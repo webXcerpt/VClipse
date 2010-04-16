@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package 
+       uri = "http://www.vclipse.org/idoc/IDoc" 
+       class = "org.vclipse.idoc.iDoc.IDocPackage"
+       genModel = "org/vclipse/idoc/IDoc.genmodel" /> 
+	
+  </extension>
+
+
+
+
+</plugin>

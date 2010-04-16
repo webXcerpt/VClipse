@@ -1,0 +1,899 @@
+grammar org.vclipse.vcml.VCML with org.eclipse.xtext.common.Terminals
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+generate vcml "http://www.vclipse.org/vcml"
+
+Model :
+    (imports+=Import)*
+    ('options' '{' (options+=Option)* '}')?
+    (objects+=VCObject)*
+    ;
+
+Import 
+	: 'import' importURI=STRING
+	;	
+
+Option
+	: name=OptionType '=' value=STRING
+	;
+	
+enum OptionType
+	: ECM // engineering change master
+	| UPS // set to ID of header material, if UPS IDocs and segments should be generated
+	;
+
+// this enforces that all VCObjects have a name attribute
+DummyRule returns VCObject
+	:	name=STRING
+	;
+	
+VCObject :
+	  Characteristic
+	| Class
+	| Constraint 
+	| SelectionCondition 
+	| Precondition 
+	| Procedure 
+	| DependencyNet
+	| Material
+	| InterfaceDesign
+	| VariantFunction
+	| VariantTable
+	;
+
+// concrete classes
+
+BillOfMaterial :
+	'billofmaterial' '{'
+		('items' '{' items+=BOMItem* '}')?
+	//	('classitems' '{' classitems+=BOMItem* '}')? // currently deactivated
+	'}'
+	;
+
+BOMItem :
+	itemnumber=INT
+	material=[Material | EXTENDED_ID]
+	('dependencies' '{'
+	  (selectionCondition=[SelectionCondition | ID])?
+	  (entries+=ConfigurationProfileEntry)*
+	 '}')?
+	;
+
+Characteristic :
+	'characteristic' name=ID ('{'
+	description=Description
+	(documentation=Documentation)?
+	type=CharacteristicType
+	('status' status=Status)?
+	('group' group=STRING)?
+	('[' (
+	       additionalValues?='additionalValues'
+	     | required?='required'
+	     | restrictable?='restrictable'
+	     | noDisplay?='noDisplay'
+	     | notReadyForInput?='notReadyForInput'
+	     | multiValue?='multiValue'
+	     | displayAllowedValues?='displayAllowedValues'
+	     )*
+	']')?
+    (dependencies=CharacteristicOrValueDependencies)?
+	'}')?
+	;
+
+CharacteristicType :
+		NumericType
+	|	SymbolicType
+	;
+
+NumericType : 
+	'numeric' '{'
+	'numberOfChars' numberOfChars=INT
+	'decimalPlaces' decimalPlaces=INT
+	('unit' unit=STRING)?
+	('[' (
+	       negativeValuesAllowed?='negativeValuesAllowed'
+	     | intervalValuesAllowed?='intervalValuesAllowed'
+	     )*
+	 ']')?
+	('values' '{' (values+=NumericCharacteristicValue)* '}')?
+	'}'
+	;
+	
+SymbolicType :
+	'symbolic' '{'
+	'numberOfChars' numberOfChars=INT
+	('[' (
+	       caseSensitive?='caseSensitive'
+	     )*
+	 ']')?
+	('values' '{' (values+=CharacteristicValue)* '}')?
+	'}'
+	;
+
+CharacteristicValue :
+	name=SYMBOL
+	('{'
+	  (description=Description)?
+	  (documentation=Documentation)?
+	  (dependencies=CharacteristicOrValueDependencies)?
+	'}')?
+	;
+
+NumericCharacteristicValue :
+	name=NUMBER
+    (dependencies=CharacteristicOrValueDependencies)?
+	;
+
+CharacteristicOrValueDependencies :
+	'dependencies' '{'
+		(localPrecondition=LocalPrecondition)?
+		(localSelectionCondition=LocalSelectionCondition)?
+		(dependencies+=[GlobalDependency | ID])*
+	'}'
+	;
+
+Class :
+	'class' name=CLASSNAME ('{'
+		description=Description
+		('status' status=Status)?
+		('group' group=STRING)?
+		'characteristics' '{' 
+			characteristics+=[Characteristic|ID]* 
+		'}'
+	'}')?
+	;
+
+CLASSNAME
+	:	'(' INT ')' ID
+	;
+
+ConfigurationProfile :
+    'configurationprofile' name=SYMBOL '{'
+	   ('status' status=Status)?
+	   'bomapplication' bomapplication=ID
+	   ('uidesign' uidesign=[InterfaceDesign | EXTENDED_ID])?
+       (dependencyNets+=[DependencyNet|ID])*
+       (entries+=ConfigurationProfileEntry)*
+    '}'
+    ;
+
+Dependency
+	:	GlobalDependency
+	|	LocalDependency
+	;
+
+GlobalDependency // just for inheritence
+	: 	Procedure
+	| 	SelectionCondition
+	| 	Precondition
+	| 	Constraint
+	;
+
+LocalDependency
+	:	LocalSelectionCondition
+	|	LocalPrecondition
+	;
+
+Procedure :
+    'procedure' name=ID ('{'
+		description=Description
+		(documentation=Documentation)?
+		('status' status=Status)?
+		('group' group=STRING)?
+    	('source' '{'
+    		source=ProcedureSource
+    	'}')?
+    '}')?
+    ;
+
+SelectionCondition :
+    'selectioncondition' name=ID ('{'
+		description=Description
+		(documentation=Documentation)?
+		('status' status=Status)?
+		('group' group=STRING)?
+    	('source' '{'
+    		source=ConditionSource
+    	'}')?
+    '}')?
+    ;
+
+LocalSelectionCondition :
+    'selectioncondition' '{'
+		(description=Description)?
+		(documentation=Documentation)?
+		('status' status=Status)?
+		('group' group=STRING)?
+    	('source' '{'
+    		source=ConditionSource
+    	'}')?
+    '}'
+    ;
+
+GeneralSelectionCondition
+	:	SelectionCondition
+	|	LocalSelectionCondition
+	;
+
+Precondition :
+    'precondition' name=ID ('{'
+		description=Description
+		(documentation=Documentation)?
+		('status' status=Status)?
+ 		('group' group=STRING)?
+    	('source' '{'
+    		source=ConditionSource
+    	'}')?
+    '}')?
+    ;
+
+LocalPrecondition :
+    'precondition' '{'
+		(description=Description)?
+		(documentation=Documentation)?
+		('status' status=Status)?
+ 		('group' group=STRING)?
+    	('source' '{'
+    		source=ConditionSource
+    	'}')?
+    '}'
+    ;
+
+GeneralPrecondition :
+		Precondition
+	|   LocalPrecondition
+	;
+
+ConditionSource hidden (WS, DEPENDENCY_COMMENT):
+	condition=Condition_P '.'
+	;
+
+DependencyNet :
+	'dependencynet' name=ID ('{'
+		description=Description
+		(documentation=Documentation)?
+		('status' status=Status)?
+ 		('group' group=STRING)?
+		(constraints+=[Constraint | ID])*
+	'}')?
+	;
+
+Constraint :
+    'constraint' name=ID ('{'
+		description=Description
+		(documentation=Documentation)?
+		('status' status=Status)?
+ 		('group' group=STRING)?
+    	('source' '{'
+    		source=ConstraintSource
+    	'}')?
+    '}')?
+    ;
+
+ConfigurationProfileEntry :
+    sequence=INT dependency=[Procedure|ID]
+    ;
+
+InterfaceDesign :
+	'interfacedesign' name=EXTENDED_ID ('{'
+		(characteristicGroups+=CharacteristicGroup)*
+	'}')?
+	;
+
+CharacteristicGroup :
+	'characteristicgroup' name=EXTENDED_ID '{'
+		description=Description
+		(characteristics+=[Characteristic | ID])*
+	'}'
+	;    
+
+Material : 
+	'material' name=EXTENDED_ID ('{'
+		description=Description
+		'type' type=ID
+		(billofmaterials+=BillOfMaterial)*
+		('classes' '{' (classes+=[Class|CLASSNAME])* '}')?
+		(configurationprofiles+=ConfigurationProfile)*
+	'}')?
+	;
+	
+VariantFunction :
+		'variantfunction' name=ID ('{'
+			description=Description
+			('status' status=Status)?
+			('group' group=STRING)?
+			'arguments' '{' (arguments+=VariantFunctionArgument)* '}'
+		'}')?
+	; 
+	
+VariantFunctionArgument
+	:	(in?='in')? characteristic=[Characteristic|ID]
+	;
+	
+VariantTable
+	:	'varianttable' name=ID ('{'
+			description=Description
+			('status' status=Status)?
+			('group' group=STRING)?
+			'arguments' '{' (arguments+=VariantTableArgument)* '}'
+		'}')?
+	; 
+	
+VariantTableArgument
+	:	(key?='key')? characteristic=[Characteristic|ID]
+	;
+
+// auxiliary grammar rules
+enum Status : Released = 'released' | InPreparation = 'inPreparation' | Locked = 'locked';
+
+Description : 
+	  SimpleDescription
+	| MultiLanguageDescriptions
+	;
+	
+SimpleDescription :
+    'description' value=STRING
+    ;
+
+MultiLanguageDescriptions : 
+	'description' '{' (descriptions+=MultiLanguageDescription)* '}'
+	;
+
+MultiLanguageDescription :
+	language=Language value=STRING
+	;
+	
+enum Language
+	:	AF // Afrikaans       
+	|	AR // Arabic          
+	|	BG // Bulgarian       
+	|	CA // Catalan         
+	|	CS // Czech           
+	|	DA // Danish          
+	|	DE // German          
+	|	EL // Greek           
+	|	EN // English         
+	|	ES // Spanish         
+	|	ET // Estonian        
+	|	FI // Finnish         
+	|	FR // French          
+	|	HE // Hebrew          
+	|	HR // Croatian        
+	|	HU // Hungarian       
+	|	ID // Indonesian      
+	|	IS // Icelandic       
+	|	IT // Italian         
+	|	JA // Japanese        
+	|	KO // Korean          
+	|	LT // Lithuanian      
+	|	LV // Latvian         
+	|	MS // Malaysian       
+	|	NL // Dutch           
+	|	NO // Norwegian       
+	|	PL // Polish          
+	|	PT // Portuguese      
+	|	RO // Romanian        
+	|	RU // Russian         
+	|	SH // Serbian (Latin) 
+	|	SK // Slovakian       
+	|	SL // Slovenian       
+	|	SR // Serbian         
+	|	SV // Swedish         
+	|	TH // Thai            
+	|	TR // Turkish         
+	|	UK // Ukrainian       
+	|	Z1 // Customer reserve
+	|	ZF // Chinese trad.   
+	|	ZH // Chinese         
+	;
+
+Documentation :
+	  SimpleDocumentation
+	| MultipleLanguageDocumentation
+	;
+	
+SimpleDocumentation :
+	'documentation' value=STRING
+	;
+	
+MultipleLanguageDocumentation :
+	'documentation' '{' (languageblocks+=MultipleLanguageDocumentation_LanguageBlock)* '}'
+	;
+
+MultipleLanguageDocumentation_LanguageBlock :
+	language=Language (formattedDocumentationBlocks+=FormattedDocumentationBlock)*
+	;
+
+FormattedDocumentationBlock :
+	value=STRING ('format' format=STRING)?
+	; 
+
+///////////////////////////////////////////////////////////////////////////////
+// code representation: constraints
+///////////////////////////////////////////////////////////////////////////////
+
+ConstraintSource hidden (WS, DEPENDENCY_COMMENT)
+	:   ('objects' | 'OBJECTS') ':'	objects+=ConstraintObject (',' objects+=ConstraintObject)* '.'?
+
+		(('condition' | 'CONDITION') ':' condition=Condition_C '.'?)?
+
+		('restriction' | 'RESTRICTION' | 'restrictions' | 'RESTRICTIONS') ':'
+		restrictions+=ConditionalConstraintRestriction (',' restrictions+=ConditionalConstraintRestriction)*
+		'.'?
+
+		(('inferences' | 'INFERENCES') ':' inferences+=CharacteristicReference_C (',' inferences+=CharacteristicReference_C)* '.'?)?
+    ;
+
+ConstraintObject
+	:	ConstraintClass
+	|	ConstraintMaterial 
+	;
+	
+ConstraintClass
+	:	(name=SHORTVAR ('is_a' | 'IS_A'))? class=[Class|CLASSNAME] 
+		(	('where' | 'WHERE')
+			shortVars+=ShortVarDefinition (';' shortVars+=ShortVarDefinition)*
+		)?
+	;
+
+ConstraintMaterial
+	:	(name=SHORTVAR ('is_object' | 'IS_OBJECT'))? objectType=ObjectType
+		(	('where' | 'WHERE')
+			shortVars+=ShortVarDefinition (';' shortVars+=ShortVarDefinition)*
+		)?
+	;
+
+ObjectType
+	:	'(' type=('material' | 'MATERIAL') ')' '(' classType=INT ')' '(' attrs+=PartialKey (',' attrs+=PartialKey)* ')'
+	;
+
+ // TODO how to handle cross references?
+PartialKey
+	:	name=('nr' | 'NR') '=' value=SYMBOL
+	;
+
+ShortVarDefinition
+	:	name=SHORTVAR '=' characteristic=[Characteristic | ID]
+	;
+
+PartOfCondition :
+	('part_of' | 'PART_OF') '(' child=[ConstraintObject | SHORTVAR] ',' parent=[ConstraintObject | SHORTVAR] ')'
+	; 
+SubpartOfCondition :
+	('subpart_of' | 'SUBPART_OF') '(' child=[ConstraintObject | SHORTVAR] ',' parent=[ConstraintObject | SHORTVAR] ')'
+	; 
+
+ConditionalConstraintRestriction returns ConstraintRestriction :
+	ConstraintRestrictionLHS ({ConditionalConstraintRestriction.restriction=current} ('if' | 'IF') condition=Condition_C)?
+	;
+
+ConstraintRestrictionFalse
+	:	'false' | 'FALSE'
+	;
+
+ConstraintRestrictionLHS returns ConstraintsRestriction
+	:	InCondition_C
+	|	IsSpecified_C
+	|	PartOfCondition
+	|	SubpartOfCondition
+	|	Comparison_C
+	|	Table_C
+	|	Function_C
+	|	NegatedConstraintRestrictionLHS
+	|	ConstraintRestrictionFalse
+	;
+	
+NegatedConstraintRestrictionLHS
+	:	('not' | 'NOT') restriction=(Table_C | Function_C)
+	;
+
+/*
+EqualsRestriction :
+	characteristic=CharacteristicReference_C '=' expression=Expression_C
+	;
+*/
+
+CharacteristicReference_C
+	:	ObjectCharacteristicReference
+	|	ShortVarReference
+	;
+	
+ObjectCharacteristicReference
+	:	location=[ConstraintObject | SHORTVAR] '.' characteristic=[Characteristic|ID]
+	;
+
+ShortVarReference
+	:	ref=[ShortVarDefinition | SHORTVAR]
+	;
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// code representation: procedures
+///////////////////////////////////////////////////////////////////////////////
+
+ProcedureSource hidden (WS, DEPENDENCY_COMMENT):
+	statements+=Statement (',' statements+=Statement)* '.'?
+	;
+
+Statement
+	:	(SimpleStatement | CompoundStatement) ({ConditionalStatement.statement=current} ('if' | 'IF') condition=Condition_P)?
+	;
+
+CompoundStatement
+	:	'(' statements+=SimpleStatement (',' statements+=SimpleStatement)* ')'
+	;
+
+SimpleStatement
+	:	Assignment
+	|	Function_P
+	|	PFunction
+	|	Table_P
+	|	SetOrDelDefault
+	|	IsInvisible
+	|	SetPricingFactor
+	;
+
+Assignment
+	:	('$self' | '$SELF') '.' characteristic=[Characteristic | ID] '=' expression=Expression_P
+    ;
+
+FunctionOrTable
+	:	Function_C
+	|	Function_P
+	|	PFunction
+	|	Table_C
+	|	Table_P
+	;
+
+Function_C returns Function
+	:	('function' | 'FUNCTION') function=[VariantFunction|ID]
+		'('
+			characteristics+=[Characteristic|ID] '=' values+=Literal_C
+			(',' characteristics+=[Characteristic|ID] '=' values+=Literal_C)*
+		')'
+	;
+
+Function_P returns Function
+	:	('function' | 'FUNCTION') function=[VariantFunction|ID]
+		'('
+			characteristics+=[Characteristic|ID] '=' values+=Literal_P
+			(',' characteristics+=[Characteristic|ID] '=' values+=Literal_P)*
+		')'
+	;
+
+PFunction
+	:	('pfunction' | 'PFUNCTION') function=[VariantFunction|ID]
+		'('
+			characteristics+=[Characteristic|ID] '=' values+=Literal_P
+			(',' characteristics+=[Characteristic|ID] '=' values+=Literal_P)*
+		')'
+	;
+
+Table_C returns Table
+	:	('table' | 'TABLE') table=[VariantTable|ID]
+		'('
+			characteristics+=[Characteristic|ID] '=' values+=Literal_C
+			(',' characteristics+=[Characteristic|ID] '=' values+=Literal_C)*
+		')'
+	;
+	
+Table_P returns Table
+	:	('table' | 'TABLE') table=[VariantTable|ID]
+		'('
+			characteristics+=[Characteristic|ID] '=' values+=Literal_P
+			(',' characteristics+=[Characteristic|ID] '=' values+=Literal_P)*
+		')'
+	;
+
+SetOrDelDefault
+	:	SetDefault
+	|	DelDefault
+	;
+
+SetDefault
+	:	('$set_default' | '$SET_DEFAULT') '(' ('$self' | '$SELF') ',' characteristic=[Characteristic | ID] ',' expression=Expression_P ')'
+	|	('$self' | '$SELF') '.' characteristic=[Characteristic | ID] '?=' expression=Expression_P
+    ;
+
+DelDefault
+	:	('$del_default' | '$DEL_DEFAULT') '(' ('$self' | '$SELF') ',' characteristic=[Characteristic | ID] ',' expression=Expression_P ')'
+    ;
+
+IsInvisible
+	:	('$self' | '$SELF') '.' characteristic=[Characteristic | ID] ('is' | 'IS') ('invisible' | 'INVISIBLE')
+	;
+	
+SetPricingFactor
+	:	('$set_pricing_factor' | '$SET_PRICING_FACTOR') '(' location=ProcedureLocation ',' characteristic=[Characteristic|ID] ',' arg1=Expression_P ',' arg2=Expression_P ')'
+	;
+
+CharacteristicReference_P :
+	(location=ProcedureLocation '.')? characteristic=[Characteristic|ID]
+	;
+
+///////////////////////////////////////////////////////////////////////////////
+// Expressions
+///////////////////////////////////////////////////////////////////////////////
+
+Expression_C returns Expression
+    :	MultiplicativeExpression_C ({BinaryExpression.left=current} operator=("+" | '-') right=MultiplicativeExpression_C)*
+	;
+	
+Expression_P returns Expression
+    :	MultiplicativeExpression_P ({BinaryExpression.left=current} operator=("+" | '-') right=MultiplicativeExpression_P)*
+	;
+	
+MultiplicativeExpression_C returns Expression
+	:	UnaryPrimaryExpression_C ({BinaryExpression.left=current} operator=('*' | '/' | '||') right=UnaryPrimaryExpression_C)*
+    ;
+
+MultiplicativeExpression_P returns Expression
+	:	UnaryPrimaryExpression_P ({BinaryExpression.left=current} operator=('*' | '/' | '||') right=UnaryPrimaryExpression_P)*
+    ;
+
+UnaryPrimaryExpression_C returns Expression
+	:	UnaryExpression_C
+	|	PrimaryExpression_C
+	;
+
+UnaryPrimaryExpression_P returns Expression
+	:	UnaryExpression_P
+	|	PrimaryExpression_P
+	;
+	
+UnaryExpression_C returns UnaryExpression
+	:	operator=UnaryExpressionOperator expression=UnaryPrimaryExpression_C
+	;
+	
+UnaryExpression_P returns UnaryExpression
+	:	operator=UnaryExpressionOperator expression=UnaryPrimaryExpression_P
+	;
+	
+PrimaryExpression_C returns Expression
+	:	'(' Expression_C ')'
+	|	Literal_C
+	|	FunctionCall_C
+	;	
+
+PrimaryExpression_P returns Expression
+	:	'(' Expression_P ')'
+	|	Literal_P
+	|	FunctionCall_P
+	|	SumParts
+	|	CountParts
+	;	
+
+Literal_C returns Literal
+	:	CharacteristicReference_C
+	| 	MDataCharacteristic_C
+	|	NumericLiteral
+	|	SymbolicLiteral
+	;
+
+Literal_P returns Literal
+	:	CharacteristicReference_P
+	|	MDataCharacteristic_P
+	|	NumericLiteral
+	|	SymbolicLiteral
+	;
+
+FunctionCall_C returns FunctionCall
+	:	function=FunctionName '(' argument=Expression_C ')'
+	;
+
+FunctionCall_P returns FunctionCall
+	:	function=FunctionName '(' argument=Expression_P ')'
+	;
+
+SumParts
+	:	('$sum_parts' | '$SUM_PARTS') '(' location=ProcedureLocation ',' characteristic=[Characteristic|ID] ')'
+	;
+
+CountParts
+	:	('$count_parts' | '$COUNT_PARTS') '(' location=ProcedureLocation ')'
+	; 
+
+MDataCharacteristic_C
+	:	('mdata' | 'MDATA') characteristic=CharacteristicReference_C
+	;
+
+MDataCharacteristic_P
+	:	('mdata' | 'MDATA') characteristic=CharacteristicReference_P
+	;
+	
+NumericLiteral :
+	value=NUMBER
+	;
+
+SymbolicLiteral :
+	value=SYMBOL
+	;
+
+///////////////////////////////////////////////////////////////////////////////
+// Conditions
+///////////////////////////////////////////////////////////////////////////////
+
+Condition_C returns Condition
+	:	Conjunction_C ({BinaryCondition.left=current} operator=('or' | 'OR') right=Conjunction_C)* 
+	; 
+
+Condition_P returns Condition
+	:	Conjunction_P ({BinaryCondition.left=current} operator=('or' | 'OR') right=Conjunction_P)* 
+	; 
+
+Conjunction_C returns Condition
+	:	Negation_C ({BinaryCondition.left=current} operator=('and' | 'AND') right=Negation_C)*
+	; 
+
+Conjunction_P returns Condition
+	:	Negation_P ({BinaryCondition.left=current} operator=('and' | 'AND') right=Negation_P)*
+	; 
+
+Negation_C returns Condition
+	:	UnaryCondition_C
+	|	PrimaryCondition_C
+	;
+
+Negation_P returns Condition
+	:	UnaryCondition_P
+	|	PrimaryCondition_P
+	;
+
+UnaryCondition_C returns UnaryCondition
+	:	('not' | 'NOT') condition=Negation_C // not may be nested in constraints
+	;
+
+UnaryCondition_P returns UnaryCondition
+	:	('not' | 'NOT') condition=PrimaryCondition_P
+	;
+
+// TODO not must not be used around specified, part_of and subpart_of - put into validation
+
+PrimaryCondition_C returns Condition
+	:	Comparison_C
+	|	'(' Condition_C ')'
+ 	|	InCondition_C
+ 	|	IsSpecified_C
+ 	|	PartOfCondition
+	|	SubpartOfCondition 
+	;
+
+PrimaryCondition_P returns Condition
+	:	Comparison_P
+	|	'(' Condition_P ')'
+ 	|	InCondition_P
+ 	|	IsSpecified_P
+ 	|   TypeOf
+	;
+
+Comparison_C returns Comparison
+	:	left=Expression_C operator=ComparisonOperator right=Expression_C
+	;
+
+Comparison_P returns Comparison
+	:	left=Expression_P operator=ComparisonOperator right=Expression_P
+	;
+
+IsSpecified_C
+	:	characteristic=CharacteristicReference_C ('specified' | 'SPECIFIED')
+	|	('specified' | 'SPECIFIED') characteristic=CharacteristicReference_C
+    ;
+
+IsSpecified_P
+	:	characteristic=CharacteristicReference_P ('specified' | 'SPECIFIED')
+	|	('specified' | 'SPECIFIED') characteristic=CharacteristicReference_P
+    ;
+
+TypeOf
+	:	('type_of' | 'TYPE_OF') '(' location=ProcedureLocation ',' variantclass=ObjectType ')'
+	;
+	 
+InCondition_C
+	:	characteristic=CharacteristicReference_C ('in' | 'IN') list=List
+	;
+
+InCondition_P
+	:	characteristic=CharacteristicReference_P ('in' | 'IN') list=List
+	;
+
+List :
+		NumberList
+	|	SymbolList
+	;
+
+NumberList :
+	'(' entries+=NumberListEntry (',' entries+=NumberListEntry)* ')'
+	;
+
+NumberListEntry :
+	  NumericLiteral
+	| NumericInterval
+	;
+	
+NumericInterval :
+	lowerBound=NUMBER '-' upperBound=NUMBER
+	;
+
+SymbolList :
+	'(' entries+=SymbolicLiteral (',' entries+=SymbolicLiteral)* ')'
+	;
+
+enum ProcedureLocation :
+	SELF   = '$self'   | SELF   = '$SELF'   |
+	PARENT = '$parent' | PARENT = '$PARENT' |
+	ROOT   = '$root'   | ROOT   = '$ROOT'
+	;
+
+enum UnaryExpressionOperator :
+	PLUS  = '+' | 
+	MINUS = '-' | 
+	LC = 'lc' | LC = 'LC' |
+	UC = 'uc' | UC = 'UC'
+	;
+
+enum ComparisonOperator : 
+	EQ = '='  | EQ = 'eq' | EQ = 'EQ' |
+	NE = '<>' | NE = 'ne' | NE = 'NE' | 
+	GT = '>'  | GT = 'gt' | GT = 'GT' |  
+    GE = '>=' | GE = '=>' |GE = 'ge' | GE = 'GE' |
+	LT = '<'  | LT = 'lt' | LT = 'LT'| 
+	LE = 'le' | LE = 'LE' | LE = '<=' | LE = '=<'
+	;
+	
+enum FunctionName :
+		SIN    = 'sin'    | SIN    = 'SIN'
+	|	COS    = 'cos'    | COS    = 'COS'
+	|	TAN    = 'tan'    | TAN    = 'TAN'
+	|	EXP    = 'exp'    | EXP    = 'EXP'
+	|	LN     = 'ln'     | LN     = 'LN'
+	|	ABS    = 'abs'    | ABS    = 'ABS'
+	|	SQRT   = 'sqrt'   | SQRT   = 'SQRT'
+	|	LOG10  = 'log10'  |	LOG10  = 'LOG10'
+	|	ARCSIN = 'arcsin' |	ARCSIN = 'ARCSIN'
+	|	ARCCOS = 'arccos' |	ARCCOS = 'ARCCOS'
+	|	ARCTAN = 'arctan' |	ARCTAN = 'ARCTAN'
+	|	SIGN   = 'sign'   |	SIGN   = 'SIGN'
+	|	FRAC   = 'frac'   |	FRAC   = 'FRAC'
+	|	CEIL   = 'ceil'   | CEIL   = 'CEIL'
+	|	TRUNK  = 'trunk'  |	TRUNK  = 'TRUNK'
+	|	FLOOR  = 'floor'  |	FLOOR  = 'FLOOR'
+	;
+
+terminal ID	// Xtext standard without ^ 
+	:	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*
+	;
+
+terminal DEPENDENCY_COMMENT
+	:	(' '|'\t')* ('\r'? '\n*') !('\n'|'\r')*
+	;
+
+terminal STRING	// Xtext standard, but only enclosed in double quotes
+	:	'"' ( '\\' ('b'|'t'|'n'|'f'|'r'|'"'|'\\') | !('\\'|'"') )* '"'
+	;
+
+terminal SYMBOL // enclosed in single quotes, no escapes, no line breaks, no tabs
+	:	"'" ( !("'"|'\t'|'\n'|'\r') )* "'"
+	; 
+
+EXTENDED_ID hidden () // no whitespace might be used inside extended ids
+	:	(INT | ID | '/' | ':' | '-' | '.')+ 
+	;	
+
+// bug has been filed as Xtext bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=303212
+SHORTVAR // NOTE: due to a bug in Xtext, the following does not work: hidden () // no whitespace might be used inside shortvars // TODO verify this in SAP
+	:	('?' | '#')? ID 
+	;	
+
+// TODO implement size restrictions for a number: e.g., the exponent's maximum value is 99
+NUMBER
+	:	('-'|'+')? INT ('.' INT)? (('e'|'E') ('-'|'+') INT)? // sign of exponent is mandatory in SAP
+	;
+
+/*
+TODO:
+ * handle characteristics with hyphens in their name. Use in dependencies code as: skey 'cstic-name-with-hyphens'
+ * handle keywords 'INVISIBILITY', 'INV', 'SKEY'
+ * handle intervals with "bound operators", e.g., >1 - <5
+*/

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+    Copyright (c) 2010 webXcerpt Software GmbH.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+   
+    Contributors:
+       webXcerpt Software GmbH - initial creator
+ -->
+
+<plugin>
+   <extension-point id="outlinePageActions" name="Outline page actions" schema="schema/outlinePageActions.exsd"/>
+
+    <extension
+            point="org.eclipse.ui.editors">
+        <editor
+              class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.core.editor.XtextEditor"
+              contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+              default="true"
+              extensions="vcml"
+              icon="icons/vcml.png"
+              id="org.vclipse.vcml.vcml"
+              name="VCML Editor">
+        </editor>
+    </extension>
+    <extension
+        point="org.eclipse.ui.handlers">
+        <handler
+            class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.common.editor.hyperlinking.OpenDeclarationHandler"
+            commandId="org.eclipse.xtext.ui.common.editor.hyperlinking.OpenDeclaration">
+            <activeWhen>
+                <reference
+                    definitionId="org.vclipse.vcml.vcml.Editor.opened">
+                </reference>
+            </activeWhen>
+        </handler>
+        <handler
+            class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.core.editor.handler.ValidateActionHandler"
+            commandId="org.vclipse.vcml.vcml.validate">
+         <activeWhen>
+            <reference
+                    definitionId="org.vclipse.vcml.vcml.Editor.opened">
+            </reference>
+         </activeWhen>
+      </handler>
+    </extension>
+    <extension point="org.eclipse.core.expressions.definitions">
+        <definition id="org.vclipse.vcml.vcml.Editor.opened">
+            <and>
+                <reference definitionId="isActiveEditorAnInstanceOfXtextEditor"/>
+                <with variable="activeEditor">
+                    <test property="org.eclipse.xtext.ui.core.editor.XtextEditor.languageName" 
+                        value="org.vclipse.vcml.vcml" 
+                        forcePluginActivation="true"/>
+                </with>        
+            </and>
+        </definition>
+    </extension>
+    <extension
+            point="org.eclipse.ui.preferencePages">
+        <page
+            class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.core.editor.preferences.LanguageRootPreferencePage"
+            id="org.vclipse.preferences.page"
+            name="VClipse">
+            <keywordReference id="org.vclipse.vcml.ui.keyword_VCML"/>
+        </page>
+        <page
+              category="org.vclipse.preferences.page"
+              class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.core.editor.preferences.LanguageRootPreferencePage"
+              id="org.vclipse.preferences.page.vcmlTextEditor"
+              name="VCML Text Editor">
+        </page>
+        <page
+            category="org.vclipse.preferences.page.vcmlTextEditor"
+            class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.common.editor.syntaxcoloring.SyntaxColoringPreferencePage"
+            id="org.vclipse.vcml.coloring.page"
+            name="Syntax Coloring">
+            <keywordReference id="org.vclipse.vcml.ui.keyword_VCML"/>
+        </page>
+        <page
+            category="org.vclipse.preferences.page.vcmlTextEditor"
+            class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.common.editor.templates.XtextTemplatePreferencePage"
+            id="org.vclipse.vcml.templates.page"
+            name="Templates">
+            <keywordReference id="org.vclipse.vcml.ui.keyword_VCML"/>
+        </page>
+        <page
+              category="org.vclipse.preferences.page"
+              class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.core.editor.preferences.LanguageRootPreferencePage"
+              id="org.vclipse.preferences.page.sap"
+              name="SAP">
+        </page>
+        <page
+              category="org.vclipse.preferences.page.sap"
+              class="org.vclipse.vcml.preferences.SapOptionsPreferencePage"
+              id="org.vclipse.preferences.page.sap.options"
+              name="Options">
+        </page>
+        <page
+              category="org.vclipse.preferences.page.sap"
+              class="org.vclipse.vcml.preferences.SapDefaultSettingsPreferencePage"
+              id="org.vclipse.preferences.page.sap.defaultSettings"
+              name="Default Settings">
+        </page>
+    </extension>
+    <extension
+        point="org.eclipse.ui.keywords">
+        <keyword
+            id="org.vclipse.vcml.ui.keyword_VCML"
+            label="VCML"/>
+    </extension>
+    <extension
+         point="org.eclipse.ui.commands">
+      <command
+            description="Trigger expensive validation"
+            id="org.vclipse.vcml.vcml.validate"
+            name="Validate">
+      </command>
+    </extension>
+    <extension point="org.eclipse.ui.menus">
+        <menuContribution
+            locationURI="popup:#TextEditorContext?after=group.open">
+             <command
+                 commandId="org.vclipse.vcml.vcml.validate"
+                 style="push"
+                 tooltip="Trigger expensive validation">
+            <visibleWhen checkEnabled="false">
+                <reference
+                    definitionId="org.vclipse.vcml.vcml.Editor.opened">
+                </reference>
+            </visibleWhen>
+         </command>  
+         </menuContribution>
+    </extension>
+
+<!-- adding resource factories -->
+
+	<extension
+		point="org.eclipse.emf.ecore.extension_parser">
+		<parser
+			class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.eclipse.xtext.resource.XtextResourceFactory"
+			type="vcml">
+		</parser>
+	</extension>
+ <extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="org.vclipse.vcml.preferences.PreferencesInitializer">
+    </initializer>
+ </extension>
+ <extension
+       point="org.eclipse.ui.views">
+    <category
+          id="org.vclipse.views.category"
+          name="VClipse">
+    </category>
+ </extension>
+ <extension
+       point="org.eclipse.ui.viewActions">
+    <viewContribution
+          id="org.vclipse.vcml.ui.viewContribution3"
+          targetID="org.eclipse.ui.navigator.ProjectExplorer">
+       <action
+             class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.vclipse.vcml.PrettyPrinterAction"
+             icon="icons/table.png"
+             id="org.vclipse.vcml.ui.action3"
+             label="Pretty Printer"
+             style="push"
+             toolbarPath="additions">
+       </action>
+    </viewContribution>
+ </extension>
+ <extension
+       point="org.eclipse.ui.perspectives">
+    <perspective
+          class="org.vclipse.vcml.VClipsePerspectiveFactory"
+          fixed="false"
+          id="org.vclipse.perspective"
+          name="VClipse">
+    </perspective>
+ </extension>
+</plugin>

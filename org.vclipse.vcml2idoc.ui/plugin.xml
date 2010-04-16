@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?><!--
+    Copyright (c) 2010 webXcerpt Software GmbH.
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+   
+    Contributors:
+       webXcerpt Software GmbH - initial creator
+ -->
+
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="org.vclipse.fileTranformation"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               id="org.vclipse.VCML2idoc.menus.transformation"
+               label="Transform"
+               path="additions">
+            <groupMarker
+                  name="content">
+            </groupMarker>
+            <separator
+                  name="additions">
+            </separator>
+         </menu>
+         <action
+               class="org.vclipse.vcml2idoc.ui.VCML2IDocsAction"
+               enablesFor="+"
+               icon="icons/run_transformation.png"
+               id="org.vclipse.actions.VCML2idoc"
+               label="VClipse: VCML to IDoc"
+               menubarPath="org.vclipse.VCML2idoc.menus.transformation/content"
+               tooltip="Create IDocs from existing SAP model.">
+            <enablement>
+               <and>
+                  <objectClass
+                        name="org.eclipse.core.resources.IFile">
+                  </objectClass>
+                  <objectState
+                        name="extension"
+                        value="vcml">
+                  </objectState>
+               </and>
+            </enablement>
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="org.vclipse.popup.VCMLnature"
+            objectClass="org.eclipse.core.resources.IProject">
+         <action
+               class="org.vclipse.vcml2idoc.ui.AddRemoveVCML2IDocNature"
+               enablesFor="+"
+               id="org.vclipse.actions.addvcmlnature"
+               label="Add/Remove VCML nature"
+               menubarPath="additions">
+            <enablement>
+               <objectClass
+                     name="org.eclipse.core.resources.IProject">
+               </objectClass>
+            </enablement>
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.vclipse.preferences.page"
+            class="org.vclipse.vcml2idoc.ui.preferences.VCML2IDocOptionsPreferencePage"
+            id="org.vclipse.vcml2idoc.preferences.pages.vcml2IDocOptions"
+            name="IDoc Generation">
+      </page>
+   </extension>
+
+</plugin>

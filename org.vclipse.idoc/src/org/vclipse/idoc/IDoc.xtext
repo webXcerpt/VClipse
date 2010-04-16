@@ -1,0 +1,49 @@
+grammar org.vclipse.idoc.IDoc with org.eclipse.xtext.common.Terminals
+
+generate iDoc "http://www.vclipse.org/idoc/IDoc"
+
+Model :
+    (imports+=Import)*
+    (idocs+=IDoc)*
+    ;
+
+Import 
+	: 'import' importURI=STRING
+	;	
+
+Record : // generalized type for IDocs and Segments
+	IDoc | Segment
+	;
+
+IDoc :
+	'idoc' name=STRING type=ID messageType=ID '{'
+		fields+=Field*
+		segments+=Segment*
+	'}'
+	;
+
+Segment :
+	'segment' type=ID '{'
+		fields+=Field*
+		segments+=Segment*
+	'}'
+	;
+
+Field :
+	StringField | NumberField
+	;
+
+StringField :
+	name=ID '=' value=STRING
+	;
+	
+NumberField :
+	name=ID '=' value=INT
+	;
+	
+terminal ID : 
+  '^'?('a'..'z'|'A'..'Z'|'_'|'/') ('a'..'z'|'A'..'Z'|'_'|'/'|'0'..'9')* ; // include / into IDs (TODO what about line comments?)
+
+terminal STRING	// Xtext standard, but only enclosed in double quotes
+	:	'"' ( '\\' ('b'|'t'|'n'|'f'|'r'|'"'|'\\') | !('\\'|'"') )* '"'
+	;
