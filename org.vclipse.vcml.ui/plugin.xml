@@ -182,4 +182,24 @@
           name="VClipse">
     </perspective>
  </extension>
+ <extension
+       point="org.eclipse.ui.popupMenus">
+    <objectContribution
+          adaptable="true"
+          id="org.vclipse.vcml.popupMenu.resourceContribution"
+          objectClass="org.eclipse.core.resources.IResource">
+       <menu
+             icon="icons/vcml.png"
+             id="org.vclipse.vcml.ui.popupMenu.resource"
+             label="VClipse"
+             path="additions">
+          <groupMarker
+                name="content">
+          </groupMarker>
+          <separator
+                name="additions">
+          </separator>
+       </menu>
+    </objectContribution>
+ </extension>
 </plugin>
