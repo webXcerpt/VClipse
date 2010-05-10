@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="org.vclipse.actions.diff"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.vclipse.vcml.diff.ui.ExportDiffsAction"
+               enablesFor="+"
+               icon="icons/compare.png"
+               id="org.vclipse.actions.VCML2idoc"
+               label="Compare and export diffs"
+               menubarPath="org.vclipse.vcml.ui.popupMenu/content"
+               tooltip="Extracts differences from 2 vcml files to a third one">
+            <enablement>
+               <and>
+                  <objectClass
+                        name="org.eclipse.core.resources.IFile">
+                  </objectClass>
+                  <objectState
+                        name="extension"
+                        value="vcml">
+                  </objectState>
+               </and>
+            </enablement>
+         </action>
+      </objectContribution>
+   </extension>
+
+</plugin>
