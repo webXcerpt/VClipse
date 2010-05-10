@@ -17,24 +17,13 @@
             adaptable="true"
             id="org.vclipse.fileTranformation"
             objectClass="org.eclipse.core.resources.IFile">
-         <menu
-               id="org.vclipse.VCML2idoc.menus.transformation"
-               label="Transform"
-               path="additions">
-            <groupMarker
-                  name="content">
-            </groupMarker>
-            <separator
-                  name="additions">
-            </separator>
-         </menu>
          <action
                class="org.vclipse.vcml2idoc.ui.VCML2IDocsAction"
                enablesFor="+"
                icon="icons/run_transformation.png"
                id="org.vclipse.actions.VCML2idoc"
                label="VClipse: VCML to IDoc"
-               menubarPath="org.vclipse.VCML2idoc.menus.transformation/content"
+               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/content"
                tooltip="Create IDocs from existing SAP model.">
             <enablement>
                <and>
@@ -61,7 +50,7 @@
                enablesFor="+"
                id="org.vclipse.actions.addvcmlnature"
                label="Add/Remove VCML nature"
-               menubarPath="additions">
+               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/content">
             <enablement>
                <objectClass
                      name="org.eclipse.core.resources.IProject">
