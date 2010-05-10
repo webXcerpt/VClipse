@@ -83,6 +83,11 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 	private Button generateExportFileButton;
 	
 	/**
+	 * 
+	 */
+	private Button switchPathsButton;
+	
+	/**
 	 *	Resources, being preselected.
 	 *
 	 *	Use case 1 - user preselected a container.
@@ -231,20 +236,27 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 			}
 		});
 		
-		button = new Button(group, SWT.NONE);
-		button.setText("Switch comparison paths");
-		button.addSelectionListener(new SelectionAdapter() {
+		// TODO implement the click-handling for the browseExportPathButton and remove the following 3 lines
+		generateExportFileButton.setEnabled(false);
+		generateExportFileButton.setSelection(true);
+		browseExportPathButton.setEnabled(false);
+		thirdPathText.setEditable(false);
+		
+		switchPathsButton = new Button(group, SWT.NONE);
+		switchPathsButton.setText("Switch comparison paths");
+		switchPathsButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent event) {
-				String tmpString = firstPathText.getText();
+				final String tmpTextFirst = firstPathText.getText();
 				firstPathText.setText(secondPathText.getText());
-				secondPathText.setText(tmpString);
+				secondPathText.setText(tmpTextFirst);
+				validateEntries();
 			}
 		});
 		gridData = new GridData();
 		gridData.horizontalSpan = 2;
 		gridData.horizontalAlignment = SWT.END;
-		button.setLayoutData(gridData);
+		switchPathsButton.setLayoutData(gridData);
 		
 		validateEntries();
 		return super.createDialogArea(parent);
@@ -263,7 +275,7 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 				} catch (CoreException e) {
 				}
 			}
-			System.out.println("Run compare operation");
+			//System.out.println("Run compare operation");
 		}
 		super.buttonPressed(buttonId);
 	}
@@ -273,10 +285,13 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 	 */
 	private void validateEntries() {
 		setErrorMessage(null);
+		switchPathsButton.setEnabled(true);
+		
 		try {
 			firstComparisonFile = ROOT.getFile(new Path(firstPathText.getText()));
 		} catch(final IllegalArgumentException exception) {
 			firstComparisonFile = null;
+			switchPathsButton.setEnabled(false);
 			setErrorMessage("Please specify the first file for comparison.");
 			return;
 		}
@@ -285,6 +300,7 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 			secondComparisonFile = ROOT.getFile(new Path(secondPathText.getText()));
 		} catch(final IllegalArgumentException exception) {
 			secondComparisonFile = null;
+			switchPathsButton.setEnabled(false);
 			setErrorMessage("Please specify the second file for comparison.");
 			return;
 		}
