@@ -45,8 +45,8 @@ public class VCMLFormatter extends AbstractDeclarativeFormatter {
 		linewrapKeywords.add("status");
 		linewrapKeywords.add("group");
 		linewrapKeywords.add("type");
-		linewrapKeywords.add("Symbolic");
-		linewrapKeywords.add("Numeric");
+		linewrapKeywords.add("symbolic");
+		linewrapKeywords.add("numeric");
 		linewrapKeywords.add("values");
 		linewrapKeywords.add("source");
 		linewrapKeywords.add("characteristics");

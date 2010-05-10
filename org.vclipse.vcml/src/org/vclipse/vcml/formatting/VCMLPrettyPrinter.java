@@ -205,7 +205,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	 */
 	@Override
 	public DataLayouter<NoExceptions> caseNumericType(NumericType object) {
-		layouter.brk().beginC().print("Numeric {");
+		layouter.brk().beginC().print("numeric {");
 		{
 			layouter.brk().print("numberOfChars ").print(object.getNumberOfChars());
 			layouter.brk().print("decimalPlaces ").print(object.getDecimalPlaces());
@@ -247,7 +247,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	 */
 	@Override
 	public DataLayouter<NoExceptions> caseSymbolicType(SymbolicType object) {
-		layouter.brk().beginC().print("Symbolic {");
+		layouter.brk().beginC().print("symbolic {");
 		layouter.brk().print("numberOfChars ").print(object.getNumberOfChars());
 		if(object.isCaseSensitive()) {
 			layouter.brk().print("[ caseSensitive ]");
