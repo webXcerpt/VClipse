@@ -111,7 +111,7 @@ public final class FileSelectionDialog extends TitleAreaDialog {
 	protected Control createDialogArea(Composite parent) {
 		getShell().setText("File selection dialog");
 		setTitle("Source file selection dialog");
-		setMessage("Please select a ConfigModeler source file...");
+		setMessage("Please select a VCML source file...");
 		
 		GridData gridData = new GridData(GridData.FILL_BOTH);
 		Composite dialogArea = new Composite(parent, SWT.NONE);
