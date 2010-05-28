@@ -10,8 +10,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -30,7 +28,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.vclipse.vcml.diff.ExportDiffsOperation;
+import org.vclipse.vcml.diff.ExportDiffsJob;
 
 /**
  *
@@ -269,13 +267,12 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 	protected void buttonPressed(final int buttonId) {
 		if(Dialog.OK == buttonId) {
 			if(firstComparisonFile != null && secondComparisonFile != null) {
-				ExportDiffsOperation operation = new ExportDiffsOperation(firstComparisonFile, secondComparisonFile, exportComparisonFile);
-				try {
-					ResourcesPlugin.getWorkspace().run(operation, new NullProgressMonitor());
-				} catch (CoreException e) {
-				}
+				final ExportDiffsJob job = new ExportDiffsJob();
+				job.setLeftFile(firstComparisonFile);
+				job.setRightFile(secondComparisonFile);
+				job.setExportFile(exportComparisonFile);
+				job.schedule();
 			}
-			//System.out.println("Run compare operation");
 		}
 		super.buttonPressed(buttonId);
 	}

@@ -29,5 +29,20 @@
          </action>
       </objectContribution>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.vclipse.vcml.diff.internal.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.vclipse.preferences.page"
+            class="org.vclipse.vcml.diff.internal.DiffPreferencePage"
+            id="org.vclipse.vcml.preferencesPages.diff"
+            name="VCML Diff">
+      </page>
+   </extension>
 
 </plugin>
