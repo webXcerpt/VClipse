@@ -134,7 +134,15 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 	 */
 	@Override
 	public Boolean caseModelElementChangeRightTarget(final ModelElementChangeRightTarget object) {
-		return addObject2HandleList(object.getRightElement());
+		EObject rightElement = object.getRightElement();
+		// extract deleted VCObjects
+		if(rightElement instanceof VCObject) {
+			return addObject2HandleList(rightElement);
+		} 
+		// otherwise extract VCObject from the left model
+		else {
+			return addObject2HandleList(object.getLeftParent());
+		}
 	}
 	
 	/**
@@ -220,13 +228,13 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 		} else if(object instanceof Import) {
 			model2Build.getImports().add((Import)object);
 		} else if(object instanceof VCObject) {
-			handleObject((VCObject)object);
+			handleObject(object);
 		} else {
 			EObject parent = object.eContainer();
 			while(parent != null && !(parent instanceof VCObject)) {
 				parent = parent.eContainer();
 			}
-			handleObject((VCObject)parent);
+			handleObject(parent);
 		}
 		return HANDELED;
 	}
@@ -234,25 +242,24 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 	/**
 	 * @param vcobject
 	 */
-	private void handleObject(VCObject vcobject) {
-		if(vcobject != null) {
-			String name = vcobject.getName();
-			if(!objects2Add.containsKey(name)) {
-				objects2Add.put(name, vcobject);
-				referenceConstructor.doSwitch(vcobject);
-				Map<String, EObject> createdObjects = referenceConstructor.getCreatedObjects();
-				if(createdObjects != null) {
-					for(EObject created : createdObjects.values()) {
-						if(monitor.isCanceled()) {
-							return;
-						}
-						if(created instanceof VCObject) {					
-							vcobject = (VCObject)created;
-							objects2Add.put(vcobject.getName(), vcobject);
-						}
+	private void handleObject(EObject object) {
+		if(object instanceof VCObject) {
+			VCObject vcobject = (VCObject)object;
+			objects2Add.put(vcobject.getName(), vcobject);
+			referenceConstructor.reset();
+			referenceConstructor.doSwitch(vcobject);
+			Map<String, EObject> createdObjects = referenceConstructor.getCreatedObjects();
+			if(createdObjects != null) {
+				for(EObject created : createdObjects.values()) {
+					if(monitor.isCanceled()) {
+						return;
+					}
+					if(created instanceof VCObject) {					
+						vcobject = (VCObject)created;
+						objects2Add.put(vcobject.getName(), vcobject);
 					}
 				}
-			}		
+			}
 		}
 	}
 }
