@@ -13,15 +13,13 @@ Require-Bundle: org.vclipse.vcml;visibility:=reexport,
  org.eclipse.ui,
  org.antlr.runtime,
  org.eclipse.ui.console,
- org.eclipse.xtext.ui,
  org.eclipse.xtext.ui.shared,
  org.eclipse.xtext.builder
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.vcml.ui.contentassist.antlr,
  org.vclipse.vcml.ui.outline.actions,
  org.vclipse.vcml.ui,
- org.vclipse.vcml.ui.contentassist,
- org.vclipse.vcml.ui.contentassist.antlr
+ org.vclipse.vcml.ui.contentassist
 Bundle-Activator: org.vclipse.vcml.ui.internal.VCMLActivator
 Import-Package: de.uka.ilkd.pp,
  org.apache.log4j,

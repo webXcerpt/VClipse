@@ -17,38 +17,38 @@
     <extension
             point="org.eclipse.ui.editors">
         <editor
-              class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.core.editor.XtextEditor"
+              class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
               contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
               default="true"
               extensions="vcml"
               icon="icons/vcml.png"
-              id="org.vclipse.vcml.vcml"
+              id="org.vclipse.vcml.VCML"
               name="VCML Editor">
         </editor>
     </extension>
     <extension
         point="org.eclipse.ui.handlers">
         <handler
-            class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.common.editor.hyperlinking.OpenDeclarationHandler"
-            commandId="org.eclipse.xtext.ui.common.editor.hyperlinking.OpenDeclaration">
+            class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
+            commandId="org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclaration">
             <activeWhen>
                 <reference
-                    definitionId="org.vclipse.vcml.vcml.Editor.opened">
+                    definitionId="org.vclipse.vcml.VCML.Editor.opened">
                 </reference>
             </activeWhen>
         </handler>
         <handler
-            class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.core.editor.handler.ValidateActionHandler"
-            commandId="org.vclipse.vcml.vcml.validate">
+            class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
+            commandId="org.vclipse.vcml.VCML.validate">
          <activeWhen>
             <reference
-                    definitionId="org.vclipse.vcml.vcml.Editor.opened">
+                    definitionId="org.vclipse.vcml.VCML.Editor.opened">
             </reference>
          </activeWhen>
       </handler>
     </extension>
     <extension point="org.eclipse.core.expressions.definitions">
-        <definition id="org.vclipse.vcml.vcml.Editor.opened">
+        <definition id="org.vclipse.vcml.VCML.Editor.opened">
             <and>
                 <reference definitionId="isActiveEditorAnInstanceOfXtextEditor"/>
                 <with variable="activeEditor">
@@ -62,27 +62,27 @@
     <extension
             point="org.eclipse.ui.preferencePages">
         <page
-            class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.core.editor.preferences.LanguageRootPreferencePage"
+            class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
             id="org.vclipse.preferences.page"
             name="VClipse">
             <keywordReference id="org.vclipse.vcml.ui.keyword_VCML"/>
         </page>
         <page
               category="org.vclipse.preferences.page"
-              class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.core.editor.preferences.LanguageRootPreferencePage"
+              class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
               id="org.vclipse.preferences.page.vcmlTextEditor"
               name="VCML Text Editor">
         </page>
         <page
             category="org.vclipse.preferences.page.vcmlTextEditor"
-            class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.common.editor.syntaxcoloring.SyntaxColoringPreferencePage"
+            class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
             id="org.vclipse.vcml.coloring.page"
             name="Syntax Coloring">
             <keywordReference id="org.vclipse.vcml.ui.keyword_VCML"/>
         </page>
         <page
             category="org.vclipse.preferences.page.vcmlTextEditor"
-            class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.common.editor.templates.XtextTemplatePreferencePage"
+            class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
             id="org.vclipse.vcml.templates.page"
             name="Templates">
             <keywordReference id="org.vclipse.vcml.ui.keyword_VCML"/>
@@ -116,39 +116,66 @@
          point="org.eclipse.ui.commands">
       <command
             description="Trigger expensive validation"
-            id="org.vclipse.vcml.vcml.validate"
+            id="org.vclipse.vcml.VCML.validate"
             name="Validate">
       </command>
     </extension>
     <extension point="org.eclipse.ui.menus">
         <menuContribution
-            locationURI="popup:#TextEditorContext?after=group.open">
+            locationURI="popup:#TextEditorContext?after=group.edit">
              <command
-                 commandId="org.vclipse.vcml.vcml.validate"
+                 commandId="org.vclipse.vcml.VCML.validate"
                  style="push"
                  tooltip="Trigger expensive validation">
             <visibleWhen checkEnabled="false">
                 <reference
-                    definitionId="org.vclipse.vcml.vcml.Editor.opened">
+                    definitionId="org.vclipse.vcml.VCML.Editor.opened">
                 </reference>
             </visibleWhen>
          </command>  
          </menuContribution>
     </extension>
+    <extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="popup:#TextEditorContext?endof=group.find">
+			<command commandId="org.eclipse.xtext.ui.editor.FindReferences">
+				<visibleWhen checkEnabled="false">
+                	<reference definitionId="org.vclipse.vcml.VCML.Editor.opened">
+                	</reference>
+            	</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.ui.handlers">
+	    <handler
+            class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
+            commandId="org.eclipse.xtext.ui.editor.FindReferences">
+            <activeWhen>
+                <reference
+                    definitionId="org.vclipse.vcml.VCML.Editor.opened">
+                </reference>
+            </activeWhen>
+        </handler>
+    </extension>   
 
 <!-- adding resource factories -->
 
 	<extension
 		point="org.eclipse.emf.ecore.extension_parser">
 		<parser
-			class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.eclipse.xtext.resource.XtextResourceFactory"
+			class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
 			type="vcml">
 		</parser>
 	</extension>
+	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
+        <resourceServiceProvider
+            class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+            uriExtension="vcml">
+        </resourceServiceProvider>
+    </extension>
  <extension
        point="org.eclipse.core.runtime.preferences">
     <initializer
-          class="org.vclipse.vcml.preferences.PreferencesInitializer">
+          class="org.vclipse.vcml.ui.preferences.PreferencesInitializer">
     </initializer>
  </extension>
  <extension
@@ -158,6 +185,50 @@
           name="VClipse">
     </category>
  </extension>
+
+
+
+
+	<!-- Quick Outline -->
+	<extension
+		point="org.eclipse.ui.handlers">
+		<handler 
+			class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
+			commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline">
+			<activeWhen>
+				<reference
+					definitionId="org.vclipse.vcml.VCML.Editor.opened">
+				</reference>
+			</activeWhen>
+		</handler>
+	</extension>
+	<extension
+		point="org.eclipse.ui.commands">
+		<command
+			description="Open the quick outline."
+			id="org.eclipse.xtext.ui.editor.outline.QuickOutline"
+			name="Quick Outline">
+		</command>
+	</extension>
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution
+			locationURI="popup:#TextEditorContext?after=group.open">
+			<command commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline"
+				style="push"
+				tooltip="Open Quick Outline">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.vclipse.vcml.VCML.Editor.opened"/>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+   <!-- quickfix marker resolution generator -->
+   <extension
+         point="org.eclipse.ui.ide.markerResolution">
+      <markerResolutionGenerator
+            class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator">
+      </markerResolutionGenerator>
+   </extension>
  <extension
        point="org.eclipse.ui.viewActions">
     <viewContribution
