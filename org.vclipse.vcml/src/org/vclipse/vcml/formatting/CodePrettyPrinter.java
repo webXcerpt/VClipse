@@ -459,12 +459,7 @@ public abstract class CodePrettyPrinter extends VcmlSwitch<DataLayouter<NoExcept
 		if (o!=null) {
 			linkText = o.toString();
 		} else {
-			try {
-				linkText = linkingService.getLinkText(object, ref, context);
-			} catch (Exception ex) {
-				linkText = "###EXCEPTION###";
-				ex.printStackTrace();
-			}
+			linkText = "###UNKNOWN###";
 		}
 		printNullsafe(linkText);
 	}

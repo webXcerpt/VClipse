@@ -176,7 +176,7 @@
  <extension
        point="org.eclipse.ui.perspectives">
     <perspective
-          class="org.vclipse.vcml.VClipsePerspectiveFactory"
+          class="org.vclipse.vcml.ui.VClipsePerspectiveFactory"
           fixed="false"
           id="org.vclipse.perspective"
           name="VClipse">

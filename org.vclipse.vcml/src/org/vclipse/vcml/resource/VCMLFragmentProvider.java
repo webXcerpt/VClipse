@@ -24,7 +24,7 @@ public class VCMLFragmentProvider implements IFragmentProvider {
 
 	private static final String CONSTRAINT_OBJECT_CLASSIFIER = VcmlFactory.eINSTANCE.createConstraintObject().eClass().getClassifierID()+"";
 
-	public EObject getEObject(Resource resource, String fragment) {
+	public EObject getEObject(Resource resource, String fragment, Fallback fallback) {
 		for(EObject o  : resource.getContents()) {
 			if (o instanceof Model) {
 				Model model = (Model)o;
@@ -60,7 +60,7 @@ public class VCMLFragmentProvider implements IFragmentProvider {
 		return null;
 	}
 
-	public String getFragment(EObject obj) {
+	public String getFragment(EObject obj, Fallback fallback) {
 		// System.err.println("getFragment " + obj);
 		if (obj instanceof VCObject) {
 			VCObject so = (VCObject)obj;

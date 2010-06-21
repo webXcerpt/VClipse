@@ -20,7 +20,7 @@ public class VCMLResource extends XtextResource {
 	@Override
 	public EObject getEObject(String uriFragment) {
 		IFragmentProvider fragmentProvider = getFragmentProvider();
-		EObject result = (fragmentProvider != null) ? fragmentProvider.getEObject(this, uriFragment) : null;
+		EObject result = (fragmentProvider != null) ? fragmentProvider.getEObject(this, uriFragment, null) : null;
 
 		return result;
 	}
@@ -28,7 +28,7 @@ public class VCMLResource extends XtextResource {
 	@Override
 	public String getURIFragment(EObject object) {
 		IFragmentProvider fragmentProvider = getFragmentProvider();
-		String result = (fragmentProvider != null) ? fragmentProvider.getFragment(object) : null;
+		String result = (fragmentProvider != null) ? fragmentProvider.getFragment(object, null) : null;
 
 		return result;
 	}

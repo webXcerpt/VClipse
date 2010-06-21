@@ -15,16 +15,14 @@ package org.vclipse.vcml;
 
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.linking.ILinker;
-import org.eclipse.xtext.linking.ILinkingService;
 import org.eclipse.xtext.linking.lazy.LazyURIEncoder;
-import org.eclipse.xtext.parsetree.reconstr.ICrossReferenceSerializer;
-import org.eclipse.xtext.parsetree.reconstr.SerializerUtil;
+import org.eclipse.xtext.parsetree.reconstr.ITokenSerializer;
+import org.eclipse.xtext.parsetree.reconstr.Serializer;
 import org.eclipse.xtext.validation.CompositeEValidator;
 import org.vclipse.vcml.conversion.VCMLValueConverter;
 import org.vclipse.vcml.formatting.VCMLCrossReferenceSerializer;
-import org.vclipse.vcml.formatting.VCMLSerializerUtil;
+import org.vclipse.vcml.formatting.VCMLSerializer;
 import org.vclipse.vcml.linking.VCMLLinker;
-import org.vclipse.vcml.linking.VCMLLinkingService;
 import org.vclipse.vcml.resource.VCMLURIEncoder;
 import org.vclipse.vcml.scoping.VCMLScopeProvider;
 
@@ -32,7 +30,7 @@ import com.google.inject.Binder;
 import com.google.inject.name.Names;
 
 /**
- * Use this class to register components to be used within the IDE.
+ * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
 public class VCMLRuntimeModule extends org.vclipse.vcml.AbstractVCMLRuntimeModule {
 
@@ -53,17 +51,11 @@ public class VCMLRuntimeModule extends org.vclipse.vcml.AbstractVCMLRuntimeModul
 		return VCMLLinker.class;
 	}
 
-	@Override
-	public Class<? extends ILinkingService> bindILinkingService() {
-		return VCMLLinkingService.class;
-	}
-
 	public Class<? extends LazyURIEncoder> bindURIEncoder() {
 		return VCMLURIEncoder.class;
 	}
 
-	@Override
-	public Class<? extends ICrossReferenceSerializer> bindICrossReferenceSerializer() {
+	public Class<? extends ITokenSerializer.ICrossReferenceSerializer> bindICrossReferenceSerializer() {
 		return VCMLCrossReferenceSerializer.class;
 	}
 	
@@ -72,7 +64,9 @@ public class VCMLRuntimeModule extends org.vclipse.vcml.AbstractVCMLRuntimeModul
 		return VCMLScopeProvider.class;
 	}
 
-	public Class<? extends SerializerUtil> bindSerializerUtil() {
-		return VCMLSerializerUtil.class;
-	}
+	// FIXME bind serializer
+//	public Class<? extends Serializer> bindSerializer() {
+//		return VCMLSerializer.class;
+//	}
+
 }

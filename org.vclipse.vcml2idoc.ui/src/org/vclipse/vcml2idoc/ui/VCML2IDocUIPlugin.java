@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.vclipse.vcml.CombinedPreferenceStore;
+import org.vclipse.vcml.ui.CombinedPreferenceStore;
 import org.vclipse.vcml2idoc.VCML2IDocPlugin;
 
 /**

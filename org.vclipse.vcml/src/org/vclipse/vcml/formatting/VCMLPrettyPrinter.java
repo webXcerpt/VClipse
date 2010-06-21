@@ -16,7 +16,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.xtext.linking.ILinkingService;
 import org.vclipse.vcml.VCMLPlugin;
 import org.vclipse.vcml.utils.ISapConstants;
 import org.vclipse.vcml.vcml.BOMItem;
@@ -60,8 +59,6 @@ import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VcmlPackage;
 import org.vclipse.vcml.vcml.util.VcmlSwitch;
 
-import com.google.inject.Inject;
-
 import de.uka.ilkd.pp.DataLayouter;
 import de.uka.ilkd.pp.NoExceptions;
 import de.uka.ilkd.pp.StringBackend;
@@ -70,9 +67,6 @@ import de.uka.ilkd.pp.StringBackend;
  * 
  */
 public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
-	
-	@Inject
-	private ILinkingService linkingService;
 	
 	private static final int INDENTATION = 2;
 	
@@ -892,12 +886,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		if (o!=null) {
 			linkText = o.toString();
 		} else {
-			try {
-				linkText = linkingService.getLinkText(object, ref, context);
-			} catch (Exception ex) {
-				linkText = "###EXCEPTION###";
-				ex.printStackTrace();
-			}
+			linkText = "###UNKNOWN###";
 		}
 		printNullsafe(linkText);
 	}
