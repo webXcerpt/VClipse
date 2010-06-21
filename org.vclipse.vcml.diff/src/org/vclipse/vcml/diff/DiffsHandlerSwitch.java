@@ -21,7 +21,6 @@ import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffSwitch;
 import org.eclipse.emf.ecore.EObject;
-import org.vclipse.vcml.vcml.Import;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.VCObject;
@@ -225,8 +224,6 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 	private boolean addObject2HandleList(final EObject object) {
 		if(object instanceof Option) {
 			model2Build.getOptions().add((Option)object);
-		} else if(object instanceof Import) {
-			model2Build.getImports().add((Import)object);
 		} else if(object instanceof VCObject) {
 			handleObject(object);
 		} else {
