@@ -33,5 +33,6 @@ Export-Package: org.vclipse.vcml,
  org.vclipse.vcml.vcml,
  org.vclipse.vcml.vcml.impl,
  org.vclipse.vcml.vcml.util,
- org.vclipse.vcml.formatting
+ org.vclipse.vcml.formatting,
+ org.vclipse.vcml.parser.antlr.lexer
 Bundle-Activator: org.vclipse.vcml.VCMLPlugin
