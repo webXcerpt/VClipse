@@ -52,8 +52,8 @@
             <and>
                 <reference definitionId="isActiveEditorAnInstanceOfXtextEditor"/>
                 <with variable="activeEditor">
-                    <test property="org.eclipse.xtext.ui.core.editor.XtextEditor.languageName" 
-                        value="org.vclipse.vcml.vcml" 
+                    <test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName" 
+                        value="org.vclipse.vcml.VCML" 
                         forcePluginActivation="true"/>
                 </with>        
             </and>
@@ -89,19 +89,19 @@
         </page>
         <page
               category="org.vclipse.preferences.page"
-              class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.core.editor.preferences.LanguageRootPreferencePage"
+              class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
               id="org.vclipse.preferences.page.sap"
               name="SAP">
         </page>
         <page
               category="org.vclipse.preferences.page.sap"
-              class="org.vclipse.vcml.preferences.SapOptionsPreferencePage"
+              class="org.vclipse.vcml.ui.preferences.SapOptionsPreferencePage"
               id="org.vclipse.preferences.page.sap.options"
               name="Options">
         </page>
         <page
               category="org.vclipse.preferences.page.sap"
-              class="org.vclipse.vcml.preferences.SapDefaultSettingsPreferencePage"
+              class="org.vclipse.vcml.ui.preferences.SapDefaultSettingsPreferencePage"
               id="org.vclipse.preferences.page.sap.defaultSettings"
               name="Default Settings">
         </page>
@@ -235,7 +235,7 @@
           id="org.vclipse.vcml.ui.viewContribution3"
           targetID="org.eclipse.ui.navigator.ProjectExplorer">
        <action
-             class="org.vclipse.vcml.VCMLExecutableExtensionFactory:org.vclipse.vcml.PrettyPrinterAction"
+             class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.vclipse.vcml.PrettyPrinterAction"
              icon="icons/table.png"
              id="org.vclipse.vcml.ui.action3"
              label="Pretty Printer"
