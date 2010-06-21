@@ -67,5 +67,9 @@ public class VCMLUiModule extends org.vclipse.vcml.ui.AbstractVCMLUiModule {
 	public Class<? extends IDamagerRepairer> bindIDamagerRepairer() {
 		return FastLineBasedDamagerRepairer.class;
 	}
+	
+	public com.google.inject.Provider<org.eclipse.xtext.resource.containers.IAllContainersState> provideIAllContainersState() {
+		return org.eclipse.xtext.ui.shared.Access.getWorkspaceProjectsState();
+	}
 
 }

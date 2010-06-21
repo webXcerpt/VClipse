@@ -31,7 +31,6 @@ import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.FormattedDocumentationBlock;
 import org.vclipse.vcml.vcml.GlobalDependency;
-import org.vclipse.vcml.vcml.Import;
 import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.LocalDependency;
 import org.vclipse.vcml.vcml.LocalPrecondition;
@@ -95,18 +94,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	@Override
 	public DataLayouter<NoExceptions> caseModel(Model object) {
 		layouter.beginC(0);
-		EList<Import> imports = object.getImports();
-		if(!imports.isEmpty()) {
-			layouter.beginC(0);
-			for(int i=0, size=imports.size()-1; i<=size; i++) {
-				doSwitch(imports.get(i));
-				if(i<size) {
-					layouter.brk();
-				}
-			}
-			layouter.end().nl().nl();
-		}
-		
+
 		EList<Option> options = object.getOptions();
 		if(!options.isEmpty()) {
 			layouter.beginC().print("options {");
@@ -122,14 +110,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 			layouter.nl().nl();
 		}
 		return layouter.end();
-	}
-	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseImport(org.vclipse.vcml.vcml.Import)
-	 */
-	@Override
-	public DataLayouter<NoExceptions> caseImport(Import object) {
-		return layouter.print("import ").print(doublequote(object.getImportURI()));
 	}
 	
 	/**

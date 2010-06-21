@@ -5,14 +5,9 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 generate vcml "http://www.vclipse.org/vcml"
 
 Model :
-    (imports+=Import)*
     ('options' '{' (options+=Option)* '}')?
     (objects+=VCObject)*
     ;
-
-Import 
-	: 'import' importURI=STRING
-	;	
 
 Option
 	: name=OptionType '=' value=STRING

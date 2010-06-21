@@ -68,5 +68,9 @@ public class VCMLRuntimeModule extends org.vclipse.vcml.AbstractVCMLRuntimeModul
 //	public Class<? extends Serializer> bindSerializer() {
 //		return VCMLSerializer.class;
 //	}
+	
+	public Class<? extends org.eclipse.xtext.resource.IContainer.Manager> bindIContainer$Manager() {
+		  return org.eclipse.xtext.resource.containers.StateBasedContainerManager.class;
+		}
 
 }
