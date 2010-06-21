@@ -62,22 +62,22 @@ BOMItem :
 
 Characteristic :
 	'characteristic' name=ID ('{'
-	description=Description
-	(documentation=Documentation)?
-	type=CharacteristicType
-	('status' status=Status)?
-	('group' group=STRING)?
-	('[' (
-	       additionalValues?='additionalValues'
-	     | required?='required'
-	     | restrictable?='restrictable'
-	     | noDisplay?='noDisplay'
-	     | notReadyForInput?='notReadyForInput'
-	     | multiValue?='multiValue'
-	     | displayAllowedValues?='displayAllowedValues'
-	     )*
-	']')?
-    (dependencies=CharacteristicOrValueDependencies)?
+	(	description=Description
+	&	documentation=Documentation?
+	&	type=CharacteristicType
+	&	('status' status=Status)?
+	&	('group' group=STRING)?
+	&	('[' (  additionalValues?='additionalValues'?
+	     	  & required?='required'?
+	     	  & restrictable?='restrictable'?
+	     	  & noDisplay?='noDisplay'?
+	    	  & notReadyForInput?='notReadyForInput'?
+	   	      & multiValue?='multiValue'?
+	    	  & displayAllowedValues?='displayAllowedValues'?
+	     	 )
+		']')?
+    &	dependencies=CharacteristicOrValueDependencies?
+    )
 	'}')?
 	;
 
@@ -88,59 +88,59 @@ CharacteristicType :
 
 NumericType : 
 	'numeric' '{'
-	'numberOfChars' numberOfChars=INT
-	'decimalPlaces' decimalPlaces=INT
-	('unit' unit=STRING)?
-	('[' (
-	       negativeValuesAllowed?='negativeValuesAllowed'
-	     | intervalValuesAllowed?='intervalValuesAllowed'
-	     )*
-	 ']')?
-	('values' '{' (values+=NumericCharacteristicValue)* '}')?
+	(	('numberOfChars' numberOfChars=INT)
+	&	('decimalPlaces' decimalPlaces=INT)
+	&	('unit' unit=STRING)?
+	&	('[' (	negativeValuesAllowed?='negativeValuesAllowed'?
+	     	 &	intervalValuesAllowed?='intervalValuesAllowed'?
+	     	 )
+	 	']')?
+	&	('values' '{' values+=NumericCharacteristicValue* '}')?
+	)
 	'}'
 	;
 	
 SymbolicType :
 	'symbolic' '{'
-	'numberOfChars' numberOfChars=INT
-	('[' (
-	       caseSensitive?='caseSensitive'
-	     )*
-	 ']')?
-	('values' '{' (values+=CharacteristicValue)* '}')?
+	(	('numberOfChars' numberOfChars=INT)
+	&	('[' caseSensitive?='caseSensitive'? ']')?
+	&	('values' '{' values+=CharacteristicValue* '}')?
+	)
 	'}'
 	;
 
 CharacteristicValue :
 	name=SYMBOL
 	('{'
-	  (description=Description)?
-	  (documentation=Documentation)?
-	  (dependencies=CharacteristicOrValueDependencies)?
+	  (	description=Description?
+	  &	documentation=Documentation?
+	  &	dependencies=CharacteristicOrValueDependencies?
+	  )
 	'}')?
 	;
 
 NumericCharacteristicValue :
 	name=NUMBER
-    (dependencies=CharacteristicOrValueDependencies)?
+    dependencies=CharacteristicOrValueDependencies?
 	;
 
 CharacteristicOrValueDependencies :
 	'dependencies' '{'
-		(localPrecondition=LocalPrecondition)?
-		(localSelectionCondition=LocalSelectionCondition)?
-		(dependencies+=[GlobalDependency | ID])*
+		localPrecondition=LocalPrecondition?
+		localSelectionCondition=LocalSelectionCondition?
+		dependencies+=[GlobalDependency | ID]*
 	'}'
 	;
 
 Class :
 	'class' name=CLASSNAME ('{'
-		description=Description
-		('status' status=Status)?
-		('group' group=STRING)?
-		'characteristics' '{' 
-			characteristics+=[Characteristic|ID]* 
-		'}'
+		(	description=Description
+		&	('status' status=Status)?
+		&	('group' group=STRING)?
+		&	('characteristics' '{' 
+				characteristics+=[Characteristic|ID]* 
+			'}')
+		)
 	'}')?
 	;
 
@@ -150,9 +150,10 @@ CLASSNAME
 
 ConfigurationProfile :
     'configurationprofile' name=SYMBOL '{'
-	   ('status' status=Status)?
-	   'bomapplication' bomapplication=ID
-	   ('uidesign' uidesign=[InterfaceDesign | EXTENDED_ID])?
+	   (	('status' status=Status)?
+	   &	('bomapplication' bomapplication=ID)
+	   &	('uidesign' uidesign=[InterfaceDesign | EXTENDED_ID])?
+	   )
        (dependencyNets+=[DependencyNet|ID])*
        (entries+=ConfigurationProfileEntry)*
     '}'
@@ -177,37 +178,40 @@ LocalDependency
 
 Procedure :
     'procedure' name=ID ('{'
-		description=Description
-		(documentation=Documentation)?
-		('status' status=Status)?
-		('group' group=STRING)?
-    	('source' '{'
-    		source=ProcedureSource
-    	'}')?
+		(	description=Description
+		&	documentation=Documentation?
+		&	('status' status=Status)?
+		&	('group' group=STRING)?
+    	&	('source' '{'
+    			source=ProcedureSource
+    		'}')?
+    	)
     '}')?
     ;
 
 SelectionCondition :
     'selectioncondition' name=ID ('{'
-		description=Description
-		(documentation=Documentation)?
-		('status' status=Status)?
-		('group' group=STRING)?
-    	('source' '{'
-    		source=ConditionSource
-    	'}')?
+		(	description=Description
+		&	documentation=Documentation?
+		&	('status' status=Status)?
+		&	('group' group=STRING)?
+    	&	('source' '{'
+    			source=ConditionSource
+    		'}')?
+    	)
     '}')?
     ;
 
 LocalSelectionCondition :
     'selectioncondition' '{'
-		(description=Description)?
-		(documentation=Documentation)?
-		('status' status=Status)?
-		('group' group=STRING)?
-    	('source' '{'
-    		source=ConditionSource
-    	'}')?
+		(	description=Description?
+		&	documentation=Documentation?
+		&	('status' status=Status)?
+		&	('group' group=STRING)?
+    	&	('source' '{'
+    			source=ConditionSource
+    		'}')?
+    	)
     '}'
     ;
 
@@ -218,25 +222,27 @@ GeneralSelectionCondition
 
 Precondition :
     'precondition' name=ID ('{'
-		description=Description
-		(documentation=Documentation)?
-		('status' status=Status)?
- 		('group' group=STRING)?
-    	('source' '{'
-    		source=ConditionSource
-    	'}')?
+		(	description=Description
+		&	documentation=Documentation?
+		&	('status' status=Status)?
+ 		&	('group' group=STRING)?
+    	&	('source' '{'
+    			source=ConditionSource
+    		'}')?
+    	)
     '}')?
     ;
 
 LocalPrecondition :
     'precondition' '{'
-		(description=Description)?
-		(documentation=Documentation)?
-		('status' status=Status)?
- 		('group' group=STRING)?
-    	('source' '{'
-    		source=ConditionSource
-    	'}')?
+		(	description=Description?
+		&	documentation=Documentation?
+		&	('status' status=Status)?
+ 		&	('group' group=STRING)?
+    	&	('source' '{'
+    			source=ConditionSource
+    		'}')?
+    	)
     '}'
     ;
 
@@ -251,23 +257,25 @@ ConditionSource hidden (WS, DEPENDENCY_COMMENT):
 
 DependencyNet :
 	'dependencynet' name=ID ('{'
-		description=Description
-		(documentation=Documentation)?
-		('status' status=Status)?
- 		('group' group=STRING)?
+		(	description=Description
+		&	documentation=Documentation?
+		&	('status' status=Status)?
+ 		&	('group' group=STRING)?
+ 		)
 		(constraints+=[Constraint | ID])*
 	'}')?
 	;
 
 Constraint :
     'constraint' name=ID ('{'
-		description=Description
-		(documentation=Documentation)?
-		('status' status=Status)?
- 		('group' group=STRING)?
-    	('source' '{'
-    		source=ConstraintSource
-    	'}')?
+		(	description=Description
+		&	documentation=Documentation?
+		&	('status' status=Status)?
+ 		&	('group' group=STRING)?
+    	&	('source' '{'
+    			source=ConstraintSource
+    		'}')?
+    	)
     '}')?
     ;
 
@@ -290,20 +298,22 @@ CharacteristicGroup :
 
 Material : 
 	'material' name=EXTENDED_ID ('{'
-		description=Description
-		'type' type=ID
-		(billofmaterials+=BillOfMaterial)*
-		('classes' '{' (classes+=[Class|CLASSNAME])* '}')?
-		(configurationprofiles+=ConfigurationProfile)*
+		(	description=Description
+		&	('type' type=ID)
+		&	(billofmaterials+=BillOfMaterial)*
+		&	('classes' '{' (classes+=[Class|CLASSNAME])* '}')?
+		&	(configurationprofiles+=ConfigurationProfile)*
+		)
 	'}')?
 	;
 	
 VariantFunction :
-		'variantfunction' name=ID ('{'
-			description=Description
-			('status' status=Status)?
-			('group' group=STRING)?
-			'arguments' '{' (arguments+=VariantFunctionArgument)* '}'
+	'variantfunction' name=ID ('{'
+		(	description=Description
+		&	('status' status=Status)?
+		&	('group' group=STRING)?
+		&	('arguments' '{' (arguments+=VariantFunctionArgument)* '}')
+		)
 		'}')?
 	; 
 	
@@ -313,10 +323,11 @@ VariantFunctionArgument
 	
 VariantTable
 	:	'varianttable' name=ID ('{'
-			description=Description
-			('status' status=Status)?
-			('group' group=STRING)?
-			'arguments' '{' (arguments+=VariantTableArgument)* '}'
+			(	description=Description
+			&	('status' status=Status)?
+			&	('group' group=STRING)?
+			&	('arguments' '{' (arguments+=VariantTableArgument)* '}')
+			)
 		'}')?
 	; 
 	
