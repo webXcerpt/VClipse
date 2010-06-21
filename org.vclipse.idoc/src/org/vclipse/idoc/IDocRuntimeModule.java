@@ -16,11 +16,10 @@ package org.vclipse.idoc;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.vclipse.idoc.conversion.IDocValueConverter;
 
-
 /**
- * Use this class to register components to be used within the IDE.
+ * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
-public class IDocRuntimeModule extends org.vclipse.idoc.AbstractIDocRuntimeModule {
+public class IDocRuntimeModule extends AbstractIDocRuntimeModule {
 
 	@Override
 	public Class<? extends IValueConverterService> bindIValueConverterService() {
