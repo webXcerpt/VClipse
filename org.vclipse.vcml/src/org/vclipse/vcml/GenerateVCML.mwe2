@@ -48,10 +48,11 @@ Workflow {
 			}
 
 			// The antlr parser generator fragment.
-			fragment = parser.antlr.XtextAntlrGeneratorFragment {
+			fragment = org.eclipse.xtext.generator.parser.antlr.ex.rt.AntlrGeneratorFragment {
 			  options = {
 					backtrack = true
 					memoize = true
+					ignoreCase = true
 				}
 			}
 
@@ -63,7 +64,9 @@ Workflow {
 			}
 
 			// scoping and exporting API
-			fragment = scoping.ImportURIScopingFragment {}
+			fragment = scoping.ImportURIScopingFragment {
+				ignoreCase = true
+			}
 			fragment = exporting.SimpleNamesFragment {}
 
 			// scoping and exporting API 
@@ -90,10 +93,11 @@ Workflow {
 			}
 
 			// generates a more lightweight Antlr parser and lexer tailored for content assist  
-			fragment = parser.antlr.XtextAntlrUiGeneratorFragment {
+			fragment = org.eclipse.xtext.generator.parser.antlr.ex.ca.ContentAssistParserGeneratorFragment {
 			  options = {
 					backtrack = true
 					memoize = true
+					ignoreCase = true
 				}
 			}
 

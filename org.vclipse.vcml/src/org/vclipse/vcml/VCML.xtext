@@ -414,15 +414,15 @@ FormattedDocumentationBlock :
 ///////////////////////////////////////////////////////////////////////////////
 
 ConstraintSource hidden (WS, DEPENDENCY_COMMENT)
-	:   ('objects' | 'OBJECTS') ':'	objects+=ConstraintObject (',' objects+=ConstraintObject)* '.'?
+	:   'objects' ':'	objects+=ConstraintObject (',' objects+=ConstraintObject)* '.'?
 
-		(('condition' | 'CONDITION') ':' condition=Condition_C '.'?)?
+		('condition' ':' condition=Condition_C '.'?)?
 
-		('restriction' | 'RESTRICTION' | 'restrictions' | 'RESTRICTIONS') ':'
+		('restriction' | 'restrictions') ':'
 		restrictions+=ConditionalConstraintRestriction (',' restrictions+=ConditionalConstraintRestriction)*
 		'.'?
 
-		(('inferences' | 'INFERENCES') ':' inferences+=CharacteristicReference_C (',' inferences+=CharacteristicReference_C)* '.'?)?
+		('inferences' ':' inferences+=CharacteristicReference_C (',' inferences+=CharacteristicReference_C)* '.'?)?
     ;
 
 ConstraintObject
@@ -431,26 +431,26 @@ ConstraintObject
 	;
 	
 ConstraintClass
-	:	(name=SHORTVAR ('is_a' | 'IS_A'))? class=[Class|CLASSNAME] 
-		(	('where' | 'WHERE')
+	:	(name=SHORTVAR 'is_a')? class=[Class|CLASSNAME] 
+		(	'where'
 			shortVars+=ShortVarDefinition (';' shortVars+=ShortVarDefinition)*
 		)?
 	;
 
 ConstraintMaterial
-	:	(name=SHORTVAR ('is_object' | 'IS_OBJECT'))? objectType=ObjectType
-		(	('where' | 'WHERE')
+	:	(name=SHORTVAR 'is_object')? objectType=ObjectType
+		(	'where'
 			shortVars+=ShortVarDefinition (';' shortVars+=ShortVarDefinition)*
 		)?
 	;
 
 ObjectType
-	:	'(' type=('material' | 'MATERIAL') ')' '(' classType=INT ')' '(' attrs+=PartialKey (',' attrs+=PartialKey)* ')'
+	:	'(' type='material' ')' '(' classType=INT ')' '(' attrs+=PartialKey (',' attrs+=PartialKey)* ')'
 	;
 
  // TODO how to handle cross references?
 PartialKey
-	:	name=('nr' | 'NR') '=' value=SYMBOL
+	:	name='nr' '=' value=SYMBOL
 	;
 
 ShortVarDefinition
@@ -458,18 +458,18 @@ ShortVarDefinition
 	;
 
 PartOfCondition :
-	('part_of' | 'PART_OF') '(' child=[ConstraintObject | SHORTVAR] ',' parent=[ConstraintObject | SHORTVAR] ')'
+	'part_of' '(' child=[ConstraintObject | SHORTVAR] ',' parent=[ConstraintObject | SHORTVAR] ')'
 	; 
 SubpartOfCondition :
-	('subpart_of' | 'SUBPART_OF') '(' child=[ConstraintObject | SHORTVAR] ',' parent=[ConstraintObject | SHORTVAR] ')'
+	'subpart_of' '(' child=[ConstraintObject | SHORTVAR] ',' parent=[ConstraintObject | SHORTVAR] ')'
 	; 
 
 ConditionalConstraintRestriction returns ConstraintRestriction :
-	ConstraintRestrictionLHS ({ConditionalConstraintRestriction.restriction=current} ('if' | 'IF') condition=Condition_C)?
+	ConstraintRestrictionLHS ({ConditionalConstraintRestriction.restriction=current} 'if' condition=Condition_C)?
 	;
 
 ConstraintRestrictionFalse
-	:	'false' | 'FALSE'
+	:	'false'
 	;
 
 ConstraintRestrictionLHS returns ConstraintsRestriction
@@ -485,7 +485,7 @@ ConstraintRestrictionLHS returns ConstraintsRestriction
 	;
 	
 NegatedConstraintRestrictionLHS
-	:	('not' | 'NOT') restriction=(Table_C | Function_C)
+	:	'not' restriction=(Table_C | Function_C)
 	;
 
 /*
@@ -518,7 +518,7 @@ ProcedureSource hidden (WS, DEPENDENCY_COMMENT):
 	;
 
 Statement
-	:	(SimpleStatement | CompoundStatement) ({ConditionalStatement.statement=current} ('if' | 'IF') condition=Condition_P)?
+	:	(SimpleStatement | CompoundStatement) ({ConditionalStatement.statement=current} 'if' condition=Condition_P)?
 	;
 
 CompoundStatement
@@ -536,7 +536,7 @@ SimpleStatement
 	;
 
 Assignment
-	:	('$self' | '$SELF') '.' characteristic=[Characteristic | ID] '=' expression=Expression_P
+	:	'$self' '.' characteristic=[Characteristic | ID] '=' expression=Expression_P
     ;
 
 FunctionOrTable
@@ -548,7 +548,7 @@ FunctionOrTable
 	;
 
 Function_C returns Function
-	:	('function' | 'FUNCTION') function=[VariantFunction|ID]
+	:	'function' function=[VariantFunction|ID]
 		'('
 			characteristics+=[Characteristic|ID] '=' values+=Literal_C
 			(',' characteristics+=[Characteristic|ID] '=' values+=Literal_C)*
@@ -556,7 +556,7 @@ Function_C returns Function
 	;
 
 Function_P returns Function
-	:	('function' | 'FUNCTION') function=[VariantFunction|ID]
+	:	'function' function=[VariantFunction|ID]
 		'('
 			characteristics+=[Characteristic|ID] '=' values+=Literal_P
 			(',' characteristics+=[Characteristic|ID] '=' values+=Literal_P)*
@@ -564,7 +564,7 @@ Function_P returns Function
 	;
 
 PFunction
-	:	('pfunction' | 'PFUNCTION') function=[VariantFunction|ID]
+	:	'pfunction' function=[VariantFunction|ID]
 		'('
 			characteristics+=[Characteristic|ID] '=' values+=Literal_P
 			(',' characteristics+=[Characteristic|ID] '=' values+=Literal_P)*
@@ -572,7 +572,7 @@ PFunction
 	;
 
 Table_C returns Table
-	:	('table' | 'TABLE') table=[VariantTable|ID]
+	:	'table' table=[VariantTable|ID]
 		'('
 			characteristics+=[Characteristic|ID] '=' values+=Literal_C
 			(',' characteristics+=[Characteristic|ID] '=' values+=Literal_C)*
@@ -580,7 +580,7 @@ Table_C returns Table
 	;
 	
 Table_P returns Table
-	:	('table' | 'TABLE') table=[VariantTable|ID]
+	:	'table' table=[VariantTable|ID]
 		'('
 			characteristics+=[Characteristic|ID] '=' values+=Literal_P
 			(',' characteristics+=[Characteristic|ID] '=' values+=Literal_P)*
@@ -593,20 +593,20 @@ SetOrDelDefault
 	;
 
 SetDefault
-	:	('$set_default' | '$SET_DEFAULT') '(' ('$self' | '$SELF') ',' characteristic=[Characteristic | ID] ',' expression=Expression_P ')'
-	|	('$self' | '$SELF') '.' characteristic=[Characteristic | ID] '?=' expression=Expression_P
+	:	'$set_default' '(' '$self' ',' characteristic=[Characteristic | ID] ',' expression=Expression_P ')'
+	|	'$self' '.' characteristic=[Characteristic | ID] '?=' expression=Expression_P
     ;
 
 DelDefault
-	:	('$del_default' | '$DEL_DEFAULT') '(' ('$self' | '$SELF') ',' characteristic=[Characteristic | ID] ',' expression=Expression_P ')'
+	:	'$del_default' '(' '$self' ',' characteristic=[Characteristic | ID] ',' expression=Expression_P ')'
     ;
 
 IsInvisible
-	:	('$self' | '$SELF') '.' characteristic=[Characteristic | ID] ('is' | 'IS') ('invisible' | 'INVISIBLE')
+	:	'$self' '.' characteristic=[Characteristic | ID] 'is' 'invisible'
 	;
 	
 SetPricingFactor
-	:	('$set_pricing_factor' | '$SET_PRICING_FACTOR') '(' location=ProcedureLocation ',' characteristic=[Characteristic|ID] ',' arg1=Expression_P ',' arg2=Expression_P ')'
+	:	'$set_pricing_factor' '(' location=ProcedureLocation ',' characteristic=[Characteristic|ID] ',' arg1=Expression_P ',' arg2=Expression_P ')'
 	;
 
 CharacteristicReference_P :
@@ -688,19 +688,19 @@ FunctionCall_P returns FunctionCall
 	;
 
 SumParts
-	:	('$sum_parts' | '$SUM_PARTS') '(' location=ProcedureLocation ',' characteristic=[Characteristic|ID] ')'
+	:	'$sum_parts' '(' location=ProcedureLocation ',' characteristic=[Characteristic|ID] ')'
 	;
 
 CountParts
-	:	('$count_parts' | '$COUNT_PARTS') '(' location=ProcedureLocation ')'
+	:	'$count_parts' '(' location=ProcedureLocation ')'
 	; 
 
 MDataCharacteristic_C
-	:	('mdata' | 'MDATA') characteristic=CharacteristicReference_C
+	:	'mdata' characteristic=CharacteristicReference_C
 	;
 
 MDataCharacteristic_P
-	:	('mdata' | 'MDATA') characteristic=CharacteristicReference_P
+	:	'mdata' characteristic=CharacteristicReference_P
 	;
 	
 NumericLiteral :
@@ -716,19 +716,19 @@ SymbolicLiteral :
 ///////////////////////////////////////////////////////////////////////////////
 
 Condition_C returns Condition
-	:	Conjunction_C ({BinaryCondition.left=current} operator=('or' | 'OR') right=Conjunction_C)* 
+	:	Conjunction_C ({BinaryCondition.left=current} operator='or' right=Conjunction_C)* 
 	; 
 
 Condition_P returns Condition
-	:	Conjunction_P ({BinaryCondition.left=current} operator=('or' | 'OR') right=Conjunction_P)* 
+	:	Conjunction_P ({BinaryCondition.left=current} operator='or' right=Conjunction_P)* 
 	; 
 
 Conjunction_C returns Condition
-	:	Negation_C ({BinaryCondition.left=current} operator=('and' | 'AND') right=Negation_C)*
+	:	Negation_C ({BinaryCondition.left=current} operator='and' right=Negation_C)*
 	; 
 
 Conjunction_P returns Condition
-	:	Negation_P ({BinaryCondition.left=current} operator=('and' | 'AND') right=Negation_P)*
+	:	Negation_P ({BinaryCondition.left=current} operator='and' right=Negation_P)*
 	; 
 
 Negation_C returns Condition
@@ -742,11 +742,11 @@ Negation_P returns Condition
 	;
 
 UnaryCondition_C returns UnaryCondition
-	:	('not' | 'NOT') condition=Negation_C // not may be nested in constraints
+	:	'not' condition=Negation_C // not may be nested in constraints
 	;
 
 UnaryCondition_P returns UnaryCondition
-	:	('not' | 'NOT') condition=PrimaryCondition_P
+	:	'not' condition=PrimaryCondition_P
 	;
 
 // TODO not must not be used around specified, part_of and subpart_of - put into validation
@@ -777,25 +777,25 @@ Comparison_P returns Comparison
 	;
 
 IsSpecified_C
-	:	characteristic=CharacteristicReference_C ('specified' | 'SPECIFIED')
-	|	('specified' | 'SPECIFIED') characteristic=CharacteristicReference_C
+	:	characteristic=CharacteristicReference_C 'specified'
+	|	'specified' characteristic=CharacteristicReference_C
     ;
 
 IsSpecified_P
-	:	characteristic=CharacteristicReference_P ('specified' | 'SPECIFIED')
-	|	('specified' | 'SPECIFIED') characteristic=CharacteristicReference_P
+	:	characteristic=CharacteristicReference_P 'specified'
+	|	'specified' characteristic=CharacteristicReference_P
     ;
 
 TypeOf
-	:	('type_of' | 'TYPE_OF') '(' location=ProcedureLocation ',' variantclass=ObjectType ')'
+	:	'type_of' '(' location=ProcedureLocation ',' variantclass=ObjectType ')'
 	;
 	 
 InCondition_C
-	:	characteristic=CharacteristicReference_C ('in' | 'IN') list=List
+	:	characteristic=CharacteristicReference_C 'in' list=List
 	;
 
 InCondition_P
-	:	characteristic=CharacteristicReference_P ('in' | 'IN') list=List
+	:	characteristic=CharacteristicReference_P 'in' list=List
 	;
 
 List :
@@ -821,44 +821,44 @@ SymbolList :
 	;
 
 enum ProcedureLocation :
-	SELF   = '$self'   | SELF   = '$SELF'   |
-	PARENT = '$parent' | PARENT = '$PARENT' |
-	ROOT   = '$root'   | ROOT   = '$ROOT'
+	SELF   = '$self'   |
+	PARENT = '$parent' |
+	ROOT   = '$root'
 	;
 
 enum UnaryExpressionOperator :
 	PLUS  = '+' | 
 	MINUS = '-' | 
-	LC = 'lc' | LC = 'LC' |
-	UC = 'uc' | UC = 'UC'
+	LC = 'lc' |
+	UC = 'uc'
 	;
 
 enum ComparisonOperator : 
-	EQ = '='  | EQ = 'eq' | EQ = 'EQ' |
-	NE = '<>' | NE = 'ne' | NE = 'NE' | 
-	GT = '>'  | GT = 'gt' | GT = 'GT' |  
-    GE = '>=' | GE = '=>' |GE = 'ge' | GE = 'GE' |
-	LT = '<'  | LT = 'lt' | LT = 'LT'| 
-	LE = 'le' | LE = 'LE' | LE = '<=' | LE = '=<'
+	EQ = '='  | EQ = 'eq' |
+	NE = '<>' | NE = 'ne' |
+	GT = '>'  | GT = 'gt' |
+    GE = '>=' | GE = '=>' | GE = 'ge' |
+	LT = '<'  | LT = 'lt' |
+	LE = '<=' | LE = '=<' | LE = 'le'
 	;
 	
 enum FunctionName :
-		SIN    = 'sin'    | SIN    = 'SIN'
-	|	COS    = 'cos'    | COS    = 'COS'
-	|	TAN    = 'tan'    | TAN    = 'TAN'
-	|	EXP    = 'exp'    | EXP    = 'EXP'
-	|	LN     = 'ln'     | LN     = 'LN'
-	|	ABS    = 'abs'    | ABS    = 'ABS'
-	|	SQRT   = 'sqrt'   | SQRT   = 'SQRT'
-	|	LOG10  = 'log10'  |	LOG10  = 'LOG10'
-	|	ARCSIN = 'arcsin' |	ARCSIN = 'ARCSIN'
-	|	ARCCOS = 'arccos' |	ARCCOS = 'ARCCOS'
-	|	ARCTAN = 'arctan' |	ARCTAN = 'ARCTAN'
-	|	SIGN   = 'sign'   |	SIGN   = 'SIGN'
-	|	FRAC   = 'frac'   |	FRAC   = 'FRAC'
-	|	CEIL   = 'ceil'   | CEIL   = 'CEIL'
-	|	TRUNK  = 'trunk'  |	TRUNK  = 'TRUNK'
-	|	FLOOR  = 'floor'  |	FLOOR  = 'FLOOR'
+		SIN    = 'sin'
+	|	COS    = 'cos'
+	|	TAN    = 'tan'
+	|	EXP    = 'exp'
+	|	LN     = 'ln'
+	|	ABS    = 'abs'
+	|	SQRT   = 'sqrt'
+	|	LOG10  = 'log10'
+	|	ARCSIN = 'arcsin'
+	|	ARCCOS = 'arccos'
+	|	ARCTAN = 'arctan'
+	|	SIGN   = 'sign'
+	|	FRAC   = 'frac'
+	|	CEIL   = 'ceil'
+	|	TRUNK  = 'trunk'
+	|	FLOOR  = 'floor'
 	;
 
 terminal ID	// Xtext standard without ^ 
@@ -888,7 +888,7 @@ SHORTVAR // NOTE: due to a bug in Xtext, the following does not work: hidden () 
 
 // TODO implement size restrictions for a number: e.g., the exponent's maximum value is 99
 NUMBER
-	:	('-'|'+')? INT ('.' INT)? (('e'|'E') ('-'|'+') INT)? // sign of exponent is mandatory in SAP
+	:	('-'|'+')? INT ('.' INT)? ('e' ('-'|'+') INT)? // sign of exponent is mandatory in SAP
 	;
 
 /*
