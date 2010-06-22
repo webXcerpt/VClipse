@@ -295,10 +295,10 @@ Material :
 	'material' name=EXTENDED_ID ('{'
 		(	description=Description
 		&	('type' type=ID)
-		&	(billofmaterials+=BillOfMaterial)*
-		&	('classes' '{' (classes+=[Class|CLASSNAME])* '}')?
-		&	(configurationprofiles+=ConfigurationProfile)*
 		)
+		billofmaterials+=BillOfMaterial*
+		('classes' '{' classes+=[Class|CLASSNAME]* '}')?
+		configurationprofiles+=ConfigurationProfile*
 	'}')?
 	;
 	
