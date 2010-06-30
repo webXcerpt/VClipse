@@ -14,7 +14,9 @@
 package org.vclipse.vcml.ui.labeling;
 
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider;
+import org.eclipse.xtext.util.Strings;
 
 import org.vclipse.vcml.vcml.Assignment;
 import org.vclipse.vcml.vcml.BOMItem;
@@ -171,6 +173,60 @@ public class VCMLLabelProvider extends DefaultEObjectLabelProvider {
 		return element.getItemnumber() + " " + element.getMaterial().getName();
 	}
 
+	public StyledString text(Characteristic element) {
+		return createStyledString(element.getName(), element.getDescription());
+	}
+	
+	public StyledString text(Class element) {
+		return createStyledString(element.getName(), element.getDescription());
+	}
+	
+	public StyledString text(Constraint element) {
+		return createStyledString(element.getName(), element.getDescription());
+	}
+	
+	public StyledString text(DependencyNet element) {
+		return createStyledString(element.getName(), element.getDescription());
+	}
+	
+	public StyledString text(Material element) {
+		return createStyledString(element.getName(), element.getDescription());
+	}
+	
+	public StyledString text(Precondition element) {
+		return createStyledString(element.getName(), element.getDescription());
+	}
+	
+	public StyledString text(Procedure element) {
+		return createStyledString(element.getName(), element.getDescription());
+	}
+	
+	public StyledString text(SelectionCondition element) {
+		return createStyledString(element.getName(), element.getDescription());
+	}
+	
+	public StyledString text(VariantFunction element) {
+		return createStyledString(element.getName(), element.getDescription());
+	}
+	
+	public StyledString text(VariantTable element) {
+		return createStyledString(element.getName(), element.getDescription());
+	}
+	
+	private StyledString createStyledString(String name, Description description) { 
+		final StyledString result = new StyledString(name); 
+		new DescriptionHandler() {
+			private Language defaultLanguage = VCMLUtils.getDefaultLanguage(); 
+			@Override
+			public void handleSingleDescription(Language language, String value) {
+				if (defaultLanguage.equals(language)) {
+					result.append(new StyledString(" " + value, StyledString.DECORATIONS_STYLER)); 
+				}
+			}
+		}.handleDescription(description);
+		return result;
+	}
+	
 	public String text(MultiLanguageDescriptions element) {
 		final StringBuffer label = new StringBuffer();
 		new DescriptionHandler() {
@@ -290,14 +346,6 @@ public class VCMLLabelProvider extends DefaultEObjectLabelProvider {
 	
 	public String text(Function element) {
 		return text(element.getFunction()) + " (...)";
-	}
-	
-	public String text(VariantFunction element) {
-		return element.getName();
-	}
-	
-	public String text(VariantTable element) {
-		return element.getName();
 	}
 	
 	public String text(Table element) {
