@@ -4,9 +4,10 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
 generate vcml "http://www.vclipse.org/vcml"
 
-Model :
-    ('options' '{' (options+=Option)* '}')?
-    (objects+=VCObject)*
+Model 
+	:	{Model}
+		('options' '{' (options+=Option)* '}')?
+    	(objects+=VCObject)*
     ;
 
 Option
@@ -40,6 +41,7 @@ VCObject :
 // concrete classes
 
 BillOfMaterial :
+	{BillOfMaterial}
 	'billofmaterial' '{'
 		('items' '{' items+=BOMItem* '}')?
 	//	('classitems' '{' classitems+=BOMItem* '}')? // currently deactivated
@@ -48,7 +50,7 @@ BillOfMaterial :
 
 BOMItem :
 	itemnumber=INT
-	material=[Material | EXTENDED_ID]
+	material=[Material | ExtendedIdentifier]
 	('dependencies' '{'
 	  (selectionCondition=[SelectionCondition | ID])?
 	  (entries+=ConfigurationProfileEntry)*
@@ -120,6 +122,7 @@ NumericCharacteristicValue :
 	;
 
 CharacteristicOrValueDependencies :
+	{CharacteristicOrValueDependencies}
 	'dependencies' '{'
 		localPrecondition=LocalPrecondition?
 		localSelectionCondition=LocalSelectionCondition?
@@ -128,18 +131,21 @@ CharacteristicOrValueDependencies :
 	;
 
 Class :
-	'class' name=CLASSNAME ('{'
+	'class' name=ClassIdentifier ('{'
 		(	description=Description
 		&	('status' status=Status)?
 		&	('group' group=STRING)?
 		&	('characteristics' '{' 
 				characteristics+=[Characteristic|ID]* 
 			'}')
+		&	('superclasses' '{' 
+				superClasses+=[Class | ClassIdentifier]*
+			'}')?
 		)
 	'}')?
 	;
 
-CLASSNAME
+ClassIdentifier
 	:	'(' INT ')' ID
 	;
 
@@ -147,7 +153,7 @@ ConfigurationProfile :
     'configurationprofile' name=SYMBOL '{'
 	   (	('status' status=Status)?
 	   &	('bomapplication' bomapplication=ID)
-	   &	('uidesign' uidesign=[InterfaceDesign | EXTENDED_ID])?
+	   &	('uidesign' uidesign=[InterfaceDesign | ExtendedIdentifier])?
 	   )
        (dependencyNets+=[DependencyNet|ID])*
        (entries+=ConfigurationProfileEntry)*
@@ -198,6 +204,7 @@ SelectionCondition :
     ;
 
 LocalSelectionCondition :
+	{LocalSelectionCondition}
     'selectioncondition' '{'
 		(	description=Description?
 		&	documentation=Documentation?
@@ -229,6 +236,7 @@ Precondition :
     ;
 
 LocalPrecondition :
+	{LocalPrecondition}
     'precondition' '{'
 		(	description=Description?
 		&	documentation=Documentation?
@@ -279,25 +287,25 @@ ConfigurationProfileEntry :
     ;
 
 InterfaceDesign :
-	'interfacedesign' name=EXTENDED_ID ('{'
+	'interfacedesign' name=ExtendedIdentifier ('{'
 		(characteristicGroups+=CharacteristicGroup)*
 	'}')?
 	;
 
 CharacteristicGroup :
-	'characteristicgroup' name=EXTENDED_ID '{'
+	'characteristicgroup' name=ExtendedIdentifier '{'
 		description=Description
 		(characteristics+=[Characteristic | ID])*
 	'}'
 	;    
 
 Material : 
-	'material' name=EXTENDED_ID ('{'
+	'material' name=ExtendedIdentifier ('{'
 		(	description=Description
 		&	('type' type=ID)
 		)
 		billofmaterials+=BillOfMaterial*
-		('classes' '{' classes+=[Class|CLASSNAME]* '}')?
+		('classes' '{' classes+=[Class|ClassIdentifier]* '}')?
 		configurationprofiles+=ConfigurationProfile*
 	'}')?
 	;
@@ -343,6 +351,7 @@ SimpleDescription :
     ;
 
 MultiLanguageDescriptions : 
+	{MultiLanguageDescriptions}
 	'description' '{' (descriptions+=MultiLanguageDescription)* '}'
 	;
 
@@ -404,6 +413,7 @@ SimpleDocumentation :
 	;
 	
 MultipleLanguageDocumentation :
+	{MultipleLanguageDocumentation}
 	'documentation' '{' (languageblocks+=MultipleLanguageDocumentation_LanguageBlock)* '}'
 	;
 
@@ -437,7 +447,7 @@ ConstraintObject
 	;
 	
 ConstraintClass
-	:	(name=SHORTVAR 'is_a')? class=[Class|CLASSNAME] 
+	:	(name=SHORTVAR 'is_a')? class=[Class|ClassIdentifier] 
 		(	'where'
 			shortVars+=ShortVarDefinition (';' shortVars+=ShortVarDefinition)*
 		)?
@@ -488,6 +498,7 @@ ConstraintRestrictionLHS returns ConstraintsRestriction
 	|	Function_C
 	|	NegatedConstraintRestrictionLHS
 	|	ConstraintRestrictionFalse
+		{ConstraintsRestriction}
 	;
 	
 NegatedConstraintRestrictionLHS
@@ -883,7 +894,7 @@ terminal SYMBOL // enclosed in single quotes, no escapes, no line breaks, no tab
 	:	"'" ( !("'"|'\t'|'\n'|'\r') )* "'"
 	; 
 
-EXTENDED_ID hidden () // no whitespace might be used inside extended ids
+ExtendedIdentifier hidden () // no whitespace might be used inside extended ids
 	:	(INT | ID | '/' | ':' | '-' | '.')+ 
 	;	
 
