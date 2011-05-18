@@ -93,7 +93,6 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 	private static final int HIELEV_CNPMAS = 14;
 	private static final int HIELEV_BOMMAT = 15;
 	private static final int HIELEV_VCUI_SAVEM = 15;
-	private static final int HIELEV_NSN_DDICTAB = 20;
 
 	// constants defined at time of each transformation
 	private String today;
@@ -120,7 +119,6 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 	private int inslev_BOMMAT;
 //	private int inslev_VCUI_SAVEM;
 
-	private int sublev_NSN_DDICTAB;
 	private int sublev_BOMMAT;
 
 	@Inject

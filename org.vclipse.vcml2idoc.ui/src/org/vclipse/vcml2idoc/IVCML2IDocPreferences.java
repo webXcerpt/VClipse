@@ -33,8 +33,6 @@ public interface IVCML2IDocPreferences {
 	public static final String VFNMAS = VCML2IDocUIPlugin.ID + ".vfnmas";
 	public static final String VTAMAS = VCML2IDocUIPlugin.ID + ".vtamas";
 	
-	public static final String NSN_DDICTAB = VCML2IDocUIPlugin.ID + ".nsn_ddictab";
-
 	public static final String UPSTYP = VCMLPlugin.ID + ".upsType";
 
 }

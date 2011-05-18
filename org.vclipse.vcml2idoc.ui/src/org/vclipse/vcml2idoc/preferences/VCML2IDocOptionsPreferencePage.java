@@ -53,7 +53,6 @@ public class VCML2IDocOptionsPreferencePage extends FieldEditorPreferencePage im
 		addField(new BooleanFieldEditor(IVCML2IDocPreferences.VCUI_SAVEM, "VCUI_SAVEM (Create or change interface design)", idocGroup));
 		addField(new BooleanFieldEditor(IVCML2IDocPreferences.VFNMAS, "VFNMAS (Master variant function)", idocGroup));
 		addField(new BooleanFieldEditor(IVCML2IDocPreferences.VTAMAS, "VTAMAS (Master variant table)", idocGroup));
-		addField(new BooleanFieldEditor(IVCML2IDocPreferences.NSN_DDICTAB, "/NSN/DDICTAB", idocGroup));
 		addField(new StringFieldEditor(IVCML2IDocPreferences.UPSTYP, "UPS type:", idocGroup));
 	}
 
