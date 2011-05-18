@@ -20,6 +20,7 @@ import java.io.PrintStream;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.eclipse.xtext.ui.IImageHelper;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.antlr.AbstractAntlrTokenToAttributeIdMapper;
 import org.eclipse.xtext.ui.editor.FastLineBasedDamagerRepairer;
 import org.eclipse.xtext.ui.editor.IDamagerRepairer;
@@ -27,6 +28,7 @@ import org.eclipse.xtext.ui.editor.XtextSourceViewerConfiguration;
 import org.vclipse.vcml.ui.editor.VCMLInformationControlCreator;
 import org.vclipse.vcml.ui.editor.VCMLSourceViewerConfiguration;
 import org.vclipse.vcml.ui.editor.VCMLTextHover;
+import org.vclipse.vcml.ui.labeling.ClasspathAwareImageHelper;
 import org.vclipse.vcml.ui.outline.VCMLOutlinePage;
 import org.vclipse.vcml.ui.syntaxcoloring.VCMLAntlrTokenToAttributeIdMapper;
 
@@ -72,4 +74,11 @@ public class VCMLUiModule extends org.vclipse.vcml.ui.AbstractVCMLUiModule {
 		return org.eclipse.xtext.ui.shared.Access.getWorkspaceProjectsState();
 	}
 
+	@Override
+	public Class<? extends IImageHelper> bindIImageHelper() {
+		return ClasspathAwareImageHelper.class;
+	}
+
+	
+	
 }
