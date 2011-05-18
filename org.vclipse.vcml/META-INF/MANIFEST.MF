@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: VClipse VCML Plug-in
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 0.2.0.qualifier
 Bundle-SymbolicName: org.vclipse.vcml; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext,
@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.emf.ecore,
  org.eclipse.emf.common,
  org.eclipse.core.runtime,
- org.antlr.runtime
+ org.antlr.runtime,
+ org.eclipse.jface;bundle-version="3.6.1"
 Import-Package: com.google.common.collect,
  de.uka.ilkd.pp,
  org.apache.log4j,

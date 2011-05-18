@@ -66,8 +66,8 @@ public abstract class CodePrettyPrinter extends VcmlSwitch<DataLayouter<NoExcept
 	protected static int PREC_MAX = 10;
 	
 	protected int precedenceLevel;
-	
-	protected static final int LINE_WIDTH = 71; // 72 is allowed in SAP, we reduce by 1 to be able to append punctuation
+
+	protected static final int LINE_WIDTH = 70; // 72 is allowed in SAP, we reduce by 1 to be able to append punctuation
 	protected static final int INDENTATION = 2;
 	
 	protected DataLayouter<NoExceptions> layouter;
@@ -324,7 +324,7 @@ public abstract class CodePrettyPrinter extends VcmlSwitch<DataLayouter<NoExcept
 		int parentPrec = precedenceLevel;
 		precedenceLevel = PREC_COMPARISON;
 		doSwitch(object.getLeft());
-		layouter.print(" ").print(object.getOperator()).print(" ");
+		layouter.brk().print(object.getOperator()).brk();
 		doSwitch(object.getRight());
 		precedenceLevel = parentPrec;
 		return layouter;
@@ -453,7 +453,11 @@ public abstract class CodePrettyPrinter extends VcmlSwitch<DataLayouter<NoExcept
 		printCrossReference(context, (EObject)context.eGet(ref), ref, att);
 	}
 
-	protected void printCrossReference(EObject context, EObject object, EReference ref, EAttribute att) {
+	protected void printCrossReference(final EObject context, final EObject object, final EReference ref, final EAttribute att) {
+		if (object==null) {
+			layouter.print("###NULL###");
+			return;
+		}
 		String linkText;
 		Object o = object.eGet(att);
 		if (o!=null) {

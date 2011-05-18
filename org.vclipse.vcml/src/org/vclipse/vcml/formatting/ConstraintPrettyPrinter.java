@@ -12,10 +12,12 @@ package org.vclipse.vcml.formatting;
 
 import org.eclipse.emf.common.util.EList;
 import org.vclipse.vcml.vcml.CharacteristicReference_C;
+import org.vclipse.vcml.vcml.ConditionalConstraintRestriction;
 import org.vclipse.vcml.vcml.ConstraintClass;
 import org.vclipse.vcml.vcml.ConstraintMaterial;
 import org.vclipse.vcml.vcml.ConstraintObject;
 import org.vclipse.vcml.vcml.ConstraintRestriction;
+import org.vclipse.vcml.vcml.ConstraintRestrictionFalse;
 import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.InCondition_C;
 import org.vclipse.vcml.vcml.IsSpecified_C;
@@ -60,8 +62,8 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 			doSwitch(object.getCondition());
 			layouter.print(".").brk(1, -INDENTATION).end().brk();
 		}
+		final EList<ConstraintRestriction> restrictions = object.getRestrictions();
 		layouter.brk().beginC().print("restrictions:").brk();
-		EList<ConstraintRestriction> restrictions = object.getRestrictions();
 		for(int i=0, size=restrictions.size()-1; i<=size; i++) {
 			precedenceLevel = PREC_MAX;
 			doSwitch(restrictions.get(i));
@@ -261,6 +263,22 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 			printNullsafe(key.getValue());
 		}
 		return layouter;
+	}
+
+	@Override
+	public DataLayouter<NoExceptions> caseConstraintRestrictionFalse(
+			final ConstraintRestrictionFalse object) {
+		return layouter.print("false");
+	}
+
+	@Override
+	public DataLayouter<NoExceptions> caseConditionalConstraintRestriction(
+			final ConditionalConstraintRestriction object) {
+		layouter.beginC();
+		doSwitch(object.getRestriction());
+		layouter.brk().print(" if ").brk();;
+		doSwitch(object.getCondition());
+		return layouter.end();
 	}
 
 }

@@ -95,13 +95,13 @@
         </page>
         <page
               category="org.vclipse.preferences.page.sap"
-              class="org.vclipse.vcml.ui.preferences.SapOptionsPreferencePage"
+              class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.vclipse.vcml.ui.preferences.SapOptionsPreferencePage"
               id="org.vclipse.preferences.page.sap.options"
               name="Options">
         </page>
         <page
               category="org.vclipse.preferences.page.sap"
-              class="org.vclipse.vcml.ui.preferences.SapDefaultSettingsPreferencePage"
+              class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.vclipse.vcml.ui.preferences.SapDefaultSettingsPreferencePage"
               id="org.vclipse.preferences.page.sap.defaultSettings"
               name="Default Settings">
         </page>
@@ -175,7 +175,7 @@
  <extension
        point="org.eclipse.core.runtime.preferences">
     <initializer
-          class="org.vclipse.vcml.ui.preferences.PreferencesInitializer">
+          class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.vclipse.vcml.ui.preferences.PreferencesInitializer">
     </initializer>
  </extension>
  <extension

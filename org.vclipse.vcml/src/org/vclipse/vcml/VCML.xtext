@@ -50,7 +50,7 @@ BillOfMaterial :
 
 BOMItem :
 	itemnumber=INT
-	material=[Material | ExtendedIdentifier]
+	material=[Material | EXTENDED_ID]
 	('dependencies' '{'
 	  (selectionCondition=[SelectionCondition | ID])?
 	  (entries+=ConfigurationProfileEntry)*
@@ -131,7 +131,7 @@ CharacteristicOrValueDependencies :
 	;
 
 Class :
-	'class' name=ClassIdentifier ('{'
+	'class' name=CLASSNAME ('{'
 		(	description=Description
 		&	('status' status=Status)?
 		&	('group' group=STRING)?
@@ -139,13 +139,13 @@ Class :
 				characteristics+=[Characteristic|ID]* 
 			'}')
 		&	('superclasses' '{' 
-				superClasses+=[Class | ClassIdentifier]*
+				superClasses+=[Class | CLASSNAME]*
 			'}')?
 		)
 	'}')?
 	;
 
-ClassIdentifier
+CLASSNAME
 	:	'(' INT ')' ID
 	;
 
@@ -153,7 +153,7 @@ ConfigurationProfile :
     'configurationprofile' name=SYMBOL '{'
 	   (	('status' status=Status)?
 	   &	('bomapplication' bomapplication=ID)
-	   &	('uidesign' uidesign=[InterfaceDesign | ExtendedIdentifier])?
+	   &	('uidesign' uidesign=[InterfaceDesign | EXTENDED_ID])?
 	   )
        (dependencyNets+=[DependencyNet|ID])*
        (entries+=ConfigurationProfileEntry)*
@@ -287,25 +287,25 @@ ConfigurationProfileEntry :
     ;
 
 InterfaceDesign :
-	'interfacedesign' name=ExtendedIdentifier ('{'
+	'interfacedesign' name=EXTENDED_ID ('{'
 		(characteristicGroups+=CharacteristicGroup)*
 	'}')?
 	;
 
 CharacteristicGroup :
-	'characteristicgroup' name=ExtendedIdentifier '{'
+	'characteristicgroup' name=EXTENDED_ID '{'
 		description=Description
 		(characteristics+=[Characteristic | ID])*
 	'}'
 	;    
 
 Material : 
-	'material' name=ExtendedIdentifier ('{'
+	'material' name=EXTENDED_ID ('{'
 		(	description=Description
 		&	('type' type=ID)
 		)
 		billofmaterials+=BillOfMaterial*
-		('classes' '{' classes+=[Class|ClassIdentifier]* '}')?
+		('classes' '{' classes+=[Class|CLASSNAME]* '}')?
 		configurationprofiles+=ConfigurationProfile*
 	'}')?
 	;
@@ -447,7 +447,7 @@ ConstraintObject
 	;
 	
 ConstraintClass
-	:	(name=SHORTVAR 'is_a')? class=[Class|ClassIdentifier] 
+	:	(name=SHORTVAR 'is_a')? class=[Class|CLASSNAME] 
 		(	'where'
 			shortVars+=ShortVarDefinition (';' shortVars+=ShortVarDefinition)*
 		)?
@@ -485,10 +485,11 @@ ConditionalConstraintRestriction returns ConstraintRestriction :
 	;
 
 ConstraintRestrictionFalse
-	:	'false'
+	:	{ConstraintRestrictionFalse}
+	   'false'
 	;
 
-ConstraintRestrictionLHS returns ConstraintsRestriction
+ConstraintRestrictionLHS returns ConstraintRestriction
 	:	InCondition_C
 	|	IsSpecified_C
 	|	PartOfCondition
@@ -498,7 +499,6 @@ ConstraintRestrictionLHS returns ConstraintsRestriction
 	|	Function_C
 	|	NegatedConstraintRestrictionLHS
 	|	ConstraintRestrictionFalse
-		{ConstraintsRestriction}
 	;
 	
 NegatedConstraintRestrictionLHS
@@ -894,8 +894,8 @@ terminal SYMBOL // enclosed in single quotes, no escapes, no line breaks, no tab
 	:	"'" ( !("'"|'\t'|'\n'|'\r') )* "'"
 	; 
 
-ExtendedIdentifier hidden () // no whitespace might be used inside extended ids
-	:	(INT | ID | '/' | ':' | '-' | '.')+ 
+EXTENDED_ID hidden () // no whitespace might be used inside extended ids
+	:	(INT | ID | '/' | ':' | '-' | '.' | 'e')+ 
 	;	
 
 // bug has been filed as Xtext bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=303212

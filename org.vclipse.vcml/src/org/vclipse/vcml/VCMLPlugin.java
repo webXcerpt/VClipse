@@ -18,6 +18,8 @@ import org.osgi.framework.BundleContext;
  */
 public class VCMLPlugin extends Plugin {
 	
+	public static final String PREFERENCES_ID = VCMLPlugin.ID + ".ui";
+	
 	/**
 	 * 
 	 */

@@ -13,18 +13,16 @@
 */
 package org.vclipse.vcml.ui.outline;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.xtext.resource.ILocationInFileProvider;
 import org.eclipse.xtext.ui.editor.outline.ContentOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.transformer.AbstractDeclarativeSemanticModelTransformer;
-import org.eclipse.xtext.resource.ILocationInFileProvider;
 import org.vclipse.vcml.ui.IUiConstants;
-import org.vclipse.vcml.ui.VCMLUiPlugin;
 import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Characteristic;
@@ -63,13 +61,13 @@ public class VCMLTransformer extends AbstractDeclarativeSemanticModelTransformer
 	 * @param labelProvider
 	 */
 	@Inject
-	public VCMLTransformer(ILocationInFileProvider locationProvider, ILabelProvider labelProvider) {
+	public VCMLTransformer(final ILocationInFileProvider locationProvider, final ILabelProvider labelProvider, final IPreferenceStore preferenceStore) {
 		this.labelProvider = labelProvider;
-		hierarchical = Platform.getPreferencesService().getBoolean(VCMLUiPlugin.ID, IUiConstants.SAP_HIERARCHY_ACTIVATED, false, null);
-		new InstanceScope().getNode(VCMLUiPlugin.ID).addPreferenceChangeListener(new IPreferenceChangeListener() {
-			public void preferenceChange(PreferenceChangeEvent event) {
-				if(IUiConstants.SAP_HIERARCHY_ACTIVATED.equals(event.getKey())) {
-					hierarchical = Platform.getPreferencesService().getBoolean(VCMLUiPlugin.ID, IUiConstants.SAP_HIERARCHY_ACTIVATED, false, null);
+		hierarchical = preferenceStore.getBoolean(IUiConstants.SAP_HIERARCHY_ACTIVATED);
+		preferenceStore.addPropertyChangeListener(new IPropertyChangeListener() {
+			public void propertyChange(final PropertyChangeEvent event) {
+				if(IUiConstants.SAP_HIERARCHY_ACTIVATED.equals(event.getProperty())) {
+					hierarchical = preferenceStore.getBoolean(IUiConstants.SAP_HIERARCHY_ACTIVATED);
 				}
 			}
 		});

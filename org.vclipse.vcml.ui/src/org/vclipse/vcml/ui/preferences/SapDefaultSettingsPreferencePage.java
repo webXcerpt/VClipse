@@ -4,6 +4,7 @@
 package org.vclipse.vcml.ui.preferences;
 
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -12,32 +13,26 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.vclipse.vcml.ui.CombinedPreferenceStore;
-import org.vclipse.vcml.ui.VCMLUiPlugin;
 import org.vclipse.vcml.utils.ISapConstants;
+
+import com.google.inject.Inject;
 
 /**
  *
  */
-public class SapDefaultSettingsPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+public final class SapDefaultSettingsPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-	/**
-	 * 
-	 */
+	@Inject
+	private IPreferenceStore preferenceStore;
+
 	public SapDefaultSettingsPreferencePage()  {
 		super(GRID);
 	}
 	
-	/**
-	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-	 */
 	public void init(IWorkbench workbench) {
-		setPreferenceStore(VCMLUiPlugin.getDefault().getPreferenceStore());
+		setPreferenceStore(preferenceStore);
 	}
 	
-	/**
-	 * @see org.eclipse.xtext.ui.core.editor.preferences.LanguageRootPreferencePage#createFieldEditors()
-	 */
 	@Override
 	protected void createFieldEditors() {
 		final Composite parent = getFieldEditorParent();
@@ -57,12 +52,6 @@ public class SapDefaultSettingsPreferencePage extends FieldEditorPreferencePage 
 		addField(createStringFieldEditor(ISapConstants.DISTRIBUTION_CHANNEL, "Distribution channel:", sapValuesGroup));
 	}
 
-	/**
-	 * @param prefName
-	 * @param label
-	 * @param parent
-	 * @return
-	 */
 	private StringFieldEditor createStringFieldEditor(String prefName, String label, Composite parent) {
 		return new StringFieldEditor(prefName, label, 10, StringFieldEditor.VALIDATE_ON_KEY_STROKE, parent) {
 			@Override
@@ -76,24 +65,5 @@ public class SapDefaultSettingsPreferencePage extends FieldEditorPreferencePage 
 				doFillIntoGrid(parent, layout.numColumns);
 			}
 		};
-	}
-
-	/**
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#performOk()
-	 */
-	@Override
-	public boolean performOk() {
-		super.performOk();
-		((CombinedPreferenceStore)getPreferenceStore()).storePreferences();
-		return true;
-	}
-
-	/**
-	 * @see org.eclipse.jface.preference.PreferencePage#performApply()
-	 */
-	@Override
-	protected void performApply() {
-		super.performApply();
-		((CombinedPreferenceStore)getPreferenceStore()).storePreferences();
 	}
 }

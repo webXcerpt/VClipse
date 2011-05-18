@@ -10,19 +10,15 @@
  *******************************************************************************/
 package org.vclipse.vcml.ui.preferences;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.DefaultScope;
-import org.eclipse.core.runtime.preferences.IPreferencesService;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.FieldEditor;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.osgi.service.prefs.BackingStoreException;
-import org.osgi.service.prefs.Preferences;
+import org.vclipse.vcml.utils.ISapConstants;
 
 /**
  *
@@ -30,44 +26,19 @@ import org.osgi.service.prefs.Preferences;
 public final class ComboFieldEditor extends FieldEditor {
 	
 	/**
-	 * 
+	 *	Entries of the widget
 	 */
 	private Iterable<?> comboEntries;
 	
 	/**
-	 * 
+	 *	Combo widget for the LanguageFieldEditor
 	 */
 	private Combo combo;
 	
 	/**
-	 * 
+	 *	Preference store
 	 */
-	private String prevValue;
-	
-	/**
-	 * 
-	 */
-	private IPreferencesService preferencesService;
-	
-	/**
-	 * 
-	 */
-	private Preferences defaultPreferences;
-	
-	/**
-	 * 
-	 */
-	private Preferences actualPreferences;
-	
-	/**
-	 * 
-	 */
-	private String pluginid;
-	
-	/**
-	 * 
-	 */
-	private String preferenceName;
+	private IPreferenceStore preferenceStore;
 	
 	/**
 	 * @param preferenceName
@@ -75,16 +46,14 @@ public final class ComboFieldEditor extends FieldEditor {
 	 * @param parent - 
 	 * @param comboEntries - a String list will be shown in the ComboBox
 	 */
-	public ComboFieldEditor(String pluginid, String preferenceName, String label, Composite parent, Iterable<?> entries) {
-		this.preferenceName = preferenceName;
-		init(preferenceName, label);
+	public ComboFieldEditor(final IPreferenceStore preferenceStore, Composite parent, Iterable<?> entries) {
+		this.preferenceStore = preferenceStore;
+		setPreferenceStore(preferenceStore);
+		setPreferenceName(ISapConstants.DEFAULT_LANGUAGE);
+		setLabelText("Default language: ");
 		comboEntries = entries;
 		createControl(parent);
-		this.pluginid = pluginid;
-		preferencesService = Platform.getPreferencesService();
-		actualPreferences = new InstanceScope().getNode(pluginid);
-		defaultPreferences = new DefaultScope().getNode(pluginid);
-		combo.setText(preferencesService.getString(pluginid, getPreferenceName(), "", null));
+		combo.setText(preferenceStore.getString(ISapConstants.DEFAULT_LANGUAGE));
 	}
 
 	/**
@@ -92,7 +61,7 @@ public final class ComboFieldEditor extends FieldEditor {
 	 */
 	@Override
 	public String getPreferenceName() {
-		return preferenceName;
+		return ISapConstants.DEFAULT_LANGUAGE;
 	}
 
 	/**
@@ -119,15 +88,10 @@ public final class ComboFieldEditor extends FieldEditor {
         combo.setLayoutData(gd);
 	}
 
-	/**
-	 * @see org.eclipse.jface.preference.FieldEditor#doLoad()
-	 */
 	@Override
 	protected void doLoad() {
 		if(combo != null) {
-			String value = Platform.getPreferencesService().getString(pluginid, getPreferenceName(), "", null);
-            combo.setText(value);
-            prevValue = value;
+			combo.setText(getPreferenceStore().getString(getPreferenceName()));
         }
 	}
 
@@ -136,9 +100,8 @@ public final class ComboFieldEditor extends FieldEditor {
 	 */
 	@Override
 	protected void doLoadDefault() {
-		prevValue = combo.getText();
 		if(combo != null) {
-			combo.setText(defaultPreferences.get(getPreferenceName(), " "));
+			combo.setText(preferenceStore.getDefaultString(getPreferenceName()));
         }
 	}
 	
@@ -147,17 +110,9 @@ public final class ComboFieldEditor extends FieldEditor {
 	 */
 	@Override
 	protected void doStore() {
-		String currentValue = combo.getText();
-		if(prevValue != currentValue) {
-			actualPreferences.put(getPreferenceName(), currentValue);
-			try {
-				actualPreferences.flush();
-				fireValueChanged(VALUE, prevValue, currentValue);
-	            prevValue = currentValue;
-			} catch (BackingStoreException e) {
-				e.printStackTrace();
-			}
-		}
+		String language = combo.getText();
+		getPreferenceStore().putValue(getPreferenceName(), language);
+		fireValueChanged(getPreferenceName(), "", language);
 	}
 
 

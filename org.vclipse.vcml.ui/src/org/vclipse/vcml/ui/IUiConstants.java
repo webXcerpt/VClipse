@@ -23,12 +23,12 @@ public interface IUiConstants {
 	/**
 	 * Name for the image describing document hierarchy
 	 */
-	public static final String DOC_HIERARCHY_IMAGE = VCMLUiPlugin.ID + ".docHierarchyImage";
+	public static final String DOC_HIERARCHY_IMAGE = "actions/doc_hierarchy.png";
 	
 	/**
 	 * Name for the image describing sap hierarchy
 	 */
-	public static final String SAP_HIERARCHY_IMAGE = VCMLUiPlugin.ID + ".sapHierarchyImage";
+	public static final String SAP_HIERARCHY_IMAGE = "actions/sap_hierarchy.png";
 
 	/**
 	 * Preference names for presenting/storing the created sap code

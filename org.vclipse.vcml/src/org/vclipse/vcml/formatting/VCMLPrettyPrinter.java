@@ -10,13 +10,13 @@
  *******************************************************************************/
 package org.vclipse.vcml.formatting;
 
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.vclipse.vcml.VCMLPlugin;
+import org.vclipse.vcml.conversion.Strings;
 import org.vclipse.vcml.utils.ISapConstants;
 import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;
@@ -46,11 +46,11 @@ import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Precondition;
 import org.vclipse.vcml.vcml.Procedure;
-import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.SelectionCondition;
 import org.vclipse.vcml.vcml.SimpleDescription;
 import org.vclipse.vcml.vcml.SimpleDocumentation;
 import org.vclipse.vcml.vcml.SymbolicType;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VariantFunction;
 import org.vclipse.vcml.vcml.VariantFunctionArgument;
 import org.vclipse.vcml.vcml.VariantTable;
@@ -72,17 +72,13 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	private DataLayouter<NoExceptions> layouter;
 	
 	private static VcmlPackage VCMLPACKAGE = VcmlPackage.eINSTANCE;
-	
-	/**
-	 * @param o
-	 * @return
-	 */
-	public String prettyPrint(EObject o) {
-		StringBuilder sb = new StringBuilder();
-		IEclipsePreferences preferences = new InstanceScope().getNode(VCMLPlugin.ID);
-		layouter = 
+
+	public String prettyPrint(final EObject o) {
+		final StringBuilder sb = new StringBuilder();
+		final int lineLenght = Platform.getPreferencesService().getInt(VCMLPlugin.PREFERENCES_ID, ISapConstants.PP_LINE_LENGTH, 70, null);
+		layouter =
 			new DataLayouter<NoExceptions>(
-					new StringBackend(sb, preferences.getInt(ISapConstants.PP_LINE_LENGTH, 70)), INDENTATION);
+					new StringBackend(sb, lineLenght), INDENTATION);
 		doSwitch(o);
 		layouter.close();
 		return sb.toString();
@@ -547,6 +543,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 					printNullsafe(profile.getName());
 					layouter.print("' {");
 					{
+						layouter.brk().print("bomapplication ").print(profile.getBomapplication());
 						if(profile.getUidesign() != null) {
 							layouter.brk().print("uidesign ");
 							printCrossReference(profile, VCMLPACKAGE.getConfigurationProfile_Uidesign(), VCMLPACKAGE.getVCObject_Name());
@@ -824,8 +821,8 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	}
 	
 	// TODO use injected value converter?
-	private String doublequote(String string) {
-		return "\"" + string + "\"";
+	private String doublequote(final String string) {
+		return "\"" + Strings.convertToJavaString(string) + "\"";
 	}
 	
 	/**

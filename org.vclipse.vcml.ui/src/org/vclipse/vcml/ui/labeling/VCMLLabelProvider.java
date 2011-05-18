@@ -16,8 +16,8 @@ package org.vclipse.vcml.ui.labeling;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider;
-import org.eclipse.xtext.util.Strings;
-
+import org.vclipse.vcml.utils.DescriptionHandler;
+import org.vclipse.vcml.utils.VCMLUtils;
 import org.vclipse.vcml.vcml.Assignment;
 import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;
@@ -64,8 +64,6 @@ import org.vclipse.vcml.vcml.Table;
 import org.vclipse.vcml.vcml.VariantFunction;
 import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.util.VcmlSwitch;
-import org.vclipse.vcml.utils.DescriptionHandler;
-import org.vclipse.vcml.utils.VCMLUtils;
 
 import com.google.inject.Inject;
 

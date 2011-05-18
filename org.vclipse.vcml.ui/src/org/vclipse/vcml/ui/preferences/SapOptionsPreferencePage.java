@@ -5,6 +5,7 @@ package org.vclipse.vcml.ui.preferences;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -16,39 +17,39 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.vclipse.vcml.VCMLPlugin;
-import org.vclipse.vcml.ui.CombinedPreferenceStore;
 import org.vclipse.vcml.ui.IUiConstants;
-import org.vclipse.vcml.ui.VCMLUiPlugin;
-import org.vclipse.vcml.vcml.Language;
 import org.vclipse.vcml.utils.ISapConstants;
+import org.vclipse.vcml.vcml.Language;
+
+import com.google.inject.Inject;
 
 /**
  *
  */
-public class SapOptionsPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+public final class SapOptionsPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
+	@Inject
+	private IPreferenceStore preferenceStore;
+	
 	/**
 	 * index 0 & 1 are for "Output to file" & "Overwrite" options
 	 * index 2 is for the "Use pretty printer" option
 	 */
 	private final Button[] booleanButtons = new Button[3];
 
-	/**
-	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-	 */
+	public SapOptionsPreferencePage() {
+		super(GRID);
+	}
+	
 	public void init(final IWorkbench workbench) {
-		setPreferenceStore(VCMLUiPlugin.getDefault().getPreferenceStore());
+		setPreferenceStore(preferenceStore);
 	}
 
-	/**
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
-	 */
 	@Override
 	protected void createFieldEditors() {
 		final Composite parent = getFieldEditorParent();
 		
-		addField(new ComboFieldEditor(VCMLPlugin.ID, ISapConstants.DEFAULT_LANGUAGE, "Default language: ", parent, Language.VALUES));
+		addField(new ComboFieldEditor(getPreferenceStore(), parent, Language.VALUES));
 		
 		Group group = new Group(parent, SWT.NONE);
 		group.setText(" Values for handling output ");
@@ -111,12 +112,6 @@ public class SapOptionsPreferencePage extends FieldEditorPreferencePage implemen
 		
 	}
 
-	/**
-	 * @param prefName
-	 * @param label
-	 * @param parent
-	 * @return
-	 */
 	private BooleanFieldEditor createBooleanFieldEditor(String prefName, String label, Composite parent) {
 		return new BooleanFieldEditor(prefName, label, parent) {
 			@Override
@@ -143,24 +138,5 @@ public class SapOptionsPreferencePage extends FieldEditorPreferencePage implemen
 				doFillIntoGrid(parent, layout.numColumns);
 			}
 		};
-	}
-
-	/**
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#performOk()
-	 */
-	@Override
-	public boolean performOk() {
-		super.performOk();
-		((CombinedPreferenceStore)getPreferenceStore()).storePreferences();
-		return true;
-	}
-
-	/**
-	 * @see org.eclipse.jface.preference.PreferencePage#performApply()
-	 */
-	@Override
-	protected void performApply() {
-		super.performApply();
-		((CombinedPreferenceStore)getPreferenceStore()).storePreferences();
 	}
 }

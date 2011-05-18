@@ -20,30 +20,30 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.IGrammarAccess;
 import org.eclipse.xtext.linking.ILinker;
 import org.eclipse.xtext.linking.ILinkingService;
 import org.eclipse.xtext.resource.IResourceFactory;
+import org.eclipse.xtext.ui.IImageHelper;
 import org.eclipse.xtext.ui.editor.outline.XtextContentOutlinePage;
-import org.vclipse.vcml.VCMLPlugin;
-import org.vclipse.vcml.ui.outline.actions.HierarchySwitchAction;
+import org.vclipse.vcml.ui.IUiConstants;
+import org.vclipse.vcml.ui.VCMLUiPlugin;
 import org.vclipse.vcml.ui.outline.actions.IVCMLOutlineActionHandler;
 import org.vclipse.vcml.ui.outline.actions.VCMLOutlineAction;
-import org.vclipse.vcml.ui.VCMLUiPlugin;
 import org.vclipse.vcml.utils.ISapConstants;
 
 import com.google.inject.Inject;
@@ -51,7 +51,7 @@ import com.google.inject.Inject;
 /**
  * 
  */
-public class VCMLOutlinePage extends XtextContentOutlinePage implements IPreferenceChangeListener {
+public class VCMLOutlinePage extends XtextContentOutlinePage implements IPropertyChangeListener {
 
 	@Inject
 	private IResourceFactory resourceFactory;
@@ -64,6 +64,12 @@ public class VCMLOutlinePage extends XtextContentOutlinePage implements IPrefere
 	
 	@Inject
 	private IGrammarAccess grammarAccess;
+	
+	@Inject
+	private IImageHelper imageHelper;
+	
+	// injected over constructor injection
+	private final IPreferenceStore preferenceStore;
 	
 	/**
 	 * 
@@ -120,36 +126,36 @@ public class VCMLOutlinePage extends XtextContentOutlinePage implements IPrefere
 	 */
 	private Menu menu;
 	
-	/**
-	 * 
-	 */
-	public VCMLOutlinePage() {
+	@Inject
+	public VCMLOutlinePage(final IPreferenceStore preferenceStore) {
 		id2Action = new HashMap<String, VCMLOutlineAction>();
 		action2Path = new LinkedHashMap<VCMLOutlineAction, String>(); // LinkedHashMap to guarantee order in menu
-		 new InstanceScope().getNode(VCMLPlugin.ID).addPreferenceChangeListener(this);
+		this.preferenceStore = preferenceStore;
+		this.preferenceStore.addPropertyChangeListener(this);
 	}
 
-	/**
-	 * @see org.eclipse.xtext.ui.common.editor.outline.XtextContentOutlinePage#dispose()
-	 */
 	@Override
 	public void dispose() {
-		new InstanceScope().getNode(VCMLPlugin.ID).removePreferenceChangeListener(this);
+		preferenceStore.removePropertyChangeListener(this);
 		super.dispose();
 	}
-
-	/**
-	 * @see org.eclipse.xtext.ui.common.editor.outline.XtextContentOutlinePage#createControl(org.eclipse.swt.widgets.Composite)
-	 */
+	
+	public void propertyChange(final PropertyChangeEvent event) {
+		final String property = event.getProperty();
+		if(IUiConstants.SAP_HIERARCHY_ACTIVATED.equals(property) ||
+				ISapConstants.DEFAULT_LANGUAGE.equals(property)) {
+			final TreeViewer treeViewer = getTreeViewer();
+			treeViewer.setInput(treeViewer.getInput());
+		}
+	}
+	
 	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 		final TreeViewer treeViewer = getTreeViewer();
-		IActionBars actionBars = getSite().getActionBars();
-		IToolBarManager toolBarManager = actionBars.getToolBarManager();
+		final IToolBarManager toolBarManager = getSite().getActionBars().getToolBarManager();
 		
-		// add action for tree view change
-		toolBarManager.add(new HierarchySwitchAction(treeViewer));
+		createHierarchySwitchAction(toolBarManager);
 		
 		// Add contributing actions
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -230,17 +236,49 @@ public class VCMLOutlinePage extends XtextContentOutlinePage implements IPrefere
 			}
 		}
 	}
-	
-	/**
-	 * @param treeViewer
+
+	/*
+	 * Create the hierarchy switch action for the outline view
 	 */
-	private void createMenu(TreeViewer treeViewer) {
-		MenuManager menuManager = new MenuManager(POPUP_MENU_ID);
+	private void createHierarchySwitchAction(final IToolBarManager toolBarManager) {
+		final ImageDescriptor sapImageDescriptor = ImageDescriptor.createFromImage(imageHelper.getImage(IUiConstants.SAP_HIERARCHY_IMAGE));
+		final ImageDescriptor docImageDescriptior = ImageDescriptor.createFromImage(imageHelper.getImage(IUiConstants.DOC_HIERARCHY_IMAGE));
+		// create an action for hierarchy switching
+		final Action action = new Action() {
+			@Override
+			public void run() {
+				setChecked(!isChecked());
+				if(isChecked()) {
+					setText("Document hierarchy");
+					setToolTipText("Document hierarchy");
+					setImageDescriptor(docImageDescriptior);
+					preferenceStore.setValue(IUiConstants.SAP_HIERARCHY_ACTIVATED, false);	
+				} else {
+					setText("PMEVC-like hierarchy");
+					setToolTipText("PMEVC-like hierarchy");
+					setImageDescriptor(sapImageDescriptor);
+					preferenceStore.setValue(IUiConstants.SAP_HIERARCHY_ACTIVATED, true);
+				}
+			}
+		};
+		
+		// we begin with a false value for IUiConstants.SAP_HIERARCHY_ACTIVATED => see also PreferenceInitializer
+		action.setText("PMEVC-like hierarchy");
+		action.setToolTipText("PMEVC-like hierarchy");
+		action.setImageDescriptor(sapImageDescriptor);
+		toolBarManager.add(action);
+	}
+	
+	/*
+	 * Create a menu for the outline view
+	 */
+	private void createMenu(final TreeViewer treeViewer) {
+		final MenuManager menuManager = new MenuManager(POPUP_MENU_ID);
 		menuManager.setRemoveAllWhenShown(true);
 		menuManager.addMenuListener(new IMenuListener() {	
-			public void menuAboutToShow(IMenuManager manager) {
+			public void menuAboutToShow(final IMenuManager manager) {
 				for(Map.Entry<VCMLOutlineAction,String> entry : action2Path.entrySet()) {
-					GroupMarker groupMarker = new GroupMarker(entry.getValue());
+					final GroupMarker groupMarker = new GroupMarker(entry.getValue());
 					manager.add(groupMarker);
 					manager.appendToGroup(groupMarker.getGroupName(), entry.getKey());
 				}
@@ -249,15 +287,5 @@ public class VCMLOutlinePage extends XtextContentOutlinePage implements IPrefere
 		menu = menuManager.createContextMenu(treeViewer.getControl());
 		treeViewer.getControl().setMenu(menu);
 		getSite().registerContextMenu(POPUP_MENU_ID, menuManager, treeViewer);
-	}
-
-	/**
-	 * @see org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener#preferenceChange(org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent)
-	 */
-	public void preferenceChange(PreferenceChangeEvent event) {
-		if(ISapConstants.DEFAULT_LANGUAGE.equals(event.getKey())) {
-			TreeViewer treeViewer = getTreeViewer();
-			treeViewer.setInput(treeViewer.getInput());
-		}
 	}
 }

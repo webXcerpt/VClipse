@@ -23,7 +23,7 @@ public class VCMLCrossReferenceSerializer extends CrossReferenceSerializer {
 	public String serializeCrossRef(EObject context,
 			CrossReference grammarElement, EObject target, AbstractNode node) {
 		try {
-			System.err.println("serializeCrossRef " + context + " " + grammarElement + " " + target);
+			// System.err.println("serializeCrossRef " + context + " " + grammarElement + " " + target);
 			return super.serializeCrossRef(context, grammarElement, target, node);
 		} catch (XtextSerializationException e) {
 			if (target.eIsProxy()) {

@@ -11,25 +11,36 @@
 package org.vclipse.vcml.ui.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.eclipse.core.runtime.preferences.DefaultScope;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.vclipse.vcml.ui.IUiConstants;
-import org.vclipse.vcml.ui.VCMLUiPlugin;
+import org.vclipse.vcml.utils.ISapConstants;
+import org.vclipse.vcml.vcml.Language;
 
+import com.google.inject.Inject;
 
 /**
- * 
+ *	Default implementation for VClipse plug-in.
  */
 public class PreferencesInitializer extends AbstractPreferenceInitializer {
 	
-	/**
-	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
-	 */
+	@Inject
+	private IPreferenceStore preferenceStore;
+	
 	@Override
 	public void initializeDefaultPreferences() {
-		final IEclipsePreferences preferences = new DefaultScope().getNode(VCMLUiPlugin.ID);
-		preferences.putBoolean(IUiConstants.SAP_HIERARCHY_ACTIVATED, false);
-		preferences.putBoolean(IUiConstants.OUTPUT_TO_FILE, true);
-		preferences.putBoolean(IUiConstants.OVERWRITE, true);
+		preferenceStore.setDefault(ISapConstants.DEFAULT_LANGUAGE, Language.EN.name());
+		preferenceStore.setDefault(ISapConstants.PLANT, "1000");
+		preferenceStore.setDefault(ISapConstants.BOM_USAGE, "3");
+		preferenceStore.setDefault(ISapConstants.INDUSTRY_SECTOR, "M");
+		preferenceStore.setDefault(ISapConstants.TRANSPORTATION_GROUP, "0001");
+		preferenceStore.setDefault(ISapConstants.LOADING_GROUP, "0001");
+		preferenceStore.setDefault(ISapConstants.SALES_ORGANISATION, "0001");
+		preferenceStore.setDefault(ISapConstants.DISTRIBUTION_CHANNEL, "01");
+		preferenceStore.setDefault(ISapConstants.PP_LINE_LENGTH, 70);
+		preferenceStore.setDefault(ISapConstants.USE_PRETTY_PRINTER, true);
+		
+		preferenceStore.setDefault(IUiConstants.SAP_HIERARCHY_ACTIVATED, false);
+		preferenceStore.setDefault(IUiConstants.OUTPUT_TO_FILE, true);
+		preferenceStore.setDefault(IUiConstants.OVERWRITE, true);
 	}
 }

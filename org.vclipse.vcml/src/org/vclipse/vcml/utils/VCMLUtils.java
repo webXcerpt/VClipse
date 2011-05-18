@@ -147,8 +147,7 @@ public class VCMLUtils {
 	}
 	
 	public static Language getDefaultLanguage() {
-		String literal = Platform.getPreferencesService().getString(VCMLPlugin.ID, ISapConstants.DEFAULT_LANGUAGE, "", null);
-		return Language.get(literal);
+		return Language.get(Platform.getPreferencesService().getString(VCMLPlugin.PREFERENCES_ID, ISapConstants.DEFAULT_LANGUAGE, Language.EN.getLiteral(), null));
 	}
 	
 	public static Status createStatusFromInt(int status) {

@@ -17,9 +17,11 @@ import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.linking.ILinker;
 import org.eclipse.xtext.linking.lazy.LazyURIEncoder;
 import org.eclipse.xtext.parsetree.reconstr.ITokenSerializer;
+import org.eclipse.xtext.parsetree.reconstr.Serializer;
 import org.eclipse.xtext.validation.CompositeEValidator;
 import org.vclipse.vcml.conversion.VCMLValueConverter;
 import org.vclipse.vcml.formatting.VCMLCrossReferenceSerializer;
+import org.vclipse.vcml.formatting.VCMLSerializer;
 import org.vclipse.vcml.linking.VCMLLinker;
 import org.vclipse.vcml.resource.VCMLURIEncoder;
 import org.vclipse.vcml.scoping.VCMLScopeProvider;
@@ -62,11 +64,12 @@ public class VCMLRuntimeModule extends org.vclipse.vcml.AbstractVCMLRuntimeModul
 		return VCMLScopeProvider.class;
 	}
 
-	// FIXME bind serializer
-//	public Class<? extends Serializer> bindSerializer() {
-//		return VCMLSerializer.class;
-//	}
-	
+	@Override
+	public Class<? extends Serializer> bindSerializerUtil() {
+		return VCMLSerializer.class;
+	}
+
+	@Override
 	public Class<? extends org.eclipse.xtext.resource.IContainer.Manager> bindIContainer$Manager() {
 		  return org.eclipse.xtext.resource.containers.StateBasedContainerManager.class;
 		}

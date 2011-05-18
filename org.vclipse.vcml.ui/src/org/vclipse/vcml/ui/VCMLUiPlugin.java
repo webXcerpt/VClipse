@@ -12,12 +12,12 @@ package org.vclipse.vcml.ui;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
-import org.vclipse.vcml.VCMLPlugin;
 import org.vclipse.vcml.ui.internal.VCMLActivator;
+
+import com.google.inject.Injector;
 
 
 /**
@@ -29,43 +29,25 @@ public class VCMLUiPlugin extends VCMLActivator {
 	 * 
 	 */
 	public static final String ID = "org.vclipse.vcml.ui";
-	
-	/**
-	 * 
-	 */
+
 	private static VCMLUiPlugin plugin;
 	
-	/**
-	 * 
-	 */
-	private IPreferenceStore preferenceStore;
-
-	/**
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#getPreferenceStore()
-	 */
-	@Override
-	public IPreferenceStore getPreferenceStore() {
-		if(preferenceStore == null) {
-			preferenceStore = new CombinedPreferenceStore(ID, VCMLPlugin.ID);
-		}
-		return preferenceStore;
-	}
-	
-	/**
-	 * @return
-	 */
 	public static VCMLUiPlugin getDefault() {
 		if(plugin == null) {
 			plugin = new VCMLUiPlugin();
 		}
 		return plugin;
 	}
-
+	
+	public Injector getInjector() {
+		return getInstance().getInjector("org.vclipse.vcml.VCML");
+	}
+	
 	/**
 	 * @param status
 	 */
 	public static void log(final IStatus status) {
-		getDefault().getLog().log(status);
+		getInstance().getLog().log(status);
 	}
 	
 	/**
@@ -81,7 +63,7 @@ public class VCMLUiPlugin extends VCMLActivator {
 	 * @return
 	 */
 	public static ImageDescriptor getImageDescriptor(String key) {
-		return getDefault().getImageRegistry().getDescriptor(key);
+		return getInstance().getImageRegistry().getDescriptor(key);
 	}
 	
 	/**
@@ -99,6 +81,6 @@ public class VCMLUiPlugin extends VCMLActivator {
 	 */
 	private void addImage(String name, String path) {
 		Image image = imageDescriptorFromPlugin(ID, path).createImage();
-		getDefault().getImageRegistry().put(name, image);
+		getInstance().getImageRegistry().put(name, image);
 	}
 }

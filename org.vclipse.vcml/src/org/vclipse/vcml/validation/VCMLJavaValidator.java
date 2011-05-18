@@ -10,13 +10,18 @@
  *******************************************************************************/
 package org.vclipse.vcml.validation;
 
+import java.util.List;
+
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
 import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.Class;
+import org.vclipse.vcml.vcml.ConfigurationProfile;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
+import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Precondition;
 import org.vclipse.vcml.vcml.Procedure;
 import org.vclipse.vcml.vcml.SelectionCondition;
@@ -31,29 +36,30 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	private static final int MAXLENGTH_NAME = 30;
 	private static final int MAXLENGTH_DESCRIPTION = 30;
 	private static final int MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS = 50; // soft limit of size of dependency net (should not be larger because compilation has a O(n^2) algorithm)
+	private static final int MAXLENGTH_MATERIAL_NAME = 18;
 
 	/*
 	 * @Check(CheckType.EXPENSIVE) //executed upon validate action in context menu
      * @Check(CheckType.NORMAL) //upon save
      * @Check(CheckType.FAST) //while editig 
 	 */
-	
-	@Check(CheckType.NORMAL)
-	public void checkCharacteristic(Characteristic object) {
+
+	@Check(CheckType.FAST)
+	public void checkCharacteristic(final Characteristic object) {
 		if (object.getName().length() > MAXLENGTH_NAME) {
 			error("Name of characteristic is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.CHARACTERISTIC__NAME);
 		}
 	}
-	
-	@Check(CheckType.NORMAL)
-	public void checkProcedure(Procedure object) {
+
+	@Check(CheckType.FAST)
+	public void checkProcedure(final Procedure object) {
 		if (object.getName().length() > MAXLENGTH_NAME) {
 			error("Name of procedure is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.PROCEDURE__NAME);
 		}
 	}
-	
-	@Check(CheckType.NORMAL)
-	public void checkDependencyNet(DependencyNet object) {
+
+	@Check(CheckType.FAST)
+	public void checkDependencyNet(final DependencyNet object) {
 		if (object.getName().length() > MAXLENGTH_NAME) {
 			error("Name of dependency net is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.DEPENDENCY_NET__NAME);
 		}
@@ -61,30 +67,30 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 			warning("Dependency net " + object.getName() + " too large, should have for efficiency at most " + MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS + " constraints", VcmlPackage.DEPENDENCY_NET__CONSTRAINTS);
 		}
 	}
-	
-	@Check(CheckType.NORMAL)
-	public void checkConstraint(Constraint object) {
+
+	@Check(CheckType.FAST)
+	public void checkConstraint(final Constraint object) {
 		if (object.getName().length() > MAXLENGTH_NAME) {
 			error("Name of constraint is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.CONSTRAINT__NAME);
 		}
 	}
-	
-	@Check(CheckType.NORMAL)
-	public void checkSelectionCondition(SelectionCondition object) {
+
+	@Check(CheckType.FAST)
+	public void checkSelectionCondition(final SelectionCondition object) {
 		if (object.getName().length() > MAXLENGTH_NAME) {
 			error("Name of selection condition is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.SELECTION_CONDITION__NAME);
 		}
 	}
-	
-	@Check(CheckType.NORMAL)
-	public void checkPrecondition(Precondition object) {
+
+	@Check(CheckType.FAST)
+	public void checkPrecondition(final Precondition object) {
 		if (object.getName().length() > MAXLENGTH_NAME) {
 			error("Name of precondition is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.PRECONDITION__NAME);
 		}
 	}
-	
-	@Check(CheckType.NORMAL)
-	public void checkClass(Class object) {
+
+	@Check(CheckType.FAST)
+	public void checkClass(final Class object) {
 		if (VCMLUtils.getClassName(object.getName()).length() > MAXLENGTH_CLASS_NAME) {
 			error("Name of class is limited to " + MAXLENGTH_CLASS_NAME + " characters", VcmlPackage.CLASS__NAME);
 		}
@@ -93,8 +99,8 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 		}
 	}
 
-	@Check(CheckType.NORMAL)
-	public void checkDescription(SimpleDescription desc) {
+	@Check(CheckType.FAST)
+	public void checkDescription(final SimpleDescription desc) {
 		if (desc.getValue().length() > MAXLENGTH_DESCRIPTION) {
 			error("Descriptions are limited to " + MAXLENGTH_DESCRIPTION + " characters", VcmlPackage.SIMPLE_DESCRIPTION__VALUE);
 		}

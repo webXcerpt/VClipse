@@ -65,7 +65,7 @@ public class VCMLFormatter extends AbstractDeclarativeFormatter {
 	protected void configureFormatting(FormattingConfig c) {
 		org.vclipse.vcml.services.VCMLGrammarAccess f = (org.vclipse.vcml.services.VCMLGrammarAccess) getGrammarAccess();
 
-	    c.setAutoLinewrap(72); // SAP dependencies are limited to 72 characters // FIXME this does not work in Xtext 0.7.2
+	    c.setAutoLinewrap(70); // SAP dependencies are limited to 72 characters // FIXME this does not work in Xtext 0.7.2
 	    
 	    // generic formatting code (ideas by Moritz Eysholdt and Sebastian Benz, eclipse.modeling.tmf, 2009-07-22)
 	    Iterable<Keyword> keywords = GrammarUtil.containedKeywords(f.getGrammar());
@@ -82,13 +82,15 @@ public class VCMLFormatter extends AbstractDeclarativeFormatter {
 	    Stack<Keyword> openBraceStack = new Stack<Keyword>();
 	    for (Keyword currentKeyword : keywords) {
 	    	if ("{".equals(currentKeyword.getValue())) {
-	    		openBraceStack.add(currentKeyword);
+	    		openBraceStack.push(currentKeyword);
 	    		c.setLinewrap().after(currentKeyword);
+	    		c.setIndentationIncrement().after(currentKeyword);
 	    	} else if ("}".equals(currentKeyword.getValue())) {
-	    		c.setLinewrap().after(currentKeyword);
-	    		c.setLinewrap().before(currentKeyword);
 	    		if (!openBraceStack.isEmpty()) {
-	    			c.setIndentation(openBraceStack.pop(), currentKeyword);
+	    			c.setLinewrap().after(currentKeyword);
+	    			c.setLinewrap().before(currentKeyword);
+	    			c.setIndentationDecrement().before(currentKeyword);
+	    			openBraceStack.pop();
 	    		}
 	    	}
 	    }
@@ -117,6 +119,7 @@ public class VCMLFormatter extends AbstractDeclarativeFormatter {
 	    c.setLinewrap(2).before(f.getCharacteristicAccess().getCharacteristicKeyword_0());
 	    c.setLinewrap(2).before(f.getConstraintAccess().getConstraintKeyword_0());
 	    c.setLinewrap(2).before(f.getDependencyNetAccess().getDependencynetKeyword_0());
+	    c.setIndentationIncrement().before(f.getDependencyNetAccess().getDescriptionAssignment_2_1_0());
 	    c.setLinewrap(2).before(f.getInterfaceDesignAccess().getInterfacedesignKeyword_0());
 	    c.setLinewrap(2).before(f.getMaterialAccess().getMaterialKeyword_0());
 	    c.setLinewrap(2).before(f.getPreconditionAccess().getPreconditionKeyword_0());

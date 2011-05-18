@@ -21,12 +21,6 @@
 	
   </extension>
   <extension
-        point="org.eclipse.core.runtime.preferences">
-     <initializer
-           class="org.vclipse.vcml.utils.PreferenceInitializer">
-     </initializer>
-  </extension>
-  <extension
         point="org.eclipse.core.contenttype.contentTypes">
      <content-type
            default-charset="UTF-8"

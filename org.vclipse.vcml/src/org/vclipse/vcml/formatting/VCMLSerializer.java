@@ -11,18 +11,15 @@
 package org.vclipse.vcml.formatting;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.Writer;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.formatting.IFormatter;
-import org.eclipse.xtext.parsetree.CompositeNode;
-import org.eclipse.xtext.parsetree.reconstr.IHiddenTokenMerger;
 import org.eclipse.xtext.parsetree.reconstr.IParseTreeConstructor;
+import org.eclipse.xtext.parsetree.reconstr.IParseTreeConstructor.TreeConstructionReport;
 import org.eclipse.xtext.parsetree.reconstr.ITokenStream;
 import org.eclipse.xtext.parsetree.reconstr.Serializer;
-import org.eclipse.xtext.parsetree.reconstr.IParseTreeConstructor.TreeConstructionDiagnostic;
-import org.eclipse.xtext.parsetree.reconstr.IParseTreeConstructor.TreeConstructionReport;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.validation.IConcreteSyntaxValidator;
 import org.vclipse.vcml.VCMLPlugin;
@@ -52,7 +49,15 @@ public class VCMLSerializer extends Serializer {
 	}
 
 	@Override
-	public TreeConstructionReport serialize(EObject obj, ITokenStream tokenStream, SaveOptions options)
+	public TreeConstructionReport serialize(final EObject obj, final Writer writer, final SaveOptions options)
+	throws IOException {
+		writer.append(serialize(obj));
+		writer.flush();
+		return null;
+	}
+
+	@Override
+	public TreeConstructionReport serialize(final EObject obj, final ITokenStream tokenStream, final SaveOptions options)
 	throws IOException {
 		if (usePrettyPrinter()) { 
 			// TODO how to implement this with VCMLPrettyPrinter
@@ -98,7 +103,7 @@ public class VCMLSerializer extends Serializer {
 */
 
 	private boolean usePrettyPrinter() {
-		return Platform.getPreferencesService().getBoolean(VCMLPlugin.ID, ISapConstants.USE_PRETTY_PRINTER, false, null);
+		return Platform.getPreferencesService().getBoolean(VCMLPlugin.PREFERENCES_ID, ISapConstants.USE_PRETTY_PRINTER, false, null);
 	}
 
 }
