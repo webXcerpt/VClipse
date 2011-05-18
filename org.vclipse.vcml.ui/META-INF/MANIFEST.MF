@@ -6,7 +6,7 @@ Bundle-Version: 0.2.0.qualifier
 Bundle-SymbolicName: org.vclipse.vcml.ui;singleton:=true
 Eclipse-RegisterBuddy: org.eclipse.xtext.log4j
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.vclipse.base;bundle-version="0.1.0",
+Require-Bundle: org.vclipse.base.ui;bundle-version="0.1.0",
  org.vclipse.vcml;visibility:=reexport,
  org.eclipse.xtext.ui,
  org.eclipse.ui.editors;bundle-version="3.5.0",

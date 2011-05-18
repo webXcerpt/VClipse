@@ -5,7 +5,7 @@ Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Bundle-Version: 0.2.0.qualifier
 Bundle-SymbolicName: org.vclipse.idoc.ui;singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.vclipse.base;bundle-version="0.1.0",
+Require-Bundle: org.vclipse.base.ui;bundle-version="0.1.0",
  org.vclipse.idoc;visibility:=reexport,
  org.eclipse.xtext.ui,
  org.eclipse.ui.editors;bundle-version="3.5.0",
