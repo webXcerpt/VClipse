@@ -8,7 +8,7 @@
  * Contributors:
  *    webXcerpt Software GmbH - initial creator
  *******************************************************************************/
-package org.vclipse.base;
+package org.vclipse.base.ui;
 
 import java.net.URL;
 

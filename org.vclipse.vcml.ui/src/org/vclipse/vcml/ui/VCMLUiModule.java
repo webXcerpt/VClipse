@@ -24,7 +24,7 @@ import org.eclipse.xtext.ui.editor.FastLineBasedDamagerRepairer;
 import org.eclipse.xtext.ui.editor.IDamagerRepairer;
 import org.eclipse.xtext.ui.editor.XtextSourceViewerConfiguration;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.antlr.AbstractAntlrTokenToAttributeIdMapper;
-import org.vclipse.base.ClasspathAwareImageHelper;
+import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.vcml.ui.editor.VCMLInformationControlCreator;
 import org.vclipse.vcml.ui.editor.VCMLSourceViewerConfiguration;
 import org.vclipse.vcml.ui.editor.VCMLTextHover;

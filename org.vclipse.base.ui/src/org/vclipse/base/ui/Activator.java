@@ -1,4 +1,4 @@
-package org.vclipse.base;
+package org.vclipse.base.ui;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

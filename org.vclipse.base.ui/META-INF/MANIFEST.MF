@@ -3,11 +3,11 @@ Bundle-ManifestVersion: 2
 Bundle-Name: VClipse Base UI Plug-in
 Bundle-SymbolicName: org.vclipse.base.ui
 Bundle-Version: 0.1.0.qualifier
-Bundle-Activator: org.vclipse.base.Activator
+Bundle-Activator: org.vclipse.base.ui.Activator
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.xtext.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.vclipse.base
+Export-Package: org.vclipse.base.ui

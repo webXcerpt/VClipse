@@ -15,7 +15,7 @@ package org.vclipse.idoc.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.ui.IImageHelper;
-import org.vclipse.base.ClasspathAwareImageHelper;
+import org.vclipse.base.ui.ClasspathAwareImageHelper;
 
 /**
  * Use this class to register components to be used within the IDE.
