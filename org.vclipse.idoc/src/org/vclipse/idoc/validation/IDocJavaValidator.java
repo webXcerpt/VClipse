@@ -20,8 +20,6 @@ public class IDocJavaValidator extends AbstractIDocJavaValidator {
 
 	private static final int LENGTH_LIMIT = 72;
 	
-	// preliminary checks
-	// TODO error message should be at concrete field
 	@Check
 	public void checkSegment(final Segment segment) {
 		if ("E1CUKNM".equals(segment.getType())) {
@@ -29,7 +27,7 @@ public class IDocJavaValidator extends AbstractIDocJavaValidator {
 				if ("LINE".equals(field.getName()) && field instanceof StringField) {
 					final int length = ((StringField)field).getValue().length();
 					if (length > LENGTH_LIMIT) {
-						error("Length of E1CUKNM LINE should be " + LENGTH_LIMIT + " characters maximum, but is " + length+ " characters", IDocPackage.SEGMENT__FIELDS);
+						error("Length of E1CUKNM LINE should be " + LENGTH_LIMIT + " characters maximum, but is " + length+ " characters", field, IDocPackage.STRING_FIELD__VALUE);
 					}
 				}
 			}
