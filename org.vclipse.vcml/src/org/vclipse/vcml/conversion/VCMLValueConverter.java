@@ -16,6 +16,7 @@ import org.eclipse.xtext.conversion.ValueConverter;
 import org.eclipse.xtext.conversion.impl.AbstractNullSafeConverter;
 import org.eclipse.xtext.conversion.impl.AbstractToStringConverter;
 import org.eclipse.xtext.parsetree.AbstractNode;
+import org.vclipse.base.Strings;
 
 public class VCMLValueConverter extends DefaultTerminalConverters {
 

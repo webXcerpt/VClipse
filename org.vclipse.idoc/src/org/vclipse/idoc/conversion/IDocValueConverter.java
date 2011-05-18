@@ -15,6 +15,7 @@ import org.eclipse.xtext.conversion.IValueConverter;
 import org.eclipse.xtext.conversion.ValueConverter;
 import org.eclipse.xtext.conversion.impl.AbstractNullSafeConverter;
 import org.eclipse.xtext.parsetree.AbstractNode;
+import org.vclipse.base.Strings;
 
 public class IDocValueConverter extends DefaultTerminalConverters {
 

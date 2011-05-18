@@ -8,7 +8,7 @@
  * Contributors:
  *    webXcerpt Software GmbH - initial creator
  *******************************************************************************/
-package org.vclipse.vcml.conversion;
+package org.vclipse.base;
 
 public class Strings extends org.eclipse.xtext.util.Strings {
 

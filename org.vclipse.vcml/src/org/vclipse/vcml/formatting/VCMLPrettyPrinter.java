@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.vclipse.vcml.VCMLPlugin;
-import org.vclipse.vcml.conversion.Strings;
+import org.vclipse.base.Strings;
 import org.vclipse.vcml.utils.ISapConstants;
 import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;

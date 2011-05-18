@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.util,
  org.eclipse.emf.ecore,
  org.eclipse.emf.common,
- org.antlr.runtime
+ org.antlr.runtime,
+ org.vclipse.base
 Import-Package: de.uka.ilkd.pp,
  org.apache.log4j
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
