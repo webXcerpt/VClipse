@@ -18,7 +18,7 @@
             id="org.vclipse.fileTranformation"
             objectClass="org.eclipse.core.resources.IFile">
          <action
-               class="org.vclipse.vcml2idoc.ui.VCML2IDocsAction"
+               class="org.vclipse.vcml2idoc.injection.ExecutableExtensionFactory:org.vclipse.vcml2idoc.actions.VCML2IDocsAction"
                enablesFor="+"
                icon="icons/run_transformation.png"
                id="org.vclipse.actions.VCML2idoc"
@@ -46,7 +46,7 @@
             id="org.vclipse.popup.VCMLnature"
             objectClass="org.eclipse.core.resources.IProject">
          <action
-               class="org.vclipse.vcml2idoc.ui.AddRemoveVCML2IDocNature"
+               class="org.vclipse.vcml2idoc.actions.AddRemoveNatureAction"
                enablesFor="+"
                id="org.vclipse.actions.addvcmlnature"
                label="Add/Remove VCML nature"
@@ -63,10 +63,41 @@
          point="org.eclipse.ui.preferencePages">
       <page
             category="org.vclipse.preferences.page"
-            class="org.vclipse.vcml2idoc.ui.preferences.VCML2IDocOptionsPreferencePage"
+            class="org.vclipse.vcml2idoc.injection.ExecutableExtensionFactory:org.vclipse.vcml2idoc.preferences.VCML2IDocOptionsPreferencePage"
             id="org.vclipse.vcml2idoc.preferences.pages.vcml2IDocOptions"
             name="IDoc Generation">
       </page>
    </extension>
-
+   <extension
+         id="org.vclipse.builder.vcml2idoc"
+         name="VCML to IDoc Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true"
+            isConfigurable="true">
+         <run
+               class="org.vclipse.vcml2idoc.builder.VCML2IDocBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="org.vclipse.natures.vcml2idoc"
+         name="VCML to IDoc nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.vclipse.vcml2idoc.builder.VCML2IDocNature">
+         </run>
+      </runtime>
+      <builder
+            id="org.vclipse.builder.vcml2idoc">
+      </builder>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.vclipse.vcml2idoc.injection.ExecutableExtensionFactory:org.vclipse.vcml2idoc.preferences.PreferencesInitializer">
+      </initializer>
+   </extension>
+   
 </plugin>

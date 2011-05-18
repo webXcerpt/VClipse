@@ -8,7 +8,7 @@
  * Contributors:
  *    webXcerpt Software GmbH - initial creator
  *******************************************************************************/
-package org.vclipse.vcml2idoc;
+package org.vclipse.vcml2idoc.builder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
+import org.vclipse.vcml2idoc.VCML2IDocUIPlugin;
 
 /**
  * 
@@ -59,7 +60,7 @@ public class VCML2IDocNature implements IProjectNature {
 				description.setBuildSpec((ICommand[]) newCmds.toArray(new ICommand[newCmds.size()]));
 				project.setDescription(description, null);
 			} catch (final CoreException exception) {
-				VCML2IDocPlugin.log(exception.getMessage(), exception);
+				VCML2IDocUIPlugin.log(exception.getMessage(), exception);
 			}
 		}
 	}
@@ -94,7 +95,7 @@ public class VCML2IDocNature implements IProjectNature {
 				description.setBuildSpec((ICommand[]) newCmds.toArray(new ICommand[newCmds.size()]));
 				project.setDescription(description, null);
 			} catch (final CoreException exception) {
-				VCML2IDocPlugin.log(exception.getMessage(), exception);
+				VCML2IDocUIPlugin.log(exception.getMessage(), exception);
 			}
 		}
 	}

@@ -8,15 +8,16 @@
  * Contributors:
  *    webXcerpt Software GmbH - initial creator
  *******************************************************************************/
-package org.vclipse.vcml2idoc.ui;
+package org.vclipse.vcml2idoc;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.vclipse.vcml.ui.CombinedPreferenceStore;
-import org.vclipse.vcml2idoc.VCML2IDocPlugin;
+import org.vclipse.vcml2idoc.injection.Module;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -29,14 +30,14 @@ public class VCML2IDocUIPlugin extends AbstractUIPlugin {
 	public static final String ID = "org.vclipse.vcml2idoc.ui";
 
 	/**
-	 * 
-	 */
-	private IPreferenceStore preferenceStore;
-	
-	/**
 	 *  The shared instance
 	 */
 	private static VCML2IDocUIPlugin plugin;
+	
+	/**
+	 * 
+	 */
+	private Injector injector;
 
 	/**
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
@@ -64,16 +65,15 @@ public class VCML2IDocUIPlugin extends AbstractUIPlugin {
 	}
 	
 	/**
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#getPreferenceStore()
+	 * @return
 	 */
-	@Override
-	public IPreferenceStore getPreferenceStore() {
-		if(preferenceStore == null) {
-			preferenceStore = new CombinedPreferenceStore(VCML2IDocUIPlugin.ID, VCML2IDocPlugin.ID);
+	public Injector getInjector() {
+		if(injector == null) {
+			injector = Guice.createInjector(new Module(this));
 		}
-		return preferenceStore;
+		return injector;
 	}
-
+	
 	/**
 	 * @param message
 	 * @param severity

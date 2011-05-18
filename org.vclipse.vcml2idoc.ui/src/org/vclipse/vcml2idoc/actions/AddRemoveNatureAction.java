@@ -8,7 +8,7 @@
  * Contributors:
  *    webXcerpt Software GmbH - initial creator
  *******************************************************************************/
-package org.vclipse.vcml2idoc.ui;
+package org.vclipse.vcml2idoc.actions;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -21,14 +21,13 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionDelegate;
-import org.vclipse.vcml2idoc.VCML2IDocNature;
-
-
+import org.vclipse.vcml2idoc.VCML2IDocUIPlugin;
+import org.vclipse.vcml2idoc.builder.VCML2IDocNature;
 
 /**
  * 
  */
-public class AddRemoveVCML2IDocNature implements IActionDelegate {
+public class AddRemoveNatureAction implements IActionDelegate {
 
 	/**
 	 * 

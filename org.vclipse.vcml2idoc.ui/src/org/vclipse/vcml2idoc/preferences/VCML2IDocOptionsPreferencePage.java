@@ -8,17 +8,18 @@
  * Contributors:
  *    webXcerpt Software GmbH - initial creator
  *******************************************************************************/
-package org.vclipse.vcml2idoc.ui.preferences;
+package org.vclipse.vcml2idoc.preferences;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.vclipse.vcml.ui.CombinedPreferenceStore;
 import org.vclipse.vcml2idoc.IVCML2IDocPreferences;
-import org.vclipse.vcml2idoc.ui.VCML2IDocUIPlugin;
+
+import com.google.inject.Inject;
 
 /**
  *
@@ -26,13 +27,14 @@ import org.vclipse.vcml2idoc.ui.VCML2IDocUIPlugin;
 public class VCML2IDocOptionsPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
 	/**
-	 * 
+	 *
 	 */
-	public VCML2IDocOptionsPreferencePage() {
+	@Inject
+	public VCML2IDocOptionsPreferencePage(final IPreferenceStore preferenceStore) {
 		super(GRID);
-		setPreferenceStore(VCML2IDocUIPlugin.getDefault().getPreferenceStore());
+		setPreferenceStore(preferenceStore);
 	}
-	
+
 	/**
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
@@ -46,11 +48,12 @@ public class VCML2IDocOptionsPreferencePage extends FieldEditorPreferencePage im
 		addField(new BooleanFieldEditor(IVCML2IDocPreferences.CNPMAS, "CNPMAS (Master configuration profile)", idocGroup));
 		addField(new BooleanFieldEditor(IVCML2IDocPreferences.DEPNET, "DEPNET (Master data of dependency net)", idocGroup));
 		addField(new BooleanFieldEditor(IVCML2IDocPreferences.KNOMAS, "KNOMAS (Master dependency basic data)", idocGroup));
-		addField(new DisabledBooleanFieldEditor(IVCML2IDocPreferences.MATMAS, "MATMAS (Material master)", idocGroup));
+		addField(new BooleanFieldEditor(IVCML2IDocPreferences.MATMAS, "MATMAS (Material master)", idocGroup));
 		addField(new BooleanFieldEditor(IVCML2IDocPreferences.UPSMAS, "UPSMAS (master: ALE distribution unit)", idocGroup));
 		addField(new BooleanFieldEditor(IVCML2IDocPreferences.VCUI_SAVEM, "VCUI_SAVEM (Create or change interface design)", idocGroup));
 		addField(new BooleanFieldEditor(IVCML2IDocPreferences.VFNMAS, "VFNMAS (Master variant function)", idocGroup));
 		addField(new BooleanFieldEditor(IVCML2IDocPreferences.VTAMAS, "VTAMAS (Master variant table)", idocGroup));
+		addField(new BooleanFieldEditor(IVCML2IDocPreferences.NSN_DDICTAB, "/NSN/DDICTAB", idocGroup));
 		addField(new StringFieldEditor(IVCML2IDocPreferences.UPSTYP, "UPS type:", idocGroup));
 	}
 
@@ -60,24 +63,5 @@ public class VCML2IDocOptionsPreferencePage extends FieldEditorPreferencePage im
 	@Override
 	public void init(final IWorkbench workbench) {
 		// not used
-	}
-	
-	/**
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#performOk()
-	 */
-	@Override
-	public boolean performOk() {
-		super.performOk();
-		((CombinedPreferenceStore)getPreferenceStore()).storePreferences();
-		return true;
-	}
-
-	/**
-	 * @see org.eclipse.jface.preference.PreferencePage#performApply()
-	 */
-	@Override
-	protected void performApply() {
-		super.performApply();
-		((CombinedPreferenceStore)getPreferenceStore()).storePreferences();
 	}
 }

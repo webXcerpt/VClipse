@@ -8,7 +8,7 @@
  * Contributors:
  *    webXcerpt Software GmbH - initial creator
  *******************************************************************************/
-package org.vclipse.vcml2idoc;
+package org.vclipse.vcml2idoc.builder;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
@@ -27,6 +27,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeSettings;
+import org.vclipse.vcml2idoc.IVcml2IDocTransformation;
+import org.vclipse.vcml2idoc.VCML2IDocUIPlugin;
 
 /**
  * 
@@ -58,6 +60,8 @@ public class VCML2IDocBuilder extends IncrementalProjectBuilder {
 	 */
 	private String vcmlExtension;
 	
+	private IVcml2IDocTransformation transformation;
+	
 	/**
 	 * 
 	 */
@@ -65,12 +69,13 @@ public class VCML2IDocBuilder extends IncrementalProjectBuilder {
 		pathsToBuild = new HashSet<IFile>();
 		final IContentType contentType = Platform.getContentTypeManager().getContentType(SAP_MODEL_CTYPE_ID);
 		vcmlExtension = contentType.getFileSpecs(IContentTypeSettings.FILE_EXTENSION_SPEC)[0];
+		transformation = VCML2IDocUIPlugin.getDefault().getInjector().getInstance(IVcml2IDocTransformation.class);
 	}
 
 	/**
 	 * @see org.eclipse.core.resources.IncrementalProjectBuilder#build(int, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Override
 	protected IProject[] build(final int kind, final Map args, final IProgressMonitor monitor) throws CoreException {
 		final IProject project = getProject();
@@ -98,11 +103,11 @@ public class VCML2IDocBuilder extends IncrementalProjectBuilder {
 		}
 		
 		try {
-			new VCML2IDocTransformation().tranform(pathsToBuild.iterator(), monitor);
+			transformation.tranform(pathsToBuild.iterator(), monitor);
 			monitor.done();
 		} catch (final InvocationTargetException exception) {
 			monitor.setCanceled(true);
-			VCML2IDocPlugin.log(exception.getMessage(), exception);
+			VCML2IDocUIPlugin.log(exception.getMessage(), exception);
 		}
 		return new IProject[0];
 	}

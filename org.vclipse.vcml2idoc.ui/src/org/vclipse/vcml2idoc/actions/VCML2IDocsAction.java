@@ -8,7 +8,7 @@
  * Contributors:
  *    webXcerpt Software GmbH - initial creator
  *******************************************************************************/
-package org.vclipse.vcml2idoc.ui;
+package org.vclipse.vcml2idoc.actions;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
@@ -23,7 +23,10 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.vclipse.vcml2idoc.VCML2IDocTransformation;
+import org.vclipse.vcml2idoc.IVcml2IDocTransformation;
+import org.vclipse.vcml2idoc.VCML2IDocUIPlugin;
+
+import com.google.inject.Inject;
 
 /**
  * 
@@ -34,6 +37,19 @@ public class VCML2IDocsAction implements IObjectActionDelegate {
 	 * 
 	 */
 	private Iterator<IFile> iterator;
+	
+	/**
+	 * 
+	 */
+	private final IVcml2IDocTransformation transformation;
+	
+	/**
+	 * @param transformation
+	 */
+	@Inject
+	public VCML2IDocsAction(IVcml2IDocTransformation transformation) {
+		this.transformation = transformation;
+	}
 	
 	/**
 	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
@@ -51,11 +67,11 @@ public class VCML2IDocsAction implements IObjectActionDelegate {
 		try {
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().run(true, true, 
 					new WorkspaceModifyOperation() {
-						@Override
-							protected void execute(final IProgressMonitor monitor) throws CoreException, InvocationTargetException, InterruptedException {
-								new VCML2IDocTransformation().tranform(iterator, monitor);
-							}
-					});
+				@Override
+				protected void execute(final IProgressMonitor monitor) throws CoreException, InvocationTargetException, InterruptedException {
+					transformation.tranform(iterator, monitor);
+				}
+			});
 		} catch (final InvocationTargetException exception) {
 			VCML2IDocUIPlugin.log(exception.getMessage(), exception);
 		} catch (final InterruptedException exception) {

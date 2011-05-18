@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.vclipse.vcml2idoc.ui.preferences;
+package org.vclipse.vcml2idoc.preferences;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.swt.widgets.Button;
