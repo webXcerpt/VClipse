@@ -8,7 +8,7 @@
  * Contributors:
  *    webXcerpt Software GmbH - initial creator
  *******************************************************************************/
-package org.vclipse.vcml.ui.labeling;
+package org.vclipse.base;
 
 import java.net.URL;
 
