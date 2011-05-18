@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.vclipse.rfc_feature"
+      label="VClipse RFC Actions"
+      version="0.1.0.qualifier"
+      provider-name="webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)">
+
+   <description url="http://www.vclipse.org">
+      Using SAP’s remote function call, VC objects and dependencies can be transferred and retrieved from a SAP system.
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.equinox.security" version="1.0.100" match="greaterOrEqual"/>
+      <import plugin="org.apache.commons.lang" version="2.3.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.commons.logging" version="1.1.1" match="greaterOrEqual"/>
+      <import plugin="com.sap.conn.jco.idoc"/>
+      <import plugin="com.sap.conn.jco"/>
+      <import plugin="org.eclipse.ui.console" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.vclipse.connection" version="0.1.0" match="greaterOrEqual"/>
+      <import plugin="org.vclipse.vcml.ui" version="0.1.0" match="greaterOrEqual"/>
+      <import plugin="org.vclipse.console" version="0.1.0" match="greaterOrEqual"/>
+      <import plugin="org.vclipse.jpplib" version="0.6.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.log4j"/>
+      <import plugin="org.eclipse.xtext.ui"/>
+   </requires>
+
+   <plugin
+         id="org.vclipse.connection"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.vclipse.console"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.vclipse.vcml.ui.actions"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

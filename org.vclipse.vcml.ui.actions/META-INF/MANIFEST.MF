@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: VClipse VCML UI RFC Actions Plug-in
+Bundle-SymbolicName: org.vclipse.vcml.ui.actions;singleton:=true
+Bundle-Version: 0.1.0.qualifier
+Bundle-Activator: org.vclipse.vcml.ui.actions.Activator
+Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.vclipse.connection;bundle-version="0.1.0",
+ org.vclipse.vcml.ui;bundle-version="0.1.0",
+ org.eclipse.xtext.ui,
+ org.eclipse.ui.console;bundle-version="3.4.0",
+ org.vclipse.console;bundle-version="0.1.0",
+ org.vclipse.jpplib;bundle-version="0.6.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: org.vclipse.vcml.ui.actions
+Import-Package: com.sap.conn.jco,
+ de.uka.ilkd.pp,
+ org.apache.log4j

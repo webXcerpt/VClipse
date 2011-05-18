@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: VClipse IDoc to JCo IDoc Transformation UI Plug-in
+Bundle-SymbolicName: org.vclipse.idoc2jcoidoc;singleton:=true
+Bundle-Version: 0.1.0.qualifier
+Bundle-Activator: org.vclipse.idoc2jcoidoc.Activator
+Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.vclipse.vcml2idoc;bundle-version="0.1.0",
+ org.vclipse.connection;bundle-version="0.1.0",
+ org.vclipse.vcml;bundle-version="0.1.0",
+ org.vclipse.idoc;bundle-version="0.1.0",
+ org.eclipse.core.resources;bundle-version="3.5.1",
+ org.eclipse.xtext,
+ org.eclipse.ui.views;bundle-version="3.4.1",
+ org.eclipse.ui.ide;bundle-version="3.5.1",
+ org.eclipse.xtext.ui,
+ org.vclipse.console;bundle-version="0.1.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Import-Package: com.sap.conn.idoc,
+ com.sap.conn.idoc.jco,
+ com.sap.conn.idoc.rt.cp,
+ com.sap.conn.idoc.rt.record,
+ com.sap.conn.idoc.rt.record.impl,
+ com.sap.conn.idoc.rt.trace,
+ com.sap.conn.idoc.rt.util,
+ com.sap.conn.idoc.rt.xml,
+ com.sap.conn.jco

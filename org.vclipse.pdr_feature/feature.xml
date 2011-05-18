@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.vclipse.pdr_feature"
+      label="VClipse PDR Sender"
+      version="0.1.0.qualifier"
+      provider-name="webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)">
+
+   <description url="http://www.vclipse.org">
+      PDR enables to transfer VC objects and dependencies to a SAP system, using product data replication via IDOCs
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.equinox.security" version="1.0.100" match="greaterOrEqual"/>
+      <import plugin="org.apache.commons.lang" version="2.3.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.commons.logging" version="1.1.1" match="greaterOrEqual"/>
+      <import plugin="com.sap.conn.jco.idoc"/>
+      <import plugin="com.sap.conn.jco"/>
+      <import plugin="org.eclipse.ui.console" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.vclipse.vcml2idoc" version="0.1.0" match="greaterOrEqual"/>
+      <import plugin="org.vclipse.connection" version="0.1.0" match="greaterOrEqual"/>
+      <import plugin="org.vclipse.vcml" version="0.1.0" match="greaterOrEqual"/>
+      <import plugin="org.vclipse.idoc" version="0.1.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.resources" version="3.5.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.views" version="3.4.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.ide" version="3.5.1" match="greaterOrEqual"/>
+      <import plugin="org.vclipse.console" version="0.1.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.xtext" version="1.0.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.xtext.ui" version="1.0.1" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="org.vclipse.connection"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.vclipse.console"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.vclipse.idoc2jcoidoc"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
