@@ -20,7 +20,7 @@
               contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
               default="true"
               extensions="idoc"
-              icon="icons/idoc.png"
+              icon="icons/IDoc.png"
               id="org.vclipse.idoc.IDoc"
               name="IDoc Editor">
         </editor>

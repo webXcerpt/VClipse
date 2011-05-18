@@ -14,10 +14,16 @@
 package org.vclipse.idoc;
 
 import org.eclipse.xtext.conversion.IValueConverterService;
+import org.eclipse.xtext.parsetree.reconstr.Serializer;
+import org.eclipse.xtext.resource.IResourceDescription;
 import org.vclipse.idoc.conversion.IDocValueConverter;
+import org.vclipse.idoc.formatting.IDocSerializer;
+import org.vclipse.idoc.iDoc.IDocFactory;
+import org.vclipse.idoc.resource.IDocResourceDescriptionManager;
 
 /**
- * Use this class to register components to be used at runtime / without the Equinox extension registry.
+ * Use this class to register components to be used at runtime / without the
+ * Equinox extension registry.
  */
 public class IDocRuntimeModule extends AbstractIDocRuntimeModule {
 
@@ -26,4 +32,16 @@ public class IDocRuntimeModule extends AbstractIDocRuntimeModule {
 		return IDocValueConverter.class;
 	}
 
+	@Override
+	public Class<? extends Serializer> bindSerializerUtil() {
+		return IDocSerializer.class;
+	}
+
+	public Class<? extends IResourceDescription.Manager> bindIResourceDescriptionManager() {
+		return IDocResourceDescriptionManager.class;
+	}
+
+	public IDocFactory bindIDocFactory() {
+		return IDocFactory.eINSTANCE;
+	}
 }

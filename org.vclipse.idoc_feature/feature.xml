@@ -2,7 +2,7 @@
 <feature
       id="org.vclipse.idoc_feature"
       label="VClipse IDoc Editor"
-      version="0.1.0.qualifier"
+      version="0.2.0.qualifier"
       provider-name="webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)">
 
    <description url="http://www.vclipse.org">

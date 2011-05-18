@@ -13,8 +13,14 @@
 */
 package org.vclipse.idoc.ui.labeling;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider;
+import org.vclipse.idoc.iDoc.IDoc;
+import org.vclipse.idoc.iDoc.NumberField;
+import org.vclipse.idoc.iDoc.Segment;
+import org.vclipse.idoc.iDoc.StringField;
 
 import com.google.inject.Inject;
 
@@ -30,15 +36,26 @@ public class IDocLabelProvider extends DefaultEObjectLabelProvider {
 		super(delegate);
 	}
 
-/*
-	//Labels and icons can be computed like this:
-	
-	String text(MyModel ele) {
-	  return "my "+ele.getName();
+	String image(EObject ele) {
+		return ele.eClass().getName() + ".png";
 	}
-	 
-    String image(MyModel ele) {
-      return "MyModel.gif";
-    }
-*/
+
+	StyledString text(IDoc ele) {
+		return new StyledString(ele.getName() + " ", StyledString.DECORATIONS_STYLER).append(new StyledString(ele.getType()));
+	}
+	
+	StyledString text(NumberField ele) {
+		return new StyledString(ele.getName()).append(new StyledString(" " + ele.getValue(), StyledString.COUNTER_STYLER));
+		
+	}
+		
+	String text(Segment ele) {
+		return ele.getType();
+	}
+	
+	StyledString text(StringField ele) {
+		return new StyledString(ele.getName()).append(new StyledString(" " + ele.getValue(), StyledString.COUNTER_STYLER));
+		
+	}
+		
 }

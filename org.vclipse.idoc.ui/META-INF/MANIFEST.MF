@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: VClipse IDoc UI Plug-in
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 0.2.0.qualifier
 Bundle-SymbolicName: org.vclipse.idoc.ui;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.vclipse.idoc;visibility:=reexport,
