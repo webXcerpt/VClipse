@@ -16,7 +16,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -35,20 +34,17 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.xtext.IGrammarAccess;
 import org.eclipse.xtext.diagnostics.Diagnostic;
-import org.eclipse.xtext.diagnostics.DiagnosticSeverity;
 import org.eclipse.xtext.diagnostics.IDiagnosticConsumer;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.linking.ILinker;
 import org.eclipse.xtext.linking.ILinkingService;
 import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.ui.editor.outline.ContentOutlineNode;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.vclipse.console.CMConsolePlugin;
 import org.vclipse.console.CMConsolePlugin.Kind;
@@ -117,7 +113,7 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 		Resource usedResource = null;
 		final boolean outputToFile = preferenceStore.getBoolean(IUiConstants.OUTPUT_TO_FILE);
 		if(outputToFile) {
-			Model model = page.getDocument().readOnly(new IUnitOfWork<Model, XtextResource>() {
+			Model model = page.getXtextDocument().readOnly(new IUnitOfWork<Model, XtextResource>() {
 				public Model exec(XtextResource resource) throws Exception {
 					return (Model)resource.getParseResult().getRootASTElement();
 				}
@@ -186,13 +182,14 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 					}
 					if (linker!=null) {
 						linker.linkModel(resultModel, new IDiagnosticConsumer() {
-
-							public void consume(Diagnostic diagnostic, DiagnosticSeverity severity) {
+							public void consume(Diagnostic diagnostic,
+									Severity severity) {
 								// TODO Auto-generated method stub
 								
 							}
 
-							public boolean hasConsumedDiagnostics(DiagnosticSeverity severity) {
+							public boolean hasConsumedDiagnostics(
+									Severity severity) {
 								// TODO Auto-generated method stub
 								return false;
 							}
@@ -259,8 +256,8 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
 	 */
 	@SuppressWarnings("unchecked")
-	public void selectionChanged(SelectionChangedEvent event) {
-		ISelection selection = event.getSelection();
+	public void selectionChanged(final SelectionChangedEvent event) {
+		/*ISelection selection = event.getSelection();
 		removeSelectedObjects();
 		if(selection instanceof IStructuredSelection) {
 			IStructuredSelection strSelection = (IStructuredSelection)selection;
@@ -306,7 +303,7 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 			}
 
 			setEnabled(visitedSomeAction && enabled);
-		}
+		}*/
 	}
 	
 	private Class<?> getInstanceType(EObject obj) throws ClassNotFoundException {

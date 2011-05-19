@@ -13,15 +13,14 @@ package org.vclipse.vcml.formatting;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.xtext.CrossReference;
-import org.eclipse.xtext.parsetree.AbstractNode;
+import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.parsetree.reconstr.XtextSerializationException;
 import org.eclipse.xtext.parsetree.reconstr.impl.CrossReferenceSerializer;
 
 public class VCMLCrossReferenceSerializer extends CrossReferenceSerializer {
 	
 	@Override
-	public String serializeCrossRef(EObject context,
-			CrossReference grammarElement, EObject target, AbstractNode node) {
+	public String serializeCrossRef(EObject context, CrossReference grammarElement, EObject target, INode node) {
 		try {
 			// System.err.println("serializeCrossRef " + context + " " + grammarElement + " " + target);
 			return super.serializeCrossRef(context, grammarElement, target, node);

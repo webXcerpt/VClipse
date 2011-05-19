@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.vclipse.vcml.ui.syntaxcoloring;
 
+import org.eclipse.xtext.ui.editor.syntaxcoloring.DefaultAntlrTokenToAttributeIdMapper;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.DefaultHighlightingConfiguration;
-import org.eclipse.xtext.ui.editor.syntaxcoloring.antlr.DefaultAntlrTokenToAttributeIdMapper;
 
 public class VCMLAntlrTokenToAttributeIdMapper extends DefaultAntlrTokenToAttributeIdMapper {
 

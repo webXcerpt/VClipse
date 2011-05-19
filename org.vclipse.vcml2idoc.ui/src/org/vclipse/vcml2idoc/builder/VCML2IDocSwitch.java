@@ -994,7 +994,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		final List<IDoc> result = new ArrayList<IDoc>();
 
 		// group classes by type
-		final Multimap<Integer, Class> classesByType = new ArrayListMultimap<Integer, Class>();
+		final Multimap<Integer, Class> classesByType = ArrayListMultimap.create();
 		for(final Class cls : material.getClasses()) {
 			classesByType.put(VCMLUtils.getClassType(toUpperCase(cls.getName())), cls);
 		}

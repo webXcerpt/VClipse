@@ -47,62 +47,63 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	@Check(CheckType.FAST)
 	public void checkCharacteristic(final Characteristic object) {
 		if (object.getName().length() > MAXLENGTH_NAME) {
-			error("Name of characteristic is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.CHARACTERISTIC__NAME);
+			error("Name of characteristic is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 	}
 
 	@Check(CheckType.FAST)
 	public void checkProcedure(final Procedure object) {
 		if (object.getName().length() > MAXLENGTH_NAME) {
-			error("Name of procedure is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.PROCEDURE__NAME);
+			error("Name of procedure is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 	}
 
 	@Check(CheckType.FAST)
 	public void checkDependencyNet(final DependencyNet object) {
 		if (object.getName().length() > MAXLENGTH_NAME) {
-			error("Name of dependency net is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.DEPENDENCY_NET__NAME);
+			error("Name of dependency net is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 		if (object.getConstraints().size() > MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS) {
-			warning("Dependency net " + object.getName() + " too large, should have for efficiency at most " + MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS + " constraints", VcmlPackage.DEPENDENCY_NET__CONSTRAINTS);
+			warning("Dependency net " + object.getName() + " too large, should have for efficiency at most " + MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS + " constraints", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 	}
 
 	@Check(CheckType.FAST)
 	public void checkConstraint(final Constraint object) {
 		if (object.getName().length() > MAXLENGTH_NAME) {
-			error("Name of constraint is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.CONSTRAINT__NAME);
+			error("Name of constraint is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 	}
 
 	@Check(CheckType.FAST)
 	public void checkSelectionCondition(final SelectionCondition object) {
 		if (object.getName().length() > MAXLENGTH_NAME) {
-			error("Name of selection condition is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.SELECTION_CONDITION__NAME);
+			error("Name of selection condition is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 	}
 
 	@Check(CheckType.FAST)
 	public void checkPrecondition(final Precondition object) {
 		if (object.getName().length() > MAXLENGTH_NAME) {
-			error("Name of precondition is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.PRECONDITION__NAME);
+			error("Name of precondition is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 	}
 
 	@Check(CheckType.FAST)
 	public void checkClass(final Class object) {
 		if (VCMLUtils.getClassName(object.getName()).length() > MAXLENGTH_CLASS_NAME) {
-			error("Name of class is limited to " + MAXLENGTH_CLASS_NAME + " characters", VcmlPackage.CLASS__NAME);
+			error("Name of class is limited to " + MAXLENGTH_CLASS_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 		if (object.getCharacteristics().size() > MAXLENGTH_CLASS_CHARACTERISTICS) {
-			error("Number of characteristics of a class is limited to " + MAXLENGTH_CLASS_CHARACTERISTICS, VcmlPackage.CLASS__CHARACTERISTICS);
+			error("Number of characteristics of a class is limited to " + MAXLENGTH_CLASS_CHARACTERISTICS, VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 	}
 
 	@Check(CheckType.FAST)
 	public void checkDescription(final SimpleDescription desc) {
 		if (desc.getValue().length() > MAXLENGTH_DESCRIPTION) {
-			error("Descriptions are limited to " + MAXLENGTH_DESCRIPTION + " characters", VcmlPackage.SIMPLE_DESCRIPTION__VALUE);
+			warning("Descriptions are limited to " + MAXLENGTH_DESCRIPTION + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
+			// TODO make this an error
 		}
 	}
 

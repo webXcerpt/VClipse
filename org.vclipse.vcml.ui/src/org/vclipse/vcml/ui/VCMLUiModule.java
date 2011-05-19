@@ -20,15 +20,14 @@ import org.eclipse.jface.text.ITextHover;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.xtext.ui.IImageHelper;
-import org.eclipse.xtext.ui.editor.FastLineBasedDamagerRepairer;
-import org.eclipse.xtext.ui.editor.IDamagerRepairer;
 import org.eclipse.xtext.ui.editor.XtextSourceViewerConfiguration;
-import org.eclipse.xtext.ui.editor.syntaxcoloring.antlr.AbstractAntlrTokenToAttributeIdMapper;
+import org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider;
+import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
 import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.vcml.ui.editor.VCMLInformationControlCreator;
 import org.vclipse.vcml.ui.editor.VCMLSourceViewerConfiguration;
-import org.vclipse.vcml.ui.editor.VCMLTextHover;
 import org.vclipse.vcml.ui.outline.VCMLOutlinePage;
+import org.vclipse.vcml.ui.outline.VCMLOutlineTreeProvider;
 import org.vclipse.vcml.ui.syntaxcoloring.VCMLAntlrTokenToAttributeIdMapper;
 
 /**
@@ -48,10 +47,10 @@ public class VCMLUiModule extends org.vclipse.vcml.ui.AbstractVCMLUiModule {
 		return VCMLSourceViewerConfiguration.class;
 	}
 
-	public Class<? extends ITextHover> bindTextHover() {
-		return VCMLTextHover.class;
-	}
-	
+//	public Class<? extends ITextHover> bindTextHover() {
+//		return VCMLTextHover.class;
+//	}
+
 	public Class<? extends IInformationControlCreator> bindInformationControlCreator() {
 		return VCMLInformationControlCreator.class;
 	}
@@ -64,11 +63,6 @@ public class VCMLUiModule extends org.vclipse.vcml.ui.AbstractVCMLUiModule {
 		return VCMLAntlrTokenToAttributeIdMapper.class;
 	}
 
-	@Override
-	public Class<? extends IDamagerRepairer> bindIDamagerRepairer() {
-		return FastLineBasedDamagerRepairer.class;
-	}
-	
 	public com.google.inject.Provider<org.eclipse.xtext.resource.containers.IAllContainersState> provideIAllContainersState() {
 		return org.eclipse.xtext.ui.shared.Access.getWorkspaceProjectsState();
 	}
@@ -77,5 +71,10 @@ public class VCMLUiModule extends org.vclipse.vcml.ui.AbstractVCMLUiModule {
 	public Class<? extends IImageHelper> bindIImageHelper() {
 		return ClasspathAwareImageHelper.class;
 	}
-	
+
+	@Override
+	public Class<? extends IOutlineTreeProvider> bindIOutlineTreeProvider() {
+		return VCMLOutlineTreeProvider.class;
+	}
+
 }

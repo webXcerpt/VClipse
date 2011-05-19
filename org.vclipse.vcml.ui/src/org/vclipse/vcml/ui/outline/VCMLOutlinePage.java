@@ -39,7 +39,7 @@ import org.eclipse.xtext.linking.ILinker;
 import org.eclipse.xtext.linking.ILinkingService;
 import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.ui.IImageHelper;
-import org.eclipse.xtext.ui.editor.outline.XtextContentOutlinePage;
+import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
 import org.vclipse.vcml.ui.IUiConstants;
 import org.vclipse.vcml.ui.VCMLUiPlugin;
 import org.vclipse.vcml.ui.outline.actions.IVCMLOutlineActionHandler;
@@ -51,7 +51,7 @@ import com.google.inject.Inject;
 /**
  * 
  */
-public class VCMLOutlinePage extends XtextContentOutlinePage implements IPropertyChangeListener {
+public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListener {
 
 	@Inject
 	private IResourceFactory resourceFactory;

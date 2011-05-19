@@ -15,12 +15,15 @@ Require-Bundle: org.vclipse.base.ui;bundle-version="0.1.0",
  org.antlr.runtime,
  org.eclipse.ui.console,
  org.eclipse.xtext.ui.shared,
- org.eclipse.xtext.builder
+ org.eclipse.xtext.builder,
+ org.eclipse.compare,
+ org.eclipse.xtext.common.types.ui
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.vcml.ui.contentassist.antlr,
  org.vclipse.vcml.ui.outline.actions,
  org.vclipse.vcml.ui,
- org.vclipse.vcml.ui.contentassist
+ org.vclipse.vcml.ui.contentassist,
+ org.vclipse.vcml.ui.internal
 Bundle-Activator: org.vclipse.vcml.ui.internal.VCMLActivator
 Import-Package: de.uka.ilkd.pp,
  org.apache.log4j,

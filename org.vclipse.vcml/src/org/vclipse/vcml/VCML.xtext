@@ -894,9 +894,11 @@ terminal SYMBOL // enclosed in single quotes, no escapes, no line breaks, no tab
 	:	"'" ( !("'"|'\t'|'\n'|'\r') )* "'"
 	; 
 
-EXTENDED_ID hidden () // no whitespace might be used inside extended ids
-	:	(INT | ID | '/' | ':' | '-' | '.' | 'e')+ 
-	;	
+EXTENDED_ID
+	: ID | SYMBOL;
+//EXTENDED_ID hidden () // no whitespace might be used inside extended ids
+//	:	(INT | ID | '/' | ':' | '-' | '.')+ 
+//	;	
 
 // bug has been filed as Xtext bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=303212
 SHORTVAR // NOTE: due to a bug in Xtext, the following does not work: hidden () // no whitespace might be used inside shortvars // TODO verify this in SAP

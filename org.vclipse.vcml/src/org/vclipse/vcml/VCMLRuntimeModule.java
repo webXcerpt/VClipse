@@ -17,7 +17,7 @@ import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.linking.ILinker;
 import org.eclipse.xtext.linking.lazy.LazyURIEncoder;
 import org.eclipse.xtext.parsetree.reconstr.ITokenSerializer;
-import org.eclipse.xtext.parsetree.reconstr.Serializer;
+import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.validation.CompositeEValidator;
 import org.vclipse.vcml.conversion.VCMLValueConverter;
 import org.vclipse.vcml.formatting.VCMLCrossReferenceSerializer;
@@ -65,7 +65,7 @@ public class VCMLRuntimeModule extends org.vclipse.vcml.AbstractVCMLRuntimeModul
 	}
 
 	@Override
-	public Class<? extends Serializer> bindSerializerUtil() {
+	public Class<? extends ISerializer> bindISerializer() {
 		return VCMLSerializer.class;
 	}
 

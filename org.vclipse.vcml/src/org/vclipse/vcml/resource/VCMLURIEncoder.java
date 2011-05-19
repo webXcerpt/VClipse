@@ -16,8 +16,8 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.linking.lazy.LazyURIEncoder;
-import org.eclipse.xtext.parsetree.AbstractNode;
-import org.eclipse.xtext.parsetree.NodeUtil;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.util.Triple;
 import org.eclipse.xtext.util.Tuples;
 
@@ -36,12 +36,13 @@ public class VCMLURIEncoder extends LazyURIEncoder {
 	 * @return
 	 */
 	@Override
-	public String encode(EObject obj, EReference ref, AbstractNode node) {
+	public String encode(EObject obj, EReference ref, INode node) {
 		StringBuilder fragment = new StringBuilder(80).append(VCML_LINK).append(SEP);
 		fragment.append(obj.eResource().getURIFragment(obj)).append(SEP);
 		appendReferenceURI(fragment, ref);
 		fragment.append(SEP);
-		getRelativePath(fragment, NodeUtil.getNodeAdapter(obj).getParserNode(), node);
+		getRelativePath(fragment, 
+				NodeModelUtils.getNode(obj), node);
 		return fragment.toString();
 	}
 
@@ -62,7 +63,7 @@ public class VCMLURIEncoder extends LazyURIEncoder {
 	 * @return
 	 */
 	@Override
-	public Triple<EObject, EReference, AbstractNode> decode(Resource res, String uriFragment) {
+	public Triple<EObject, EReference, INode> decode(Resource res, String uriFragment) {
 		String[] split = uriFragment.split(SEP);
 		EObject source = res.getEObject(split[1]);
 		String reference = split[2];
@@ -71,8 +72,7 @@ public class VCMLURIEncoder extends LazyURIEncoder {
 		EPackage pack = res.getResourceSet().getPackageRegistry().getEPackage(reference.substring(0, referenceHash));
 		EClass classifier = (EClass) pack.getEClassifier(reference.substring(referenceHash+1, referenceSlash));
 		EReference ref = (EReference) classifier.getEStructuralFeature(Integer.parseInt(reference.substring(referenceSlash + 1)));
-		AbstractNode text = getNode(NodeUtil.getNodeAdapter(source).getParserNode(), split[3]);
-		return Tuples.create(source, ref, text);
+		return Tuples.create(source, ref, getNode(NodeModelUtils.getNode(source), split[3]));
 	}
 
 	@Override

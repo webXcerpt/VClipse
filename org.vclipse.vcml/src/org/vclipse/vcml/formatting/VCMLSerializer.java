@@ -49,16 +49,13 @@ public class VCMLSerializer extends Serializer {
 	}
 
 	@Override
-	public TreeConstructionReport serialize(final EObject obj, final Writer writer, final SaveOptions options)
-	throws IOException {
+	public void serialize(final EObject obj, final Writer writer, final SaveOptions options) throws IOException {
 		writer.append(serialize(obj));
 		writer.flush();
-		return null;
 	}
 
 	@Override
-	public TreeConstructionReport serialize(final EObject obj, final ITokenStream tokenStream, final SaveOptions options)
-	throws IOException {
+	public TreeConstructionReport serialize(final EObject obj, final ITokenStream tokenStream, final SaveOptions options) throws IOException {
 		if (usePrettyPrinter()) { 
 			// TODO how to implement this with VCMLPrettyPrinter
 			throw new IllegalArgumentException("VCMLPrettyPrinter is not a serializer to ITokenStream");

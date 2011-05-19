@@ -13,25 +13,25 @@ package org.vclipse.vcml.conversion;
 import org.eclipse.xtext.common.services.DefaultTerminalConverters;
 import org.eclipse.xtext.conversion.IValueConverter;
 import org.eclipse.xtext.conversion.ValueConverter;
+import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.conversion.impl.AbstractNullSafeConverter;
 import org.eclipse.xtext.conversion.impl.AbstractToStringConverter;
-import org.eclipse.xtext.parsetree.AbstractNode;
+import org.eclipse.xtext.nodemodel.INode;
 import org.vclipse.base.Strings;
 
 public class VCMLValueConverter extends DefaultTerminalConverters {
 
 	private static IValueConverter<String> TOUPPER_VALUECONVERTER = new AbstractToStringConverter<String>() {
 		@Override
-		protected String internalToValue(String string, AbstractNode node) {
+		protected String internalToValue(String string, INode node) throws ValueConverterException {
 			return string.toUpperCase();
 		}
 	};
 	
 	private static IValueConverter<String> NOWHITESPACE_TOUPPER_VALUECONVERTER = new AbstractToStringConverter<String>() {
 		@Override
-		protected String internalToValue(String string, AbstractNode node) {
-			String result = string.replaceAll("\\s", "").toUpperCase();
-			return result;
+		protected String internalToValue(String string, INode node) throws ValueConverterException {
+			return string.replaceAll("\\s", "").toUpperCase();
 		}
 	};
 	
@@ -64,7 +64,7 @@ public class VCMLValueConverter extends DefaultTerminalConverters {
 	public IValueConverter<String> STRING() {
 		return new AbstractNullSafeConverter<String>() {
 			@Override
-			protected String internalToValue(String string, AbstractNode node) {
+			protected String internalToValue(String string, INode node) throws ValueConverterException {
 				return Strings.convertFromJavaString(string.substring(1, string.length() - 1));
 			}
 
@@ -79,7 +79,7 @@ public class VCMLValueConverter extends DefaultTerminalConverters {
 	public IValueConverter<String> SYMBOL() {
 		return new AbstractNullSafeConverter<String>() {
 			@Override
-			protected String internalToValue(String string, AbstractNode node) {
+			protected String internalToValue(String string, INode node) throws ValueConverterException {
 				return string.substring(1, string.length() - 1);
 			}
 
