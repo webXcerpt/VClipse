@@ -29,7 +29,7 @@ public class IDocDescriptionLabelProvider extends DefaultDescriptionLabelProvide
     }
 	 
 	public String text(IEObjectDescription ele) {
-	  return ele.getName();
+	  return ele.getName().toString();
 	}	 
 
 }

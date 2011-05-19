@@ -13,8 +13,13 @@ Require-Bundle: org.vclipse.base.ui;bundle-version="0.1.0",
  org.eclipse.xtext.ui.shared,
  org.eclipse.ui,
  org.eclipse.xtext.builder,
- org.antlr.runtime
-Import-Package: org.apache.log4j
+ org.eclipse.compare,
+ org.antlr.runtime,
+ org.eclipse.xtext.common.types.ui,
+ org.eclipse.xtext.ui.codetemplates.ui
+Import-Package: org.apache.log4j,
+ org.apache.commons.logging
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.vclipse.idoc.ui.contentassist.antlr
+Export-Package: org.vclipse.idoc.ui.contentassist.antlr,
+ org.vclipse.idoc.ui.internal
 Bundle-Activator: org.vclipse.idoc.ui.internal.IDocActivator

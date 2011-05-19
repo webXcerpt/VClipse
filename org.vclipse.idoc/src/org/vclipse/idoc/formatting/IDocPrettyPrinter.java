@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.vclipse.idoc.formatting;
 
 import org.eclipse.emf.common.util.EList;
@@ -18,15 +15,12 @@ import de.uka.ilkd.pp.DataLayouter;
 import de.uka.ilkd.pp.NoExceptions;
 import de.uka.ilkd.pp.StringBackend;
 
-/**
- *
- */
 public class IDocPrettyPrinter extends IDocSwitch<DataLayouter<NoExceptions>> {
-	
+
 	private DataLayouter<NoExceptions> layouter;
-	
+
 	private static final int INDENTATION = 2;
-	
+
 	public String prettyPrint(final EObject object) {
 		final StringBuilder sb = new StringBuilder();
 		// FIXME -> PreferenceSetting ?

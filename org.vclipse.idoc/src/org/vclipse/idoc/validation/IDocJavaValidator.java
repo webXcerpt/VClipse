@@ -27,7 +27,7 @@ public class IDocJavaValidator extends AbstractIDocJavaValidator {
 				if ("LINE".equals(field.getName()) && field instanceof StringField) {
 					final int length = ((StringField)field).getValue().length();
 					if (length > LENGTH_LIMIT) {
-						error("Length of E1CUKNM LINE should be " + LENGTH_LIMIT + " characters maximum, but is " + length+ " characters", field, IDocPackage.STRING_FIELD__VALUE);
+						error("Length of E1CUKNM LINE should be " + LENGTH_LIMIT + " characters maximum, but is " + length+ " characters", IDocPackage.Literals.STRING_FIELD__VALUE);
 					}
 				}
 			}

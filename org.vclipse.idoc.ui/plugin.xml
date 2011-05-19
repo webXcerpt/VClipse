@@ -151,6 +151,12 @@
 
 
 
+   <extension
+         point="org.eclipse.xtext.builder.participant">
+      <participant
+            class="org.vclipse.idoc.ui.IDocExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant">
+      </participant>
+   </extension>
 
 	<!-- Quick Outline -->
 	<extension
@@ -192,5 +198,25 @@
             class="org.vclipse.idoc.ui.IDocExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator">
       </markerResolutionGenerator>
    </extension>
+
+  <extension point="org.eclipse.compare.contentViewers">
+    <viewer id="org.vclipse.idoc.IDoc.compare.contentViewers"
+            class="org.vclipse.idoc.ui.IDocExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+            extensions="idoc">
+    </viewer>
+  </extension>
+  <extension point="org.eclipse.compare.contentMergeViewers">
+    <viewer id="org.vclipse.idoc.IDoc.compare.contentMergeViewers"
+            class="org.vclipse.idoc.ui.IDocExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+            extensions="idoc" label="IDoc Compare">
+     </viewer>
+  </extension>
+  <extension point="org.eclipse.ui.editors.documentProviders">
+    <provider id="org.vclipse.idoc.IDoc.editors.documentProviders"
+            class="org.vclipse.idoc.ui.IDocExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
+            extensions="idoc">
+    </provider>
+  </extension>
+
 
 </plugin>

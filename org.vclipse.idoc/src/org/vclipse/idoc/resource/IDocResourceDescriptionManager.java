@@ -11,7 +11,7 @@
 package org.vclipse.idoc.resource;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.naming.IQualifiedNameProvider;
+import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionManager;
 import org.eclipse.xtext.util.IResourceScopeCache;
@@ -23,7 +23,7 @@ public class IDocResourceDescriptionManager extends
 		DefaultResourceDescriptionManager {
 
 	@Inject
-	private IQualifiedNameProvider nameProvider;
+	private IDefaultResourceDescriptionStrategy strategy;
 
 	@Inject
 	private final IResourceScopeCache cache = IResourceScopeCache.NullImpl.INSTANCE;
@@ -36,8 +36,7 @@ public class IDocResourceDescriptionManager extends
 		return cache.get(CACHE_KEY, resource,
 				new Provider<IResourceDescription>() {
 					public IResourceDescription get() {
-						return new IDocResourceDescription(resource,
-								nameProvider);
+						return new IDocResourceDescription(resource, strategy);
 					}
 				});
 	}
