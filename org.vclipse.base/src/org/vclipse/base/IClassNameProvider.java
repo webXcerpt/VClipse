@@ -8,16 +8,23 @@
  * Contributors:
  *    webXcerpt Software GmbH - initial creator
  ******************************************************************************/
-package org.vclipse.vcml.linking;
+package org.vclipse.base;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.linking.lazy.LazyLinker;
 
-public class VCMLLinker extends LazyLinker {
+import com.google.inject.ImplementedBy;
 
-	@Override
-	protected void clearAllReferences(EObject model) {
-		// this is intentional, the VCMLLinker should not clear all references
-	}
-	
+/**
+ * Provides readable class names for EObjects and EClasses. To be used in
+ * generic label and hover providers to avoid the output of Java class names to
+ * the user.
+ */
+@ImplementedBy(DefaultClassNameProvider.class)
+public interface IClassNameProvider {
+
+	public String getClassName(EClass cls);
+
+	public String getClassName(EObject cls);
+
 }

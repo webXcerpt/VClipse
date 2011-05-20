@@ -8,16 +8,19 @@
  * Contributors:
  *    webXcerpt Software GmbH - initial creator
  ******************************************************************************/
-package org.vclipse.vcml.linking;
+package org.vclipse.base;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.linking.lazy.LazyLinker;
 
-public class VCMLLinker extends LazyLinker {
+public class DefaultClassNameProvider implements IClassNameProvider {
 
-	@Override
-	protected void clearAllReferences(EObject model) {
-		// this is intentional, the VCMLLinker should not clear all references
+	public String getClassName(EClass cls) {
+		return cls.getName();
 	}
-	
+
+	public String getClassName(EObject o) {
+		return getClassName(o.eClass());
+	}
+
 }

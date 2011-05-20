@@ -29,15 +29,16 @@ Import-Package: com.google.common.collect,
  org.eclipse.xtext.xtend2.lib
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.vcml,
+ org.vclipse.vcml.documentation,
+ org.vclipse.vcml.formatting,
  org.vclipse.vcml.parseTreeConstruction,
  org.vclipse.vcml.parser.antlr,
  org.vclipse.vcml.parser.antlr.internal,
+ org.vclipse.vcml.parser.antlr.lexer,
  org.vclipse.vcml.services,
  org.vclipse.vcml.utils,
  org.vclipse.vcml.validation,
  org.vclipse.vcml.vcml,
  org.vclipse.vcml.vcml.impl,
- org.vclipse.vcml.vcml.util,
- org.vclipse.vcml.formatting,
- org.vclipse.vcml.parser.antlr.lexer
+ org.vclipse.vcml.vcml.util
 Bundle-Activator: org.vclipse.vcml.VCMLPlugin

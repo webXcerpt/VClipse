@@ -7,7 +7,8 @@ Bundle-Activator: org.vclipse.base.ui.Activator
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
- org.eclipse.xtext.ui
+ org.eclipse.xtext.ui,
+ org.vclipse.base
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.vclipse.base.ui

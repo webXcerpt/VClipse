@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- *     webXcerpt Software GmbH - initial creator
+ *    webXcerpt Software GmbH - initial creator
  ******************************************************************************/
 package org.vclipse.vcml.ui.quickfix;
 
