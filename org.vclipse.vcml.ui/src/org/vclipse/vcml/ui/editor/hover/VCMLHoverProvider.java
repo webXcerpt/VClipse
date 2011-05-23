@@ -17,10 +17,6 @@ import org.vclipse.base.IClassNameProvider;
 import org.vclipse.vcml.documentation.VCMLAdditionalInformationProvider;
 import org.vclipse.vcml.documentation.VCMLDescriptionProvider;
 import org.vclipse.vcml.documentation.VCMLDocumentationProvider;
-import org.vclipse.vcml.utils.DescriptionHandler;
-import org.vclipse.vcml.utils.VCMLUtils;
-import org.vclipse.vcml.vcml.Description;
-import org.vclipse.vcml.vcml.Language;
 
 import com.google.inject.Inject;
 
@@ -61,21 +57,18 @@ public class VCMLHoverProvider extends DefaultEObjectHoverProvider {
 		buffer.append(getFirstLine(o));
 		String description = descriptionProvider.getDocumentation(o);
 		if (description!=null && description.length()>0) {
-			buffer.append("<p>");
+			buffer.append("<br/>");
 			buffer.append(description);
-			buffer.append("</p>");
 		}
 		String documentation = documentationProvider.getDocumentation(o);
 		if (documentation!=null && documentation.length()>0) {
-			buffer.append("<p>");
+			buffer.append("<br/>");
 			buffer.append(documentation);
-			buffer.append("</p>");
 		}
 		String additionalInformation = additionalInformationProvider.getDocumentation(o);
 		if (additionalInformation!=null && additionalInformation.length()>0) {
-			buffer.append("<p>");
+			buffer.append("<br/>");
 			buffer.append(additionalInformation);
-			buffer.append("</p>");
 		}
 		String multilineCommentDocumentation = getDocumentation(o);
 		if (multilineCommentDocumentation!=null && multilineCommentDocumentation.length()>0) {
