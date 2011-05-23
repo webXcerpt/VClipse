@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +35,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.xtext.IGrammarAccess;
 import org.eclipse.xtext.diagnostics.Diagnostic;
 import org.eclipse.xtext.diagnostics.IDiagnosticConsumer;
@@ -45,6 +48,7 @@ import org.eclipse.xtext.linking.ILinkingService;
 import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.vclipse.console.CMConsolePlugin;
 import org.vclipse.console.CMConsolePlugin.Kind;
@@ -63,7 +67,6 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 	private IResourceFactory resourceFactory;
 	
 	
-	private ILinker linker;
 
 	/**
 	 * 
@@ -82,7 +85,8 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 	protected PrintStream out; 
 	protected PrintStream result; 
 	protected PrintStream err;
-
+	
+	private ILinker linker;
 
 	/**
 	 * @param resourceFactory 
@@ -94,13 +98,13 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 	public VCMLOutlineAction(IResourceFactory resourceFactory, VCMLOutlinePage vCMLOutlinePage, ILinker linker, 
 			ILinkingService linkingService, IGrammarAccess grammarAccess) {
 		this.resourceFactory = resourceFactory;
+		this.linker = linker;
 		actionHandlers = new HashMap<String,IVCMLOutlineActionHandler<?>>();
 		selectedObjects = new ArrayList<EObject>();
 		page = vCMLOutlinePage;
 		out = new PrintStream(CMConsolePlugin.getDefault().getConsole(Kind.Task));
 		result = new PrintStream(CMConsolePlugin.getDefault().getConsole(Kind.Result));
 		err = new PrintStream(CMConsolePlugin.getDefault().getConsole(Kind.Error));
-		this.linker = linker;
 	}
 
 	/**
@@ -142,7 +146,6 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 		if(usedResource != null) {
 			final Resource res = usedResource;
 			Job job = new Job(getDescription()) {
-				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					monitor.beginTask("", IProgressMonitor.UNKNOWN);
 					Model resultModel = VCMLFACTORY.createModel();
@@ -182,14 +185,12 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 					}
 					if (linker!=null) {
 						linker.linkModel(resultModel, new IDiagnosticConsumer() {
-							public void consume(Diagnostic diagnostic,
-									Severity severity) {
+							public void consume(Diagnostic diagnostic, Severity severity) {
 								// TODO Auto-generated method stub
 								
 							}
 
-							public boolean hasConsumedDiagnostics(
-									Severity severity) {
+							public boolean hasConsumedDiagnostics(Severity severity) {
 								// TODO Auto-generated method stub
 								return false;
 							}
@@ -257,53 +258,50 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 	 */
 	@SuppressWarnings("unchecked")
 	public void selectionChanged(final SelectionChangedEvent event) {
-		/*ISelection selection = event.getSelection();
+		ISelection selection = event.getSelection();
 		removeSelectedObjects();
-		if(selection instanceof IStructuredSelection) {
-			IStructuredSelection strSelection = (IStructuredSelection)selection;
-			Iterator<ContentOutlineNode> iterator = strSelection.iterator(); // IStructuredSelection does not implement Iterable!
+		if(selection instanceof TreeSelection) {
 			boolean enabled = true;
 			boolean visitedSomeAction = false;
-			try {
-			while(enabled && iterator.hasNext()) {
-				ContentOutlineNode node = iterator.next();
-				EObject obj = node.getEObjectHandle().readOnly(new IUnitOfWork<EObject, EObject>() {
-					public EObject exec(EObject eobject) throws Exception {
-						return eobject;
+			Iterator<EObjectNode> it = ((TreeSelection)selection).iterator();
+			if(enabled && it.hasNext()) {
+				try {
+					EObject obj = it.next().readOnly(new IUnitOfWork<EObject, EObject>() {
+						public EObject exec(EObject eobject) throws Exception {
+							return eobject;
+						}
+					});
+					IVCMLOutlineActionHandler<?> actionHandler = actionHandlers.get(getInstanceTypeName(obj));
+					if (actionHandler!=null) {
+						visitedSomeAction = true;
+						Method method = actionHandler.getClass().getMethod("isEnabled", new Class[]{getInstanceType(obj)});
+						enabled &= (Boolean)method.invoke(actionHandler, obj);
+						if(enabled) {
+							addSelectedObject(obj);
+						}
+					} else {
+						enabled = false;
 					}
-				});
-				IVCMLOutlineActionHandler<?> actionHandler = actionHandlers.get(getInstanceTypeName(obj));
-				if (actionHandler!=null) {
-					visitedSomeAction = true;
-					Method method = actionHandler.getClass().getMethod("isEnabled", new Class[]{getInstanceType(obj)});
-					enabled &= (Boolean)method.invoke(actionHandler, obj);
-					if(enabled) {
-						addSelectedObject(obj);
-					}
-				} else {
+				} catch (NoSuchMethodException e) {
+					e.printStackTrace();
+					removeSelectedObjects();
+					enabled = false;
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+					removeSelectedObjects();
+					enabled = false;
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+					removeSelectedObjects();
+					enabled = false;
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+					removeSelectedObjects();
 					enabled = false;
 				}
+				setEnabled(visitedSomeAction && enabled);
 			}
-			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
-				removeSelectedObjects();
-				enabled = false;
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-				removeSelectedObjects();
-				enabled = false;
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-				removeSelectedObjects();
-				enabled = false;
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-				removeSelectedObjects();
-				enabled = false;
-			}
-
-			setEnabled(visitedSomeAction && enabled);
-		}*/
+		}
 	}
 	
 	private Class<?> getInstanceType(EObject obj) throws ClassNotFoundException {

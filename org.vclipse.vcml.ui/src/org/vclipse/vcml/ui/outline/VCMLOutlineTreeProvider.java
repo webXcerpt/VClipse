@@ -13,7 +13,29 @@
 */
 package org.vclipse.vcml.ui.outline;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
+import org.vclipse.vcml.ui.IUiConstants;
+import org.vclipse.vcml.vcml.BOMItem;
+import org.vclipse.vcml.vcml.BillOfMaterial;
+import org.vclipse.vcml.vcml.Characteristic;
+import org.vclipse.vcml.vcml.Class;
+import org.vclipse.vcml.vcml.ConfigurationProfile;
+import org.vclipse.vcml.vcml.ConfigurationProfileEntry;
+import org.vclipse.vcml.vcml.Constraint;
+import org.vclipse.vcml.vcml.DependencyNet;
+import org.vclipse.vcml.vcml.LocalSelectionCondition;
+import org.vclipse.vcml.vcml.Material;
+import org.vclipse.vcml.vcml.Model;
+import org.vclipse.vcml.vcml.VCObject;
+
+import com.google.inject.Inject;
 
 /**
  * customization of the default outline structure
@@ -21,4 +43,112 @@ import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
  */
 public class VCMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	
+	/**
+	 * 
+	 */
+	private boolean hierarchical;
+	
+	/**
+	 * 
+	 */
+	@Inject
+	public VCMLOutlineTreeProvider(final IPreferenceStore preferenceStore) {
+		hierarchical = preferenceStore.getBoolean(IUiConstants.SAP_HIERARCHY_ACTIVATED);
+		preferenceStore.addPropertyChangeListener(new IPropertyChangeListener() {
+			public void propertyChange(final PropertyChangeEvent event) {
+				if(IUiConstants.SAP_HIERARCHY_ACTIVATED.equals(event.getProperty())) {
+					hierarchical = preferenceStore.getBoolean(IUiConstants.SAP_HIERARCHY_ACTIVATED);
+				}
+			}
+		});
+	}
+	
+	protected void _createChildren(IOutlineNode parentNode, Model modelElement) {
+		for(EObject childElement : EcoreUtil2.typeSelect(modelElement.getObjects(), hierarchical ? VCObject.class : Material.class)) {
+			createNode(parentNode, childElement);
+		}
+	}
+	
+	protected void _createChildren(IOutlineNode parentNode, Characteristic modelElement) {
+		if(!hierarchical) {
+			super._createChildren(parentNode, modelElement);
+		} else {
+			createNode(parentNode, modelElement.getDependencies());			
+		}
+	}
+	
+	protected void _createChildren(IOutlineNode parentNode, org.vclipse.vcml.vcml.Class modelElement) {
+		if(!hierarchical) {
+			super._createChildren(parentNode, modelElement);
+		} else {
+			for(Characteristic cstic : modelElement.getCharacteristics()) {
+				createNode(parentNode, cstic);			
+			}
+		}
+	}
+	
+	protected void _createChildren(IOutlineNode parentNode, DependencyNet modelElement) {
+		if(!hierarchical) {
+			super._createChildren(parentNode, modelElement);
+		} else {
+			for(Constraint constraint : modelElement.getConstraints()) {
+				createNode(parentNode, constraint);
+			}
+		}
+	}
+	
+	protected void _createChildren(IOutlineNode parentNode, Material modelElement) {
+		if(!hierarchical) {
+			super._createChildren(parentNode, modelElement);
+		} else {
+			for(ConfigurationProfile childElement : modelElement.getConfigurationprofiles()) {
+				createNode(parentNode, childElement);
+			}
+			for(Class childElement : modelElement.getClasses()) {
+				createNode(parentNode, childElement);
+			}
+			for(BillOfMaterial childElement : modelElement.getBillofmaterials()) {
+				createNode(parentNode, childElement);
+			}
+		}
+	}
+
+	protected void _createChildren(IOutlineNode parentNode, BillOfMaterial modelElement) {
+		if(!hierarchical) {
+			super._createChildren(parentNode, modelElement);
+		} else {
+			for(BOMItem item : modelElement.getItems()) {
+				createNode(parentNode, item);
+			}
+		}
+	}
+	
+	protected void _createChildren(IOutlineNode parentNode, BOMItem modelElement) {
+		if(!hierarchical) {
+			super._createChildren(parentNode, modelElement);
+		} else {
+			createNode(parentNode, modelElement);
+			createNode(parentNode, modelElement.getSelectionCondition());
+			for(ConfigurationProfileEntry cpe : modelElement.getEntries()) {
+				createNode(parentNode, cpe);
+			}
+		}
+	}
+	
+	protected void _createChildren(IOutlineNode parentNode, LocalSelectionCondition modelElement) {
+		if(!hierarchical) {
+			super._createChildren(parentNode, modelElement);
+		} else {
+			createNode(parentNode, modelElement);
+		}
+	}
+
+	protected Object _text(BOMItem modelElement) {
+		if(modelElement != null) {
+			if(EcoreUtil.isAncestor(modelElement.getMaterial(), modelElement)) {
+				return super._text(modelElement.getMaterial()) + " [cyclic]";
+			}			
+		}
+		return super._text(modelElement);
+	}
 }
