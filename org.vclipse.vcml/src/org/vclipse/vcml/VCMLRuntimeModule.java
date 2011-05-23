@@ -14,13 +14,14 @@
 package org.vclipse.vcml;
 
 import org.eclipse.xtext.conversion.IValueConverterService;
-import org.eclipse.xtext.documentation.IEObjectDocumentationProvider;
 import org.eclipse.xtext.linking.ILinker;
 import org.eclipse.xtext.linking.lazy.LazyURIEncoder;
+import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.parsetree.reconstr.ITokenSerializer;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.validation.CompositeEValidator;
 import org.vclipse.base.IClassNameProvider;
+import org.vclipse.base.NullQualifiedNameConverter;
 import org.vclipse.vcml.conversion.VCMLValueConverter;
 import org.vclipse.vcml.documentation.VCMLClassNameProvider;
 import org.vclipse.vcml.formatting.VCMLCrossReferenceSerializer;
@@ -79,6 +80,10 @@ public class VCMLRuntimeModule extends org.vclipse.vcml.AbstractVCMLRuntimeModul
 	
 	public Class<? extends IClassNameProvider> bindIClassNameProvider() {
 		return VCMLClassNameProvider.class;
+	}
+
+	public Class<? extends IQualifiedNameConverter> bindIQualifiedNameConverter() {
+		return NullQualifiedNameConverter.class;
 	}
 
 }
