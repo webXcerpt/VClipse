@@ -14,7 +14,6 @@
 package org.vclipse.connection;
 
 /**
- * @author as
  *
  */
 public interface ISharedImages {

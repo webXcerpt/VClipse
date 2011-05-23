@@ -13,13 +13,10 @@
  */
 package org.vclipse.connection.injection;
 
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
-import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.eclipse.xtext.service.AbstractGenericModule;
 import org.eclipse.xtext.service.SingletonBinding;
 import org.vclipse.connection.IConnectionDataStorage;
@@ -31,7 +28,6 @@ import org.vclipse.connection.internal.DefaultConnectionDataStorage;
 import org.vclipse.connection.internal.DefaultDestinationDataProvider;
 
 /**
- * @author as
  *
  */
 public class ConnectionModule extends AbstractGenericModule {
@@ -59,14 +55,6 @@ public class ConnectionModule extends AbstractGenericModule {
 	 */
 	public IPreferenceStore bindPreferenceStore() { 
 		return plugin.getPreferenceStore();
-	}
-	
-	/**
-	 * @return
-	 */
-	@SingletonBinding
-	public IPersistentPreferenceStore bindConnectionPreferenceStore() {
-		return new ScopedPreferenceStore(new InstanceScope(), VClipseConnectionPlugin.ID);
 	}
 	
 	/**

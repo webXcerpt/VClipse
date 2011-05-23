@@ -25,7 +25,6 @@ import org.vclipse.connection.IConnectionHandler;
 
 import com.sap.conn.jco.JCoException;
 
-
 /**
  *
  */
@@ -54,7 +53,6 @@ final class ConnectionStateDialog extends ProgressMonitorDialog {
 
 	/**
 	 * @throws Throwable 
-	 * 
 	 */
 	public IStatus connect(final IConnection connection) throws Throwable {
 		try {

@@ -20,6 +20,7 @@ import java.util.List;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jface.preference.IPersistentPreferenceStore;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.vclipse.connection.IConnection;
 import org.vclipse.connection.IConnectionDataStorage;
 import org.vclipse.connection.IDestinationDataProvider;
@@ -28,7 +29,6 @@ import org.vclipse.connection.VClipseConnectionPlugin;
 import com.google.inject.Inject;
 
 /**
- * @author as
  *
  */
 public class DefaultConnectionDataStorage implements IConnectionDataStorage {
@@ -51,7 +51,7 @@ public class DefaultConnectionDataStorage implements IConnectionDataStorage {
 	/**
 	 * 
 	 */
-	private final IPersistentPreferenceStore preferenceStore;
+	private final IPreferenceStore preferenceStore;
 	
 	/**
 	 * 
@@ -68,7 +68,7 @@ public class DefaultConnectionDataStorage implements IConnectionDataStorage {
 	 * @param securePreferences
 	 */
 	@Inject
-	public DefaultConnectionDataStorage(IPersistentPreferenceStore preferenceStore, ISecurePreferences securePreferences) {
+	public DefaultConnectionDataStorage(IPreferenceStore preferenceStore, ISecurePreferences securePreferences) {
 		this.preferenceStore = preferenceStore;
 		this.securePreferences = securePreferences;
 		currentConnectionIndex = BAD_INDEX;
@@ -126,7 +126,7 @@ public class DefaultConnectionDataStorage implements IConnectionDataStorage {
 			}
 		}
 		try {
-			preferenceStore.save();
+			((IPersistentPreferenceStore)preferenceStore).save();
 		} catch (final IOException exception) {
 			VClipseConnectionPlugin.log(exception.getMessage(), exception);
 		}

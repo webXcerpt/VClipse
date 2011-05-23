@@ -23,7 +23,6 @@ import com.google.inject.Inject;
 import com.sap.conn.jco.ext.DestinationDataEventListener;
 
 /**
- * @author as
  *
  */
 public class DefaultDestinationDataProvider implements IDestinationDataProvider {

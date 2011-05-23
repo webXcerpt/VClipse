@@ -13,7 +13,6 @@
  */
 package org.vclipse.connection.internal;
 
-
 /**
  *
  */

@@ -22,8 +22,6 @@ package org.vclipse.connection;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
@@ -37,7 +35,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 /**
- * @author as
  *
  */
 public class VClipseConnectionPlugin extends AbstractUIPlugin {
@@ -63,11 +60,6 @@ public class VClipseConnectionPlugin extends AbstractUIPlugin {
 	private boolean iDocAvailable;
 	
 	/**
-	 * Preferences of the plug-in
-	 */
-	private IEclipsePreferences preferences;
-	
-	/**
 	 * 
 	 */
 	private Injector injector;
@@ -84,8 +76,6 @@ public class VClipseConnectionPlugin extends AbstractUIPlugin {
 	 */
 	@Override
 	public void start(final BundleContext context) throws Exception {
-		preferences = new InstanceScope().getNode(ID);
-		
 		// check if JCo-Library is available
 		try {
 			getClass().getClassLoader().loadClass("com.sap.conn.jco.JCo");
@@ -139,13 +129,6 @@ public class VClipseConnectionPlugin extends AbstractUIPlugin {
 	 */
 	public boolean isIDocAvailable() {
 		return iDocAvailable;
-	}
-	
-	/**
-	 * @return
-	 */
-	public IEclipsePreferences getPreferences() {
-		return preferences;
 	}
 	
 	/**

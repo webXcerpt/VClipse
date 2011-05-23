@@ -16,7 +16,6 @@ package org.vclipse.connection;
 import java.util.List;
 
 /**
- * @author as
  * 
  */
 public interface IConnectionDataStorage {

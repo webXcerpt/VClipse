@@ -16,7 +16,6 @@ package org.vclipse.connection;
 import com.sap.conn.jco.ext.DestinationDataProvider;
 
 /**
- * @author as
  *
  */
 public interface IDestinationDataProvider extends DestinationDataProvider {

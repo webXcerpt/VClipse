@@ -20,7 +20,6 @@ import org.vclipse.connection.VClipseConnectionPlugin;
 import com.google.inject.Injector;
 
 /**
- * @author as
  *
  */
 public class ConnectionsExecutableExtensionFactory extends AbstractGuiceAwareExecutableExtensionFactory {

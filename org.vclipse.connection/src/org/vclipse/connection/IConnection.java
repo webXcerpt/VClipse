@@ -16,7 +16,6 @@ package org.vclipse.connection;
 import org.eclipse.core.runtime.IStatus;
 
 /**
- * @author as
  *
  */
 public interface IConnection {
