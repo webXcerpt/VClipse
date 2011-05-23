@@ -33,6 +33,7 @@ import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.LocalSelectionCondition;
 import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Model;
+import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.VCObject;
 
 import com.google.inject.Inject;
@@ -158,6 +159,21 @@ public class VCMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	protected void _createNode(IOutlineNode parentNode, EObject modelElement) {
 		if(modelElement != null) {
 			super._createNode(parentNode, modelElement);			
+		}
+	}
+	
+	String _text(Model object) {
+		if(object.getOptions().isEmpty()) {
+			return "VC Objects:";
+		} else {
+			StringBuffer sb = new StringBuffer();
+			for(Option option : object.getOptions()) {
+				sb.append(option.getName());
+				sb.append(" : ");
+				sb.append(option.getValue());
+				sb.append("  ");
+			}
+			return sb.toString();			
 		}
 	}
 }
