@@ -15,7 +15,7 @@ import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -23,11 +23,11 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.IGrammarAccess;
+import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.parser.IParseResult;
-import org.eclipse.xtext.parser.antlr.IAntlrParser;
-import org.eclipse.xtext.parsetree.SyntaxError;
-import org.eclipse.xtext.parsetree.reconstr.Serializer;
+import org.eclipse.xtext.parser.IParser;
 import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.util.Strings;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.connection.VClipseConnectionPlugin;
@@ -86,7 +86,7 @@ public class BAPIUtils {
 	protected static final VcmlFactory VCMLFACTORY = VcmlFactory.eINSTANCE;
 
 	@Inject
-	private IAntlrParser parser;
+	private IParser parser;
 	
 	@Inject
 	private IGrammarAccess grammarAccess;
@@ -111,7 +111,7 @@ public class BAPIUtils {
 	
 		// injection TODO injection should be simplified
 		Injector injector = Guice.createInjector(new VCMLRuntimeModule());
-		parser = injector.getInstance(IAntlrParser.class);
+		parser = injector.getInstance(IParser.class);
 		grammarAccess = injector.getInstance(IGrammarAccess.class);
 		preferenceStore = VCMLUiPlugin.getDefault().getInjector().getInstance(IPreferenceStore.class);
 		prettyPrinter = new VCMLPrettyPrinter();
@@ -344,7 +344,7 @@ public class BAPIUtils {
 	protected MultipleLanguageDocumentation readMultiLanguageDocumentations(JCoTable table) {
 		if (table.isEmpty())
 			return null;
-		Multimap<Language, Integer> language2Rows = new ArrayListMultimap<Language, Integer>();
+		Multimap<Language, Integer> language2Rows = ArrayListMultimap.create();
 		for (int i = 0; i < table.getNumRows(); i++) {
 			table.setRow(i);
 			Language language; 
@@ -400,7 +400,7 @@ public class BAPIUtils {
 			if(preferenceStore.getBoolean(ISapConstants.USE_PRETTY_PRINTER)) {
 				sourceCode = prettyPrinter.prettyPrint(source);
 			} else {
-				Serializer serializer = ((XtextResource)(source.eResource())).getSerializer();
+				ISerializer serializer = ((XtextResource)(source.eResource())).getSerializer();
 				sourceCode = serializer.serialize(source);
 			}
 			int lineNo = 1;
@@ -417,41 +417,41 @@ public class BAPIUtils {
 	protected ProcedureSource readProcedureSource(JCoTable table) {
 		StringBuffer source = readSourceLines(table);
 		ProcedureSourceElements elements = ((org.vclipse.vcml.services.VCMLGrammarAccess)grammarAccess).getProcedureSourceAccess();
-    	IParseResult result = parser.parse(elements.getRule().getName(), new StringReader(source.toString()));
-		List<SyntaxError> parseErrors = result.getParseErrors();
-		if (parseErrors.isEmpty()) {
-			return (ProcedureSource)result.getRootASTElement();
-		} else {
-			printParseErrors(parseErrors, source);
+    	IParseResult result = parser.parse(elements.getRule(), new StringReader(source.toString()));
+    	Iterator<INode> iterator = result.getSyntaxErrors().iterator();
+    	if(iterator.hasNext()) {
+    		printParseErrors(iterator, source);
 			err.println(source);
 			return null;
-		}
+    	} else {
+    		return (ProcedureSource)result.getRootASTElement();
+    	}
 	}
 
 	protected ConditionSource readConditionSource(JCoTable table) {
 		StringBuffer source = readSourceLines(table);
 		ConditionSourceElements elements = ((org.vclipse.vcml.services.VCMLGrammarAccess)grammarAccess).getConditionSourceAccess();
-    	IParseResult result = parser.parse(elements.getRule().getName(), new StringReader(source.toString()));
-		List<SyntaxError> parseErrors = result.getParseErrors();
-		if (parseErrors.isEmpty()) {
-			return (ConditionSource)result.getRootASTElement();
-		} else {
-			printParseErrors(parseErrors, source);
-			return null;
-		}
+    	IParseResult result = parser.parse(elements.getRule(), new StringReader(source.toString()));
+    	Iterator<INode> iterator = result.getSyntaxErrors().iterator();
+    	if(iterator.hasNext()) {
+    		printParseErrors(iterator, source);
+    		return null;
+    	} else {
+    		return (ConditionSource)result.getRootASTElement();
+    	}
 	}
 	
 	protected ConstraintSource readConstraintSource(JCoTable table) {
 		StringBuffer source = readSourceLines(table);
 		ConstraintSourceElements elements = ((org.vclipse.vcml.services.VCMLGrammarAccess)grammarAccess).getConstraintSourceAccess();
-    	IParseResult result = parser.parse(elements.getRule().getName(), new StringReader(source.toString()));
-		List<SyntaxError> parseErrors = result.getParseErrors();
-		if (parseErrors.isEmpty()) {
-			return (ConstraintSource)result.getRootASTElement();
-		} else {
-			printParseErrors(parseErrors, source);
+    	IParseResult result = parser.parse(elements.getRule(), new StringReader(source.toString()));
+    	Iterator<INode> it = result.getSyntaxErrors().iterator();
+    	if(it.hasNext()) {
+    		printParseErrors(it, source);
 			return null;
-		}
+    	} else {
+    		return (ConstraintSource)result.getRootASTElement();
+    	}
 	}
 
 	private StringBuffer readSourceLines(JCoTable table) {
@@ -466,10 +466,10 @@ public class BAPIUtils {
 		return source;
 	}
 	
-	private void printParseErrors(List<SyntaxError> parseErrors,
-			StringBuffer source) {
-		for (SyntaxError error : parseErrors) {
-			err.println("// syntax error: " + error.getMessage() + " in line " + error.getNode().getLine());
+	private void printParseErrors(Iterator<INode> parseErrors, StringBuffer source) {
+		while(parseErrors.hasNext()) {
+			INode node = parseErrors.next();
+			err.println("// syntax error: " + node.getText() + " in line " + node.getStartLine());
 		}
 		err.println("/*");
 		err.println(source);
