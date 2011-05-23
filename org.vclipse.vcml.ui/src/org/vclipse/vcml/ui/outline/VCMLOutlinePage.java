@@ -144,8 +144,7 @@ public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListe
 		final String property = event.getProperty();
 		if(IUiConstants.SAP_HIERARCHY_ACTIVATED.equals(property) ||
 				ISapConstants.DEFAULT_LANGUAGE.equals(property)) {
-			final TreeViewer treeViewer = getTreeViewer();
-			treeViewer.setInput(treeViewer.getInput());
+			getRefreshJob().schedule();
 		}
 	}
 	

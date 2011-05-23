@@ -73,7 +73,9 @@ public class VCMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		if(!hierarchical) {
 			super._createChildren(parentNode, modelElement);
 		} else {
-			createNode(parentNode, modelElement.getDependencies());			
+			if(modelElement.getDependencies() != null) {
+				createNode(parentNode, modelElement.getDependencies());							
+			}
 		}
 	}
 	
@@ -150,5 +152,12 @@ public class VCMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 			}			
 		}
 		return super._text(modelElement);
+	}
+	
+	@Override
+	protected void _createNode(IOutlineNode parentNode, EObject modelElement) {
+		if(modelElement != null) {
+			super._createNode(parentNode, modelElement);			
+		}
 	}
 }
