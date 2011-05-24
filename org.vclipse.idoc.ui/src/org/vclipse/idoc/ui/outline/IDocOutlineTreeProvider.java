@@ -3,7 +3,9 @@
 */
 package org.vclipse.idoc.ui.outline;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
+import org.eclipse.xtext.ui.editor.outline.impl.DocumentRootNode;
 
 /**
  * customization of the default outline structure
@@ -11,4 +13,10 @@ import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
  */
 public class IDocOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	
+	protected void _createChildren(DocumentRootNode parentNode, EObject modelElement) {
+		for (EObject childElement : modelElement.eContents()) {
+			createNode(parentNode, childElement);
+		}
+	}
+
 }

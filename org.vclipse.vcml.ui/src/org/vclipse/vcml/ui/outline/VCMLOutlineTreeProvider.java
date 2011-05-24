@@ -21,6 +21,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
+import org.eclipse.xtext.ui.editor.outline.impl.DocumentRootNode;
 import org.vclipse.vcml.ui.IUiConstants;
 import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;
@@ -33,7 +34,6 @@ import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.LocalSelectionCondition;
 import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Model;
-import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.VCObject;
 
 import com.google.inject.Inject;
@@ -44,14 +44,8 @@ import com.google.inject.Inject;
  */
 public class VCMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	
-	/**
-	 * 
-	 */
 	private boolean hierarchical;
 	
-	/**
-	 * 
-	 */
 	@Inject
 	public VCMLOutlineTreeProvider(final IPreferenceStore preferenceStore) {
 		hierarchical = preferenceStore.getBoolean(IUiConstants.SAP_HIERARCHY_ACTIVATED);
@@ -64,6 +58,12 @@ public class VCMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		});
 	}
 	
+	protected void _createChildren(DocumentRootNode parentNode, EObject modelElement) {
+		for (EObject childElement : modelElement.eContents()) {
+			createNode(parentNode, childElement);
+		}
+	}
+
 	protected void _createChildren(IOutlineNode parentNode, Model modelElement) {
 		for(EObject childElement : EcoreUtil2.typeSelect(modelElement.getObjects(), hierarchical ? VCObject.class : Material.class)) {
 			createNode(parentNode, childElement);
@@ -147,33 +147,10 @@ public class VCMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	}
 
 	protected Object _text(BOMItem modelElement) {
-		if(modelElement != null) {
-			if(EcoreUtil.isAncestor(modelElement.getMaterial(), modelElement)) {
-				return super._text(modelElement.getMaterial()) + " [cyclic]";
-			}			
-		}
+		if(EcoreUtil.isAncestor(modelElement.getMaterial(), modelElement)) {
+			return super._text(modelElement.getMaterial()) + " [cyclic]";
+		}			
 		return super._text(modelElement);
 	}
 	
-	@Override
-	protected void _createNode(IOutlineNode parentNode, EObject modelElement) {
-		if(modelElement != null) {
-			super._createNode(parentNode, modelElement);			
-		}
-	}
-	
-	String _text(Model object) {
-		if(object.getOptions().isEmpty()) {
-			return "VC Objects:";
-		} else {
-			StringBuffer sb = new StringBuffer();
-			for(Option option : object.getOptions()) {
-				sb.append(option.getName());
-				sb.append(" : ");
-				sb.append(option.getValue());
-				sb.append("  ");
-			}
-			return sb.toString();			
-		}
-	}
 }

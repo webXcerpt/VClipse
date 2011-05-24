@@ -53,6 +53,7 @@ import org.vclipse.vcml.vcml.MultiLanguageDescriptions;
 import org.vclipse.vcml.vcml.MultipleLanguageDocumentation;
 import org.vclipse.vcml.vcml.MultipleLanguageDocumentation_LanguageBlock;
 import org.vclipse.vcml.vcml.NumericType;
+import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Precondition;
 import org.vclipse.vcml.vcml.Procedure;
 import org.vclipse.vcml.vcml.ProcedureLocation;
@@ -185,6 +186,10 @@ public class VCMLLabelProvider extends DefaultEObjectLabelProvider {
 	
 	public StyledString text(DependencyNet element) {
 		return createStyledString(element.getName(), element.getDescription());
+	}
+	
+	public StyledString text(Option option) {
+		return new StyledString(option.getName().getLiteral()).append(" : " + option.getValue(), StyledString.DECORATIONS_STYLER);
 	}
 	
 	public StyledString text(Material element) {
