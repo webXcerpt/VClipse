@@ -107,7 +107,7 @@ SymbolicType :
 	;
 
 CharacteristicValue :
-	name=SYMBOL
+	name=EXTENDED_ID
 	('{'
 	  (	description=Description?
 	  &	documentation=Documentation?
@@ -150,7 +150,7 @@ CLASSNAME
 	;
 
 ConfigurationProfile :
-    'configurationprofile' name=SYMBOL '{'
+    'configurationprofile' name=EXTENDED_ID '{'
 	   (	('status' status=Status)?
 	   &	('bomapplication' bomapplication=ID)
 	   &	('uidesign' uidesign=[InterfaceDesign | EXTENDED_ID])?

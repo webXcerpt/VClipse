@@ -110,7 +110,7 @@ public class VCMLFormatter extends AbstractDeclarativeFormatter {
 	    
 	    {	// names of characteristic values
 	    	CharacteristicValueElements elements = f.getCharacteristicValueAccess();
-	    	c.setLinewrap().before(elements.getNameSYMBOLTerminalRuleCall_0_0());
+	    	c.setLinewrap().before(elements.getNameEXTENDED_IDParserRuleCall_0_0());
 	    }
 	    
 	    // SAPObject definitions on toplevel
