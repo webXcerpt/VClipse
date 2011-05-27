@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.vclipse.vcml.formatting;
 
+import java.util.regex.Pattern;
+
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
@@ -357,7 +359,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	@Override
 	public DataLayouter<NoExceptions> caseClass(Class object) {
 		layouter.beginC().print("class ");
-		printName(object);
+		printNullsafe(object.getName());
 		if(hasBody(object)) {
 			layouter.print(" {");
 			{
@@ -456,7 +458,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	@Override
 	public DataLayouter<NoExceptions> caseCharacteristicGroup(CharacteristicGroup object) {
 		layouter.brk().beginC().print("characteristicgroup ");
-		printNullsafe(object.getName());
+		printNullsafe(asSymbol(object.getName()));
 		layouter.print(" {");
 		doSwitch(object.getDescription());
 		for(Characteristic cstic : object.getCharacteristics()) {
@@ -845,8 +847,18 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		layouter.print(object==null ? "null" : object);
 	}
 
+	public static Pattern idPattern = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9]*");
+	
+	public static String asSymbol(String theString) {
+		if (idPattern.matcher(theString).matches()) {
+			return theString;
+		} else {
+			return "'" + theString + "'";
+		}
+	}
+	
 	private void printName(VCObject object) {
-		printNullsafe(object.getName());
+		printNullsafe(asSymbol(object.getName()));
 	}
 
 	private void printCrossReference(EObject context, EReference ref, EAttribute att) {
@@ -865,7 +877,11 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		} else {
 			linkText = "###UNKNOWN###";
 		}
-		printNullsafe(linkText);
+		if (ref.getEReferenceType() == VcmlPackage.Literals.CLASS) {
+			printNullsafe(linkText); // class names must not be quoted, since they contain the class type
+		} else {
+			printNullsafe(asSymbol(linkText));
+		}
 	}
 	
 }
