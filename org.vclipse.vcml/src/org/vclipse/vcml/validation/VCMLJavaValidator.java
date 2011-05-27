@@ -102,8 +102,7 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	@Check(CheckType.FAST)
 	public void checkDescription(final SimpleDescription desc) {
 		if (desc.getValue().length() > MAXLENGTH_DESCRIPTION) {
-			warning("Descriptions are limited to " + MAXLENGTH_DESCRIPTION + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
-			// TODO make this an error
+			warning("Descriptions are limited to " + MAXLENGTH_DESCRIPTION + " characters", VcmlPackage.Literals.SIMPLE_DESCRIPTION__VALUE);
 		}
 	}
 
