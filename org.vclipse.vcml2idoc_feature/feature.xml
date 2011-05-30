@@ -2,7 +2,7 @@
 <feature
       id="org.vclipse.vcml2idoc_feature"
       label="VClipse VCML to IDoc Transformation"
-      version="0.2.0.qualifier"
+      version="0.3.0.qualifier"
       provider-name="webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)">
 
    <description url="http://www.vclipse.org">
