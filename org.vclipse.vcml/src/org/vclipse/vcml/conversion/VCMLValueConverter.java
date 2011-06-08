@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.vclipse.vcml.conversion;
 
+import java.util.regex.Pattern;
+
 import org.eclipse.xtext.common.services.DefaultTerminalConverters;
 import org.eclipse.xtext.conversion.IValueConverter;
 import org.eclipse.xtext.conversion.ValueConverter;
@@ -35,15 +37,36 @@ public class VCMLValueConverter extends DefaultTerminalConverters {
 		}
 	};
 	
+	// ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*
+	protected static final Pattern ID_PATTERN = Pattern.compile("[a-zA-Z_][a-zA-Z_\\d]*");
+
+	protected static IValueConverter<String> symbolOrIdValueConverter = new SymbolOrIdValueConverter();
+
+	public static class SymbolOrIdValueConverter extends AbstractNullSafeConverter<String> {
+		@Override
+		protected String internalToValue(String string, INode node) throws ValueConverterException {
+			final int lastCharIndex = string.length() - 1;
+			if (lastCharIndex >= 0 && string.charAt(0) == '\'' && string.charAt(lastCharIndex) == '\'') {
+				return string.substring(1, lastCharIndex).toUpperCase();
+			} else {
+				return string.toUpperCase();
+			}
+		}
+
+		@Override
+		protected String internalToString(final String value) {
+			if (ID_PATTERN.matcher(value).matches()) {
+				return value;
+			} else {
+				return "'" + value + "'";
+			}
+		}
+	}
+
 	// SAP IDs, EXTENDED_IDs and SHORTVARs are interpreted as uppercase
 	@Override
 	@ValueConverter(rule = "ID")
 	public IValueConverter<String> ID() {
-		return TOUPPER_VALUECONVERTER;
-	}
-
-	@ValueConverter(rule = "EXTENDED_ID")
-	public IValueConverter<String> EXTENDED_ID() {
 		return TOUPPER_VALUECONVERTER;
 	}
 
@@ -88,6 +111,11 @@ public class VCMLValueConverter extends DefaultTerminalConverters {
 				return "'" + value + "'";
 			}
 		};
+	}
+
+	@ValueConverter(rule = "EXTENDED_ID")
+	public IValueConverter<String> EXTENDED_ID() {
+		return symbolOrIdValueConverter;
 	}
 
 
