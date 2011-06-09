@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.vclipse.vcml2idoc.actions;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
@@ -24,67 +24,40 @@ import org.eclipse.ui.IActionDelegate;
 import org.vclipse.vcml2idoc.VCML2IDocUIPlugin;
 import org.vclipse.vcml2idoc.builder.VCML2IDocNature;
 
-/**
- * 
- */
+import com.google.common.collect.Lists;
+
 public class AddRemoveNatureAction implements IActionDelegate {
 
-	/**
-	 * 
-	 */
-	private Iterator<IProject> projectIterator;
+	private IProject project;
 
-	/**
-	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-	 */
 	public void run(final IAction action) {
-		while(projectIterator.hasNext()) {
-			final IProject project = projectIterator.next();
-			try {
-				final IProjectDescription description = project.getDescription();
-				final String[] natureids = description.getNatureIds();
-				if(description.hasNature(VCML2IDocNature.ID)) {
-					for(int i=0; i<natureids.length; i++) {
-						if(natureids[i].equals(VCML2IDocNature.ID)) {
-							String[] newids = null;
-							if(i == 0) {
-								newids = Arrays.copyOfRange(natureids, 0, natureids.length - 1);
-							} else if(i == natureids.length -1) {
-								newids = Arrays.copyOfRange(natureids, 0, natureids.length - 2);
-							} else {
-								newids = new String[natureids.length - 1];
-								for(int k=0; k<natureids.length; i++) {
-									if(i == k) {
-										k--;
-										continue;
-									}
-									newids[k] = natureids[i];
-								}
-							}
-							description.setNatureIds(newids);
-							project.setDescription(description, new NullProgressMonitor());
-							break;
-						}
-					}
-				} else {
-					final String[] newNatureIds = Arrays.copyOf(natureids, natureids.length + 1);
-					newNatureIds[natureids.length] = VCML2IDocNature.ID;
-					description.setNatureIds(newNatureIds);
-					project.setDescription(description, new NullProgressMonitor());
-				}
-			} catch (final CoreException exception) {
-				VCML2IDocUIPlugin.log(exception.getMessage(), exception);
+		ArrayList<String> natureIds;
+		try {
+			IProjectDescription description = project.getDescription();
+			natureIds = Lists.newArrayList(description.getNatureIds());
+			if(natureIds.contains(VCML2IDocNature.ID)) {
+				natureIds.remove(VCML2IDocNature.ID);
+			} else {
+				natureIds.add(VCML2IDocNature.ID);
 			}
+			description.setNatureIds(natureIds.toArray(new String[natureIds.size()]));
+			project.setDescription(description, new NullProgressMonitor());
+		} catch (CoreException e) {
+			VCML2IDocUIPlugin.log(e.getMessage(), e);
 		}
 	}
 
-	/**
-	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
-	 */
-	@SuppressWarnings("unchecked")
 	public void selectionChanged(final IAction action, final ISelection selection) {
-		if(selection instanceof IStructuredSelection && !selection.isEmpty()) {
-			projectIterator = ((IStructuredSelection)selection).iterator();
+		if(selection instanceof IStructuredSelection) {
+			if(!selection.isEmpty()) {
+				Iterator<?> iterator = ((IStructuredSelection)selection).iterator();
+				if(iterator.hasNext()) {
+					Object next = iterator.next();
+					if(next instanceof IProject) {
+						project = (IProject)next;
+					}
+				}
+			}
 		}
 	}
 }
