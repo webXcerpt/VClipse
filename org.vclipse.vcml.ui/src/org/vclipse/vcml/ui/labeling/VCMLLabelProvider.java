@@ -15,6 +15,7 @@ package org.vclipse.vcml.ui.labeling;
 
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider;
 import org.vclipse.vcml.utils.DescriptionHandler;
 import org.vclipse.vcml.utils.VCMLUtils;
@@ -80,6 +81,23 @@ public class VCMLLabelProvider extends DefaultEObjectLabelProvider {
 		super(delegate);
 	}
 
+	private StyledString createStyledString(String name, Description description) {
+		if (description==null) {
+			return new StyledString(name, StyledString.QUALIFIER_STYLER); // assumption: object has no body
+		}
+		final StyledString result = new StyledString(name); 
+		new DescriptionHandler() {
+			private Language defaultLanguage = VCMLUtils.getDefaultLanguage(); 
+			@Override
+			public void handleSingleDescription(Language language, String value) {
+				if (defaultLanguage.equals(language)) {
+					result.append(new StyledString(" " + value, StyledString.DECORATIONS_STYLER)); 
+				}
+			}
+		}.handleDescription(description);
+		return result;
+	}
+	
 	public String image(BillOfMaterial element) {
 		return "b_slis.gif";
 	}
@@ -91,29 +109,45 @@ public class VCMLLabelProvider extends DefaultEObjectLabelProvider {
 	public String image(Characteristic element) {
 		return "s_chaa.gif";
 	}
-	
+
 	public String image(CharacteristicGroup element) {
 		return "b_aboa.gif";
+	}
+
+	public String image(CharacteristicOrValueDependencies element) {
+		return "b_rela.gif";
 	}
 
 	public String image(CharacteristicValue element) {
 		return "b_kons.gif";
 	}
-
+	
 	public String image(Class element) {
 		return "b_clas.gif";
 	}
-	
+
 	public String image(ConfigurationProfile element) {
 		return "b_conf.gif";
 	}
 
+	public Image image(ConfigurationProfileEntry element) {
+		return getImage(element.getDependency());
+	}
+	
 	public String image(Constraint element) {
 		return "snapgr.gif";
 	}
 	
 	public String image(DependencyNet element) {
 		return "magrid.gif";
+	}
+	
+	public String image(Description element) {
+		return "b_text.gif";
+	}
+	
+	public String image(Documentation element) {
+		return "b_anno.gif";
 	}
 	
 	public String image(InterfaceDesign element) {
@@ -132,6 +166,18 @@ public class VCMLLabelProvider extends DefaultEObjectLabelProvider {
 		return "b_matl.gif";
 	}
 	
+	public String image(MultiLanguageDescription element) {
+		return languageIcon(element.getLanguage());
+	}
+	
+	public String image(MultipleLanguageDocumentation_LanguageBlock element) {
+		return languageIcon(element.getLanguage());
+	}
+	
+	public String image(Option ele) {
+		return "cog.png";
+	}
+	
 	public String image(Precondition element) {
 		return "b_mbed.gif";
 	}
@@ -143,93 +189,130 @@ public class VCMLLabelProvider extends DefaultEObjectLabelProvider {
 	public String image(SelectionCondition element) {
 		return "b_bedi.gif";
 	}
-	
+
 	public String image(VariantFunction element) {
 		return "b_abal.gif";
 	}
-	
+
 	public String image(VariantTable element) {
 		return "dbtabl.gif";
 	}
-	
-	public String image(CharacteristicOrValueDependencies element) {
-		return "b_rela.gif";
+
+	private String languageIcon (Language language) {
+		switch (language) {
+			case EN : return "gb.png";
+			case DE : return "de.png";
+			case ES : return "es.png";
+			case FR : return "fr.png";
+			case JA : return "jp.png";
+			case PT : return "pt.png";
+			case RU : return "ru.png";
+			default : return "";
+		}
 	}
 	
-	public String image(Description element) {
-		return "b_text.gif";
-	}
-	
-	public String image(Documentation element) {
-		return "b_anno.gif";
+	public String text(Assignment element) {
+		return text(element.getCharacteristic()) + " = ...";
 	}
 	
 	public String text(BillOfMaterial element) {
 		return "BOM";
 	}
-
-	public String text(BOMItem element) {
-		return element.getItemnumber() + " " + element.getMaterial().getName();
+	
+	public StyledString text(BOMItem element) {
+		return new StyledString(element.getItemnumber() + " ", StyledString.COUNTER_STYLER).append(getStyledText(element.getMaterial()));
 	}
-
+	
 	public StyledString text(Characteristic element) {
 		return createStyledString(element.getName(), element.getDescription());
+	}
+	
+	public StyledString text(CharacteristicGroup element) {
+		return createStyledString(element.getName(), element.getDescription());
+	}
+	
+	public String text(CharacteristicOrValueDependencies element) {
+		return "dependencies";
+	}
+	
+	public String text(CharacteristicReference_P element) {
+		ProcedureLocation location = element.getLocation();
+		return (location!=null ? location.getLiteral() + "." : "") + text(element.getCharacteristic());
 	}
 	
 	public StyledString text(Class element) {
 		return createStyledString(element.getName(), element.getDescription());
 	}
 	
+	public String text(CompoundStatement element) {
+		return "(..., ...)";
+	}
+	
+	public String text(ConditionalStatement element) {
+		return "... if ...";
+	}
+	
+	public String text(ConditionSource element) {
+		return "source";
+	}
+	
+	public StyledString text(ConfigurationProfileEntry element) {
+		return new StyledString(element.getSequence() + " ", StyledString.COUNTER_STYLER).append(getStyledText(element.getDependency()));
+	}
+	
 	public StyledString text(Constraint element) {
 		return createStyledString(element.getName(), element.getDescription());
+	}
+	
+	public String text(ConstraintSource element) {
+		return "source";
+	}
+	
+	public String text(DelDefault element) {
+		return "$del_default " + text(element.getCharacteristic());
 	}
 	
 	public StyledString text(DependencyNet element) {
 		return createStyledString(element.getName(), element.getDescription());
 	}
 	
-	public StyledString text(Option option) {
-		return new StyledString(option.getName().getLiteral()).append(" : " + option.getValue(), StyledString.DECORATIONS_STYLER);
+	public String text(FormattedDocumentationBlock element) {
+		String format = element.getFormat();
+		return (format==null ? "" : (format + " ")) + element.getValue();
+	}
+	
+	public String text(Function element) {
+		return text(element.getFunction()) + " (...)";
+	}
+
+	public String text(IsInvisible element) {
+		return text(element.getCharacteristic()) + "is invisible ";
+	}
+	
+	public String text(IsSpecified_C element) {
+		return text(element.getCharacteristic()) + "is specified";
+	}
+	
+	public String text(IsSpecified_P element) {
+		return text(element.getCharacteristic()) + "is specified";
+	}
+	
+	public String text(LocalPrecondition element) {
+		return "local precondition";
+	}
+	
+	public String text(LocalSelectionCondition element) {
+		return "local selection condition";
 	}
 	
 	public StyledString text(Material element) {
 		return createStyledString(element.getName(), element.getDescription());
 	}
-	
-	public StyledString text(Precondition element) {
-		return createStyledString(element.getName(), element.getDescription());
+
+	public String text(MultiLanguageDescription element) {
+		return element.getLanguage() + " " + element.getValue();
 	}
-	
-	public StyledString text(Procedure element) {
-		return createStyledString(element.getName(), element.getDescription());
-	}
-	
-	public StyledString text(SelectionCondition element) {
-		return createStyledString(element.getName(), element.getDescription());
-	}
-	
-	public StyledString text(VariantFunction element) {
-		return createStyledString(element.getName(), element.getDescription());
-	}
-	
-	public StyledString text(VariantTable element) {
-		return createStyledString(element.getName(), element.getDescription());
-	}
-	
-	private StyledString createStyledString(String name, Description description) { 
-		final StyledString result = new StyledString(name); 
-		new DescriptionHandler() {
-			private Language defaultLanguage = VCMLUtils.getDefaultLanguage(); 
-			@Override
-			public void handleSingleDescription(Language language, String value) {
-				if (defaultLanguage.equals(language)) {
-					result.append(new StyledString(" " + value, StyledString.DECORATIONS_STYLER)); 
-				}
-			}
-		}.handleDescription(description);
-		return result;
-	}
-	
+
 	public String text(MultiLanguageDescriptions element) {
 		final StringBuffer label = new StringBuffer();
 		new DescriptionHandler() {
@@ -245,11 +328,7 @@ public class VCMLLabelProvider extends DefaultEObjectLabelProvider {
 		}.handleDescription(element);
 		return label.toString();
 	}
-	
-	public String text(MultiLanguageDescription element) {
-		return element.getLanguage() + " " + element.getValue();
-	}
-	
+
 	public String text(MultipleLanguageDocumentation element) {
 		final StringBuffer label = new StringBuffer();
 		new VcmlSwitch<Object>() {
@@ -259,6 +338,14 @@ public class VCMLLabelProvider extends DefaultEObjectLabelProvider {
 					FormattedDocumentationBlock object) {
 				label.append(object.getValue());
 				label.append(' ');
+				return this;
+			}
+			@Override
+			public Object caseMultipleLanguageDocumentation(
+					MultipleLanguageDocumentation object) {
+				for(MultipleLanguageDocumentation_LanguageBlock lb : object.getLanguageblocks()) {
+					doSwitch(lb);
+				}
 				return this;
 			}
 			@Override
@@ -273,123 +360,52 @@ public class VCMLLabelProvider extends DefaultEObjectLabelProvider {
 				}
 				return this;
 			}
-			@Override
-			public Object caseMultipleLanguageDocumentation(
-					MultipleLanguageDocumentation object) {
-				for(MultipleLanguageDocumentation_LanguageBlock lb : object.getLanguageblocks()) {
-					doSwitch(lb);
-				}
-				return this;
-			}
 		}.doSwitch(element);
 		return label.toString();
 	}
-	
-	public String text(FormattedDocumentationBlock element) {
-		String format = element.getFormat();
-		return (format==null ? "" : (format + " ")) + element.getValue();
-	}
-	
-	public String text(ConfigurationProfileEntry element) {
-		return element.getSequence() + " " + text(element.getDependency());
-	}
-	
-	public String text(SymbolicType element) {
-		return "CHAR " + element.getNumberOfChars();
-	}
-	
+
 	public String text(NumericType element) {
 		return "NUM " + element.getNumberOfChars() + "." + element.getDecimalPlaces();
 	}
 
-	public String text(Assignment element) {
-		return text(element.getCharacteristic()) + " = ...";
+	public StyledString text(Option option) {
+		return new StyledString(option.getName().getLiteral()).append(" : " + option.getValue(), StyledString.DECORATIONS_STYLER);
 	}
 	
-	public String text(SetDefault element) {
-		return text(element.getCharacteristic()) + " ?= ...";
+	public StyledString text(Precondition element) {
+		return createStyledString(element.getName(), element.getDescription());
 	}
 	
-	public String text(DelDefault element) {
-		return "$del_default " + text(element.getCharacteristic());
+	public StyledString text(Procedure element) {
+		return createStyledString(element.getName(), element.getDescription());
 	}
-	
-	public String text(ConditionalStatement element) {
-		return "... if ...";
-	}
-	
-	public String text(CharacteristicReference_P element) {
-		ProcedureLocation location = element.getLocation();
-		return (location!=null ? location.getLiteral() + "." : "") + text(element.getCharacteristic());
-	}
-	
+
 	public String text(ProcedureSource element) {
 		return "source";
 	}
-
-	public String text(ConstraintSource element) {
-		return "source";
-	}
-
-	public String text(ConditionSource element) {
-		return "source";
-	}
-
-	public String text(LocalPrecondition element) {
-		return "local precondition";
-	}
-
-	public String text(LocalSelectionCondition element) {
-		return "local selection condition";
-	}
-
-	public String text(CharacteristicOrValueDependencies element) {
-		return "dependencies";
-	}
 	
-	public String text(Function element) {
-		return text(element.getFunction()) + " (...)";
+	public StyledString text(SelectionCondition element) {
+		return createStyledString(element.getName(), element.getDescription());
 	}
-	
+
+	public String text(SetDefault element) {
+		return text(element.getCharacteristic()) + " ?= ...";
+	}
+
+	public String text(SymbolicType element) {
+		return "CHAR " + element.getNumberOfChars();
+	}
+
 	public String text(Table element) {
 		return text(element.getTable()) + " (...)";
 	}
-
-	public String text(CompoundStatement element) {
-		return "(..., ...)";
+	
+	public StyledString text(VariantFunction element) {
+		return createStyledString(element.getName(), element.getDescription());
 	}
 	
-	public String text(IsSpecified_C element) {
-		return text(element.getCharacteristic()) + "is specified";
-	}
-
-	public String text(IsSpecified_P element) {
-		return text(element.getCharacteristic()) + "is specified";
-	}
-
-	public String text(IsInvisible element) {
-		return text(element.getCharacteristic()) + "is invisible ";
-	}
-
-	public String image(MultiLanguageDescription element) {
-		return languageIcon(element.getLanguage());
-	}
-	
-	public String image(MultipleLanguageDocumentation_LanguageBlock element) {
-		return languageIcon(element.getLanguage());
-	}
-	
-	private String languageIcon (Language language) {
-		switch (language) {
-			case EN : return "gb.png";
-			case DE : return "de.png";
-			case ES : return "es.png";
-			case FR : return "fr.png";
-			case JA : return "jp.png";
-			case PT : return "pt.png";
-			case RU : return "ru.png";
-			default : return "";
-		}
+	public StyledString text(VariantTable element) {
+		return createStyledString(element.getName(), element.getDescription());
 	}
 
 }

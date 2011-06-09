@@ -26,14 +26,23 @@ import org.vclipse.vcml.ui.IUiConstants;
 import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Characteristic;
+import org.vclipse.vcml.vcml.CharacteristicGroup;
+import org.vclipse.vcml.vcml.CharacteristicValue;
 import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.ConfigurationProfile;
 import org.vclipse.vcml.vcml.ConfigurationProfileEntry;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
+import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.LocalSelectionCondition;
 import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Model;
+import org.vclipse.vcml.vcml.NumericCharacteristicValue;
+import org.vclipse.vcml.vcml.NumericType;
+import org.vclipse.vcml.vcml.Precondition;
+import org.vclipse.vcml.vcml.Procedure;
+import org.vclipse.vcml.vcml.SelectionCondition;
+import org.vclipse.vcml.vcml.SymbolicType;
 import org.vclipse.vcml.vcml.VCObject;
 
 import com.google.inject.Inject;
@@ -59,14 +68,44 @@ public class VCMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	}
 	
 	protected void _createChildren(DocumentRootNode parentNode, EObject modelElement) {
-		for (EObject childElement : modelElement.eContents()) {
-			createNode(parentNode, childElement);
+		if (hierarchical) {
+			for (EObject childElement : modelElement.eContents()) {
+				if (childElement instanceof Material) {
+					Material material = (Material)childElement;
+					if (!material.getBillofmaterials().isEmpty() || !material.getClasses().isEmpty() || !material.getConfigurationprofiles().isEmpty()) {
+						createNode(parentNode, childElement);
+					}
+				}
+			}
+		} else {
+			for (EObject childElement : modelElement.eContents()) {
+				createNode(parentNode, childElement);
+			}
 		}
 	}
 
-	protected void _createChildren(IOutlineNode parentNode, Model modelElement) {
-		for(EObject childElement : EcoreUtil2.typeSelect(modelElement.getObjects(), hierarchical ? VCObject.class : Material.class)) {
-			createNode(parentNode, childElement);
+	protected void _createChildren(IOutlineNode parentNode, BillOfMaterial modelElement) {
+		if(!hierarchical) {
+			super._createChildren(parentNode, modelElement);
+		} else {
+			for(BOMItem item : modelElement.getItems()) {
+				createNode(parentNode, item);
+			}
+		}
+	}
+
+	protected void _createChildren(IOutlineNode parentNode, BOMItem modelElement) {
+		if(!hierarchical) {
+			super._createChildren(parentNode, modelElement);
+		} else {
+			createNode(parentNode, modelElement.getMaterial());
+			SelectionCondition selectionCondition = modelElement.getSelectionCondition();
+			if (selectionCondition!=null) {
+				createNode(parentNode, selectionCondition);
+			}
+			for(ConfigurationProfileEntry cpe : modelElement.getEntries()) {
+				createNode(parentNode, cpe);
+			}
 		}
 	}
 	
@@ -74,18 +113,38 @@ public class VCMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		if(!hierarchical) {
 			super._createChildren(parentNode, modelElement);
 		} else {
+			if (modelElement.getType()!=null) {
+				createNode(parentNode, modelElement.getType());
+			}
 			if(modelElement.getDependencies() != null) {
 				createNode(parentNode, modelElement.getDependencies());							
 			}
 		}
 	}
-	
-	protected void _createChildren(IOutlineNode parentNode, org.vclipse.vcml.vcml.Class modelElement) {
+
+	protected void _createChildren(IOutlineNode parentNode, CharacteristicGroup modelElement) {
 		if(!hierarchical) {
 			super._createChildren(parentNode, modelElement);
 		} else {
-			for(Characteristic cstic : modelElement.getCharacteristics()) {
-				createNode(parentNode, cstic);			
+			for (Characteristic cstic : modelElement.getCharacteristics()) {
+				createNode(parentNode, cstic);
+			}
+		}
+	}
+	
+	protected void _createChildren(IOutlineNode parentNode,	ConfigurationProfile modelElement) {
+		if (!hierarchical) {
+			super._createChildren(parentNode, modelElement);
+		} else {
+			InterfaceDesign uidesign = modelElement.getUidesign();
+			if (uidesign != null) {
+				createNode(parentNode, uidesign);
+			}
+			for (DependencyNet dnet : modelElement.getDependencyNets()) {
+				createNode(parentNode, dnet);
+			}
+			for (ConfigurationProfileEntry entry : modelElement.getEntries()) {
+				createNode(parentNode, entry);
 			}
 		}
 	}
@@ -116,34 +175,62 @@ public class VCMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		}
 	}
 
-	protected void _createChildren(IOutlineNode parentNode, BillOfMaterial modelElement) {
+	protected void _createChildren(IOutlineNode parentNode, NumericType modelElement) {
+		for (NumericCharacteristicValue v : modelElement.getValues()) {
+			createNode(parentNode, v);
+		}
+	}
+
+//	protected void _createChildren(IOutlineNode parentNode, LocalSelectionCondition modelElement) {
+//		if(!hierarchical) {
+//			super._createChildren(parentNode, modelElement);
+//		} else {
+//			createNode(parentNode, modelElement);
+//		}
+//	}
+
+	protected void _createChildren(IOutlineNode parentNode, org.vclipse.vcml.vcml.Class modelElement) {
 		if(!hierarchical) {
 			super._createChildren(parentNode, modelElement);
 		} else {
-			for(BOMItem item : modelElement.getItems()) {
-				createNode(parentNode, item);
+			for(Characteristic cstic : modelElement.getCharacteristics()) {
+				createNode(parentNode, cstic);			
 			}
 		}
 	}
 	
-	protected void _createChildren(IOutlineNode parentNode, BOMItem modelElement) {
-		if(!hierarchical) {
-			super._createChildren(parentNode, modelElement);
-		} else {
-			createNode(parentNode, modelElement);
-			createNode(parentNode, modelElement.getSelectionCondition());
-			for(ConfigurationProfileEntry cpe : modelElement.getEntries()) {
-				createNode(parentNode, cpe);
-			}
+	protected void _createChildren(IOutlineNode parentNode, SymbolicType modelElement) {
+		for (CharacteristicValue v : modelElement.getValues()) {
+			createNode(parentNode, v);
 		}
 	}
 	
-	protected void _createChildren(IOutlineNode parentNode, LocalSelectionCondition modelElement) {
-		if(!hierarchical) {
-			super._createChildren(parentNode, modelElement);
-		} else {
-			createNode(parentNode, modelElement);
-		}
+	protected boolean _isLeaf(BOMItem modelElement) {
+		return false;
+	}
+
+	protected boolean _isLeaf(CharacteristicValue modelElement) {
+		return hierarchical;
+	}
+
+	protected boolean _isLeaf(Constraint modelElement) {
+		return hierarchical;
+	}
+
+	protected boolean _isLeaf(NumericCharacteristicValue modelElement) {
+		return hierarchical;
+	}
+
+	protected boolean _isLeaf(Precondition modelElement) {
+		return hierarchical;
+	}
+
+	protected boolean _isLeaf(Procedure modelElement) {
+		return hierarchical;
+	}
+
+	protected boolean _isLeaf(SelectionCondition modelElement) {
+		return hierarchical;
 	}
 
 	protected Object _text(BOMItem modelElement) {
