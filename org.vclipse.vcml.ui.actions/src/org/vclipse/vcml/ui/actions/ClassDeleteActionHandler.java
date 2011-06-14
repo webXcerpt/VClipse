@@ -23,8 +23,7 @@ import com.sap.conn.jco.JCoParameterList;
 public class ClassDeleteActionHandler extends BAPIUtils implements IVCMLOutlineActionHandler<Class> {
 	
 	public boolean isEnabled(Class object) {
-		return isConnected() && 
-			!(object.getName().startsWith("GEN_") || object.getName().startsWith("IPGEN_"));
+		return isConnected();
 	}
 
 	public void run(Class object, Resource resource, IProgressMonitor monitor) throws JCoException {

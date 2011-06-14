@@ -38,8 +38,7 @@ public abstract class AbstractClassCreateChangeActionHandler extends BAPIUtils i
 	protected abstract String getCLASSCHARACTERISTICS();
 
 	public boolean isEnabled(Class object) {
-		return isConnected() && 
-			!(object.getName().startsWith("GEN_") || object.getName().startsWith("IPGEN_"));
+		return isConnected();
 	}
 
 	public void run(Class object, Resource resource, IProgressMonitor monitor) throws JCoException {

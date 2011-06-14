@@ -21,8 +21,7 @@ import com.sap.conn.jco.JCoFunction;
 public class CharacteristicDeleteActionHandler extends BAPIUtils implements IVCMLOutlineActionHandler<Characteristic> {
 	
 	public boolean isEnabled(Characteristic object) {
-		return isConnected() && 
-			!(object.getName().startsWith("GEN_") || object.getName().startsWith("IPGEN_"));
+		return isConnected();
 	}
 
 	public void run(Characteristic object, Resource resource, IProgressMonitor monitor) throws JCoException {

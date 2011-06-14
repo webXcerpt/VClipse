@@ -176,8 +176,7 @@ public class CharacteristicCreateChangeActionHandler extends BAPIUtils implement
 
 
 	public boolean isEnabled(Characteristic object) {
-		return isConnected() && 
-			!(object.getName().startsWith("GEN_") || object.getName().startsWith("IPGEN_")); 
+		return isConnected(); 
 	}
 
 	private class DocumentationHandler extends VcmlSwitch<Object> {
