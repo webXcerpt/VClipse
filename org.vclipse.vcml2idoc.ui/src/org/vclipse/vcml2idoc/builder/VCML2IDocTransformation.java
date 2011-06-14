@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -24,6 +25,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml2idoc.IVcml2IDocTransformation;
@@ -72,7 +74,13 @@ public class VCML2IDocTransformation implements IVcml2IDocTransformation {
 									}
 									resource = set.createResource(URI.createURI(idocFile.getLocationURI().toString()));
 									resource.getContents().add(idocModel);
-									resource.save(null);
+									resource.save(SaveOptions.newBuilder().format().getOptions().toOptionsMap());
+									try {
+										idocFile.refreshLocal(IResource.DEPTH_ONE, monitor);
+									} catch (CoreException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
 								}
 							}
 						}

@@ -32,6 +32,7 @@ public interface IVCML2IDocPreferences {
 	public static final String VCUI_SAVEM = VCML2IDocUIPlugin.ID + ".vcui_savem";
 	public static final String VFNMAS = VCML2IDocUIPlugin.ID + ".vfnmas";
 	public static final String VTAMAS = VCML2IDocUIPlugin.ID + ".vtamas";
+	public static final String VTMMAS = VCML2IDocUIPlugin.ID + ".vtmmas";
 	
 	public static final String UPSTYP = VCMLPlugin.ID + ".upsType";
 

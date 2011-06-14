@@ -26,18 +26,12 @@ import com.google.inject.Inject;
  */
 public class VCML2IDocOptionsPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-	/**
-	 *
-	 */
 	@Inject
 	public VCML2IDocOptionsPreferencePage(final IPreferenceStore preferenceStore) {
 		super(GRID);
 		setPreferenceStore(preferenceStore);
 	}
 
-	/**
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
-	 */
 	@Override
 	protected void createFieldEditors() {
 		final Composite idocGroup = getFieldEditorParent();
@@ -53,12 +47,10 @@ public class VCML2IDocOptionsPreferencePage extends FieldEditorPreferencePage im
 		addField(new BooleanFieldEditor(IVCML2IDocPreferences.VCUI_SAVEM, "VCUI_SAVEM (Create or change interface design)", idocGroup));
 		addField(new BooleanFieldEditor(IVCML2IDocPreferences.VFNMAS, "VFNMAS (Master variant function)", idocGroup));
 		addField(new BooleanFieldEditor(IVCML2IDocPreferences.VTAMAS, "VTAMAS (Master variant table)", idocGroup));
+		addField(new BooleanFieldEditor(IVCML2IDocPreferences.VTMMAS, "VTMMAS (Master maintenance for table contents)", idocGroup));
 		addField(new StringFieldEditor(IVCML2IDocPreferences.UPSTYP, "UPS type:", idocGroup));
 	}
 
-	/**
-	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-	 */
 	@Override
 	public void init(final IWorkbench workbench) {
 		// not used

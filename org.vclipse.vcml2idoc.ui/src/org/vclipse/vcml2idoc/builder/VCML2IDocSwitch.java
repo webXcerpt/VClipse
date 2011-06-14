@@ -21,6 +21,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.resource.XtextResource;
@@ -48,24 +49,29 @@ import org.vclipse.vcml.vcml.Description;
 import org.vclipse.vcml.vcml.Documentation;
 import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.Language;
+import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.MultiLanguageDescription;
 import org.vclipse.vcml.vcml.MultiLanguageDescriptions;
 import org.vclipse.vcml.vcml.NumericCharacteristicValue;
+import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Precondition;
 import org.vclipse.vcml.vcml.Procedure;
+import org.vclipse.vcml.vcml.Row;
 import org.vclipse.vcml.vcml.SelectionCondition;
 import org.vclipse.vcml.vcml.SimpleDescription;
 import org.vclipse.vcml.vcml.Status;
+import org.vclipse.vcml.vcml.SymbolicLiteral;
 import org.vclipse.vcml.vcml.SymbolicType;
 import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VariantFunction;
 import org.vclipse.vcml.vcml.VariantFunctionArgument;
 import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VariantTableArgument;
+import org.vclipse.vcml.vcml.VariantTableContent;
 import org.vclipse.vcml.vcml.util.VcmlSwitch;
 import org.vclipse.vcml2idoc.IVCML2IDocPreferences;
 
@@ -403,6 +409,8 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		return Collections.singletonList(iDoc);
 	}
 
+	
+	
 	/**
 	 * @param parentSegment
 	 * @param counter
@@ -1120,6 +1128,53 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		addSegmentE1UPSLINK(iDoc, toUpperCase(name), VCMLUtils.DEFAULT_VALIDITY_START);
 		addSegmentE1UPSITM(iDoc, "VTAMAS", "VTA", toUpperCase(vartab.getName()), HIELEV_VTAMAS, 1, 1); // new inslev per variant table
 		return Collections.singletonList(iDoc);
+	}
+	
+	@Override
+	public List<IDoc> caseVariantTableContent(VariantTableContent tableContent) {
+		if(!generateIDocsFor(IVCML2IDocPreferences.VTMMAS)) {
+			return Collections.emptyList();
+		}
+		VariantTable table = tableContent.getTable();
+		IDoc idocRoot = createIDocRootSegment("VTMMAS02", "VTMMAS");
+		
+		Segment segE1CUVTM = addChildSegment(idocRoot, "E1CUVTM");
+		setValue(segE1CUVTM, "MSGFN", "004");
+		setValue(segE1CUVTM, "VAR_TAB", table.getName());
+		
+		Segment segE1DATEM = addChildSegment(segE1CUVTM, "E1DATEM");
+		setValue(segE1DATEM, "MSGFN", "004");
+		setValue(segE1DATEM, "KEY_DATE", today);
+		
+		EList<Row> rows = tableContent.getRows();
+		EList<VariantTableArgument> arguments = table.getArguments();
+		for(int rowsIndex=0, rowsSize=rows.size(); rowsIndex<rowsSize; rowsIndex++) {
+			for(int argsIndex=0, argsSize=arguments.size(); argsIndex<argsSize; argsIndex++) {
+				Segment curSegment = addChildSegment(segE1CUVTM, "E1CUV1M");
+				setValue(curSegment, "MSGFN", "004");
+				setValue(curSegment, "VTLINENO", rowsIndex+1);
+				setValue(curSegment, "VTCHARACT", arguments.get(argsIndex).getCharacteristic().getName());
+				setValue(curSegment, "ATWRT", getLiteralValue(rows.get(rowsIndex).getValues().get(argsIndex)));
+				setValue(curSegment, "ATFLV", 0); 
+				setValue(curSegment, "ATFLB", 0); 
+				setValue(curSegment, "ATCOD", 1);
+				setValue(curSegment, "ATTLV", 0);
+				setValue(curSegment, "ATTLB", 0); 
+				setValue(curSegment, "ATINC", 0); 
+				setValue(curSegment, "VTLINENO5", rowsIndex+1);
+			}
+		}
+		
+		// TODO addSegmentE1UPSLINK(...)
+		return Collections.singletonList(idocRoot);
+	}
+	
+	private String getLiteralValue(Literal literal) {
+		if(literal instanceof NumericLiteral) {
+			return ((NumericLiteral)literal).getValue();
+		} else {
+			return ((SymbolicLiteral)literal).getValue();
+		}
 	}
 
 	/**

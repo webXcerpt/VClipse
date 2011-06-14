@@ -24,22 +24,13 @@ import com.google.inject.Inject;
  */
 public class PreferencesInitializer extends AbstractPreferenceInitializer {
 
-	/**
-	 * 
-	 */
 	private final IPreferenceStore preferenceStore;
 	
-	/**
-	 * @param preferenceStore
-	 */
 	@Inject
 	public PreferencesInitializer(IPreferenceStore preferenceStore) {
 		this.preferenceStore = preferenceStore;
 	}
 	
-	/**
-	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
-	 */
 	@Override
 	public void initializeDefaultPreferences() {
 		preferenceStore.setDefault(IVCML2IDocPreferences.BOMMAT, false);
@@ -54,6 +45,7 @@ public class PreferencesInitializer extends AbstractPreferenceInitializer {
 		preferenceStore.setDefault(IVCML2IDocPreferences.VCUI_SAVEM, true);
 		preferenceStore.setDefault(IVCML2IDocPreferences.VFNMAS, false);
 		preferenceStore.setDefault(IVCML2IDocPreferences.VTAMAS, true);
+		preferenceStore.setDefault(IVCML2IDocPreferences.VTMMAS, true);
 		preferenceStore.setDefault(IVCML2IDocPreferences.UPSTYP, "ZVC_CML");
 	}
 }
