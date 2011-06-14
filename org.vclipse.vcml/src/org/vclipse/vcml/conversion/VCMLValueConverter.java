@@ -47,7 +47,7 @@ public class VCMLValueConverter extends DefaultTerminalConverters {
 		protected String internalToValue(String string, INode node) throws ValueConverterException {
 			final int lastCharIndex = string.length() - 1;
 			if (lastCharIndex >= 0 && string.charAt(0) == '\'' && string.charAt(lastCharIndex) == '\'') {
-				return string.substring(1, lastCharIndex).toUpperCase();
+				return string.substring(1, lastCharIndex); // no conversion to upper case
 			} else {
 				return string.toUpperCase();
 			}
