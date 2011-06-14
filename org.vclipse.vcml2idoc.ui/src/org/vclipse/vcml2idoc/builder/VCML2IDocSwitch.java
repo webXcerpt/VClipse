@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.vclipse.vcml2idoc.builder;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -91,6 +92,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 	private static final int HIELEV_MATMAS = 2;
 	private static final int HIELEV_CHRMAS = 3;
 	private static final int HIELEV_VTAMAS = 4; // Variant tables (structure)
+	private static final int HIELEV_VTMMAS = 5; // Variant tables (contents)
 	private static final int HIELEV_VFNMAS = 6;
 	private static final int HIELEV_KNOMAS = 7;
 	private static final int HIELEV_CLSMAS = 8;
@@ -1136,47 +1138,45 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 			return Collections.emptyList();
 		}
 		VariantTable table = tableContent.getTable();
-		IDoc idocRoot = createIDocRootSegment("VTMMAS02", "VTMMAS");
+		IDoc iDoc = createIDocRootSegment("VTMMAS02", "VTMMAS");
 		
-		Segment segE1CUVTM = addChildSegment(idocRoot, "E1CUVTM");
-		setValue(segE1CUVTM, "MSGFN", "004");
-		setValue(segE1CUVTM, "VAR_TAB", table.getName());
+		Segment segmentE1CUVTM = addChildSegment(iDoc, "E1CUVTM");
+		setValue(segmentE1CUVTM, "MSGFN", "004");
+		String tableName = toUpperCase(table.getName());
+		setValue(segmentE1CUVTM, "VAR_TAB", tableName);
 		
-		Segment segE1DATEM = addChildSegment(segE1CUVTM, "E1DATEM");
-		setValue(segE1DATEM, "MSGFN", "004");
-		setValue(segE1DATEM, "KEY_DATE", today);
+		addSegmentE1DATEM(segmentE1CUVTM);
 		
 		EList<Row> rows = tableContent.getRows();
 		EList<VariantTableArgument> arguments = table.getArguments();
 		for(int rowsIndex=0, rowsSize=rows.size(); rowsIndex<rowsSize; rowsIndex++) {
 			for(int argsIndex=0, argsSize=arguments.size(); argsIndex<argsSize; argsIndex++) {
-				Segment curSegment = addChildSegment(segE1CUVTM, "E1CUV1M");
-				setValue(curSegment, "MSGFN", "004");
-				setValue(curSegment, "VTLINENO", rowsIndex+1);
-				setValue(curSegment, "VTCHARACT", arguments.get(argsIndex).getCharacteristic().getName());
-				setValue(curSegment, "ATWRT", getLiteralValue(rows.get(rowsIndex).getValues().get(argsIndex)));
-				setValue(curSegment, "ATFLV", 0); 
-				setValue(curSegment, "ATFLB", 0); 
-				setValue(curSegment, "ATCOD", 1);
-				setValue(curSegment, "ATTLV", 0);
-				setValue(curSegment, "ATTLB", 0); 
-				setValue(curSegment, "ATINC", 0); 
-				setValue(curSegment, "VTLINENO5", rowsIndex+1);
+				Segment segmentE1CUV1M = addChildSegment(segmentE1CUVTM, "E1CUV1M");
+				setValue(segmentE1CUV1M, "MSGFN", "004");
+				setValue(segmentE1CUV1M, "VTLINENO", rowsIndex+1);
+				setValue(segmentE1CUV1M, "VTCHARACT", toUpperCase(arguments.get(argsIndex).getCharacteristic().getName()));
+				Literal literal = rows.get(rowsIndex).getValues().get(argsIndex);
+				if (literal instanceof NumericLiteral) {
+					BigDecimal value = new BigDecimal(((NumericLiteral)literal).getValue());
+					setValue(segmentE1CUV1M, "ATFLV", value.toString()); 
+					setValue(segmentE1CUV1M, "ATFLB", value.toString()); 
+				} else if (literal instanceof SymbolicLiteral) {
+					setValue(segmentE1CUV1M, "ATWRT", ((SymbolicLiteral)literal).getValue());
+				} else {
+					throw new IllegalArgumentException(literal.toString());
+				}
+				setValue(segmentE1CUV1M, "ATCOD", 1);
+				setValue(segmentE1CUV1M, "ATTLV", 0);
+				setValue(segmentE1CUV1M, "ATTLB", 0); 
+				setValue(segmentE1CUV1M, "ATINC", 0); 
+				setValue(segmentE1CUV1M, "VTLINENO5", rowsIndex+1);
 			}
 		}
-		
-		// TODO addSegmentE1UPSLINK(...)
-		return Collections.singletonList(idocRoot);
+		addSegmentE1UPSLINK(iDoc, tableName, VCMLUtils.DEFAULT_VALIDITY_START);
+		addSegmentE1UPSITM(iDoc, "VTMMAS", "VTM", tableName, HIELEV_VTMMAS, 1, 1);
+		return Collections.singletonList(iDoc);
 	}
 	
-	private String getLiteralValue(Literal literal) {
-		if(literal instanceof NumericLiteral) {
-			return ((NumericLiteral)literal).getValue();
-		} else {
-			return ((SymbolicLiteral)literal).getValue();
-		}
-	}
-
 	/**
 	 * @param parentSegment
 	 * @return
