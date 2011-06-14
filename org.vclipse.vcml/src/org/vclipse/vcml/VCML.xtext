@@ -36,6 +36,7 @@ VCObject :
 	| InterfaceDesign
 	| VariantFunction
 	| VariantTable
+	| VariantTableContent
 	;
 
 // concrete classes
@@ -336,6 +337,17 @@ VariantTable
 	
 VariantTableArgument
 	:	(key?='key')? characteristic=[Characteristic|ID]
+	;
+
+VariantTableContent
+	:	'varianttablecontent' table=[VariantTable | ID] '{'
+			rows += Row*
+		'}'
+	;
+
+Row 
+	:	{Row}
+		'row' values+=(SymbolicLiteral | NumericLiteral)*
 	;
 
 // auxiliary grammar rules
