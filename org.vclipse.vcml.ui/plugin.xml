@@ -316,4 +316,11 @@
        </menu>
     </objectContribution>
  </extension>
+ <extension
+       point="org.eclipse.ui.importWizards">
+    <category
+          id="org.vclipse.vcml.ui.wizards.imports"
+          name="VClipse">
+    </category>
+ </extension>
 </plugin>

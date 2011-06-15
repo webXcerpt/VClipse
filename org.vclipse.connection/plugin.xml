@@ -3,12 +3,8 @@
 <plugin>
 	<extension
          point="org.eclipse.ui.importWizards">
-      <category
-            id="org.vclipse.wizards.imports.category"
-            name="VClipse">
-      </category>
       <wizard
-            category="org.vclipse.wizards.imports.category"
+            category="org.vclipse.vcml.ui.wizards.imports"
             class="org.vclipse.connection.injection.ConnectionsExecutableExtensionFactory:org.vclipse.connection.wizards.imports.ConnectionsImportWizard"
             icon="icons/connection_import.png"
             id="org.vclipse.wizards.imports.connection"
