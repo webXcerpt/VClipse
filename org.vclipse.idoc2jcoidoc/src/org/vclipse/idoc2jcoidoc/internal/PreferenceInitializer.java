@@ -40,8 +40,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	@Override
 	public void initializeDefaultPreferences() {
 		preferenceStore.putValue(IUiConstants.NUMBERS_PROVIDER, IUiConstants.TARGET_SYSTEM);
-		preferenceStore.putValue(IUiConstants.RFC_FOR_UPS_NUMBERS, "CML_GET_UPS_NUMBER");
-		preferenceStore.putValue(IUiConstants.RFC_FOR_IDOC_NUMBERS, "CML_GET_IDOC_NUMBERS");
+		preferenceStore.putValue(IUiConstants.RFC_FOR_UPS_NUMBERS, "ZCWG_CML_GET_UPS_NUMBER");
+		preferenceStore.putValue(IUiConstants.RFC_FOR_IDOC_NUMBERS, "ZCWG_CML_GET_IDOC_NUMBERS");
 		preferenceStore.putValue(IUiConstants.PARTNER_NUMBER, DEFAULT_PARTNER_NUMBER);
 		preferenceStore.putValue(IUiConstants.PARTNER_TYPE, DEFAULT_PARTNER_TYPE);
 	}

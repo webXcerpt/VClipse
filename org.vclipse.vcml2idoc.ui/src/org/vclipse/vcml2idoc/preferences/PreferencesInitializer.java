@@ -46,6 +46,6 @@ public class PreferencesInitializer extends AbstractPreferenceInitializer {
 		preferenceStore.setDefault(IVCML2IDocPreferences.VFNMAS, false);
 		preferenceStore.setDefault(IVCML2IDocPreferences.VTAMAS, true);
 		preferenceStore.setDefault(IVCML2IDocPreferences.VTMMAS, true);
-		preferenceStore.setDefault(IVCML2IDocPreferences.UPSTYP, "ZVC_CML");
+		preferenceStore.setDefault(IVCML2IDocPreferences.UPSTYP, "SAP_REPLI");
 	}
 }
