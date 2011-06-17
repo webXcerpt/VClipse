@@ -1149,7 +1149,36 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		
 		EList<Row> rows = tableContent.getRows();
 		EList<VariantTableArgument> arguments = table.getArguments();
-		for(int rowsIndex=0, rowsSize=rows.size(); rowsIndex<rowsSize; rowsIndex++) {
+		
+		for(Row row : rows) {
+			for(VariantTableArgument arg : arguments) {
+				Segment segmentE1CUV1M = addChildSegment(segmentE1CUVTM, "E1CUV1M");
+				setValue(segmentE1CUV1M, "MSGFN", "004");
+				setValue(segmentE1CUV1M, "VTLINENO", rows.indexOf(row) + 1);
+				setValue(segmentE1CUV1M, "VTCHARACT", toUpperCase(arg.getCharacteristic().getName()));
+				int argIndex = arguments.indexOf(arg);
+				EList<Literal> rowValues = row.getValues();
+				if(argIndex < arguments.size() && argIndex < rowValues.size()) {
+					Literal literal = rowValues.get(argIndex);
+					if (literal instanceof NumericLiteral) {
+						BigDecimal value = new BigDecimal(((NumericLiteral)literal).getValue());
+						setValue(segmentE1CUV1M, "ATFLV", value.toString()); 
+						setValue(segmentE1CUV1M, "ATFLB", value.toString()); 
+					} else if (literal instanceof SymbolicLiteral) {
+						setValue(segmentE1CUV1M, "ATWRT", ((SymbolicLiteral)literal).getValue());
+					} else {
+						throw new IllegalArgumentException(literal.toString());
+					}
+				}
+				setValue(segmentE1CUV1M, "ATCOD", 1);
+				setValue(segmentE1CUV1M, "ATTLV", 0);
+				setValue(segmentE1CUV1M, "ATTLB", 0); 
+				setValue(segmentE1CUV1M, "ATINC", 0); 
+				setValue(segmentE1CUV1M, "VTLINENO5", rows.indexOf(row) + 1);
+			}
+		}
+		
+		/*for(int rowsIndex=0, rowsSize=rows.size(); rowsIndex<rowsSize; rowsIndex++) {
 			for(int argsIndex=0, argsSize=arguments.size(); argsIndex<argsSize; argsIndex++) {
 				Segment segmentE1CUV1M = addChildSegment(segmentE1CUVTM, "E1CUV1M");
 				setValue(segmentE1CUV1M, "MSGFN", "004");
@@ -1171,7 +1200,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 				setValue(segmentE1CUV1M, "ATINC", 0); 
 				setValue(segmentE1CUV1M, "VTLINENO5", rowsIndex+1);
 			}
-		}
+		}*/
 		addSegmentE1UPSLINK(iDoc, tableName, VCMLUtils.DEFAULT_VALIDITY_START);
 		addSegmentE1UPSITM(iDoc, "VTMMAS", "VTM", tableName, HIELEV_VTMMAS, 1, 1);
 		return Collections.singletonList(iDoc);
