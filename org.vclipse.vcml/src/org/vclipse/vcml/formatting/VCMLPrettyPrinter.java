@@ -25,6 +25,8 @@ import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicGroup;
 import org.vclipse.vcml.vcml.CharacteristicOrValueDependencies;
+import org.vclipse.vcml.vcml.CharacteristicReference_C;
+import org.vclipse.vcml.vcml.CharacteristicReference_P;
 import org.vclipse.vcml.vcml.CharacteristicValue;
 import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.ConfigurationProfile;
@@ -34,9 +36,11 @@ import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.FormattedDocumentationBlock;
 import org.vclipse.vcml.vcml.GlobalDependency;
 import org.vclipse.vcml.vcml.InterfaceDesign;
+import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.LocalDependency;
 import org.vclipse.vcml.vcml.LocalPrecondition;
 import org.vclipse.vcml.vcml.LocalSelectionCondition;
+import org.vclipse.vcml.vcml.MDataCharacteristic_P;
 import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.MultiLanguageDescription;
@@ -44,19 +48,23 @@ import org.vclipse.vcml.vcml.MultiLanguageDescriptions;
 import org.vclipse.vcml.vcml.MultipleLanguageDocumentation;
 import org.vclipse.vcml.vcml.MultipleLanguageDocumentation_LanguageBlock;
 import org.vclipse.vcml.vcml.NumericCharacteristicValue;
+import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Precondition;
 import org.vclipse.vcml.vcml.Procedure;
+import org.vclipse.vcml.vcml.Row;
 import org.vclipse.vcml.vcml.SelectionCondition;
 import org.vclipse.vcml.vcml.SimpleDescription;
 import org.vclipse.vcml.vcml.SimpleDocumentation;
+import org.vclipse.vcml.vcml.SymbolicLiteral;
 import org.vclipse.vcml.vcml.SymbolicType;
 import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VariantFunction;
 import org.vclipse.vcml.vcml.VariantFunctionArgument;
 import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VariantTableArgument;
+import org.vclipse.vcml.vcml.VariantTableContent;
 import org.vclipse.vcml.vcml.VcmlPackage;
 import org.vclipse.vcml.vcml.util.VcmlSwitch;
 
@@ -737,6 +745,38 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		}
 		return layouter.end();
 	}
+	
+	@Override
+	public DataLayouter<NoExceptions> caseVariantTableContent(VariantTableContent object) {
+		layouter.beginC().print("varianttablecontent ");
+		printName(object.getTable());
+		if(hasBody(object)) {
+			layouter.print(" {").brk();
+			for(Row row : object.getRows()) {
+				layouter.print("row ");
+				for(Literal value : row.getValues()) {
+					doSwitch(value).print(" ");
+				}
+				layouter.brk();
+			}
+			layouter.brk(1, -INDENTATION).print("}");
+		}
+		return layouter.end();
+	}
+	
+	@Override
+	public DataLayouter<NoExceptions> caseLiteral(Literal object) {
+		if(object instanceof SymbolicLiteral) {
+			layouter.print(symbolName(((SymbolicLiteral)object).getValue()));
+		} else if(object instanceof NumericLiteral) {
+			layouter.print(((NumericLiteral)object).getValue());
+		} else if(object instanceof CharacteristicReference_C) {
+			layouter.print(symbolName(((CharacteristicReference_P)object).getCharacteristic().getName()));
+		} else if(object instanceof MDataCharacteristic_P) {
+			layouter.print(symbolName(((MDataCharacteristic_P)object).getCharacteristic().getCharacteristic().getName()));
+		}
+		return layouter;
+	}
 
 	/**
 	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#doSwitch(org.eclipse.emf.ecore.EObject)
@@ -818,6 +858,10 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return object.getDescription()!=null;
 	}
 	
+	private boolean hasBody(VariantTableContent object) {
+		return !object.getRows().isEmpty();
+	}
+	
 	private boolean hasBody(InterfaceDesign object) {
 		return !object.getCharacteristicGroups().isEmpty();
 	}
@@ -853,8 +897,12 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		if (idPattern.matcher(theString).matches()) {
 			return theString;
 		} else {
-			return "'" + theString + "'";
+			return symbolName(theString);
 		}
+	}
+	
+	public static String symbolName(String theString) {
+		return "'" + theString + "'";
 	}
 	
 	private void printName(VCObject object) {
