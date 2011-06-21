@@ -19,7 +19,7 @@ import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.conversion.impl.AbstractNullSafeConverter;
 import org.eclipse.xtext.conversion.impl.AbstractToStringConverter;
 import org.eclipse.xtext.nodemodel.INode;
-import org.vclipse.base.Strings;
+import org.eclipse.xtext.util.Strings;
 
 public class VCMLValueConverter extends DefaultTerminalConverters {
 
@@ -88,7 +88,7 @@ public class VCMLValueConverter extends DefaultTerminalConverters {
 		return new AbstractNullSafeConverter<String>() {
 			@Override
 			protected String internalToValue(String string, INode node) throws ValueConverterException {
-				return Strings.convertFromJavaString(string.substring(1, string.length() - 1));
+				return Strings.convertFromJavaString(string.substring(1, string.length() - 1), false);
 			}
 
 			@Override

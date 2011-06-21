@@ -9,6 +9,7 @@ package org.vclipse.idoc2jcoidoc.views;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -39,6 +40,7 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.connection.VClipseConnectionPlugin;
@@ -46,6 +48,7 @@ import org.vclipse.idoc.iDoc.Model;
 import org.vclipse.idoc2jcoidoc.Activator;
 import org.vclipse.idoc2jcoidoc.IIDoc2JCoIDocProcessor;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.sap.conn.idoc.IDocDocument;
 import com.sap.conn.jco.JCoException;
@@ -206,7 +209,9 @@ public class IDocView extends ViewPart implements IShowInTarget {
 			ResourceSet set = new XtextResourceSet();
 			URI uri = URI.createURI(inputFile.getLocationURI().toString());
 			Resource resource = set.createResource(uri);
-			resource.load(null);
+			Map<Object,Object> options = Maps.newHashMap();
+			options.put(XtextResource.OPTION_ENCODING, "UTF-8");
+			resource.load(options);
 			EList<EObject> contents = resource.getContents();
 			if(!contents.isEmpty()) {
 				EObject eobject = contents.get(0);

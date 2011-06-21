@@ -13,7 +13,9 @@ package org.vclipse.vcml2idoc.builder;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -26,11 +28,13 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.xtext.resource.SaveOptions;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml2idoc.IVcml2IDocTransformation;
 import org.vclipse.vcml2idoc.VCML2IDocUIPlugin;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 /**
@@ -54,7 +58,9 @@ public class VCML2IDocTransformation implements IVcml2IDocTransformation {
 					monitor.subTask("Reading " + file.getName());
 					try {
 						Resource resource = set.createResource(URI.createURI(file.getLocationURI().toString()));
-						resource.load(null);
+						Map<Object,Object> options = Maps.newHashMap();
+						options.put(XtextResource.OPTION_ENCODING, "UTF-8");
+						resource.load(options);
 						final EList<EObject> contents = resource.getContents();
 						if(!contents.isEmpty()) {
 							final EObject eobject = contents.get(0);
