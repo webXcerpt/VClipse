@@ -18,7 +18,10 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.Platform;
 import org.vclipse.vcml.VCMLPlugin;
 import org.vclipse.vcml.vcml.Language;
+import org.vclipse.vcml.vcml.Literal;
+import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.Status;
+import org.vclipse.vcml.vcml.SymbolicLiteral;
 
 
 public class VCMLUtils {
@@ -208,6 +211,14 @@ public class VCMLUtils {
 		 }
 	}
 	
-	
+	public static String getLiteralName(Literal literal) {
+		if(literal instanceof SymbolicLiteral) {
+			return ((SymbolicLiteral)literal).getValue();
+		} else if(literal instanceof NumericLiteral) {
+			return ((NumericLiteral)literal).getValue();
+		} else {
+			throw new IllegalArgumentException(literal.toString());
+		}
+	}
 
 }

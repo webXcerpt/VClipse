@@ -10,22 +10,29 @@
  ******************************************************************************/
 package org.vclipse.vcml.validation;
 
-import java.util.List;
-
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
 import org.vclipse.vcml.utils.VCMLUtils;
-import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Characteristic;
+import org.vclipse.vcml.vcml.CharacteristicType;
+import org.vclipse.vcml.vcml.CharacteristicValue;
 import org.vclipse.vcml.vcml.Class;
-import org.vclipse.vcml.vcml.ConfigurationProfile;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
-import org.vclipse.vcml.vcml.Material;
+import org.vclipse.vcml.vcml.Literal;
+import org.vclipse.vcml.vcml.NumericCharacteristicValue;
+import org.vclipse.vcml.vcml.NumericLiteral;
+import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.Precondition;
 import org.vclipse.vcml.vcml.Procedure;
+import org.vclipse.vcml.vcml.Row;
 import org.vclipse.vcml.vcml.SelectionCondition;
 import org.vclipse.vcml.vcml.SimpleDescription;
+import org.vclipse.vcml.vcml.SymbolicLiteral;
+import org.vclipse.vcml.vcml.SymbolicType;
+import org.vclipse.vcml.vcml.VariantTableArgument;
+import org.vclipse.vcml.vcml.VariantTableContent;
 import org.vclipse.vcml.vcml.VcmlPackage;
 
 
@@ -36,7 +43,7 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	private static final int MAXLENGTH_NAME = 30;
 	private static final int MAXLENGTH_DESCRIPTION = 30;
 	private static final int MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS = 50; // soft limit of size of dependency net (should not be larger because compilation has a O(n^2) algorithm)
-	private static final int MAXLENGTH_MATERIAL_NAME = 18;
+	//private static final int MAXLENGTH_MATERIAL_NAME = 18;
 
 	/*
 	 * @Check(CheckType.EXPENSIVE) //executed upon validate action in context menu
@@ -105,5 +112,45 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 			warning("Descriptions are limited to " + MAXLENGTH_DESCRIPTION + " characters", VcmlPackage.Literals.SIMPLE_DESCRIPTION__VALUE);
 		}
 	}
-
+	
+	@Check(CheckType.FAST)
+	public void checkVaraiantTableContents(final VariantTableContent content) {
+		EList<VariantTableArgument> parameters = content.getTable().getArguments();
+		EList<Row> rows = content.getRows();
+		for(Row row : rows) {
+			EList<Literal> values = row.getValues();
+			if(values.size() != parameters.size()) {
+				error("Illegal number of values in a row. Expected " + parameters.size() + " values.", VcmlPackage.Literals.VARIANT_TABLE_CONTENT__ROWS, rows.indexOf(row));
+			}
+			for(Literal value : values) {
+				int index = values.indexOf(value);
+				if(index < parameters.size()) {
+					Characteristic param = parameters.get(index).getCharacteristic();
+					if(!param.eIsProxy() && !contains(param.getType(), value)) {
+						error("Parameter " + param.getName() + " does not contain value " + VCMLUtils.getLiteralName(value), 
+								row, VcmlPackage.Literals.ROW__VALUES, index);
+					}
+				}
+			}
+		}
+	}
+	
+	private boolean contains(CharacteristicType type, Literal value) {
+		if(value instanceof SymbolicLiteral && type instanceof SymbolicType) {
+			String strValue = ((SymbolicLiteral)value).getValue();
+			for(CharacteristicValue cv : ((SymbolicType)type).getValues()) {
+				if(cv.getName().equals(strValue)) {
+					return true;
+				}
+			}
+		} else if(value instanceof NumericLiteral && type instanceof NumericType) {
+			String strValue = ((NumericLiteral)value).getValue();
+			for(NumericCharacteristicValue ncv : ((NumericType)type).getValues()) {
+				if(ncv.getName().equals(strValue)) {
+					return true;
+				}
+			}
+		} 
+		return false;
+	}
 }
