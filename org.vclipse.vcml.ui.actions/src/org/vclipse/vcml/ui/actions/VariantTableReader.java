@@ -36,7 +36,7 @@ public class VariantTableReader extends BAPIUtils {
 	public VariantTable read(String variantTableName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
 		if (!seenObjects.add("VariantTable#" + variantTableName))
 			return null;
-		VariantTable object = VCMLFACTORY.createVariantTable();
+		VariantTable object = VCML.createVariantTable();
 		object.setName(variantTableName);
 		((Model)resource.getContents().get(0)).getObjects().add(object);
 		JCoFunction function = getJCoFunction("CARD_TABLE_READ_STRUCTURE", monitor);
@@ -64,7 +64,7 @@ public class VariantTableReader extends BAPIUtils {
 				if (cstic==null) {
 					cstic = VCMLProxyFactory.createCharacteristicProxy(resource, csticName);
 				}
-				VariantTableArgument variantTableArgument = VCMLFACTORY.createVariantTableArgument();
+				VariantTableArgument variantTableArgument = VCML.createVariantTableArgument();
 				variantTableArgument.setCharacteristic(cstic);
 				arguments.add(variantTableArgument);
 				// cstic is input parameter if it occurs in "alt input"

@@ -29,7 +29,7 @@ public class ProcedureReader extends BAPIUtils {
 	public Procedure read(String procedureName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
 		if (!seenObjects.add("Procedure#" + procedureName))
 			return null;
-		Procedure object = VCMLFACTORY.createProcedure();
+		Procedure object = VCML.createProcedure();
 		object.setName(procedureName);
 		((Model)resource.getContents().get(0)).getObjects().add(object);
 		JCoFunction function = getJCoFunction("CARD_DEPENDENCY_READ", monitor);

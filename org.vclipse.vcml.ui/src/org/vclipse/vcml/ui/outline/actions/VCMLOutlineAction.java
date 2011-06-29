@@ -78,7 +78,7 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 	 */
 	private final List<EObject> selectedObjects;
 	
-	protected static final VcmlFactory VCMLFACTORY = VcmlFactory.eINSTANCE;
+	protected static final VcmlFactory VCML = VcmlFactory.eINSTANCE;
 	
 	private VCMLOutlinePage page;
 	
@@ -148,7 +148,7 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 			Job job = new Job(getDescription()) {
 				protected IStatus run(IProgressMonitor monitor) {
 					monitor.beginTask("", IProgressMonitor.UNKNOWN);
-					Model resultModel = VCMLFACTORY.createModel();
+					Model resultModel = VCML.createModel();
 					res.getContents().add(resultModel);
 					
 					for(EObject obj : getSelectedObjects()) {

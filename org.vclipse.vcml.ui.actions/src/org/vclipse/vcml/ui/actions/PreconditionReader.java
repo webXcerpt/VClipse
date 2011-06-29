@@ -29,7 +29,7 @@ public class PreconditionReader extends BAPIUtils {
 	public Precondition read(String preconditionName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
 		if (!seenObjects.add("Precondition#" + preconditionName))
 			return null;
-		Precondition object = VCMLFACTORY.createPrecondition();
+		Precondition object = VCML.createPrecondition();
 		object.setName(preconditionName);
 		((Model)resource.getContents().get(0)).getObjects().add(object);
 		JCoFunction function = getJCoFunction("CARD_DEPENDENCY_READ", monitor);

@@ -92,7 +92,7 @@ public class ReferenceConstructor extends VcmlSwitch<EObject> {
 	/**
 	 * 
 	 */
-	private static final VcmlFactory FACTORY = VcmlFactory.eINSTANCE;
+	private static final VcmlFactory VCML = VcmlFactory.eINSTANCE;
 	
 	/**
 	 * 
@@ -798,7 +798,7 @@ public class ReferenceConstructor extends VcmlSwitch<EObject> {
 	 */
 	private void createVCObject(final EObject source) {
 		if(source instanceof VCObject) {
-			VCObject newObject = (VCObject)FACTORY.create(source.eClass());
+			VCObject newObject = (VCObject)VCML.create(source.eClass());
 			String name = ((VCObject)source).getName();
 			newObject.setName(name);
 			objects.put(name, newObject);

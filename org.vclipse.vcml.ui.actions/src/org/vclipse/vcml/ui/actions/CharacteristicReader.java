@@ -46,7 +46,7 @@ public class CharacteristicReader extends BAPIUtils {
 	public Characteristic read(String csticName, Resource resource, final IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
 		if (!seenObjects.add("Characteristic#" + csticName))
 			return null;
-		final Characteristic object = VCMLFACTORY.createCharacteristic();
+		final Characteristic object = VCML.createCharacteristic();
 		((Model)resource.getContents().get(0)).getObjects().add(object);
 		JCoFunction function = getJCoFunction("BAPI_CHARACT_GETDETAIL", monitor);
 		function.getImportParameterList().setValue("CHARACTNAME", csticName);
@@ -59,7 +59,7 @@ public class CharacteristicReader extends BAPIUtils {
 			object.setName(charactDetail.getString("CHARACT_NAME"));
 			String dataType = charactDetail.getString("DATA_TYPE");
 			if ("NUM".equals(dataType)) {
-				NumericType type = VCMLFACTORY.createNumericType();
+				NumericType type = VCML.createNumericType();
 				object.setType(type);
 				type.setNumberOfChars(charactDetail.getInt("LENGTH"));
 				type.setDecimalPlaces(charactDetail.getInt("DECIMALS"));
@@ -71,15 +71,15 @@ public class CharacteristicReader extends BAPIUtils {
 				if (charactValuesNum!=null) {
 					for (int i = 0; i < charactValuesNum.getNumRows(); i++) {
 						charactValuesNum.setRow(i);
-						NumericCharacteristicValue value = VCMLFACTORY.createNumericCharacteristicValue();
+						NumericCharacteristicValue value = VCML.createNumericCharacteristicValue();
 						String from = charactValuesNum.getString("VALUE_FROM");
 						String to = charactValuesNum.getString("VALUE_TO");
 						if (from.equals(to)) {
-							NumericLiteral literal = VCMLFACTORY.createNumericLiteral();
+							NumericLiteral literal = VCML.createNumericLiteral();
 							literal.setValue(from);
 							value.setEntry(literal);
 						} else {
-							NumericInterval interval = VCMLFACTORY.createNumericInterval();
+							NumericInterval interval = VCML.createNumericInterval();
 							interval.setLowerBound(from);
 							interval.setUpperBound(to);
 							value.setEntry(interval);
@@ -89,7 +89,7 @@ public class CharacteristicReader extends BAPIUtils {
 					}
 				}
 			} else if ("CHAR".equals(dataType)) {
-				SymbolicType type = VCMLFACTORY.createSymbolicType();
+				SymbolicType type = VCML.createSymbolicType();
 				object.setType(type);
 				type.setNumberOfChars(charactDetail.getInt("LENGTH"));
 				type.setCaseSensitive("X".equals(charactDetail.getValue("CASE_SENSITIV")));
@@ -102,15 +102,15 @@ public class CharacteristicReader extends BAPIUtils {
 						String name = charactValuesDescr.getString("VALUE_CHAR");
 						CharacteristicValue value = seenValues.get(name);
 						if (value==null) {
-							value = VCMLFACTORY.createCharacteristicValue();
+							value = VCML.createCharacteristicValue();
 							values.add(value);
 							value.setName(name);
-							value.setDescription(VCMLFACTORY.createMultiLanguageDescriptions());
+							value.setDescription(VCML.createMultiLanguageDescriptions());
 							seenValues.put(name, value);
 						}
 						MultiLanguageDescriptions multiLanguageDescriptions = (MultiLanguageDescriptions)value.getDescription();
 						EList<MultiLanguageDescription> descriptions = multiLanguageDescriptions.getDescriptions();
-						MultiLanguageDescription multiLanguageDescription = VCMLFACTORY.createMultiLanguageDescription();
+						MultiLanguageDescription multiLanguageDescription = VCML.createMultiLanguageDescription();
 						multiLanguageDescription.setLanguage(VCMLUtils.getLanguageByISOString(charactValuesDescr.getString("LANGUAGE_ISO")));
 						multiLanguageDescription.setValue(charactValuesDescr.getString("DESCRIPTION"));
 						descriptions.add(multiLanguageDescription);
@@ -118,7 +118,7 @@ public class CharacteristicReader extends BAPIUtils {
 				}
 				for (final CharacteristicValue value : values) {
 					value.setDescription(simplifyDescription(value.getDescription()));
-					MultipleLanguageDocumentation multipleLanguageDocumentation = VCMLFACTORY.createMultipleLanguageDocumentation();
+					MultipleLanguageDocumentation multipleLanguageDocumentation = VCML.createMultipleLanguageDocumentation();
 					final EList<MultipleLanguageDocumentation_LanguageBlock> languageBlocks = multipleLanguageDocumentation.getLanguageblocks();
 					final Description description = value.getDescription();
 					if (description!=null) {
@@ -155,13 +155,13 @@ public class CharacteristicReader extends BAPIUtils {
 			object.setGroup(nullIfEmpty(charactDetail.getString("CHARACT_GROUP")));
 			JCoTable charactDescr = tpl.getTable("CHARACTDESCR");
 			if (charactDescr!=null && charactDescr.getNumRows()>0) {
-				MultiLanguageDescriptions multiLanguageDescriptions = VCMLFACTORY.createMultiLanguageDescriptions();
+				MultiLanguageDescriptions multiLanguageDescriptions = VCML.createMultiLanguageDescriptions();
 				EList<MultiLanguageDescription> descriptions = multiLanguageDescriptions.getDescriptions();
-				MultipleLanguageDocumentation multipleLanguageDocumentation = VCMLFACTORY.createMultipleLanguageDocumentation();
+				MultipleLanguageDocumentation multipleLanguageDocumentation = VCML.createMultipleLanguageDocumentation();
 				EList<MultipleLanguageDocumentation_LanguageBlock> languageBlocks = multipleLanguageDocumentation.getLanguageblocks();
 				for (int i = 0; i < charactDescr.getNumRows(); i++) {
 					charactDescr.setRow(i);
-					MultiLanguageDescription multiLanguageDescription = VCMLFACTORY.createMultiLanguageDescription();
+					MultiLanguageDescription multiLanguageDescription = VCML.createMultiLanguageDescription();
 					Language language = VCMLUtils.getLanguageByISOString(charactDescr.getString("LANGUAGE_ISO"));
 					multiLanguageDescription.setLanguage(language);
 					multiLanguageDescription.setValue(charactDescr.getString("DESCRIPTION"));
@@ -189,14 +189,14 @@ public class CharacteristicReader extends BAPIUtils {
 			ipl.setValue("VALUE_CHAR", value.getName());
 		ipl.setValue("LANGUAGE_ISO", language.toString());
 		execute(function, monitor, cstic.getName() + " " + (value==null ? "" : value.getName() + " ") + language);
-		MultipleLanguageDocumentation_LanguageBlock lb = VCMLFACTORY.createMultipleLanguageDocumentation_LanguageBlock();
+		MultipleLanguageDocumentation_LanguageBlock lb = VCML.createMultipleLanguageDocumentation_LanguageBlock();
 		lb.setLanguage(language);
 		EList<FormattedDocumentationBlock> fdbs = lb.getFormattedDocumentationBlocks();
 		JCoParameterList tpl = function.getTableParameterList();
 		JCoTable longText = tpl.getTable("LONGTEXT");
 		for (int i = 0; i < longText.getNumRows(); i++) {
 			longText.setRow(i);
-			FormattedDocumentationBlock fdb = VCMLFACTORY.createFormattedDocumentationBlock();
+			FormattedDocumentationBlock fdb = VCML.createFormattedDocumentationBlock();
 			fdbs.add(fdb);
 			fdb.setValue(longText.getString("TDLINE"));
 			fdb.setFormat(nullIfEquals(VCMLUtils.DEFAULT_FORMAT, longText.getString("TDFORMAT")));

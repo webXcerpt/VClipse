@@ -88,7 +88,7 @@ import com.google.inject.name.Named;
  */
 public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 
-	private static final IDocFactory IDOCFACTORY = IDocFactory.eINSTANCE;
+	private static final IDocFactory IDOC = IDocFactory.eINSTANCE;
 
 	// hierarchy levels for different IDoc types
 	private static final int HIELEV_MATMAS = 2;
@@ -147,7 +147,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 			setOptionsFromModel(vcmlModel);
 			initializeVariables();
 			// transform all objects to IDocs
-			final org.vclipse.idoc.iDoc.Model iDocModel = IDOCFACTORY.createModel();
+			final org.vclipse.idoc.iDoc.Model iDocModel = IDOC.createModel();
 			final List<IDoc> idocs = iDocModel.getIdocs();
 			IDoc upsIDoc = null;
 			if (haveUPS()) {
@@ -1239,7 +1239,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 	 */
 	private void setValue(final Segment segment, final String name, final String value) {
 		if(value != null) {
-			final StringField field = IDOCFACTORY.createStringField();
+			final StringField field = IDOC.createStringField();
 			field.setName(toUpperCase(name));
 			field.setValue(value);
 			segment.getFields().add(field);
@@ -1252,7 +1252,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 	 * @param value
 	 */
 	private void setValue(final Segment segment, final String name, final char value) {
-		final StringField field = IDOCFACTORY.createStringField();
+		final StringField field = IDOC.createStringField();
 		field.setName(toUpperCase(name));
 		field.setValue("" + value);
 		segment.getFields().add(field);
@@ -1264,7 +1264,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 	 * @param value
 	 */
 	private void setValue(final Segment segment, final String name, final int value) {
-		final NumberField field = IDOCFACTORY.createNumberField();
+		final NumberField field = IDOC.createNumberField();
 		field.setName(toUpperCase(name));
 		field.setValue(value);
 		segment.getFields().add(field);
@@ -1276,7 +1276,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 	 * @return
 	 */
 	private Segment addChildSegment(final IDoc iDoc, final String type) {
-		final Segment child = IDOCFACTORY.createSegment();
+		final Segment child = IDOC.createSegment();
 		child.setType(type);
 		iDoc.getSegments().add(child);
 		return child;
@@ -1288,7 +1288,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 	 * @return
 	 */
 	private Segment addChildSegment(final Segment segment, final String type) {
-		final Segment child = IDOCFACTORY.createSegment();
+		final Segment child = IDOC.createSegment();
 		child.setType(type);
 		segment.getSegments().add(child);
 		return child;
@@ -1300,7 +1300,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 	 * @return
 	 */
 	private IDoc createIDocRootSegment(final String type, final String messageType) {
-		final IDoc iDoc = IDOCFACTORY.createIDoc();
+		final IDoc iDoc = IDOC.createIDoc();
 		iDoc.setName(iDocNumber++ + "");
 		iDoc.setType(type);
 		iDoc.setMessageType(messageType);

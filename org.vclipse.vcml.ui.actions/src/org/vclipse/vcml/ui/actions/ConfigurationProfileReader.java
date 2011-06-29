@@ -67,7 +67,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 				if (profileName!=null && !profileName.equals(name)) { // wrong profile
 					continue;
 				}
-				ConfigurationProfile object = VCMLFACTORY.createConfigurationProfile();
+				ConfigurationProfile object = VCML.createConfigurationProfile();
 				object.setName(name);
 				object.setStatus(VCMLUtils.createStatusFromInt(conProAttributes.getInt("STATUS")));
 				object.setBomapplication(conProAttributes.getString("BOMAPPL"));
@@ -101,7 +101,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 				String depType = conProDependencyData.getString("DEP_TYPE");
 				String depName = conProDependencyData.getString("DEP_INTERN");
 				if ("PROC".equals(depType)) {
-					ConfigurationProfileEntry entry = VCMLFACTORY.createConfigurationProfileEntry();
+					ConfigurationProfileEntry entry = VCML.createConfigurationProfileEntry();
 					profile.getEntries().add(entry);
 					entriesByName.put(depName, entry);
 					Procedure procedure = null;

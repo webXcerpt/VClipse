@@ -29,7 +29,7 @@ public class SelectionConditionReader extends BAPIUtils {
 	public SelectionCondition read(String selectionConditionName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
 		if (!seenObjects.add("SelectionCondition#" + selectionConditionName))
 			return null;
-		SelectionCondition object = VCMLFACTORY.createSelectionCondition();
+		SelectionCondition object = VCML.createSelectionCondition();
 		object.setName(selectionConditionName);
 		((Model)resource.getContents().get(0)).getObjects().add(object);
 		JCoFunction function = getJCoFunction("CARD_DEPENDENCY_READ", monitor);

@@ -35,7 +35,7 @@ public class DependencyNetReader extends BAPIUtils {
 		if (!seenObjects.add("DependencyNet#" + depNetName)) {
 			return null;
 		}
-		DependencyNet object = VCMLFACTORY.createDependencyNet();
+		DependencyNet object = VCML.createDependencyNet();
 		((Model)resource.getContents().get(0)).getObjects().add(object);
 		JCoFunction function = getJCoFunction("CARD_CONSTRAINT_NET_READ", monitor);
 		function.getImportParameterList().setValue("CONSTRAINT_NET", depNetName);

@@ -58,7 +58,7 @@ public class BillOfMaterialReader extends BAPIUtils {
 			for (int i = 0; i < tSTKO.getNumRows(); i++) {
 				tSTKO.setRow(i);
 				String bomNo = tSTKO.getString("BOM_NO");
-				BillOfMaterial object = VCMLFACTORY.createBillOfMaterial();
+				BillOfMaterial object = VCML.createBillOfMaterial();
 				containerMaterial.getBillofmaterials().add(object);
 				billOfMaterialByName.put(bomNo, object);
 				// object.setStatus(VCMLUtils.createStatus(tSTKO.getInt("BOM_STATUS"))); // TODO BOM should have a status
@@ -71,7 +71,7 @@ public class BillOfMaterialReader extends BAPIUtils {
 				BillOfMaterial bom = billOfMaterialByName.get(bomNo);
 				List<BOMItem> bomItems = bom.getItems();
 				// String itemNode = tSTPO.getString("ITEM_NODE");
-				BOMItem bomItem = VCMLFACTORY.createBOMItem();
+				BOMItem bomItem = VCML.createBOMItem();
 				bomItems.add(bomItem);
 				bomItem.setItemnumber(tSTPO.getInt("ITEM_NO"));
 				String component = tSTPO.getString("COMPONENT");

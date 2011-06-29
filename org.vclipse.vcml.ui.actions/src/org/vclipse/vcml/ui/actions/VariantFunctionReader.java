@@ -36,7 +36,7 @@ public class VariantFunctionReader extends BAPIUtils {
 	public VariantFunction read(String variantFunctionName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
 		if (!seenObjects.add("VariantFunction#" + variantFunctionName))
 			return null;
-		VariantFunction object = VCMLFACTORY.createVariantFunction();
+		VariantFunction object = VCML.createVariantFunction();
 		object.setName(variantFunctionName);
 		((Model)resource.getContents().get(0)).getObjects().add(object);
 		JCoFunction function = getJCoFunction("CARD_FUNCTION_READ", monitor);
@@ -64,7 +64,7 @@ public class VariantFunctionReader extends BAPIUtils {
 				if (cstic==null) {
 					cstic = VCMLProxyFactory.createCharacteristicProxy(resource, csticName);
 				}
-				VariantFunctionArgument variantFunctionArgument = VCMLFACTORY.createVariantFunctionArgument();
+				VariantFunctionArgument variantFunctionArgument = VCML.createVariantFunctionArgument();
 				variantFunctionArgument.setCharacteristic(cstic);
 				arguments.add(variantFunctionArgument);
 				// cstic is input parameter if it occurs in "alt input"

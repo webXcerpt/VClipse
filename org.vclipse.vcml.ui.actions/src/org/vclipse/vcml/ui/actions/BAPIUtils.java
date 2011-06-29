@@ -83,7 +83,7 @@ public class BAPIUtils {
 	/**
 	 * 
 	 */
-	protected static final VcmlFactory VCMLFACTORY = VcmlFactory.eINSTANCE;
+	protected static final VcmlFactory VCML = VcmlFactory.eINSTANCE;
 
 	@Inject
 	private IParser parser;
@@ -300,11 +300,11 @@ public class BAPIUtils {
 	}
 
 	protected MultiLanguageDescriptions readMultiLanguageDescriptions(JCoTable table, String languageFieldISO, String languageField, String descriptionField) {
-		MultiLanguageDescriptions multiLanguageDescriptions = VCMLFACTORY.createMultiLanguageDescriptions();
+		MultiLanguageDescriptions multiLanguageDescriptions = VCML.createMultiLanguageDescriptions();
 		EList<MultiLanguageDescription> descriptions = multiLanguageDescriptions.getDescriptions();
 		for (int i = 0; i < table.getNumRows(); i++) {
 			table.setRow(i);
-			MultiLanguageDescription multiLanguageDescription = VCMLFACTORY.createMultiLanguageDescription();
+			MultiLanguageDescription multiLanguageDescription = VCML.createMultiLanguageDescription();
 			Language language; 
 			String languageISO = table.getString(languageFieldISO);
 			if (languageISO==null || languageISO.length()!=2) { // heuristics to test whether languageISO is a valid ISO language: must be a string of length 2
@@ -333,7 +333,7 @@ public class BAPIUtils {
 		case 1: 
 			MultiLanguageDescription multiLanguageDescription = multiLanguageDescriptions.getDescriptions().get(0);
 			if (VCMLUtils.getDefaultLanguage().equals(multiLanguageDescription.getLanguage())) {
-				SimpleDescription description = VCMLFACTORY.createSimpleDescription();
+				SimpleDescription description = VCML.createSimpleDescription();
 				description.setValue(multiLanguageDescription.getValue());
 				return description;
 			}
@@ -357,17 +357,17 @@ public class BAPIUtils {
 			language2Rows.put(language, i);
 		}
 		
-		MultipleLanguageDocumentation multipleLanguageDocumentation = VCMLFACTORY.createMultipleLanguageDocumentation();
+		MultipleLanguageDocumentation multipleLanguageDocumentation = VCML.createMultipleLanguageDocumentation();
 		EList<MultipleLanguageDocumentation_LanguageBlock> languageBlocks = multipleLanguageDocumentation.getLanguageblocks();
 		for(java.util.Map.Entry<Language, Collection<Integer>> entry : language2Rows.asMap().entrySet()) {
-			MultipleLanguageDocumentation_LanguageBlock languageBlock = VCMLFACTORY.createMultipleLanguageDocumentation_LanguageBlock();
+			MultipleLanguageDocumentation_LanguageBlock languageBlock = VCML.createMultipleLanguageDocumentation_LanguageBlock();
 			languageBlocks.add(languageBlock);
 			languageBlock.setLanguage(entry.getKey());
 			EList<FormattedDocumentationBlock> formattedDocumentationBlocks = languageBlock.getFormattedDocumentationBlocks();
 			Collection<Integer> indices = entry.getValue();
 			for (int i : indices) {
 				table.setRow(i);
-				FormattedDocumentationBlock fdb = VCMLFACTORY.createFormattedDocumentationBlock();
+				FormattedDocumentationBlock fdb = VCML.createFormattedDocumentationBlock();
 				formattedDocumentationBlocks.add(fdb);
 				fdb.setFormat(table.getString("TXT_FORM"));
 				fdb.setValue(table.getString("TXT_LINE"));

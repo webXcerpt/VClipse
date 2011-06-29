@@ -22,7 +22,8 @@ import org.vclipse.vcml.vcml.VcmlFactory;
 
 public class VCMLFragmentProvider implements IFragmentProvider {
 
-	private static final String CONSTRAINT_OBJECT_CLASSIFIER = VcmlFactory.eINSTANCE.createConstraintObject().eClass().getClassifierID()+"";
+	private static final VcmlFactory VCML = VcmlFactory.eINSTANCE;
+	private static final String CONSTRAINT_OBJECT_CLASSIFIER = VCML.createConstraintObject().eClass().getClassifierID()+"";
 
 	public EObject getEObject(Resource resource, String fragment, Fallback fallback) {
 		for(EObject o  : resource.getContents()) {

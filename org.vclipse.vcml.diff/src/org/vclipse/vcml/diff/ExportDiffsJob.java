@@ -34,6 +34,8 @@ import org.vclipse.vcml.vcml.VcmlFactory;
  */
 public class ExportDiffsJob extends Job {
 
+	private static final VcmlFactory VCML = VcmlFactory.eINSTANCE;
+
 	/**
 	 * 
 	 */
@@ -105,7 +107,7 @@ public class ExportDiffsJob extends Job {
 			// init the left model -> resource could be empty
 			Model left_model = null;
 			if(resource_one.getContents().isEmpty()) {
-				left_model = VcmlFactory.eINSTANCE.createModel();
+				left_model = VCML.createModel();
 				resource_one.getContents().add(left_model);
 			} else {
 				left_model = (Model)resource_one.getContents().get(0);
@@ -115,7 +117,7 @@ public class ExportDiffsJob extends Job {
 			// init the right model -> resource could be empty
 			Model right_model = null;
 			if(resource_two.getContents().isEmpty()) {
-				right_model = VcmlFactory.eINSTANCE.createModel();
+				right_model = VCML.createModel();
 				resource_two.getContents().add(right_model);
 			} else {
 				right_model = (Model)resource_two.getContents().get(0);
@@ -132,7 +134,7 @@ public class ExportDiffsJob extends Job {
 			
 			monitor.subTask("Saving results...");
 			final Resource resource = new XtextResourceSet().getResource(URI.createURI(exportFile.getLocationURI().toString()), true);
-			final Model vcmlModel = VcmlFactory.eINSTANCE.createModel();
+			final Model vcmlModel = VCML.createModel();
 			resource.getContents().add(vcmlModel);			
 			new DiffsHandlerSwitch(vcmlModel, monitor).doSwitch(diffModel);
 			resource.save(Collections.EMPTY_MAP);

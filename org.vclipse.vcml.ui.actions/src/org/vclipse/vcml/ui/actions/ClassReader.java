@@ -35,7 +35,7 @@ public class ClassReader extends BAPIUtils {
 		if (!seenObjects.add("Class#" + classSpec)) {
 			return null;
 		}
-		Class object = VCMLFACTORY.createClass();
+		Class object = VCML.createClass();
 		object.setName(classSpec);
 		((Model)resource.getContents().get(0)).getObjects().add(object);
 		JCoFunction function = getJCoFunction("BAPI_CLASS_GETDETAIL", monitor);

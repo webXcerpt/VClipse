@@ -39,7 +39,7 @@ public class InterfaceDesignReader extends BAPIUtils {
 		if (!seenObjects.add("InterfaceDesign#" + interfaceDesignName)) {
 			return null;
 		}
-		InterfaceDesign object = VCMLFACTORY.createInterfaceDesign();
+		InterfaceDesign object = VCML.createInterfaceDesign();
 		object.setName(interfaceDesignName);
 
 			/** 
@@ -168,16 +168,16 @@ FRAME_TEXT
 					charGroups.setRow(g);
 					// TODO sort groups by groupName
 					String groupName = charGroups.getString("GROUP_NAME");
-					CharacteristicGroup group = VCMLFACTORY.createCharacteristicGroup();
+					CharacteristicGroup group = VCML.createCharacteristicGroup();
 					characteristicGroups.add(group);
 					
 					// read description
-					MultiLanguageDescriptions multiLanguageDescriptions = VCMLFACTORY.createMultiLanguageDescriptions();
+					MultiLanguageDescriptions multiLanguageDescriptions = VCML.createMultiLanguageDescriptions();
 					EList<MultiLanguageDescription> descriptions = multiLanguageDescriptions.getDescriptions();
 					for (int i = 0; i < charGroupsLang.getNumRows(); i++) {
 						charGroupsLang.setRow(i);
 						if (groupName.equals(charGroupsLang.getValue("GROUP_NAME"))) {
-							MultiLanguageDescription multiLanguageDescription = VCMLFACTORY.createMultiLanguageDescription();
+							MultiLanguageDescription multiLanguageDescription = VCML.createMultiLanguageDescription();
 							Language language; 
 							String languageISO = charGroupsLang.getString("LANGUAGE_ISO");
 							if (Strings.isEmpty(languageISO)) {

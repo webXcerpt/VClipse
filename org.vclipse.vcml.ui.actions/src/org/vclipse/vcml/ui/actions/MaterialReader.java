@@ -38,7 +38,7 @@ public class MaterialReader extends BAPIUtils {
 		if (!seenObjects.add("Material#" + materialName)) {
 			return null;
 		}
-		Material object = VCMLFACTORY.createMaterial();
+		Material object = VCML.createMaterial();
 		object.setName(materialName);
 		((Model)resource.getContents().get(0)).getObjects().add(object);
 		JCoFunction function = getJCoFunction("BAPI_MATERIAL_GET_DETAIL", monitor);
@@ -52,7 +52,7 @@ public class MaterialReader extends BAPIUtils {
 			JCoParameterList epl = function.getExportParameterList();
 			JCoStructure materialGeneralData = epl.getStructure("MATERIAL_GENERAL_DATA");
 			// TODO how to read multi-language descriptions for materials?
-			SimpleDescription description = VCMLFACTORY.createSimpleDescription(); 
+			SimpleDescription description = VCML.createSimpleDescription(); 
 			description.setValue(materialGeneralData.getString("MATL_DESC"));
 			object.setDescription(description);
 			object.setType(materialGeneralData.getString("MATL_TYPE"));

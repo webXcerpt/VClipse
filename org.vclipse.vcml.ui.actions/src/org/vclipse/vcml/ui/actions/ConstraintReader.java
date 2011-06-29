@@ -30,7 +30,7 @@ public class ConstraintReader extends BAPIUtils {
 		if (!seenObjects.add("Constraint#" + constraintName)) {
 			return null;
 		}
-		Constraint object = VCMLFACTORY.createConstraint();
+		Constraint object = VCML.createConstraint();
 		object.setName(constraintName);
 		((Model)resource.getContents().get(0)).getObjects().add(object);
 		JCoFunction function = getJCoFunction("CARD_CNET_CONSTRAINT_READ", monitor);

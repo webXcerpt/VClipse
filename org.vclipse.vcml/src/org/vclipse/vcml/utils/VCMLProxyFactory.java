@@ -30,10 +30,10 @@ import org.vclipse.vcml.vcml.impl.VcmlFactoryImpl;
 
 public class VCMLProxyFactory extends VcmlFactoryImpl {
 
-	protected static final VcmlFactory VCMLFACTORY = VcmlFactory.eINSTANCE;
+	protected static final VcmlFactory VCML = VcmlFactory.eINSTANCE;
 	
 	public static Characteristic createCharacteristicProxy(Resource resource, String name) {
-		Characteristic obj = VCMLFACTORY.createCharacteristic();
+		Characteristic obj = VCML.createCharacteristic();
 		obj.setName(name);
 		URI uri = resource.getURI();
 		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
@@ -41,7 +41,7 @@ public class VCMLProxyFactory extends VcmlFactoryImpl {
 	}
 
 	public static Class createClassProxy(Resource resource, String name) {
-		Class obj = VCMLFACTORY.createClass();
+		Class obj = VCML.createClass();
 		obj.setName(name);
 		URI uri = resource.getURI();
 		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
@@ -49,7 +49,7 @@ public class VCMLProxyFactory extends VcmlFactoryImpl {
 	}
 
 	public static Constraint createConstraintProxy(Resource resource, String name) {
-		Constraint obj = VCMLFACTORY.createConstraint();
+		Constraint obj = VCML.createConstraint();
 		obj.setName(name);
 		URI uri = resource.getURI();
 		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
@@ -57,7 +57,7 @@ public class VCMLProxyFactory extends VcmlFactoryImpl {
 	}
 
 	public static DependencyNet createDependencyNetProxy(Resource resource, String name) {
-		DependencyNet obj = VCMLFACTORY.createDependencyNet();
+		DependencyNet obj = VCML.createDependencyNet();
 		obj.setName(name);
 		URI uri = resource.getURI();
 		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
@@ -65,7 +65,7 @@ public class VCMLProxyFactory extends VcmlFactoryImpl {
 	}
 
 	public static InterfaceDesign createInterfaceDesignProxy(Resource resource, String name) {
-		InterfaceDesign obj = VCMLFACTORY.createInterfaceDesign();
+		InterfaceDesign obj = VCML.createInterfaceDesign();
 		obj.setName(name);
 		URI uri = resource.getURI();
 		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
@@ -73,7 +73,7 @@ public class VCMLProxyFactory extends VcmlFactoryImpl {
 	}
 
 	public static Material createMaterialProxy(Resource resource, String name) {
-		Material obj = VCMLFACTORY.createMaterial();
+		Material obj = VCML.createMaterial();
 		obj.setName(name);
 		URI uri = resource.getURI();
 		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
@@ -81,7 +81,7 @@ public class VCMLProxyFactory extends VcmlFactoryImpl {
 	}
 
 	public static Precondition createPreconditionProxy(Resource resource, String name) {
-		Precondition obj = VCMLFACTORY.createPrecondition();
+		Precondition obj = VCML.createPrecondition();
 		obj.setName(name);
 		URI uri = resource.getURI();
 		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
@@ -89,7 +89,7 @@ public class VCMLProxyFactory extends VcmlFactoryImpl {
 	}
 
 	public static Procedure createProcedureProxy(Resource resource, String name) {
-		Procedure obj = VCMLFACTORY.createProcedure();
+		Procedure obj = VCML.createProcedure();
 		obj.setName(name);
 		URI uri = resource.getURI();
 		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
@@ -97,7 +97,7 @@ public class VCMLProxyFactory extends VcmlFactoryImpl {
 	}
 
 	public static SelectionCondition createSelectionConditionProxy(Resource resource, String name) {
-		SelectionCondition obj = VCMLFACTORY.createSelectionCondition();
+		SelectionCondition obj = VCML.createSelectionCondition();
 		obj.setName(name);
 		URI uri = resource.getURI();
 		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
@@ -105,7 +105,7 @@ public class VCMLProxyFactory extends VcmlFactoryImpl {
 	}
 
 	public static VariantFunction createVariantFunctionProxy(Resource resource, String name) {
-		VariantFunction obj = VCMLFACTORY.createVariantFunction();
+		VariantFunction obj = VCML.createVariantFunction();
 		obj.setName(name);
 		URI uri = resource.getURI();
 		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
@@ -113,7 +113,7 @@ public class VCMLProxyFactory extends VcmlFactoryImpl {
 	}
 
 	public static VariantTable createVariantTableProxy(Resource resource, String name) {
-		VariantTable obj = VCMLFACTORY.createVariantTable();
+		VariantTable obj = VCML.createVariantTable();
 		obj.setName(name);
 		URI uri = resource.getURI();
 		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
