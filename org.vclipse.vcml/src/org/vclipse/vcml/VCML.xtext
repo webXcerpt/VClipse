@@ -118,7 +118,7 @@ CharacteristicValue :
 	;
 
 NumericCharacteristicValue :
-	name=NUMBER
+	entry=NumberListEntryForValues
     dependencies=CharacteristicOrValueDependencies?
 	;
 
@@ -841,6 +841,11 @@ NumberListEntry :
 	| NumericInterval
 	;
 	
+NumberListEntryForValues returns NumberListEntry :
+	  NumericLiteral
+	| '(' NumericInterval ')'
+	;
+	
 NumericInterval :
 	lowerBound=NUMBER '-' upperBound=NUMBER
 	;
@@ -918,7 +923,7 @@ SHORTVAR // NOTE: due to a bug in Xtext, the following does not work: hidden () 
 	;	
 
 // TODO implement size restrictions for a number: e.g., the exponent's maximum value is 99
-NUMBER
+NUMBER hidden ()
 	:	('-'|'+')? INT ('.' INT)? ('e' ('-'|'+') INT)? // sign of exponent is mandatory in SAP
 	;
 

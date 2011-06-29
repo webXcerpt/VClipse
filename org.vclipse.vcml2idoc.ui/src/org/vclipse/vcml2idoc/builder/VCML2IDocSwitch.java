@@ -55,7 +55,9 @@ import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.MultiLanguageDescription;
 import org.vclipse.vcml.vcml.MultiLanguageDescriptions;
+import org.vclipse.vcml.vcml.NumberListEntry;
 import org.vclipse.vcml.vcml.NumericCharacteristicValue;
+import org.vclipse.vcml.vcml.NumericInterval;
 import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.Option;
@@ -473,8 +475,19 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		setValue(segmentE1CAWNM, "MSGFN", "004");
 		setValue(segmentE1CAWNM, "ATZHL", String.format("%1$04d", counter)); // internal counter
 		// NUM objects use ATFLV. Some other attributes have to be set.
-		setValue(segmentE1CAWNM, "ATFLV", value.getName());
-		setValue(segmentE1CAWNM, "ATFLB", value.getName());
+		String flv, flb;
+		NumberListEntry entry = value.getEntry();
+		if (entry instanceof NumericLiteral) {
+			flv = ((NumericLiteral)entry).getValue();
+			flb = flv;
+		} else if (entry instanceof NumericInterval) {
+			flv = ((NumericInterval)entry).getLowerBound();
+			flb = ((NumericInterval)entry).getUpperBound();
+		} else {
+			throw new IllegalArgumentException("unknown NumberListEntry " + entry);
+		}
+		setValue(segmentE1CAWNM, "ATFLV", flv);
+		setValue(segmentE1CAWNM, "ATFLB", flb);
 		setValue(segmentE1CAWNM, "ATTLV", 0); // ToLeranz Von
 		setValue(segmentE1CAWNM, "ATTLB", 0); // ToLeranz Bis
 		setValue(segmentE1CAWNM, "ATINC", 0);

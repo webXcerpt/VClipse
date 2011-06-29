@@ -47,7 +47,9 @@ import org.vclipse.vcml.vcml.MultiLanguageDescription;
 import org.vclipse.vcml.vcml.MultiLanguageDescriptions;
 import org.vclipse.vcml.vcml.MultipleLanguageDocumentation;
 import org.vclipse.vcml.vcml.MultipleLanguageDocumentation_LanguageBlock;
+import org.vclipse.vcml.vcml.NumberListEntry;
 import org.vclipse.vcml.vcml.NumericCharacteristicValue;
+import org.vclipse.vcml.vcml.NumericInterval;
 import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.Option;
@@ -209,7 +211,14 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 				layouter.brk().beginC().print("values {").brk();
 				for(NumericCharacteristicValue value : object.getValues()) {
 					layouter.brk();
-					printNullsafe(value.getName());
+					NumberListEntry entry = value.getEntry();
+					if (entry instanceof NumericInterval) { // parentheses only if intervals are used in value definitions
+						layouter.print("(");
+						doSwitch(entry);
+						layouter.print(")");
+					} else {
+						doSwitch(entry);
+					}
 					CharacteristicOrValueDependencies dependencies = value.getDependencies();
 					if (dependencies!=null) {
 						layouter.brk();
@@ -222,6 +231,22 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.brk(1, -INDENTATION).print("}").end();
 	}
 
+	@Override
+	public DataLayouter<NoExceptions> caseNumericLiteral(NumericLiteral object) {
+		layouter.print(object.getValue());
+		return layouter;
+	}
+	
+	@Override
+	public DataLayouter<NoExceptions> caseNumericInterval(NumericInterval object) {
+		layouter.print(object.getLowerBound());
+		layouter.brk();
+		layouter.print("-");
+		layouter.brk();
+		layouter.print(object.getUpperBound());
+		return layouter;
+	}
+	
 	/**
 	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseSymbolicType(org.vclipse.vcml.vcml.SymbolicType)
 	 */

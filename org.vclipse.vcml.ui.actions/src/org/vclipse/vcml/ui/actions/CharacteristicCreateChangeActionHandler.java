@@ -21,7 +21,10 @@ import org.vclipse.vcml.vcml.FormattedDocumentationBlock;
 import org.vclipse.vcml.vcml.Language;
 import org.vclipse.vcml.vcml.MultipleLanguageDocumentation;
 import org.vclipse.vcml.vcml.MultipleLanguageDocumentation_LanguageBlock;
+import org.vclipse.vcml.vcml.NumberListEntry;
 import org.vclipse.vcml.vcml.NumericCharacteristicValue;
+import org.vclipse.vcml.vcml.NumericInterval;
+import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.SimpleDocumentation;
 import org.vclipse.vcml.vcml.SymbolicType;
@@ -62,8 +65,19 @@ public class CharacteristicCreateChangeActionHandler extends BAPIUtils implement
 				JCoTable charactValuesNum = tpl.getTable("CHARACTVALUESNUMNEW");
 				charactValuesNum.appendRows(ty.getValues().size());
 				for (NumericCharacteristicValue value : ty.getValues()) {
-					charactValuesNum.setValue("VALUE_FROM", value.getName());
-					charactValuesNum.setValue("VALUE_TO", value.getName());
+					String flv, flb;
+					NumberListEntry entry = value.getEntry();
+					if (entry instanceof NumericLiteral) {
+						flv = ((NumericLiteral)entry).getValue();
+						flb = flv;
+					} else if (entry instanceof NumericInterval) {
+						flv = ((NumericInterval)entry).getLowerBound();
+						flb = ((NumericInterval)entry).getUpperBound();
+					} else {
+						throw new IllegalArgumentException("unknown NumberListEntry " + entry);
+					}
+					charactValuesNum.setValue("VALUE_FROM", flv);
+					charactValuesNum.setValue("VALUE_TO", flb);
 					charactValuesNum.setValue("UNIT_FROM", unit);
 					charactValuesNum.setValue("UNIT_TO", unit);
 					charactValuesNum.setValue("VALUE_RELATION", 1); // means EQ

@@ -21,6 +21,7 @@ import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Literal;
+import org.vclipse.vcml.vcml.NumberListEntry;
 import org.vclipse.vcml.vcml.NumericCharacteristicValue;
 import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.NumericType;
@@ -146,9 +147,13 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 		} else if(value instanceof NumericLiteral && type instanceof NumericType) {
 			String strValue = ((NumericLiteral)value).getValue();
 			for(NumericCharacteristicValue ncv : ((NumericType)type).getValues()) {
-				if(ncv.getName().equals(strValue)) {
-					return true;
+				NumberListEntry entry = ncv.getEntry();
+				if (entry instanceof NumericLiteral) {
+					if(((NumericLiteral)entry).getValue().equals(strValue)) {
+						return true;
+					}
 				}
+				// TODO check intervals
 			}
 		} 
 		return false;

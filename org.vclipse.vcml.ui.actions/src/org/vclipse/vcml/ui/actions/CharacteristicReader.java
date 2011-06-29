@@ -28,6 +28,8 @@ import org.vclipse.vcml.vcml.MultiLanguageDescriptions;
 import org.vclipse.vcml.vcml.MultipleLanguageDocumentation;
 import org.vclipse.vcml.vcml.MultipleLanguageDocumentation_LanguageBlock;
 import org.vclipse.vcml.vcml.NumericCharacteristicValue;
+import org.vclipse.vcml.vcml.NumericInterval;
+import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.SymbolicType;
 import org.vclipse.vcml.utils.DescriptionHandler;
@@ -70,7 +72,19 @@ public class CharacteristicReader extends BAPIUtils {
 					for (int i = 0; i < charactValuesNum.getNumRows(); i++) {
 						charactValuesNum.setRow(i);
 						NumericCharacteristicValue value = VCMLFACTORY.createNumericCharacteristicValue();
-						value.setName(charactValuesNum.getString("VALUE_FROM"));
+						String from = charactValuesNum.getString("VALUE_FROM");
+						String to = charactValuesNum.getString("VALUE_TO");
+						if (from.equals(to)) {
+							NumericLiteral literal = VCMLFACTORY.createNumericLiteral();
+							literal.setValue(from);
+							value.setEntry(literal);
+						} else {
+							NumericInterval interval = VCMLFACTORY.createNumericInterval();
+							interval.setLowerBound(from);
+							interval.setUpperBound(to);
+							value.setEntry(interval);
+							
+						}
 						values.add(value);
 					}
 				}
