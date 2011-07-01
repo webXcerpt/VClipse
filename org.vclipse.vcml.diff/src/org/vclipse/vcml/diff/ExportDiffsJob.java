@@ -15,12 +15,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -133,9 +135,13 @@ public class ExportDiffsJob extends Job {
 			monitor.worked(10);
 			
 			monitor.subTask("Saving results...");
-			final Resource resource = new XtextResourceSet().getResource(URI.createURI(exportFile.getLocationURI().toString()), true);
-			final Model vcmlModel = VCML.createModel();
-			resource.getContents().add(vcmlModel);			
+			Resource resource = new XtextResourceSet().getResource(URI.createURI(exportFile.getLocationURI().toString()), true);
+			EList<EObject> contents = resource.getContents();
+			if(!contents.isEmpty()) {
+				contents.clear();				
+			}
+			Model vcmlModel = VcmlFactory.eINSTANCE.createModel();				
+			contents.add(vcmlModel);
 			new DiffsHandlerSwitch(vcmlModel, monitor).doSwitch(diffModel);
 			resource.save(Collections.EMPTY_MAP);
 			exportFile.refreshLocal(IResource.DEPTH_ONE, monitor);
