@@ -476,22 +476,38 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		setValue(segmentE1CAWNM, "ATZHL", String.format("%1$04d", counter)); // internal counter
 		// NUM objects use ATFLV. Some other attributes have to be set.
 		String flv, flb;
+		String atcod;
 		NumberListEntry entry = value.getEntry();
 		if (entry instanceof NumericLiteral) {
 			flv = ((NumericLiteral)entry).getValue();
 			flb = flv;
+			atcod = "1"; // for EQ
 		} else if (entry instanceof NumericInterval) {
 			flv = ((NumericInterval)entry).getLowerBound();
 			flb = ((NumericInterval)entry).getUpperBound();
+			atcod = "3";
 		} else {
 			throw new IllegalArgumentException("unknown NumberListEntry " + entry);
 		}
+		/*
+		 * the atcod coding means the following:
+'1'. " EQ
+'2'. " GE LT
+'3'. " GE LE
+'4'. " GT LT
+'5'. " GT LE
+'6'. " LT
+'7'. "    LE
+'8'. " GT
+'9'. " GE
+		 */
+		
 		setValue(segmentE1CAWNM, "ATFLV", flv);
 		setValue(segmentE1CAWNM, "ATFLB", flb);
 		setValue(segmentE1CAWNM, "ATTLV", 0); // ToLeranz Von
 		setValue(segmentE1CAWNM, "ATTLB", 0); // ToLeranz Bis
 		setValue(segmentE1CAWNM, "ATINC", 0);
-		setValue(segmentE1CAWNM, "ATCOD", 1); // for EQ
+		setValue(segmentE1CAWNM, "ATCOD", atcod);
 		setValue(segmentE1CAWNM, "ATAW1", unit);
 		setValue(segmentE1CAWNM, "ATAWE", unit);
 		setValue(segmentE1CAWNM, "TXTNR", "0000");

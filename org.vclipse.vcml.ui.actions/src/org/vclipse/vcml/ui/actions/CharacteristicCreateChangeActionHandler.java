@@ -65,14 +65,16 @@ public class CharacteristicCreateChangeActionHandler extends BAPIUtils implement
 				JCoTable charactValuesNum = tpl.getTable("CHARACTVALUESNUMNEW");
 				charactValuesNum.appendRows(ty.getValues().size());
 				for (NumericCharacteristicValue value : ty.getValues()) {
-					String flv, flb;
+					String flv, flb, relation;
 					NumberListEntry entry = value.getEntry();
 					if (entry instanceof NumericLiteral) {
 						flv = ((NumericLiteral)entry).getValue();
 						flb = flv;
+						relation = "1"; // means EQ
 					} else if (entry instanceof NumericInterval) {
 						flv = ((NumericInterval)entry).getLowerBound();
 						flb = ((NumericInterval)entry).getUpperBound();
+						relation = "3"; // means GE LE
 					} else {
 						throw new IllegalArgumentException("unknown NumberListEntry " + entry);
 					}
@@ -80,7 +82,7 @@ public class CharacteristicCreateChangeActionHandler extends BAPIUtils implement
 					charactValuesNum.setValue("VALUE_TO", flb);
 					charactValuesNum.setValue("UNIT_FROM", unit);
 					charactValuesNum.setValue("UNIT_TO", unit);
-					charactValuesNum.setValue("VALUE_RELATION", 1); // means EQ
+					charactValuesNum.setValue("VALUE_RELATION", relation);
 					charactValuesNum.nextRow();
 				}
 				return this;
