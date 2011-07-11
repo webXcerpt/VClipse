@@ -15,6 +15,7 @@ package org.vclipse.vcml;
 
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.linking.ILinker;
+import org.eclipse.xtext.linking.ILinkingDiagnosticMessageProvider;
 import org.eclipse.xtext.linking.lazy.LazyURIEncoder;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.parsetree.reconstr.ITokenSerializer;
@@ -29,6 +30,7 @@ import org.vclipse.vcml.formatting.VCMLSerializer;
 import org.vclipse.vcml.linking.VCMLLinker;
 import org.vclipse.vcml.resource.VCMLURIEncoder;
 import org.vclipse.vcml.scoping.VCMLScopeProvider;
+import org.vclipse.vcml.validation.VCMLLinkingDiagnosticMessageProvider;
 
 import com.google.inject.Binder;
 import com.google.inject.name.Names;
@@ -44,7 +46,6 @@ public class VCMLRuntimeModule extends org.vclipse.vcml.AbstractVCMLRuntimeModul
 		 binder.bindConstant().annotatedWith(Names.named(CompositeEValidator.USE_EOBJECT_VALIDATOR)).to(false);
 	 }
 
-	
 	@Override
 	public Class<? extends IValueConverterService> bindIValueConverterService() {
 		return VCMLValueConverter.class;
@@ -86,4 +87,7 @@ public class VCMLRuntimeModule extends org.vclipse.vcml.AbstractVCMLRuntimeModul
 		return NullQualifiedNameConverter.class;
 	}
 
+	public Class<? extends ILinkingDiagnosticMessageProvider.Extended> bindILinkingDiagnosticMessageProvider() {
+		return VCMLLinkingDiagnosticMessageProvider.class;
+	}
 }
