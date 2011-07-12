@@ -98,7 +98,7 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 		layouter.beginC();
 		printNullsafe(object.getName());
 		layouter.print(" is_a "); // TODO improve this
-		printCrossReference(object, VCMLPACKAGE.getConstraintClass_Class(), VCMLPACKAGE.getVCObject_Name());
+		layouter.print(getCrossReference(object, VCMLPACKAGE.getConstraintClass_Class(), VCMLPACKAGE.getVCObject_Name()));
 		EList<ShortVarDefinition> shortVars = object.getShortVars();
 		if(!shortVars.isEmpty()) {
 			layouter.print(" where").brk();
@@ -106,7 +106,7 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 				ShortVarDefinition cur = shortVars.get(i);
 				printNullsafe(cur.getName());
 				layouter.print(" = ");
-				printCrossReference(cur, VCMLPACKAGE.getShortVarDefinition_Characteristic(), VCMLPACKAGE.getVCObject_Name());
+				layouter.print(getCrossReference(cur, VCMLPACKAGE.getShortVarDefinition_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
 				if(i<size) {
 					layouter.print(";").brk();
 				}
@@ -140,7 +140,7 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 				ShortVarDefinition definition = shortVars.get(i);
 				printNullsafe(definition.getName());
 				layouter.print(" = ");
-				printCrossReference(definition, VCMLPACKAGE.getShortVarDefinition_Characteristic(), VCMLPACKAGE.getVCObject_Name());
+				layouter.print(getCrossReference(definition, VCMLPACKAGE.getShortVarDefinition_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
 				if(i<size) {
 					layouter.print(";");
 				}
@@ -206,9 +206,7 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 	 */
 	@Override
 	public DataLayouter<NoExceptions> caseObjectCharacteristicReference(ObjectCharacteristicReference object) {
-		printNullsafe(object.getLocation().getName());
-		layouter.print(".");
-		printCrossReference(object, VCMLPACKAGE.getObjectCharacteristicReference_Characteristic(), VCMLPACKAGE.getVCObject_Name());
+		printNullsafe(object.getLocation().getName() + "." + getCrossReference(object, VCMLPACKAGE.getObjectCharacteristicReference_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
 		return layouter;
 	}
 	

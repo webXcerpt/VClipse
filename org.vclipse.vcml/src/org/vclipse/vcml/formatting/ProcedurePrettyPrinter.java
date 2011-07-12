@@ -51,14 +51,13 @@ public class ProcedurePrettyPrinter extends CodePrettyPrinter {
 	 */
 	@Override
 	public DataLayouter<NoExceptions> caseIsInvisible(IsInvisible object) {
-		layouter.print("$self.");
-		printCrossReference(object, VCMLPACKAGE.getIsInvisible_Characteristic(), VCMLPACKAGE.getVCObject_Name());
+		layouter.print("$self." + getCrossReference(object, VCMLPACKAGE.getIsInvisible_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
 		return layouter.print(" is").print(" invisible");
 	}
 
 	public DataLayouter<NoExceptions> casePFunction(PFunction object) {
 		layouter.beginC().print("pfunction ");
-		printCrossReference(object, VCMLPACKAGE.getPFunction_Function(), VCMLPACKAGE.getVCObject_Name());
+		layouter.print(getCrossReference(object, VCMLPACKAGE.getPFunction_Function(), VCMLPACKAGE.getVCObject_Name()));
 		layouter.print(" (").brk();
 		EList<Characteristic> cstics = object.getCharacteristics();
 		EList<Literal> literals = object.getValues();
@@ -70,7 +69,7 @@ public class ProcedurePrettyPrinter extends CodePrettyPrinter {
 				layouter.print(",").brk();
 			}
 			layouter.beginI();
-			printCrossReference(object, cstics.get(i), VCMLPACKAGE.getPFunction_Characteristics(), VCMLPACKAGE.getVCObject_Name());
+			layouter.print(getCrossReference(object, cstics.get(i), VCMLPACKAGE.getPFunction_Characteristics(), VCMLPACKAGE.getVCObject_Name()));
 			layouter.brk().print("=").brk();
 			doSwitch(literals.get(i));
 			layouter.end();
@@ -85,7 +84,7 @@ public class ProcedurePrettyPrinter extends CodePrettyPrinter {
 	public DataLayouter<NoExceptions> caseDelDefault(DelDefault object) {
 		layouter.beginC();
 		layouter.print("$del_default").print("(").print("$self,").brk();
-		printCrossReference(object, VCMLPACKAGE.getSetOrDelDefault_Characteristic(), VCMLPACKAGE.getVCObject_Name());
+		layouter.print(getCrossReference(object, VCMLPACKAGE.getSetOrDelDefault_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
 		layouter.print(",").brk();
 		precedenceLevel = PREC_MAX;
 		doSwitch(object.getExpression());
@@ -98,11 +97,14 @@ public class ProcedurePrettyPrinter extends CodePrettyPrinter {
 	 */
 	@Override
 	public DataLayouter<NoExceptions> caseSetDefault(SetDefault object) {
-		layouter.print("$self.");
-		printCrossReference(object, VCMLPACKAGE.getSetOrDelDefault_Characteristic(), VCMLPACKAGE.getVCObject_Name());
-		layouter.print(" ?= ");
+		layouter.beginI();
+		layouter.print("$self." + getCrossReference(object, VCMLPACKAGE.getSetOrDelDefault_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
+		layouter.brk();
+		layouter.print("?=");
+		layouter.brk();
 		precedenceLevel = PREC_MAX;
 		doSwitch(object.getExpression());
+		layouter.end();
 		return layouter;
 	}
 
@@ -114,7 +116,7 @@ public class ProcedurePrettyPrinter extends CodePrettyPrinter {
 		layouter.print("$set_pricing_factor (");
 		printNullsafe(object.getLocation().getName());
 		layouter.print(", ");
-		printCrossReference(object, VCMLPACKAGE.getSetPricingFactor_Characteristic(), VCMLPACKAGE.getVCObject_Name());
+		layouter.print(getCrossReference(object, VCMLPACKAGE.getSetPricingFactor_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
 		layouter.print(", ");
 		precedenceLevel = PREC_MAX;
 		doSwitch(object.getArg1());
@@ -201,10 +203,8 @@ public class ProcedurePrettyPrinter extends CodePrettyPrinter {
 	 */
 	@Override
 	public DataLayouter<NoExceptions> caseCharacteristicReference_P(CharacteristicReference_P object) {
-		if(object.getLocation() != null) {
-			layouter.print(object.getLocation().getLiteral()).print(".");
-		}
-		printCrossReference(object, VCMLPACKAGE.getCharacteristicReference_P_Characteristic(), VCMLPACKAGE.getVCObject_Name());
+		String locationPrefix = object.getLocation() != null ? object.getLocation().getLiteral() + "." : "";
+		layouter.print(locationPrefix + getCrossReference(object, VCMLPACKAGE.getCharacteristicReference_P_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
 		return layouter;
 	}
 

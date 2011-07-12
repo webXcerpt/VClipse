@@ -122,8 +122,7 @@ public abstract class CodePrettyPrinter extends VcmlSwitch<DataLayouter<NoExcept
 	@Override
 	public DataLayouter<NoExceptions> caseAssignment(Assignment object) {
 		layouter.beginI(0);
-		layouter.print("$self.");
-		printCrossReference(object, VCMLPACKAGE.getAssignment_Characteristic(), VCMLPACKAGE.getVCObject_Name());
+		layouter.print("$self." + getCrossReference(object, VCMLPACKAGE.getAssignment_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
 		layouter.brk().print("=").brk();
 		if(object.getExpression() != null) {
 			precedenceLevel = PREC_MAX;
@@ -139,12 +138,12 @@ public abstract class CodePrettyPrinter extends VcmlSwitch<DataLayouter<NoExcept
 	@Override
 	public DataLayouter<NoExceptions> caseFunction(Function object) {
 		layouter.print("function ");
-		printCrossReference(object, VCMLPACKAGE.getFunction_Function(), VCMLPACKAGE.getVCObject_Name());
+		layouter.print(getCrossReference(object, VCMLPACKAGE.getFunction_Function(), VCMLPACKAGE.getVCObject_Name()));
 		layouter.print("(");
 		EList<Characteristic> cstics = object.getCharacteristics();
 		EList<Literal> literals = object.getValues();
 		for(int i=0, size=cstics.size()-1; i<=size; i++) {
-			printCrossReference(object, cstics.get(i), VCMLPACKAGE.getFunction_Characteristics(), VCMLPACKAGE.getVCObject_Name());
+			layouter.print(getCrossReference(object, cstics.get(i), VCMLPACKAGE.getFunction_Characteristics(), VCMLPACKAGE.getVCObject_Name()));
 			layouter.print(" = ");
 			doSwitch(literals.get(i));
 			if(i<size) {
@@ -159,8 +158,7 @@ public abstract class CodePrettyPrinter extends VcmlSwitch<DataLayouter<NoExcept
 	 */
 	@Override
 	public DataLayouter<NoExceptions> caseIsInvisible(IsInvisible object) {
-		layouter.print("$self.");
-		printCrossReference(object, VCMLPACKAGE.getIsInvisible_Characteristic(), VCMLPACKAGE.getVCObject_Name());
+		layouter.print("$self." + getCrossReference(object, VCMLPACKAGE.getIsInvisible_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
 		return layouter.print(" is").print(" invisible");
 	}
 
@@ -449,23 +447,22 @@ public abstract class CodePrettyPrinter extends VcmlSwitch<DataLayouter<NoExcept
 		layouter.print(object==null ? "null" : object);
 	}
 
-	protected void printCrossReference(EObject context, EReference ref, EAttribute att) {
-		printCrossReference(context, (EObject)context.eGet(ref), ref, att);
+	protected String getCrossReference(EObject context, EReference ref, EAttribute att) {
+		return getCrossReference(context, (EObject)context.eGet(ref), ref, att);
 	}
 
-	protected void printCrossReference(final EObject context, final EObject object, final EReference ref, final EAttribute att) {
+	protected String getCrossReference(final EObject context, final EObject object, final EReference ref, final EAttribute att) {
 		if (object==null) {
-			layouter.print("###NULL###");
-			return;
+			return "###NULL###";
 		}
-		String linkText;
+		String linkText = "";
 		Object o = object.eGet(att);
 		if (o!=null) {
 			linkText = o.toString();
 		} else {
 			linkText = "###UNKNOWN###";
 		}
-		printNullsafe(linkText);
+		return linkText;
 	}
 	
 }
