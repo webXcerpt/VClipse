@@ -97,7 +97,7 @@ public class ProcedurePrettyPrinter extends CodePrettyPrinter {
 	 */
 	@Override
 	public DataLayouter<NoExceptions> caseSetDefault(SetDefault object) {
-		layouter.beginI();
+		layouter.beginC();
 		layouter.print("$self." + getCrossReference(object, VCMLPACKAGE.getSetOrDelDefault_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
 		layouter.brk();
 		layouter.print("?=");
