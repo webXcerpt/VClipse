@@ -10,9 +10,13 @@
  ******************************************************************************/
 package org.vclipse.vcml.validation;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
+import org.vclipse.vcml.documentation.VCMLDescriptionProvider;
 import org.vclipse.vcml.utils.VCMLUtils;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicType;
@@ -36,9 +40,14 @@ import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
 import org.vclipse.vcml.vcml.VcmlPackage;
 
+import com.google.inject.Inject;
+
 
 public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 
+	@Inject
+	private VCMLDescriptionProvider descriptionProvider;
+	
 	private static final int MAXLENGTH_CLASS_CHARACTERISTICS = 999; // SAP limit because cstic index in class table has size 3
 	private static final int MAXLENGTH_CLASS_NAME = 18;
 	private static final int MAXLENGTH_NAME = 30;
@@ -111,6 +120,25 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	public void checkDescription(final SimpleDescription desc) {
 		if (desc.getValue().length() > MAXLENGTH_DESCRIPTION) {
 			warning("Descriptions are limited to " + MAXLENGTH_DESCRIPTION + " characters", VcmlPackage.Literals.SIMPLE_DESCRIPTION__VALUE);
+		}
+	}
+	
+	@Check(CheckType.FAST)
+	public void checkValueDescription(SymbolicType type) {
+		Map<String, Boolean> descriptions = new HashMap<String, Boolean>();
+		EList<CharacteristicValue> values = type.getValues();
+		for(CharacteristicValue sv : values) {
+			String description = descriptionProvider.getDocumentation(sv);
+			if(description != null && !description.isEmpty()) {
+				if(descriptions.containsKey(description)) {
+					if(descriptions.get(description)) {
+						error("Identical descriptions are not allowed", type, VcmlPackage.Literals.SYMBOLIC_TYPE__VALUES, values.indexOf(sv) - 1);
+					}
+					error("Identical descriptions are not allowed", type, VcmlPackage.Literals.SYMBOLIC_TYPE__VALUES, values.indexOf(sv));
+				} else {
+					descriptions.put(description, true);
+				}
+			}
 		}
 	}
 	
