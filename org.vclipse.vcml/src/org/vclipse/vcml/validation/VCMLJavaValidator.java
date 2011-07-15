@@ -12,10 +12,12 @@ package org.vclipse.vcml.validation;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
+import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.vclipse.vcml.documentation.VCMLDescriptionProvider;
 import org.vclipse.vcml.utils.VCMLUtils;
 import org.vclipse.vcml.vcml.Characteristic;
@@ -40,8 +42,8 @@ import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
 import org.vclipse.vcml.vcml.VcmlPackage;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
-
 
 public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 
@@ -125,20 +127,19 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	
 	@Check(CheckType.FAST)
 	public void checkValueDescription(SymbolicType type) {
-		Map<String, Boolean> descriptions = new HashMap<String, Boolean>();
-		EList<CharacteristicValue> values = type.getValues();
-		for(CharacteristicValue sv : values) {
-			String description = descriptionProvider.getDocumentation(sv);
-			if(description != null && !description.isEmpty()) {
-				if(descriptions.containsKey(description)) {
-					if(descriptions.get(description)) {
-						error("Identical descriptions are not allowed", type, VcmlPackage.Literals.SYMBOLIC_TYPE__VALUES, values.indexOf(sv) - 1);
-					}
-					error("Identical descriptions are not allowed", type, VcmlPackage.Literals.SYMBOLIC_TYPE__VALUES, values.indexOf(sv));
-				} else {
-					descriptions.put(description, true);
-				}
+		Map<String, CharacteristicValue> descriptions = new HashMap<String, CharacteristicValue>();
+		Set<String> duplicateDescriptions = Sets.newHashSet();
+		for(CharacteristicValue value : ((SymbolicType)type).getValues()) {
+			String description = descriptionProvider.getDocumentation(value);
+			if(descriptions.get(description) != null) {
+				duplicateDescriptions.add(description);
+				error("Duplicate description \"" + description + "\" for value " + value.getName(), value, VcmlPackage.Literals.CHARACTERISTIC_VALUE__DESCRIPTION, ValidationMessageAcceptor.INSIGNIFICANT_INDEX);
+			} else {
+				descriptions.put(description, value);
 			}
+		}
+		for(String description : duplicateDescriptions) {
+			error("Duplicate description \"" + description + "\" for value " + descriptions.get(description).getName(), descriptions.get(description), VcmlPackage.Literals.CHARACTERISTIC_VALUE__DESCRIPTION, ValidationMessageAcceptor.INSIGNIFICANT_INDEX);
 		}
 	}
 	
