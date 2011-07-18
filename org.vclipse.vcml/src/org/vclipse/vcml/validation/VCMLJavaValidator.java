@@ -127,6 +127,7 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	
 	@Check(CheckType.FAST)
 	public void checkValueDescription(SymbolicType type) {
+		// code adapted from http://blogs.itemis.de/stundzig/archives/487
 		Map<String, CharacteristicValue> descriptions = new HashMap<String, CharacteristicValue>();
 		Set<String> duplicateDescriptions = Sets.newHashSet();
 		for(CharacteristicValue value : ((SymbolicType)type).getValues()) {
