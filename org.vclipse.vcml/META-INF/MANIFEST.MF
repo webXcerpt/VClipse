@@ -7,7 +7,6 @@ Bundle-SymbolicName: org.vclipse.vcml; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.generator;resolution:=optional,
- org.apache.commons.logging;resolution:=optional,
  org.eclipse.emf.codegen.ecore;resolution:=optional,
  org.eclipse.emf.mwe.utils;resolution:=optional,
  org.eclipse.emf.mwe2.launch;resolution:=optional,
@@ -24,6 +23,7 @@ Require-Bundle: org.eclipse.xtext,
 Import-Package: com.google.common.collect,
  de.uka.ilkd.pp,
  org.apache.log4j,
+ org.apache.commons.logging,
  org.osgi.framework,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.xtext.xtend2.lib

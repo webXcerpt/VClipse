@@ -9,7 +9,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.equinox.security,
  org.apache.commons.lang,
- org.apache.commons.logging,
  org.eclipse.xtext,
  org.eclipse.xtext.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -19,7 +18,9 @@ Export-Package: org.vclipse.connection,
 Bundle-ClassPath: .,
  libs/commons-collections-3.2.1.jar,
  libs/commons-configuration-1.6.jar
-Import-Package: com.sap.conn.idoc,
+Import-Package: org.apache.log4j,
+ org.apache.commons.logging,
+ com.sap.conn.idoc,
  com.sap.conn.idoc.jco,
  com.sap.conn.idoc.rt.cp,
  com.sap.conn.idoc.rt.record,

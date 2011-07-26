@@ -181,18 +181,17 @@ waives its rights to a jury trial in any resulting litigation.
    <requires>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.equinox.security" version="1.0.100" match="greaterOrEqual"/>
-      <import plugin="org.apache.commons.lang" version="2.3.0" match="greaterOrEqual"/>
-      <import plugin="org.apache.commons.logging" version="1.1.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.equinox.security"/>
+      <import plugin="org.apache.commons.lang"/>
+      <import plugin="org.eclipse.xtext"/>
+      <import plugin="org.eclipse.xtext.ui"/>
+      <import plugin="org.apache.log4j"/>
+      <import plugin="org.apache.commons.logging"/>
       <import plugin="com.sap.conn.jco.idoc"/>
       <import plugin="com.sap.conn.jco"/>
-      <import plugin="org.eclipse.ui.console" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.vclipse.connection" version="0.1.0" match="greaterOrEqual"/>
-      <import plugin="org.vclipse.vcml.ui" version="0.1.0" match="greaterOrEqual"/>
-      <import plugin="org.vclipse.console" version="0.1.0" match="greaterOrEqual"/>
-      <import plugin="org.vclipse.jpplib" version="0.6.0" match="greaterOrEqual"/>
-      <import plugin="org.apache.log4j"/>
-      <import plugin="org.eclipse.xtext.ui"/>
+      <import plugin="org.eclipse.ui.console"/>
+      <import plugin="org.vclipse.vcml.ui"/>
+      <import plugin="org.vclipse.jpplib"/>
    </requires>
 
    <plugin
