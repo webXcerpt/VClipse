@@ -17,6 +17,7 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
 import org.vclipse.vcml.vcml.Characteristic;
+import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.ConstraintObject;
 import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.ShortVarDefinition;
@@ -79,6 +80,9 @@ public class VCMLScopeProvider extends AbstractDeclarativeScopeProvider {
 						}
 					})
 			);
+		} else if (reference == VcmlPackage.eINSTANCE.getValueAssignment_Characteristic() &&
+				context instanceof org.vclipse.vcml.vcml.Classification) {
+			return Scopes.scopeFor(((org.vclipse.vcml.vcml.Classification)context).getCls().getCharacteristics());
 		}
 		return super.getScope(context, reference);
 	}

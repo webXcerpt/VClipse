@@ -40,8 +40,10 @@ import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicGroup;
+import org.vclipse.vcml.vcml.CharacteristicType;
 import org.vclipse.vcml.vcml.CharacteristicValue;
 import org.vclipse.vcml.vcml.Class;
+import org.vclipse.vcml.vcml.Classification;
 import org.vclipse.vcml.vcml.ConfigurationProfile;
 import org.vclipse.vcml.vcml.ConfigurationProfileEntry;
 import org.vclipse.vcml.vcml.Constraint;
@@ -70,6 +72,7 @@ import org.vclipse.vcml.vcml.Status;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
 import org.vclipse.vcml.vcml.SymbolicType;
 import org.vclipse.vcml.vcml.VCObject;
+import org.vclipse.vcml.vcml.ValueAssignment;
 import org.vclipse.vcml.vcml.VariantFunction;
 import org.vclipse.vcml.vcml.VariantFunctionArgument;
 import org.vclipse.vcml.vcml.VariantTable;
@@ -1031,19 +1034,17 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 	 */
 	private List<IDoc> getIDocsCLFMAS(final Material material) {
 		final List<IDoc> result = new ArrayList<IDoc>();
-
-		// group classes by type
-		final Multimap<Integer, Class> classesByType = ArrayListMultimap.create();
-		for(final Class cls : material.getClasses()) {
-			classesByType.put(VCMLUtils.getClassType(toUpperCase(cls.getName())), cls);
-		}
-
 		if(generateIDocsFor(IVCML2IDocPreferences.CLFMAS)) {
+			// group classes by type
+			final Multimap<Integer, Classification> classesByType = ArrayListMultimap.create();
+			for(final Classification classification : material.getClassifications()) {
+				Class cls = classification.getCls();
+				classesByType.put(VCMLUtils.getClassType(toUpperCase(cls.getName())), classification);
+			}
 			// create CLFMAS IDoc for each class
-			for(final Entry<Integer, Collection<Class>> entry : classesByType.asMap().entrySet()) {
+			for(final Entry<Integer, Collection<Classification>> entry : classesByType.asMap().entrySet()) {
 				final int classType = entry.getKey();
 				final IDoc iDoc = createIDocRootSegment("CLFMAS02", "CLFMAS");
-
 				// Master Object Classification
 				final Segment segmentE1OCLFM = addChildSegment(iDoc, "E1OCLFM");
 				setValue(segmentE1OCLFM, "MSGFN", "004");
@@ -1052,16 +1053,41 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 				setValue(segmentE1OCLFM, "KLART", classType);
 				setValue(segmentE1OCLFM, "MAFID", "O");
 				setValue(segmentE1OCLFM, "OBJECT_TABLE", "MARA");
-
+				addSegmentE1DATEM(segmentE1OCLFM);
 				// Distribution Classification: Object Class Assignment
-				for(final Class cls : entry.getValue()) {
+				for(final Classification classification : entry.getValue()) {
+					Class cls = classification.getCls();
 					final Segment segmentE1KSSKM = addChildSegment(segmentE1OCLFM, "E1KSSKM");
 					setValue(segmentE1KSSKM, "MSGFN", "004");
 					setValue(segmentE1KSSKM, "CLASS", VCMLUtils.getClassName(toUpperCase(cls.getName())));
 					setValue(segmentE1KSSKM, "DATUV", "00000000");
 					setValue(segmentE1KSSKM, "STATU", VCMLUtils.createIntFromStatus(cls.getStatus())); // TODO is status neccessary here?
 				}
-				addSegmentE1DATEM(segmentE1OCLFM);
+				// Distribution of classification: assigned char. values
+				for(final Classification classification : entry.getValue()) {
+					for (final ValueAssignment va : classification.getValueAssignments()) {
+						for (final Literal literal : va.getValues()) {
+							final Segment segmentE1AUSPM = addChildSegment(segmentE1OCLFM, "E1AUSPM");
+							setValue(segmentE1AUSPM, "MSGFN", "004");
+							Characteristic characteristic = va.getCharacteristic();
+							setValue(segmentE1AUSPM, "ATNAM", characteristic.getName());
+							// AENNR: Change number
+							if (literal instanceof NumericLiteral) {
+								BigDecimal value = new BigDecimal(((NumericLiteral)literal).getValue());
+								setValue(segmentE1AUSPM, "ATFLV", value.toString()); 
+								setValue(segmentE1AUSPM, "ATFLB", value.toString()); 
+							} else if (literal instanceof SymbolicLiteral) {
+								setValue(segmentE1AUSPM, "ATWRT", ((SymbolicLiteral)literal).getValue());
+							} else {
+								throw new IllegalArgumentException(literal.toString());
+							}
+							setValue(segmentE1AUSPM, "ATCOD", 1);
+							setValue(segmentE1AUSPM, "ATTLV", 0);
+							setValue(segmentE1AUSPM, "ATTLB", 0); 
+							setValue(segmentE1AUSPM, "ATINC", 0); 
+						}
+					}
+				}
 				addSegmentE1UPSLINK(iDoc, "MARA", VCMLUtils.DEFAULT_VALIDITY_START);
 				addSegmentE1UPSITM(iDoc, "CLFMAS", "CLF", String.format("%1$-30s%2$-30s%3$24s", "MARA", toUpperCase(material.getName()), classType + "*"), HIELEV_CLFMAS, inslev_CLFMAS++, 1);
 				result.add(iDoc);

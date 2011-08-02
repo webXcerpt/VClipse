@@ -47,7 +47,7 @@ public class DefaultDiffFilter extends EcoreSwitch<Boolean> implements IDiffFilt
 			return PREFERENCES.getBoolean(IFilterConstants.DEPENDENCY_NET_IGNORE_CONSTRAINTS_ORDER);
 		} else if(VcmlPackage.Literals.MATERIAL__BILLOFMATERIALS.equals(object)) {
 			return PREFERENCES.getBoolean(IFilterConstants.MATERIAL_IGNORE_BOMS_ORDER);
-		} else if(VcmlPackage.Literals.MATERIAL__CLASSES.equals(object)) {
+		} else if(VcmlPackage.Literals.MATERIAL__CLASSIFICATIONS.equals(object)) {
 			return PREFERENCES.getBoolean(IFilterConstants.MATERIAL_IGNORE_CLASSES_ORDER);
 		} else if(VcmlPackage.Literals.MATERIAL__CONFIGURATIONPROFILES.equals(object)) {
 			return PREFERENCES.getBoolean(IFilterConstants.MATERIAL_IGNORE_CONFIGURATION_PROFILE_ORDER);

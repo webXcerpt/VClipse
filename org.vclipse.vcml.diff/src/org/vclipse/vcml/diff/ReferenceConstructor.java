@@ -20,6 +20,7 @@ import org.vclipse.vcml.vcml.CharacteristicReference_C;
 import org.vclipse.vcml.vcml.CharacteristicReference_P;
 import org.vclipse.vcml.vcml.CharacteristicValue;
 import org.vclipse.vcml.vcml.Class;
+import org.vclipse.vcml.vcml.Classification;
 import org.vclipse.vcml.vcml.Comparison;
 import org.vclipse.vcml.vcml.CompoundStatement;
 import org.vclipse.vcml.vcml.ConditionSource;
@@ -163,8 +164,8 @@ public class ReferenceConstructor extends VcmlSwitch<EObject> {
 	 */
 	@Override
 	public EObject caseMaterial(final Material parent) {
-		for(Class clazz : parent.getClasses()) {			
-			createVCObject(clazz);
+		for(Classification classification : parent.getClassifications()) {			
+			createVCObject(classification); // FIXME this is not correct
 		}
 		for(BillOfMaterial bom : parent.getBillofmaterials()) {
 			for(BOMItem item : bom.getItems()) {

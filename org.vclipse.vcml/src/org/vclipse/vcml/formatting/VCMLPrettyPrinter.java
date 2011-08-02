@@ -29,6 +29,7 @@ import org.vclipse.vcml.vcml.CharacteristicReference_C;
 import org.vclipse.vcml.vcml.CharacteristicReference_P;
 import org.vclipse.vcml.vcml.CharacteristicValue;
 import org.vclipse.vcml.vcml.Class;
+import org.vclipse.vcml.vcml.Classification;
 import org.vclipse.vcml.vcml.ConfigurationProfile;
 import org.vclipse.vcml.vcml.ConfigurationProfileEntry;
 import org.vclipse.vcml.vcml.Constraint;
@@ -62,6 +63,7 @@ import org.vclipse.vcml.vcml.SimpleDocumentation;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
 import org.vclipse.vcml.vcml.SymbolicType;
 import org.vclipse.vcml.vcml.VCObject;
+import org.vclipse.vcml.vcml.ValueAssignment;
 import org.vclipse.vcml.vcml.VariantFunction;
 import org.vclipse.vcml.vcml.VariantFunctionArgument;
 import org.vclipse.vcml.vcml.VariantTable;
@@ -562,13 +564,31 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 				for(BillOfMaterial bom : object.getBillofmaterials()) {
 					doSwitch(bom);
 				}
-				EList<Class> classes = object.getClasses();
-				if(!classes.isEmpty()) {
+				EList<Classification> classifications = object.getClassifications();
+				if(!classifications.isEmpty()) {
 					layouter.brk().beginC().print("classes {");
 					{
-						for(Class clazz : classes) {
+						for(Classification classification : classifications) {
+							Class cls = classification.getCls();
 							layouter.brk();
-							printCrossReference(object, clazz, VCMLPACKAGE.getMaterial_Classes(), VCMLPACKAGE.getVCObject_Name());
+							printCrossReference(classification, cls, VCMLPACKAGE.getClassification_Cls(), VCMLPACKAGE.getVCObject_Name());
+							EList<ValueAssignment> valueAssignments = classification.getValueAssignments();
+							if (!valueAssignments.isEmpty()) {
+								layouter.print("{");
+								layouter.brk();
+								for(ValueAssignment va : valueAssignments) {
+									printCrossReference(va, va.getCharacteristic(), VCMLPACKAGE.getValueAssignment_Characteristic(), VCMLPACKAGE.getVCObject_Name());
+									layouter.beginC();
+									layouter.print(" = ");
+									for(Literal x : va.getValues()) {
+										layouter.print(x);
+										layouter.brk();
+									}
+									layouter.end();
+									layouter.brk();
+								}
+								layouter.print("}");
+							}
 						}
 					}
 					layouter.brk(1, -INDENTATION).print("}").end();
@@ -856,7 +876,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	private boolean hasBody(Material object) {
 		return object.getDescription()!=null
 		|| !object.getBillofmaterials().isEmpty()
-		|| !object.getClasses().isEmpty()
+		|| !object.getClassifications().isEmpty()
 		|| !object.getConfigurationprofiles().isEmpty();
 	}
 	

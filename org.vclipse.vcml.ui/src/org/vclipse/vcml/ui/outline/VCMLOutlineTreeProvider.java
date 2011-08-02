@@ -29,6 +29,7 @@ import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicGroup;
 import org.vclipse.vcml.vcml.CharacteristicValue;
 import org.vclipse.vcml.vcml.Class;
+import org.vclipse.vcml.vcml.Classification;
 import org.vclipse.vcml.vcml.ConfigurationProfile;
 import org.vclipse.vcml.vcml.ConfigurationProfileEntry;
 import org.vclipse.vcml.vcml.Constraint;
@@ -72,7 +73,7 @@ public class VCMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 			for (EObject childElement : modelElement.eContents()) {
 				if (childElement instanceof Material) {
 					Material material = (Material)childElement;
-					if (!material.getBillofmaterials().isEmpty() || !material.getClasses().isEmpty() || !material.getConfigurationprofiles().isEmpty()) {
+					if (!material.getBillofmaterials().isEmpty() || !material.getClassifications().isEmpty() || !material.getConfigurationprofiles().isEmpty()) {
 						createNode(parentNode, childElement);
 					}
 				}
@@ -166,7 +167,7 @@ public class VCMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 			for(ConfigurationProfile childElement : modelElement.getConfigurationprofiles()) {
 				createNode(parentNode, childElement);
 			}
-			for(Class childElement : modelElement.getClasses()) {
+			for(Classification childElement : modelElement.getClassifications()) {
 				createNode(parentNode, childElement);
 			}
 			for(BillOfMaterial childElement : modelElement.getBillofmaterials()) {

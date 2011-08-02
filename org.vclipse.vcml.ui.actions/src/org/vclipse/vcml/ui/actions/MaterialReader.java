@@ -17,6 +17,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.vcml.vcml.Class;
+import org.vclipse.vcml.vcml.Classification;
 import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.SimpleDescription;
@@ -71,7 +72,7 @@ public class MaterialReader extends BAPIUtils {
 		if (processReturnTable(functionGetClasses)) {
 			JCoTable allocList = functionGetClasses.getTableParameterList().getTable("ALLOCLIST");
 			if (allocList.getNumRows()>0) {
-				List<Class> classes = object.getClasses();
+				List<Classification> classifications = object.getClassifications();
 				for (int i = 0; i < allocList.getNumRows(); i++) {
 					allocList.setRow(i);
 					String className = "(" + allocList.getInt("CLASSTYPE") + ")" + allocList.getString("CLASSNUM");
@@ -82,7 +83,9 @@ public class MaterialReader extends BAPIUtils {
 					if (cls==null) {
 						cls = VCMLProxyFactory.createClassProxy(resource, className);
 					}
-					classes.add(cls);
+					Classification classification = VCML.createClassification();
+					classification.setCls(cls);
+					classifications.add(classification);
 				}
 			}
 		}

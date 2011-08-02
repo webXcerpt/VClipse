@@ -306,9 +306,19 @@ Material :
 		&	('type' type=ID)
 		)
 		billofmaterials+=BillOfMaterial*
-		('classes' '{' classes+=[Class|CLASSNAME]* '}')?
+		('classes' '{' classifications+=Classification* '}')?
 		configurationprofiles+=ConfigurationProfile*
 	'}')?
+	;
+
+Classification :
+	cls=[Class|CLASSNAME] ('{' valueAssignments+=ValueAssignment* '}')?
+	;
+
+ValueAssignment :
+	characteristic=[Characteristic | ID]
+	'='
+	values+=(NumericLiteral | SymbolicLiteral)+
 	;
 	
 VariantFunction :
