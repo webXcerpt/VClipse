@@ -574,14 +574,14 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 							printCrossReference(classification, cls, VCMLPACKAGE.getClassification_Cls(), VCMLPACKAGE.getVCObject_Name());
 							EList<ValueAssignment> valueAssignments = classification.getValueAssignments();
 							if (!valueAssignments.isEmpty()) {
-								layouter.print("{");
+								layouter.print(" {");
 								layouter.brk();
 								for(ValueAssignment va : valueAssignments) {
 									printCrossReference(va, va.getCharacteristic(), VCMLPACKAGE.getValueAssignment_Characteristic(), VCMLPACKAGE.getVCObject_Name());
 									layouter.beginC();
 									layouter.print(" = ");
 									for(Literal x : va.getValues()) {
-										layouter.print(x);
+										doSwitch(x);
 										layouter.brk();
 									}
 									layouter.end();
