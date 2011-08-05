@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
@@ -24,7 +25,9 @@ import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicType;
 import org.vclipse.vcml.vcml.CharacteristicValue;
 import org.vclipse.vcml.vcml.Class;
+import org.vclipse.vcml.vcml.ConditionalConstraintRestriction;
 import org.vclipse.vcml.vcml.Constraint;
+import org.vclipse.vcml.vcml.ConstraintRestriction;
 import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.NumberListEntry;
@@ -42,10 +45,13 @@ import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
 import org.vclipse.vcml.vcml.VcmlPackage;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
+
+	private static final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
 
 	@Inject
 	private VCMLDescriptionProvider descriptionProvider;
@@ -89,8 +95,14 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkConstraint(final Constraint object) {
-		if (object.getName().length() > MAXLENGTH_NAME) {
+		if(object.getName().length() > MAXLENGTH_NAME) {
 			error("Name of constraint is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
+		}
+		EList<EObject> constraintSourceContents = ((EObject)object.eGet(VCML_PACKAGE.getConstraint_Source())).eContents();
+		int size = Iterables.size(Iterables.filter(constraintSourceContents, ConditionalConstraintRestriction.class));
+		if(size > 0 && Iterables.size(Iterables.filter(constraintSourceContents, ConstraintRestriction.class)) > size) {
+			error("Constraint " + object.eGet(VCML_PACKAGE.getVCObject_Name()) + 
+					" is not allowed. All restrictions should have the type conditional restriction.", VCML_PACKAGE.getVCObject_Name());
 		}
 	}
 
