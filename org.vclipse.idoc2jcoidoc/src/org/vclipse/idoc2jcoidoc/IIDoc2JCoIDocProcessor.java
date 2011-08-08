@@ -13,7 +13,6 @@ import com.sap.conn.idoc.IDocDocument;
 import com.sap.conn.jco.JCoException;
 
 /**
- * @author as
  *
  */
 public interface IIDoc2JCoIDocProcessor {

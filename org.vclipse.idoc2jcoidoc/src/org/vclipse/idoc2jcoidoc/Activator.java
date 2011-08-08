@@ -65,9 +65,6 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public Injector getInjector() {
 		if(injector == null) {
-			//injector = Guice.createInjector(
-			//		Modules.override(
-			//				new ConnectionModule(VClipseConnectionPlugin.getDefault())).with(new Module(this)));
 			injector = Guice.createInjector(new Module(this));
 		}
 		return injector;
