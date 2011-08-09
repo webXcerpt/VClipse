@@ -400,7 +400,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 				final Segment segmentE1CABTM = addChildSegment(segmentE1CABNM, "E1CABTM");
 				setValue(segmentE1CABTM, "MSGFN", "004");
 				setValue(segmentE1CABTM, "SPRAS", VCMLUtils.getLanguageCharacter(language));
-				setValue(segmentE1CABTM, "ATBEZ", value);
+				setValue(segmentE1CABTM, "ATBEZ", value.replace("\"", "\\\"")); // TODO use a value converter for this purpose
 				setValue(segmentE1CABTM, "SPRAS_ISO", language.toString());
 			}
 		}.doSwitch(object.getDescription());
