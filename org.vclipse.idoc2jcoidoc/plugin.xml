@@ -57,20 +57,20 @@
          <action
                class="org.vclipse.idoc2jcoidoc.injection.ExecutableExtensionFactory:org.vclipse.idoc2jcoidoc.actions.ExportInSapXmlAction"
                id="org.vclipse.actions.exportassapxml"
-               label="Export in SAP XML format"
+               label="Export to SAP XML format"
                menubarPath="org.vclipse.vcml.ui.popupMenu.resource/content">
+	         <enablement>
+	            <and>
+	               <objectClass
+	                     name="org.eclipse.core.resources.IFile">
+	               </objectClass>
+	               <objectState
+	                     name="extension"
+	                     value="idoc">
+	               </objectState>
+	            </and>
+	         </enablement>
          </action>
-         <enablement>
-            <and>
-               <objectClass
-                     name="org.eclipse.core.resources.IFile">
-               </objectClass>
-               <objectState
-                     name="extension"
-                     value="idoc">
-               </objectState>
-            </and>
-         </enablement>
       </objectContribution>
    </extension>
    <extension
