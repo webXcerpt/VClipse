@@ -11,6 +11,7 @@
 package org.vclipse.vcml.validation;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,6 +28,7 @@ import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.ConditionalConstraintRestriction;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.ConstraintRestriction;
+import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.NumberListEntry;
@@ -97,11 +99,15 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 		if(object.getName().length() > MAXLENGTH_NAME) {
 			error("Name of constraint is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
-		EList<ConstraintRestriction> restrictions = object.getSource().getRestrictions();
-		int size = Iterables.size(Iterables.filter(restrictions, ConditionalConstraintRestriction.class));
-		if(size > 0 && restrictions.size() > size) {
-			error("Constraint " + object.eGet(VCML_PACKAGE.getVCObject_Name()) + 
-					" is not allowed. All restrictions should have the type conditional restriction.", VCML_PACKAGE.getVCObject_Name());
+		ConstraintSource source = object.getSource();
+		if (source!=null) {
+			List<ConstraintRestriction> restrictions = source.getRestrictions();
+			int size = Iterables.size(Iterables.filter(restrictions, ConditionalConstraintRestriction.class));
+			if(size > 0 && restrictions.size() > size) {
+				error("Conditional and unconditional restrictions in the constraint " + object.eGet(VCML_PACKAGE.getVCObject_Name()) + 
+						".", VCML_PACKAGE.getVCObject_Name());
+				// TODO possible quickfix: split this constraint
+			}
 		}
 	}
 
