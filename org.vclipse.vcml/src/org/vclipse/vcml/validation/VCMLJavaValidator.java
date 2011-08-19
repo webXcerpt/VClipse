@@ -21,16 +21,23 @@ import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.vclipse.vcml.documentation.VCMLDescriptionProvider;
 import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.vcml.BinaryExpression;
 import org.vclipse.vcml.vcml.Characteristic;
+import org.vclipse.vcml.vcml.CharacteristicReference_C;
+import org.vclipse.vcml.vcml.CharacteristicReference_P;
 import org.vclipse.vcml.vcml.CharacteristicType;
 import org.vclipse.vcml.vcml.CharacteristicValue;
 import org.vclipse.vcml.vcml.Class;
+import org.vclipse.vcml.vcml.Comparison;
 import org.vclipse.vcml.vcml.ConditionalConstraintRestriction;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.ConstraintRestriction;
 import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.DependencyNet;
+import org.vclipse.vcml.vcml.Expression;
 import org.vclipse.vcml.vcml.Literal;
+import org.vclipse.vcml.vcml.MDataCharacteristic_C;
+import org.vclipse.vcml.vcml.MDataCharacteristic_P;
 import org.vclipse.vcml.vcml.NumberListEntry;
 import org.vclipse.vcml.vcml.NumericCharacteristicValue;
 import org.vclipse.vcml.vcml.NumericLiteral;
@@ -42,6 +49,7 @@ import org.vclipse.vcml.vcml.SelectionCondition;
 import org.vclipse.vcml.vcml.SimpleDescription;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
 import org.vclipse.vcml.vcml.SymbolicType;
+import org.vclipse.vcml.vcml.UnaryExpression;
 import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
 import org.vclipse.vcml.vcml.VcmlPackage;
@@ -203,6 +211,32 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 				// TODO check intervals
 			}
 		} 
+		return false;
+	}
+	
+	@Check
+	public void checkComparison(Comparison comparison) {
+		Expression left = comparison.getLeft();
+		Expression right = comparison.getRight();
+		if (isConstant(left) && isConstant(right)) {
+			error("Simple condition without variables not allowed.", VcmlPackage.Literals.COMPARISON__OPERATOR);
+		}
+	}
+
+	private boolean isConstant(Expression expression) {
+		if (expression instanceof CharacteristicReference_C || expression instanceof CharacteristicReference_P || expression instanceof MDataCharacteristic_C || expression instanceof MDataCharacteristic_P) {
+			return false;
+		}
+		if (expression instanceof NumericLiteral || expression instanceof SymbolicLiteral) {
+			return true;
+		}
+		if (expression instanceof BinaryExpression) {
+			return isConstant(((BinaryExpression)expression).getLeft()) && isConstant(((BinaryExpression)expression).getRight());
+		}
+		if (expression instanceof UnaryExpression) {
+			return isConstant(((UnaryExpression)expression).getExpression());
+		}
+		// TODO add other uses
 		return false;
 	}
 }
