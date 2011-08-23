@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.vclipse.vcml.documentation;
 
+import org.eclipse.emf.common.util.EList;
 import org.vclipse.base.DeclarativeEObjectDocumentationProvider;
 import org.vclipse.vcml.utils.DescriptionHandler;
 import org.vclipse.vcml.utils.VCMLUtils;
@@ -21,10 +22,13 @@ import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Description;
 import org.vclipse.vcml.vcml.Language;
 import org.vclipse.vcml.vcml.Material;
+import org.vclipse.vcml.vcml.MultiLanguageDescription;
+import org.vclipse.vcml.vcml.MultiLanguageDescriptions;
 import org.vclipse.vcml.vcml.Precondition;
 import org.vclipse.vcml.vcml.Procedure;
 import org.vclipse.vcml.vcml.SelectionCondition;
 import org.vclipse.vcml.vcml.ShortVarDefinition;
+import org.vclipse.vcml.vcml.SimpleDescription;
 import org.vclipse.vcml.vcml.VariantFunction;
 import org.vclipse.vcml.vcml.VariantTable;
 
@@ -88,17 +92,28 @@ public class VCMLDescriptionProvider extends
 			return null;
 		}
 		final StringBuffer result = new StringBuffer();
-		new DescriptionHandler() {
-			private Language defaultLanguage = VCMLUtils.getDefaultLanguage();
+		if(description instanceof SimpleDescription) {
+			new DescriptionHandler() {
+				private Language defaultLanguage = VCMLUtils.getDefaultLanguage();
 
-			@Override
-			public void handleSingleDescription(Language language, String value) {
-				if (defaultLanguage.equals(language)) {
-					result.append(value);
+				@Override
+				public void handleSingleDescription(Language language, String value) {
+					if (defaultLanguage.equals(language)) {
+						result.append(value);
+					}
+				}
+			}.handleDescription(description);
+		} else {
+			EList<MultiLanguageDescription> descriptions = ((MultiLanguageDescriptions)description).getDescriptions();
+			for(MultiLanguageDescription mlDescription : descriptions) {
+				result.append(mlDescription.getLanguage().getLiteral()).append(" ");
+				result.append("\"").append(mlDescription.getValue()).append("\"");
+				if(descriptions.indexOf(mlDescription) != descriptions.size() - 1) {
+					result.append(" ");
 				}
 			}
-		}.handleDescription(description);
+			
+		}
 		return result.toString();
 	}
-
 }
