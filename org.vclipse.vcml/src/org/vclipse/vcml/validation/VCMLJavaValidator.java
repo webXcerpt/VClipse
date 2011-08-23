@@ -155,17 +155,31 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 		// code adapted from http://blogs.itemis.de/stundzig/archives/487
 		Map<String, CharacteristicValue> descriptions = new HashMap<String, CharacteristicValue>();
 		Set<String> duplicateDescriptions = Sets.newHashSet();
+		
+		Map<String, CharacteristicValue> names = new HashMap<String, CharacteristicValue>();
+		Set<String> duplicateNames = Sets.newHashSet();
 		for(CharacteristicValue value : ((SymbolicType)type).getValues()) {
+			String name = value.getName();			
+			if(names.get(name) != null) {
+				duplicateNames.add(name);
+				error("Duplicate value " + name, value, VcmlPackage.Literals.CHARACTERISTIC_VALUE__NAME, ValidationMessageAcceptor.INSIGNIFICANT_INDEX);
+			} else {
+				names.put(name, value);
+			}
+			
 			String description = descriptionProvider.getDocumentation(value);
 			if(descriptions.get(description) != null) {
 				duplicateDescriptions.add(description);
-				error("Duplicate description \"" + description + "\" for value " + value.getName(), value, VcmlPackage.Literals.CHARACTERISTIC_VALUE__DESCRIPTION, ValidationMessageAcceptor.INSIGNIFICANT_INDEX);
+				error("Duplicate description '" + description + "' for value " + name, value, VcmlPackage.Literals.CHARACTERISTIC_VALUE__DESCRIPTION, ValidationMessageAcceptor.INSIGNIFICANT_INDEX);
 			} else {
 				descriptions.put(description, value);
 			}
 		}
 		for(String description : duplicateDescriptions) {
-			error("Duplicate description \"" + description + "\" for value " + descriptions.get(description).getName(), descriptions.get(description), VcmlPackage.Literals.CHARACTERISTIC_VALUE__DESCRIPTION, ValidationMessageAcceptor.INSIGNIFICANT_INDEX);
+			error("Duplicate description '" + description + "' for value " + descriptions.get(description).getName(), descriptions.get(description), VcmlPackage.Literals.CHARACTERISTIC_VALUE__DESCRIPTION, ValidationMessageAcceptor.INSIGNIFICANT_INDEX);
+		}
+		for(String name : duplicateNames) {
+			error("Duplicate value " + name, names.get(name), VcmlPackage.Literals.CHARACTERISTIC_VALUE__NAME, ValidationMessageAcceptor.INSIGNIFICANT_INDEX);
 		}
 	}
 	
