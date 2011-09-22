@@ -411,6 +411,17 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 					}
 				}
 				layouter.brk(1,-INDENTATION).print("}").end();  
+				EList<Class> superClasses = object.getSuperClasses();
+				if (!superClasses.isEmpty()) {
+					layouter.brk().beginC().print("superclasses {");
+					{
+						for(Class cls : superClasses) {
+							layouter.brk();
+							printCrossReference(object, cls, VCMLPACKAGE.getClass_SuperClasses(), VCMLPACKAGE.getVCObject_Name());
+						}
+					}
+					layouter.brk(1,-INDENTATION).print("}").end();
+				}
 			}
 			layouter.brk(1,-INDENTATION).print("}");
 		}
