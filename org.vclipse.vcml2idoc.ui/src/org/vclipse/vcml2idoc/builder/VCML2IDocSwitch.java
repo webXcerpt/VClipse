@@ -82,6 +82,7 @@ import org.vclipse.vcml.vcml.util.VcmlSwitch;
 import org.vclipse.vcml2idoc.IVCML2IDocPreferences;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -560,55 +561,79 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 	// TODO extend segments for Class
 	@Override
 	public List<IDoc> caseClass(final org.vclipse.vcml.vcml.Class object) {
-		if(!generateIDocsFor(IVCML2IDocPreferences.CLSMAS) || object.getDescription()==null) {
-			return Collections.emptyList();
-		}
-		final IDoc iDoc = createIDocRootSegment("CLSMAS04", "CLSMAS");
+		List<IDoc> result = Lists.newArrayList();
 		final String classSpec = toUpperCase(object.getName());
 		final int classType = VCMLUtils.getClassType(classSpec);
 		final String className = VCMLUtils.getClassName(classSpec);
-		// Master Class Basic Data
-		final Segment segmentE1KLAHM = addChildSegment(iDoc, "E1KLAHM");
-		setValue(segmentE1KLAHM, "MSGFN", "004");
-		setValue(segmentE1KLAHM, "KLART", classType);
-		setValue(segmentE1KLAHM, "CLASS", toUpperCase(className));
-		setValue(segmentE1KLAHM, "STATU", VCMLUtils.createIntFromStatus(object.getStatus()));
-		setValue(segmentE1KLAHM, "KLAGR", toUpperCase(object.getGroup()));
-		setValue(segmentE1KLAHM, "VONDT", withDefault(VCMLUtils.DEFAULT_VALIDITY_START, null)); // must be set manually for classes // TODO check possible attributes in object
-		// Class Descriptions
-		// Segment segmentE1KLATM = addChildSegment(segmentE1KLAHM, "E1KLATM");
-		// Class: long text lines
-		// Segment segmentE1TEXTL = addChildSegment(segmentE1KLAHM, "E1TEXTL");
-		// Master Class Characteristics for Class
-		int counter = 0;
-		for(final Characteristic cstic : object.getCharacteristics()) {
-			counter++;
-			final Segment segmentE1KSMLM = addChildSegment(segmentE1KLAHM, "E1KSMLM");
-			setValue(segmentE1KSMLM, "MSGFN", "004");
-			setValue(segmentE1KSMLM, "ATNAM", toUpperCase(cstic.getName()));
-			setValue(segmentE1KSMLM, "POSNR", String.format("%1$03d", counter));
-		}
-		// Master Class Keywords
-		new DescriptionHandler() {
-			@Override
-			public void handleSingleDescription(final Language language, final String value) {
-				final Segment segmentE1SWORM = addChildSegment(segmentE1KLAHM, "E1SWORM");
-				setValue(segmentE1SWORM, "MSGFN", "004");
-				setValue(segmentE1SWORM, "SPRAS", VCMLUtils.getLanguageCharacter(language));
-				setValue(segmentE1SWORM, "KLPOS", "01");
-				setValue(segmentE1SWORM, "KSCHL", value);
-				setValue(segmentE1SWORM, "SPRAS_ISO", language.toString());
+		final IDoc iDoc = createIDocRootSegment("CLSMAS04", "CLSMAS");
+		if(generateIDocsFor(IVCML2IDocPreferences.CLSMAS) && object.getDescription()!=null) {
+			result.add(iDoc);
+			// Master Class Basic Data
+			final Segment segmentE1KLAHM = addChildSegment(iDoc, "E1KLAHM");
+			setValue(segmentE1KLAHM, "MSGFN", "004");
+			setValue(segmentE1KLAHM, "KLART", classType);
+			setValue(segmentE1KLAHM, "CLASS", toUpperCase(className));
+			setValue(segmentE1KLAHM, "STATU", VCMLUtils.createIntFromStatus(object.getStatus()));
+			setValue(segmentE1KLAHM, "KLAGR", toUpperCase(object.getGroup()));
+			setValue(segmentE1KLAHM, "VONDT", withDefault(VCMLUtils.DEFAULT_VALIDITY_START, null)); // must be set manually for classes // TODO check possible attributes in object
+			// Class Descriptions
+			// Segment segmentE1KLATM = addChildSegment(segmentE1KLAHM, "E1KLATM");
+			// Class: long text lines
+			// Segment segmentE1TEXTL = addChildSegment(segmentE1KLAHM, "E1TEXTL");
+			// Master Class Characteristics for Class
+			int counter = 0;
+			for(final Characteristic cstic : object.getCharacteristics()) {
+				counter++;
+				final Segment segmentE1KSMLM = addChildSegment(segmentE1KLAHM, "E1KSMLM");
+				setValue(segmentE1KSMLM, "MSGFN", "004");
+				setValue(segmentE1KSMLM, "ATNAM", toUpperCase(cstic.getName()));
+				setValue(segmentE1KSMLM, "POSNR", String.format("%1$03d", counter));
 			}
-		}.handleDescription(object.getDescription());
+			// Master Class Keywords
+			new DescriptionHandler() {
+				@Override
+				public void handleSingleDescription(final Language language, final String value) {
+					final Segment segmentE1SWORM = addChildSegment(segmentE1KLAHM, "E1SWORM");
+					setValue(segmentE1SWORM, "MSGFN", "004");
+					setValue(segmentE1SWORM, "SPRAS", VCMLUtils.getLanguageCharacter(language));
+					setValue(segmentE1SWORM, "KLPOS", "01");
+					setValue(segmentE1SWORM, "KSCHL", value);
+					setValue(segmentE1SWORM, "SPRAS_ISO", language.toString());
+				}
+			}.handleDescription(object.getDescription());
 
-		addSegmentE1DATEM(segmentE1KLAHM);
-		addSegmentE1UPSLINK(iDoc, toUpperCase(className), VCMLUtils.DEFAULT_VALIDITY_START);
+			addSegmentE1DATEM(segmentE1KLAHM);
+			addSegmentE1UPSLINK(iDoc, toUpperCase(className), VCMLUtils.DEFAULT_VALIDITY_START);
 
-		addSegmentE1UPSITM(iDoc, "CLSMAS", "CLS", classType + toUpperCase(className), HIELEV_CLSMAS, inslev_CLSMAS++, 1);
+			addSegmentE1UPSITM(iDoc, "CLSMAS", "CLS", classType + toUpperCase(className), HIELEV_CLSMAS, inslev_CLSMAS++, 1);
+		}
 
-		// the following might be for subclasses
-		// addSegmentUPSITM(iDoc, "CLFMAS", "SUBCLF", "???", HIELEV_CLFMAS, inslev_CLFMAS++);
-		return Collections.singletonList(iDoc);
+		List<Class> superClasses = object.getSuperClasses();
+		if(generateIDocsFor(IVCML2IDocPreferences.CLFMAS) && !superClasses.isEmpty()) {
+			final IDoc clfmas_iDoc = createIDocRootSegment("CLFMAS02", "CLFMAS");
+			result.add(clfmas_iDoc);
+			// Master Object Classification
+			final Segment segmentE1OCLFM = addChildSegment(clfmas_iDoc, "E1OCLFM");
+			setValue(segmentE1OCLFM, "MSGFN", "004");
+			setValue(segmentE1OCLFM, "OBTAB", "MARA");
+			setValue(segmentE1OCLFM, "OBJEK", toUpperCase(className));
+			setValue(segmentE1OCLFM, "KLART", classType);
+			setValue(segmentE1OCLFM, "MAFID", "K");
+			setValue(segmentE1OCLFM, "OBJECT_TABLE", "MARA");
+			for (Class superClass : superClasses) {
+				// Distribution Classification: Object Class Assignment
+				final Segment segmentE1KSSKM = addChildSegment(segmentE1OCLFM, "E1KSSKM");
+				setValue(segmentE1KSSKM, "MSGFN", "004");
+				setValue(segmentE1KSSKM, "CLASS", VCMLUtils.getClassName(toUpperCase(superClass.getName())));
+				setValue(segmentE1KSSKM, "DATUV", "00000000");
+				setValue(segmentE1KSSKM, "STATU", VCMLUtils.createIntFromStatus(superClass.getStatus())); // TODO is status neccessary here?
+			}
+			addSegmentE1DATEM(segmentE1OCLFM);
+			addSegmentE1UPSLINK(clfmas_iDoc, classType + toUpperCase(className), VCMLUtils.DEFAULT_VALIDITY_START);
+			
+			addSegmentE1UPSITM(clfmas_iDoc, "CLSMAS", "SUBCLS", classType + toUpperCase(className), HIELEV_CLFMAS, inslev_CLFMAS++, 1);
+		}
+		return result;
 	}
 
 	/**
