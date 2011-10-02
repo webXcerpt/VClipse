@@ -29,7 +29,9 @@ import org.vclipse.vcml.vcml.CharacteristicType;
 import org.vclipse.vcml.vcml.CharacteristicValue;
 import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.Comparison;
+import org.vclipse.vcml.vcml.CompoundStatement;
 import org.vclipse.vcml.vcml.ConditionalConstraintRestriction;
+import org.vclipse.vcml.vcml.ConditionalStatement;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.ConstraintRestriction;
 import org.vclipse.vcml.vcml.ConstraintSource;
@@ -252,5 +254,12 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 		}
 		// TODO add other uses
 		return false;
+	}
+	
+	@Check
+	public void checkCompoundStatement(CompoundStatement cs) {
+		if (!(cs.eContainer() instanceof ConditionalStatement)) {
+			error("Parethenseses around statements can only be used for conditional statements (with an IF).", VcmlPackage.Literals.COMPOUND_STATEMENT__STATEMENTS);
+		}
 	}
 }
