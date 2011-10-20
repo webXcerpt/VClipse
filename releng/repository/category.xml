@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.vclipse.idoc_feature-0.4.0.qualifier.jar" id="org.vclipse.idoc_feature" version="0.4.0.qualifier">
+      <category name="org.vclipse.category.idoc"/>
+   </feature>
+   <feature url="features/org.vclipse.vcml2idoc_feature-0.4.0.qualifier.jar" id="org.vclipse.vcml2idoc_feature" version="0.4.0.qualifier">
+      <category name="org.vclipse.category.idoc"/>
+   </feature>
+   <feature url="features/org.vclipse.vcml_feature-0.4.0.qualifier.jar" id="org.vclipse.vcml_feature" version="0.4.0.qualifier">
+      <category name="org.vclipse.category.vcml"/>
+   </feature>
+   <category-def name="org.vclipse.category.vcml" label="VCML"/>
+   <category-def name="org.vclipse.category.idoc" label="IDoc"/>
+</site>

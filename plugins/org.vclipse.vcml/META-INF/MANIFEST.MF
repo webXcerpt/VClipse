@@ -6,12 +6,11 @@ Bundle-Version: 0.4.0.qualifier
 Bundle-SymbolicName: org.vclipse.vcml; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext,
- org.eclipse.xtext.generator;resolution:=optional,
- org.eclipse.emf.codegen.ecore;resolution:=optional,
- org.eclipse.emf.mwe.utils;resolution:=optional,
- org.eclipse.emf.mwe2.launch;resolution:=optional,
- com.ibm.icu;resolution:=optional,
- org.eclipse.xtext.xtend;resolution:=optional,
+ org.eclipse.xtext.generator,
+ org.eclipse.emf.codegen.ecore,
+ org.eclipse.emf.mwe.utils,
+ org.eclipse.emf.mwe2.launch,
+ com.ibm.icu,
  org.eclipse.xtext.util,
  org.eclipse.emf.ecore,
  org.eclipse.emf.common,
@@ -42,3 +41,4 @@ Export-Package: org.vclipse.vcml,
  org.vclipse.vcml.vcml.impl,
  org.vclipse.vcml.vcml.util
 Bundle-Activator: org.vclipse.vcml.VCMLPlugin
+Bundle-ClassPath: .
