@@ -53,13 +53,13 @@ BOMItem :
 	itemnumber=INT
 	material=[Material | EXTENDED_ID]
 	('dependencies' '{'
-	  (selectionCondition=[SelectionCondition | ID])?
+	  (selectionCondition=[SelectionCondition | XID])?
 	  (entries+=ConfigurationProfileEntry)*
 	 '}')?
 	;
 
 Characteristic :
-	'characteristic' name=ID ('{'
+	'characteristic' name=XID ('{'
 	(	description=Description
 	&	documentation=Documentation?
 	&	type=CharacteristicType
@@ -127,7 +127,7 @@ CharacteristicOrValueDependencies :
 	'dependencies' '{'
 		localPrecondition=LocalPrecondition?
 		localSelectionCondition=LocalSelectionCondition?
-		dependencies+=[GlobalDependency | ID]*
+		dependencies+=[GlobalDependency | XID]*
 	'}'
 	;
 
@@ -137,7 +137,7 @@ Class :
 		&	('status' status=Status)?
 		&	('group' group=STRING)?
 		&	('characteristics' '{' 
-				characteristics+=[Characteristic|ID]* 
+				characteristics+=[Characteristic|XID]* 
 			'}')
 		&	('superclasses' '{' 
 				superClasses+=[Class | CLASSNAME]*
@@ -147,16 +147,16 @@ Class :
 	;
 
 CLASSNAME
-	:	'(' INT ')' ID
+	:	'(' INT ')' XID
 	;
 
 ConfigurationProfile :
     'configurationprofile' name=EXTENDED_ID '{'
 	   (	('status' status=Status)?
-	   &	('bomapplication' bomapplication=ID)
+	   &	('bomapplication' bomapplication=XID)
 	   &	('uidesign' uidesign=[InterfaceDesign | EXTENDED_ID])?
 	   )
-       (dependencyNets+=[DependencyNet|ID])*
+       (dependencyNets+=[DependencyNet|XID])*
        (entries+=ConfigurationProfileEntry)*
     '}'
     ;
@@ -179,7 +179,7 @@ LocalDependency
 	;
 
 Procedure :
-    'procedure' name=ID ('{'
+    'procedure' name=XID ('{'
 		(	description=Description
 		&	documentation=Documentation?
 		&	('status' status=Status)?
@@ -192,7 +192,7 @@ Procedure :
     ;
 
 SelectionCondition :
-    'selectioncondition' name=ID ('{'
+    'selectioncondition' name=XID ('{'
 		(	description=Description
 		&	documentation=Documentation?
 		&	('status' status=Status)?
@@ -224,7 +224,7 @@ GeneralSelectionCondition
 	;
 
 Precondition :
-    'precondition' name=ID ('{'
+    'precondition' name=XID ('{'
 		(	description=Description
 		&	documentation=Documentation?
 		&	('status' status=Status)?
@@ -260,18 +260,18 @@ ConditionSource hidden (WS, DEPENDENCY_COMMENT):
 	;
 
 DependencyNet :
-	'dependencynet' name=ID ('{'
+	'dependencynet' name=XID ('{'
 		(	description=Description
 		&	documentation=Documentation?
 		&	('status' status=Status)?
  		&	('group' group=STRING)?
  		)
-		(constraints+=[Constraint | ID])*
+		(constraints+=[Constraint | XID])*
 	'}')?
 	;
 
 Constraint :
-    'constraint' name=ID ('{'
+    'constraint' name=XID ('{'
 		(	description=Description
 		&	documentation=Documentation?
 		&	('status' status=Status)?
@@ -284,7 +284,7 @@ Constraint :
     ;
 
 ConfigurationProfileEntry :
-    sequence=INT dependency=[Procedure|ID]
+    sequence=INT dependency=[Procedure|XID]
     ;
 
 InterfaceDesign :
@@ -296,14 +296,14 @@ InterfaceDesign :
 CharacteristicGroup :
 	'characteristicgroup' name=EXTENDED_ID '{'
 		description=Description
-		(characteristics+=[Characteristic | ID])*
+		(characteristics+=[Characteristic | XID])*
 	'}'
 	;    
 
 Material : 
 	'material' name=EXTENDED_ID ('{'
 		(	description=Description
-		&	('type' type=ID)
+		&	('type' type=XID)
 		)
 		billofmaterials+=BillOfMaterial*
 		('classes' '{' classifications+=Classification* '}')?
@@ -316,13 +316,13 @@ Classification :
 	;
 
 ValueAssignment :
-	characteristic=[Characteristic | ID]
+	characteristic=[Characteristic | XID]
 	'='
 	values+=(NumericLiteral | SymbolicLiteral)+
 	;
 	
 VariantFunction :
-	'variantfunction' name=ID ('{'
+	'variantfunction' name=XID ('{'
 		(	description=Description
 		&	('status' status=Status)?
 		&	('group' group=STRING)?
@@ -332,11 +332,11 @@ VariantFunction :
 	; 
 	
 VariantFunctionArgument
-	:	(in?='in')? characteristic=[Characteristic|ID]
+	:	(in?='in')? characteristic=[Characteristic|XID]
 	;
 	
 VariantTable
-	:	'varianttable' name=ID ('{'
+	:	'varianttable' name=XID ('{'
 			(	description=Description
 			&	('status' status=Status)?
 			&	('group' group=STRING)?
@@ -346,11 +346,11 @@ VariantTable
 	; 
 	
 VariantTableArgument
-	:	(key?='key')? characteristic=[Characteristic|ID]
+	:	(key?='key')? characteristic=[Characteristic|XID]
 	;
 
 VariantTableContent
-	:	'varianttablecontent' table=[VariantTable | ID] '{'
+	:	'varianttablecontent' table=[VariantTable | XID] '{'
 			rows += Row*
 		'}'
 	;
@@ -492,7 +492,7 @@ PartialKey
 	;
 
 ShortVarDefinition
-	:	name=SHORTVAR '=' characteristic=[Characteristic | ID]
+	:	name=SHORTVAR '=' characteristic=[Characteristic | XID]
 	;
 
 PartOfCondition :
@@ -539,7 +539,7 @@ CharacteristicReference_C
 	;
 	
 ObjectCharacteristicReference
-	:	location=[ConstraintObject | SHORTVAR] '.' characteristic=[Characteristic|ID]
+	:	location=[ConstraintObject | SHORTVAR] '.' characteristic=[Characteristic|XID]
 	;
 
 ShortVarReference
@@ -575,7 +575,7 @@ SimpleStatement
 	;
 
 Assignment
-	:	'$self' '.' characteristic=[Characteristic | ID] '=' expression=Expression_P
+	:	'$self' '.' characteristic=[Characteristic | XID] '=' expression=Expression_P
     ;
 
 FunctionOrTable
@@ -587,42 +587,42 @@ FunctionOrTable
 	;
 
 Function_C returns Function
-	:	'function' function=[VariantFunction|ID]
+	:	'function' function=[VariantFunction|XID]
 		'('
-			characteristics+=[Characteristic|ID] '=' values+=Literal_C
-			(',' characteristics+=[Characteristic|ID] '=' values+=Literal_C)*
+			characteristics+=[Characteristic|XID] '=' values+=Literal_C
+			(',' characteristics+=[Characteristic|XID] '=' values+=Literal_C)*
 		')'
 	;
 
 Function_P returns Function
-	:	'function' function=[VariantFunction|ID]
+	:	'function' function=[VariantFunction|XID]
 		'('
-			characteristics+=[Characteristic|ID] '=' values+=Literal_P
-			(',' characteristics+=[Characteristic|ID] '=' values+=Literal_P)*
+			characteristics+=[Characteristic|XID] '=' values+=Literal_P
+			(',' characteristics+=[Characteristic|XID] '=' values+=Literal_P)*
 		')'
 	;
 
 PFunction
-	:	'pfunction' function=[VariantFunction|ID]
+	:	'pfunction' function=[VariantFunction|XID]
 		'('
-			characteristics+=[Characteristic|ID] '=' values+=Literal_P
-			(',' characteristics+=[Characteristic|ID] '=' values+=Literal_P)*
+			characteristics+=[Characteristic|XID] '=' values+=Literal_P
+			(',' characteristics+=[Characteristic|XID] '=' values+=Literal_P)*
 		')'
 	;
 
 Table_C returns Table
-	:	'table' table=[VariantTable|ID]
+	:	'table' table=[VariantTable|XID]
 		'('
-			characteristics+=[Characteristic|ID] '=' values+=Literal_C
-			(',' characteristics+=[Characteristic|ID] '=' values+=Literal_C)*
+			characteristics+=[Characteristic|XID] '=' values+=Literal_C
+			(',' characteristics+=[Characteristic|XID] '=' values+=Literal_C)*
 		')'
 	;
 	
 Table_P returns Table
-	:	'table' table=[VariantTable|ID]
+	:	'table' table=[VariantTable|XID]
 		'('
-			characteristics+=[Characteristic|ID] '=' values+=Literal_P
-			(',' characteristics+=[Characteristic|ID] '=' values+=Literal_P)*
+			characteristics+=[Characteristic|XID] '=' values+=Literal_P
+			(',' characteristics+=[Characteristic|XID] '=' values+=Literal_P)*
 		')'
 	;
 
@@ -632,24 +632,24 @@ SetOrDelDefault
 	;
 
 SetDefault
-	:	'$set_default' '(' '$self' ',' characteristic=[Characteristic | ID] ',' expression=Expression_P ')'
-	|	'$self' '.' characteristic=[Characteristic | ID] '?=' expression=Expression_P
+	:	'$set_default' '(' '$self' ',' characteristic=[Characteristic | XID] ',' expression=Expression_P ')'
+	|	'$self' '.' characteristic=[Characteristic | XID] '?=' expression=Expression_P
     ;
 
 DelDefault
-	:	'$del_default' '(' '$self' ',' characteristic=[Characteristic | ID] ',' expression=Expression_P ')'
+	:	'$del_default' '(' '$self' ',' characteristic=[Characteristic | XID] ',' expression=Expression_P ')'
     ;
 
 IsInvisible
-	:	'$self' '.' characteristic=[Characteristic | ID] 'is' 'invisible'
+	:	'$self' '.' characteristic=[Characteristic | XID] 'is' 'invisible'
 	;
 	
 SetPricingFactor
-	:	'$set_pricing_factor' '(' location=ProcedureLocation ',' characteristic=[Characteristic|ID] ',' arg1=Expression_P ',' arg2=Expression_P ')'
+	:	'$set_pricing_factor' '(' location=ProcedureLocation ',' characteristic=[Characteristic|XID] ',' arg1=Expression_P ',' arg2=Expression_P ')'
 	;
 
 CharacteristicReference_P :
-	(location=ProcedureLocation '.')? characteristic=[Characteristic|ID]
+	(location=ProcedureLocation '.')? characteristic=[Characteristic|XID]
 	;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -727,7 +727,7 @@ FunctionCall_P returns FunctionCall
 	;
 
 SumParts
-	:	'$sum_parts' '(' location=ProcedureLocation ',' characteristic=[Characteristic|ID] ')'
+	:	'$sum_parts' '(' location=ProcedureLocation ',' characteristic=[Characteristic|XID] ')'
 	;
 
 CountParts
@@ -921,15 +921,63 @@ terminal SYMBOL // enclosed in single quotes, no escapes, no line breaks, no tab
 	:	"'" ( !("'"|'\t'|'\n'|'\r') )* "'"
 	; 
 
+XID
+	:	ID
+	|	'AF'
+	|	'AR'
+	|	'BG'
+	|	'CA'
+	|	'CS'
+	|	'DA'
+	|	'DE'
+	|	'EL'
+	|	'EN'
+	|	'ES'
+	|	'ET'
+	|	'FI'
+	|	'FR'
+	|	'HE'
+	|	'HR'
+	|	'HU'
+	|	'ID'
+	|	'IS'
+	|	'IT'
+	|	'JA'
+	|	'KO'
+	|	'LT'
+	|	'LV'
+	|	'MS'
+	|	'NL'
+	|	'NO'
+	|	'PL'
+	|	'PT'
+	|	'RO' 
+	|	'RU'
+	|	'SH'
+	|	'SK'
+	|	'SL'
+	|	'SR'
+	|	'SV'
+	|	'TH'
+	|	'TR'
+	|	'UK'
+	|	'Z1'
+	|	'ZF'
+	|	'ZH'
+	|	'e'
+	;
+
 EXTENDED_ID
-	: ID | SYMBOL;
+	: XID
+	| SYMBOL
+	;
 //EXTENDED_ID hidden () // no whitespace might be used inside extended ids
 //	:	(INT | ID | '/' | ':' | '-' | '.')+ 
 //	;	
 
 // bug has been filed as Xtext bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=303212
 SHORTVAR // NOTE: due to a bug in Xtext, the following does not work: hidden () // no whitespace might be used inside shortvars // TODO verify this in SAP
-	:	('?' | '#')? ID 
+	:	('?' | '#')? XID 
 	;	
 
 // TODO implement size restrictions for a number: e.g., the exponent's maximum value is 99

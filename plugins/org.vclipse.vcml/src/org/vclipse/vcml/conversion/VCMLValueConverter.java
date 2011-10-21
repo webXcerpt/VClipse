@@ -70,6 +70,11 @@ public class VCMLValueConverter extends DefaultTerminalConverters {
 		return TOUPPER_VALUECONVERTER;
 	}
 
+	@ValueConverter(rule = "XID")
+	public IValueConverter<String> XID() {
+		return TOUPPER_VALUECONVERTER;
+	}
+
 	@ValueConverter(rule = "SHORTVAR")
 	public IValueConverter<String> SHORTVAR() {
 		return TOUPPER_VALUECONVERTER;
