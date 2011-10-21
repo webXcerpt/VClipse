@@ -170,11 +170,13 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 			}
 			
 			String description = descriptionProvider.getDocumentation(value);
-			if(descriptions.get(description) != null) {
-				duplicateDescriptions.add(description);
-				error("Duplicate description '" + description + "' for value " + name, value, VcmlPackage.Literals.CHARACTERISTIC_VALUE__DESCRIPTION, ValidationMessageAcceptor.INSIGNIFICANT_INDEX);
-			} else {
-				descriptions.put(description, value);
+			if (description!=null) {
+				if(descriptions.get(description) != null) {
+					duplicateDescriptions.add(description);
+					error("Duplicate description '" + description + "' for value " + name, value, VcmlPackage.Literals.CHARACTERISTIC_VALUE__DESCRIPTION, ValidationMessageAcceptor.INSIGNIFICANT_INDEX);
+				} else {
+					descriptions.put(description, value);
+				}
 			}
 		}
 		for(String description : duplicateDescriptions) {
