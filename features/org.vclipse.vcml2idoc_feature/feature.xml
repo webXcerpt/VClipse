@@ -5,12 +5,12 @@
       version="0.4.0.qualifier"
       provider-name="webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)">
 
-   <description url="http://www.vclipse.org">
-      Transforms VCML files into IDoc files.
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
    </description>
 
-   <copyright>
-      Copyright (c) 2010, 2011 webXcerpt Software GmbH.
+   <copyright url="http://www.example.com/copyright">
+      Copyright (c) 2010 webXcerpt Software GmbH.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
     which accompanies this distribution, and is available at
@@ -180,18 +180,18 @@ waives its rights to a jury trial in any resulting litigation.
 
    <requires>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.vclipse.idoc"/>
-      <import plugin="org.vclipse.vcml"/>
-      <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.xtext"/>
+      <import plugin="org.eclipse.emf.ecore" version="2.5.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.xtext" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.jface"/>
+      <import plugin="org.eclipse.jface" version="3.5.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.core.resources" version="3.5.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.ide" version="3.5.1" match="greaterOrEqual"/>
+      <import plugin="org.vclipse.idoc" version="0.0.0" match="greaterOrEqual"/>
+      <import plugin="org.vclipse.vcml" version="0.0.0" match="greaterOrEqual"/>
+      <import plugin="org.vclipse.vcml.ui" version="0.0.0" match="greaterOrEqual"/>
+      <import plugin="org.vclipse.vcml2idoc" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.xtext.ui"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.vclipse.vcml.ui"/>
-      <import plugin="org.vclipse.idoc"/>
    </requires>
 
    <plugin

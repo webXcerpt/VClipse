@@ -5,13 +5,12 @@
       version="0.4.0.qualifier"
       provider-name="webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)">
 
-   <description url="http://www.vclipse.org">
-      The VCML Editor enables you to write new and edit existing VCML
-files.
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
    </description>
 
-   <copyright>
-      Copyright (c) 2010, 2011 webXcerpt Software GmbH.
+   <copyright url="http://www.example.com/copyright">
+      Copyright (c) 2010 webXcerpt Software GmbH.
     All rights reserved. This program and the accompanying materials
     are made available under the terms of the Eclipse Public License v1.0
     which accompanies this distribution, and is available at
@@ -179,35 +178,6 @@ No party to this Agreement will bring a legal action under this Agreement more t
 waives its rights to a jury trial in any resulting litigation.
    </license>
 
-   <requires>
-      <import plugin="org.eclipse.xtext"/>
-      <import plugin="org.eclipse.xtext.util"/>
-      <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.emf.common"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.antlr.runtime"/>
-      <import plugin="com.google.collect"/>
-      <import plugin="org.apache.log4j"/>
-      <import plugin="org.eclipse.osgi"/>
-      <import plugin="org.eclipse.xtext.ui"/>
-      <import plugin="org.eclipse.ui.editors"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.ui.console"/>
-      <import plugin="org.eclipse.xtext.ui.shared"/>
-      <import plugin="org.eclipse.xtext.builder"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.emf.compare.diff.edit"/>
-      <import plugin="org.eclipse.emf.compare.match"/>
-      <import plugin="org.eclipse.jface"/>
-      <import plugin="org.eclipse.xtext.common.types"/>
-      <import plugin="org.apache.commons.logging"/>
-      <import plugin="org.eclipse.xtext.xbase.lib"/>
-      <import plugin="org.eclipse.xtext.xtend2.lib"/>
-      <import plugin="org.eclipse.compare"/>
-      <import plugin="org.eclipse.xtext.common.types.ui"/>
-   </requires>
-
    <plugin
          id="org.vclipse.vcml"
          download-size="0"
@@ -224,20 +194,6 @@ waives its rights to a jury trial in any resulting litigation.
 
    <plugin
          id="org.vclipse.jpplib"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.vclipse.console"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.vclipse.vcml.diff"
          download-size="0"
          install-size="0"
          version="0.0.0"

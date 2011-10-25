@@ -247,6 +247,7 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
 	<pluginRepositories>
 		<pluginRepository>
 			<id>sonatype</id>
@@ -344,7 +345,6 @@
 		</profile>
 	</profiles>
 
-
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -372,7 +372,7 @@
 
 	<url>http://code.google.com/a/eclipselabs.org/p/xtext-utils/</url>
 	<description>This project aims to provide one or more Domain Specific Languages (DSL) (for example with Xtext) to describe Visual DSL Editors against the Graphiti runtime, and provide code generation (for example with Xtend2) to create the boilerplate code for realizing the implementation against the Graphiti framework.
-</description>
+	</description>
 	<inceptionYear>2011</inceptionYear>
 	<issueManagement>
 		<system>GoogleCode Issue Tracker</system>
