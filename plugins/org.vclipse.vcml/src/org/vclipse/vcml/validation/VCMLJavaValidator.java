@@ -40,6 +40,7 @@ import org.vclipse.vcml.vcml.Expression;
 import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.MDataCharacteristic_C;
 import org.vclipse.vcml.vcml.MDataCharacteristic_P;
+import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.NumberListEntry;
 import org.vclipse.vcml.vcml.NumericCharacteristicValue;
 import org.vclipse.vcml.vcml.NumericLiteral;
@@ -147,8 +148,14 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkDescription(final SimpleDescription desc) {
-		if (desc.getValue().length() > MAXLENGTH_DESCRIPTION) {
-			warning("Descriptions are limited to " + MAXLENGTH_DESCRIPTION + " characters", VcmlPackage.Literals.SIMPLE_DESCRIPTION__VALUE);
+		if (desc.eContainer() instanceof Material) {
+			if (desc.getValue().length() > 40) {
+				warning("Material descriptions are limited to 40 characters", VcmlPackage.Literals.SIMPLE_DESCRIPTION__VALUE);
+			}
+		} else {
+			if (desc.getValue().length() > MAXLENGTH_DESCRIPTION) {
+				warning("Descriptions are limited to " + MAXLENGTH_DESCRIPTION + " characters", VcmlPackage.Literals.SIMPLE_DESCRIPTION__VALUE);
+			}
 		}
 	}
 	
