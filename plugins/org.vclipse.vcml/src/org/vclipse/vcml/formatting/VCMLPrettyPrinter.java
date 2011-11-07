@@ -609,7 +609,9 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 					printNullsafe(profile.getName());
 					layouter.print("' {");
 					{
-						layouter.brk().print("bomapplication ").print(profile.getBomapplication());
+						if (profile.getBomapplication() != null) {
+							layouter.brk().print("bomapplication ").print(profile.getBomapplication());
+						}
 						if(profile.getUidesign() != null) {
 							layouter.brk().print("uidesign ");
 							printCrossReference(profile, VCMLPACKAGE.getConfigurationProfile_Uidesign(), VCMLPACKAGE.getVCObject_Name());
