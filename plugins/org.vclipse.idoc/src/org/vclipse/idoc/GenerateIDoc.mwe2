@@ -78,7 +78,8 @@ Workflow {
 
 			// scoping and exporting API
 			fragment = scoping.ImportURIScopingFragment {}
-			fragment = exporting.SimpleNamesFragment {}
+			// FIXME workaround for a bug in Xtext 2.1 (https://bugs.eclipse.org/bugs/show_bug.cgi?id=362655)
+			// fragment = exporting.SimpleNamesFragment {}
 
 			// scoping and exporting API 
 			// fragment = scoping.ImportNamespacesScopingFragment {}
