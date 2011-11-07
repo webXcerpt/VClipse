@@ -39,6 +39,8 @@ Export-Package: org.vclipse.vcml,
  org.vclipse.vcml.validation,
  org.vclipse.vcml.vcml,
  org.vclipse.vcml.vcml.impl,
- org.vclipse.vcml.vcml.util
+ org.vclipse.vcml.vcml.util,
+ org.vclipse.vcml.scoping,
+ org.vclipse.vcml.generator
 Bundle-Activator: org.vclipse.vcml.VCMLPlugin
 Bundle-ClassPath: .
