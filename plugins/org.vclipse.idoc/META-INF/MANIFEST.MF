@@ -32,4 +32,7 @@ Export-Package: org.vclipse.idoc,
  org.vclipse.idoc.parseTreeConstruction,
  org.vclipse.idoc.parser.antlr,
  org.vclipse.idoc.parser.antlr.internal,
- org.vclipse.idoc.validation
+ org.vclipse.idoc.validation,
+ org.vclipse.idoc.scoping,
+ org.vclipse.idoc.generator,
+ org.vclipse.idoc.formatting
