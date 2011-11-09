@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target includeMode="feature" name="VClipse Target Platform" sequenceNumber="62">
+<target includeMode="feature" name="VClipse Target Platform" sequenceNumber="63">
 <locations>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="net.sf.rcer.import.feature.group" version="0.1.0.201104252054"/>
-<repository location="http://rcer.sf.net/update-site"/>
-</location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.sdk.ide" version="3.7.1.M20110909-1335"/>
 <repository location="http://download.eclipse.org/eclipse/updates/3.7"/>
@@ -17,16 +13,16 @@
 <repository location="http://download.itemis.de/updates/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.emf.compare.feature.group" version="1.1.1.v201009150357"/>
+<repository location="http://download.eclipse.org/modeling/emf/updates/milestones/"/>
+</location>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.sdk.feature.group" version="2.7.1.v20110913-1526"/>
 <unit id="org.eclipse.xtext.sdk.feature.group" version="2.0.1.v201108020636"/>
 <unit id="org.eclipse.emf.mwe2.language.sdk.feature.group" version="2.0.1.v201108020809"/>
 <unit id="org.eclipse.emf.mwe2.runtime.sdk.feature.group" version="2.0.1.v201108020506"/>
 <unit id="org.eclipse.emf.mwe.sdk.feature.group" version="1.1.1.v201108020506"/>
 <repository location="http://download.eclipse.org/releases/indigo"/>
-</location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.compare.feature.group" version="1.1.1.v201009150357"/>
-<repository location="http://download.eclipse.org/modeling/emf/updates/milestones/"/>
 </location>
 </locations>
 <environment>
