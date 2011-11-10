@@ -82,8 +82,8 @@ Workflow {
 
 			// generator API
 			fragment = generator.GeneratorFragment {
-				generateMwe = true
-				generateJavaMain = true
+				generateMwe = false
+				generateJavaMain = false
 			}
 			
 			// formatter API 
