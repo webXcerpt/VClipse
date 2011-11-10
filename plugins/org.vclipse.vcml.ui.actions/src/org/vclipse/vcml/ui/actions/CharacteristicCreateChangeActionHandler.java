@@ -30,7 +30,7 @@ import org.vclipse.vcml.vcml.SimpleDocumentation;
 import org.vclipse.vcml.vcml.SymbolicType;
 import org.vclipse.vcml.vcml.util.VcmlSwitch;
 import org.vclipse.vcml.utils.DescriptionHandler;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
@@ -108,7 +108,7 @@ public class CharacteristicCreateChangeActionHandler extends BAPIUtils implement
 							charactValuesDescr.appendRow();
 							charactValuesDescr.setValue("VALUE_CHAR", valueName);
 							charactValuesDescr.setValue("DESCRIPTION", descrText);
-							charactValuesDescr.setValue("LANGUAGE_INT", VCMLUtils.getLanguageCharacter(language));
+							charactValuesDescr.setValue("LANGUAGE_INT", VcmlUtils.getLanguageCharacter(language));
 							charactValuesDescr.setValue("LANGUAGE_ISO", language.toString());
 						}
 					}.handleDescription(value.getDescription());
@@ -116,7 +116,7 @@ public class CharacteristicCreateChangeActionHandler extends BAPIUtils implement
 				return this;
 			}
 		}.doSwitch(object.getType());
-		charactDetail.setValue("STATUS", VCMLUtils.createIntFromStatus(object.getStatus()));
+		charactDetail.setValue("STATUS", VcmlUtils.createIntFromStatus(object.getStatus()));
 		charactDetail.setValue("CHARACT_GROUP", object.getGroup());
 		// a cstic can be S (single value), R (single value & restricted), M (multi value)
 		if (object.isMultiValue()) {
@@ -146,7 +146,7 @@ public class CharacteristicCreateChangeActionHandler extends BAPIUtils implement
 			public void handleSingleDescription(Language language, String value) {
 				charactDescr.appendRow();
 				charactDescr.setValue("DESCRIPTION", value);
-				charactDescr.setValue("LANGUAGE_INT", VCMLUtils.getLanguageCharacter(language));
+				charactDescr.setValue("LANGUAGE_INT", VcmlUtils.getLanguageCharacter(language));
 				charactDescr.setValue("LANGUAGE_ISO", language.toString());
 			}
 		}.handleDescription(object.getDescription());
@@ -252,7 +252,7 @@ public class CharacteristicCreateChangeActionHandler extends BAPIUtils implement
 					before(language);
 					for(FormattedDocumentationBlock fdb : lb.getFormattedDocumentationBlocks()) {
 						longText.appendRow();
-						longText.setValue("TDFORMAT", withDefault(VCMLUtils.DEFAULT_FORMAT, fdb.getFormat())); 
+						longText.setValue("TDFORMAT", withDefault(VcmlUtils.DEFAULT_FORMAT, fdb.getFormat())); 
 						longText.setValue("TDLINE", fdb.getValue());
 					}
 					after(language);
@@ -265,11 +265,11 @@ public class CharacteristicCreateChangeActionHandler extends BAPIUtils implement
 		@Override
 		public Object caseSimpleDocumentation(SimpleDocumentation sd) {
 			try {
-				before(VCMLUtils.getDefaultLanguage());
+				before(VcmlUtils.getDefaultLanguage());
 				longText.appendRow();
-				longText.setValue("TDFORMAT", VCMLUtils.DEFAULT_FORMAT); 
+				longText.setValue("TDFORMAT", VcmlUtils.DEFAULT_FORMAT); 
 				longText.setValue("TDLINE", sd.getValue());
-				after(VCMLUtils.getDefaultLanguage());
+				after(VcmlUtils.getDefaultLanguage());
 			} catch (JCoException e) {
 				throw new WrappedException(e); // wraps JCoException in a RuntimeException which does not have to be declared
 			}

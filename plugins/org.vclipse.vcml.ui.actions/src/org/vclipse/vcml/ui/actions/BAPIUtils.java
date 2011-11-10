@@ -43,7 +43,7 @@ import org.vclipse.vcml.ui.outline.actions.OutlineActionCanceledException;
 import org.vclipse.vcml.utils.DescriptionHandler;
 import org.vclipse.vcml.utils.DocumentationHandler;
 import org.vclipse.vcml.utils.ISapConstants;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.ConditionSource;
 import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.Description;
@@ -308,9 +308,9 @@ public class BAPIUtils {
 			Language language; 
 			String languageISO = table.getString(languageFieldISO);
 			if (languageISO==null || languageISO.length()!=2) { // heuristics to test whether languageISO is a valid ISO language: must be a string of length 2
-				language = VCMLUtils.getLanguageByCharacter(table.getChar(languageField));
+				language = VcmlUtils.getLanguageByCharacter(table.getChar(languageField));
 			} else {
-				language = VCMLUtils.getLanguageByISOString(languageISO);
+				language = VcmlUtils.getLanguageByISOString(languageISO);
 			}
 			multiLanguageDescription.setLanguage(language);
 			multiLanguageDescription.setValue(table.getString(descriptionField));
@@ -332,7 +332,7 @@ public class BAPIUtils {
 			return null;
 		case 1: 
 			MultiLanguageDescription multiLanguageDescription = multiLanguageDescriptions.getDescriptions().get(0);
-			if (VCMLUtils.getDefaultLanguage().equals(multiLanguageDescription.getLanguage())) {
+			if (VcmlUtils.getDefaultLanguage().equals(multiLanguageDescription.getLanguage())) {
 				SimpleDescription description = VCML.createSimpleDescription();
 				description.setValue(multiLanguageDescription.getValue());
 				return description;
@@ -350,9 +350,9 @@ public class BAPIUtils {
 			Language language; 
 			String languageISO = table.getString("LANGUAGE_ISO");
 			if (Strings.isEmpty(languageISO)) {
-				language = VCMLUtils.getLanguageByCharacter(table.getChar("LANGUAGE"));
+				language = VcmlUtils.getLanguageByCharacter(table.getChar("LANGUAGE"));
 			} else {
-				language = VCMLUtils.getLanguageByISOString(languageISO);
+				language = VcmlUtils.getLanguageByISOString(languageISO);
 			}
 			language2Rows.put(language, i);
 		}
@@ -386,7 +386,7 @@ public class BAPIUtils {
 			public void handleSingleDescription(Language language, String value) {
 				table.appendRow();
 				table.setValue("DESCRIPT", value);
-				table.setValue("LANGUAGE", VCMLUtils.getLanguageCharacter(language));
+				table.setValue("LANGUAGE", VcmlUtils.getLanguageCharacter(language));
 				table.setValue("LANGUAGE_ISO", language.toString());
 			}
 		}.handleDescription(description);
@@ -573,7 +573,7 @@ public class BAPIUtils {
 			documentationTable.setValue("LINE_NO", lineNo++);
 			documentationTable.setValue("TXT_FORM", format);
 			documentationTable.setValue("TXT_LINE", text);
-			documentationTable.setValue("LANGUAGE", VCMLUtils.getLanguageCharacter(language));
+			documentationTable.setValue("LANGUAGE", VcmlUtils.getLanguageCharacter(language));
 			documentationTable.setValue("LANGUAGE_ISO", language.toString());
 		}
 

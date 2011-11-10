@@ -18,7 +18,7 @@ import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.VcmlPackage;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -55,7 +55,7 @@ public class ConstraintCreateChangeActionHandler extends BAPIUtils implements IV
 		}
 		JCoStructure constraintData = ipl.getStructure("CONSTRAINT_DATA");
 		constraintData.setValue("DEP_TYPE", "CONS");
-		constraintData.setValue("STATUS", VCMLUtils.createIntFromStatus(object.getStatus()));
+		constraintData.setValue("STATUS", VcmlUtils.createIntFromStatus(object.getStatus()));
 		constraintData.setValue("GROUP", object.getGroup());
 		JCoParameterList tpl = function.getTableParameterList();
 		writeDescription(tpl.getTable("DESCRIPTION"), object.getDescription());

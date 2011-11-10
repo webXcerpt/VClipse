@@ -18,7 +18,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.util.Strings;
 import org.vclipse.vcml.utils.VCMLProxyFactory;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicGroup;
 import org.vclipse.vcml.vcml.InterfaceDesign;
@@ -181,9 +181,9 @@ FRAME_TEXT
 							Language language; 
 							String languageISO = charGroupsLang.getString("LANGUAGE_ISO");
 							if (Strings.isEmpty(languageISO)) {
-								language = VCMLUtils.getLanguageByCharacter(charGroupsLang.getChar("LANGUAGE_INT"));
+								language = VcmlUtils.getLanguageByCharacter(charGroupsLang.getChar("LANGUAGE_INT"));
 							} else {
-								language = VCMLUtils.getLanguageByISOString(languageISO);
+								language = VcmlUtils.getLanguageByISOString(languageISO);
 							}
 							multiLanguageDescription.setLanguage(language);
 							multiLanguageDescription.setValue(charGroupsLang.getString("GROUP_TEXT"));

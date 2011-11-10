@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.vcml.ui.outline.actions.IVCMLOutlineActionHandler;
 import org.vclipse.vcml.vcml.Precondition;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -35,7 +35,7 @@ public class PreconditionCreateChangeActionHandler extends BAPIUtils implements 
 		ipl.setValue("DEPENDENCY", object.getName());
 		JCoStructure dependencyData = ipl.getStructure("DEPENDENCY_DATA");
 		dependencyData.setValue("DEP_TYPE", "PRE");
-		dependencyData.setValue("STATUS", VCMLUtils.createIntFromStatus(object.getStatus()));
+		dependencyData.setValue("STATUS", VcmlUtils.createIntFromStatus(object.getStatus()));
 		dependencyData.setValue("GROUP", object.getGroup());
 		JCoParameterList tpl = function.getTableParameterList();
 		writeDescription(tpl.getTable("DESCRIPTION"), object.getDescription());

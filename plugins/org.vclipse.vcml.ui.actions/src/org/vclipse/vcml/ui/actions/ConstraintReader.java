@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.Model;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -39,7 +39,7 @@ public class ConstraintReader extends BAPIUtils {
 			execute(function, monitor, constraintName);
 			JCoParameterList epl = function.getExportParameterList();
 			JCoStructure dependencyData = epl.getStructure("BASIC_DATA");
-			object.setStatus(VCMLUtils.createStatusFromInt(dependencyData.getInt("STATUS")));
+			object.setStatus(VcmlUtils.createStatusFromInt(dependencyData.getInt("STATUS")));
 			object.setGroup(nullIfEmpty(dependencyData.getString("GROUP")));
 			JCoParameterList tpl = function.getTableParameterList();
 			object.setDescription(readDescription(tpl.getTable("DESCRIPTION"), "LANGUAGE_ISO", "LANGUAGE", "DESCRIPT"));

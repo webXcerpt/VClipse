@@ -18,7 +18,7 @@ import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.utils.VCMLProxyFactory;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -46,7 +46,7 @@ public class DependencyNetReader extends BAPIUtils {
 			String depType = dependencyData.getString("DEP_TYPE");
 			if (!"CNET".equals(depType))
 				err.println("ERROR: " + depNetName + " is not a dependency net - it has dependency type " + depType);
-			object.setStatus(VCMLUtils.createStatusFromInt(dependencyData.getInt("STATUS")));
+			object.setStatus(VcmlUtils.createStatusFromInt(dependencyData.getInt("STATUS")));
 			object.setGroup(nullIfEmpty(dependencyData.getString("GROUP")));
 			JCoParameterList tpl = function.getTableParameterList();
 			object.setDescription(readDescription(tpl.getTable("DESCRIPTION"), "LANGUAGE_ISO", "LANGUAGE", "DESCRIPT"));

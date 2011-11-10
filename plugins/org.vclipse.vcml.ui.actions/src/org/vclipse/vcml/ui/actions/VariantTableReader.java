@@ -20,7 +20,7 @@ import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.utils.VCMLProxyFactory;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -46,7 +46,7 @@ public class VariantTableReader extends BAPIUtils {
 			execute(function, monitor, variantTableName);
 			JCoParameterList epl = function.getExportParameterList();
 			JCoStructure basicData = epl.getStructure("BASIC_DATA");
-			object.setStatus(VCMLUtils.createStatusFromIntVFT(basicData.getInt("STATUS")));
+			object.setStatus(VcmlUtils.createStatusFromIntVFT(basicData.getInt("STATUS")));
 			object.setGroup(nullIfEmpty(basicData.getString("VTGROUP")));
 			JCoParameterList tpl = function.getTableParameterList();
 			object.setDescription(readDescription(tpl.getTable("DESCRIPTIONS"), "LANGUAGE_ISO", "LANGUAGE", "DESCRIPT"));

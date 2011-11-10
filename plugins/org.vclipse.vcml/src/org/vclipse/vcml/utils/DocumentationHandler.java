@@ -23,7 +23,7 @@ import org.vclipse.vcml.vcml.util.VcmlSwitch;
 
 public abstract class DocumentationHandler extends VcmlSwitch<Object> {
 	
-	private Language language = VCMLUtils.getDefaultLanguage();
+	private Language language = VcmlUtils.getDefaultLanguage();
 	
 	public void handleDocumentation(Documentation documentation) {
 		if(documentation != null) {
@@ -34,7 +34,7 @@ public abstract class DocumentationHandler extends VcmlSwitch<Object> {
 	@Override
 	public Object caseFormattedDocumentationBlock(FormattedDocumentationBlock object) {
 		String format = object.getFormat();
-		addDocumentationEntry(language, object.getValue(), format==null ? VCMLUtils.DEFAULT_FORMAT : format);
+		addDocumentationEntry(language, object.getValue(), format==null ? VcmlUtils.DEFAULT_FORMAT : format);
 		return this;
 	}
 	
@@ -57,7 +57,7 @@ public abstract class DocumentationHandler extends VcmlSwitch<Object> {
 	
 	@Override
 	public Object caseSimpleDocumentation(SimpleDocumentation object) {
-		addDocumentationEntry(language, object.getValue(), VCMLUtils.DEFAULT_FORMAT);
+		addDocumentationEntry(language, object.getValue(), VcmlUtils.DEFAULT_FORMAT);
 		return this;
 	}
 

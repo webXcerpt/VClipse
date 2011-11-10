@@ -35,7 +35,7 @@ import org.vclipse.vcml.ui.VCMLUiPlugin;
 import org.vclipse.vcml.utils.DescriptionHandler;
 import org.vclipse.vcml.utils.DocumentationHandler;
 import org.vclipse.vcml.utils.ISapConstants;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Characteristic;
@@ -309,7 +309,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 			}
 		}
 		final String objid = String.format("%1$-18s%2$4s%3$1s%4$2s", materialNumber, plant, bomUsage, alternativeBOM);
-		addSegmentE1UPSLINK(iDoc, objid, VCMLUtils.DEFAULT_VALIDITY_START);
+		addSegmentE1UPSLINK(iDoc, objid, VcmlUtils.DEFAULT_VALIDITY_START);
 		addSegmentE1UPSITM(iDoc, "BOMMAT", "MBOM", objid, HIELEV_BOMMAT, inslev_BOMMAT, sublev_BOMMAT++);
 		return Collections.singletonList(iDoc);
 	}
@@ -364,7 +364,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 			}
 		}.doSwitch(object.getType());
 
-		setValue(segmentE1CABNM, "ATMST", VCMLUtils.createIntFromStatus(object.getStatus()));
+		setValue(segmentE1CABNM, "ATMST", VcmlUtils.createIntFromStatus(object.getStatus()));
 		setValue(segmentE1CABNM, "ATKLA", object.getGroup());
 
 		setValue(segmentE1CABNM, "ATSON", object.isAdditionalValues() ? "X" : null);
@@ -394,13 +394,13 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 			}
 			@Override
 			public Object caseSimpleDescription(final SimpleDescription description) {
-				addSegmentE1CABTM(VCMLUtils.getDefaultLanguage(), description.getValue());
+				addSegmentE1CABTM(VcmlUtils.getDefaultLanguage(), description.getValue());
 				return this;
 			}
 			private void addSegmentE1CABTM(final Language language, final String value) {
 				final Segment segmentE1CABTM = addChildSegment(segmentE1CABNM, "E1CABTM");
 				setValue(segmentE1CABTM, "MSGFN", "004");
-				setValue(segmentE1CABTM, "SPRAS", VCMLUtils.getLanguageCharacter(language));
+				setValue(segmentE1CABTM, "SPRAS", VcmlUtils.getLanguageCharacter(language));
 				setValue(segmentE1CABTM, "ATBEZ", value.replace("\"", "\\\"")); // TODO use a value converter for this purpose
 				setValue(segmentE1CABTM, "SPRAS_ISO", language.toString());
 			}
@@ -410,7 +410,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		addSegmentsForDocumentation(segmentE1CABNM, "E1TEXTL", object.getDocumentation());
 
 		addSegmentE1DATEM(segmentE1CABNM);
-		addSegmentE1UPSLINK(iDoc, toUpperCase(object.getName()), VCMLUtils.DEFAULT_VALIDITY_START);
+		addSegmentE1UPSLINK(iDoc, toUpperCase(object.getName()), VcmlUtils.DEFAULT_VALIDITY_START);
 
 		addSegmentE1UPSITM(iDoc, "CHRMAS", "CHR", toUpperCase(object.getName()), HIELEV_CHRMAS, inslev_CHRMAS++, 1);
 
@@ -450,7 +450,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 				}
 				@Override
 				public Object caseSimpleDescription(final SimpleDescription description) {
-					addSegmentE1CABTM(VCMLUtils.getDefaultLanguage(), description.getValue());
+					addSegmentE1CABTM(VcmlUtils.getDefaultLanguage(), description.getValue());
 					return this;
 				}
 				private void addSegmentE1CABTM(final Language language, final String value) {
@@ -459,7 +459,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 					setValue(segmentE1CAWTM, "MSGFN", "004");
 					setValue(segmentE1CAWTM, "ATZHL", String.format("%1$04d", counter));
 					setValue(segmentE1CAWTM, "SPRAS_ISO", language.toString());
-					setValue(segmentE1CAWTM, "SPRAS", VCMLUtils.getLanguageCharacter(language));
+					setValue(segmentE1CAWTM, "SPRAS", VcmlUtils.getLanguageCharacter(language));
 					setValue(segmentE1CAWTM, "ATWTB", value);
 				}
 			}.doSwitch(description);
@@ -549,7 +549,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 			public void addDocumentationEntry(final Language language, final String text, final String format) {
 				final Segment segmentE1TEXTx = addChildSegment(parentSegment, segmentType);
 				setValue(segmentE1TEXTx, "MSGFN", ""); // TODO set MSGFN?
-				setValue(segmentE1TEXTx, "LANGUAGE", VCMLUtils.getLanguageCharacter(language));
+				setValue(segmentE1TEXTx, "LANGUAGE", VcmlUtils.getLanguageCharacter(language));
 				setValue(segmentE1TEXTx, "TXT_FORM", format);
 				setValue(segmentE1TEXTx, "TXT_LINE", text);
 				setValue(segmentE1TEXTx, "LANGUAGE_ISO", language.toString());
@@ -563,8 +563,8 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 	public List<IDoc> caseClass(final org.vclipse.vcml.vcml.Class object) {
 		List<IDoc> result = Lists.newArrayList();
 		final String classSpec = toUpperCase(object.getName());
-		final int classType = VCMLUtils.getClassType(classSpec);
-		final String className = VCMLUtils.getClassName(classSpec);
+		final int classType = VcmlUtils.getClassType(classSpec);
+		final String className = VcmlUtils.getClassName(classSpec);
 		final IDoc iDoc = createIDocRootSegment("CLSMAS04", "CLSMAS");
 		if(generateIDocsFor(IVCML2IDocPreferences.CLSMAS) && object.getDescription()!=null) {
 			result.add(iDoc);
@@ -573,9 +573,9 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 			setValue(segmentE1KLAHM, "MSGFN", "004");
 			setValue(segmentE1KLAHM, "KLART", classType);
 			setValue(segmentE1KLAHM, "CLASS", toUpperCase(className));
-			setValue(segmentE1KLAHM, "STATU", VCMLUtils.createIntFromStatus(object.getStatus()));
+			setValue(segmentE1KLAHM, "STATU", VcmlUtils.createIntFromStatus(object.getStatus()));
 			setValue(segmentE1KLAHM, "KLAGR", toUpperCase(object.getGroup()));
-			setValue(segmentE1KLAHM, "VONDT", withDefault(VCMLUtils.DEFAULT_VALIDITY_START, null)); // must be set manually for classes // TODO check possible attributes in object
+			setValue(segmentE1KLAHM, "VONDT", withDefault(VcmlUtils.DEFAULT_VALIDITY_START, null)); // must be set manually for classes // TODO check possible attributes in object
 			// Class Descriptions
 			// Segment segmentE1KLATM = addChildSegment(segmentE1KLAHM, "E1KLATM");
 			// Class: long text lines
@@ -595,7 +595,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 				public void handleSingleDescription(final Language language, final String value) {
 					final Segment segmentE1SWORM = addChildSegment(segmentE1KLAHM, "E1SWORM");
 					setValue(segmentE1SWORM, "MSGFN", "004");
-					setValue(segmentE1SWORM, "SPRAS", VCMLUtils.getLanguageCharacter(language));
+					setValue(segmentE1SWORM, "SPRAS", VcmlUtils.getLanguageCharacter(language));
 					setValue(segmentE1SWORM, "KLPOS", "01");
 					setValue(segmentE1SWORM, "KSCHL", value);
 					setValue(segmentE1SWORM, "SPRAS_ISO", language.toString());
@@ -603,7 +603,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 			}.handleDescription(object.getDescription());
 
 			addSegmentE1DATEM(segmentE1KLAHM);
-			addSegmentE1UPSLINK(iDoc, toUpperCase(className), VCMLUtils.DEFAULT_VALIDITY_START);
+			addSegmentE1UPSLINK(iDoc, toUpperCase(className), VcmlUtils.DEFAULT_VALIDITY_START);
 
 			addSegmentE1UPSITM(iDoc, "CLSMAS", "CLS", classType + toUpperCase(className), HIELEV_CLSMAS, inslev_CLSMAS++, 1);
 		}
@@ -624,12 +624,12 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 				// Distribution Classification: Object Class Assignment
 				final Segment segmentE1KSSKM = addChildSegment(segmentE1OCLFM, "E1KSSKM");
 				setValue(segmentE1KSSKM, "MSGFN", "004");
-				setValue(segmentE1KSSKM, "CLASS", VCMLUtils.getClassName(toUpperCase(superClass.getName())));
+				setValue(segmentE1KSSKM, "CLASS", VcmlUtils.getClassName(toUpperCase(superClass.getName())));
 				setValue(segmentE1KSSKM, "DATUV", "00000000");
-				setValue(segmentE1KSSKM, "STATU", VCMLUtils.createIntFromStatus(superClass.getStatus())); // TODO is status neccessary here?
+				setValue(segmentE1KSSKM, "STATU", VcmlUtils.createIntFromStatus(superClass.getStatus())); // TODO is status neccessary here?
 			}
 			addSegmentE1DATEM(segmentE1OCLFM);
-			addSegmentE1UPSLINK(clfmas_iDoc, classType + toUpperCase(className), VCMLUtils.DEFAULT_VALIDITY_START);
+			addSegmentE1UPSLINK(clfmas_iDoc, classType + toUpperCase(className), VcmlUtils.DEFAULT_VALIDITY_START);
 			
 			addSegmentE1UPSITM(clfmas_iDoc, "CLSMAS", "SUBCLS", classType + toUpperCase(className), HIELEV_CLFMAS, inslev_CLFMAS++, 1);
 		}
@@ -651,7 +651,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 			setValue(segmentE1UPSITM, "MESTYP", toUpperCase(mestyp));
 			setValue(segmentE1UPSITM, "OBJTYP", toUpperCase(objtyp));
 			setValue(segmentE1UPSITM, "OBJID", toUpperCase(objid));
-			setValue(segmentE1UPSITM, "OBJVAL", "VCUI_SAVEM".equals(mestyp) ? null : VCMLUtils.DEFAULT_VALIDITY_START);
+			setValue(segmentE1UPSITM, "OBJVAL", "VCUI_SAVEM".equals(mestyp) ? null : VcmlUtils.DEFAULT_VALIDITY_START);
 			setValue(segmentE1UPSITM, "HIELEV", String.format("%1$04d", hielev));
 			setValue(segmentE1UPSITM, "INSLEV", String.format("%1$06d", inslev));
 			setValue(segmentE1UPSITM, "SUBLEV", String.format("%1$06d", sublev));
@@ -685,7 +685,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		setValue(segmentE1CUCOM, "MSGFN", "004");
 		setValue(segmentE1CUCOM, "C_PROFILE", toUpperCase(profile.getName()));
 		setValue(segmentE1CUCOM, "CLASSTYPE", "300");
-		setValue(segmentE1CUCOM, "STATUS", VCMLUtils.createIntFromStatus(profile.getStatus()));
+		setValue(segmentE1CUCOM, "STATUS", VcmlUtils.createIntFromStatus(profile.getStatus()));
 		setValue(segmentE1CUCOM, "BOMAPPL", profile.getBomapplication());
 		setValue(segmentE1CUCOM, "BOMEXPL", "4");
 		setValue(segmentE1CUCOM, "INITSCREEN", "1");
@@ -723,7 +723,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		}
 
 		setValue(addChildSegment(segmentE1CUCOM, "E1KSSKM"), "MSGFN", "023");
-		addSegmentE1UPSLINK(iDoc, toUpperCase(profile.getName()), VCMLUtils.DEFAULT_VALIDITY_START);
+		addSegmentE1UPSLINK(iDoc, toUpperCase(profile.getName()), VcmlUtils.DEFAULT_VALIDITY_START);
 		addSegmentE1UPSITM(iDoc, "CNPMAS", "CPM", String.format("%1$-18s%2$-30s%3$3s", toUpperCase(profile.getName()), toUpperCase(profile.getName()), "300"), HIELEV_CNPMAS, inslev_CNPMAS++, 1);
 		// FIXME the object key in CNPMAS might include the material name and the configuration profile name.
 		return Collections.singletonList(iDoc);
@@ -743,7 +743,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		setValue(segmentE1CUKBM, "MSGFN", "004");
 		setValue(segmentE1CUKBM, "DEP_INTERN", toUpperCase(name));
 		setValue(segmentE1CUKBM, "DEP_TYPE", type);
-		setValue(segmentE1CUKBM, "STATUS", VCMLUtils.createIntFromStatus(status));
+		setValue(segmentE1CUKBM, "STATUS", VcmlUtils.createIntFromStatus(status));
 		setValue(segmentE1CUKBM, "GROUP", toUpperCase(group));
 		setValue(segmentE1CUKBM, "DEP_LINENO", lineno);
 		return segmentE1CUKBM;
@@ -765,7 +765,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		setValue(segmentE1CUKBM, "MSGFN", "004");
 		setValue(segmentE1CUKBM, "DEP_INTERN", toUpperCase(dnet.getName()));
 		setValue(segmentE1CUKBM, "DEP_TYPE", "6");
-		setValue(segmentE1CUKBM, "STATUS", VCMLUtils.createIntFromStatus(dnet.getStatus()));
+		setValue(segmentE1CUKBM, "STATUS", VcmlUtils.createIntFromStatus(dnet.getStatus()));
 		setValue(segmentE1CUKBM, "GROUP", toUpperCase(dnet.getGroup()));
 
 		addSegmentsForDescription(segmentE1CUKBM, "E1CUKBT", "DESCRIPT", dnet.getDescription());
@@ -778,7 +778,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 				final Segment segmentE1CUKB5 = addChildSegment(segmentE1CUKBM, "E1CUKB5");
 				setValue(segmentE1CUKB5, "MSGFN", "004");
 				setValue(segmentE1CUKB5, "DEP_INTERN", toUpperCase(constraint.getName()));
-				setValue(segmentE1CUKB5, "STATUS", VCMLUtils.createIntFromStatus(constraint.getStatus()));
+				setValue(segmentE1CUKB5, "STATUS", VcmlUtils.createIntFromStatus(constraint.getStatus()));
 				setValue(segmentE1CUKB5, "DEP_LINENO", "0000"); // TODO number lines?
 
 				addSegmentsForDescription(segmentE1CUKB5, "E1CUKB2", "DESCRIPT", constraint.getDescription());
@@ -787,7 +787,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 			}
 		}
 		addSegmentE1DATEM(segmentE1CUKBM);
-		addSegmentE1UPSLINK(iDoc, toUpperCase(dnet.getName()), VCMLUtils.DEFAULT_VALIDITY_START);
+		addSegmentE1UPSLINK(iDoc, toUpperCase(dnet.getName()), VcmlUtils.DEFAULT_VALIDITY_START);
 		addSegmentE1UPSITM(iDoc, "DEPNET", "DEP", toUpperCase(dnet.getName()), HIELEV_DEPNET, inslev_DEPNET++, 1);
 		return Collections.singletonList(iDoc);
 	}
@@ -823,7 +823,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 			public void handleSingleDescription(final Language language, final String value) {
 				final Segment segment = addChildSegment(parentSegment, segmentType);
 				setValue(segment, "MSGFN", "004");
-				setValue(segment, "LANGUAGE", VCMLUtils.getLanguageCharacter(language));
+				setValue(segment, "LANGUAGE", VcmlUtils.getLanguageCharacter(language));
 				setValue(segment, descriptionAttribute, value);
 				setValue(segment, "LANGUAGE_ISO", language.toString());
 			}
@@ -843,7 +843,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		setValue(segmentE1CUKBM, "MSGFN", "004");
 		setValue(segmentE1CUKBM, "DEP_INTERN", toUpperCase(procedure.getName()));
 		setValue(segmentE1CUKBM, "DEP_TYPE", "7");
-		setValue(segmentE1CUKBM, "STATUS", VCMLUtils.createIntFromStatus(procedure.getStatus()));
+		setValue(segmentE1CUKBM, "STATUS", VcmlUtils.createIntFromStatus(procedure.getStatus()));
 		setValue(segmentE1CUKBM, "GROUP", toUpperCase(procedure.getGroup()));
 
 		addSegmentE1DATEM(segmentE1CUKBM);
@@ -852,7 +852,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		addSegmentsForSource(segmentE1CUKBM, procedure.getSource());
 		addSegmentsForDependencyDocumentation(segmentE1CUKBM, "E1CUTXM", procedure.getDocumentation());
 
-		addSegmentE1UPSLINK(iDoc, toUpperCase(procedure.getName()), VCMLUtils.DEFAULT_VALIDITY_START);
+		addSegmentE1UPSLINK(iDoc, toUpperCase(procedure.getName()), VcmlUtils.DEFAULT_VALIDITY_START);
 
 		addSegmentE1UPSITM(iDoc, "KNOMAS", "KNO", toUpperCase(procedure.getName()), HIELEV_KNOMAS, inslev_KNOMAS++, 1);
 
@@ -875,7 +875,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		setValue(segmentE1CUKBM, "MSGFN", "004");
 		setValue(segmentE1CUKBM, "DEP_INTERN", toUpperCase(precondition.getName()));
 		setValue(segmentE1CUKBM, "DEP_TYPE", "2");
-		setValue(segmentE1CUKBM, "STATUS", VCMLUtils.createIntFromStatus(precondition.getStatus()));
+		setValue(segmentE1CUKBM, "STATUS", VcmlUtils.createIntFromStatus(precondition.getStatus()));
 		setValue(segmentE1CUKBM, "GROUP", toUpperCase(precondition.getGroup()));
 
 		addSegmentE1DATEM(segmentE1CUKBM);
@@ -884,7 +884,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		addSegmentsForSource(segmentE1CUKBM, precondition.getSource());
 		addSegmentsForDependencyDocumentation(segmentE1CUKBM, "E1CUTXM", precondition.getDocumentation());
 
-		addSegmentE1UPSLINK(iDoc, toUpperCase(precondition.getName()), VCMLUtils.DEFAULT_VALIDITY_START);
+		addSegmentE1UPSLINK(iDoc, toUpperCase(precondition.getName()), VcmlUtils.DEFAULT_VALIDITY_START);
 
 		addSegmentE1UPSITM(iDoc, "KNOMAS", "KNO", toUpperCase(precondition.getName()), HIELEV_KNOMAS, inslev_KNOMAS++, 1);
 
@@ -902,13 +902,13 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		setValue(segmentE1CUKBM, "MSGFN", "004");
 		setValue(segmentE1CUKBM, "DEP_INTERN", toUpperCase(condition.getName()));
 		setValue(segmentE1CUKBM, "DEP_TYPE", "5");
-		setValue(segmentE1CUKBM, "STATUS", VCMLUtils.createIntFromStatus(condition.getStatus()));
+		setValue(segmentE1CUKBM, "STATUS", VcmlUtils.createIntFromStatus(condition.getStatus()));
 		setValue(segmentE1CUKBM, "GROUP", toUpperCase(condition.getGroup()));
 		addSegmentE1DATEM(segmentE1CUKBM);
 		addSegmentsForDescription(segmentE1CUKBM, "E1CUKBT", "DESCRIPT", condition.getDescription());
 		addSegmentsForSource(segmentE1CUKBM, condition.getSource());
 		addSegmentsForDependencyDocumentation(segmentE1CUKBM, "E1CUTXM", condition.getDocumentation());
-		addSegmentE1UPSLINK(iDoc, toUpperCase(condition.getName()), VCMLUtils.DEFAULT_VALIDITY_START);
+		addSegmentE1UPSLINK(iDoc, toUpperCase(condition.getName()), VcmlUtils.DEFAULT_VALIDITY_START);
 		addSegmentE1UPSITM(iDoc, "KNOMAS", "KNO", toUpperCase(condition.getName()), HIELEV_KNOMAS, inslev_KNOMAS++, 1);
 		return Collections.singletonList(iDoc);
 	}
@@ -941,7 +941,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 				public void handleSingleDescription(final Language language, final String value) {
 					final Segment segmentE1BP_CHARGROUPS_LANG = addChildSegment(iDoc, "E1BP_CHARGROUPS_LANG");
 					setValue(segmentE1BP_CHARGROUPS_LANG, "GROUP_NAME", toUpperCase(group.getName()));
-					setValue(segmentE1BP_CHARGROUPS_LANG, "LANGUAGE_INT", VCMLUtils.getLanguageCharacter(language));
+					setValue(segmentE1BP_CHARGROUPS_LANG, "LANGUAGE_INT", VcmlUtils.getLanguageCharacter(language));
 					setValue(segmentE1BP_CHARGROUPS_LANG, "LANGUAGE_ISO", language.toString());
 					setValue(segmentE1BP_CHARGROUPS_LANG, "GROUP_TEXT", value);
 
@@ -1013,7 +1013,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 				public void handleSingleDescription(final Language language, final String value) {
 					final Segment segmentE1MAKTM = addChildSegment(segmentE1MARAM, "E1MAKTM");
 					setValue(segmentE1MAKTM, "MSGFN", "004");
-					setValue(segmentE1MAKTM, "SPRAS", VCMLUtils.getLanguageCharacter(language));
+					setValue(segmentE1MAKTM, "SPRAS", VcmlUtils.getLanguageCharacter(language));
 					setValue(segmentE1MAKTM, "SPRAS_ISO", language.toString());
 					setValue(segmentE1MAKTM, "MAKTX", value);
 				}
@@ -1039,7 +1039,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 			setValue(segmentE1MLANM, "TATY1", "MWST");
 			setValue(segmentE1MLANM, "TAXM1", "0");
 
-			addSegmentE1UPSLINK(iDoc, toUpperCase(material.getName()), VCMLUtils.DEFAULT_VALIDITY_START);
+			addSegmentE1UPSLINK(iDoc, toUpperCase(material.getName()), VcmlUtils.DEFAULT_VALIDITY_START);
 			addSegmentE1UPSITM(iDoc, "MATMAS", "MAT", toUpperCase(material.getName()), HIELEV_MATMAS, inslev_MATMAS++, 1);
 			result.add(iDoc);
 		}
@@ -1064,7 +1064,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 			final Multimap<Integer, Classification> classesByType = ArrayListMultimap.create();
 			for(final Classification classification : material.getClassifications()) {
 				Class cls = classification.getCls();
-				classesByType.put(VCMLUtils.getClassType(toUpperCase(cls.getName())), classification);
+				classesByType.put(VcmlUtils.getClassType(toUpperCase(cls.getName())), classification);
 			}
 			// create CLFMAS IDoc for each class
 			for(final Entry<Integer, Collection<Classification>> entry : classesByType.asMap().entrySet()) {
@@ -1084,9 +1084,9 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 					Class cls = classification.getCls();
 					final Segment segmentE1KSSKM = addChildSegment(segmentE1OCLFM, "E1KSSKM");
 					setValue(segmentE1KSSKM, "MSGFN", "004");
-					setValue(segmentE1KSSKM, "CLASS", VCMLUtils.getClassName(toUpperCase(cls.getName())));
+					setValue(segmentE1KSSKM, "CLASS", VcmlUtils.getClassName(toUpperCase(cls.getName())));
 					setValue(segmentE1KSSKM, "DATUV", "00000000");
-					setValue(segmentE1KSSKM, "STATU", VCMLUtils.createIntFromStatus(cls.getStatus())); // TODO is status neccessary here?
+					setValue(segmentE1KSSKM, "STATU", VcmlUtils.createIntFromStatus(cls.getStatus())); // TODO is status neccessary here?
 				}
 				// Distribution of classification: assigned char. values
 				for(final Classification classification : entry.getValue()) {
@@ -1113,7 +1113,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 						}
 					}
 				}
-				addSegmentE1UPSLINK(iDoc, "MARA", VCMLUtils.DEFAULT_VALIDITY_START);
+				addSegmentE1UPSLINK(iDoc, "MARA", VcmlUtils.DEFAULT_VALIDITY_START);
 				addSegmentE1UPSITM(iDoc, "CLFMAS", "CLF", String.format("%1$-30s%2$-30s%3$24s", "MARA", toUpperCase(material.getName()), classType + "*"), HIELEV_CLFMAS, inslev_CLFMAS++, 1);
 				result.add(iDoc);
 			}
@@ -1136,7 +1136,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		final Segment segmentE1CUVFM = addChildSegment(iDoc, "E1CUVFM");
 		setValue(segmentE1CUVFM, "MSGFN", "004");
 		setValue(segmentE1CUVFM, "FUNCTION_NAME", toUpperCase(name));
-		setValue(segmentE1CUVFM, "STATUS", VCMLUtils.createIntFromStatusVFT(varfunc.getStatus()));
+		setValue(segmentE1CUVFM, "STATUS", VcmlUtils.createIntFromStatusVFT(varfunc.getStatus()));
 		setValue(segmentE1CUVFM, "GROUP", toUpperCase(varfunc.getGroup()));
 
 		addSegmentE1DATEM(segmentE1CUVFM);
@@ -1166,7 +1166,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 			}
 		}.handleDescription(varfunc.getDescription());
 
-		addSegmentE1UPSLINK(iDoc, toUpperCase(name), VCMLUtils.DEFAULT_VALIDITY_START);
+		addSegmentE1UPSLINK(iDoc, toUpperCase(name), VcmlUtils.DEFAULT_VALIDITY_START);
 		addSegmentE1UPSITM(iDoc, "VFNMAS", "VFN", toUpperCase(name), HIELEV_VFNMAS, 1, 1); // new inslev per variant function
 		return Collections.singletonList(iDoc);
 	}
@@ -1186,7 +1186,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		final Segment segmentE1CUVTM = addChildSegment(iDoc, "E1CUVTM");
 		setValue(segmentE1CUVTM, "MSGFN", "004");
 		setValue(segmentE1CUVTM, "VAR_TAB", toUpperCase(name));
-		setValue(segmentE1CUVTM, "STATUS", VCMLUtils.createIntFromStatusVFT(vartab.getStatus()));
+		setValue(segmentE1CUVTM, "STATUS", VcmlUtils.createIntFromStatusVFT(vartab.getStatus()));
 		setValue(segmentE1CUVTM, "VTGROUP", toUpperCase(vartab.getGroup()));
 
 		addSegmentE1DATEM(segmentE1CUVTM);
@@ -1207,7 +1207,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		}
 
 		addSegmentsForDescription(segmentE1CUVTM, "E1CUVTT", "DESCRIPT", vartab.getDescription());
-		addSegmentE1UPSLINK(iDoc, toUpperCase(name), VCMLUtils.DEFAULT_VALIDITY_START);
+		addSegmentE1UPSLINK(iDoc, toUpperCase(name), VcmlUtils.DEFAULT_VALIDITY_START);
 		addSegmentE1UPSITM(iDoc, "VTAMAS", "VTA", toUpperCase(vartab.getName()), HIELEV_VTAMAS, 1, 1); // new inslev per variant table
 		return Collections.singletonList(iDoc);
 	}
@@ -1257,7 +1257,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 				}
 			}
 		}
-		addSegmentE1UPSLINK(iDoc, tableName, VCMLUtils.DEFAULT_VALIDITY_START);
+		addSegmentE1UPSLINK(iDoc, tableName, VcmlUtils.DEFAULT_VALIDITY_START);
 		addSegmentE1UPSITM(iDoc, "VTMMAS", "VTM", tableName, HIELEV_VTMMAS, 1, 1);
 		return Collections.singletonList(iDoc);
 	}

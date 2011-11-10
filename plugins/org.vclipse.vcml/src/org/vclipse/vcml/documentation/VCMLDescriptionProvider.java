@@ -13,7 +13,7 @@ package org.vclipse.vcml.documentation;
 import org.eclipse.emf.common.util.EList;
 import org.vclipse.base.DeclarativeEObjectDocumentationProvider;
 import org.vclipse.vcml.utils.DescriptionHandler;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicValue;
 import org.vclipse.vcml.vcml.Constraint;
@@ -94,7 +94,7 @@ public class VCMLDescriptionProvider extends
 		final StringBuffer result = new StringBuffer();
 		if(description instanceof SimpleDescription) {
 			new DescriptionHandler() {
-				private Language defaultLanguage = VCMLUtils.getDefaultLanguage();
+				private Language defaultLanguage = VcmlUtils.getDefaultLanguage();
 
 				@Override
 				public void handleSingleDescription(Language language, String value) {

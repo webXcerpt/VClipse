@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.vcml.ui.outline.actions.IVCMLOutlineActionHandler;
 import org.vclipse.vcml.vcml.DependencyNet;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -34,7 +34,7 @@ public class DependencyNetCreateChangeActionHandler extends BAPIUtils implements
 		ipl.setValue("CONSTRAINT_NET", object.getName());
 		JCoStructure constraintNetData = ipl.getStructure("CONSTRAINT_NET_DATA");
 		constraintNetData.setValue("DEP_TYPE", "CNET");
-		constraintNetData.setValue("STATUS", VCMLUtils.createIntFromStatus(object.getStatus()));
+		constraintNetData.setValue("STATUS", VcmlUtils.createIntFromStatus(object.getStatus()));
 		constraintNetData.setValue("GROUP", object.getGroup());
 		JCoParameterList tpl = function.getTableParameterList();
 		writeDescription(tpl.getTable("DESCRIPTION"), object.getDescription());

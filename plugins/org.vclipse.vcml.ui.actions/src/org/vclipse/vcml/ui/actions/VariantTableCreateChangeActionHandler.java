@@ -17,7 +17,7 @@ import org.vclipse.vcml.vcml.Language;
 import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.utils.DescriptionHandler;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -41,7 +41,7 @@ public class VariantTableCreateChangeActionHandler extends BAPIUtils implements 
 		JCoTable varTabBasicData = tpl.getTable("VAR_TAB_BASIC_DATA");
 		varTabBasicData.appendRow();
 		varTabBasicData.setValue("VAR_TAB", name);
-		varTabBasicData.setValue("STATUS", VCMLUtils.createIntFromStatusVFT(object.getStatus())); // TODO is this the correct status translation?
+		varTabBasicData.setValue("STATUS", VcmlUtils.createIntFromStatusVFT(object.getStatus())); // TODO is this the correct status translation?
 		varTabBasicData.setValue("VTGROUP", object.getGroup());
 		final JCoTable varTabDescriptions = tpl.getTable("VAR_TAB_DESCRIPTIONS");
 		new DescriptionHandler() {
@@ -50,7 +50,7 @@ public class VariantTableCreateChangeActionHandler extends BAPIUtils implements 
 				varTabDescriptions.appendRow();
 				varTabDescriptions.setValue("VAR_TAB", name);
 				varTabDescriptions.setValue("DESCRIPT", value);
-				varTabDescriptions.setValue("LANGUAGE", VCMLUtils.getLanguageCharacter(language));
+				varTabDescriptions.setValue("LANGUAGE", VcmlUtils.getLanguageCharacter(language));
 				varTabDescriptions.setValue("LANGUAGE_ISO", language.toString());
 			}
 		}.handleDescription(object.getDescription());

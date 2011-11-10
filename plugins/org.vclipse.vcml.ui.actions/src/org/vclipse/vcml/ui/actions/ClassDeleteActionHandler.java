@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.vcml.ui.outline.actions.IVCMLOutlineActionHandler;
 import org.vclipse.vcml.vcml.Class;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
@@ -31,8 +31,8 @@ public class ClassDeleteActionHandler extends BAPIUtils implements IVCMLOutlineA
 		JCoFunction function = getJCoFunction("BAPI_CLASS_DELETE", monitor);	
 		JCoParameterList ipl = function.getImportParameterList();
 		String classSpec = object.getName();
-		String className = VCMLUtils.getClassName(classSpec);
-		int classType = VCMLUtils.getClassType(classSpec);
+		String className = VcmlUtils.getClassName(classSpec);
+		int classType = VcmlUtils.getClassType(classSpec);
 		ipl.setValue("CLASSNUM", className);
 		ipl.setValue("CLASSTYPE", classType);
 		execute(function, monitor, object.getName());

@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider;
 import org.vclipse.vcml.utils.DescriptionHandler;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Assignment;
 import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;
@@ -87,7 +87,7 @@ public class VCMLLabelProvider extends DefaultEObjectLabelProvider {
 		}
 		final StyledString result = new StyledString(name); 
 		new DescriptionHandler() {
-			private Language defaultLanguage = VCMLUtils.getDefaultLanguage(); 
+			private Language defaultLanguage = VcmlUtils.getDefaultLanguage(); 
 			@Override
 			public void handleSingleDescription(Language language, String value) {
 				if (defaultLanguage.equals(language)) {
@@ -316,7 +316,7 @@ public class VCMLLabelProvider extends DefaultEObjectLabelProvider {
 	public String text(MultiLanguageDescriptions element) {
 		final StringBuffer label = new StringBuffer();
 		new DescriptionHandler() {
-			private Language defaultLanguage = VCMLUtils.getDefaultLanguage(); 
+			private Language defaultLanguage = VcmlUtils.getDefaultLanguage(); 
 			@Override
 			public void handleSingleDescription(Language language, String value) {
 				int length = label.length();
@@ -332,7 +332,7 @@ public class VCMLLabelProvider extends DefaultEObjectLabelProvider {
 	public String text(MultipleLanguageDocumentation element) {
 		final StringBuffer label = new StringBuffer();
 		new VcmlSwitch<Object>() {
-			private Language defaultLanguage = VCMLUtils.getDefaultLanguage(); 
+			private Language defaultLanguage = VcmlUtils.getDefaultLanguage(); 
 			@Override
 			public Object caseFormattedDocumentationBlock(
 					FormattedDocumentationBlock object) {

@@ -17,7 +17,7 @@ import org.vclipse.vcml.vcml.Language;
 import org.vclipse.vcml.vcml.VariantFunction;
 import org.vclipse.vcml.vcml.VariantFunctionArgument;
 import org.vclipse.vcml.utils.DescriptionHandler;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -41,7 +41,7 @@ public class VariantFunctionCreateChangeActionHandler extends BAPIUtils implemen
 		JCoTable varFunctionBasicData = tpl.getTable("VAR_FUNCTION_BASIC_DATA");
 		varFunctionBasicData.appendRow();
 		varFunctionBasicData.setValue("VFUNC_NAME", name);
-		varFunctionBasicData.setValue("VFUNC_STATUS", VCMLUtils.createIntFromStatusVFT(object.getStatus())); // TODO is this the correct status translation?
+		varFunctionBasicData.setValue("VFUNC_STATUS", VcmlUtils.createIntFromStatusVFT(object.getStatus())); // TODO is this the correct status translation?
 		varFunctionBasicData.setValue("VFUNC_GROUP", object.getGroup());
 		final JCoTable varFunctionDescriptions = tpl.getTable("VAR_FUNCTION_DESCRIPTIONS");
 		new DescriptionHandler() {

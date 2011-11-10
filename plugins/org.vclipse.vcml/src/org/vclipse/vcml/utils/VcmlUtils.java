@@ -71,7 +71,7 @@ import org.vclipse.vcml.vcml.VcmlFactory;
 
 
 
-public class VCMLUtils {
+public class VcmlUtils {
 
 	public static final String DEFAULT_FORMAT = "*";
 	

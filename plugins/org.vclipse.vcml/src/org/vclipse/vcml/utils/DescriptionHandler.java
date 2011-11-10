@@ -46,7 +46,7 @@ public abstract class DescriptionHandler extends VcmlSwitch<Object> {
 	
 	@Override
 	public Object caseSimpleDescription(SimpleDescription object) {
-		handleSingleDescription(VCMLUtils.getDefaultLanguage(), object.getValue());
+		handleSingleDescription(VcmlUtils.getDefaultLanguage(), object.getValue());
 		return this;
 	}
 	

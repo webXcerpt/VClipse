@@ -19,7 +19,7 @@ import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.utils.VCMLProxyFactory;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
@@ -40,12 +40,12 @@ public class ClassReader extends BAPIUtils {
 		((Model)resource.getContents().get(0)).getObjects().add(object);
 		JCoFunction function = getJCoFunction("BAPI_CLASS_GETDETAIL", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
-		ipl.setValue("CLASSNUM", VCMLUtils.getClassName(classSpec));
-		ipl.setValue("CLASSTYPE", VCMLUtils.getClassType(classSpec));
+		ipl.setValue("CLASSNUM", VcmlUtils.getClassName(classSpec));
+		ipl.setValue("CLASSTYPE", VcmlUtils.getClassType(classSpec));
 		execute(function, monitor, classSpec);
 		if (processReturnStructure(function)) {
 			JCoStructure classBasicData = function.getExportParameterList().getStructure("CLASSBASICDATA");
-			object.setStatus(VCMLUtils.createStatusFromInt(classBasicData.getInt("STATUS")));
+			object.setStatus(VcmlUtils.createStatusFromInt(classBasicData.getInt("STATUS")));
 			object.setGroup(nullIfEmpty(classBasicData.getString("CLASSGROUP")));
 			JCoTable classCharacteristics =
 				function.getTableParameterList().getTable("CLASSCHARACTERISTICS");

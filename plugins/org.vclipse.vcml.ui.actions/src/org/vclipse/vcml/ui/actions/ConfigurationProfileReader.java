@@ -25,7 +25,7 @@ import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Procedure;
 import org.vclipse.vcml.utils.VCMLProxyFactory;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -69,7 +69,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 				}
 				ConfigurationProfile object = VCML.createConfigurationProfile();
 				object.setName(name);
-				object.setStatus(VCMLUtils.createStatusFromInt(conProAttributes.getInt("STATUS")));
+				object.setStatus(VcmlUtils.createStatusFromInt(conProAttributes.getInt("STATUS")));
 				object.setBomapplication(conProAttributes.getString("BOMAPPL"));
 				// TODO System.out.println("Class type\t" + conProAttributes.getString("CLASSTYPE"));
 				// TODO System.out.println("BOM explosion\t" + conProAttributes.getValue("BOMEXPL"));

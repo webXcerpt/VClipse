@@ -12,7 +12,7 @@ package org.vclipse.vcml.documentation;
 
 import org.vclipse.base.DeclarativeEObjectDocumentationProvider;
 import org.vclipse.vcml.utils.DocumentationHandler;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicValue;
 import org.vclipse.vcml.vcml.Constraint;
@@ -65,7 +65,7 @@ public class VCMLDocumentationProvider extends
 		}
 		final StringBuffer result = new StringBuffer();
 		new DocumentationHandler() {
-			private Language defaultLanguage = VCMLUtils.getDefaultLanguage(); 
+			private Language defaultLanguage = VcmlUtils.getDefaultLanguage(); 
 			@Override
 			public void addDocumentationEntry(final Language language, final String text, final String format) {
 				if (defaultLanguage.equals(language)) {

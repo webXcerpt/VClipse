@@ -19,7 +19,7 @@ import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.Language;
 import org.vclipse.vcml.utils.DescriptionHandler;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
@@ -46,12 +46,12 @@ public abstract class AbstractClassCreateChangeActionHandler extends BAPIUtils i
 		JCoFunction function = getJCoFunction(getBAPI(), monitor);	
 		JCoParameterList ipl = function.getImportParameterList();
 		String classSpec = object.getName();
-		String className = VCMLUtils.getClassName(classSpec);
-		int classType = VCMLUtils.getClassType(classSpec);
+		String className = VcmlUtils.getClassName(classSpec);
+		int classType = VcmlUtils.getClassType(classSpec);
 		ipl.setValue(getCLASSNUM(), className);
 		ipl.setValue(getCLASSTYPE(), classType);
 		JCoStructure classBasicDataNew = ipl.getStructure(getCLASSBASICDATA());
-		classBasicDataNew.setValue("STATUS", VCMLUtils.createIntFromStatus(object.getStatus()));
+		classBasicDataNew.setValue("STATUS", VcmlUtils.createIntFromStatus(object.getStatus()));
 		classBasicDataNew.setValue("CLASSGROUP", nullIfEmpty(object.getGroup()));
 		classBasicDataNew.setValue("VALID_FROM", getToday()); // TODO set VALID_FROM for classes?
 		classBasicDataNew.setValue("VALID_TO", "9999-12-31"); // TODO set VALID_TO for classes?
@@ -62,7 +62,7 @@ public abstract class AbstractClassCreateChangeActionHandler extends BAPIUtils i
 			public void handleSingleDescription(Language language, String value) {
 				classDescriptionsNew.appendRow();
 				classDescriptionsNew.setValue("CATCHWORD", value);
-				classDescriptionsNew.setValue("LANGU", VCMLUtils.getLanguageCharacter(language));
+				classDescriptionsNew.setValue("LANGU", VcmlUtils.getLanguageCharacter(language));
 				classDescriptionsNew.setValue("LANGU_ISO", language.toString());
 			}
 		}.handleDescription(object.getDescription());

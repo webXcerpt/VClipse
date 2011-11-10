@@ -18,7 +18,7 @@ import org.vclipse.vcml.vcml.ConfigurationProfileEntry;
 import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.Material;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -50,7 +50,7 @@ public class ConfigurationProfileCreateChangeActionHandler extends BAPIUtils imp
 		String profileName = object.getName();
 		conProAttributes.setValue("C_PROFILE", profileName);
 		conProAttributes.setValue("CLASSTYPE", 300);
-		conProAttributes.setValue("STATUS", VCMLUtils.createIntFromStatus(object.getStatus()));
+		conProAttributes.setValue("STATUS", VcmlUtils.createIntFromStatus(object.getStatus()));
 		conProAttributes.setValue("BOMAPPL", object.getBomapplication());
 		InterfaceDesign uidesign = object.getUidesign();
 		if (uidesign!=null) {

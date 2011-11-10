@@ -18,7 +18,7 @@ import org.vclipse.vcml.vcml.CharacteristicGroup;
 import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.Language;
 import org.vclipse.vcml.utils.DescriptionHandler;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
@@ -50,7 +50,7 @@ public class InterfaceDesignCreateChangeActionHandler extends BAPIUtils implemen
 					charGroupsLang.appendRow();
 					charGroupsLang.setValue("GROUP_NAME", groupName);
 					charGroupsLang.setValue("GROUP_TEXT", value);
-					charGroupsLang.setValue("LANGUAGE_INT", VCMLUtils.getLanguageCharacter(language));
+					charGroupsLang.setValue("LANGUAGE_INT", VcmlUtils.getLanguageCharacter(language));
 					charGroupsLang.setValue("LANGUAGE_ISO", language.toString());
 				}
 			}.handleDescription(group.getDescription());

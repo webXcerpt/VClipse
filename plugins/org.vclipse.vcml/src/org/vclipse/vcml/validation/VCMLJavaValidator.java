@@ -20,7 +20,7 @@ import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.vclipse.vcml.documentation.VCMLDescriptionProvider;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.BinaryExpression;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicReference_C;
@@ -138,7 +138,7 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkClass(final Class object) {
-		if (VCMLUtils.getClassName(object.getName()).length() > MAXLENGTH_CLASS_NAME) {
+		if (VcmlUtils.getClassName(object.getName()).length() > MAXLENGTH_CLASS_NAME) {
 			error("Name of class is limited to " + MAXLENGTH_CLASS_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 		if (object.getCharacteristics().size() > MAXLENGTH_CLASS_CHARACTERISTICS) {
@@ -208,7 +208,7 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 				if(index < parameters.size()) {
 					Characteristic param = parameters.get(index).getCharacteristic();
 					if(!param.eIsProxy() && !contains(param.getType(), value)) {
-						error("Parameter " + param.getName() + " does not contain value " + VCMLUtils.getLiteralName(value), 
+						error("Parameter " + param.getName() + " does not contain value " + VcmlUtils.getLiteralName(value), 
 								row, VcmlPackage.Literals.ROW__VALUES, index);
 					}
 				}

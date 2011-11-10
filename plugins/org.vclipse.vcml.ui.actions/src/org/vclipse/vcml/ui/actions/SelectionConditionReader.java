@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.SelectionCondition;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -46,7 +46,7 @@ public class SelectionConditionReader extends BAPIUtils {
 			String depType = dependencyData.getString("DEP_TYPE");
 			if (!"SEL".equals(depType))
 				err.println("ERROR: " + selectionConditionName + " is not a selection condition - it has dependency type " + depType);
-			object.setStatus(VCMLUtils.createStatusFromInt(dependencyData.getInt("STATUS")));
+			object.setStatus(VcmlUtils.createStatusFromInt(dependencyData.getInt("STATUS")));
 			object.setGroup(nullIfEmpty(dependencyData.getString("GROUP")));
 			JCoParameterList tpl = function.getTableParameterList();
 			object.setDescription(readDescription(tpl.getTable("DESCRIPTION"), "LANGUAGE_ISO", "LANGUAGE", "DESCRIPT"));

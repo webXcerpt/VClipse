@@ -20,7 +20,7 @@ import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.VariantFunction;
 import org.vclipse.vcml.vcml.VariantFunctionArgument;
 import org.vclipse.vcml.utils.VCMLProxyFactory;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -46,7 +46,7 @@ public class VariantFunctionReader extends BAPIUtils {
 			execute(function, monitor, variantFunctionName);
 			JCoParameterList epl = function.getExportParameterList();
 			JCoStructure varFunctionBasicData = epl.getStructure("VAR_FUNCTION_BASIC_DATA");
-			object.setStatus(VCMLUtils.createStatusFromIntVFT(varFunctionBasicData.getInt("VFUNC_STATUS")));
+			object.setStatus(VcmlUtils.createStatusFromIntVFT(varFunctionBasicData.getInt("VFUNC_STATUS")));
 			object.setGroup(nullIfEmpty(varFunctionBasicData.getString("VFUNC_GROUP")));
 			JCoParameterList tpl = function.getTableParameterList();
 			object.setDescription(readDescription(tpl.getTable("VAR_FUNCTION_DESCRIPTIONS"), "LANGUAGE_ISO", null, "DESCRIPT"));

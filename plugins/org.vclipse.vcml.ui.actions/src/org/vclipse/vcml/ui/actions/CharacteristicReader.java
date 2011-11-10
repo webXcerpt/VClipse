@@ -33,7 +33,7 @@ import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.SymbolicType;
 import org.vclipse.vcml.utils.DescriptionHandler;
-import org.vclipse.vcml.utils.VCMLUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
@@ -111,7 +111,7 @@ public class CharacteristicReader extends BAPIUtils {
 						MultiLanguageDescriptions multiLanguageDescriptions = (MultiLanguageDescriptions)value.getDescription();
 						EList<MultiLanguageDescription> descriptions = multiLanguageDescriptions.getDescriptions();
 						MultiLanguageDescription multiLanguageDescription = VCML.createMultiLanguageDescription();
-						multiLanguageDescription.setLanguage(VCMLUtils.getLanguageByISOString(charactValuesDescr.getString("LANGUAGE_ISO")));
+						multiLanguageDescription.setLanguage(VcmlUtils.getLanguageByISOString(charactValuesDescr.getString("LANGUAGE_ISO")));
 						multiLanguageDescription.setValue(charactValuesDescr.getString("DESCRIPTION"));
 						descriptions.add(multiLanguageDescription);
 					}
@@ -151,7 +151,7 @@ public class CharacteristicReader extends BAPIUtils {
 			object.setAdditionalValues("X".equals(charactDetail.getString("ADDITIONAL_VALUES")));
 			object.setRestrictable("R".equals(charactDetail.getString("VALUE_ASSIGNMENT")));
 			object.setDisplayAllowedValues("X".equals(charactDetail.getString("DISPLAY_VALUES")));
-			object.setStatus(VCMLUtils.createStatusFromInt(charactDetail.getInt("STATUS")));
+			object.setStatus(VcmlUtils.createStatusFromInt(charactDetail.getInt("STATUS")));
 			object.setGroup(nullIfEmpty(charactDetail.getString("CHARACT_GROUP")));
 			JCoTable charactDescr = tpl.getTable("CHARACTDESCR");
 			if (charactDescr!=null && charactDescr.getNumRows()>0) {
@@ -162,7 +162,7 @@ public class CharacteristicReader extends BAPIUtils {
 				for (int i = 0; i < charactDescr.getNumRows(); i++) {
 					charactDescr.setRow(i);
 					MultiLanguageDescription multiLanguageDescription = VCML.createMultiLanguageDescription();
-					Language language = VCMLUtils.getLanguageByISOString(charactDescr.getString("LANGUAGE_ISO"));
+					Language language = VcmlUtils.getLanguageByISOString(charactDescr.getString("LANGUAGE_ISO"));
 					multiLanguageDescription.setLanguage(language);
 					multiLanguageDescription.setValue(charactDescr.getString("DESCRIPTION"));
 					descriptions.add(multiLanguageDescription);
@@ -199,7 +199,7 @@ public class CharacteristicReader extends BAPIUtils {
 			FormattedDocumentationBlock fdb = VCML.createFormattedDocumentationBlock();
 			fdbs.add(fdb);
 			fdb.setValue(longText.getString("TDLINE"));
-			fdb.setFormat(nullIfEquals(VCMLUtils.DEFAULT_FORMAT, longText.getString("TDFORMAT")));
+			fdb.setFormat(nullIfEquals(VcmlUtils.DEFAULT_FORMAT, longText.getString("TDFORMAT")));
 		}
 		return lb;
 	}
