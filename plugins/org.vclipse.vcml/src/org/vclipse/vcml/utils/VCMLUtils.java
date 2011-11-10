@@ -10,18 +10,65 @@
  ******************************************************************************/
 package org.vclipse.vcml.utils;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.common.util.EList;
 import org.vclipse.vcml.VCMLPlugin;
+import org.vclipse.vcml.vcml.Assignment;
+import org.vclipse.vcml.vcml.BinaryCondition;
+import org.vclipse.vcml.vcml.BinaryExpression;
+import org.vclipse.vcml.vcml.Characteristic;
+import org.vclipse.vcml.vcml.CharacteristicReference_C;
+import org.vclipse.vcml.vcml.CharacteristicReference_P;
+import org.vclipse.vcml.vcml.Comparison;
+import org.vclipse.vcml.vcml.ComparisonOperator;
+import org.vclipse.vcml.vcml.CompoundStatement;
+import org.vclipse.vcml.vcml.Condition;
+import org.vclipse.vcml.vcml.ConditionalConstraintRestriction;
+import org.vclipse.vcml.vcml.ConditionalStatement;
+import org.vclipse.vcml.vcml.ConstraintObject;
+import org.vclipse.vcml.vcml.ConstraintRestriction;
+import org.vclipse.vcml.vcml.ConstraintRestrictionFalse;
+import org.vclipse.vcml.vcml.DelDefault;
+import org.vclipse.vcml.vcml.Expression;
+import org.vclipse.vcml.vcml.FunctionCall;
+import org.vclipse.vcml.vcml.FunctionName;
+import org.vclipse.vcml.vcml.InCondition_C;
+import org.vclipse.vcml.vcml.InCondition_P;
+import org.vclipse.vcml.vcml.IsInvisible;
+import org.vclipse.vcml.vcml.IsSpecified_C;
+import org.vclipse.vcml.vcml.IsSpecified_P;
 import org.vclipse.vcml.vcml.Language;
+import org.vclipse.vcml.vcml.List;
 import org.vclipse.vcml.vcml.Literal;
+import org.vclipse.vcml.vcml.Model;
+import org.vclipse.vcml.vcml.NumberList;
+import org.vclipse.vcml.vcml.NumberListEntry;
+import org.vclipse.vcml.vcml.NumericInterval;
 import org.vclipse.vcml.vcml.NumericLiteral;
+import org.vclipse.vcml.vcml.ObjectCharacteristicReference;
+import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.OptionType;
+import org.vclipse.vcml.vcml.PFunction;
+import org.vclipse.vcml.vcml.PartOfCondition;
+import org.vclipse.vcml.vcml.ProcedureLocation;
+import org.vclipse.vcml.vcml.SetDefault;
+import org.vclipse.vcml.vcml.Statement;
 import org.vclipse.vcml.vcml.Status;
+import org.vclipse.vcml.vcml.SumParts;
+import org.vclipse.vcml.vcml.SymbolList;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
+import org.vclipse.vcml.vcml.UnaryCondition;
+import org.vclipse.vcml.vcml.UnaryExpression;
+import org.vclipse.vcml.vcml.UnaryExpressionOperator;
+import org.vclipse.vcml.vcml.VariantFunction;
+import org.vclipse.vcml.vcml.VcmlFactory;
+
 
 
 public class VCMLUtils {
@@ -221,4 +268,266 @@ public class VCMLUtils {
 		}
 	}
 
+	
+	private static final VcmlFactory VCML = VcmlFactory.eINSTANCE;
+
+	static public Model mkModel() {
+		return VCML.createModel();
+	}
+
+	static public Option mkOption(final OptionType type, final String value) {
+		final Option option = VCML.createOption();
+		option.setName(type);
+		option.setValue(value);
+		return option;
+	}
+
+	static public ComparisonOperator getComparisonOperator(final String text) {
+		if("==".equals(text)) {
+			return ComparisonOperator.EQ;
+		} else if("!=".equals(text)) {
+			return ComparisonOperator.NE;
+		} else if(">=".equals(text)) {
+			return ComparisonOperator.GE;
+		} else if(">".equals(text)) {
+			return ComparisonOperator.GT;
+		} else if("<=".equals(text)) {
+			return ComparisonOperator.LE;
+		} else if("<".equals(text)) {
+			return ComparisonOperator.LT;
+		} else {
+			throw new IllegalArgumentException("Invalid comparison operator " + text);
+		}
+	}
+
+	static public Assignment mkAssignment(final Characteristic cstic, final Expression result) {
+		final Assignment object = VCML.createAssignment();
+		object.setCharacteristic(cstic);
+		object.setExpression(result);
+		return object;
+	}
+
+	static public BinaryCondition mkBinaryCondition(final String operator, final Condition left, final Condition right) {
+		final BinaryCondition object = VCML.createBinaryCondition();
+		object.setOperator(operator);
+		object.setLeft(left);
+		object.setRight(right);
+		return object;
+	}
+
+	static public BinaryExpression mkBinaryExpression(final String operator, final Expression left, final Expression right) {
+		final BinaryExpression object = VCML.createBinaryExpression();
+		object.setLeft(left);
+		object.setOperator(operator);
+		object.setRight(right);
+		return object;
+	}
+
+	static public CharacteristicReference_P mkCharacteristicReference(final Characteristic cstic, final ProcedureLocation location) {
+		final CharacteristicReference_P object = VCML.createCharacteristicReference_P();
+		object.setCharacteristic(cstic);
+		object.setLocation(location);
+		return object;
+	}
+
+	static public Comparison mkComparison(final ComparisonOperator operator, final Expression left, final Expression right) {
+		final Comparison object = VCML.createComparison();
+		object.setLeft(left);
+		object.setOperator(operator);
+		object.setRight(right);
+		return object;
+	}
+
+	static public CompoundStatement mkCompoundStatement() {
+		return VCML.createCompoundStatement();
+	}
+
+	static public ConditionalConstraintRestriction mkConditionalConstraintRestriction(final Condition condition, final ConstraintRestriction restriction) {
+		final ConditionalConstraintRestriction object = VCML.createConditionalConstraintRestriction();
+		object.setCondition(condition);
+		object.setRestriction(restriction);
+		return object;
+	}
+
+	static public ConditionalStatement mkConditionalStatement(final Statement statement, final Condition condition) {
+		final ConditionalStatement object = VCML.createConditionalStatement();
+		object.setStatement(statement);
+		object.setCondition(condition);
+		return object;
+	}
+
+	static public ConditionalConstraintRestriction mkConstraintRestriction(final ConstraintRestriction restriction, final Condition condition) {
+		final ConditionalConstraintRestriction ccRestriction = VCML.createConditionalConstraintRestriction();
+		ccRestriction.setRestriction(restriction);
+		ccRestriction.setCondition(condition);
+		return ccRestriction;
+	}
+
+	static public ConstraintRestrictionFalse mkConstraintRestrictionFalse() {
+		return VCML.createConstraintRestrictionFalse();
+	}
+
+	static public DelDefault mkDelDefault(final Characteristic cstic, final Expression expression) {
+		 final DelDefault object = VCML.createDelDefault();
+		 object.setCharacteristic(cstic);
+		 object.setExpression(expression);
+		 return object;
+	}
+
+	static public FunctionCall mkFunctionCall(final FunctionName functionName, final Expression expression) {
+		final FunctionCall call = VCML.createFunctionCall();
+		call.setFunction(functionName);
+		call.setArgument(expression);
+		return call;
+	}
+
+	static public InCondition_P mkInCondition(final CharacteristicReference_P ref) {
+		final InCondition_P object = VCML.createInCondition_P();
+		object.setCharacteristic(ref);
+		return object;
+	}
+
+	static public InCondition_P mkInCondition(final CharacteristicReference_P ref, final List list) {
+		final InCondition_P object = VCML.createInCondition_P();
+		object.setCharacteristic(ref);
+		object.setList(list);
+		return object;
+	}
+
+	static public InCondition_C mkInCondition_C(final CharacteristicReference_C ref) {
+		final InCondition_C object = VCML.createInCondition_C();
+		object.setCharacteristic(ref);
+		return object;
+	}
+
+	static public InCondition_C mkInCondition_C(final CharacteristicReference_C ref, final List list) {
+		final InCondition_C object = mkInCondition_C(ref);
+		object.setList(list);
+		return object;
+	}
+
+	static public IsInvisible mkIsInvisible(final Characteristic cstic) {
+		final IsInvisible object = VCML.createIsInvisible();
+		object.setCharacteristic(cstic);
+		return object;
+	}
+
+	static public IsSpecified_C mkIsSpecified_C(final CharacteristicReference_C ref) {
+		final IsSpecified_C object = VCML.createIsSpecified_C();
+		object.setCharacteristic(ref);
+		return object;
+	}
+
+	static public IsSpecified_P mkIsSpecified_P(final CharacteristicReference_P ref) {
+		final IsSpecified_P object = VCML.createIsSpecified_P();
+		object.setCharacteristic(ref);
+		return object;
+	}
+
+	static public NumberList mkNumberList() {
+		return VCML.createNumberList();
+	}
+
+	static public NumberList mkNumberListBigDecimal(final EList<BigDecimal> values) {
+		final NumberList list = mkNumberList();
+		final EList<NumberListEntry> entries = list.getEntries();
+		for(final BigDecimal value : values) {
+			entries.add(mkNumericLiteral(value));
+		}
+		return list;
+	}
+
+	static public NumberList mkNumberListIntervalValue(final NumericInterval numericInterval) {
+		final NumberList list = mkNumberList();
+		list.getEntries().add(numericInterval);
+		return list;
+	}
+
+	static public NumericInterval mkNumericInterval(final String lowerBound, final String upperBound) {
+		final NumericInterval interval = VCML.createNumericInterval();
+		interval.setLowerBound(lowerBound);
+		interval.setUpperBound(upperBound);
+		return interval;
+	}
+
+	static public NumericLiteral mkNumericLiteral(final BigDecimal value) {
+		final NumericLiteral object = VCML.createNumericLiteral();
+		object.setValue(value.toPlainString());
+		return object;
+	}
+
+	static public NumericLiteral mkNumericLiteral(final int value) {
+		final NumericLiteral object = VCML.createNumericLiteral();
+		object.setValue(Integer.toString(value));
+		return object;
+	}
+
+	static public ObjectCharacteristicReference mkObjectCharacteristicReference(
+			final ConstraintObject location,
+			final Characteristic characteristic) {
+		final ObjectCharacteristicReference object = VCML.createObjectCharacteristicReference();
+		object.setLocation(location);
+		object.setCharacteristic(characteristic);
+		return object;
+	}
+
+	static public PartOfCondition mkPartOfCondition(final ConstraintObject child,
+			final ConstraintObject parent) {
+		final PartOfCondition object = VCML.createPartOfCondition();
+		object.setChild(child);
+		object.setParent(parent);
+		return object;
+	}
+
+	static public PFunction mkPFunction(final VariantFunction variantFunction) {
+		final PFunction object = VCML.createPFunction();
+		object.setFunction(variantFunction);
+		return object;
+	}
+
+	static public SetDefault mkSetDefault(final Characteristic cstic, final Expression expression) {
+		 final SetDefault object = VCML.createSetDefault();
+		 object.setCharacteristic(cstic);
+		 object.setExpression(expression);
+		 return object;
+	}
+
+	static public SumParts mkSumParts(final ProcedureLocation location, final Characteristic cstic) {
+		final SumParts sumParts = VCML.createSumParts();
+		sumParts.setLocation(location);
+		sumParts.setCharacteristic(cstic);
+		return sumParts;
+	}
+
+	static public SymbolicLiteral mkSymbolicLiteral(final String value) {
+		final SymbolicLiteral object = VCML.createSymbolicLiteral();
+		object.setValue(value);
+		return object;
+	}
+
+	static public SymbolList mkSymbolList() {
+		return VCML.createSymbolList();
+	}
+
+	static public SymbolList mkSymbolList_Literals(final java.util.List<SymbolicLiteral> literals) {
+		final SymbolList list = mkSymbolList();
+		final java.util.List<SymbolicLiteral> entries = list.getEntries();
+		for(final SymbolicLiteral value : literals) {
+			entries.add(mkSymbolicLiteral(value.getValue()));
+		}
+		return list;
+	}
+
+	static public UnaryCondition mkUnaryCondition(final Condition condition) {
+		final UnaryCondition object = VCML.createUnaryCondition();
+		object.setCondition(condition);
+		return object;
+	}
+
+	static public UnaryExpression mkUnaryExpression(final UnaryExpressionOperator operator, final Expression expression) {
+		final UnaryExpression object = VCML.createUnaryExpression();
+		object.setOperator(operator);
+		object.setExpression(expression);
+		return object;
+	}
 }
