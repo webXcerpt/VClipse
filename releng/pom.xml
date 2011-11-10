@@ -370,9 +370,7 @@
 		</license>
 	</licenses>
 
-	<url>http://code.google.com/a/eclipselabs.org/p/xtext-utils/</url>
-	<description>This project aims to provide one or more Domain Specific Languages (DSL) (for example with Xtext) to describe Visual DSL Editors against the Graphiti runtime, and provide code generation (for example with Xtend2) to create the boilerplate code for realizing the implementation against the Graphiti framework.
-	</description>
+	<url>http://http://code.google.com/a/eclipselabs.org/p/vclipse/</url>
 	<inceptionYear>2011</inceptionYear>
 	<issueManagement>
 		<system>GoogleCode Issue Tracker</system>
@@ -387,4 +385,5 @@
 	</scm>
 	<ciManagement>
 	</ciManagement>
+	<description>VClipse is an Eclipse-based integrated development environment (IDE) for product modeling for the SAP Variant Configurator (VC). VClipse supports the specification of objects and dependencies in a textual domain specific language called VCML. This enables the use of standard text comparison tools and version control systems in the model development process.</description>
 </project>
