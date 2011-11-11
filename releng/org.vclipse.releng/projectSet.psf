@@ -20,7 +20,6 @@
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.vcml.ui,org.vclipse.vcml.ui"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.vcml.ui.actions,org.vclipse.vcml.ui.actions"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.vcml.ui.wizards.imports,org.vclipse.vcml.ui.wizards.imports"/>
-<project reference="0.9.3,https://svn2.hosted-projects.com/webxcerpt/ConfigModeler/trunk/plugins/org.vclipse.vcml.ui_sapicons,org.vclipse.vcml.ui_sapicons"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.vcml2idoc,org.vclipse.vcml2idoc"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.vcml2idoc.ui,org.vclipse.vcml2idoc.ui"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/features/org.vclipse.vcml2idoc_feature,org.vclipse.vcml2idoc_feature"/>
@@ -37,7 +36,6 @@
 <item elementID="=org.vclipse.vcml2idoc.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.console" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.vcml.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.vcml.ui_sapicons" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.vcml" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.vclipse.idoc.tests" type="4"/>
 <item elementID="=org.vclipse.jpplib" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
