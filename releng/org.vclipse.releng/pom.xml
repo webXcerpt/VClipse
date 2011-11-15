@@ -52,11 +52,11 @@
 		<module>../../features/org.vclipse.vcml2idoc_feature</module>
 		
 		<!-- JCo Plug-ins -->
-		<module>../../com.sap.conn.jco</module>
-		<module>../../com.sap.conn.jco.doc</module>
-		<module>../../com.sap.conn.jco.idoc</module>
-		<module>../../com.sap.conn.jco.win32.x86</module>
-		<module>../../com.sap.conn.jco.win32.x86_64</module>
+		<module>../../../plugins/com.sap.conn.jco</module>
+		<module>../../../plugins/com.sap.conn.jco.doc</module>
+		<module>../../../plugins/com.sap.conn.jco.idoc</module>
+		<module>../../../plugins/com.sap.conn.jco.win32.x86</module>
+		<module>../../../plugins/com.sap.conn.jco.win32.x86_64</module>
 	</modules>
 
 	<build>
