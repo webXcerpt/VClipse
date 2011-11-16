@@ -37,6 +37,8 @@ import org.vclipse.vcml.vcml.ConstraintRestriction;
 import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Expression;
+import org.vclipse.vcml.vcml.InCondition_C;
+import org.vclipse.vcml.vcml.InCondition_P;
 import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.MDataCharacteristic_C;
 import org.vclipse.vcml.vcml.MDataCharacteristic_P;
@@ -45,10 +47,12 @@ import org.vclipse.vcml.vcml.NumberListEntry;
 import org.vclipse.vcml.vcml.NumericCharacteristicValue;
 import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.NumericType;
+import org.vclipse.vcml.vcml.ObjectCharacteristicReference;
 import org.vclipse.vcml.vcml.Precondition;
 import org.vclipse.vcml.vcml.Procedure;
 import org.vclipse.vcml.vcml.Row;
 import org.vclipse.vcml.vcml.SelectionCondition;
+import org.vclipse.vcml.vcml.ShortVarReference;
 import org.vclipse.vcml.vcml.SimpleDescription;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
 import org.vclipse.vcml.vcml.SymbolicType;
@@ -85,6 +89,9 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	public void checkCharacteristic(final Characteristic object) {
 		if (object.getName().length() > MAXLENGTH_NAME) {
 			error("Name of characteristic is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
+		}
+		if (object.isMultiValue() && object.isRestrictable()) {
+			error("Multivalued characteristic " + object.getName() + " must not be restrictable", VcmlPackage.Literals.CHARACTERISTIC__RESTRICTABLE);
 		}
 	}
 
@@ -271,4 +278,28 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 			error("Parethenseses around statements can only be used for conditional statements (with an IF).", VcmlPackage.Literals.COMPOUND_STATEMENT__STATEMENTS);
 		}
 	}
+	
+	@Check
+	public void checkInCondition(InCondition_C cond) {
+		CharacteristicReference_C cRef = cond.getCharacteristic();
+		if (cRef instanceof ObjectCharacteristicReference) {
+			checkInCondition_Characteristic(((ObjectCharacteristicReference)cRef).getCharacteristic());
+		} else if (cRef instanceof ShortVarReference) {
+			checkInCondition_Characteristic(((ShortVarReference)cRef).getRef().getCharacteristic());
+		}
+	}
+
+	// TODO does this also hold for procedures?
+	@Check
+	public void checkInCondition(InCondition_P cond) {
+		CharacteristicReference_P cRef = cond.getCharacteristic();
+		checkInCondition_Characteristic(cRef.getCharacteristic());
+	}
+
+	private void checkInCondition_Characteristic(Characteristic characteristic) {
+		if (characteristic.isMultiValue()) {
+			error("Multivalued characteristic " + characteristic.getName() + " must not be used in 'in' condition", VcmlPackage.Literals.IN_CONDITION_C__CHARACTERISTIC);
+		}
+	}
+
 }
