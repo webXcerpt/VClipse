@@ -1,0 +1,13 @@
+module org.vclipse.releng.GenerateVClipseLanguages
+
+import org.vclipse.idoc.*
+import org.vclipse.vcml.*
+
+Workflow {
+	
+	component = @IDoc {}
+	component = @VCML {}
+
+}
+	
+
