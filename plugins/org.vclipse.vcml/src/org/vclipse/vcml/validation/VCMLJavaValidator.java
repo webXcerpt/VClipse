@@ -35,6 +35,7 @@ import org.vclipse.vcml.vcml.ConditionalStatement;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.ConstraintRestriction;
 import org.vclipse.vcml.vcml.ConstraintSource;
+import org.vclipse.vcml.vcml.DelDefault;
 import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Expression;
 import org.vclipse.vcml.vcml.InCondition_C;
@@ -302,4 +303,16 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 		}
 	}
 
+	@Check
+	public void checkDelDefault(DelDefault dd) {
+		Expression expression = dd.getExpression();
+		if (expression instanceof CharacteristicReference_P) {
+			CharacteristicReference_P cRef = (CharacteristicReference_P)expression;
+			Characteristic characteristic = cRef.getCharacteristic();
+			if (characteristic.isMultiValue()) {
+				error("Multivalued characteristic " + characteristic.getName() + " must not be used in 'del_default' statements", VcmlPackage.Literals.SET_OR_DEL_DEFAULT__EXPRESSION);
+			}
+		}
+	}
+	
 }
