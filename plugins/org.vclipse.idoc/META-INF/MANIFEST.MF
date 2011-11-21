@@ -18,11 +18,6 @@ Require-Bundle: org.eclipse.xtext,
  org.eclipse.xtext.common.types,
  org.vclipse.jpplib,
  org.vclipse.base
-Import-Package: de.uka.ilkd.pp,
- org.apache.log4j,
- org.apache.commons.logging,
- org.eclipse.xtext.xbase.lib,
- org.eclipse.xtext.xtend2.lib
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.idoc,
  org.vclipse.idoc.services,

@@ -41,7 +41,6 @@
 		<module>../../plugins/org.vclipse.vcml.ui</module>
 		<module>../../plugins/org.vclipse.vcml.ui.actions</module>
 		<module>../../plugins/org.vclipse.vcml.ui.wizards.imports</module>
-		<module>../../plugins/org.vclipse.vcml2idoc</module>
 		<module>../../plugins/org.vclipse.vcml2idoc.ui</module>
 		
 		<!-- VClipse Features -->

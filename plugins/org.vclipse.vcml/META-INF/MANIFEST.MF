@@ -18,14 +18,8 @@ Require-Bundle: org.eclipse.xtext,
  org.antlr.runtime,
  org.eclipse.jface,
  org.vclipse.base,
- org.eclipse.xtext.common.types
-Import-Package: com.google.common.collect,
- de.uka.ilkd.pp,
- org.apache.log4j,
- org.apache.commons.logging,
- org.osgi.framework,
- org.eclipse.xtext.xbase.lib,
- org.eclipse.xtext.xtend2.lib
+ org.eclipse.xtext.common.types,
+ org.vclipse.jpplib
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.vcml,
  org.vclipse.vcml.documentation,

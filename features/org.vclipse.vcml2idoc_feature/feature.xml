@@ -195,13 +195,6 @@ waives its rights to a jury trial in any resulting litigation.
    </requires>
 
    <plugin
-         id="org.vclipse.vcml2idoc"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.vclipse.vcml2idoc.ui"
          download-size="0"
          install-size="0"

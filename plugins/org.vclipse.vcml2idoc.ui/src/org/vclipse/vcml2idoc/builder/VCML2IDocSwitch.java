@@ -42,7 +42,6 @@ import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicGroup;
-import org.vclipse.vcml.vcml.CharacteristicType;
 import org.vclipse.vcml.vcml.CharacteristicValue;
 import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.Classification;

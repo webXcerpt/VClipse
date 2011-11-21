@@ -13,7 +13,6 @@ package org.vclipse.vcml2idoc.builder;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
