@@ -38,3 +38,6 @@ Export-Package: org.vclipse.vcml,
  org.vclipse.vcml.generator
 Bundle-Activator: org.vclipse.vcml.VCMLPlugin
 Bundle-ClassPath: .
+Import-Package: org.apache.log4j,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.xtext.xtend2.lib

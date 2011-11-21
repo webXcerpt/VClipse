@@ -31,3 +31,6 @@ Export-Package: org.vclipse.idoc,
  org.vclipse.idoc.scoping,
  org.vclipse.idoc.generator,
  org.vclipse.idoc.formatting
+Import-Package: org.apache.log4j,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.xtext.xtend2.lib

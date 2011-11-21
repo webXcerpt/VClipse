@@ -28,3 +28,4 @@ Export-Package: org.vclipse.vcml.ui.contentassist.antlr,
  org.vclipse.vcml.ui.contentassist,
  org.vclipse.vcml.ui.internal
 Bundle-Activator: org.vclipse.vcml.ui.internal.VCMLActivator
+Import-Package: org.apache.log4j

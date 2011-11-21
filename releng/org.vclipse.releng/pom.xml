@@ -28,34 +28,34 @@
 		<module>./repository</module>
 		
 		<!-- VClipse Plug-ins -->
-		<module>../../plugins/org.vclipse.base</module>
-		<module>../../plugins/org.vclipse.base.ui</module>
-		<module>../../plugins/org.vclipse.connection</module>
-		<module>../../plugins/org.vclipse.console</module>
-		<module>../../plugins/org.vclipse.idoc</module>
-		<module>../../plugins/org.vclipse.idoc.ui</module>
-		<module>../../plugins/org.vclipse.idoc2jcoidoc</module>
-		<module>../../plugins/org.vclipse.jpplib</module>
-		<module>../../plugins/org.vclipse.vcml</module>
-		<module>../../plugins/org.vclipse.vcml.diff</module>
-		<module>../../plugins/org.vclipse.vcml.ui</module>
-		<module>../../plugins/org.vclipse.vcml.ui.actions</module>
-		<module>../../plugins/org.vclipse.vcml.ui.wizards.imports</module>
-		<module>../../plugins/org.vclipse.vcml2idoc.ui</module>
+		<module>../org.vclipse.base</module>
+		<module>../org.vclipse.base.ui</module>
+		<module>../org.vclipse.connection</module>
+		<module>../org.vclipse.console</module>
+		<module>../org.vclipse.idoc</module>
+		<module>../org.vclipse.idoc.ui</module>
+		<module>../org.vclipse.idoc2jcoidoc</module>
+		<module>../org.vclipse.jpplib</module>
+		<module>../org.vclipse.vcml</module>
+		<module>../org.vclipse.vcml.diff</module>
+		<module>../org.vclipse.vcml.ui</module>
+		<module>../org.vclipse.vcml.ui.actions</module>
+		<module>../org.vclipse.vcml.ui.wizards.imports</module>
+		<module>../org.vclipse.vcml2idoc.ui</module>
 		
 		<!-- VClipse Features -->
-		<module>../../features/org.vclipse.idoc_feature</module>
-		<module>../../features/org.vclipse.pdr_feature</module>
-		<module>../../features/org.vclipse.rfc_feature</module>
-		<module>../../features/org.vclipse.vcml_feature</module>
-		<module>../../features/org.vclipse.vcml2idoc_feature</module>
+		<module>../org.vclipse.idoc_feature</module>
+		<module>../org.vclipse.pdr_feature</module>
+		<module>../org.vclipse.rfc_feature</module>
+		<module>../org.vclipse.vcml_feature</module>
+		<module>../org.vclipse.vcml2idoc_feature</module>
 		
 		<!-- JCo Plug-ins -->
-		<module>../../../plugins/com.sap.conn.jco</module>
-		<module>../../../plugins/com.sap.conn.jco.doc</module>
-		<module>../../../plugins/com.sap.conn.jco.idoc</module>
-		<module>../../../plugins/com.sap.conn.jco.win32.x86</module>
-		<module>../../../plugins/com.sap.conn.jco.win32.x86_64</module>
+		<module>../com.sap.conn.jco</module>
+		<module>../com.sap.conn.jco.doc</module>
+		<module>../com.sap.conn.jco.idoc</module>
+		<module>../com.sap.conn.jco.win32.x86</module>
+		<module>../com.sap.conn.jco.win32.x86_64</module>
 	</modules>
 
 	<build>

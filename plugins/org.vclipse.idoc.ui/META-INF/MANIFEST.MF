@@ -22,3 +22,4 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.idoc.ui.contentassist.antlr,
  org.vclipse.idoc.ui.internal
 Bundle-Activator: org.vclipse.idoc.ui.internal.IDocActivator
+Import-Package: org.apache.log4j
