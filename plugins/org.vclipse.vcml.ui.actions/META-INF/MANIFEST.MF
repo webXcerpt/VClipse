@@ -13,8 +13,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.console,
  org.vclipse.console,
  org.vclipse.jpplib,
- com.sap.conn.jco,
  org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.vclipse.vcml.ui.actions
+Import-Package: com.sap.conn.jco
