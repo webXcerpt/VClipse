@@ -7,7 +7,6 @@ Bundle-Activator: org.vclipse.idoc2jcoidoc.Activator
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.vclipse.vcml2idoc,
  org.vclipse.connection,
  org.vclipse.vcml,
  org.vclipse.idoc,
