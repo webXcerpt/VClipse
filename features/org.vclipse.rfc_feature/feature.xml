@@ -21,15 +21,14 @@
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.equinox.security" version="1.0.100" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.console" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.vclipse.connection" version="0.4.0" match="greaterOrEqual"/>
-      <import plugin="org.vclipse.vcml.ui" version="0.4.0" match="greaterOrEqual"/>
-      <import plugin="org.vclipse.console" version="0.4.0" match="greaterOrEqual"/>
-      <import plugin="org.vclipse.base" version="0.4.0" match="greaterOrEqual"/>
-      <import plugin="org.apache.log4j"/>
-      <import plugin="com.sap.conn.jco"/>
-      <import plugin="com.sap.conn.jco.idoc"/>
       <import plugin="org.eclipse.xtext.ui"/>
+      <import plugin="org.apache.log4j"/>
+      <import plugin="org.eclipse.ui.console" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.vclipse.vcml.ui" version="0.4.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.commons.lang"/>
+      <import plugin="org.eclipse.xtext"/>
+      <import plugin="org.apache.commons.logging"/>
+      <import plugin="org.vclipse.jpplib"/>
    </requires>
 
    <plugin
