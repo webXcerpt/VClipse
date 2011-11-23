@@ -4,8 +4,14 @@
  *******************************************************************************/
 package org.vclipse.idoc2jcoidoc.internal;
 
+import java.io.IOException;
+import java.util.Properties;
+
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.vclipse.idoc2jcoidoc.Activator;
 import org.vclipse.idoc2jcoidoc.IUiConstants;
 
 import com.google.inject.Inject;
@@ -21,27 +27,25 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	private static final String DEFAULT_PARTNER_TYPE = "LS";
 	private static final String DEFAULT_PARTNER_NUMBER = "CML";
 	
-	/**
-	 * 
-	 */
-	private final IPreferenceStore preferenceStore;
-	
-	/**
-	 * @param preferenceStore
-	 */
 	@Inject
-	public PreferenceInitializer(IPreferenceStore preferenceStore) {
-		this.preferenceStore = preferenceStore;
+	private IPreferenceStore preferenceStore;
+	
+	private Properties properties;
+	
+	public PreferenceInitializer() throws IOException {
+		properties = new Properties();
+		try {
+			properties.load(FileLocator.openStream(Activator.getDefault().getBundle(), new Path("src/org/vclipse/idoc2jcoidoc/internal/rfc_overridden_settings.properties"), false));
+		} catch(Exception exception) {
+			properties.load(FileLocator.openStream(Activator.getDefault().getBundle(), new Path("src/org/vclipse/idoc2jcoidoc/internal/rfc_default_settings.properties"), false));		
+		}
 	}
 	
-	/**
-	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
-	 */
 	@Override
 	public void initializeDefaultPreferences() {
 		preferenceStore.putValue(IUiConstants.NUMBERS_PROVIDER, IUiConstants.TARGET_SYSTEM);
-		preferenceStore.putValue(IUiConstants.RFC_FOR_UPS_NUMBERS, "ZCWG_CML_GET_UPS_NUMBER");
-		preferenceStore.putValue(IUiConstants.RFC_FOR_IDOC_NUMBERS, "ZCWG_CML_GET_IDOC_NUMBERS");
+		preferenceStore.putValue(IUiConstants.RFC_FOR_UPS_NUMBERS, properties.getProperty(IUiConstants.RFC_FOR_UPS_NUMBERS));
+		preferenceStore.putValue(IUiConstants.RFC_FOR_IDOC_NUMBERS, properties.getProperty(IUiConstants.RFC_FOR_IDOC_NUMBERS));
 		preferenceStore.putValue(IUiConstants.PARTNER_NUMBER, DEFAULT_PARTNER_NUMBER);
 		preferenceStore.putValue(IUiConstants.PARTNER_TYPE, DEFAULT_PARTNER_TYPE);
 	}

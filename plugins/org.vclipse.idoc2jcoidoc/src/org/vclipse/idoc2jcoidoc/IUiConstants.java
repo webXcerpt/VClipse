@@ -10,8 +10,8 @@ package org.vclipse.idoc2jcoidoc;
 public interface IUiConstants {
 	
 	public static final String NUMBERS_PROVIDER = Activator.ID + ".senderType";
-	public static final String RFC_FOR_UPS_NUMBERS = Activator.ID + ".rfcForUpsNumbers";
-	public static final String RFC_FOR_IDOC_NUMBERS = Activator.ID + ".rfcForIDocsNumbers";
+	public static final String RFC_FOR_UPS_NUMBERS = "RfcSetting_UPS_NUMBER";
+	public static final String RFC_FOR_IDOC_NUMBERS = "RfcSetting_IDOC_NUMBER";
 	public static final String UPS_PACKAGE_PREFIX = Activator.ID + ".upsPackagePrefix";
 	/**
 	 * Values for sender types
