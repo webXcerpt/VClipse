@@ -13,9 +13,15 @@
  */
 package org.vclipse.vcml2idoc.preferences;
 
+import java.io.IOException;
+import java.util.Properties;
+
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.vclipse.vcml2idoc.IVCML2IDocPreferences;
+import org.vclipse.vcml2idoc.VCML2IDocUIPlugin;
 
 import com.google.inject.Inject;
 
@@ -24,11 +30,18 @@ import com.google.inject.Inject;
  */
 public class PreferencesInitializer extends AbstractPreferenceInitializer {
 
-	private final IPreferenceStore preferenceStore;
-	
 	@Inject
-	public PreferencesInitializer(IPreferenceStore preferenceStore) {
-		this.preferenceStore = preferenceStore;
+	private IPreferenceStore preferenceStore;
+	
+	private Properties properties;
+	
+	public PreferencesInitializer() throws IOException {
+		properties = new Properties();
+		try {
+			properties.load(FileLocator.openStream(VCML2IDocUIPlugin.getDefault().getBundle(), new Path("src/org/vclipse/vcml2idoc/preferences/vcml2idoc_settings_overriden.properties"), false));
+		} catch(Exception exception) {
+			properties.load(FileLocator.openStream(VCML2IDocUIPlugin.getDefault().getBundle(), new Path("src/org/vclipse/vcml2idoc/preferences/vcml2idoc_settings_default.properties"), false));			
+		}
 	}
 	
 	@Override
@@ -46,6 +59,6 @@ public class PreferencesInitializer extends AbstractPreferenceInitializer {
 		preferenceStore.setDefault(IVCML2IDocPreferences.VFNMAS, false);
 		preferenceStore.setDefault(IVCML2IDocPreferences.VTAMAS, true);
 		preferenceStore.setDefault(IVCML2IDocPreferences.VTMMAS, true);
-		preferenceStore.setDefault(IVCML2IDocPreferences.UPSTYP, "SAP_REPLI");
+		preferenceStore.setDefault(IVCML2IDocPreferences.UPSTYP, properties.getProperty(IVCML2IDocPreferences.UPSTYP));
 	}
 }
