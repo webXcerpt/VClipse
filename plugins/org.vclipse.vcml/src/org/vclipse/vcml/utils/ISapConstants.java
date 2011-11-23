@@ -27,14 +27,14 @@ public interface ISapConstants {
 	 * Preference name for storing the default plant
 	 */
 	// BOM
-	public static final String PLANT = VCMLPlugin.ID + ".plant";
-	public static final String BOM_USAGE = VCMLPlugin.ID + ".bomUsage";
-	public static final String INDUSTRY_SECTOR = VCMLPlugin.ID + ".industrySector";
+	public static final String PLANT = "SAPSetting_PLANT";
+	public static final String BOM_USAGE = "SAPSetting_BOM_USAGE";
+	public static final String INDUSTRY_SECTOR = "SAPSetting_INDUSTRY_SECTOR";
 	// Material
-	public static final String TRANSPORTATION_GROUP = VCMLPlugin.ID + ".itransportationGroup";
-	public static final String LOADING_GROUP = VCMLPlugin.ID + ".loadingGroup";
-	public static final String SALES_ORGANISATION = VCMLPlugin.ID + ".salesOrganisation";
-	public static final String DISTRIBUTION_CHANNEL = VCMLPlugin.ID + ".distributionChannel";
+	public static final String TRANSPORTATION_GROUP = "SAPSetting_TRANSPORATION_GROUP";
+	public static final String LOADING_GROUP = "SAPSetting_LOADING_GROUP";
+	public static final String SALES_ORGANISATION = "SAPSetting_SALES_ORGANISATION";
+	public static final String DISTRIBUTION_CHANNEL = "SAPSetting_DISTRIBUTION_CHANNEL";
 
 	/**
 	 * Preference name for serializer-option
