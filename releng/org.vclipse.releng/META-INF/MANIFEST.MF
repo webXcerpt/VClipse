@@ -4,12 +4,10 @@ Bundle-Name: VClipse Releng Project
 Bundle-SymbolicName: org.vclipse.releng
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.vclipse.releng.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.vclipse.vcml;bundle-version="0.4.0",
- org.vclipse.idoc;bundle-version="0.4.0",
- org.eclipse.emf.mwe2.launch;bundle-version="2.1.0",
- org.eclipse.emf.mwe2.lib;bundle-version="2.1.0",
- org.eclipse.emf.mwe2.runtime;bundle-version="2.1.0"
+Require-Bundle: org.eclipse.emf.mwe2.launch;bundle-version="2.1.0",
+ org.vclipse.vcml,
+ org.vclipse.idoc,
+ org.eclipse.ui,
+ org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
