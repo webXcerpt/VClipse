@@ -13,14 +13,15 @@ Require-Bundle: org.eclipse.xtext.ui;bundle-version="2.1.1",
  org.eclipse.xtext.ui.codetemplates.ui;bundle-version="2.1.1",
  org.vclipse.base,
  org.vclipse.base.ui,
- org.vclipse.vcml;visibility:=reexport,
+ org.vclipse.vcml,
  org.vclipse.console,
  org.eclipse.ui.editors,
  org.eclipse.ui.ide,
  org.eclipse.ui,
  org.antlr.runtime,
  org.eclipse.compare,
- org.apache.log4j
+ org.apache.log4j,
+ org.eclipse.ui.console
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.vcml.ui.contentassist.antlr,
  org.vclipse.vcml.ui.outline.actions,

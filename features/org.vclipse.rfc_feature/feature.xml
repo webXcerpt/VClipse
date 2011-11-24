@@ -18,6 +18,7 @@
    </license>
 
    <requires>
+      <import plugin="org.eclipse.xtext.ui" version="2.1.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.equinox.security" version="1.0.100" match="greaterOrEqual"/>
@@ -27,7 +28,7 @@
       <import plugin="org.eclipse.ui.console" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.vclipse.jpplib"/>
       <import plugin="org.vclipse.vcml.ui" version="0.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.ui" version="2.1.1" match="greaterOrEqual"/>
+      <import plugin="org.vclipse.vcml"/>
    </requires>
 
    <plugin
