@@ -179,15 +179,15 @@ waives its rights to a jury trial in any resulting litigation.
    </license>
 
    <requires>
+      <import plugin="org.vclipse.vcml.ui" version="0.2.0" match="greaterOrEqual"/>
+      <import plugin="org.vclipse.idoc" version="0.2.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.emf.ecore" version="2.5.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.resources" version="3.5.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.ui"/>
       <import plugin="org.eclipse.ui.ide" version="3.5.1" match="greaterOrEqual"/>
-      <import plugin="org.vclipse.vcml.ui" version="0.2.0" match="greaterOrEqual"/>
-      <import plugin="org.vclipse.idoc" version="0.2.0" match="greaterOrEqual"/>
       <import plugin="org.apache.commons.lang"/>
+      <import plugin="org.eclipse.xtext.ui" version="2.1.1" match="greaterOrEqual"/>
    </requires>
 
    <plugin

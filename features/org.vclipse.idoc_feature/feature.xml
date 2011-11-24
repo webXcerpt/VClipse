@@ -179,33 +179,30 @@ waives its rights to a jury trial in any resulting litigation.
    </license>
 
    <requires>
-      <import plugin="org.eclipse.xtext"/>
-      <import plugin="org.eclipse.xtext.generator"/>
       <import plugin="org.eclipse.emf.codegen.ecore"/>
-      <import plugin="org.eclipse.emf.mwe.utils"/>
-      <import plugin="org.eclipse.emf.mwe2.launch"/>
-      <import plugin="org.eclipse.xtext.ui.codetemplates"/>
-      <import plugin="org.eclipse.xtext.util"/>
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.antlr.runtime"/>
-      <import plugin="org.eclipse.xtext.common.types"/>
       <import plugin="org.vclipse.jpplib"/>
       <import plugin="org.vclipse.base"/>
       <import plugin="org.apache.commons.logging"/>
       <import plugin="org.apache.log4j"/>
-      <import plugin="org.eclipse.xtext.xbase.lib"/>
-      <import plugin="org.eclipse.xtext.xtend2.lib"/>
       <import plugin="org.vclipse.base.ui"/>
-      <import plugin="org.eclipse.xtext.ui"/>
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.xtext.ui.shared"/>
       <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.xtext.builder"/>
       <import plugin="org.eclipse.compare"/>
-      <import plugin="org.eclipse.xtext.common.types.ui"/>
-      <import plugin="org.eclipse.xtext.ui.codetemplates.ui"/>
+      <import plugin="org.eclipse.xtext.generator" version="2.1.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.xtext.ui.codetemplates" version="2.1.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.xtext.common.types" version="2.1.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.xtext.util" version="2.1.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.emf.mwe.utils" version="1.2.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.emf.mwe2.launch" version="2.1.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.xtext.ui" version="2.1.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.xtext.ui.shared" version="2.1.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.xtext.common.types.ui" version="2.1.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.xtext.ui.codetemplates.ui" version="2.1.1" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.xtext.builder" version="2.1.1" match="greaterOrEqual"/>
    </requires>
 
    <plugin
