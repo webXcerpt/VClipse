@@ -16,30 +16,35 @@
 
 	<version>0.4.0.qualifier</version>
 	
-	<properties>
-		<tycho-version>0.13.0</tycho-version>
-		<junit-version>4.8.2</junit-version>
-	</properties>
-	
 	<build>
+		<testSourceDirectory>${project.basedir}/src</testSourceDirectory>
 		<testResources>
 			<testResource>
 				<directory>${project.basedir}/resources</directory>
 			</testResource>
 		</testResources>
-		
-		<testSourceDirectory>${project.basedir}/src</testSourceDirectory>
-		
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
-				<version>${tycho-version}</version>
+				<version>2.9</version>
 				<configuration>
 					<testFailureIgnore>false</testFailureIgnore>
 				</configuration>
+				<executions>
+					<execution>
+						<id>test</id>
+						<phase>test</phase>
+						<configuration>
+							<testClassesDirectory>${project.basedir}/src</testClassesDirectory>
+							<reportFormat>xml</reportFormat>
+						</configuration>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
-				
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
