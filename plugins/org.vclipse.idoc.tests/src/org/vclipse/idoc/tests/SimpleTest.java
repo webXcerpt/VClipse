@@ -10,9 +10,9 @@ import org.vclipse.idoc.IDocInjectorProvider;
 
 @RunWith(XtextRunner2.class)
 @InjectWith(IDocInjectorProvider.class)
-public class Test1 extends XtextTest {
+public class SimpleTest extends XtextTest {
 
-	public Test1() {
+	public SimpleTest() {
 		super("Test1");
 	}
 
