@@ -17,7 +17,7 @@ public class SimpleTest extends XtextTest {
 	}
 
 	@Test
-	public void test1() {
+	public void simpleFileTest() {
 		suppressSerialization(); // currently, serialization leads to an error (NPE)
 		testFile("test1.vcml");
 	}

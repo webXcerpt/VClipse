@@ -13,6 +13,13 @@
 
 	<artifactId>org.vclipse.idoc.tests</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+		</dependency>
+	</dependencies>
 
 	<version>0.4.0.qualifier</version>
 	

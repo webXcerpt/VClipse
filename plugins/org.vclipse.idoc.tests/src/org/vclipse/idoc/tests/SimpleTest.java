@@ -17,7 +17,7 @@ public class SimpleTest extends XtextTest {
 	}
 
 	@Test
-	public void test1() {
+	public void simpleFileTest() {
 		ignoreSerializationDifferences();
 		testFile("test1.idoc");
 	}
