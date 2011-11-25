@@ -54,6 +54,10 @@ Workflow {
 			// "
 			}
 
+            // Serializer 2.0
+//            fragment = serializer.SerializerFragment {
+//            	generateStub = false
+//            }
 			// the serialization component
 			fragment = parseTreeConstructor.ParseTreeConstructorFragment {}
 
@@ -78,8 +82,7 @@ Workflow {
 
 			// scoping and exporting API
 			fragment = scoping.ImportURIScopingFragment {}
-			// FIXME workaround for a bug in Xtext 2.1 (https://bugs.eclipse.org/bugs/show_bug.cgi?id=362655)
-			// fragment = exporting.SimpleNamesFragment {}
+			fragment = exporting.SimpleNamesFragment {}
 
 			// scoping and exporting API 
 			// fragment = scoping.ImportNamespacesScopingFragment {}
@@ -105,14 +108,6 @@ Workflow {
 			// content assist API  
 			fragment = contentAssist.JavaBasedContentAssistFragment {}
 			
-			// rename refactoring  
-			// fragment = refactoring.RefactorElementNameFragment {}
-			
-			// provides a compare view
-			fragment = compare.CompareFragment {
-				fileExtensions = file.extensions
-			}
-
 			// generates a more lightweight Antlr parser and lexer tailored for content assist  
 			fragment = parser.antlr.XtextAntlrUiGeneratorFragment {}
 
@@ -125,12 +120,21 @@ Workflow {
 			//		modelFileExtension = file.extensions
 			// }
 			
+			// rename refactoring  
+			// fragment = refactoring.RefactorElementNameFragment {}
+			
 			// fragment = types.TypesGeneratorFragment {}
 			// generates the required bindings only if the grammar inherits from Xbase
 			// fragment = xbase.XbaseGeneratorFragment {}
 			
 			// provides a preference page for template proposals 
 			fragment = templates.CodetemplatesGeneratorFragment {}
+
+			// provides a compare view
+			fragment = compare.CompareFragment {
+				fileExtensions = file.extensions
+			}
+
 		}
 	}
 }

@@ -34,6 +34,7 @@
 		<module>../org.vclipse.console</module>
 		<module>../org.vclipse.idoc</module>
 		<module>../org.vclipse.idoc.ui</module>
+		<module>../org.vclipse.idoc.tests</module>
 		<module>../org.vclipse.idoc2jcoidoc</module>
 		<module>../org.vclipse.jpplib</module>
 		<module>../org.vclipse.vcml</module>
