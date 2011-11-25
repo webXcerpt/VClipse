@@ -10,9 +10,9 @@ import org.vclipse.vcml.VCMLInjectorProvider;
 
 @RunWith(XtextRunner2.class)
 @InjectWith(VCMLInjectorProvider.class)
-public class Test1 extends XtextTest {
+public class SimpleTest extends XtextTest {
 
-	public Test1() {
+	public SimpleTest() {
 		super("Test1");
 	}
 
