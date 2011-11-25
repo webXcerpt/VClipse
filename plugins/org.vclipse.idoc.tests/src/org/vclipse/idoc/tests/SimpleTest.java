@@ -13,7 +13,7 @@ import org.vclipse.idoc.IDocInjectorProvider;
 public class SimpleTest extends XtextTest {
 
 	public SimpleTest() {
-		super("Test1");
+		super(SimpleTest.class.getSimpleName());
 	}
 
 	@Test
