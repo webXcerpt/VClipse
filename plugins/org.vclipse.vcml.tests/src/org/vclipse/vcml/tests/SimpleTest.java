@@ -12,6 +12,10 @@ import org.vclipse.vcml.VCMLInjectorProvider;
 @InjectWith(VCMLInjectorProvider.class)
 public class SimpleTest extends XtextTest {
 	
+	public SimpleTest() {
+		super(SimpleTest.class.getSimpleName());
+	}
+
 	@Test
 	public void simpleFileTest() {
 		suppressSerialization(); // currently, serialization leads to an error (NPE) -> VCMLSerializer -> usePrettyPrinter() -> Platform is not available during the test.

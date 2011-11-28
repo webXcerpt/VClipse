@@ -12,6 +12,10 @@ import org.vclipse.idoc.IDocInjectorProvider;
 @InjectWith(IDocInjectorProvider.class)
 public class SimpleTest extends XtextTest {
 
+	public SimpleTest() {
+		super(SimpleTest.class.getSimpleName());
+	}
+
 	@Test
 	public void simpleFileTest() {
 		ignoreSerializationDifferences();
