@@ -11,10 +11,6 @@ import org.vclipse.idoc.IDocInjectorProvider;
 @InjectWith(IDocInjectorProvider.class)
 public class KeywordTests extends XtextTest {
 
-	public KeywordTests() {
-		super(KeywordTests.class.getSimpleName());
-	}
-	
 	@Test
 	public void keywordsTests() {
 		testKeyword("idoc");
@@ -23,5 +19,6 @@ public class KeywordTests extends XtextTest {
 		testKeyword("{");
 		testKeyword("}");
 		testKeyword("=");
+		
 	}
 }
