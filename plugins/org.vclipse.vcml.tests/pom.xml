@@ -4,6 +4,7 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	
 	<modelVersion>4.0.0</modelVersion>
+	
 	<parent>
 		<groupId>org.vclipse</groupId>
 		<artifactId>org.vclipse.releng</artifactId>
@@ -13,64 +14,50 @@
 
 	<artifactId>org.vclipse.vcml.tests</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
-		</dependency>
-	</dependencies>
-
 	<version>0.4.0.qualifier</version>
-
-	<build>
-		<testSourceDirectory>${project.basedir}/src</testSourceDirectory>
-		<testResources>
-			<testResource>
-				<directory>${project.basedir}/resources</directory>
-			</testResource>
-		</testResources>
-		<plugins>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>tycho-surefire-plugin</artifactId>
-				<version>2.9</version>
-				<configuration>
-					<testFailureIgnore>false</testFailureIgnore>
-				</configuration>
-				<executions>
-					<execution>
-						<id>test</id>
-						<phase>test</phase>
-						<configuration>
-							<testClassesDirectory>${project.basedir}/src</testClassesDirectory>
-							<reportFormat>xml</reportFormat>
-						</configuration>
-						<goals>
-							<goal>test</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>1.3</version>
-				<executions>
-					<execution>
-						<id>add-source</id>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>compiler-testCompile</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src-gen</source>
-							</sources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+	
+	 <dependencies>
+                <!-- It is important to have JUnit >= 4.7 as dependency to select the right 
+                        JUnit Provider see http://maven.apache.org/plugins/maven-surefire-plugin/examples/junit.html -->
+                <dependency>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                        <version>4.8.1</version>
+                </dependency>
+        </dependencies>
+        <build>
+                <plugins>
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-surefire-plugin</artifactId>
+                                <version>2.9</version>
+                                <inherited>true</inherited>
+                                <executions>
+                                        <execution>
+                                                <id>test</id>
+                                                <phase>test</phase>
+                                                <configuration>
+                                                        <excludes>
+                                                                <exclude>**/Abstract*</exclude>
+                                                        </excludes>
+                                                        <forkMode>once</forkMode>
+                                                        <reportFormat>xml</reportFormat>
+                                                        <testClassesDirectory>target/classes
+                                                        </testClassesDirectory>
+                                                </configuration>
+                                                <goals>
+                                                        <goal>test</goal>
+                                                </goals>
+                                        </execution>
+                                </executions>
+                        </plugin>
+                       <plugin>
+                                <groupId>org.eclipse.tycho</groupId>
+                                <artifactId>tycho-surefire-plugin</artifactId>
+                                <configuration>
+                                        <skip>true</skip>
+                                </configuration>
+                        </plugin>
+                </plugins>
+        </build>
 </project>
