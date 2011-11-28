@@ -20,5 +20,14 @@ public class KeywordTests extends XtextTest {
 		testKeyword("}");
 		testKeyword("=");
 		
+		testTerminal("0", "INT");
+		testTerminal("100", "INT");
+		
+		testTerminal("/testid", "ID");
+		testTerminal("/////testid", "ID");
+		
+		testNotTerminal("\\", "ANY_OTHER");
+		
+		testNotTerminal("-100", "INT");
 	}
 }
