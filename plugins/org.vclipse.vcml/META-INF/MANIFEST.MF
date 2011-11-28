@@ -33,8 +33,7 @@ Export-Package: org.vclipse.vcml,
  org.vclipse.vcml.vcml,
  org.vclipse.vcml.vcml.impl,
  org.vclipse.vcml.vcml.util,
- org.vclipse.vcml.scoping,
- org.vclipse.vcml.generator
+ org.vclipse.vcml.scoping
 Bundle-Activator: org.vclipse.vcml.VCMLPlugin
 Bundle-ClassPath: .
 Import-Package: org.apache.commons.logging,

@@ -81,7 +81,7 @@ Workflow {
 			fragment = builder.BuilderIntegrationFragment {}
 
 			// generator API
-			fragment = generator.GeneratorFragment {}
+			// fragment = generator.GeneratorFragment {}
 			
 			// formatter API 
 			fragment = formatting.FormatterFragment {}
