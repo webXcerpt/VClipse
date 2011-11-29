@@ -11,6 +11,7 @@
 package org.vclipse.idoc.validation;
 
 import org.eclipse.xtext.validation.Check;
+import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.vclipse.idoc.iDoc.Field;
 import org.vclipse.idoc.iDoc.IDocPackage;
 import org.vclipse.idoc.iDoc.Segment;
@@ -25,13 +26,15 @@ public class IDocJavaValidator extends AbstractIDocJavaValidator {
 		if ("E1CUKNM".equals(segment.getType())) {
 			for (Field field : segment.getFields()) {
 				if ("LINE".equals(field.getName()) && field instanceof StringField) {
-					final int length = ((StringField)field).getValue().length();
+					StringField stringfield= (StringField)field;
+					final int length = stringfield.getValue().length();
 					if (length > LENGTH_LIMIT) {
-						error("Length of E1CUKNM LINE should be " + LENGTH_LIMIT + " characters maximum, but is " + length+ " characters", IDocPackage.Literals.STRING_FIELD__VALUE);
+						error("Length of E1CUKNM LINE should be " + LENGTH_LIMIT + " characters maximum, but is " + length + " characters", stringfield, 
+								IDocPackage.Literals.STRING_FIELD__VALUE, 
+									ValidationMessageAcceptor.INSIGNIFICANT_INDEX); 
 					}
 				}
 			}
 		}
 	}
-	
 }
