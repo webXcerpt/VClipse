@@ -12,6 +12,5 @@
 
 	<artifactId>org.vclipse.vcml.ui</artifactId>
 	<packaging>eclipse-plugin</packaging>
-	<name>VCML UI Plug in</name>
 	<version>0.4.0.qualifier</version>
 </project>
