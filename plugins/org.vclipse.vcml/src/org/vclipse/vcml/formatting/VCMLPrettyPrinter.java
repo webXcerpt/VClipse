@@ -86,13 +86,17 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	private DataLayouter<NoExceptions> layouter;
 	
 	private static VcmlPackage VCMLPACKAGE = VcmlPackage.eINSTANCE;
+	
+	private int lineLenght = 70;
 
 	public String prettyPrint(final EObject o) {
 		final StringBuilder sb = new StringBuilder();
-		final int lineLenght = Platform.getPreferencesService().getInt(VCMLPlugin.PREFERENCES_ID, ISapConstants.PP_LINE_LENGTH, 70, null);
+		if(Platform.getPreferencesService() != null) {
+			lineLenght = Platform.getPreferencesService().getInt(VCMLPlugin.PREFERENCES_ID, ISapConstants.PP_LINE_LENGTH, 70, null);
+		}
 		layouter =
-			new DataLayouter<NoExceptions>(
-					new StringBackend(sb, lineLenght), INDENTATION);
+		new DataLayouter<NoExceptions>(
+				new StringBackend(sb, lineLenght), INDENTATION);
 		doSwitch(o);
 		layouter.close();
 		return sb.toString();
