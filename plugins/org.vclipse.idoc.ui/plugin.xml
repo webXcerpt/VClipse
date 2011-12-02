@@ -151,12 +151,6 @@
 
 
 
-   <extension
-         point="org.eclipse.xtext.builder.participant">
-      <participant
-            class="org.vclipse.idoc.ui.IDocExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant">
-      </participant>
-   </extension>
 
 	<!-- Quick Outline -->
 	<extension
