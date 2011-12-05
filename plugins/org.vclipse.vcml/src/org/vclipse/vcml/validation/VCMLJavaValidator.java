@@ -13,6 +13,7 @@ package org.vclipse.vcml.validation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
@@ -20,6 +21,7 @@ import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.vclipse.vcml.documentation.VCMLDescriptionProvider;
+import org.vclipse.vcml.utils.ExpressionExtensions;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.BinaryExpression;
 import org.vclipse.vcml.vcml.Characteristic;
@@ -63,6 +65,7 @@ import org.vclipse.vcml.vcml.VariantTableContent;
 import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
@@ -73,6 +76,9 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	@Inject
 	private VCMLDescriptionProvider descriptionProvider;
 	
+	@Inject 
+	private ExpressionExtensions expressionExtensions;
+	 
 	private static final int MAXLENGTH_CLASS_CHARACTERISTICS = 999; // SAP limit because cstic index in class table has size 3
 	private static final int MAXLENGTH_CLASS_NAME = 18;
 	private static final int MAXLENGTH_NAME = 30;
@@ -85,7 +91,7 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
      * @Check(CheckType.NORMAL) //upon save
      * @Check(CheckType.FAST) //while editig 
 	 */
-
+	
 	@Check(CheckType.FAST)
 	public void checkCharacteristic(final Characteristic object) {
 		if (object.getName().length() > MAXLENGTH_NAME) {
@@ -119,7 +125,7 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 			error("Name of constraint is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 		ConstraintSource source = object.getSource();
-		if (source!=null) {
+		if(source!=null) {
 			List<ConstraintRestriction> restrictions = source.getRestrictions();
 			int size = Iterables.size(Iterables.filter(restrictions, ConditionalConstraintRestriction.class));
 			if(size > 0 && restrictions.size() > size) {
@@ -127,6 +133,31 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 						".", VCML_PACKAGE.getVCObject_Name());
 				// TODO possible quickfix: split this constraint
 			}
+		}
+	}
+	
+	@Check(CheckType.FAST)
+	public void checkNotRestrictedInferences(Constraint constraint) {
+		// Collect the existing characteristics in the inferences part
+		ConstraintSource source = constraint.getSource();
+		Map<Characteristic, CharacteristicReference_C> cstics2Reference = Maps.newHashMap();
+		for(CharacteristicReference_C inference : source.getInferences()) {
+			for(Characteristic cstic : expressionExtensions.getUsedCharacteristics(inference)) {
+				cstics2Reference.put(cstic, inference);
+			}
+		}
+		
+		// Remove the referenced characteristics
+		for(ConditionalConstraintRestriction currentRestriction : Iterables.filter(source.getRestrictions(), ConditionalConstraintRestriction.class)) {
+			for(Characteristic cstic : expressionExtensions.getUsedCharacteristics(currentRestriction.getRestriction())) {
+				cstics2Reference.remove(cstic);
+			}
+		}
+		
+		// Show errors for not referenced characteristics
+		for(Entry<Characteristic, CharacteristicReference_C> entrySet : cstics2Reference.entrySet()) {
+			error("Characteristic " + entrySet.getKey().getName() + " does not mentioned in the restrictions part.", 
+					entrySet.getValue(), VcmlPackage.eINSTANCE.getObjectCharacteristicReference_Characteristic(), ValidationMessageAcceptor.INSIGNIFICANT_INDEX);
 		}
 	}
 
