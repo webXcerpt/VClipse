@@ -21,7 +21,7 @@ import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.vclipse.vcml.documentation.VCMLDescriptionProvider;
-import org.vclipse.vcml.utils.ExpressionExtensions;
+import org.vclipse.vcml.utils.ConstraintRestrictionExtensions;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.BinaryExpression;
 import org.vclipse.vcml.vcml.Characteristic;
@@ -77,7 +77,7 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	private VCMLDescriptionProvider descriptionProvider;
 	
 	@Inject 
-	private ExpressionExtensions expressionExtensions;
+	private ConstraintRestrictionExtensions expressionExtensions;
 	 
 	private static final int MAXLENGTH_CLASS_CHARACTERISTICS = 999; // SAP limit because cstic index in class table has size 3
 	private static final int MAXLENGTH_CLASS_NAME = 18;
@@ -148,8 +148,8 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 		}
 		
 		// Remove the referenced characteristics
-		for(ConditionalConstraintRestriction currentRestriction : Iterables.filter(source.getRestrictions(), ConditionalConstraintRestriction.class)) {
-			for(Characteristic cstic : expressionExtensions.getUsedCharacteristics(currentRestriction.getRestriction())) {
+		for(ConstraintRestriction currentRestriction : source.getRestrictions()) {
+			for(Characteristic cstic : expressionExtensions.getUsedCharacteristics(currentRestriction)) {
 				cstics2Reference.remove(cstic);
 			}
 		}
