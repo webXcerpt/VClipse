@@ -156,7 +156,7 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 		
 		// Show errors for not referenced characteristics
 		for(Entry<Characteristic, CharacteristicReference_C> entrySet : cstics2Reference.entrySet()) {
-			error("Characteristic " + entrySet.getKey().getName() + " does not mentioned in the restrictions part.", 
+			error("Inferred characteristic " + entrySet.getKey().getName() + " is not mentioned in the restrictions part.", 
 					entrySet.getValue(), VcmlPackage.eINSTANCE.getObjectCharacteristicReference_Characteristic(), ValidationMessageAcceptor.INSIGNIFICANT_INDEX);
 		}
 	}
