@@ -97,9 +97,9 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 		if (object.getName().length() > MAXLENGTH_NAME) {
 			error("Name of characteristic is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
-		if (object.isMultiValue() && object.isRestrictable()) {
-			error("Multivalued characteristic " + object.getName() + " must not be restrictable", VcmlPackage.Literals.CHARACTERISTIC__RESTRICTABLE);
-		}
+//		if (object.isMultiValue() && object.isRestrictable()) {
+//			error("Multivalued characteristic " + object.getName() + " must not be restrictable", VcmlPackage.Literals.CHARACTERISTIC__RESTRICTABLE);
+//		}
 	}
 
 	@Check(CheckType.FAST)
