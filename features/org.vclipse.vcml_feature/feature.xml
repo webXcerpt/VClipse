@@ -2,7 +2,7 @@
 <feature
       id="org.vclipse.vcml_feature"
       label="VClipse VCML Editor"
-      version="0.4.0.qualifier"
+      version="0.4.1.qualifier"
       provider-name="webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)">
 
    <description url="http://www.example.com/description">
@@ -196,7 +196,7 @@ waives its rights to a jury trial in any resulting litigation.
       <import plugin="org.eclipse.xtext.common.types.ui" version="2.1.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.xtext.builder" version="2.1.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.xtext.ui.codetemplates.ui" version="2.1.1" match="greaterOrEqual"/>
-      <import plugin="org.vclipse.console" version="0.4.0" match="greaterOrEqual"/>
+      <import plugin="org.vclipse.console" version="0.4.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.ui"/>

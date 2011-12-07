@@ -2,7 +2,7 @@
 <feature
       id="org.vclipse.pdr_feature"
       label="VClipse PDR Sender"
-      version="0.4.0.qualifier"
+      version="0.4.1.qualifier"
       provider-name="webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)">
 
    <description url="http://www.example.com/description">

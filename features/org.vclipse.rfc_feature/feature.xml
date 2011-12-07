@@ -2,7 +2,7 @@
 <feature
       id="org.vclipse.rfc_feature"
       label="VClipse RFC Actions"
-      version="0.4.0.qualifier"
+      version="0.4.1.qualifier"
       provider-name="webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)">
 
    <description url="http://www.example.com/description">
@@ -27,7 +27,7 @@
       <import plugin="org.apache.commons.logging"/>
       <import plugin="org.eclipse.ui.console" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.vclipse.jpplib"/>
-      <import plugin="org.vclipse.vcml.ui" version="0.4.0" match="greaterOrEqual"/>
+      <import plugin="org.vclipse.vcml.ui" version="0.4.1" match="greaterOrEqual"/>
       <import plugin="org.vclipse.vcml"/>
    </requires>
 

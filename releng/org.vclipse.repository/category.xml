@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.vclipse.idoc_feature-0.4.0.qualifier.jar" id="org.vclipse.idoc_feature" version="0.4.0.qualifier">
+   <feature url="features/org.vclipse.idoc_feature-0.4.1.qualifier.jar" id="org.vclipse.idoc_feature" version="0.4.1.qualifier">
       <category name="org.vclipse"/>
    </feature>
-   <feature url="features/org.vclipse.vcml2idoc_feature-0.4.0.qualifier.jar" id="org.vclipse.vcml2idoc_feature" version="0.4.0.qualifier">
+   <feature url="features/org.vclipse.vcml2idoc_feature-0.4.1.qualifier.jar" id="org.vclipse.vcml2idoc_feature" version="0.4.1.qualifier">
       <category name="org.vclipse"/>
    </feature>
-   <feature url="features/org.vclipse.vcml_feature-0.4.0.qualifier.jar" id="org.vclipse.vcml_feature" version="0.4.0.qualifier">
+   <feature url="features/org.vclipse.vcml_feature-0.4.1.qualifier.jar" id="org.vclipse.vcml_feature" version="0.4.1.qualifier">
       <category name="org.vclipse"/>
    </feature>
-   <feature url="features/org.vclipse.pdr_feature-0.4.0.qualifier.jar" id="org.vclipse.pdr_feature" version="0.4.0.qualifier">
+   <feature url="features/org.vclipse.pdr_feature-0.4.1.qualifier.jar" id="org.vclipse.pdr_feature" version="0.4.1.qualifier">
       <category name="org.vclipse"/>
    </feature>
-   <feature url="features/org.vclipse.rfc_feature-0.4.0.qualifier.jar" id="org.vclipse.rfc_feature" version="0.4.0.qualifier">
+   <feature url="features/org.vclipse.rfc_feature-0.4.1.qualifier.jar" id="org.vclipse.rfc_feature" version="0.4.1.qualifier">
       <category name="org.vclipse"/>
    </feature>
    <category-def name="org.vclipse" label="VClipse"/>
