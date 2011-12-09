@@ -220,7 +220,7 @@ public abstract class CodePrettyPrinter extends VcmlSwitch<DataLayouter<NoExcept
 		layouter.beginI(0);
 		precedenceLevel = leftPrec;
 		doSwitch(object.getLeft());
-		layouter.brk().print(operator).brk();
+		layouter.print(" ").print(operator).brk(); // no brk before operator since then * could go on first column which is a syntax error
 		precedenceLevel = rightPrec;
 		doSwitch(object.getRight());
 		layouter.end();
