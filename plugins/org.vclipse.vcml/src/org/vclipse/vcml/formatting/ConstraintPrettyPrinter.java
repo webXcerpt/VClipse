@@ -57,16 +57,18 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 		}
 		layouter.brk(1, -INDENTATION).end();
 		if(object.getCondition() != null) {
-			layouter.brk().beginC().print("condition:").brk();
+			layouter.brk().beginI().print("condition:").brk();
 			precedenceLevel = PREC_MAX;
 			doSwitch(object.getCondition());
 			layouter.print(".").brk(1, -INDENTATION).end().brk();
 		}
 		final EList<ConstraintRestriction> restrictions = object.getRestrictions();
-		layouter.brk().beginC().print("restrictions:").brk();
+		layouter.brk().beginI().print("restrictions:").brk();
 		for(int i=0, size=restrictions.size()-1; i<=size; i++) {
 			precedenceLevel = PREC_MAX;
+			layouter.beginI();
 			doSwitch(restrictions.get(i));
+			layouter.end();
 			if(i<size) {
 				layouter.print(",").brk();
 			} else {
@@ -76,7 +78,7 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 		layouter.brk(1, -INDENTATION).end();
 		EList<CharacteristicReference_C> cstic_refs = object.getInferences();
 		if(!cstic_refs.isEmpty()) {
-			layouter.brk().beginC().print("inferences:").brk();
+			layouter.brk().beginI().print("inferences:").brk();
 			for(int i=0, size=cstic_refs.size()-1; i<=size; i++) {
 				doSwitch(cstic_refs.get(i));
 				if(i < size) {
@@ -272,9 +274,9 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 	@Override
 	public DataLayouter<NoExceptions> caseConditionalConstraintRestriction(
 			final ConditionalConstraintRestriction object) {
-		layouter.beginC();
+		layouter.beginI();
 		doSwitch(object.getRestriction());
-		layouter.brk().print(" if ").brk();;
+		layouter.brk().print("if").brk();;
 		doSwitch(object.getCondition());
 		return layouter.end();
 	}
