@@ -6,8 +6,13 @@ generate vcml "http://www.vclipse.org/vcml"
 
 Model 
 	:	{Model}
-		('options' '{' (options+=Option)* '}')?
+		imports+=Import*
+	    ('options' '{' (options+=Option)* '}')?
     	(objects+=VCObject)*
+    ;
+
+Import
+    :   'import' importURI=STRING
     ;
 
 Option
