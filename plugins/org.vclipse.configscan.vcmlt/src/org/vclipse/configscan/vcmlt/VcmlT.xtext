@@ -1,0 +1,152 @@
+grammar org.vclipse.configscan.vcmlt.VcmlT with org.eclipse.xtext.common.Terminals
+
+import "platform:/resource/org.vclipse.vcml/src-gen/org/vclipse/vcml/VCML.ecore" as VCML
+
+generate vcmlT "http://www.vclipse.org/configscan/vcmlt/VcmlT"
+
+// ToDo
+// MV Cstics
+
+Model
+	:	imports+=Import*
+		testgroups+=TestGroup*
+	;
+	
+Import
+	:	'import' importURI=STRING
+	;
+
+TestGroup
+	:	'testgroup' name=EXTENDED_ID description=STRING? testmode=TestMode? '{'
+			actions+=Action*
+		'}'
+	;
+	
+enum TestMode
+	:   success
+	|	failure
+	;	
+	
+Action
+    :   SetValue
+    |   CheckSingleValue
+    |   CheckDomain
+    |   CheckDomainStrict
+    |   CheckConflict
+    |   CheckComplete
+    |   CheckBomItemQty
+    |   CheckBomItem
+    |   CheckBomCountItems
+	;
+	
+SetValue
+	:	cstic=[VCML::Characteristic] '=' value=Literal ('@' bompath=BomPath)?
+	;
+	
+CheckSingleValue
+	:	'check' cstic=[VCML::Characteristic] status+=(CsticState)* ('=' value=SymbolicLiteral)? ('@' bompath=BomPath)?
+	|	'check' cstic=[VCML::Characteristic] operator=Operator value=NumericLiteral ('@' bompath=BomPath)?
+	|	'check' cstic=[VCML::Characteristic] 'in' value=NumericInterval ('@' bompath=BomPath)?
+	;
+	
+CheckDomain
+    :   'checkDomain' cstic=[VCML::Characteristic] '{'
+            values+=DomainValue*
+        '}' ('@' bompath=BomPath)?
+    ;
+    
+CheckDomainStrict
+    :   'checkDomain' 'strict' cstic=[VCML::Characteristic] '{'
+            values+=DomainStrictValue*
+        '}' ('@' bompath=BomPath)?
+    ;
+
+DomainValue
+    :   not?='not'? literal=Literal
+    ;
+
+DomainStrictValue
+    :   literal=Literal
+    ;
+    	
+CheckConflict
+    :   {CheckConflict}
+        'check' (conflict?='consistent' | 'inconsistent') ('@' bompath=BomPath)?
+    ;
+    
+CheckComplete
+    :   {CheckComplete}
+        ('check' complete?='complete' | 'incomplete') ('@' bompath=BomPath)?
+    ;
+	
+enum CsticState
+    :   visible
+    |   invisible = 'hidden'            // 'hidden' reserved by xtext
+    |   enabled
+    |   disabled
+    |   set
+    |   unset
+    ;
+	
+enum Operator
+    :   LT='<'
+    |   LE='<='
+    |   NE='!='  // ToDo: Doublecheck ConfigScan syntax
+    |   EQ='='
+    |   GE='>='
+    |   GT='>'
+    ;
+    
+NumericInterval
+	:
+		'(' '>'? value=NumericLiteral '-' '<'? value=NumericLiteral ')'  // ToDo: Doublecheck ConfigScan syntax, and what makes sense here
+	;
+    
+NUMBER
+    :   INT ('.' INT)?
+    ;
+    
+EXTENDED_ID
+    :   ID | SYMBOL
+    ;
+    
+Literal returns VCML::Literal
+    :   NumericLiteral
+    |   SymbolicLiteral
+    ;
+    
+NumericLiteral returns VCML::NumericLiteral
+    :   value=NUMBER
+    ;
+
+SymbolicLiteral returns VCML::SymbolicLiteral
+    :   value=SYMBOL
+	;
+    
+terminal STRING // Xtext standard, but only enclosed in double quotes
+    :   '"' ( '\\' ('b'|'t'|'n'|'f'|'r'|'"'|'\\') | !('\\'|'"') )* '"'
+    ;
+
+terminal SYMBOL // enclosed in single quotes, no escapes, no line breaks, no tabs
+    :   "'" ( !("'"|'\t'|'\n'|'\r') )* "'"
+    ; 
+
+// ToDo: apply also to other bom item types	
+CheckBomItemQty
+    :    'check' 'quantity' operator=Operator amount=INT ('@' bompath=BomPath)?
+    ;        
+		
+
+// ToDo: should only apply to materials with bom
+CheckBomCountItems
+	:	'check' 'countitems' '=' value=INT ('@' bompath=BomPath)?		
+	;
+	
+CheckBomItem
+	:	'check' ('not')? 'bomitem' ('@' bompath=BomPath)?		
+	;
+
+BomPath
+	:	{BomPath}
+		'/' ('(' position=INT ')')? material=[VCML::Material|EXTENDED_ID]? child=BomPath?
+	;
