@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.vclipse.configscan.vcmlt
-Bundle-Vendor: My Company
-Bundle-Version: 1.0.0
+Bundle-Name: VClipse ConfigScan Integration VCMLT Language Plug-in
+Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com) and other committers
+Bundle-Version: 0.4.1.qualifier
 Bundle-SymbolicName: org.vclipse.configscan.vcmlt; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext;bundle-version="2.1.0";visibility:=reexport,
@@ -35,4 +35,3 @@ Export-Package: org.vclipse.configscan.vcmlt,
  org.vclipse.configscan.vcmlt.validation,
  org.vclipse.configscan.vcmlt.scoping,
  org.vclipse.configscan.vcmlt.formatting
-
