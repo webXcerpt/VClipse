@@ -926,7 +926,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 
 	@Override
 	public List<IDoc> caseInterfaceDesign(final InterfaceDesign idesign) {
-		if(!generateIDocsFor(IVCML2IDocPreferences.VCUI_SAVEM)) {
+		if(!generateIDocsFor(IVCML2IDocPreferences.VCUI_SAVEM) || idesign.getCharacteristicGroups().isEmpty()) {
 			return Collections.emptyList();
 		}
 		final IDoc iDoc = createIDocRootSegment("VCUI_SAVEM02", "VCUI_SAVEM");
