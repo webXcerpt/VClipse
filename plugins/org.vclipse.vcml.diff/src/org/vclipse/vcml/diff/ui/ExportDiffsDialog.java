@@ -138,7 +138,7 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 		group.setLayout(new GridLayout(3, false));
 		
 		Label label = new Label(group, SWT.NONE);
-		label.setText("Compare file ");
+		label.setText("Compare file (old)");
 		
 		firstPathText = new Text(group, SWT.BORDER | SWT.READ_ONLY);
 		firstPathText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -164,7 +164,7 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 		});
 		
 		label = new Label(group, SWT.NONE);
-		label.setText("... with file:");
+		label.setText("... with file (new):");
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = SWT.END;
 		label.setLayoutData(gridData);
