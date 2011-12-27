@@ -43,7 +43,9 @@ public class ProcedurePrettyPrinter extends CodePrettyPrinter {
 	@Override
 	public DataLayouter<NoExceptions> caseConditionSource(ConditionSource object) {
 		precedenceLevel = PREC_MAX;
-		return doSwitch(object.getCondition()).print(".");
+		layouter.beginC(0);
+		doSwitch(object.getCondition()).print(".");
+		return layouter.end();
 	}
 
 	/**
