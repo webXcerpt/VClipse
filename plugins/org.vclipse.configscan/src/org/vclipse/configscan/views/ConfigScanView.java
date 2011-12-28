@@ -82,7 +82,7 @@ import org.vclipse.configscan.views.XmlLoader;
  * <p>
  */
 
-public class XmlView extends ViewPart {
+public class ConfigScanView extends ViewPart {
 
 	/**
 	 * The ID of the view as specified by the extension.
@@ -126,7 +126,7 @@ public class XmlView extends ViewPart {
 	/**
 	 * The constructor.
 	 */
-	public XmlView() {
+	public ConfigScanView() {
 	}
 
 	/**
@@ -177,7 +177,7 @@ public class XmlView extends ViewPart {
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
-				XmlView.this.fillContextMenu(manager);
+				ConfigScanView.this.fillContextMenu(manager);
 			}
 		});
 		Menu menu = menuMgr.createContextMenu(viewer.getControl());

@@ -32,7 +32,7 @@ import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
 import org.vclipse.configscan.IConfigScanRunner;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.views.XmlLoader;
-import org.vclipse.configscan.views.XmlView;
+import org.vclipse.configscan.views.ConfigScanView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -66,7 +66,7 @@ public class ConfigScanLaunchConfigurationDelegate extends LaunchConfigurationDe
 						ISelection selection = page.getSelection();
 						if(selection instanceof IStructuredSelection) {
 							final Iterator<?> iterator = ((IStructuredSelection)selection).iterator();
-							final XmlView view = (XmlView) page.showView(CONFIGSCAN_VIEW_ID);
+							final ConfigScanView view = (ConfigScanView) page.showView(CONFIGSCAN_VIEW_ID);
 							Job job = new Job("Executing test cases with ConfigScan") {
 								@Override
 								protected IStatus run(IProgressMonitor monitor) {
