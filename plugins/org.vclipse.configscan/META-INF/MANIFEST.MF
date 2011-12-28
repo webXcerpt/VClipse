@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Configscan
+Bundle-Name: VClipse ConfigScan Integration Plug-in
 Bundle-SymbolicName: org.vclipse.configscan;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 0.4.1.qualifier
 Bundle-Activator: org.vclipse.configscan.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
@@ -21,3 +21,4 @@ Import-Package: com.google.inject,
 Export-Package: org.vclipse.configscan,
  org.vclipse.configscan.actions,
  org.vclipse.configscan.views
+Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)

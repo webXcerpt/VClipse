@@ -1,12 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Test
+Bundle-Name: VClipse ConfigScan Integration Tests Plug-in
 Bundle-SymbolicName: org.vclipse.configscan.test
-Bundle-Version: 1.0.0.qualifier
-Fragment-Host: org.vclipse.configscan;bundle-version="1.0.0"
+Bundle-Version: 0.4.1.qualifier
+Fragment-Host: org.vclipse.configscan;bundle-version="0.4.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit;bundle-version="4.8.2",
  org.eclipse.swtbot.eclipse.core;bundle-version="2.0.5",
  org.eclipse.swtbot.eclipse.finder;bundle-version="2.0.5",
  org.eclipse.swtbot.junit4_x;bundle-version="2.0.5",
  org.hamcrest;bundle-version="1.1.0"
+Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
