@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: VClipse ConfigScan Integration Tests Plug-in
-Bundle-SymbolicName: org.vclipse.configscan.test
+Bundle-SymbolicName: org.vclipse.configscan.tests
 Bundle-Version: 0.4.1.qualifier
 Fragment-Host: org.vclipse.configscan;bundle-version="0.4.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
