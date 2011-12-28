@@ -50,7 +50,7 @@ public class ViewLabelProviderTest {
 	 
 	private ViewLabelProvider vlp;
 	
-	private XmlView xmlView;
+	private ConfigScanView configScanView;
 	
 	private Map<Element, URI> inputToUri; 
 	
@@ -62,7 +62,7 @@ public class ViewLabelProviderTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		xmlView = (XmlView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(Config.CONFIGSCAN_VIEW_ID);
+		configScanView = (ConfigScanView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(Config.CONFIGSCAN_VIEW_ID);
 		
 		file = new File(TEST_CMLT);
 		
@@ -183,7 +183,7 @@ public class ViewLabelProviderTest {
 	    
 	    
 	    
-	    vlp = (ViewLabelProvider) xmlView.getTreeViewer().getLabelProvider();
+	    vlp = (ViewLabelProvider) configScanView.getTreeViewer().getLabelProvider();
 	    
 	    // vlp = new ViewLabelProvider(elMap, eObjectMap);
 	
@@ -191,7 +191,7 @@ public class ViewLabelProviderTest {
 
 	@After
 	public void tearDown() throws Exception {
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(xmlView);
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(configScanView);
 //		CheckComplete complete = CMLT.createCheckComplete();
 //		complete.setComplete(value)
 	}

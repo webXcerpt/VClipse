@@ -13,7 +13,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.vclipse.configscan.views.Config;
 import org.vclipse.configscan.views.ViewContentProvider;
-import org.vclipse.configscan.views.XmlView;
+import org.vclipse.configscan.views.ConfigScanView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -26,16 +26,16 @@ public class ViewContentProviderTest {
 	private Element child2;
 	private Element child3;
 	
-	private XmlView xmlView;
+	private ConfigScanView configScanView;
 	private ViewContentProvider vcp;
 	
 	
 	@Before
 	public void setUp() throws Exception {
 //		waitForJobs();
-		xmlView = (XmlView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(Config.CONFIGSCAN_VIEW_ID);
+		configScanView = (ConfigScanView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(Config.CONFIGSCAN_VIEW_ID);
 //		waitForJobs();
-		assertNotNull("XmlView must not be null", xmlView);
+		assertNotNull("ConfigScanView must not be null", configScanView);
 		
 		delay(3000);
 		
@@ -65,7 +65,7 @@ public class ViewContentProviderTest {
 	    
 		
 		vcp = new ViewContentProvider(doc); 
-//		xmlView.getTreeViewer().setContentProvider(new ViewContentProvider());			
+//		configScanView.getTreeViewer().setContentProvider(new ViewContentProvider());			
 	}
 
 	/** From eclipse -building commercial-quality plug-ins book
@@ -97,7 +97,7 @@ public class ViewContentProviderTest {
 	
 	@After
 	public void tearDown() throws Exception {
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(xmlView);
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(configScanView);
 		vcp = null;
 		doc = null;
 	
@@ -106,15 +106,15 @@ public class ViewContentProviderTest {
 	@Ignore
 	@Test
 	public void testInputChanged() {
-		System.out.println(xmlView.getTreeViewer().getInput());
+		System.out.println(configScanView.getTreeViewer().getInput());
 		vcp = new ViewContentProvider(doc); 
-		xmlView.getTreeViewer().setContentProvider(vcp);
-		System.out.println(xmlView.getTreeViewer().getInput());
+		configScanView.getTreeViewer().setContentProvider(vcp);
+		System.out.println(configScanView.getTreeViewer().getInput());
 	}
 
 	@Test
 	public void testGetElements() {
-//		xmlView.getTreeViewer().setContentProvider(vcp);
+//		configScanView.getTreeViewer().setContentProvider(vcp);
 		Object[] objs = vcp.getElements(doc.getDocumentElement());
 		assertEquals("objs[] size must be 2", 2, objs.length);
 		Element retrieve1 = (Element) objs[0];

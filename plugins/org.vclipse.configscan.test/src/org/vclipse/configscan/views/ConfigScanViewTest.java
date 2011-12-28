@@ -10,7 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.vclipse.configscan.views.Config;
-import org.vclipse.configscan.views.XmlView;
+import org.vclipse.configscan.views.ConfigScanView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.eclipse.core.runtime.Platform;
@@ -18,17 +18,17 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
-public class XmlViewTest {
+public class ConfigScanViewTest {
 
-	private XmlView xmlView;
+	private ConfigScanView configScanView;
 	
 	
 	@Before
 	public void setUp() throws Exception {
 //		waitForJobs();
-		xmlView = (XmlView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(Config.CONFIGSCAN_VIEW_ID);
+		configScanView = (ConfigScanView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(Config.CONFIGSCAN_VIEW_ID);
 //		waitForJobs();
-		assertNotNull("XmlView must not be null", xmlView);
+		assertNotNull("ConfigScanView must not be null", configScanView);
 		delay(3000);
 	}
 
@@ -71,7 +71,7 @@ public class XmlViewTest {
 
 	@After
 	public void tearDown() throws Exception {
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(xmlView);
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(configScanView);
 	}
 
 	@Test
@@ -82,7 +82,7 @@ public class XmlViewTest {
 	@Test
 	public void testFindNextDeepestChild() {
 		Document doc = createDoc();
-		Element next = xmlView.findNextDeepestChild((Element) doc.getDocumentElement());
+		Element next = configScanView.findNextDeepestChild((Element) doc.getDocumentElement());
 //		System.out.println(next.getNodeName() + " " + next.getAttribute("status"));
 		assertEquals("level of element must be 3", "3", next.getAttribute("level"));
 	}
@@ -193,7 +193,7 @@ public class XmlViewTest {
 
 	@Test
 	public void testGetTreeViewer() {
-		TreeViewer viewer = xmlView.getTreeViewer();
+		TreeViewer viewer = configScanView.getTreeViewer();
 		assertNotNull("TreeViewer must not be null", viewer);
 
 	}

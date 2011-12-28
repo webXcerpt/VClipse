@@ -34,7 +34,7 @@ public class XmlLoaderTest {
 	public void testParseXml() {
 		// TODO: do I have to test build-in methods? exception-testing
 		Document xml = null;
-//		xml = xmlLoader.parseXml(XmlView.XML_FILENAME);
+//		xml = xmlLoader.parseXml(ConfigScanView.XML_FILENAME);
 		
 		assertNotNull("xml must not be null", xml);
 	}
