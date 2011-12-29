@@ -18,20 +18,22 @@ Require-Bundle: org.eclipse.xtext;bundle-version="2.1.0";visibility:=reexport,
  org.eclipse.emf.common,
  org.antlr.runtime,
  org.eclipse.xtext.common.types,
- org.vclipse.vcml
+ org.vclipse.vcml,
+ org.vclipse.configscan
 Import-Package: org.apache.log4j,
  org.apache.commons.logging,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.xtext.xtend2.lib
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.configscan.vcmlt,
- org.vclipse.configscan.vcmlt.services,
- org.vclipse.configscan.vcmlt.vcmlT,
- org.vclipse.configscan.vcmlt.vcmlT.impl,
- org.vclipse.configscan.vcmlt.vcmlT.util,
- org.vclipse.configscan.vcmlt.serializer,
+ org.vclipse.configscan.vcmlt.builder,
+ org.vclipse.configscan.vcmlt.formatting,
  org.vclipse.configscan.vcmlt.parser.antlr,
  org.vclipse.configscan.vcmlt.parser.antlr.internal,
- org.vclipse.configscan.vcmlt.validation,
  org.vclipse.configscan.vcmlt.scoping,
- org.vclipse.configscan.vcmlt.formatting
+ org.vclipse.configscan.vcmlt.serializer,
+ org.vclipse.configscan.vcmlt.services,
+ org.vclipse.configscan.vcmlt.validation,
+ org.vclipse.configscan.vcmlt.vcmlT,
+ org.vclipse.configscan.vcmlt.vcmlT.impl,
+ org.vclipse.configscan.vcmlt.vcmlT.util
