@@ -41,7 +41,7 @@ import com.sap.conn.jco.JCoException;
 
 public class ConfigScanLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 
-	private static final String CONFIGSCAN_VIEW_ID = Activator.PLUGIN_ID + ".views.XmlView";
+	private static final String CONFIGSCAN_VIEW_ID = Activator.PLUGIN_ID + ".views.ConfigScanView";
 	
 	private static final String CMLT_EXTENSION = "cmlt";
 	

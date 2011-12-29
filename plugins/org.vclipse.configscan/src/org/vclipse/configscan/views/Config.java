@@ -7,7 +7,7 @@ public class Config {
 	/** The View-ID.
 	 * 
 	 */
-	public static final String CONFIGSCAN_VIEW_ID = Activator.PLUGIN_ID + ".views.XmlView";
+	public static final String CONFIGSCAN_VIEW_ID = Activator.PLUGIN_ID + ".views.ConfigScanView";
 	
 	/** If true: Writes the xml-data which is created in RAM to disc.
 	 * 
