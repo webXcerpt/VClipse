@@ -103,41 +103,41 @@ characteristic CSWS_QTY {
 }
 
 
-material 'MAT1' {
+material MAT1 {
   description "Material 1"
   type ZHAW
 }
 
-material 'MAT2' {
+material MAT2 {
   description "Material 2"
   type ZHAW
 }
 
-material 'MAT3' {
+material MAT3 {
   description "Material 3"
   type ZHAW
 }
 
-material 'MAT4' {
+material MAT4 {
   description "Material 4"
   type ZHAW
 }
 
-material 'MAT5' {
+material MAT5 {
   description "Material 5"
   type ZHAW
 }
 
-material 'ABC' {
+material ABC {
   description "configurable product"
   type ZKMT
   billofmaterial {
     items {
-      10 'MAT1'
-      20 'MAT2'
-      30 'MAT3'
-      40 'MAT4'
-      50 'MAT5'
+      10 MAT1
+      20 MAT2
+      30 MAT3
+      40 MAT4
+      50 MAT5
     }
   }
 }

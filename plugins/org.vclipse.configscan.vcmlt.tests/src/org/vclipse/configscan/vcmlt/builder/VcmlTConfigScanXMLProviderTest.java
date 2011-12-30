@@ -9,7 +9,7 @@ import org.eclipselabs.xtext.utils.unittesting.XtextRunner2;
 import org.eclipselabs.xtext.utils.unittesting.XtextTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.vclipse.configscan.vcmlt.VcmlTInjectorProvider;
+import org.vclipse.configscan.vcmlt.VcmlTInjectorProviderWithVCML;
 import org.vclipse.configscan.views.XmlLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -18,7 +18,7 @@ import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 @RunWith(XtextRunner2.class)
-@InjectWith(VcmlTInjectorProvider.class)
+@InjectWith(VcmlTInjectorProviderWithVCML.class)
 public class VcmlTConfigScanXMLProviderTest extends XtextTest {
 
 	@Inject
@@ -30,7 +30,7 @@ public class VcmlTConfigScanXMLProviderTest extends XtextTest {
 	@Test
 	public void transformToXML() {
 		ignoreSerializationDifferences();
-		testFile("simpleTestFile.vcmlt");
+		testFile("simpleTestFile.vcmlt", "ABC.vcml");
 		EObject root = getModelRoot();
 		HashMap<Element, URI> map = Maps.newHashMap();
 		Document document = csXmlProvider.transform(root, map);
