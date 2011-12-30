@@ -1,2 +1,17 @@
+import "ABC.vcml"
+
 testgroup 'ExampleTG' "Example Test Group" success {
+	CORE = 'NOCORE' @ /
+	check TEMPVAR hidden @ /
+	check POWERSUPPLY = 'DC' @ /
+	checkDomain APPLICATION {
+		'ADM-1'
+		'ADM-2'
+		not 'ADM-3'
+		not 'ADM-4'
+		} @ /
+	check quantity = 1 @ / 'MAT1'
+	check countitems = 5 @ /
+	check consistent @ /
+	check complete @ /
 }

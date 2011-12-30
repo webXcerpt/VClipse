@@ -1,0 +1,145 @@
+
+class (300)ABC {
+  description "class for ABC"
+  status released
+  characteristics {
+    TEMPVAR
+    POWERSUPPLY
+    CORE
+    APPLICATION
+    USERMANUAL
+    CABLELENGTH
+    CSWS_QTY
+  }
+}
+
+characteristic TEMPVAR {
+  description "Temperature Variant"
+  symbolic {
+    numberOfChars 30
+    [ caseSensitive ]
+    values { 'Standard' '70C' { description "70Â°C" } }
+  }
+  status released
+  [ restrictable ]
+}
+
+characteristic POWERSUPPLY {
+  description "Power Supply"
+  symbolic {
+    numberOfChars 30
+    [ caseSensitive ]
+    values { 'AC' { description "AC" } 'DC' { description "DC" } }
+  }
+  status released
+  [ restrictable ]
+}
+
+characteristic CORE {
+  description "Core"
+  symbolic {
+    numberOfChars 30
+    [ caseSensitive ]
+    values {
+      'NOCORE' { description "no core - cards only" }
+      '013' {
+        description "013: CORE (AC)"
+      }
+      '023' {
+        description "023: CORE (DC)"
+      }
+      '024' {
+        description "024: CORE (DC)"
+      }
+    }
+  }
+  status released
+  [ restrictable ]
+}
+
+characteristic APPLICATION {
+  description "Application"
+  symbolic {
+    numberOfChars 30
+    [ caseSensitive ]
+    values {
+      'ADM-1' { description "ADM-1" }
+      'ADM-4' { description "ADM-4" }
+    }
+  }
+  status released
+  [ restrictable ]
+}
+
+
+characteristic USERMANUAL {
+  description "User Manual"
+  numeric { numberOfChars 2 decimalPlaces 0 [ ] }
+  status released
+  [ restrictable ]
+}
+
+characteristic CABLELENGTH {
+  description "Length of 2Mbit Cables"
+  symbolic {
+    numberOfChars 30
+    [ caseSensitive ]
+    values {
+      '2m' { description "2 m (with panel)" }
+      '10m' { description "10 m (1x open end)" }
+      '30m' { description "30 m (1x open end)" }
+    }
+  }
+  status released
+  [ restrictable ]
+}
+
+
+characteristic CSWS_QTY {
+  description "CSWS_QTY"
+  numeric { numberOfChars 1 decimalPlaces 0 [ ] }
+  status released
+  [ restrictable noDisplay ]
+}
+
+
+material 'MAT1' {
+  description "Material 1"
+  type ZHAW
+}
+
+material 'MAT2' {
+  description "Material 2"
+  type ZHAW
+}
+
+material 'MAT3' {
+  description "Material 3"
+  type ZHAW
+}
+
+material 'MAT4' {
+  description "Material 4"
+  type ZHAW
+}
+
+material 'MAT5' {
+  description "Material 5"
+  type ZHAW
+}
+
+material 'ABC' {
+  description "configurable product"
+  type ZKMT
+  billofmaterial {
+    items {
+      10 'MAT1'
+      20 'MAT2'
+      30 'MAT3'
+      40 'MAT4'
+      50 'MAT5'
+    }
+  }
+}
+
+
