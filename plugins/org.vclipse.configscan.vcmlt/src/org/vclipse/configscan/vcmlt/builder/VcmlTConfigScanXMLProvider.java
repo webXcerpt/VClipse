@@ -13,9 +13,13 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.vcmlt.vcmlT.Model;
 import org.vclipse.configscan.vcmlt.vcmlT.TestGroup;
+import org.vclipse.configscan.vcmlt.vcmlT.Action;
+import org.vclipse.configscan.vcmlt.vcmlT.SetValue;
 import org.vclipse.configscan.vcmlt.vcmlT.util.VcmlTSwitch;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+
 
 public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 		IConfigScanXMLProvider {
@@ -77,9 +81,24 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 		current = tg;
 
 		// ...
+		
+	    for (final Action action : testGroup.getActions()) {
+			doSwitch(action);
+		}
 		return this;
 	}
 
+	@Override
+	public Object caseSetValue(final SetValue object) {
+		Element action = doc.createElement("command");
+		action.setAttribute("action", "setvalue");
+
+		action.setAttribute("name", (object.getCstic()).getName());
+		
+		map.put(action, EcoreUtil.getURI(object));
+		current.appendChild(action);
+		return this;
+	}
 
 
 	@Override
