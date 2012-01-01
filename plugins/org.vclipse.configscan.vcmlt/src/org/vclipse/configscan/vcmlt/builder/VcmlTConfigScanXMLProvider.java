@@ -11,11 +11,20 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.vclipse.configscan.IConfigScanXMLProvider;
+import org.vclipse.configscan.vcmlt.vcmlT.BomPath;
 import org.vclipse.configscan.vcmlt.vcmlT.Model;
 import org.vclipse.configscan.vcmlt.vcmlT.TestGroup;
 import org.vclipse.configscan.vcmlt.vcmlT.Action;
 import org.vclipse.configscan.vcmlt.vcmlT.SetValue;
 import org.vclipse.configscan.vcmlt.vcmlT.util.VcmlTSwitch;
+import org.vclipse.vcml.vcml.Literal;
+import org.vclipse.vcml.vcml.Material;
+import org.vclipse.vcml.vcml.NumericCharacteristicValue;
+import org.vclipse.vcml.vcml.NumericLiteral;
+import org.vclipse.vcml.vcml.ObjectType;
+import org.vclipse.vcml.vcml.SymbolicLiteral;
+import org.vclipse.vcml.vcml.TypeOf;
+import org.vclipse.vcml.vcml.impl.NumericCharacteristicValueImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -92,15 +101,39 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 	public Object caseSetValue(final SetValue object) {
 		Element action = doc.createElement("command");
 		action.setAttribute("action", "setvalue");
-
 		action.setAttribute("name", (object.getCstic()).getName());
+		action.setAttribute("value", getValue(object.getValue()));
+		action.setAttribute("bompath", getChildPath(object.getBompath()));
 		
 		map.put(action, EcoreUtil.getURI(object));
 		current.appendChild(action);
 		return this;
 	}
 
+	// ToDo: strip off surrounding quotes
+	private String getValue(Literal lit) {
+		if (lit instanceof SymbolicLiteral) {
+		    return ((SymbolicLiteral)lit).getValue();
+		} else if (lit instanceof NumericLiteral) {
+		    return ((NumericLiteral)lit).getValue();
+		} else {
+		    throw new IllegalArgumentException("unknown literal type: " + lit);
+		}
+	}
 
+	private String getChildPath(BomPath bompath) {
+		String ret = "/ ";
+		if (bompath != null && bompath.getMaterial() != null) {
+			if (bompath.getPosition() != 0) {
+				ret = ret + "(" + bompath.getPosition() + ") ";				
+			}
+			ret = ret + bompath.getMaterial().getName() + " ";
+			if (bompath.getChild() != null)
+				ret = ret + getChildPath(bompath.getChild());
+		}			
+		return (ret.trim());
+	}
+	
 	@Override
 	public HashMap<Element, Element> computeConfigScanMap(Document xmlLog,
 			Document xmlInput) {
