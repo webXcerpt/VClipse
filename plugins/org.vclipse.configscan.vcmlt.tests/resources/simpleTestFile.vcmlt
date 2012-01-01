@@ -2,6 +2,12 @@ import "ABC.vcml"
 
 testgroup 'ExampleTG' "Example Test Group" success {
 	CORE = 'NOCORE' @ /
+	CORE = 'NOCORE' @ / (0010) MAT1
+	CORE = 'NOCORE' @ / (0010) MAT1 / (0020) MAT2
+	CORE = 'NOCORE' @ / (0010) MAT1 / (0020) MAT2 / (0030) MAT3
+	CORE = 'NOCORE' @ / MAT1
+	CORE = 'NOCORE' @ / MAT1 / MAT2
+	CORE = 'NOCORE' @ / MAT1 / MAT2 / (0030) MAT3 / (0040) MAT4
 	check TEMPVAR hidden @ /
 	check POWERSUPPLY = 'DC' @ /
 	checkDomain APPLICATION {
