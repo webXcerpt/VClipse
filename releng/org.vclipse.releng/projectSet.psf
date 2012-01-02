@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <psf version="2.0">
 <provider id="org.tigris.subversion.subclipse.core.svnnature">
+<project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.configscan,org.vclipse.configscan"/>
+<project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.configscan.tests,org.vclipse.configscan.tests"/>
+<project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.configscan.vcmlt,org.vclipse.configscan.vcmlt"/>
+<project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.configscan.vcmlt.tests,org.vclipse.configscan.vcmlt.tests"/>
+<project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.configscan.vcmlt.ui,org.vclipse.configscan.vcmlt.ui"/>
+
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.base,org.vclipse.base"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.base.ui,org.vclipse.base.ui"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.connection,org.vclipse.connection"/>
@@ -33,6 +39,11 @@
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.vclipse.vcml2idoc_feature" type="4"/>
 </workingSets>
 <workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1321527001089_5" label="VClipse Plugins" name="VClipse Plugins">
+<item elementID="=org.vclipse.configscan" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.configscan.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.configscan.vcmlt" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.configscan.vcmlt.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.configscan.vcmlt.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.idoc" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.vcml.diff" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.connection" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
