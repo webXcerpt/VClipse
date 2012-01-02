@@ -746,7 +746,10 @@ public class ReferenceConstructor extends VcmlSwitch<EObject> {
 	 */
 	@Override
 	public EObject casePrecondition(final Precondition parent) {
-		doSwitch(parent.getSource());
+		ConditionSource source = parent.getSource();
+		if (source!=null) {
+			doSwitch(source);
+		}
 		return parent;
 	}
 
@@ -766,7 +769,10 @@ public class ReferenceConstructor extends VcmlSwitch<EObject> {
 	 */
 	@Override
 	public EObject caseSelectionCondition(final SelectionCondition parent) {
-		doSwitch(parent.getSource());
+		ConditionSource source = parent.getSource();
+		if (source!=null) {
+			doSwitch(source);
+		}
 		return parent;
 	}
 

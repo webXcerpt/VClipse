@@ -36,8 +36,6 @@ import org.vclipse.vcml.vcml.VcmlFactory;
  */
 public class ExportDiffsJob extends Job {
 
-	private static final VcmlFactory VCML = VcmlFactory.eINSTANCE;
-
 	/**
 	 * 
 	 */
@@ -106,30 +104,10 @@ public class ExportDiffsJob extends Job {
 			Resource resource_one = set.getResource(URI.createURI(leftFile.getLocationURI().toString()), true);
 			Resource resource_two = set.getResource(URI.createURI(rightFile.getLocationURI().toString()), true);
 			
-			// init the left model -> resource could be empty
-			Model left_model = null;
-			if(resource_one.getContents().isEmpty()) {
-				left_model = VCML.createModel();
-				resource_one.getContents().add(left_model);
-			} else {
-				left_model = (Model)resource_one.getContents().get(0);
-			}
-			monitor.worked(5);
-		
-			// init the right model -> resource could be empty
-			Model right_model = null;
-			if(resource_two.getContents().isEmpty()) {
-				right_model = VCML.createModel();
-				resource_two.getContents().add(right_model);
-			} else {
-				right_model = (Model)resource_two.getContents().get(0);
-			}
-			monitor.worked(5);
-			
 			monitor.subTask("Comparing models...");
 			Map<String, Object> options = new HashMap<String, Object>();   
 			options.put(MatchOptions.OPTION_DISTINCT_METAMODELS, false);
-			MatchModel matchModel = MatchService.doContentMatch(left_model, right_model, options);
+			MatchModel matchModel = MatchService.doResourceMatch(resource_one, resource_two, options);
 			
 			DiffModel diffModel = DiffService.doDiff(matchModel);
 			monitor.worked(10);

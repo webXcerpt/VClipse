@@ -92,6 +92,7 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 			if(monitor.isCanceled()) {
 				return HANDELED;
 			}
+			System.err.println("caseDiffModel with " + diffElement);
 			doSwitch(diffElement);
 		}
 		for(String key : objects2Add.keySet()) {
@@ -111,10 +112,12 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 	 */
 	@Override
 	public Boolean caseDiffElement(final DiffElement object) {
+		System.err.println(object.getClass().getSimpleName() + " " + object);
 		for(DiffElement element : object.getSubDiffElements()) {
 			if(monitor.isCanceled()) {
 				return HANDELED;
 			}
+			System.err.println(element.getClass().getSimpleName() + " " + element);
 			doSwitch(element);
 		}
 		return NOT_HANDELED;
@@ -222,6 +225,7 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 	 * @return
 	 */
 	private boolean addObject2HandleList(final EObject object) {
+//		System.err.println("addObject2HandleList " + object);
 		if(object instanceof Option) {
 			model2Build.getOptions().add((Option)object);
 		} else if(object instanceof VCObject) {
@@ -240,6 +244,7 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 	 * @param vcobject
 	 */
 	private void handleObject(EObject object) {
+		System.err.println("handleObject " + object);
 		if(object instanceof VCObject) {
 			VCObject vcobject = (VCObject)object;
 			objects2Add.put(vcobject.getName(), vcobject);

@@ -44,5 +44,14 @@
             name="VCML Diff">
       </page>
    </extension>
+   <extension
+         point="org.eclipse.emf.compare.match.engine">
+      <matchengine
+            engineClass="org.vclipse.vcml.diff.VcmlMatchEngine"
+            fileExtension="vcml"
+            label="VCML Match Engine"
+            priority="highest">
+      </matchengine>
+   </extension>
 
 </plugin>
