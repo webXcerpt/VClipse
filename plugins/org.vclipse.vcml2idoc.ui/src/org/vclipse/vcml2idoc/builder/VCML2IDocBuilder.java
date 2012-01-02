@@ -24,9 +24,6 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.core.runtime.content.IContentTypeSettings;
 import org.vclipse.vcml2idoc.IVcml2IDocTransformation;
 import org.vclipse.vcml2idoc.VCML2IDocUIPlugin;
 
@@ -40,25 +37,12 @@ public class VCML2IDocBuilder extends IncrementalProjectBuilder {
 	 */
 	public static final String ID = "org.vclipse.builder.vcml2idoc";
 	
-	/**
-	 * 
-	 */
-	private static final String SAP_MODEL_CTYPE_ID = "org.vclipse.contenttypes.vcml";
-	
-	/**
-	 * 
-	 */
 	private static final String IDOC_EXTENSION = "idoc";
+
+	private static final String VCML_EXTENSION = "vcml";
 	
-	/**
-	 * 
-	 */
 	private Set<IFile> pathsToBuild;
 	
-	/**
-	 * 
-	 */
-	private String vcmlExtension;
 	
 	private IVcml2IDocTransformation transformation;
 	
@@ -67,8 +51,6 @@ public class VCML2IDocBuilder extends IncrementalProjectBuilder {
 	 */
 	public VCML2IDocBuilder() {
 		pathsToBuild = new HashSet<IFile>();
-		final IContentType contentType = Platform.getContentTypeManager().getContentType(SAP_MODEL_CTYPE_ID);
-		vcmlExtension = contentType.getFileSpecs(IContentTypeSettings.FILE_EXTENSION_SPEC)[0];
 		transformation = VCML2IDocUIPlugin.getDefault().getInjector().getInstance(IVcml2IDocTransformation.class);
 	}
 
@@ -83,7 +65,7 @@ public class VCML2IDocBuilder extends IncrementalProjectBuilder {
 		if(IncrementalProjectBuilder.FULL_BUILD == kind) {
 			project.accept(new IResourceVisitor() {
 				public boolean visit(final IResource resource) {
-					collect(resource, vcmlExtension);
+					collect(resource, VCML_EXTENSION);
 					return false;
 				}
 			});
@@ -93,7 +75,7 @@ public class VCML2IDocBuilder extends IncrementalProjectBuilder {
 					switch(delta.getKind()) {
 						case IResourceDelta.ADDED : 
 						case IResourceDelta.CHANGED :
-							collect(delta.getResource(), vcmlExtension);
+							collect(delta.getResource(), VCML_EXTENSION);
 							return true;
 						default:
 							return false;

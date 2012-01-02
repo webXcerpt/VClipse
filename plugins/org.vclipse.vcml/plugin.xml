@@ -13,22 +13,13 @@
 
 <plugin>
 
-  <extension point="org.eclipse.emf.ecore.generated_package">
-    <package 
-       uri = "http://www.vclipse.org/vcml" 
-       class = "org.vclipse.vcml.vcml.VcmlPackage"
-       genModel = "org/vclipse/vcml/VCML.genmodel" /> 
-	
-  </extension>
   <extension
-        point="org.eclipse.core.contenttype.contentTypes">
-     <content-type
-           default-charset="UTF-8"
-           file-extensions="vcml"
-           id="org.vclipse.contenttypes.vcml"
-           name="Variant Configuration Modeling Language File"
-           priority="high">
-     </content-type>
+        point="org.eclipse.emf.ecore.generated_package">
+     <package
+           class="org.vclipse.vcml.vcml.VcmlPackage"
+           genModel="org/vclipse/vcml/VCML.genmodel"
+           uri="http://www.vclipse.org/vcml">
+     </package>
   </extension>
 
 
