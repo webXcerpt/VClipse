@@ -3,9 +3,6 @@
  */
 package org.vclipse.vcml.diff;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
@@ -39,11 +36,10 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 	
 
 	private EList<VCObject> modelElements; 
-	private Map<String, VCObject> objects2Add;
 	
 
 	private IDiffFilter diffFilter;
-	private ReferenceConstructor referenceConstructor;
+	//private ReferenceConstructor referenceConstructor;
 	private IProgressMonitor monitor;
 	
 
@@ -51,8 +47,6 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 		model2Build = model;
 		modelElements = model.getObjects();
 		diffFilter = new DefaultDiffFilter();
-		referenceConstructor = new ReferenceConstructor();
-		objects2Add = new HashMap<String, VCObject>();
 		this.monitor = monitor;
 	}
 
@@ -64,15 +58,6 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 			}
 			System.err.println("caseDiffModel with " + diffElement);
 			doSwitch(diffElement);
-		}
-		for(String key : objects2Add.keySet()) {
-			if(monitor.isCanceled()) {
-				return HANDLED;
-			}
-			VCObject vcobject = objects2Add.get(key);
-			if(!modelElements.contains(vcobject)) {
-				modelElements.add(vcobject);
-			}
 		}
 		return HANDLED;
 	}
@@ -160,36 +145,18 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 		return NOT_HANDLED;
 	}
 
-	private boolean addObject2HandleList(final EObject object) {
-//		System.err.println("addObject2HandleList " + object);
+	private boolean addObject2HandleList(EObject object) {
 		if(object instanceof Option) {
 			model2Build.getOptions().add((Option)object);
 		} else if(object instanceof VCObject) {
-			handleObject(object);
+			modelElements.add((VCObject)object);
 		} else {
 			EObject parent = object.eContainer();
 			while(parent != null && !(parent instanceof VCObject)) {
 				parent = parent.eContainer();
 			}
-			handleObject(parent);
+			modelElements.add((VCObject)parent);
 		}
 		return HANDLED;
-	}
-	
-	private void handleObject(EObject object) {
-		System.err.println("handleObject " + object);
-		if(object instanceof VCObject) {
-			VCObject vcobject = (VCObject)object;
-			objects2Add.put(vcobject.getName(), vcobject);
-			referenceConstructor.reset();
-			referenceConstructor.doSwitch(vcobject);
-			
-			for(VCObject createdVCObject : referenceConstructor.getCreatedObjects().values()) {
-				if(monitor.isCanceled()) {
-					return;
-				}
-				objects2Add.put(createdVCObject.getName(), vcobject);
-			}
-		}
 	}
 }

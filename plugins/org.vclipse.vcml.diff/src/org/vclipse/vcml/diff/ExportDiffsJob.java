@@ -26,9 +26,13 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.StringInputStream;
+import org.vclipse.vcml.vcml.Import;
 import org.vclipse.vcml.vcml.Model;
+import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.OptionType;
 import org.vclipse.vcml.vcml.VcmlFactory;
 
 /**
@@ -118,7 +122,28 @@ public class ExportDiffsJob extends Job {
 			if(!contents.isEmpty()) {
 				contents.clear();				
 			}
-			Model vcmlModel = VcmlFactory.eINSTANCE.createModel();				
+			
+			Model vcmlModel = VcmlFactory.eINSTANCE.createModel();		
+			
+			Import imStatement = VcmlFactory.eINSTANCE.createImport();
+			imStatement.setImportURI(resource_one.getURI().lastSegment());
+			vcmlModel.getImports().add(imStatement);
+		
+			EList<EObject> contents2 = resource_two.getContents();
+			if(!contents2.isEmpty()) {
+				EObject mainObject = contents2.get(0);
+				if(mainObject instanceof Model) {
+					EList<Option> options2 = ((Model)mainObject).getOptions();
+					if(!options2.isEmpty()) {
+						for(Option option : options2) {
+							if(OptionType.UPS.equals(option.getName())) {
+								vcmlModel.getOptions().add(EcoreUtil2.copy(option));
+							}
+						}
+					}
+				}				
+			}
+			
 			contents.add(vcmlModel);
 			new DiffsHandlerSwitch(vcmlModel, monitor).doSwitch(diffModel);
 			resource.save(Collections.EMPTY_MAP);
