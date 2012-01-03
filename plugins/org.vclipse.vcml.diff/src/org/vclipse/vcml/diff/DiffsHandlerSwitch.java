@@ -1,5 +1,6 @@
 package org.vclipse.vcml.diff;
 
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -24,6 +25,8 @@ import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.VCObject;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
@@ -53,12 +56,15 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 			}
 			doSwitch(diffElement);
 		}
-		for(EObject rightRoot : object.getLeftRoots()) {
-			if(rightRoot instanceof Model) {
-				for(DependencyNet dnet : EcoreUtil2.getAllContentsOfType(rightRoot, DependencyNet.class)) {
+		for(EObject root : object.getLeftRoots()) {
+			if(root instanceof Model) {
+				List<DependencyNet> dependencyNets = Lists.newArrayList(Iterables.filter(((Model)root).getObjects(), DependencyNet.class)); // to avoid concurrent modification
+				for(DependencyNet dnet : dependencyNets) {
+					depnet:
 					for(Constraint constraint : dnet.getConstraints()) {
 						if(constraintNames.contains(constraint.getName())) {
 							modelElements.add(dnet);
+							break depnet; // add depnet only once
 						}
 					}
 				}
@@ -69,12 +75,10 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 
 	@Override
 	public Boolean caseDiffElement(DiffElement object) {
-		//System.err.println(object.getClass().getSimpleName() + " " + object);
 		for(DiffElement element : object.getSubDiffElements()) {
 			if(monitor.isCanceled()) {
 				return HANDLED;
 			}
-			//System.err.println(element.getClass().getSimpleName() + " " + element);
 			doSwitch(element);
 		}
 		return NOT_HANDLED;
@@ -153,12 +157,14 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 	private boolean addObject2HandleList(EObject object) {
 		if(object instanceof Option) {
 			model2Build.getOptions().add((Option)object);
-		} else if(object instanceof Constraint) {
-			constraintNames.add(((Constraint)object).getName());
 		} else {
-			VCObject containerOfType = EcoreUtil2.getContainerOfType(object, VCObject.class);
-			if(containerOfType != null) {
-				modelElements.add(containerOfType);				
+			VCObject vcObject = EcoreUtil2.getContainerOfType(object, VCObject.class);
+			if(vcObject != null) {
+				System.err.println("adding " + vcObject);
+				modelElements.add(vcObject);
+				if(vcObject instanceof Constraint) {
+					constraintNames.add(vcObject.getName());
+				}
 			}
 		}
 		return HANDLED;
