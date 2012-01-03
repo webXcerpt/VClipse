@@ -36,6 +36,7 @@ import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.FormattedDocumentationBlock;
 import org.vclipse.vcml.vcml.GlobalDependency;
+import org.vclipse.vcml.vcml.Import;
 import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.LocalDependency;
@@ -108,6 +109,15 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	@Override
 	public DataLayouter<NoExceptions> caseModel(Model object) {
 		layouter.beginC(0);
+
+		EList<Import> imports = object.getImports();
+		if(!imports.isEmpty()) {
+			layouter.beginI();
+			for(Import importStatement : imports) {
+				layouter.print("import \"").print(importStatement.getImportURI()).pre("\"").brk();
+			}
+			layouter.end().nl().nl();
+		}
 
 		EList<Option> options = object.getOptions();
 		if(!options.isEmpty()) {
