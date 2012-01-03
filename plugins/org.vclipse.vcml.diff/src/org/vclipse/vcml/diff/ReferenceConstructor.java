@@ -91,10 +91,10 @@ public class ReferenceConstructor extends VcmlSwitch<EObject> {
 
 	private static VcmlFactory VCML = VcmlFactory.eINSTANCE;
 	
-	private Map<String, EObject> objects;
+	private Map<String, VCObject> objects;
 	
 	public ReferenceConstructor() {
-		objects = new HashMap<String, EObject>();
+		objects = new HashMap<String, VCObject>();
 	}
 	
 	@Override
@@ -106,7 +106,7 @@ public class ReferenceConstructor extends VcmlSwitch<EObject> {
 		objects.clear();
 	}
 	
-	public Map<String, EObject> getCreatedObjects() {
+	public Map<String, VCObject> getCreatedObjects() {
 		return Collections.unmodifiableMap(objects);
 	}
 
