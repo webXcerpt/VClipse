@@ -13,7 +13,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	@Override
 	public void initializeDefaultPreferences() {
 		IPreferenceStore preferences = VcmlDiffPlugin.getDefault().getPreferenceStore();
-		preferences.setDefault(IDiffFilter.CHARACTERISTIC_IGNORE_VALUE_ORDER, true);
+		preferences.setDefault(IDiffFilter.CHARACTERISTIC_IGNORE_VALUE_ORDER, false);
 		preferences.setDefault(IDiffFilter.CLASS_IGNORE_CHARACTERISTIC_ORDER, true);
 		preferences.setDefault(IDiffFilter.DEPENDENCY_NET_IGNORE_CONSTRAINTS_ORDER, true);
 		preferences.setDefault(IDiffFilter.MATERIAL_IGNORE_BOMS_ORDER, true);
