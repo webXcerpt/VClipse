@@ -45,8 +45,6 @@ import org.vclipse.vcml.vcml.IsSpecified_C;
 import org.vclipse.vcml.vcml.IsSpecified_P;
 import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.LocalDependency;
-import org.vclipse.vcml.vcml.LocalPrecondition;
-import org.vclipse.vcml.vcml.LocalSelectionCondition;
 import org.vclipse.vcml.vcml.MDataCharacteristic_C;
 import org.vclipse.vcml.vcml.MDataCharacteristic_P;
 import org.vclipse.vcml.vcml.Material;
@@ -74,6 +72,7 @@ import org.vclipse.vcml.vcml.TypeOf;
 import org.vclipse.vcml.vcml.UnaryCondition;
 import org.vclipse.vcml.vcml.UnaryExpression;
 import org.vclipse.vcml.vcml.VCObject;
+import org.vclipse.vcml.vcml.ValueAssignment;
 import org.vclipse.vcml.vcml.VariantFunction;
 import org.vclipse.vcml.vcml.VariantFunctionArgument;
 import org.vclipse.vcml.vcml.VariantTable;
@@ -89,88 +88,65 @@ import org.vclipse.vcml.vcml.util.VcmlSwitch;
  *		any characteristics which are available in the model.
  */
 public class ReferenceConstructor extends VcmlSwitch<EObject> {
+
+	private static VcmlFactory VCML = VcmlFactory.eINSTANCE;
 	
-	/**
-	 * 
-	 */
-	private static final VcmlFactory VCML = VcmlFactory.eINSTANCE;
+	private Map<String, EObject> objects;
 	
-	/**
-	 * 
-	 */
-	private final Map<String, EObject> objects;
-	
-	/**
-	 * 
-	 */
 	public ReferenceConstructor() {
 		objects = new HashMap<String, EObject>();
 	}
 	
-	/**
-	 * 
-	 */
+	@Override
+	public EObject doSwitch(EObject eObject) {
+		return eObject == null ? null : super.doSwitch(eObject);
+	}
+	
 	public void reset() {
 		objects.clear();
 	}
 	
-	/**
-	 * @return
-	 */
 	public Map<String, EObject> getCreatedObjects() {
 		return Collections.unmodifiableMap(objects);
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseClass(org.vclipse.vcml.vcml.Class)
-	 */
 	@Override
-	public EObject caseClass(final Class parent) {
-		for(final Characteristic cstic : parent.getCharacteristics()) {
+	public EObject caseClass(Class parent) {
+		for(Characteristic cstic : parent.getCharacteristics()) {
 			createVCObject(cstic);
 		}
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseCharacteristic(org.vclipse.vcml.vcml.Characteristic)
-	 */
 	@Override
-	public EObject caseCharacteristic(final Characteristic parent) {
+	public EObject caseCharacteristic(Characteristic parent) {
 		CharacteristicOrValueDependencies dependencies = parent.getDependencies();
 		if(dependencies != null) {
 			for(GlobalDependency dependency : dependencies.getDependencies()) {
-				createVCObject(dependency);
+				doSwitch(dependency);
 			}
-			doSwitch(dependencies.getLocalPrecondition());
+			doSwitch(dependencies.getLocalPrecondition());				
 			doSwitch(dependencies.getLocalSelectionCondition());
 		}
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseDependencyNet(org.vclipse.vcml.vcml.DependencyNet)
-	 */
 	@Override
-	public EObject caseDependencyNet(final DependencyNet parent) {
+	public EObject caseDependencyNet(DependencyNet parent) {
 		for(Constraint constraint : parent.getConstraints()) {				
 			createVCObject(constraint);
 		}
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseMaterial(org.vclipse.vcml.vcml.Material)
-	 */
 	@Override
-	public EObject caseMaterial(final Material parent) {
+	public EObject caseMaterial(Material parent) {
 		for(Classification classification : parent.getClassifications()) {			
-			createVCObject(classification); // FIXME this is not correct
+			doSwitch(classification);
 		}
 		for(BillOfMaterial bom : parent.getBillofmaterials()) {
 			for(BOMItem item : bom.getItems()) {
-				SelectionCondition sc = item.getSelectionCondition();
-				createVCObject(sc);
+				createVCObject(item.getSelectionCondition());
 				for(ConfigurationProfileEntry entry : item.getEntries()) {
 					doSwitch(entry.getDependency());
 				}
@@ -181,8 +157,7 @@ public class ReferenceConstructor extends VcmlSwitch<EObject> {
 				for(ConfigurationProfileEntry entry : profile.getEntries()) {
 					doSwitch(entry.getDependency());
 				}
-				InterfaceDesign idesign = profile.getUidesign();
-				createVCObject(idesign);
+				createVCObject(profile.getUidesign());
 				for(DependencyNet net : profile.getDependencyNets()) {
 					createVCObject(net);
 				}
@@ -190,12 +165,21 @@ public class ReferenceConstructor extends VcmlSwitch<EObject> {
 		}
 		return parent;
 	}
-
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseInterfaceDesign(org.vclipse.vcml.vcml.InterfaceDesign)
-	 */
+	
 	@Override
-	public EObject caseInterfaceDesign(final InterfaceDesign parent) {
+	public EObject caseClassification(Classification object) {
+		// TODO do we need to handle the super classes ? -> object.getCls().getSuperClasses()
+		for(Characteristic cstic : object.getCls().getCharacteristics()) {
+			createVCObject(cstic);
+		}
+		for(ValueAssignment va : object.getValueAssignments()) {
+			createVCObject(va.getCharacteristic());
+		}
+		return object;
+	}
+
+	@Override
+	public EObject caseInterfaceDesign(InterfaceDesign parent) {
 		for(CharacteristicGroup group : parent.getCharacteristicGroups()) {
 			for(Characteristic cstic : group.getCharacteristics()) {
 				createVCObject(cstic);
@@ -203,12 +187,9 @@ public class ReferenceConstructor extends VcmlSwitch<EObject> {
 		}
 		return parent;
 	}
-	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseProcedure(org.vclipse.vcml.vcml.Procedure)
-	 */
+
 	@Override
-	public EObject caseProcedure(final Procedure parent) {
+	public EObject caseProcedure(Procedure parent) {
 		ProcedureSource source = parent.getSource();
 		if(source != null) {
 			for(Statement statement : source.getStatements()) {
@@ -217,53 +198,38 @@ public class ReferenceConstructor extends VcmlSwitch<EObject> {
 		}
 		return parent;
 	}
-	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseCompoundStatement(org.vclipse.vcml.vcml.CompoundStatement)
-	 */
+
 	@Override
-	public EObject caseCompoundStatement(final CompoundStatement parent) {
+	public EObject caseCompoundStatement(CompoundStatement parent) {
 		for(SimpleStatement simple : parent.getStatements()) {
 			doSwitch(simple);
 		}
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseConditionalStatement(org.vclipse.vcml.vcml.ConditionalStatement)
-	 */
 	@Override
-	public EObject caseConditionalStatement(final ConditionalStatement parent) {
+	public EObject caseConditionalStatement(ConditionalStatement parent) {
 		doSwitch(parent.getStatement());
 		doSwitch(parent.getCondition());
 		return parent;
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseDelDefault(org.vclipse.vcml.vcml.DelDefault)
-	 */
 	@Override
-	public EObject caseDelDefault(final DelDefault parent) {
+	public EObject caseDelDefault(DelDefault parent) {
 		createVCObject(parent.getCharacteristic());
 		doSwitch(parent.getExpression());
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseAssignment(org.vclipse.vcml.vcml.Assignment)
-	 */
 	@Override
-	public EObject caseAssignment(final Assignment parent) {
+	public EObject caseAssignment(Assignment parent) {
 		createVCObject(parent.getCharacteristic());
 		doSwitch(parent.getExpression());
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseFunction(org.vclipse.vcml.vcml.Function)
-	 */
 	@Override
-	public EObject caseFunction(final Function parent) {
+	public EObject caseFunction(Function parent) {
 		for(Characteristic cstic : parent.getCharacteristics()) {
 			createVCObject(cstic);
 		}
@@ -274,20 +240,14 @@ public class ReferenceConstructor extends VcmlSwitch<EObject> {
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseIsInvisible(org.vclipse.vcml.vcml.IsInvisible)
-	 */
 	@Override
-	public EObject caseIsInvisible(final IsInvisible parent) {
+	public EObject caseIsInvisible(IsInvisible parent) {
 		createVCObject(parent.getCharacteristic());
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#casePFunction(org.vclipse.vcml.vcml.PFunction)
-	 */
 	@Override
-	public EObject casePFunction(final PFunction parent) {
+	public EObject casePFunction(PFunction parent) {
 		for(Characteristic cstic : parent.getCharacteristics()) {
 			createVCObject(cstic);
 		}
@@ -295,32 +255,23 @@ public class ReferenceConstructor extends VcmlSwitch<EObject> {
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseSetOrDelDefault(org.vclipse.vcml.vcml.SetOrDelDefault)
-	 */
 	@Override
-	public EObject caseSetOrDelDefault(final SetOrDelDefault parent) {
+	public EObject caseSetOrDelDefault(SetOrDelDefault parent) {
 		createVCObject(parent.getCharacteristic());
 		doSwitch(parent.getExpression());
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseSetPricingFactor(org.vclipse.vcml.vcml.SetPricingFactor)
-	 */
 	@Override
-	public EObject caseSetPricingFactor(final SetPricingFactor parent) {
+	public EObject caseSetPricingFactor(SetPricingFactor parent) {
 		createVCObject(parent.getCharacteristic());
 		doSwitch(parent.getArg1());
 		doSwitch(parent.getArg2());
 		return parent;
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseTable(org.vclipse.vcml.vcml.Table)
-	 */
 	@Override
-	public EObject caseTable(final Table parent) {
+	public EObject caseTable(Table parent) {
 		for(Characteristic cstic : parent.getCharacteristics()) {
 			createVCObject(cstic);
 		}
@@ -331,248 +282,164 @@ public class ReferenceConstructor extends VcmlSwitch<EObject> {
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseVariantFunction(org.vclipse.vcml.vcml.VariantFunction)
-	 */
 	@Override
-	public EObject caseVariantFunction(final VariantFunction parent) {
+	public EObject caseVariantFunction(VariantFunction parent) {
 		for(VariantFunctionArgument arg : parent.getArguments()) {
 			doSwitch(arg);
 		}
 		return parent;
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseVariantFunctionArgument(org.vclipse.vcml.vcml.VariantFunctionArgument)
-	 */
 	@Override
-	public EObject caseVariantFunctionArgument(final VariantFunctionArgument parent) {
+	public EObject caseVariantFunctionArgument(VariantFunctionArgument parent) {
 		createVCObject(parent.getCharacteristic());
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseVariantTable(org.vclipse.vcml.vcml.VariantTable)
-	 */
 	@Override
-	public EObject caseVariantTable(final VariantTable parent) {
+	public EObject caseVariantTable(VariantTable parent) {
 		for(VariantTableArgument arg : parent.getArguments()) {
 			doSwitch(arg);
 		}
 		return parent;
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseVariantTableArgument(org.vclipse.vcml.vcml.VariantTableArgument)
-	 */
 	@Override
-	public EObject caseVariantTableArgument(final VariantTableArgument parent) {
+	public EObject caseVariantTableArgument(VariantTableArgument parent) {
 		createVCObject(parent.getCharacteristic());
 		return parent;
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseBinaryCondition(org.vclipse.vcml.vcml.BinaryCondition)
-	 */
 	@Override
-	public EObject caseBinaryCondition(final BinaryCondition parent) {
+	public EObject caseBinaryCondition(BinaryCondition parent) {
 		doSwitch(parent.getLeft());
 		doSwitch(parent.getRight());
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseComparison(org.vclipse.vcml.vcml.Comparison)
-	 */
 	@Override
-	public EObject caseComparison(final Comparison parent) {
+	public EObject caseComparison(Comparison parent) {
 		doSwitch(parent.getLeft());
 		doSwitch(parent.getRight());
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseInCondition_C(org.vclipse.vcml.vcml.InCondition_C)
-	 */
 	@Override
-	public EObject caseInCondition_C(final InCondition_C parent) {
-		createVCObject(parent.getCharacteristic());
-		return parent;
+	public EObject caseInCondition_C(InCondition_C parent) {
+		return doSwitch(parent.getCharacteristic());
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseInCondition_P(org.vclipse.vcml.vcml.InCondition_P)
-	 */
 	@Override
-	public EObject caseInCondition_P(final InCondition_P parent) {
-		createVCObject(parent.getCharacteristic());
-		return parent;
+	public EObject caseInCondition_P(InCondition_P parent) {
+		return doSwitch(parent.getCharacteristic());
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseIsSpecified_C(org.vclipse.vcml.vcml.IsSpecified_C)
-	 */
 	@Override
-	public EObject caseIsSpecified_C(final IsSpecified_C parent) {
-		createVCObject(parent.getCharacteristic());
-		return parent;
+	public EObject caseIsSpecified_C(IsSpecified_C parent) {
+		return doSwitch(parent.getCharacteristic());
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseIsSpecified_P(org.vclipse.vcml.vcml.IsSpecified_P)
-	 */
 	@Override
-	public EObject caseIsSpecified_P(final IsSpecified_P parent) {
-		createVCObject(parent.getCharacteristic());
-		return parent;
+	public EObject caseIsSpecified_P(IsSpecified_P parent) {
+		return doSwitch(parent.getCharacteristic());
 	}
-
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#casePartOfCondition(org.vclipse.vcml.vcml.PartOfCondition)
-	 */
+	
 	@Override
-	public EObject casePartOfCondition(final PartOfCondition parent) {
+	public EObject casePartOfCondition(PartOfCondition parent) {
 		doSwitch(parent.getChild());
 		doSwitch(parent.getParent());
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseSubpartOfCondition(org.vclipse.vcml.vcml.SubpartOfCondition)
-	 */
 	@Override
-	public EObject caseSubpartOfCondition(final SubpartOfCondition parent) {
+	public EObject caseSubpartOfCondition(SubpartOfCondition parent) {
 		doSwitch(parent.getChild());
 		doSwitch(parent.getParent());
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseTypeOf(org.vclipse.vcml.vcml.TypeOf)
-	 */
 	@Override
-	public EObject caseTypeOf(final TypeOf parent) {
+	public EObject caseTypeOf(TypeOf parent) {
 		doSwitch(parent.getVariantclass());
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseUnaryCondition(org.vclipse.vcml.vcml.UnaryCondition)
-	 */
 	@Override
-	public EObject caseUnaryCondition(final UnaryCondition parent) {
+	public EObject caseUnaryCondition(UnaryCondition parent) {
 		doSwitch(parent.getCondition());
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseBinaryExpression(org.vclipse.vcml.vcml.BinaryExpression)
-	 */
 	@Override
-	public EObject caseBinaryExpression(final BinaryExpression parent) {
+	public EObject caseBinaryExpression(BinaryExpression parent) {
 		doSwitch(parent.getLeft());
 		doSwitch(parent.getRight());
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseFunctionCall(org.vclipse.vcml.vcml.FunctionCall)
-	 */
 	@Override
-	public EObject caseFunctionCall(final FunctionCall parent) {
+	public EObject caseFunctionCall(FunctionCall parent) {
 		doSwitch(parent.getArgument());
 		return parent;
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseObjectCharacteristicReference(org.vclipse.vcml.vcml.ObjectCharacteristicReference)
-	 */
 	@Override
-	public EObject caseObjectCharacteristicReference(final ObjectCharacteristicReference parent) {
+	public EObject caseObjectCharacteristicReference(ObjectCharacteristicReference parent) {
 		createVCObject(parent.getCharacteristic());
 		doSwitch(parent.getLocation());
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseShortVarReference(org.vclipse.vcml.vcml.ShortVarReference)
-	 */
 	@Override
-	public EObject caseShortVarReference(final ShortVarReference parent) {
+	public EObject caseShortVarReference(ShortVarReference parent) {
 		doSwitch(parent.getRef());
 		return parent;
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseShortVarDefinition(org.vclipse.vcml.vcml.ShortVarDefinition)
-	 */
 	@Override
-	public EObject caseShortVarDefinition(final ShortVarDefinition parent) {
+	public EObject caseShortVarDefinition(ShortVarDefinition parent) {
 		createVCObject(parent.getCharacteristic());
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseCharacteristicReference_P(org.vclipse.vcml.vcml.CharacteristicReference_P)
-	 */
 	@Override
-	public EObject caseCharacteristicReference_P(final CharacteristicReference_P parent) {
+	public EObject caseCharacteristicReference_P(CharacteristicReference_P parent) {
+		createVCObject(parent.getCharacteristic());
+		return parent;
+	}
+	
+	@Override
+	public EObject caseMDataCharacteristic_C(MDataCharacteristic_C parent) {
+		return doSwitch(parent.getCharacteristic());
+	}
+
+	@Override
+	public EObject caseMDataCharacteristic_P(MDataCharacteristic_P parent) {
+		return doSwitch(parent.getCharacteristic());
+	}
+
+	@Override
+	public EObject caseSumParts(SumParts parent) {
 		createVCObject(parent.getCharacteristic());
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseMDataCharacteristic_C(org.vclipse.vcml.vcml.MDataCharacteristic_C)
-	 */
 	@Override
-	public EObject caseMDataCharacteristic_C(final MDataCharacteristic_C parent) {
-		createVCObject(parent.getCharacteristic());
-		return parent;
-	}
-
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseMDataCharacteristic_P(org.vclipse.vcml.vcml.MDataCharacteristic_P)
-	 */
-	@Override
-	public EObject caseMDataCharacteristic_P(final MDataCharacteristic_P parent) {
-		createVCObject(parent.getCharacteristic());
-		return parent;
-	}
-
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseSumParts(org.vclipse.vcml.vcml.SumParts)
-	 */
-	@Override
-	public EObject caseSumParts(final SumParts parent) {
-		createVCObject(parent.getCharacteristic());
-		return parent;
-	}
-
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseUnaryExpression(org.vclipse.vcml.vcml.UnaryExpression)
-	 */
-	@Override
-	public EObject caseUnaryExpression(final UnaryExpression parent) {
+	public EObject caseUnaryExpression(UnaryExpression parent) {
 		doSwitch(parent.getExpression());
 		return parent;
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseBillOfMaterial(org.vclipse.vcml.vcml.BillOfMaterial)
-	 */
 	@Override
-	public EObject caseBillOfMaterial(final BillOfMaterial parent) {
+	public EObject caseBillOfMaterial(BillOfMaterial parent) {
 		for(BOMItem item : parent.getItems()) {
 			return doSwitch(item);
 		}
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseBOMItem(org.vclipse.vcml.vcml.BOMItem)
-	 */
 	@Override
-	public EObject caseBOMItem(final BOMItem parent) {
+	public EObject caseBOMItem(BOMItem parent) {
 		createVCObject(parent.getMaterial());
 		createVCObject(parent.getSelectionCondition());
 		for(ConfigurationProfileEntry entry : parent.getEntries()) {
@@ -581,22 +448,16 @@ public class ReferenceConstructor extends VcmlSwitch<EObject> {
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseCharacteristicGroup(org.vclipse.vcml.vcml.CharacteristicGroup)
-	 */
 	@Override
-	public EObject caseCharacteristicGroup(final CharacteristicGroup parent) {
+	public EObject caseCharacteristicGroup(CharacteristicGroup parent) {
 		for(Characteristic cstic : parent.getCharacteristics()) {
 			createVCObject(cstic);
 		}
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseCharacteristicOrValueDependencies(org.vclipse.vcml.vcml.CharacteristicOrValueDependencies)
-	 */
 	@Override
-	public EObject caseCharacteristicOrValueDependencies(final CharacteristicOrValueDependencies parent) {
+	public EObject caseCharacteristicOrValueDependencies(CharacteristicOrValueDependencies parent) {
 		for(GlobalDependency dependency : parent.getDependencies()) {
 			doSwitch(dependency);
 		}
@@ -605,39 +466,27 @@ public class ReferenceConstructor extends VcmlSwitch<EObject> {
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseCharacteristicValue(org.vclipse.vcml.vcml.CharacteristicValue)
-	 */
 	@Override
-	public EObject caseCharacteristicValue(final CharacteristicValue parent) {
+	public EObject caseCharacteristicValue(CharacteristicValue parent) {
 		doSwitch(parent.getDependencies());
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseConditionalConstraintRestriction(org.vclipse.vcml.vcml.ConditionalConstraintRestriction)
-	 */
 	@Override
-	public EObject caseConditionalConstraintRestriction(final ConditionalConstraintRestriction parent) {
+	public EObject caseConditionalConstraintRestriction(ConditionalConstraintRestriction parent) {
 		doSwitch(parent.getCondition());
 		doSwitch(parent.getRestriction());
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseConditionSource(org.vclipse.vcml.vcml.ConditionSource)
-	 */
 	@Override
-	public EObject caseConditionSource(final ConditionSource parent) {
+	public EObject caseConditionSource(ConditionSource parent) {
 		doSwitch(parent.getCondition());
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseConfigurationProfile(org.vclipse.vcml.vcml.ConfigurationProfile)
-	 */
 	@Override
-	public EObject caseConfigurationProfile(final ConfigurationProfile parent) {
+	public EObject caseConfigurationProfile(ConfigurationProfile parent) {
 		createVCObject(parent.getUidesign());
 		for(DependencyNet net : parent.getDependencyNets()) {
 			createVCObject(net);
@@ -648,40 +497,28 @@ public class ReferenceConstructor extends VcmlSwitch<EObject> {
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseConfigurationProfileEntry(org.vclipse.vcml.vcml.ConfigurationProfileEntry)
-	 */
 	@Override
-	public EObject caseConfigurationProfileEntry(final ConfigurationProfileEntry parent) {
+	public EObject caseConfigurationProfileEntry(ConfigurationProfileEntry parent) {
 		createVCObject(parent.getDependency());
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseConstraint(org.vclipse.vcml.vcml.Constraint)
-	 */
 	@Override
-	public EObject caseConstraint(final Constraint parent) {
+	public EObject caseConstraint(Constraint parent) {
 		createVCObject(parent);
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseConstraintObject(org.vclipse.vcml.vcml.ConstraintObject)
-	 */
 	@Override
-	public EObject caseConstraintObject(final ConstraintObject parent) {
+	public EObject caseConstraintObject(ConstraintObject parent) {
 		for(ShortVarDefinition def : parent.getShortVars()) {
 			doSwitch(def);
 		}
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseConstraintSource(org.vclipse.vcml.vcml.ConstraintSource)
-	 */
 	@Override
-	public EObject caseConstraintSource(final ConstraintSource parent) {
+	public EObject caseConstraintSource(ConstraintSource parent) {
 		doSwitch(parent.getCondition());
 		for(CharacteristicReference_C c : parent.getInferences()) {
 			doSwitch(c);
@@ -695,120 +532,60 @@ public class ReferenceConstructor extends VcmlSwitch<EObject> {
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseLocalDependency(org.vclipse.vcml.vcml.LocalDependency)
-	 */
 	@Override
-	public EObject caseLocalDependency(final LocalDependency parent) {
-		doSwitch(parent.getSource());
-		return parent;
+	public EObject caseLocalDependency(LocalDependency parent) {
+		return doSwitch(parent.getSource());
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseLocalPrecondition(org.vclipse.vcml.vcml.LocalPrecondition)
-	 */
 	@Override
-	public EObject caseLocalPrecondition(final LocalPrecondition parent) {
-		doSwitch(parent.getSource());
-		return parent;
+	public EObject caseNumericCharacteristicValue(NumericCharacteristicValue parent) {
+		return doSwitch(parent.getDependencies());
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseLocalSelectionCondition(org.vclipse.vcml.vcml.LocalSelectionCondition)
-	 */
 	@Override
-	public EObject caseLocalSelectionCondition(final LocalSelectionCondition object) {
-		return doSwitch(object.getSource());
-	}
-
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseNumericCharacteristicValue(org.vclipse.vcml.vcml.NumericCharacteristicValue)
-	 */
-	@Override
-	public EObject caseNumericCharacteristicValue(final NumericCharacteristicValue parent) {
-		doSwitch(parent.getDependencies());
-		return parent;
-	}
-
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseNumericType(org.vclipse.vcml.vcml.NumericType)
-	 */
-	@Override
-	public EObject caseNumericType(final NumericType parent) {
+	public EObject caseNumericType(NumericType parent) {
 		for(NumericCharacteristicValue numCharValue : parent.getValues()) {
 			doSwitch(numCharValue);
 		}
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#casePrecondition(org.vclipse.vcml.vcml.Precondition)
-	 */
 	@Override
-	public EObject casePrecondition(final Precondition parent) {
-		ConditionSource source = parent.getSource();
-		if (source!=null) {
-			doSwitch(source);
-		}
-		return parent;
+	public EObject casePrecondition(Precondition parent) {
+		return doSwitch(parent.getSource());
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseProcedureSource(org.vclipse.vcml.vcml.ProcedureSource)
-	 */
 	@Override
-	public EObject caseProcedureSource(final ProcedureSource parent) {
+	public EObject caseProcedureSource(ProcedureSource parent) {
 		for(Statement statement : parent.getStatements()) {
 			doSwitch(statement);
 		}
 		return parent;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseSelectionCondition(org.vclipse.vcml.vcml.SelectionCondition)
-	 */
 	@Override
-	public EObject caseSelectionCondition(final SelectionCondition parent) {
-		ConditionSource source = parent.getSource();
-		if (source!=null) {
-			doSwitch(source);
-		}
-		return parent;
+	public EObject caseSelectionCondition(SelectionCondition parent) {
+		return doSwitch(parent.getSource());
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseSetDefault(org.vclipse.vcml.vcml.SetDefault)
-	 */
 	@Override
-	public EObject caseSetDefault(final SetDefault parent) {
+	public EObject caseSetDefault(SetDefault parent) {
 		createVCObject(parent.getCharacteristic());
-		doSwitch(parent.getExpression());
-		return parent;		
+		return doSwitch(parent.getExpression());
 	}
 
-
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseSymbolicType(org.vclipse.vcml.vcml.SymbolicType)
-	 */
 	@Override
-	public EObject caseSymbolicType(final SymbolicType parent) {
+	public EObject caseSymbolicType(SymbolicType parent) {
 		for(CharacteristicValue dependency : parent.getValues()) {
 			doSwitch(dependency);
 		}
 		return parent;	
 	}
 	
-	/**
-	 * @param source
-	 * @param clazz
-	 * @return
-	 */
-	private void createVCObject(final EObject source) {
-		if(source instanceof VCObject) {
-			VCObject newObject = (VCObject)VCML.create(source.eClass());
-			String name = ((VCObject)source).getName();
-			newObject.setName(name);
-			objects.put(name, newObject);
-		}
+	private void createVCObject(VCObject source) {
+		VCObject newObject = (VCObject)VCML.create(source.eClass());
+		String name = ((VCObject)source).getName();
+		newObject.setName(name);
+		objects.put(name, newObject);
 	}
 }
