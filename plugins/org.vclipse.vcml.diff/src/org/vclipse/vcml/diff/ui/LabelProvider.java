@@ -13,16 +13,10 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
-/**
- *
- */
 public class LabelProvider extends BaseLabelProvider implements ILabelProvider {
 	
-	/**
-	 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
-	 */
 	public Image getImage(Object element) {
-		final ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
+		ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
 		if(element instanceof IProject) {
 			return sharedImages.getImage(IDE.SharedImages.IMG_OBJ_PROJECT);
 		} else if(element instanceof IFolder) {
@@ -32,10 +26,7 @@ public class LabelProvider extends BaseLabelProvider implements ILabelProvider {
 		}
 	}
 
-	/**
-	 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
-	 */
-	public String getText(final Object element) {
+	public String getText(Object element) {
 		return element instanceof IResource ? ((IResource)element).getName() : null;
 	}
 }

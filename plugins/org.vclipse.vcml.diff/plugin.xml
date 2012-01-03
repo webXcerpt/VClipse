@@ -32,14 +32,14 @@
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
-            class="org.vclipse.vcml.diff.internal.PreferenceInitializer">
+            class="org.vclipse.vcml.diff.ui.PreferenceInitializer">
       </initializer>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
             category="org.vclipse.preferences.page"
-            class="org.vclipse.vcml.diff.internal.DiffPreferencePage"
+            class="org.vclipse.vcml.diff.ui.DiffPreferencePage"
             id="org.vclipse.vcml.preferencesPages.diff"
             name="VCML Diff">
       </page>

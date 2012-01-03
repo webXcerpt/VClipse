@@ -35,59 +35,30 @@ import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.OptionType;
 import org.vclipse.vcml.vcml.VcmlFactory;
 
-/**
- *
- */
 public class ExportDiffsJob extends Job {
 
-	/**
-	 * 
-	 */
 	private IFile leftFile;
-	
-	/**
-	 * 
-	 */
 	private IFile rightFile;
-	
-	/**
-	 * 
-	 */
 	private IFile exportFile;
 	
-	/**
-	 * @param name
-	 */
 	public ExportDiffsJob() {
 		super("Export job for differences betweeen 2 vcml files.");
 	}
-
-	/**
-	 * @param file
-	 */
+	
 	public void setLeftFile(IFile file) {
 		leftFile = file;
 	}
 	
-	/**
-	 * @param file
-	 */
 	public void setRightFile(IFile file) {
 		rightFile = file;
 	}
 	
-	/**
-	 * @param file
-	 */
 	public void setExportFile(IFile file) {
 		exportFile = file;
 	}
 	
-	/**
-	 * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-	 */
 	@Override
-	protected IStatus run(final IProgressMonitor monitor) {
+	protected IStatus run(IProgressMonitor monitor) {
 		assert leftFile != null;
 		assert rightFile != null;
 		assert exportFile != null;
@@ -149,13 +120,13 @@ public class ExportDiffsJob extends Job {
 			resource.save(Collections.EMPTY_MAP);
 			exportFile.refreshLocal(IResource.DEPTH_ONE, monitor);
 			monitor.worked(10);
-		} catch(final CoreException exception) {
+		} catch(CoreException exception) {
 			VcmlDiffPlugin.log(exception.getMessage(), exception);
 			jobStatus = Status.CANCEL_STATUS;
-		} catch(final IOException exception) {
+		} catch(IOException exception) {
 			VcmlDiffPlugin.log(exception.getMessage(), exception);
 			jobStatus = Status.CANCEL_STATUS;
-		} catch(final InterruptedException exception) {
+		} catch(InterruptedException exception) {
 			VcmlDiffPlugin.log(exception.getMessage(), exception);
 			jobStatus = Status.CANCEL_STATUS;
 		} finally {

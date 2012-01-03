@@ -10,37 +10,22 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-/**
- *
- */
 public class ExportDiffsAction implements IObjectActionDelegate {
 
-	/**
-	 * 
-	 */
 	private IStructuredSelection strSelection;
 
-	/**
-	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
-	 */
 	@Override
-	public void setActivePart(final IAction action, final IWorkbenchPart targetPart) {
+	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		
 	}
 
-	/**
-	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-	 */
 	@Override
-	public void run(final IAction action) {
+	public void run(IAction action) {
 		new ExportDiffsDialog(Display.getDefault().getActiveShell(), strSelection).open();
 	}
 
-	/**
-	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
-	 */
 	@Override
-	public void selectionChanged(final IAction action, final ISelection selection) {
+	public void selectionChanged(IAction action, ISelection selection) {
 		if(selection instanceof IStructuredSelection) {
 			strSelection = (IStructuredSelection)selection;
 		}

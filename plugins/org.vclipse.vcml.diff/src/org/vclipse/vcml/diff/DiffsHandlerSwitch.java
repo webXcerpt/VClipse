@@ -1,7 +1,6 @@
-/**
- * 
- */
 package org.vclipse.vcml.diff;
+
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
@@ -18,70 +17,76 @@ import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffSwitch;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.EcoreUtil2;
+import org.vclipse.vcml.vcml.Constraint;
+import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.VCObject;
 
-/**
- *
- */
+import com.google.common.collect.Sets;
+
 public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 
-	
-	private final Boolean HANDLED = Boolean.TRUE;
-	private final Boolean NOT_HANDLED = null;
-
+	private Boolean HANDLED = Boolean.TRUE;
+	private Boolean NOT_HANDLED = null;
 
 	private Model model2Build;
-	
-
 	private EList<VCObject> modelElements; 
-	
-
+	private Set<String> constraintNames;
 	private IDiffFilter diffFilter;
-	//private ReferenceConstructor referenceConstructor;
 	private IProgressMonitor monitor;
 	
-
-	public DiffsHandlerSwitch(final Model model, final IProgressMonitor monitor) {
+	public DiffsHandlerSwitch(Model model, IProgressMonitor monitor) {
 		model2Build = model;
 		modelElements = model.getObjects();
 		diffFilter = new DefaultDiffFilter();
+		constraintNames = Sets.newHashSet();
 		this.monitor = monitor;
 	}
 
 	@Override
-	public Boolean caseDiffModel(final DiffModel object) {
-		for(final DiffElement diffElement : object.getOwnedElements()) {
+	public Boolean caseDiffModel(DiffModel object) {
+		for(DiffElement diffElement : object.getOwnedElements()) {
 			if(monitor.isCanceled()) {
 				return HANDLED;
 			}
-			System.err.println("caseDiffModel with " + diffElement);
 			doSwitch(diffElement);
+		}
+		for(EObject rightRoot : object.getLeftRoots()) {
+			if(rightRoot instanceof Model) {
+				for(DependencyNet dnet : EcoreUtil2.getAllContentsOfType(rightRoot, DependencyNet.class)) {
+					for(Constraint constraint : dnet.getConstraints()) {
+						if(constraintNames.contains(constraint.getName())) {
+							modelElements.add(dnet);
+						}
+					}
+				}
+			}
 		}
 		return HANDLED;
 	}
 
 	@Override
-	public Boolean caseDiffElement(final DiffElement object) {
-		System.err.println(object.getClass().getSimpleName() + " " + object);
+	public Boolean caseDiffElement(DiffElement object) {
+		//System.err.println(object.getClass().getSimpleName() + " " + object);
 		for(DiffElement element : object.getSubDiffElements()) {
 			if(monitor.isCanceled()) {
 				return HANDLED;
 			}
-			System.err.println(element.getClass().getSimpleName() + " " + element);
+			//System.err.println(element.getClass().getSimpleName() + " " + element);
 			doSwitch(element);
 		}
 		return NOT_HANDLED;
 	}
 
 	@Override
-	public Boolean caseModelElementChangeLeftTarget(final ModelElementChangeLeftTarget object) {
+	public Boolean caseModelElementChangeLeftTarget(ModelElementChangeLeftTarget object) {
 		return addObject2HandleList(object.getLeftElement());
 	}
 
 	@Override
-	public Boolean caseModelElementChangeRightTarget(final ModelElementChangeRightTarget object) {
+	public Boolean caseModelElementChangeRightTarget(ModelElementChangeRightTarget object) {
 		EObject rightElement = object.getRightElement();
 		// extract deleted VCObjects
 		if(rightElement instanceof VCObject) {
@@ -94,17 +99,17 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 	}
 	
 	@Override
-	public Boolean caseReferenceChangeLeftTarget(final ReferenceChangeLeftTarget object) {
+	public Boolean caseReferenceChangeLeftTarget(ReferenceChangeLeftTarget object) {
 		return addObject2HandleList(object.getLeftElement());
 	}
 
 	@Override
-	public Boolean caseReferenceChangeRightTarget(final ReferenceChangeRightTarget object) {
+	public Boolean caseReferenceChangeRightTarget(ReferenceChangeRightTarget object) {
 		return addObject2HandleList(object.getLeftElement());
 	}
 
 	@Override
-	public Boolean caseReferenceChange(final ReferenceChange object) {
+	public Boolean caseReferenceChange(ReferenceChange object) {
 		if(!diffFilter.filter(object.getReference(), object.getKind())) {
 			return addObject2HandleList(object.getLeftElement());
 		}
@@ -112,7 +117,7 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 	}
 
 	@Override
-	public Boolean caseReferenceOrderChange(final ReferenceOrderChange object) {
+	public Boolean caseReferenceOrderChange(ReferenceOrderChange object) {
 		EList<EObject> leftTarget = object.getLeftTarget();
 		EList<EObject> rightTarget = object.getRightTarget();
 		if(leftTarget != null && rightTarget != null) {
@@ -128,17 +133,17 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 	}
 	
 	@Override
-	public Boolean caseAttributeChangeLeftTarget(final AttributeChangeLeftTarget object) {
+	public Boolean caseAttributeChangeLeftTarget(AttributeChangeLeftTarget object) {
 		return addObject2HandleList(object.getRightElement());
 	}
 
 	@Override
-	public Boolean caseAttributeChangeRightTarget(final AttributeChangeRightTarget object) {
+	public Boolean caseAttributeChangeRightTarget(AttributeChangeRightTarget object) {
 		return addObject2HandleList(object.getRightElement());
 	}
 
 	@Override
-	public Boolean caseUpdateAttribute(final UpdateAttribute object) {
+	public Boolean caseUpdateAttribute(UpdateAttribute object) {
 		if(!diffFilter.filter(object.getAttribute(), object.getKind())) {
 			return addObject2HandleList(object.getLeftElement());
 		}
@@ -148,14 +153,13 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 	private boolean addObject2HandleList(EObject object) {
 		if(object instanceof Option) {
 			model2Build.getOptions().add((Option)object);
-		} else if(object instanceof VCObject) {
-			modelElements.add((VCObject)object);
+		} else if(object instanceof Constraint) {
+			constraintNames.add(((Constraint)object).getName());
 		} else {
-			EObject parent = object.eContainer();
-			while(parent != null && !(parent instanceof VCObject)) {
-				parent = parent.eContainer();
+			VCObject containerOfType = EcoreUtil2.getContainerOfType(object, VCObject.class);
+			if(containerOfType != null) {
+				modelElements.add(containerOfType);				
 			}
-			modelElements.add((VCObject)parent);
 		}
 		return HANDLED;
 	}

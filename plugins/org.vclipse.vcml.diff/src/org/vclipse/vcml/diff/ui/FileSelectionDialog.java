@@ -30,53 +30,26 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 
-/**
- *
- */
-public final class FileSelectionDialog extends TitleAreaDialog {
+public class FileSelectionDialog extends TitleAreaDialog {
 
-	/**
-	 * 
-	 */
 	private IContainer preselectedContainer;
-	
-	/**
-	 * 
-	 */
+
 	private Text parentContainerText;
 	
-	/**
-	 * 
-	 */
 	private Combo filterCombo;
 
-	/**
-	 * 
-	 */
 	private String[] fileExtensions = new String[0];
 	
-	/**
-	 * 
-	 */
 	private TableViewer tableViewer;
-	
-	/**
-	 * 
-	 */
+
 	private IFile selectedFile;
 	
-	/**
-	 * @param parent
-	 */
-	public FileSelectionDialog(final Shell parent, final IContainer container) {
+	public FileSelectionDialog(Shell parent, IContainer container) {
 		super(parent);
 		preselectedContainer = container;
 	}
 	
-	/**
-	 * @param extensions
-	 */
-	public void setExtensions(final String[] extensions) {
+	public void setExtensions(String[] extensions) {
 		if(extensions.length > 0) {
 			fileExtensions = extensions;
 		}
@@ -86,9 +59,6 @@ public final class FileSelectionDialog extends TitleAreaDialog {
 		return selectedFile;
 	}
 	
-	/**
-	 * 
-	 */
 	private void setFilter() {
 		if(tableViewer != null) {
 			tableViewer.setFilters(new ViewerFilter[]{new ViewerFilter() {
@@ -104,10 +74,7 @@ public final class FileSelectionDialog extends TitleAreaDialog {
 			}});
 		}
 	}
-		
-	/**
-	 * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-	 */
+	
 	protected Control createDialogArea(Composite parent) {
 		getShell().setText("File selection dialog");
 		setTitle("Source file selection dialog");
