@@ -23,7 +23,17 @@ public class UriUtil {
 			String[] targetUriParts = targetResourceUri.toString().split(SEPARATOR);
 			
 			if(importUriParts.length == targetUriParts.length) {
-				return importUriParts[importUriParts.length - 1];
+				for(int i=0; i<targetUriParts.length; i++) {
+					if(importUriParts[i].equals(targetUriParts[i])) {
+						continue;
+					} else if(i == targetUriParts.length - 1) {
+						importUri.append(importUriParts[importUriParts.length - 1]);
+					} else {
+						importUri.append(STEP_UP);
+						importUri.append(importUriParts[i]);
+						importUri.append(SEPARATOR);
+					}
+				}
 			} else if(importUriParts.length < targetUriParts.length) {
 				for(int i=0; i<targetUriParts.length; i++) {
 					if(i < importUriParts.length) {
