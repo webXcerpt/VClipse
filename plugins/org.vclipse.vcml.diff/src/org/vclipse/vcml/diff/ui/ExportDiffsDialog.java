@@ -35,13 +35,13 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 	private static IWorkspaceRoot ROOT = ResourcesPlugin.getWorkspace().getRoot();
 	private static FileSelectionDialog FILE_SELECTION_DIALOG;
 
-	private IFile firstComparisonFile;
-	private IFile secondComparisonFile;
-	private IFile exportComparisonFile;
+	private IFile oldFileToCompare;
+	private IFile newFileToCompare;
+	private IFile compareResultsFile;
 	
-	private Text firstPathText;
-	private Text secondPathText;
-	private Text thirdPathText;
+	private Text oldFileText;
+	private Text newFileText;
+	private Text resultsFileText;
 	
 	private Button generateExportFileButton;
 	private Button switchPathsButton;
@@ -95,12 +95,12 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 		Label label = new Label(group, SWT.NONE);
 		label.setText("Compare file (old)");
 		
-		firstPathText = new Text(group, SWT.BORDER | SWT.READ_ONLY);
-		firstPathText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		firstPathText.setSize(300, 0);
+		oldFileText = new Text(group, SWT.BORDER | SWT.READ_ONLY);
+		oldFileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		oldFileText.setSize(300, 0);
 	
 		if(preselectedResources[0] instanceof IFile) {
-			firstPathText.setText(((IFile)preselectedResources[0]).getFullPath().toString());
+			oldFileText.setText(((IFile)preselectedResources[0]).getFullPath().toString());
 		}
 		
 		Button button = new Button(group, SWT.PUSH);
@@ -109,9 +109,9 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 				if(Dialog.OK == FILE_SELECTION_DIALOG.open()) {
-					firstComparisonFile = FILE_SELECTION_DIALOG.getSelection();
-					if(firstComparisonFile != null) {
-						firstPathText.setText(firstComparisonFile.getFullPath().toString());
+					oldFileToCompare = FILE_SELECTION_DIALOG.getSelection();
+					if(oldFileToCompare != null) {
+						oldFileText.setText(oldFileToCompare.getFullPath().toString());
 						validateEntries();
 					}
 				}
@@ -124,11 +124,11 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 		gridData.horizontalAlignment = SWT.END;
 		label.setLayoutData(gridData);
 		
-		secondPathText = new Text(group, SWT.BORDER | SWT.READ_ONLY);
-		secondPathText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		newFileText = new Text(group, SWT.BORDER | SWT.READ_ONLY);
+		newFileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		if(preselectedResources[1] instanceof IFile) {
-			secondPathText.setText(((IFile)preselectedResources[1]).getFullPath().toString());
+			newFileText.setText(((IFile)preselectedResources[1]).getFullPath().toString());
 		}
 		
 		button = new Button(group, SWT.PUSH);
@@ -137,9 +137,9 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 				if(Dialog.OK == FILE_SELECTION_DIALOG.open()) {
-					secondComparisonFile = FILE_SELECTION_DIALOG.getSelection();
-					if(secondComparisonFile != null) {
-						secondPathText.setText(secondComparisonFile.getFullPath().toString());
+					newFileToCompare = FILE_SELECTION_DIALOG.getSelection();
+					if(newFileToCompare != null) {
+						newFileText.setText(newFileToCompare.getFullPath().toString());
 						validateEntries();
 					}
 				}
@@ -154,17 +154,17 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 		label = new Label(group, SWT.NONE);
 		label.setText("Export diffs to file:");
 		
-		thirdPathText = new Text(group, SWT.BORDER);
+		resultsFileText = new Text(group, SWT.BORDER);
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.horizontalSpan = 2;
-		thirdPathText.setLayoutData(gridData);
-		thirdPathText.addModifyListener(new ModifyListener() {
+		resultsFileText.setLayoutData(gridData);
+		resultsFileText.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent event) {
-				String text = thirdPathText.getText();
+				String text = resultsFileText.getText();
 				try {
 					setErrorMessage(null);
-					exportComparisonFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(text));
+					compareResultsFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(text));
 				} catch(IllegalArgumentException exception) {
 					setErrorMessage(exception.getMessage());
 				}
@@ -184,7 +184,7 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 			public void widgetSelected(SelectionEvent event) {
 				boolean enabled = ((Button)event.widget).getSelection();
 				browseExportPathButton.setEnabled(!enabled);
-				thirdPathText.setEnabled(!enabled);
+				resultsFileText.setEnabled(!enabled);
 				validateEntries();
 			}
 		});
@@ -193,16 +193,16 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 		generateExportFileButton.setEnabled(false);
 		generateExportFileButton.setSelection(true);
 		browseExportPathButton.setEnabled(false);
-		thirdPathText.setEditable(false);
+		resultsFileText.setEditable(false);
 		
 		switchPathsButton = new Button(group, SWT.NONE);
 		switchPathsButton.setText("Switch comparison paths");
 		switchPathsButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
-				String tmpTextFirst = firstPathText.getText();
-				firstPathText.setText(secondPathText.getText());
-				secondPathText.setText(tmpTextFirst);
+				String tmpTextFirst = oldFileText.getText();
+				oldFileText.setText(newFileText.getText());
+				newFileText.setText(tmpTextFirst);
 				validateEntries();
 			}
 		});
@@ -218,11 +218,11 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 	@Override
 	protected void buttonPressed(int buttonId) {
 		if(Dialog.OK == buttonId) {
-			if(firstComparisonFile != null && secondComparisonFile != null) {
+			if(oldFileToCompare != null && newFileToCompare != null) {
 				ExportDiffsJob job = new ExportDiffsJob();
-				job.setLeftFile(firstComparisonFile);
-				job.setRightFile(secondComparisonFile);
-				job.setExportFile(exportComparisonFile);
+				job.setOldFile(oldFileToCompare);
+				job.setNewFile(newFileToCompare);
+				job.setResultsFile(compareResultsFile);
 				job.schedule();
 			}
 		}
@@ -234,32 +234,33 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 		switchPathsButton.setEnabled(true);
 		
 		try {
-			firstComparisonFile = ROOT.getFile(new Path(firstPathText.getText()));
+			oldFileToCompare = ROOT.getFile(new Path(oldFileText.getText()));
 		} catch(IllegalArgumentException exception) {
-			firstComparisonFile = null;
+			oldFileToCompare = null;
 			switchPathsButton.setEnabled(false);
 			setErrorMessage("Please specify the first file for comparison.");
 			return;
 		}
 		
 		try {
-			secondComparisonFile = ROOT.getFile(new Path(secondPathText.getText()));
+			newFileToCompare = ROOT.getFile(new Path(newFileText.getText()));
 		} catch(IllegalArgumentException exception) {
-			secondComparisonFile = null;
+			newFileToCompare = null;
 			switchPathsButton.setEnabled(false);
 			setErrorMessage("Please specify the second file for comparison.");
 			return;
 		}
 		
-		if(generateExportFileButton.getSelection() && firstComparisonFile != null) {
-			String newName = firstComparisonFile.getName().replaceAll(".vcml", "_diff.vcml");
-			exportComparisonFile = firstComparisonFile.getParent().getFile(new Path(newName));
-			thirdPathText.setText(exportComparisonFile.getFullPath().toString());
+		// create a name for the result file and provide this value to the text widget
+		if(generateExportFileButton.getSelection() && oldFileToCompare != null) {
+			String newName = newFileToCompare.getName().replaceAll(".vcml", "_diff.vcml");
+			compareResultsFile = newFileToCompare.getParent().getFile(new Path(newName));
+			resultsFileText.setText(compareResultsFile.getFullPath().toString());
 		} else {
 			try {
-				exportComparisonFile = ROOT.getFile(new Path(thirdPathText.getText()));
+				compareResultsFile = ROOT.getFile(new Path(resultsFileText.getText()));
 			} catch(IllegalArgumentException exception) {
-				exportComparisonFile = null;
+				compareResultsFile = null;
 				setErrorMessage("Please specify a file for the differences export");
 			}
 		}

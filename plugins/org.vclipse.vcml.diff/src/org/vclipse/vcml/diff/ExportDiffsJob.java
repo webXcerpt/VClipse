@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.StringInputStream;
+import org.vclipse.base.UriUtil;
 import org.vclipse.vcml.vcml.Import;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
@@ -37,58 +38,58 @@ import org.vclipse.vcml.vcml.VcmlFactory;
 
 public class ExportDiffsJob extends Job {
 
-	private IFile leftFile;
-	private IFile rightFile;
-	private IFile exportFile;
+	private IFile newFile;
+	private IFile oldFile;
+	private IFile resultsFile;
 	
 	public ExportDiffsJob() {
 		super("Export job for differences betweeen 2 vcml files.");
 	}
 	
-	public void setLeftFile(IFile file) {
-		leftFile = file;
+	public void setOldFile(IFile file) {
+		newFile = file;
 	}
 	
-	public void setRightFile(IFile file) {
-		rightFile = file;
+	public void setNewFile(IFile file) {
+		oldFile = file;
 	}
 	
-	public void setExportFile(IFile file) {
-		exportFile = file;
+	public void setResultsFile(IFile file) {
+		resultsFile = file;
 	}
 	
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
-		assert leftFile != null;
-		assert rightFile != null;
-		assert exportFile != null;
+		assert newFile != null;
+		assert oldFile != null;
+		assert resultsFile != null;
 		
 		IStatus jobStatus = Status.OK_STATUS;
 		monitor.beginTask("Exporting differences...", 35);
 		try  {
 			monitor.subTask("Creating export file...");
-			if(!exportFile.exists()) {
-				exportFile.create(new StringInputStream(""), true, monitor);
+			if(!resultsFile.exists()) {
+				resultsFile.create(new StringInputStream(""), true, monitor);
 			} else {
-				exportFile.setContents(new StringInputStream(""), true, true, monitor);
+				resultsFile.setContents(new StringInputStream(""), true, true, monitor);
 			}
 			monitor.worked(5);
 			
 			monitor.subTask("Initialising models for compare operation...");
 			ResourceSet set = new ResourceSetImpl();
-			Resource resource_one = set.getResource(URI.createURI(leftFile.getLocationURI().toString()), true);
-			Resource resource_two = set.getResource(URI.createURI(rightFile.getLocationURI().toString()), true);
+			Resource oldResource = set.getResource(URI.createURI(newFile.getLocationURI().toString()), true);
+			Resource newResource = set.getResource(URI.createURI(oldFile.getLocationURI().toString()), true);
 			
 			monitor.subTask("Comparing models...");
 			Map<String, Object> options = new HashMap<String, Object>();   
 			options.put(MatchOptions.OPTION_DISTINCT_METAMODELS, false);
-			MatchModel matchModel = MatchService.doResourceMatch(resource_one, resource_two, options);
+			MatchModel matchModel = MatchService.doResourceMatch(oldResource, newResource, options);
 			
 			DiffModel diffModel = DiffService.doDiff(matchModel);
 			monitor.worked(10);
 			
 			monitor.subTask("Saving results...");
-			Resource resource = new XtextResourceSet().getResource(URI.createURI(exportFile.getLocationURI().toString()), true);
+			Resource resource = new XtextResourceSet().getResource(URI.createURI(resultsFile.getLocationURI().toString()), true);
 			EList<EObject> contents = resource.getContents();
 			if(!contents.isEmpty()) {
 				contents.clear();				
@@ -96,11 +97,13 @@ public class ExportDiffsJob extends Job {
 			
 			Model vcmlModel = VcmlFactory.eINSTANCE.createModel();		
 			
+			// compute the import uri -> the old file should be imported by the result file
 			Import imStatement = VcmlFactory.eINSTANCE.createImport();
-			imStatement.setImportURI(resource_one.getURI().lastSegment());
+			imStatement.setImportURI(new UriUtil().computeImportUri(oldResource, resource));
 			vcmlModel.getImports().add(imStatement);
 		
-			EList<EObject> contents2 = resource_two.getContents();
+			// get the ups option from the new file and provide it to the results file
+			EList<EObject> contents2 = newResource.getContents();
 			if(!contents2.isEmpty()) {
 				EObject mainObject = contents2.get(0);
 				if(mainObject instanceof Model) {
@@ -118,7 +121,7 @@ public class ExportDiffsJob extends Job {
 			contents.add(vcmlModel);
 			new DiffsHandlerSwitch(vcmlModel, monitor).doSwitch(diffModel);
 			resource.save(Collections.EMPTY_MAP);
-			exportFile.refreshLocal(IResource.DEPTH_ONE, monitor);
+			resultsFile.refreshLocal(IResource.DEPTH_ONE, monitor);
 			monitor.worked(10);
 		} catch(CoreException exception) {
 			VcmlDiffPlugin.log(exception.getMessage(), exception);

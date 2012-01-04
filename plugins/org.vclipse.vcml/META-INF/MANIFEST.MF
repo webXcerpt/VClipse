@@ -17,7 +17,7 @@ Require-Bundle: org.eclipse.xtext.generator;bundle-version="2.1.1",
  org.eclipse.core.runtime,
  org.antlr.runtime;bundle-version="3.2.0",
  org.eclipse.jface,
- org.vclipse.base,
+ org.vclipse.base;visibility:=reexport,
  org.vclipse.jpplib
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.vcml,
