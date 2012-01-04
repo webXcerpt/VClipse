@@ -1,6 +1,8 @@
 package org.vclipse.configscan.views;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -11,12 +13,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.vclipse.configscan.views.Config;
-import org.vclipse.configscan.views.ViewContentProvider;
-import org.vclipse.configscan.views.ConfigScanView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 public class ViewContentProviderTest {
 
@@ -33,7 +31,8 @@ public class ViewContentProviderTest {
 	@Before
 	public void setUp() throws Exception {
 //		waitForJobs();
-		configScanView = (ConfigScanView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(Config.CONFIGSCAN_VIEW_ID);
+		configScanView = (ConfigScanView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
+				ConfigScanView.ID);
 //		waitForJobs();
 		assertNotNull("ConfigScanView must not be null", configScanView);
 		

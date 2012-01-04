@@ -17,21 +17,15 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import com.google.inject.Inject;
 
 //import static org.mockito.Mockito.*;
 
 public class ViewLabelProviderTest {
 	
 	private static final String TEST_CMLT = "C:/eclipse/runtime-New_configuration(2)/JUnit_TestCmlt.cmlt";
-	
-	@Inject
-	private IConfigScanXMLProvider xmlProvider;
-	
+
 	
 	private Document docLog;
 	private Document docInput;
@@ -62,7 +56,8 @@ public class ViewLabelProviderTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		configScanView = (ConfigScanView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(Config.CONFIGSCAN_VIEW_ID);
+		configScanView = (ConfigScanView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
+				ConfigScanView.ID);
 		
 		file = new File(TEST_CMLT);
 		

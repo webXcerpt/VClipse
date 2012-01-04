@@ -9,7 +9,7 @@ import com.sap.conn.jco.JCoException;
 
 public class MockConfigScanRunner implements IConfigScanRunner {
 
-	public String execute(IFile file, String xmlInput, RemoteConnection rc, String matNr, String bomApplication) throws JCoException, CoreException {
+	public String execute(IFile file, String xmlInput, RemoteConnection rc, String matNr) throws JCoException, CoreException {
 		
 		System.err.println("MockConfigScanRunner: executing " + file.getName()); 
 		

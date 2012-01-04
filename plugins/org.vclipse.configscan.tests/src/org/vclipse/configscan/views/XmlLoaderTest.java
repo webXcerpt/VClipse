@@ -57,7 +57,7 @@ public class XmlLoaderTest {
 //			file.create(new ByteArrayInputStream("".getBytes()), true, null);
 //		}
 //		
-		String xmlStr = csr.execute(null, null, null, null, null);	// FIXME
+		String xmlStr = csr.execute(null, null, null, null);	// FIXME
 		Document xml = xmlLoader.parseXmlString(xmlStr);
 	}
 	

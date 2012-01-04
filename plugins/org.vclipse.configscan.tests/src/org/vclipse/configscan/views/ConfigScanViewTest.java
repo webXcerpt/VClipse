@@ -1,22 +1,22 @@
 package org.vclipse.configscan.views;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.vclipse.configscan.views.Config;
-import org.vclipse.configscan.views.ConfigScanView;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class ConfigScanViewTest {
 
@@ -26,7 +26,8 @@ public class ConfigScanViewTest {
 	@Before
 	public void setUp() throws Exception {
 //		waitForJobs();
-		configScanView = (ConfigScanView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(Config.CONFIGSCAN_VIEW_ID);
+		configScanView = (ConfigScanView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
+				ConfigScanView.ID);
 //		waitForJobs();
 		assertNotNull("ConfigScanView must not be null", configScanView);
 		delay(3000);
