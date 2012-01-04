@@ -271,17 +271,18 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 							return eobject;
 						}
 					});
-					IVCMLOutlineActionHandler<?> actionHandler = actionHandlers.get(getInstanceTypeName(obj));
-					if (actionHandler!=null) {
-						visitedSomeAction = true;
-						Method method = actionHandler.getClass().getMethod("isEnabled", new Class[]{getInstanceType(obj)});
-						enabled &= (Boolean)method.invoke(actionHandler, obj);
-						if(enabled) {
-							addSelectedObject(obj);
-						}
-					} else {
-						enabled = false;
+					if(obj != null) {
+						IVCMLOutlineActionHandler<?> actionHandler = actionHandlers.get(getInstanceTypeName(obj));
+						if(actionHandler!=null) {
+							visitedSomeAction = true;
+							Method method = actionHandler.getClass().getMethod("isEnabled", new Class[]{getInstanceType(obj)});
+							enabled &= (Boolean)method.invoke(actionHandler, obj);
+							if(enabled) {
+								addSelectedObject(obj);
+							}
+						} 
 					}
+					enabled = false;
 				} catch (NoSuchMethodException e) {
 					e.printStackTrace();
 					removeSelectedObjects();
