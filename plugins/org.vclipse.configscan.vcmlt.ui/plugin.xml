@@ -246,11 +246,12 @@
     </provider>
   </extension>
   <extension
-        point="org.vclipse.configscan.xmlProvider">
-     <xmlprovider
-           class="org.vclipse.configscan.vcmlt.builder.VcmlTConfigScanXMLProvider"
+        point="org.vclipse.configscan.testLanguageExtension">
+     <languageExtension
            file_extension="vcmlt"
-           name="VcmlT Config Scan Xml Provider">
-     </xmlprovider>
+           labelProvider="org.vclipse.configscan.vcmlt.ui.labeling.VcmlTLabelProvider"
+           name="CmlT ConfigScan Language Extensions"
+           xmlProvider="org.vclipse.configscan.vcmlt.builder.VcmlTConfigScanXMLProvider">
+     </languageExtension>
   </extension>
 </plugin>
