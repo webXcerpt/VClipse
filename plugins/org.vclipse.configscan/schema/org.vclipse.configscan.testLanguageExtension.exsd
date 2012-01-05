@@ -3,7 +3,7 @@
 <schema targetNamespace="org.vclipse.configscan" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.vclipse.configscan" id="org.vclipse.configscan.xmlProvider" name="XML provider for configscan"/>
+         <meta.schema plugin="org.vclipse.configscan" id="org.vclipse.configscan.testLanguageExtension" name="Extensions for ConfigScan plug-in"/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]
@@ -18,7 +18,7 @@
       </annotation>
       <complexType>
          <sequence>
-            <element ref="xmlprovider" minOccurs="0" maxOccurs="10"/>
+            <element ref="languageExtension" minOccurs="0" maxOccurs="10"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -47,12 +47,7 @@
       </complexType>
    </element>
 
-   <element name="xmlprovider">
-      <annotation>
-         <documentation>
-            XML provider should handle any input of your type to transform it to an XML document containing test cases for config scan.
-         </documentation>
-      </annotation>
+   <element name="languageExtension">
       <complexType>
          <attribute name="name" type="string" use="required">
             <annotation>
@@ -61,13 +56,23 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="class" type="string" use="required">
+         <attribute name="xmlProvider" type="string" use="required">
             <annotation>
                <documentation>
                   a fully qualified name of the class that implements org.vclipse.configscan.IConfigScanXMLProvider.
                </documentation>
                <appinfo>
                   <meta.attribute kind="java" basedOn=":org.vclipse.configscan.IConfigScanXMLProvider"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="labelProvider" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.jface.viewers.ILabelProvider"/>
                </appinfo>
             </annotation>
          </attribute>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="org.vclipse.configscan.xmlProvider" name="XML provider for configscan" schema="schema/org.vclipse.configscan.xmlProvider.exsd"/>
+   <extension-point id="org.vclipse.configscan.testLanguageExtension" name="Extensions for ConfigScan plug-in" schema="schema/org.vclipse.configscan.testLanguageExtension.exsd"/>
 	 <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
