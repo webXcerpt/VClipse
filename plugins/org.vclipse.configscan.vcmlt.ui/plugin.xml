@@ -249,9 +249,9 @@
         point="org.vclipse.configscan.testLanguageExtension">
      <languageExtension
            file_extension="vcmlt"
-           labelProvider="org.vclipse.configscan.vcmlt.ui.labeling.VcmlTLabelProvider"
+           labelProvider="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.vclipse.configscan.vcmlt.ui.labeling.VcmlTLabelProvider"
            name="CmlT ConfigScan Language Extensions"
-           xmlProvider="org.vclipse.configscan.vcmlt.builder.VcmlTConfigScanXMLProvider">
+           xmlProvider="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.vclipse.configscan.vcmlt.builder.VcmlTConfigScanXMLProvider">
      </languageExtension>
   </extension>
 </plugin>
