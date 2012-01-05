@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2012 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *    webXcerpt Software GmbH - initial creator
+ ******************************************************************************/
 package org.vclipse.configscan.views;
 
 import java.util.Map;
@@ -11,7 +21,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.vclipse.configscan.Activator;
+import org.vclipse.configscan.ConfigScanPlugin;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -31,7 +41,7 @@ class ViewLabelProvider extends ColumnLabelProvider {
 	 * @param sampleView
 	 */
 	ViewLabelProvider() {
-		plugin = Activator.getDefault();
+		plugin = ConfigScanPlugin.getDefault();
 		imageRegistry = plugin.getImageRegistry();
 		this.elementMap = null;
 		this.inputToUri = null;
@@ -41,12 +51,12 @@ class ViewLabelProvider extends ColumnLabelProvider {
 	}
 
 	public ViewLabelProvider(Map<Element, Element> elementMap, Map<Element, URI> inputToEObject) {	// TODO: objectMap
-		plugin = Activator.getDefault();
+		plugin = ConfigScanPlugin.getDefault();
 		imageRegistry = plugin.getImageRegistry();
 		this.elementMap = elementMap;
 		this.inputToUri = inputToEObject;
 		this.resSet = new XtextResourceSet();
-		Injector injector = Activator.getDefault().getInjector();
+		Injector injector = ConfigScanPlugin.getDefault().getInjector();
 		testLanguageLabelProvider = injector.getInstance(ILabelProvider.class);
 	}
 	

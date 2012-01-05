@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2012 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *    webXcerpt Software GmbH - initial creator
+ ******************************************************************************/
 package org.vclipse.configscan;
 
 import org.eclipse.core.runtime.FileLocator;
@@ -11,77 +21,49 @@ import org.osgi.framework.BundleContext;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.vclipse.configscan.Module;
+
+import org.vclipse.configscan.injection.ConfigScanModule;
 
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin {
+public class ConfigScanPlugin extends AbstractUIPlugin {
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "org.vclipse.configscan"; //$NON-NLS-1$
+	public static final String ID = "org.vclipse.configscan"; //$NON-NLS-1$
 
-	// The shared instance
-	private static Activator plugin;
+	private static ConfigScanPlugin plugin;
 	
 	private Injector injector;
 
-	/**
-	 * The constructor
-	 */
-	public Activator() {
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
-	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
-	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
 	}
 
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
+	public static ConfigScanPlugin getDefault() {
 		return plugin;
 	}
 
 	public Injector getInjector() {
 		if(injector == null) {
-			injector = Guice.createInjector(new Module());
+			injector = Guice.createInjector(new ConfigScanModule());
 		}
 		return injector;
 	}
 	
-	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path
-	 *
-	 * @param path the path
-	 * @return the image descriptor
-	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return imageDescriptorFromPlugin(PLUGIN_ID, path);
+		return imageDescriptorFromPlugin(ID, path);
 	}
-	
 	
 	@Override
     protected void initializeImageRegistry(ImageRegistry registry) {
         super.initializeImageRegistry(registry);
-        Bundle bundle = Platform.getBundle(PLUGIN_ID);
+        Bundle bundle = Platform.getBundle(ID);
 
         
         ImageDescriptor success = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/s.gif"), null));

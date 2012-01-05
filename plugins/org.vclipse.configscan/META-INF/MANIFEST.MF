@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: VClipse ConfigScan Integration Plug-in
 Bundle-SymbolicName: org.vclipse.configscan;singleton:=true
 Bundle-Version: 0.4.1.qualifier
-Bundle-Activator: org.vclipse.configscan.Activator
+Bundle-Activator: org.vclipse.configscan.ConfigScanPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.core.runtime,
@@ -11,9 +11,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.debug.ui,
  org.eclipse.xtext,
  org.eclipse.xtext.ui,
- org.vclipse.connection,
- org.vclipse.vcml,
- org.vclipse.vcml.ui
+ org.vclipse.connection
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.google.inject,

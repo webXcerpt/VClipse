@@ -245,4 +245,12 @@
             extensions="vcmlt">
     </provider>
   </extension>
+  <extension
+        point="org.vclipse.configscan.xmlProvider">
+     <xmlprovider
+           class="org.vclipse.configscan.vcmlt.builder.VcmlTConfigScanXMLProvider"
+           file_extension="vcmlt"
+           name="VcmlT Config Scan Xml Provider">
+     </xmlprovider>
+  </extension>
 </plugin>

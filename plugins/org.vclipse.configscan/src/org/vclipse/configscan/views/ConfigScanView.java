@@ -1,8 +1,17 @@
+/*******************************************************************************
+ * Copyright (c) 2012 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *    webXcerpt Software GmbH - initial creator
+ ******************************************************************************/
 package org.vclipse.configscan.views;
 
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
 
@@ -25,13 +34,12 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.SWT; 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -44,24 +52,11 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.util.ResourceUtil;
+import org.vclipse.configscan.ConfigScanPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import com.google.common.collect.Lists;
-import org.vclipse.configscan.Activator;
-import org.vclipse.configscan.views.Config;
-import org.vclipse.configscan.views.FailureFilter;
-import org.vclipse.configscan.views.FileAction;
-import org.vclipse.configscan.views.Labels;
-import org.vclipse.configscan.views.RemoveLogHeaderFilter;
-import org.vclipse.configscan.views.SuccessFilter;
-import org.vclipse.configscan.views.Util;
-import org.vclipse.configscan.views.ViewContentProvider;
-import org.vclipse.configscan.views.ViewLabelProvider;
-import org.vclipse.configscan.views.ViewOtherLabelProvider;
-import org.vclipse.configscan.views.XmlLoader;
 
 
 /**
@@ -87,7 +82,7 @@ public class ConfigScanView extends ViewPart {
 	/**
 	 * The ID of the view as specified by the extension.
 	 */
-	public static final String ID = "com.webxcerpt.cm.nsn.cmlt.configscan.views";
+	public static final String ID = "org.vclipse.configscan.ConfigScanView";
 
 	
 	
@@ -158,7 +153,7 @@ public class ConfigScanView extends ViewPart {
 		
 
 		// Create the help context id for the viewer's control
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), "XmlTreeViewer.viewer");
+		//PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), "XmlTreeViewer.viewer");
 		
 		makeActions();
 //		hookContextMenu();
@@ -228,7 +223,7 @@ public class ConfigScanView extends ViewPart {
 		};
 		
 		
-		collapseAll = new Action("Collapse all", Activator.getDefault().getImageRegistry().getDescriptor("collapseAll")) {
+		collapseAll = new Action("Collapse all", ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("collapseAll")) {
 			public void run() {
 				viewer.refresh();
 				viewer.collapseAll();
@@ -237,7 +232,7 @@ public class ConfigScanView extends ViewPart {
 		};
 		collapseAll.setToolTipText("Collapse all");
 		
-		expandAll = new Action("Expand all", Activator.getDefault().getImageRegistry().getDescriptor("expandAll")) {
+		expandAll = new Action("Expand all", ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("expandAll")) {
 			public void run() {
 				
 				
@@ -251,7 +246,7 @@ public class ConfigScanView extends ViewPart {
 		
 		failures = new Action("", IAction.AS_CHECK_BOX) {
 			public void run() {
-				failures.setImageDescriptor(Activator.getDefault().getImageRegistry().getDescriptor("failures"));
+				failures.setImageDescriptor(ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("failures"));
 				
 				if(fFilter == null) {
 					
@@ -271,21 +266,21 @@ public class ConfigScanView extends ViewPart {
 			}
 		};
 		failures.setToolTipText("Failures");
-		failures.setImageDescriptor(Activator.getDefault().getImageRegistry().getDescriptor("failures"));
+		failures.setImageDescriptor(ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("failures"));
 		
-		rerunAll = new Action("Rerun all", Activator.getDefault().getImageRegistry().getDescriptor("relaunch")) {
+		rerunAll = new Action("Rerun all", ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("relaunch")) {
 			public void run() {
 			}
 		};
 		rerunAll.setToolTipText("Reruns all tests");
 		
-		rerunFailures = new Action("Rerun failures", Activator.getDefault().getImageRegistry().getDescriptor("relaunchf")) {
+		rerunFailures = new Action("Rerun failures", ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("relaunchf")) {
 			public void run() {
 			}
 		};
 		rerunFailures.setToolTipText("Reruns all failed tests");
 		
-		nextFailure = new Action("Next failure", Activator.getDefault().getImageRegistry().getDescriptor("select_next")) {
+		nextFailure = new Action("Next failure", ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("select_next")) {
 			public void run() {
 				ISelection selection = viewer.getSelection();
 				IStructuredSelection ss = ((IStructuredSelection) selection);
@@ -345,7 +340,7 @@ public class ConfigScanView extends ViewPart {
 		nextFailure.setToolTipText("Jump to next failed test");
 
 		
-		previousFailure = new Action("Previous failure", Activator.getDefault().getImageRegistry().getDescriptor("select_prev")) {
+		previousFailure = new Action("Previous failure", ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("select_prev")) {
 			public void run() {
 				ISelection selection = viewer.getSelection();
 				IStructuredSelection ss = ((IStructuredSelection) selection);
@@ -431,14 +426,14 @@ public class ConfigScanView extends ViewPart {
 						
 						setChecked(true);				
 						viewer.setLabelProvider(new ViewOtherLabelProvider(mapLogInput, inputToEObject));
-						toggleContent.setImageDescriptor(Activator.getDefault().getImageRegistry().getDescriptor("cmlt"));
+						toggleContent.setImageDescriptor(ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("cmlt"));
 						toggleContent.setToolTipText("Display with ConfigScan labels");
 					}
 					
 					else {
 						setChecked(false);
 						viewer.setLabelProvider(new ViewLabelProvider(mapLogInput, inputToEObject));
-						toggleContent.setImageDescriptor(Activator.getDefault().getImageRegistry().getDescriptor("configscan"));
+						toggleContent.setImageDescriptor(ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("configscan"));
 						toggleContent.setToolTipText("Display with CMLT labels");
 					}
 				}
@@ -447,7 +442,7 @@ public class ConfigScanView extends ViewPart {
 				
 			}
 		};
-		toggleContent.setImageDescriptor(Activator.getDefault().getImageRegistry().getDescriptor("configscan"));
+		toggleContent.setImageDescriptor(ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("configscan"));
 		toggleContent.setToolTipText("Display with CMLT labels");
 		
 		
