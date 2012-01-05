@@ -30,34 +30,9 @@ import org.xml.sax.SAXException;
 
 public class XmlLoader  {
 
-	 
-	
-	public Document parseXml(String filename)  {
-		DocumentBuilder xmlDocBuilder;
-		Document doc = null;
-		try {
-			xmlDocBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		
-			doc = xmlDocBuilder.parse(filename);
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		}		
-		
-				
-		return doc;
-	}
-		
-		
-
 	public Document parseXmlString(String xmlStr) {
-		
 		StringReader reader = new StringReader(xmlStr);
 		org.xml.sax.InputSource src = new org.xml.sax.InputSource(reader);
-		
 		DocumentBuilder xmlDocBuilder;
 		Document doc = null;
 		try {

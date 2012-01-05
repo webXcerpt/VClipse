@@ -36,8 +36,7 @@ import org.w3c.dom.NodeList;
  * it and always show the same content 
  * (like Task List, for example).
  */
-class ViewContentProvider implements IStructuredContentProvider, 
-										   ITreeContentProvider {
+class ViewContentProvider implements ITreeContentProvider {
 		/**
 		 * 
 		 */

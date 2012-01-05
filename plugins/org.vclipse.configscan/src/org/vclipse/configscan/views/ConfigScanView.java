@@ -58,6 +58,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.google.inject.Inject;
+
 
 /**
  * This sample class demonstrates how to plug-in a new
@@ -84,6 +86,8 @@ public class ConfigScanView extends ViewPart {
 	 */
 	public static final String ID = "org.vclipse.configscan.ConfigScanView";
 
+	@Inject
+	private XmlLoader xmlLoader;
 	
 	
 	private TreeViewer viewer;
@@ -556,7 +560,7 @@ public class ConfigScanView extends ViewPart {
 		    Calendar c1 = Calendar.getInstance(); // today
 		    String today = sdf.format(c1.getTime());
 			String currentFilename = "XML_LOG_" + today + ".xml";
-			String xmlLog = new XmlLoader().parseXmlToString(xmlLogDoc);
+			String xmlLog = xmlLoader.parseXmlToString(xmlLogDoc);
 		    Util.saveStringToDisc(currentFilename, xmlLog);
 		}
 		

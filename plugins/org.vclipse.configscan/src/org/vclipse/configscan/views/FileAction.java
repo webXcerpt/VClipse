@@ -11,6 +11,11 @@
 package org.vclipse.configscan.views;
 
 
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -23,6 +28,11 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.xtext.util.Files;
+import org.vclipse.configscan.ConfigScanPlugin;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+
+import com.google.inject.Inject;
 
 
 /** This class is for the File-Menu drop-down.
@@ -82,6 +92,8 @@ public class FileAction extends Action implements IMenuCreator {
 		return null;
 	}
 
+	@Inject
+	private DocumentBuilder documentBuilder;
 	
 	public class ImportXmlSelectionListener implements SelectionListener {
 
@@ -96,18 +108,23 @@ public class FileAction extends Action implements IMenuCreator {
 			}
 			else {
 				String content = Files.readFileIntoString(path);
-				viewer.setContentProvider(new ViewContentProvider(content));
-				viewer.setLabelProvider(new ViewLabelProvider());			// we have no map
-				
-				viewer.refresh();
-				viewer.expandToLevel(Config.EXPAND_LEVEL);
-				int runs = ((ViewContentProvider) viewer.getContentProvider()).getNumberOfRuns();
-				int successes = ((ViewContentProvider) viewer.getContentProvider()).getNumberOfSuccess();
-				int failures = ((ViewContentProvider) viewer.getContentProvider()).getNumberOfFailure();
-				int time = 0;
-				labels.updateLabels(runs, failures, successes, time);
+				try {
+					Document document = documentBuilder.parse(content);
+					viewer.setInput(document);
+					viewer.expandToLevel(Config.EXPAND_LEVEL);
+					viewer.refresh();
+					
+					int runs = ((ViewContentProvider) viewer.getContentProvider()).getNumberOfRuns();
+					int successes = ((ViewContentProvider) viewer.getContentProvider()).getNumberOfSuccess();
+					int failures = ((ViewContentProvider) viewer.getContentProvider()).getNumberOfFailure();
+					int time = 0;
+					labels.updateLabels(runs, failures, successes, time);
+				} catch (SAXException exception) {
+					ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR, exception);
+				} catch (IOException exception) {
+					ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR, exception);
+				}
 			}
-
 		}
 
 		@Override

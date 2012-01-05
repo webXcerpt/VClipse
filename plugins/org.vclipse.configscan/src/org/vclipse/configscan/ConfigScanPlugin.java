@@ -11,8 +11,10 @@
 package org.vclipse.configscan;
 
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -58,6 +60,11 @@ public class ConfigScanPlugin extends AbstractUIPlugin {
 	
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(ID, path);
+	}
+
+	public static void log(String message, int severity, Throwable throwable) {
+		Status status = new Status(severity, ID, IStatus.OK, message, throwable);
+		getDefault().getLog().log(status);
 	}
 	
 	@Override

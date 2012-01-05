@@ -10,18 +10,17 @@
  ******************************************************************************/
 package org.vclipse.configscan.injection;
 
-import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.Platform;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.xtext.service.AbstractGenericModule;
-import org.vclipse.configscan.ConfigScanPlugin;
-import org.vclipse.configscan.IConfigScanRemoteConnections;
-import org.vclipse.configscan.IConfigScanRunner;
-import org.vclipse.configscan.MockConfigScanRemoteConnections;
-import org.vclipse.configscan.MockConfigScanRunner;
+import org.vclipse.configscan.IConfigScanXMLProvider;
+import org.vclipse.configscan.impl.ConfigScanXmlProvider;
+import org.vclipse.configscan.views.ViewLabelProvider;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.connection.VClipseConnectionPlugin;
-import org.vclipse.configscan.views.ViewLabelProvider;
 
 public class ConfigScanModule extends AbstractGenericModule {
 
@@ -29,19 +28,24 @@ public class ConfigScanModule extends AbstractGenericModule {
 		return VClipseConnectionPlugin.getDefault().getInjector().getInstance(IConnectionHandler.class);
 	}
 	
-	public Class<? extends IConfigScanRemoteConnections> bindConfigScanRemoteConnections() {
-		return MockConfigScanRemoteConnections.class;
-	}
-	
-	public Class<? extends IConfigScanRunner> bindConfigScanRunner() {
-		return MockConfigScanRunner.class;
-	}
+//	public Class<? extends IConfigScanRemoteConnections> bindConfigScanRemoteConnections() {
+//		return MockConfigScanRemoteConnections.class;
+//	}
+//	
+//	public Class<? extends IConfigScanRunner> bindConfigScanRunner() {
+//		return MockConfigScanRunner.class;
+//	}
 	
 	public Class<? extends ILabelProvider> bindILabelProvider() {
 		return ViewLabelProvider.class;
 	}
 	
-	public ILog bindLogInstance() {
-		return Platform.getLog(ConfigScanPlugin.getDefault().getBundle());
+	public Class<? extends IConfigScanXMLProvider> bindConfigScanXmlProvider() {
+		return ConfigScanXmlProvider.class;
 	}
+	
+	public DocumentBuilder bindDocumentBuilder() throws ParserConfigurationException {
+		return DocumentBuilderFactory.newInstance().newDocumentBuilder();
+	}
+	
 }

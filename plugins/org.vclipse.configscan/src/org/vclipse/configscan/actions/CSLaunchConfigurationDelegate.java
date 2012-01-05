@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -45,7 +44,6 @@ import org.vclipse.configscan.IConfigScanRemoteConnections;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
 import org.vclipse.configscan.IConfigScanRunner;
 import org.vclipse.configscan.IConfigScanXMLProvider;
-import org.vclipse.configscan.impl.ConfigScanXmlProvider;
 import org.vclipse.configscan.views.ConfigScanView;
 import org.vclipse.configscan.views.XmlLoader;
 import org.w3c.dom.Document;
@@ -76,9 +74,9 @@ public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 	private IConfigScanRemoteConnections remoteConnections;
 	
 	@Inject
-	private ILog configScanPluginLog;
+	private XmlLoader xmlLoader;
 	
-	// the default xml provider
+	@Inject
 	private IConfigScanXMLProvider xmlProvider;
 	
 	// xml providers available through the extension point
@@ -86,7 +84,6 @@ public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 	
 	public CSLaunchConfigurationDelegate() {
 		availableXmlProvider = Maps.newHashMapWithExpectedSize(10);
-		xmlProvider = new ConfigScanXmlProvider();
 	}
 	
 	@Override
@@ -108,13 +105,10 @@ public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 						if(selectedElement instanceof IFile) {
 							final IFile currentFile = (IFile)selectedElement;
 							final String fileExtension = currentFile.getFileExtension();
-							final XtextResourceSet xtextResourceSet = new XtextResourceSet();
-							
 							// do we have a registered xml provider for this file extension?
 							if(!availableXmlProvider.containsKey(fileExtension)) {
 								RuntimeException missingExtension = new RuntimeException(MISSING_EXTENSION_WARNING_MESSAGE + fileExtension);
-								configScanPluginLog.log(new Status(IStatus.WARNING, 
-										ConfigScanPlugin.ID, missingExtension.getMessage(), missingExtension));
+								ConfigScanPlugin.log(missingExtension.getMessage(), IStatus.WARNING, missingExtension);
 							} else {
 								Job configScanTestJob = new Job("Executing test cases with ConfigScan") {
 									@Override
@@ -124,7 +118,7 @@ public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 										monitor.subTask("Loading file " + currentFile.getName());
 										URI currentUri = URI.createURI(currentFile.getLocationURI().toString());
 										
-										Resource currentResource = xtextResourceSet.getResource(currentUri, true);
+										Resource currentResource = new XtextResourceSet().getResource(currentUri, true);
 										if(currentResource == null) {
 											monitor.done();
 											return new Status(IStatus.ERROR, ConfigScanPlugin.ID, "Could not load a resource for the file " + currentFile.getName());
@@ -141,12 +135,12 @@ public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 											List<? extends RemoteConnection> remoteConnectionsList = remoteConnections.readConfigScanRemoteConnections();
 											if(connectionIndex < remoteConnectionsList.size()) {
 												RemoteConnection remoteConnection = remoteConnectionsList.get(connectionIndex);
-												XmlLoader xmlLoader = new XmlLoader();
-
 												final HashMap<Element, URI> inputToUriMap = new HashMap<Element, URI>();
 												final Document xmlInputDocument = xmlProvider.transform(contents.get(0), inputToUriMap);
 												String xmlLog = runner.execute(currentFile, xmlLoader.parseXmlToString(xmlInputDocument), 
 														remoteConnection, xmlProvider.getMaterialNumber(contents.get(0)));
+												
+												
 												final Document xmlLogDocument = xmlLoader.parseXmlString(xmlLog);
 												final Map<Element, Element> mapLogInput = xmlProvider.computeConfigScanMap(xmlLogDocument, xmlInputDocument);
 
@@ -159,18 +153,15 @@ public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 															view = (ConfigScanView)page.showView(ConfigScanView.ID);
 															view.setInput(xmlLogDocument, xmlInputDocument, mapLogInput, inputToUriMap);
 														} catch (PartInitException exception) {
-															configScanPluginLog.log(new Status(IStatus.ERROR, 
-																	ConfigScanPlugin.ID, exception.getMessage(), exception.getCause()));
+															ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR, exception.getCause());
 														}
 													}
 												});
 											}
 										} catch (JCoException exception) {
-											configScanPluginLog.log(new Status(IStatus.ERROR, 
-													ConfigScanPlugin.ID, exception.getMessage(), exception.getCause()));
+											ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR, exception.getCause());
 										} catch (CoreException exception) {
-											configScanPluginLog.log(new Status(IStatus.ERROR, 
-													ConfigScanPlugin.ID, exception.getMessage(), exception.getCause()));
+											ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR, exception.getCause());
 										}
 										monitor.done();
 										return Status.OK_STATUS;
@@ -205,8 +196,7 @@ public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 							}
 						} catch (CoreException exception) {
 							// log the error
-							configScanPluginLog.log(new Status(IStatus.ERROR, 
-									ConfigScanPlugin.ID, exception.getMessage(), exception.getCause()));
+							ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR, exception.getCause());
 							
 							// handle the next extension
 							continue;
