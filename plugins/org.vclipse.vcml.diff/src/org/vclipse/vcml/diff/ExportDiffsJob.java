@@ -77,8 +77,8 @@ public class ExportDiffsJob extends Job {
 			
 			monitor.subTask("Initialising models for compare operation...");
 			ResourceSet set = new ResourceSetImpl();
-			Resource oldResource = set.getResource(URI.createURI(newFile.getLocationURI().toString()), true);
-			Resource newResource = set.getResource(URI.createURI(oldFile.getLocationURI().toString()), true);
+			Resource newResource = set.getResource(URI.createURI(newFile.getLocationURI().toString()), true);
+			Resource oldResource = set.getResource(URI.createURI(oldFile.getLocationURI().toString()), true);
 			
 			monitor.subTask("Comparing models...");
 			Map<String, Object> options = new HashMap<String, Object>();   
