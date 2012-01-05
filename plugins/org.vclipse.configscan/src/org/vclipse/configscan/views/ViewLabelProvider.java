@@ -28,7 +28,7 @@ import org.w3c.dom.Node;
 
 import com.google.inject.Injector;
 
-class ViewLabelProvider extends ColumnLabelProvider {
+public class ViewLabelProvider extends ColumnLabelProvider {
 
 	protected AbstractUIPlugin plugin;
 	protected ImageRegistry imageRegistry;

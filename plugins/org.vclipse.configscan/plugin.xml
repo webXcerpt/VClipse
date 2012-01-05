@@ -32,11 +32,12 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            allowMultiple="true"
+            allowMultiple="false"
             class="org.vclipse.configscan.views.ConfigScanView"
             icon="icons/fysbee.png"
             id="org.vclipse.configscan.ConfigScanView"
-            name="ConfigScan">
+            name="ConfigScan"
+            restorable="false">
       </view>
    </extension>
    <extension

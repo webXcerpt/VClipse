@@ -11,7 +11,6 @@
 package org.vclipse.configscan.actions;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -42,9 +42,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanRemoteConnections;
+import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
 import org.vclipse.configscan.IConfigScanRunner;
 import org.vclipse.configscan.IConfigScanXMLProvider;
-import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
 import org.vclipse.configscan.impl.ConfigScanXmlProvider;
 import org.vclipse.configscan.views.ConfigScanView;
 import org.vclipse.configscan.views.XmlLoader;
@@ -56,6 +56,8 @@ import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
 
 public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
+
+	private static final String MISSING_EXTENSION_WARNING_MESSAGE = "There is no registered xml provider for files with extension ";
 
 	// the id of the extension point
 	private static final String XML_PROVIDER_EXTENSION_POINT_ID = "org.vclipse.configscan.xmlProvider";
@@ -73,6 +75,9 @@ public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 	@Inject
 	private IConfigScanRemoteConnections remoteConnections;
 	
+	@Inject
+	private ILog configScanPluginLog;
+	
 	// the default xml provider
 	private IConfigScanXMLProvider xmlProvider;
 	
@@ -86,10 +91,11 @@ public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 	
 	@Override
 	public void launch(final ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
+		// read the extension point
 		if(availableXmlProvider.isEmpty()) {
 			readXmlProviderExtension();
 		}
-		Display.getDefault().syncExec(new Runnable() {
+		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -97,88 +103,90 @@ public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 					final IWorkbenchPage page = window.getActivePage();
 					final ISelection selection = page.getSelection();
 					if(selection instanceof IStructuredSelection) {
-						Job configScanTestJob = new Job("Executing test cases with ConfigScan") {
-							@Override
-							protected IStatus run(IProgressMonitor monitor) {
-								int connectionIndex;
-								try {
-									connectionIndex = configuration.getAttribute(OptionsLaunchConfigurationTab.CURRENT_CONNECTION_INDEX, 0);
-								} catch (CoreException e1) {
-									connectionIndex = 0;
-									e1.printStackTrace();
-								}
-								
-								Iterator<?> filesContainingTests = ((IStructuredSelection)selection).iterator();
-								
-								monitor.beginTask("Sending test cases to ConfigScan", IProgressMonitor.UNKNOWN);
-								while(filesContainingTests.hasNext()) {
-									Object nextObject = filesContainingTests.next();
-									if(nextObject instanceof IFile) {
-										IFile currentFile = (IFile)nextObject;
-										String fileExtension = currentFile.getFileExtension();
-										if(availableXmlProvider.containsKey(fileExtension)) {
-											xmlProvider = availableXmlProvider.get(fileExtension);
-											monitor.subTask("Loading file " + currentFile.getName());
-											URI currentUri = URI.createURI(currentFile.getLocationURI().toString());
-								
-											Resource currentResource = new XtextResourceSet().getResource(currentUri, true);
-											if(currentResource == null) {
-												continue;
-											}
-											
-											EList<EObject> contents = currentResource.getContents();
-											if(contents.isEmpty()) {
-												continue;
-											}
-											
-											List<? extends RemoteConnection> remoteConnectionsList;
-											try {
-												remoteConnectionsList = remoteConnections.readConfigScanRemoteConnections();
-												if(connectionIndex < remoteConnectionsList.size()) {
-													RemoteConnection remoteConnection = remoteConnectionsList.get(connectionIndex);
-													XmlLoader xmlLoader = new XmlLoader();
-													
-													final HashMap<Element, URI> inputToUriMap = new HashMap<Element, URI>();
-													final Document xmlInputDocument = xmlProvider.transform(contents.get(0), inputToUriMap);
-													String xmlLog = runner.execute(currentFile, xmlLoader.parseXmlToString(xmlInputDocument), 
-															remoteConnection, xmlProvider.getMaterialNumber(contents.get(0)));
-													final Document xmlLogDocument = xmlLoader.parseXmlString(xmlLog);
-													final Map<Element, Element> mapLogInput = xmlProvider.computeConfigScanMap(xmlLogDocument, xmlInputDocument);
-													
-													
-													Display.getDefault().syncExec(new Runnable() {
-														@Override
-														public void run() {
-															ConfigScanView view;
-															try {
-																view = (ConfigScanView)page.showView(ConfigScanView.ID);
-																view.setInput(xmlLogDocument, xmlInputDocument, mapLogInput, inputToUriMap);
-															} catch (PartInitException exception) {
-																exception.printStackTrace();
-															}
-														}
-													});
-												}
-											} catch (JCoException e) {
-												e.printStackTrace();
-											} catch (CoreException e) {
-												e.printStackTrace();
-											}
+						// handle only the first selected object
+						Object selectedElement = ((IStructuredSelection)selection).getFirstElement();
+						if(selectedElement instanceof IFile) {
+							final IFile currentFile = (IFile)selectedElement;
+							final String fileExtension = currentFile.getFileExtension();
+							final XtextResourceSet xtextResourceSet = new XtextResourceSet();
+							
+							// do we have a registered xml provider for this file extension?
+							if(!availableXmlProvider.containsKey(fileExtension)) {
+								RuntimeException missingExtension = new RuntimeException(MISSING_EXTENSION_WARNING_MESSAGE + fileExtension);
+								configScanPluginLog.log(new Status(IStatus.WARNING, 
+										ConfigScanPlugin.ID, missingExtension.getMessage(), missingExtension));
+							} else {
+								Job configScanTestJob = new Job("Executing test cases with ConfigScan") {
+									@Override
+									protected IStatus run(IProgressMonitor monitor) {
+										monitor.beginTask("Sending test cases to ConfigScan", IProgressMonitor.UNKNOWN);
+										xmlProvider = availableXmlProvider.get(fileExtension);
+										monitor.subTask("Loading file " + currentFile.getName());
+										URI currentUri = URI.createURI(currentFile.getLocationURI().toString());
+										
+										Resource currentResource = xtextResourceSet.getResource(currentUri, true);
+										if(currentResource == null) {
+											monitor.done();
+											return new Status(IStatus.ERROR, ConfigScanPlugin.ID, "Could not load a resource for the file " + currentFile.getName());
 										}
+
+										EList<EObject> contents = currentResource.getContents();
+										if(contents.isEmpty()) {
+											monitor.done();
+											return new Status(IStatus.ERROR, ConfigScanPlugin.ID, "Contents of the file " + currentFile.getName() + " are empty");
+										}
+
+										try {
+											int connectionIndex = configuration.getAttribute(OptionsLaunchConfigurationTab.CURRENT_CONNECTION_INDEX, 0);
+											List<? extends RemoteConnection> remoteConnectionsList = remoteConnections.readConfigScanRemoteConnections();
+											if(connectionIndex < remoteConnectionsList.size()) {
+												RemoteConnection remoteConnection = remoteConnectionsList.get(connectionIndex);
+												XmlLoader xmlLoader = new XmlLoader();
+
+												final HashMap<Element, URI> inputToUriMap = new HashMap<Element, URI>();
+												final Document xmlInputDocument = xmlProvider.transform(contents.get(0), inputToUriMap);
+												String xmlLog = runner.execute(currentFile, xmlLoader.parseXmlToString(xmlInputDocument), 
+														remoteConnection, xmlProvider.getMaterialNumber(contents.get(0)));
+												final Document xmlLogDocument = xmlLoader.parseXmlString(xmlLog);
+												final Map<Element, Element> mapLogInput = xmlProvider.computeConfigScanMap(xmlLogDocument, xmlInputDocument);
+
+
+												Display.getDefault().syncExec(new Runnable() {
+													@Override
+													public void run() {
+														ConfigScanView view;
+														try {
+															view = (ConfigScanView)page.showView(ConfigScanView.ID);
+															view.setInput(xmlLogDocument, xmlInputDocument, mapLogInput, inputToUriMap);
+														} catch (PartInitException exception) {
+															configScanPluginLog.log(new Status(IStatus.ERROR, 
+																	ConfigScanPlugin.ID, exception.getMessage(), exception.getCause()));
+														}
+													}
+												});
+											}
+										} catch (JCoException exception) {
+											configScanPluginLog.log(new Status(IStatus.ERROR, 
+													ConfigScanPlugin.ID, exception.getMessage(), exception.getCause()));
+										} catch (CoreException exception) {
+											configScanPluginLog.log(new Status(IStatus.ERROR, 
+													ConfigScanPlugin.ID, exception.getMessage(), exception.getCause()));
+										}
+										monitor.done();
+										return Status.OK_STATUS;
 									}
-								}
-								monitor.done();
-								return Status.OK_STATUS;
+								};
+								configScanTestJob.schedule();
 							}
-						};
-						configScanTestJob.schedule();
+						}
 					}
 				}
 			}
 		});
-	}
-		
-	protected void readXmlProviderExtension() {
+	};
+	
+	// reads the extension point
+	private void readXmlProviderExtension() {
 		IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(XML_PROVIDER_EXTENSION_POINT_ID);
 		for(IExtension extension : extensionPoint.getExtensions()) {
 			for(IConfigurationElement configurationElement : extension.getConfigurationElements()) {
@@ -197,7 +205,7 @@ public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 							}
 						} catch (CoreException exception) {
 							// log the error
-							Platform.getLog(ConfigScanPlugin.getDefault().getBundle()).log(new Status(IStatus.ERROR, 
+							configScanPluginLog.log(new Status(IStatus.ERROR, 
 									ConfigScanPlugin.ID, exception.getMessage(), exception.getCause()));
 							
 							// handle the next extension
