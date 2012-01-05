@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.vcmlt.vcmlT.BomPath;
+import org.vclipse.configscan.vcmlt.vcmlT.CheckSingleValue;
 import org.vclipse.configscan.vcmlt.vcmlT.Model;
 import org.vclipse.configscan.vcmlt.vcmlT.TestGroup;
 import org.vclipse.configscan.vcmlt.vcmlT.Action;
@@ -103,6 +104,26 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 		action.setAttribute("action", "setvalue");
 		action.setAttribute("name", (object.getCstic()).getName());
 		action.setAttribute("value", getValue(object.getValue()));
+		action.setAttribute("bompath", getChildPath(object.getBompath()));
+		
+		map.put(action, EcoreUtil.getURI(object));
+		current.appendChild(action);
+		return this;
+	}
+
+	@Override
+	// ToDo: handle value as optional entry, and separate from CsticState
+	// ToDo: CsticState
+	// ToDo: NumericLiteral
+	// ToDo: NumericInterval
+	// ToDo: re-think vcmlt design: '=' in check is redundant
+	public Object caseCheckSingleValue (final CheckSingleValue object) {
+		// put here Iterator over object.getStatus();
+		Element action = doc.createElement("checksinglevalue");
+		action.setAttribute("name", (object.getCstic()).getName());
+		if (object.getValue() != null)
+			// ToDo: strip off surrounding quotes
+			action.setAttribute("value", getValue((SymbolicLiteral) object.getValue()));
 		action.setAttribute("bompath", getChildPath(object.getBompath()));
 		
 		map.put(action, EcoreUtil.getURI(object));
