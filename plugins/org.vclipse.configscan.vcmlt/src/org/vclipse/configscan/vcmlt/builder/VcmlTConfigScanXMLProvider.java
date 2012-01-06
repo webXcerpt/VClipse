@@ -1,18 +1,22 @@
 package org.vclipse.configscan.vcmlt.builder;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.vcmlt.vcmlT.BomPath;
+import org.vclipse.configscan.vcmlt.vcmlT.CheckBomItemQty;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckSingleValue;
+import org.vclipse.configscan.vcmlt.vcmlT.CsticState;
 import org.vclipse.configscan.vcmlt.vcmlT.Model;
 import org.vclipse.configscan.vcmlt.vcmlT.TestGroup;
 import org.vclipse.configscan.vcmlt.vcmlT.Action;
@@ -112,22 +116,53 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 	}
 
 	@Override
-	// ToDo: handle value as optional entry, and separate from CsticState
-	// ToDo: CsticState
 	// ToDo: NumericLiteral
 	// ToDo: NumericInterval
 	// ToDo: re-think vcmlt design: '=' in check is redundant
 	public Object caseCheckSingleValue (final CheckSingleValue object) {
-		// put here Iterator over object.getStatus();
-		Element action = doc.createElement("checksinglevalue");
-		action.setAttribute("name", (object.getCstic()).getName());
-		if (object.getValue() != null)
+		EList<CsticState> st = object.getStatus();
+		if (st != null) {
+			Iterator<CsticState> e = object.getStatus().iterator();
+			if (e.hasNext()) {
+				Element checkstatus = doc.createElement("checkstatus");
+				checkstatus.setAttribute("name", (object.getCstic()).getName());
+				checkstatus.setAttribute("bompath", getChildPath(object.getBompath()));
+				map.put(checkstatus, EcoreUtil.getURI(object));
+				current.appendChild(checkstatus);			
+				while (e.hasNext()) {
+					String s = e.next().getName();
+					if (s.equals("invisible"))
+						s = "hidden";
+					Element status = doc.createElement("status");
+					status.setTextContent(s);
+					map.put(status, EcoreUtil.getURI(object));
+					checkstatus.appendChild(status);			
+				}
+			}			
+		}
+
+		if (object.getValue() != null) {
+			Element checksinglevalue = doc.createElement("checksinglevalue");
+			checksinglevalue.setAttribute("name", (object.getCstic()).getName());
 			// ToDo: strip off surrounding quotes
-			action.setAttribute("value", getValue((SymbolicLiteral) object.getValue()));
-		action.setAttribute("bompath", getChildPath(object.getBompath()));
+			checksinglevalue.setAttribute("value", getValue((SymbolicLiteral) object.getValue()));
+			checksinglevalue.setAttribute("bompath", getChildPath(object.getBompath()));
+			map.put(checksinglevalue, EcoreUtil.getURI(object));
+			current.appendChild(checksinglevalue);
+		}
+		return this;
+	}
+
+	@Override
+	// ToDo: doublecheck operator correctness
+	public Object caseCheckBomItemQty (final CheckBomItemQty object) {
+		Element checkbomquantity = doc.createElement("checkbomquantity");
+		checkbomquantity.setAttribute("quantity", Integer.toString(object.getAmount()));
+		checkbomquantity.setAttribute("operator", object.getOperator().getName());
+		checkbomquantity.setAttribute("bompath", getChildPath(object.getBompath()));
 		
-		map.put(action, EcoreUtil.getURI(object));
-		current.appendChild(action);
+		map.put(checkbomquantity, EcoreUtil.getURI(object));
+		current.appendChild(checkbomquantity);
 		return this;
 	}
 
