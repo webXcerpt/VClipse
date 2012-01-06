@@ -56,7 +56,7 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 			}
 			doSwitch(diffElement);
 		}
-		for(EObject root : object.getLeftRoots()) {
+		for(EObject root : object.getRightRoots()) {
 			if(root instanceof Model) {
 				List<DependencyNet> dependencyNets = Lists.newArrayList(Iterables.filter(((Model)root).getObjects(), DependencyNet.class)); // to avoid concurrent modification
 				for(DependencyNet dnet : dependencyNets) {
@@ -79,6 +79,7 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 			if(monitor.isCanceled()) {
 				return HANDLED;
 			}
+			System.err.println("doSwitch " + element + " " + element.getClass().getSimpleName());
 			doSwitch(element);
 		}
 		return NOT_HANDLED;
@@ -91,15 +92,16 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 
 	@Override
 	public Boolean caseModelElementChangeRightTarget(ModelElementChangeRightTarget object) {
-		EObject rightElement = object.getRightElement();
-		// extract deleted VCObjects
-		if(rightElement instanceof VCObject) {
-			return addObject2HandleList(rightElement);
-		} 
-		// otherwise extract VCObject from the left model
-		else {
-			return addObject2HandleList(object.getLeftParent());
-		}
+//		EObject rightElement = object.getRightElement();
+//		// extract deleted VCObjects
+//		if(rightElement instanceof VCObject) {
+//			return addObject2HandleList(rightElement);
+//		} 
+//		// otherwise extract VCObject from the left model
+//		else {
+//			return addObject2HandleList(object.getLeftParent());
+//		}
+		return NOT_HANDLED;
 	}
 	
 	@Override
@@ -138,12 +140,12 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 	
 	@Override
 	public Boolean caseAttributeChangeLeftTarget(AttributeChangeLeftTarget object) {
-		return addObject2HandleList(object.getRightElement());
+		return addObject2HandleList(object.getLeftElement());
 	}
 
 	@Override
 	public Boolean caseAttributeChangeRightTarget(AttributeChangeRightTarget object) {
-		return addObject2HandleList(object.getRightElement());
+		return addObject2HandleList(object.getLeftElement());
 	}
 
 	@Override
@@ -160,7 +162,7 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 		} else {
 			VCObject vcObject = EcoreUtil2.getContainerOfType(object, VCObject.class);
 			if(vcObject != null) {
-				System.err.println("adding " + vcObject);
+				// System.err.println("adding " + vcObject);
 				modelElements.add(vcObject);
 				if(vcObject instanceof Constraint) {
 					constraintNames.add(vcObject.getName());

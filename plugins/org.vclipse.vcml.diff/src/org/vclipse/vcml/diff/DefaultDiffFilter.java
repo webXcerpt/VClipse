@@ -44,7 +44,7 @@ public class DefaultDiffFilter extends EcoreSwitch<Boolean> implements IDiffFilt
 		} else if(VcmlPackage.Literals.VARIANT_TABLE__ARGUMENTS.equals(object)) {
 			return PREFERENCES.getBoolean(IDiffFilter.VARIANT_TABLE_IGNORE_ARGUMENTS_ORDER);
 		} else {
-			return true;
+			return false;
 		}
 	}
 }

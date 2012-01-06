@@ -47,11 +47,11 @@ public class ExportDiffsJob extends Job {
 	}
 	
 	public void setOldFile(IFile file) {
-		newFile = file;
+		oldFile = file;
 	}
 	
 	public void setNewFile(IFile file) {
-		oldFile = file;
+		newFile = file;
 	}
 	
 	public void setResultsFile(IFile file) {
@@ -80,10 +80,15 @@ public class ExportDiffsJob extends Job {
 			Resource newResource = set.getResource(URI.createURI(newFile.getLocationURI().toString()), true);
 			Resource oldResource = set.getResource(URI.createURI(oldFile.getLocationURI().toString()), true);
 			
+			System.err.println("old: " + oldResource);
+			System.err.println("new: " + newResource);
+			
 			monitor.subTask("Comparing models...");
 			Map<String, Object> options = new HashMap<String, Object>();   
 			options.put(MatchOptions.OPTION_DISTINCT_METAMODELS, false);
-			MatchModel matchModel = MatchService.doResourceMatch(oldResource, newResource, options);
+			options.put(MatchOptions.OPTION_IGNORE_ID, false);
+			options.put(MatchOptions.OPTION_IGNORE_XMI_ID, false);
+			MatchModel matchModel = MatchService.doResourceMatch(newResource, oldResource, options);
 			
 			DiffModel diffModel = DiffService.doDiff(matchModel);
 			monitor.worked(10);
