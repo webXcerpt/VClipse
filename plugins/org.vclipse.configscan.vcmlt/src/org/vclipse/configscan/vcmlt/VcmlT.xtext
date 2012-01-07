@@ -56,7 +56,7 @@ CheckDomain
     ;
     
 CheckDomainStrict
-    :   'checkDomain' 'strict' cstic=[VCML::Characteristic] '{'
+    :   'checkDomainStrict' cstic=[VCML::Characteristic] '{'
             values+=DomainStrictValue*
         '}' ('@' bompath=BomPath)?
     ;

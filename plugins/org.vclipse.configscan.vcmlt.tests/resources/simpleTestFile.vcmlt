@@ -17,6 +17,10 @@ testgroup 'ExampleTG' "Example Test Group" success {
 		not 'ADM-3'
 		not 'ADM-4'
 		} @ /
+	checkDomainStrict APPLICATION {
+		'ADM-1'
+		'ADM-2'
+		} @ /
 	check quantity = 1 @ / MAT1
 	check countitems = 5 @ /
 	check consistent @ /
