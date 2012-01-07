@@ -14,7 +14,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.vcmlt.vcmlT.BomPath;
+import org.vclipse.configscan.vcmlt.vcmlT.CheckBomCountItems;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckBomItemQty;
+import org.vclipse.configscan.vcmlt.vcmlT.CheckComplete;
+import org.vclipse.configscan.vcmlt.vcmlT.CheckConflict;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckSingleValue;
 import org.vclipse.configscan.vcmlt.vcmlT.CsticState;
 import org.vclipse.configscan.vcmlt.vcmlT.Model;
@@ -104,14 +107,14 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 
 	@Override
 	public Object caseSetValue(final SetValue object) {
-		Element action = doc.createElement("command");
-		action.setAttribute("action", "setvalue");
-		action.setAttribute("name", (object.getCstic()).getName());
-		action.setAttribute("value", getValue(object.getValue()));
-		action.setAttribute("bompath", getChildPath(object.getBompath()));
+		Element e = doc.createElement("command");
+		e.setAttribute("action", "setvalue");
+		e.setAttribute("name", (object.getCstic()).getName());
+		e.setAttribute("value", getValue(object.getValue()));
+		e.setAttribute("bompath", getChildPath(object.getBompath()));
 		
-		map.put(action, EcoreUtil.getURI(object));
-		current.appendChild(action);
+		map.put(e, EcoreUtil.getURI(object));
+		current.appendChild(e);
 		return this;
 	}
 
@@ -122,33 +125,33 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 	public Object caseCheckSingleValue (final CheckSingleValue object) {
 		EList<CsticState> st = object.getStatus();
 		if (st != null) {
-			Iterator<CsticState> e = object.getStatus().iterator();
-			if (e.hasNext()) {
-				Element checkstatus = doc.createElement("checkstatus");
-				checkstatus.setAttribute("name", (object.getCstic()).getName());
-				checkstatus.setAttribute("bompath", getChildPath(object.getBompath()));
-				map.put(checkstatus, EcoreUtil.getURI(object));
-				current.appendChild(checkstatus);			
-				while (e.hasNext()) {
-					String s = e.next().getName();
+			Iterator<CsticState> sti = object.getStatus().iterator();
+			if (sti.hasNext()) {
+				Element es = doc.createElement("checkstatus");
+				es.setAttribute("name", (object.getCstic()).getName());
+				es.setAttribute("bompath", getChildPath(object.getBompath()));
+				map.put(es, EcoreUtil.getURI(object));
+				current.appendChild(es);			
+				while (sti.hasNext()) {
+					String s = sti.next().getName();
 					if (s.equals("invisible"))
 						s = "hidden";
-					Element status = doc.createElement("status");
-					status.setTextContent(s);
-					map.put(status, EcoreUtil.getURI(object));
-					checkstatus.appendChild(status);			
+					Element estat = doc.createElement("status");
+					estat.setTextContent(s);
+					map.put(estat, EcoreUtil.getURI(object));
+					es.appendChild(estat);			
 				}
 			}			
 		}
 
 		if (object.getValue() != null) {
-			Element checksinglevalue = doc.createElement("checksinglevalue");
-			checksinglevalue.setAttribute("name", (object.getCstic()).getName());
+			Element ec = doc.createElement("checksinglevalue");
+			ec.setAttribute("name", (object.getCstic()).getName());
 			// ToDo: strip off surrounding quotes
-			checksinglevalue.setAttribute("value", getValue((SymbolicLiteral) object.getValue()));
-			checksinglevalue.setAttribute("bompath", getChildPath(object.getBompath()));
-			map.put(checksinglevalue, EcoreUtil.getURI(object));
-			current.appendChild(checksinglevalue);
+			ec.setAttribute("value", getValue((SymbolicLiteral) object.getValue()));
+			ec.setAttribute("bompath", getChildPath(object.getBompath()));
+			map.put(ec, EcoreUtil.getURI(object));
+			current.appendChild(ec);
 		}
 		return this;
 	}
@@ -156,13 +159,52 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 	@Override
 	// ToDo: doublecheck operator correctness
 	public Object caseCheckBomItemQty (final CheckBomItemQty object) {
-		Element checkbomquantity = doc.createElement("checkbomquantity");
-		checkbomquantity.setAttribute("quantity", Integer.toString(object.getAmount()));
-		checkbomquantity.setAttribute("operator", object.getOperator().getName());
-		checkbomquantity.setAttribute("bompath", getChildPath(object.getBompath()));
+		Element e = doc.createElement("checkbomquantity");
+		e.setAttribute("quantity", Integer.toString(object.getAmount()));
+		e.setAttribute("operator", object.getOperator().getName());
+		e.setAttribute("bompath", getChildPath(object.getBompath()));
 		
-		map.put(checkbomquantity, EcoreUtil.getURI(object));
-		current.appendChild(checkbomquantity);
+		map.put(e, EcoreUtil.getURI(object));
+		current.appendChild(e);
+		return this;
+	}
+
+	@Override
+	public Object caseCheckBomCountItems (final CheckBomCountItems object) {
+		Element e = doc.createElement("countitems");
+		e.setAttribute("quantity", Integer.toString(object.getValue()));
+		e.setAttribute("bompath", getChildPath(object.getBompath()));
+		
+		map.put(e, EcoreUtil.getURI(object));
+		current.appendChild(e);
+		return this;
+	}
+
+	@Override
+	public Object caseCheckComplete (final CheckComplete object) {
+		Element e = doc.createElement("checkinststatus");
+		if (object.isComplete())
+			e.setAttribute("iscomplete", "TRUE");
+		else
+			e.setAttribute("iscomplete", "FALSE");
+		e.setAttribute("bompath", getChildPath(object.getBompath()));
+		
+		map.put(e, EcoreUtil.getURI(object));
+		current.appendChild(e);
+		return this;
+	}
+
+	@Override
+	public Object caseCheckConflict (final CheckConflict object) {
+		Element e = doc.createElement("checkinststatus");
+		if (object.isConflict())
+			e.setAttribute("isconsistent", "FALSE");
+		else
+			e.setAttribute("isconsistent", "TRUE");
+		e.setAttribute("bompath", getChildPath(object.getBompath()));
+		
+		map.put(e, EcoreUtil.getURI(object));
+		current.appendChild(e);
 		return this;
 	}
 
