@@ -127,9 +127,9 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 	// ToDo: NumericInterval
 	// ToDo: re-think vcmlt design: '=' in check is redundant
 	public Object caseCheckSingleValue (final CheckSingleValue object) {
-		EList<CsticState> st = object.getStatus();
-		if (st != null) {
-			Iterator<CsticState> sti = object.getStatus().iterator();
+		EList<CsticState> sts = object.getStatus();
+		if (sts != null) {
+			Iterator<CsticState> sti = sts.iterator();
 			if (sti.hasNext()) {
 				Element es = doc.createElement("checkstatus");
 				es.setAttribute("name", (object.getCstic()).getName());
