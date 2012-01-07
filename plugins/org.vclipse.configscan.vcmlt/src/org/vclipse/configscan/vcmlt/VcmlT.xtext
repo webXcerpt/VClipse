@@ -71,7 +71,7 @@ DomainStrictValue
     	
 CheckConflict
     :   {CheckConflict}
-        'check' (conflict?='consistent' | 'inconsistent') ('@' bompath=BomPath)?
+        'check' (conflict?='inconsistent' | 'consistent') ('@' bompath=BomPath)?
     ;
     
 CheckComplete
