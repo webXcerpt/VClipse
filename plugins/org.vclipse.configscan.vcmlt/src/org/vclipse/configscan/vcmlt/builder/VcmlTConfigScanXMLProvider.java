@@ -25,6 +25,7 @@ import org.vclipse.configscan.vcmlt.vcmlT.CsticState;
 import org.vclipse.configscan.vcmlt.vcmlT.DomainStrictValue;
 import org.vclipse.configscan.vcmlt.vcmlT.DomainValue;
 import org.vclipse.configscan.vcmlt.vcmlT.Model;
+import org.vclipse.configscan.vcmlt.vcmlT.NumericInterval;
 import org.vclipse.configscan.vcmlt.vcmlT.TestGroup;
 import org.vclipse.configscan.vcmlt.vcmlT.Action;
 import org.vclipse.configscan.vcmlt.vcmlT.SetValue;
@@ -96,6 +97,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 		final String description = testGroup.getDescription();
 		tg.setAttribute("desc", description!=null ? description : name);
 		tg.setAttribute("testmode", testGroup.getTestmode().toString()); // evtl mit geigneter Methode in Attributwert abbilden
+		tg.setAttribute("status", "1");
 		
 		map.put(tg, EcoreUtil.getURI(testGroup));
 		current.appendChild(tg);
@@ -123,8 +125,8 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 	}
 
 	@Override
-	// ToDo: NumericInterval
-	// ToDo: re-think vcmlt design: '=' in check is redundant
+	// ToDo: NumericInterval (less important, rarely used)
+	// ToDo: operator 'NE'
 	public Object caseCheckSingleValue (final CheckSingleValue object) {
 		EList<CsticState> sts = object.getStatus();
 		if (sts != null) {
@@ -150,8 +152,26 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 		if (object.getValue() != null) {
 			Element ec = doc.createElement("checksinglevalue");
 			ec.setAttribute("name", (object.getCstic()).getName());
-			// ToDo: strip off surrounding quotes
-			ec.setAttribute("value", getValue((Literal)object.getValue()));
+			String prefix = "";
+			if ((Literal)object.getValue() instanceof NumericLiteral) {
+				String op = object.getOperator().getName();
+				if (op.equals("LT")) {
+					prefix = "< ";				
+				}
+				else if (op.equals("LE")) {
+					prefix = "<= ";				
+				}
+				else if (op.equals("GT")) {
+					prefix = "> ";				
+				}
+				else if (op.equals("GE")) {
+					prefix = ">= ";				
+				}
+			}
+			else if (object.getValue() instanceof NumericInterval) {
+				return this;
+			}
+			ec.setAttribute("value", prefix + getValue((Literal)object.getValue()));
 			ec.setAttribute("bompath", getChildPath(object.getBompath()));
 			map.put(ec, EcoreUtil.getURI(object));
 			current.appendChild(ec);
@@ -258,10 +278,11 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 		return this;
 	}
 
-	// ToDo: strip off surrounding quotes
 	private String getValue(Literal lit) {
 		if (lit instanceof SymbolicLiteral) {
-		    return ((SymbolicLiteral)lit).getValue();
+			String str = ((SymbolicLiteral)lit).getValue();
+			// strip off surrounding quotes
+		    return (str.substring(1, str.length()-1));
 		} else if (lit instanceof NumericLiteral) {
 		    return ((NumericLiteral)lit).getValue();
 		} else {

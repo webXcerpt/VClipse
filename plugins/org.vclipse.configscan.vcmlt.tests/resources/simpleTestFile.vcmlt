@@ -10,6 +10,12 @@ testgroup 'ExampleTG' "Example Test Group" success {
 	CORE = 'NOCORE' @ / MAT1 / MAT2 / (0030) MAT3 / (0040) MAT4
 	USERMANUAL = 2 @ /
 	check USERMANUAL = 2 @ /
+	check USERMANUAL = 2.5 @ /
+	check USERMANUAL < 3 @ /
+	check USERMANUAL <= 2 @ /
+	check USERMANUAL > 1 @ /
+	check USERMANUAL >= 2 @ /
+//	check USERMANUAL in (1 - 3) @ /
 	check TEMPVAR hidden disabled unset @ /
 	check POWERSUPPLY enabled visible set = 'DC' @ /
 	check CORE = '013' @ /
@@ -24,6 +30,11 @@ testgroup 'ExampleTG' "Example Test Group" success {
 		'ADM-2'
 		} @ /
 	check quantity = 1 @ / MAT1
+	check quantity < 3 @ / MAT1
+	check quantity <= 2 @ / MAT1
+	check quantity >= 1 @ / MAT1
+	check quantity > 0 @ / MAT1
+	check quantity != 2 @ / MAT1
 	check countitems = 5 @ /
 	check consistent @ /
 	check complete @ /
