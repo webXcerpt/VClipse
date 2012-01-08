@@ -12,7 +12,7 @@ package org.vclipse.configscan;
 
 import java.util.List;
 
-import org.vclipse.configscan.impl.ConfigScanRemoteConnections;
+import org.vclipse.configscan.implementation.ConfigScanRemoteConnections;
 
 import com.google.inject.ImplementedBy;
 import com.sap.conn.jco.JCoException;

@@ -8,7 +8,7 @@
  * Contributors:
  *    webXcerpt Software GmbH - initial creator
  ******************************************************************************/
-package org.vclipse.configscan.actions;
+package org.vclipse.configscan.launch;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,12 +16,8 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunch;
@@ -31,6 +27,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
@@ -39,17 +36,18 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.util.Pair;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanRemoteConnections;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
 import org.vclipse.configscan.IConfigScanRunner;
 import org.vclipse.configscan.IConfigScanXMLProvider;
+import org.vclipse.configscan.extension.ExtensionPointReader;
+import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.views.ConfigScanView;
-import org.vclipse.configscan.views.XmlLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
 
@@ -57,16 +55,6 @@ public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 
 	private static final String MISSING_EXTENSION_WARNING_MESSAGE = "There is no registered xml provider for files with extension ";
 
-	// the id of the extension point
-	private static final String XML_PROVIDER_EXTENSION_POINT_ID = "org.vclipse.configscan.xmlProvider";
-	
-	// the name of the configuration element we are interested in
-	private static final String CONFIGURATION_ELEMENT_NAME = "xmlprovider";
-	
-	// attributes provided by the extension point
-	private static final String ATTRIBUTE_CLASS = "class";
-	private static final String ATTRIBUTE_FILE_EXTENSION = "file_extension";
-	
 	@Inject
 	private IConfigScanRunner runner;	
 	
@@ -74,24 +62,17 @@ public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 	private IConfigScanRemoteConnections remoteConnections;
 	
 	@Inject
-	private XmlLoader xmlLoader;
+	private DocumentUtility documentUtility;
 	
 	@Inject
 	private IConfigScanXMLProvider xmlProvider;
 	
-	// xml providers available through the extension point
-	private Map<String, IConfigScanXMLProvider> availableXmlProvider;
-	
-	public CSLaunchConfigurationDelegate() {
-		availableXmlProvider = Maps.newHashMapWithExpectedSize(10);
-	}
-	
+	@Inject
+	private ExtensionPointReader extensionPointReader;
+
 	@Override
 	public void launch(final ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
-		// read the extension point
-		if(availableXmlProvider.isEmpty()) {
-			readXmlProviderExtension();
-		}
+		final Map<String, Pair<IConfigScanXMLProvider, ILabelProvider>> extensions = extensionPointReader.getExtensions();
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
@@ -106,7 +87,7 @@ public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 							final IFile currentFile = (IFile)selectedElement;
 							final String fileExtension = currentFile.getFileExtension();
 							// do we have a registered xml provider for this file extension?
-							if(!availableXmlProvider.containsKey(fileExtension)) {
+							if(!extensions.containsKey(fileExtension)) {
 								RuntimeException missingExtension = new RuntimeException(MISSING_EXTENSION_WARNING_MESSAGE + fileExtension);
 								ConfigScanPlugin.log(missingExtension.getMessage(), IStatus.WARNING, missingExtension);
 							} else {
@@ -114,7 +95,7 @@ public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 									@Override
 									protected IStatus run(IProgressMonitor monitor) {
 										monitor.beginTask("Sending test cases to ConfigScan", IProgressMonitor.UNKNOWN);
-										xmlProvider = availableXmlProvider.get(fileExtension);
+										xmlProvider = extensions.get(fileExtension).getFirst();
 										monitor.subTask("Loading file " + currentFile.getName());
 										URI currentUri = URI.createURI(currentFile.getLocationURI().toString());
 										
@@ -137,11 +118,11 @@ public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 												RemoteConnection remoteConnection = remoteConnectionsList.get(connectionIndex);
 												final HashMap<Element, URI> inputToUriMap = new HashMap<Element, URI>();
 												final Document xmlInputDocument = xmlProvider.transform(contents.get(0), inputToUriMap);
-												String xmlLog = runner.execute(currentFile, xmlLoader.parseXmlToString(xmlInputDocument), 
+												String xmlLog = runner.execute(currentFile, documentUtility.parse(xmlInputDocument), 
 														remoteConnection, xmlProvider.getMaterialNumber(contents.get(0)));
 												
 												
-												final Document xmlLogDocument = xmlLoader.parseXmlString(xmlLog);
+												final Document xmlLogDocument = documentUtility.parse(xmlLog);
 												final Map<Element, Element> mapLogInput = xmlProvider.computeConfigScanMap(xmlLogDocument, xmlInputDocument);
 
 
@@ -176,34 +157,4 @@ public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 		});
 	};
 	
-	// reads the extension point
-	private void readXmlProviderExtension() {
-		IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(XML_PROVIDER_EXTENSION_POINT_ID);
-		for(IExtension extension : extensionPoint.getExtensions()) {
-			for(IConfigurationElement configurationElement : extension.getConfigurationElements()) {
-				if(CONFIGURATION_ELEMENT_NAME.equals(configurationElement.getName())) {
-					String fileExtension = configurationElement.getAttribute(ATTRIBUTE_FILE_EXTENSION);
-					if(fileExtension != null && !fileExtension.isEmpty()) {
-						// only one xml provider for one file extension is allowed
-						if(availableXmlProvider.containsKey(fileExtension)) {
-							continue;
-						}
-						
-						try {
-							Object classObject = configurationElement.createExecutableExtension(ATTRIBUTE_CLASS);
-							if(classObject instanceof IConfigScanXMLProvider) {
-								availableXmlProvider.put(fileExtension, (IConfigScanXMLProvider)classObject);
-							}
-						} catch (CoreException exception) {
-							// log the error
-							ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR, exception.getCause());
-							
-							// handle the next extension
-							continue;
-						}
-					}
-				}
-			}
-		}
-	}
 }

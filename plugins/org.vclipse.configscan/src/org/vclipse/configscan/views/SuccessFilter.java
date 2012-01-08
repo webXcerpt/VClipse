@@ -12,8 +12,11 @@ package org.vclipse.configscan.views;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.vclipse.configscan.utils.DocumentUtility;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import com.google.inject.Inject;
 
 /** SuccessFilter is a ViewerFilter and is used to filter out the elements which have status="S".
  *  If a Element has any child below it with status "S", it is filtered too (displayed).
@@ -22,24 +25,17 @@ import org.w3c.dom.NodeList;
  *
  */
 class SuccessFilter extends ViewerFilter {
+
+	@Inject
+	private DocumentUtility documentUtility;
 	
-
-
-	/** Constructor does nothing
-	 * 
-	 */
-	SuccessFilter() {
-	}
-
 	/** The select method returns true if element or any Element or Child-Element has an attribute
 	 *  named status with a value of "S"
 	 *  
 	 */
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
 		if(element instanceof Element) {
-			if (isAnythingSuccessUnderNode((Element)element)) {
-				return true;
-			}
+			return isAnythingSuccessUnderNode((Element)element);
 		}
 		return false;
 	}
@@ -58,17 +54,18 @@ class SuccessFilter extends ViewerFilter {
 	 * @return
 	 */
 	private boolean isAnythingSuccessUnderNode(Element element) {
-		if (Util.isSuccess(element)) {
+		if(documentUtility.isSuccess(element)) {
 			return true;
-		}
-		NodeList nodes = element.getChildNodes();
-		for(int i = 0; i < nodes.getLength(); i++) {
-			if (nodes.item(i) instanceof Element) {
-				if(isAnythingSuccessUnderNode((Element)nodes.item(i))) {
-					return true;
+		} else {
+			NodeList nodes = element.getChildNodes();
+			for(int i = 0; i<nodes.getLength(); i++) {
+				if(nodes.item(i) instanceof Element) {
+					if(isAnythingSuccessUnderNode((Element)nodes.item(i))) {
+						return true;
+					}
 				}
 			}
+			return false;
 		}
-		return false;
 	}
 }

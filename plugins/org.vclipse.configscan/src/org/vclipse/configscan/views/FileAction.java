@@ -107,23 +107,23 @@ public class FileAction extends Action implements IMenuCreator {
 				// Cancelled
 			}
 			else {
-				String content = Files.readFileIntoString(path);
-				try {
-					Document document = documentBuilder.parse(content);
-					viewer.setInput(document);
-					viewer.expandToLevel(Config.EXPAND_LEVEL);
-					viewer.refresh();
-					
-					int runs = ((ViewContentProvider) viewer.getContentProvider()).getNumberOfRuns();
-					int successes = ((ViewContentProvider) viewer.getContentProvider()).getNumberOfSuccess();
-					int failures = ((ViewContentProvider) viewer.getContentProvider()).getNumberOfFailure();
-					int time = 0;
-					labels.updateLabels(runs, failures, successes, time);
-				} catch (SAXException exception) {
-					ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR, exception);
-				} catch (IOException exception) {
-					ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR, exception);
-				}
+//				String content = Files.readFileIntoString(path);
+//				try {
+//					Document document = documentBuilder.parse(content);
+//					viewer.setInput(document);
+//					viewer.expandToLevel(ConfigScanConfiguration.EXPAND_LEVEL);
+//					viewer.refresh();
+//					
+//					int runs = ((ContentProvider) viewer.getContentProvider()).getNumberOfRuns();
+//					int successes = ((ContentProvider) viewer.getContentProvider()).getNumberOfSuccess();
+//					int failures = ((ContentProvider) viewer.getContentProvider()).getNumberOfFailure();
+//					int time = 0;
+//					labels.updateLabels(runs, failures, successes, time);
+//				} catch (SAXException exception) {
+//					ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR, exception);
+//				} catch (IOException exception) {
+//					ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR, exception);
+//				}
 			}
 		}
 
@@ -152,17 +152,17 @@ public class FileAction extends Action implements IMenuCreator {
 
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			FileDialog fd = new FileDialog(parent.getShell(), SWT.SAVE);
-			fd.setText("XML File Dialog");
-			System.err.println("Trying to show FileDialog");
-			String path = fd.open();
-			if(path == null) {
-				// Cancelled
-			}
-			else {
-				String content = new XmlLoader().parseXmlToString(((ViewContentProvider) viewer.getContentProvider()).getLogDocument());
-				Files.writeStringIntoFile(path, content);
-			}
+//			FileDialog fd = new FileDialog(parent.getShell(), SWT.SAVE);
+//			fd.setText("XML File Dialog");
+//			System.err.println("Trying to show FileDialog");
+//			String path = fd.open();
+//			if(path == null) {
+//				// Cancelled
+//			}
+//			else {
+//				String content = new XmlLoader().parseXmlToString(((ContentProvider) viewer.getContentProvider()).getLogDocument());
+//				Files.writeStringIntoFile(path, content);
+//			}
 		}
 
 		@Override

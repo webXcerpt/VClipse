@@ -10,6 +10,9 @@
  ******************************************************************************/
 package org.vclipse.configscan.views;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -26,10 +29,11 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -52,14 +56,18 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.util.ResourceUtil;
+import org.eclipse.xtext.util.Pair;
 import org.vclipse.configscan.ConfigScanPlugin;
+import org.vclipse.configscan.IConfigScanImages;
+import org.vclipse.configscan.IConfigScanXMLProvider;
+import org.vclipse.configscan.extension.ExtensionPointReader;
+import org.vclipse.configscan.utils.DocumentUtility;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.google.inject.Inject;
-
 
 /**
  * This sample class demonstrates how to plug-in a new
@@ -78,22 +86,29 @@ import com.google.inject.Inject;
  * presented in the same way everywhere.
  * <p>
  */
+public final class ConfigScanView extends ViewPart {
 
-public class ConfigScanView extends ViewPart {
-
-	/**
-	 * The ID of the view as specified by the extension.
-	 */
 	public static final String ID = "org.vclipse.configscan.ConfigScanView";
-
-	@Inject
-	private XmlLoader xmlLoader;
 	
+	@Inject
+	private ImageRegistry imageRegistry;
+	
+	@Inject
+	private ExtensionPointReader extensionPointReader;
+	
+	@Inject
+	private ContentProvider contentProvider;
+	
+	@Inject
+	private DefaultConfigScanLabelProvider labelProvider;
+	
+	@Inject
+	private DocumentUtility documentUtility;
 	
 	private TreeViewer viewer;
+	
 	private DrillDownAdapter drillDownAdapter;
 	private Action failures;
-	private Action doubleClickAction;
 	private Action rerunAll;
 	private Action rerunFailures;
 	private Action nextFailure;
@@ -107,43 +122,38 @@ public class ConfigScanView extends ViewPart {
 	
 	
 	protected SuccessFilter sFilter;
-	protected FailureFilter fFilter;
-
-
+	protected FailureFilter filter;
 
 	private Composite parent;
-
 	private Labels labels;
-
-
-	
-
-	
-
 	
 	
-	/**
-	 * The constructor.
-	 */
-	public ConfigScanView() {
+	public void setFocus() {
+		viewer.getControl().setFocus();
 	}
-
-	/**
-	 * This is a callback that will allow us
-	 * to create the viewer and initialize it.
-	 */
+	
 	public void createPartControl(Composite parent) {
-		
 		GridLayout gridLayout = new GridLayout(4, true);
 		parent.setLayout(gridLayout);
 		
 		labels = new Labels(parent, 0, 0, 0, 0);
 		
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		viewer.setAutoExpandLevel(ConfigScanConfiguration.EXPAND_LEVEL);
+		
+		
 		drillDownAdapter = new DrillDownAdapter(viewer);
-		viewer.setContentProvider(new ViewContentProvider());
+		viewer.setContentProvider(contentProvider);
+		
 		ColumnViewerToolTipSupport.enableFor(viewer);
-		viewer.setLabelProvider(new ViewLabelProvider());		// at initialization we have no map
+		
+		Map<String, Pair<IConfigScanXMLProvider, ILabelProvider>> extensions = extensionPointReader.getExtensions();
+		Pair<IConfigScanXMLProvider, ILabelProvider> pair = extensions.get("cmlt");
+		if(pair != null) {
+			viewer.setLabelProvider(pair.getSecond());
+		} else {
+			viewer.setLabelProvider(labelProvider);		// at initialization we have no map			
+		}
 		viewer.addFilter(new RemoveLogHeaderFilter());
 		
 		
@@ -155,22 +165,16 @@ public class ConfigScanView extends ViewPart {
 		data.horizontalSpan = 4;
 		tree.setLayoutData(data);
 		
-
-		// Create the help context id for the viewer's control
-		//PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), "XmlTreeViewer.viewer");
-		
 		makeActions();
 //		hookContextMenu();
 		hookDoubleClickAction();
-		contributeToActionBars();
-		viewer.expandToLevel(Config.EXPAND_LEVEL);
-		
+		contributeToActionBars();		
 	}
 
+	protected TreeViewer getTreeViewer() {
+		return viewer;
+	}
 	
-
-
-
 	private void hookContextMenu() {
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
 		menuMgr.setRemoveAllWhenShown(true);
@@ -198,7 +202,6 @@ public class ConfigScanView extends ViewPart {
 		manager.add(failures);
 	}
 
-
 	private void fillContextMenu(IMenuManager manager) {
 		manager.add(failures);
 	}
@@ -218,117 +221,101 @@ public class ConfigScanView extends ViewPart {
 	}
 
 	private void makeActions() {
-		doubleClickAction = new Action() {
+		
+		new Action() {
 			public void run() {
 				ISelection selection = viewer.getSelection();
 				Element obj = ((Element)((IStructuredSelection)selection).getFirstElement());
-				showMessage("Double-click detected on "+obj.getTagName());
+				
 			}
 		};
-		
-		
-		collapseAll = new Action("Collapse all", ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("collapseAll")) {
+
+		collapseAll = new Action() {
 			public void run() {
-				viewer.refresh();
 				viewer.collapseAll();
-				viewer.expandToLevel(Config.EXPAND_LEVEL);
+				viewer.refresh();
+				viewer.expandToLevel(ConfigScanConfiguration.EXPAND_LEVEL);
 			}
 		};
+		collapseAll.setText("Collapse all");
+		collapseAll.setImageDescriptor(imageRegistry.getDescriptor(IConfigScanImages.COLLAPSE_ALL));
 		collapseAll.setToolTipText("Collapse all");
 		
-		expandAll = new Action("Expand all", ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("expandAll")) {
+		expandAll = new Action() {
 			public void run() {
-				
-				
 				viewer.refresh();
 				viewer.expandAll();
 			}
 		};
+		expandAll.setText("Expand all");
+		expandAll.setImageDescriptor(imageRegistry.getDescriptor(IConfigScanImages.EXPAND_ALL));
 		expandAll.setToolTipText("Expand all");
-		
 
-		
 		failures = new Action("", IAction.AS_CHECK_BOX) {
 			public void run() {
-				failures.setImageDescriptor(ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("failures"));
-				
-				if(fFilter == null) {
-					
+				failures.setImageDescriptor(imageRegistry.getDescriptor(IConfigScanImages.FAILURES));
+				if(filter == null) {
 					setChecked(true);				
-					fFilter = new FailureFilter();
-					viewer.addFilter(fFilter);
-				}
-				
-				else {
+					filter = new FailureFilter();
+					viewer.addFilter(filter);
+				} else {
 					setChecked(false);
-					viewer.removeFilter(fFilter);
-					fFilter = null;
+					viewer.removeFilter(filter);
+					filter = null;
 				}
-				
-				
 				viewer.refresh();
 			}
 		};
-		failures.setToolTipText("Failures");
-		failures.setImageDescriptor(ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("failures"));
+		failures.setToolTipText("Show only failures");
+		failures.setImageDescriptor(imageRegistry.getDescriptor(IConfigScanImages.FAILURES));
 		
-		rerunAll = new Action("Rerun all", ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("relaunch")) {
+		rerunAll = new Action() {
 			public void run() {
+				
 			}
 		};
+		rerunAll.setText("Rerun all tests");
+		rerunAll.setImageDescriptor(imageRegistry.getDescriptor(IConfigScanImages.RELAUNCH));
 		rerunAll.setToolTipText("Reruns all tests");
 		
-		rerunFailures = new Action("Rerun failures", ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("relaunchf")) {
+		rerunFailures = new Action() {
 			public void run() {
+				
 			}
 		};
+		rerunFailures.setText("Rerun failures");
+		rerunFailures.setImageDescriptor(imageRegistry.getDescriptor(IConfigScanImages.RELAUNCHF));
 		rerunFailures.setToolTipText("Reruns all failed tests");
 		
-		nextFailure = new Action("Next failure", ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("select_next")) {
+		nextFailure = new Action() {
 			public void run() {
 				ISelection selection = viewer.getSelection();
 				IStructuredSelection ss = ((IStructuredSelection) selection);
 				Element lastSelected = ((Element) ss.getFirstElement());
-				
-				
-				Document logDocument = ((ViewContentProvider) viewer.getContentProvider()).getLogDocument();
-				
+				Document logDocument = ((ContentProvider) viewer.getContentProvider()).getInput();
 				NodeList allElements = null;
-				
 				if(logDocument != null) {
 					allElements = logDocument.getElementsByTagName("log_msg");	
 				}
-				 
 				if(allElements != null) {
 					if(lastSelected == null) {
 						lastSelected = (Element) allElements.item(0);
 						ss = new StructuredSelection(lastSelected);
 						viewer.setSelection(ss);
 					}
-				}
-				else {
+				} else {
 					return;
 				}
-				
 				Element nextEl = null;
-				
 				lastSelected = findNextDeepestChild(lastSelected);
-				
-				
 				for(int i = 0; i < allElements.getLength() - 1; i++) {
-					
 					if(allElements.item(i).equals(lastSelected)) {
-						
 						do {
-							
 							nextEl = (Element)(allElements.item(++i)); 
 						} while(i < allElements.getLength() - 1 && !"E".equals(nextEl.getAttribute("status")));
 						break;
 					}
-					
-
 				}
-				
 				if(nextEl != null && "E".equals(nextEl.getAttribute("status"))) {
 						StructuredSelection next = new StructuredSelection(nextEl);
 						viewer.setSelection(next);
@@ -336,22 +323,20 @@ public class ConfigScanView extends ViewPart {
 				else {
 					viewer.setSelection(ss);
 				}
-				
 			}
-
-			
 		};
+		nextFailure.setText("Show next failure");
+		nextFailure.setImageDescriptor(imageRegistry.getDescriptor(IConfigScanImages.SELECT_NEXT));
 		nextFailure.setToolTipText("Jump to next failed test");
 
 		
-		previousFailure = new Action("Previous failure", ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("select_prev")) {
+		previousFailure = new Action() {
 			public void run() {
 				ISelection selection = viewer.getSelection();
 				IStructuredSelection ss = ((IStructuredSelection) selection);
 				Element lastSelected = ((Element) ss.getFirstElement());
 				
-				Document logDocument = ((ViewContentProvider) viewer.getContentProvider()).getLogDocument();
-				
+				Document logDocument = ((ContentProvider) viewer.getContentProvider()).getInput();
 				NodeList allElements = null;
 				
 				if(logDocument != null) {
@@ -395,16 +380,15 @@ public class ConfigScanView extends ViewPart {
 
 			}
 		};
+		previousFailure.setText("Previous failure");
+		previousFailure.setImageDescriptor(imageRegistry.getDescriptor(IConfigScanImages.SELECT_PREV));
 		previousFailure.setToolTipText("Jump to previous failed test");
-		
-
 		
 		showTime = new Action("Show Time") {
 			public void run() {
 			}
 		};
 		showTime.setToolTipText("Show Time");
-		
 		
 		stopAtFirstFailure = new Action("Stop at first Failure") {
 			public void run() {
@@ -421,42 +405,37 @@ public class ConfigScanView extends ViewPart {
 		
 		toggleContent = new Action("", IAction.AS_CHECK_BOX) {
 			public void run() {
-				
-				Map<Element, Element> mapLogInput = ((ViewLabelProvider) viewer.getLabelProvider()).getMapLogInput();
-				Map<Element, URI> inputToEObject = ((ViewLabelProvider) viewer.getLabelProvider()).getMapInputUri();
-				
-				if(mapLogInput != null && inputToEObject != null) {
-					if(isChecked()) {
-						
-						setChecked(true);				
-						viewer.setLabelProvider(new ViewOtherLabelProvider(mapLogInput, inputToEObject));
-						toggleContent.setImageDescriptor(ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("cmlt"));
-						toggleContent.setToolTipText("Display with ConfigScan labels");
-					}
-					
-					else {
-						setChecked(false);
-						viewer.setLabelProvider(new ViewLabelProvider(mapLogInput, inputToEObject));
-						toggleContent.setImageDescriptor(ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("configscan"));
-						toggleContent.setToolTipText("Display with CMLT labels");
-					}
-				}
-				
-				viewer.refresh();
-				
+//				Map<Element, Element> mapLogInput = ((DefaultConfigScanLabelProvider) viewer.getLabelProvider()).getMapLogInput();
+//				Map<Element, URI> inputToEObject = ((DefaultConfigScanLabelProvider) viewer.getLabelProvider()).getMapInputUri();
+//				if(mapLogInput != null && inputToEObject != null) {
+//					if(isChecked()) {
+//						setChecked(true);				
+//						
+//						ViewOtherLabelProvider labelProvider = new ViewOtherLabelProvider();
+//						labelProvider.setElementMap(mapLogInput);
+//						labelProvider.setInputEObjectMap(inputToEObject);
+//						viewer.setLabelProvider(labelProvider);
+//		
+//						toggleContent.setImageDescriptor(ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("cmlt"));
+//						toggleContent.setToolTipText("Display with ConfigScan labels");
+//					} else {
+//						setChecked(false);
+//						labelProvider.setElementMap(mapLogInput);
+//						labelProvider.setInputEObjectMap(inputToEObject);
+//						viewer.setLabelProvider(labelProvider);
+//						toggleContent.setImageDescriptor(ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("configscan"));
+//						toggleContent.setToolTipText("Display with CMLT labels");
+//					}
+//				}
+//				viewer.refresh();
 			}
 		};
-		toggleContent.setImageDescriptor(ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("configscan"));
+		toggleContent.setImageDescriptor(imageRegistry.getDescriptor(IConfigScanImages.FYSBEE));
 		toggleContent.setToolTipText("Display with CMLT labels");
 		
 		
 	}
 
-	/** This method is used to find the next deepest child of an element.
-	 *  
-	 * @param lastSelected
-	 * @return the next deepest child
-	 */
 	protected Element findNextDeepestChild(Element lastSelected) {		// TODO: testing!
 		if("3".equals(lastSelected.getAttribute("level"))) {
 			return lastSelected;
@@ -490,105 +469,88 @@ public class ConfigScanView extends ViewPart {
 	private void hookDoubleClickAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				
-				Map<Element, Element> mapLogInput = ((ViewLabelProvider) viewer.getLabelProvider()).getMapLogInput();
-				Map<Element, URI> inputToUri = ((ViewLabelProvider) viewer.getLabelProvider()).getMapInputUri();
-				
-				
-				if(mapLogInput != null && inputToUri != null) {
-					Element el =  (Element) selection.getFirstElement();
-					Element inputEl = mapLogInput.get(el);
-					if(inputEl != null) {
-						URI uri = inputToUri.get(inputEl);
-						
-						if(uri != null) {
-							Resource res = new XtextResourceSet().getResource(uri, true);
-							if (res == null) {
-								throw new IllegalArgumentException("resource null");
-							}
-							
-							
-							EObject eObj = res.getResourceSet().getEObject(uri, true);
-							if(eObj != null) {
-	
-								IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-								try {
-									Resource eResource = eObj.eResource();
-									IFile file = ResourceUtil.getFile(eResource);
-									IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(new java.net.URI(uri.toString()));
-									for (IFile f : files) {
-										System.err.println(f.getFullPath());
-									}
-									XtextEditor cmltEditor = (XtextEditor)activePage.openEditor(
-											new FileEditorInput(file), "com.webxcerpt.cm.nsn.cmlt.CmlT");
-									INode n = NodeModelUtils.getNode(eObj);
-									cmltEditor.selectAndReveal(n.getOffset(), n.getLength());
-								} catch (PartInitException e) {
-									e.printStackTrace();
-								} catch (URISyntaxException e) {
-									e.printStackTrace();
-								}
-							}
-						}
-					}
-				}
+//				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+//				
+//				Map<Element, Element> mapLogInput = ((ViewLabelProvider) viewer.getLabelProvider()).getMapLogInput();
+//				Map<Element, URI> inputToUri = ((ViewLabelProvider) viewer.getLabelProvider()).getMapInputUri();
+//				
+//				
+//				
+//				if(mapLogInput != null && inputToUri != null) {
+//					Element el =  (Element) selection.getFirstElement();
+//					Element inputEl = mapLogInput.get(el);
+//					if(inputEl != null) {
+//						URI uri = inputToUri.get(inputEl);
+//						
+//						if(uri != null) {
+//							Resource res = new XtextResourceSet().getResource(uri, true);
+//							if (res == null) {
+//								throw new IllegalArgumentException("resource null");
+//							}
+//							
+//							
+//							EObject eObj = res.getResourceSet().getEObject(uri, true);
+//							if(eObj != null) {
+//	
+//								IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+//								try {
+//									Resource eResource = eObj.eResource();
+//									IFile file = ResourceUtil.getFile(eResource);
+//									IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(new java.net.URI(uri.toString()));
+//									for (IFile f : files) {
+//										System.err.println(f.getFullPath());
+//									}
+//									XtextEditor cmltEditor = (XtextEditor)activePage.openEditor(
+//											new FileEditorInput(file), "com.webxcerpt.cm.nsn.cmlt.CmlT");
+//									INode n = NodeModelUtils.getNode(eObj);
+//									cmltEditor.selectAndReveal(n.getOffset(), n.getLength());
+//								} catch (PartInitException e) {
+//									e.printStackTrace();
+//								} catch (URISyntaxException e) {
+//									e.printStackTrace();
+//								}
+//							}
+//						}
+//					}
+//				}
 			}
 		});
 	}
-	
-	private void showMessage(String message) {
-		MessageDialog.openInformation(
-			viewer.getControl().getShell(),
-			"Sample View",
-			message);
-	}
- 
-	
-	/**
-	 * Passing the focus request to the viewer's control.
-	 */
-	public void setFocus() {
-		viewer.getControl().setFocus();
-	}
-
-	
-	
+	 
 	public void setInput(Document xmlLogDoc, Document xmlInputDoc, Map<Element, Element> mapLogInput, final Map<Element, URI> inputToUri) {
-		if(Config.WRITE_MEMORY_TO_DISC_AS_XML) {
-		    SimpleDateFormat sdf = new SimpleDateFormat(Config.DATE_FORMAT);
-		    Calendar c1 = Calendar.getInstance(); // today
-		    String today = sdf.format(c1.getTime());
-			String currentFilename = "XML_LOG_" + today + ".xml";
-			String xmlLog = xmlLoader.parseXmlToString(xmlLogDoc);
-		    Util.saveStringToDisc(currentFilename, xmlLog);
-		}
 		
-		ViewContentProvider contentProvider = new ViewContentProvider(xmlLogDoc);
 		
-		viewer.setContentProvider(contentProvider);
+//		if(ConfigScanConfiguration.WRITE_MEMORY_TO_DISC_AS_XML) {
+//		    SimpleDateFormat sdf = new SimpleDateFormat(ConfigScanConfiguration.DATE_FORMAT);
+//		    Calendar c1 = Calendar.getInstance(); // today
+//		    String today = sdf.format(c1.getTime());
+//			String currentFilename = "XML_LOG_" + today + ".xml";
+//			String xmlLog = documentUtility.parse(xmlLogDoc);
+//			try {
+//				BufferedWriter out = new BufferedWriter(new FileWriter(currentFilename));
+//				out.write(xmlLog);
+//				out.close();
+//			} catch (IOException e1) {
+//				e1.printStackTrace();
+//			}
+//		}
+				
+		viewer.setInput(xmlLogDoc);
 		
-		viewer.setLabelProvider(new ViewLabelProvider(mapLogInput, inputToUri));		// this time we have a map
+		labelProvider.setElementMap(mapLogInput);
+		labelProvider.setInputEObjectMap(inputToUri);
 		
+		viewer.setLabelProvider(labelProvider);
+		viewer.expandToLevel(ConfigScanConfiguration.EXPAND_LEVEL);
 		viewer.refresh();
-		viewer.expandToLevel(Config.EXPAND_LEVEL);
 		
-		
-		int runs = contentProvider.getNumberOfRuns();
-		int successes = contentProvider.getNumberOfSuccess();
-		int failures = contentProvider.getNumberOfFailure();
+		int runs = documentUtility.getNumberOfRuns(xmlLogDoc);
+		int successes = documentUtility.getNumberOfSuccess(xmlLogDoc);
+		int failures = documentUtility.getNumberOfFailure(xmlLogDoc);
 		int time = 0;
-		
-
 		labels.updateLabels(runs, failures, successes, time);
 	}
 
-	/** For testing purposes only.
-	 * 
-	 * @return the TreeViewer
-	 */
-	public TreeViewer getTreeViewer() {
-		return viewer;
-	}
+	
 }
 

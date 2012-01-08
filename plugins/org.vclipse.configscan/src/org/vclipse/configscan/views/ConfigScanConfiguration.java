@@ -11,7 +11,7 @@
 package org.vclipse.configscan.views;
 
 
-public class Config {
+public class ConfigScanConfiguration {
 
 	/** If true: Writes the xml-data which is created in RAM to disc.
 	 * 

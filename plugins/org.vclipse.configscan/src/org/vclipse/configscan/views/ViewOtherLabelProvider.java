@@ -10,50 +10,40 @@
  ******************************************************************************/
 package org.vclipse.configscan.views;
 
-import java.util.Map;
-
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.vclipse.configscan.utils.DocumentUtility;
 import org.w3c.dom.Element;
 
-public class ViewOtherLabelProvider extends ViewLabelProvider {
-//	private Map<Element, Element> elementMap;
-//	private Map<Element, EObject> inputToEObject;
+public class ViewOtherLabelProvider extends DefaultConfigScanLabelProvider {
 
-	
-	public ViewOtherLabelProvider(Map<Element, Element> mapLogInput,
-			Map<Element, URI> inputToUri) {
-		super(mapLogInput, inputToUri);
-		
+	public ViewOtherLabelProvider(ILabelProvider delegate) {
+		super(delegate);
 	}
 
 	public String getText(Object obj) {
-		if (obj instanceof Element) {
-			
-			Element elementLog = (Element) obj;
-			
-			if("1".equals(elementLog.getAttribute("level"))) {
-				return elementLog.getAttribute("title");
-			}
-			
-			Element elementInput = elementMap.get(elementLog);
-			if(elementInput != null) {
-				EObject eObject = getEObjectForUri(inputToUri.get(elementInput));
-				
-				if(eObject != null) {
-					return computeLabel(elementLog, elementInput, testLanguageLabelProvider.getText(eObject));
-				}
-			}
-		}
+//		if(obj instanceof Element) {
+//			Element elementLog = (Element) obj;
+//			if(DocumentUtility.ATTRIBUTE_VALUE_ONE.equals(elementLog.getAttribute(DocumentUtility.ATTRIBUTE_LEVEL))) {
+//				return elementLog.getAttribute(DocumentUtility.ATTRIBUTE_TITLE);
+//			}
+//			Element elementInput = elementMap.get(elementLog);
+//			if(elementInput != null) {
+//				EObject eObject = getEObjectForUri(inputToUri.get(elementInput));
+//				
+//				if(eObject != null) {
+//					return computeLabel(elementLog, elementInput, testLanguageLabelProvider.getText(eObject));
+//				}
+//			}
+//		}
 		return "";
 	}
 
 	private String computeLabel(Element elementLog, Element elementInput, String text) {
-		if("log_msg".equals(elementLog.getNodeName()) /*&& "E".equals(elementLog.getAttribute("status"))*/) {
-			String cmd = elementLog.getAttribute("cmd");
-			boolean e = "E".equals(elementLog.getAttribute("status"));
+		if(DocumentUtility.NODE_NAME_LOG_MSG.equals(elementLog.getNodeName()) /*&& "E".equals(elementLog.getAttribute("status"))*/) {
+			String cmd = elementLog.getAttribute(DocumentUtility.ATTRIBUTE_CMD);
+			boolean e = DocumentUtility.ATTRIBUTE_VALUE_E.equals(elementLog.getAttribute(DocumentUtility.ATTRIBUTE_STATUS));
 			if("CHECK ITEM QUANTITY".equals(cmd)) {
-				if(elementLog.getAttribute("title").contains("Instance not found")) {
+				if(elementLog.getAttribute(DocumentUtility.TITLE).contains("Instance not found")) {
 					return text + " (instance not found)";
 				}
 				String countStr = elementLog.getAttribute("quantity");
@@ -67,7 +57,7 @@ public class ViewOtherLabelProvider extends ViewLabelProvider {
 			else if("CHECK ITEM EXIST".equals(cmd)) {
 				String test = elementLog.getAttribute("test");
 				if(e) {
-					return text + " (computed: " + ("false".equals(test) ? "0" : "1" ) + ")";
+					return text + " (computed: " + ("false".equals(test) ? "0" : DocumentUtility.ATTRIBUTE_VALUE_ONE ) + ")";
 				}
 				else {
 					return text + " (" + ("false".equals(test) ? "FALSE" : "TRUE" ) + ")";
@@ -83,6 +73,4 @@ public class ViewOtherLabelProvider extends ViewLabelProvider {
 		
 		return text;
 	}
-	
-	
 }

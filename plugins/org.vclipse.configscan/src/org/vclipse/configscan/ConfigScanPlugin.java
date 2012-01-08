@@ -13,30 +13,41 @@ package org.vclipse.configscan;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.vclipse.configscan.injection.ConfigScanModule;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
-import org.vclipse.configscan.injection.ConfigScanModule;
 
 /**
  * The activator class controls the plug-in life cycle
  */
 public class ConfigScanPlugin extends AbstractUIPlugin {
 
-	public static final String ID = "org.vclipse.configscan"; //$NON-NLS-1$
+	public static final String ID = "org.vclipse.configscan";
 
 	private static ConfigScanPlugin plugin;
 	
+	private static final String ICON_PATH = "icons/";
+	
 	private Injector injector;
 
+	public static ConfigScanPlugin getDefault() {
+		return plugin;
+	}
+	
+	public static ImageDescriptor getImageDescriptor(String path) {
+		return imageDescriptorFromPlugin(ID, path);
+	}
+
+	public static void log(String message, int severity, Throwable throwable) {
+		getDefault().getLog().log(new Status(severity, ID, IStatus.OK, message, throwable));
+	}
+	
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
@@ -47,63 +58,33 @@ public class ConfigScanPlugin extends AbstractUIPlugin {
 		super.stop(context);
 	}
 
-	public static ConfigScanPlugin getDefault() {
-		return plugin;
-	}
-
 	public Injector getInjector() {
 		if(injector == null) {
-			injector = Guice.createInjector(new ConfigScanModule());
+			injector = Guice.createInjector(new ConfigScanModule(this));
 		}
 		return injector;
 	}
 	
-	public static ImageDescriptor getImageDescriptor(String path) {
-		return imageDescriptorFromPlugin(ID, path);
-	}
-
-	public static void log(String message, int severity, Throwable throwable) {
-		Status status = new Status(severity, ID, IStatus.OK, message, throwable);
-		getDefault().getLog().log(status);
-	}
-	
 	@Override
     protected void initializeImageRegistry(ImageRegistry registry) {
+        registry.put(IConfigScanImages.FAILURES, getDescriptor(IConfigScanImages.FAILURES));
+        registry.put(IConfigScanImages.COLLAPSE_ALL, getDescriptor(IConfigScanImages.COLLAPSE_ALL));
+        registry.put(IConfigScanImages.EXPAND_ALL, getDescriptor(IConfigScanImages.EXPAND_ALL));
+        registry.put(IConfigScanImages.SUCCESS, getDescriptor(IConfigScanImages.SUCCESS));
+        registry.put(IConfigScanImages.RELAUNCH, getDescriptor(IConfigScanImages.RELAUNCH));
+        registry.put(IConfigScanImages.RELAUNCHF, getDescriptor(IConfigScanImages.RELAUNCHF));
+        registry.put(IConfigScanImages.SELECT_NEXT, getDescriptor(IConfigScanImages.SELECT_NEXT));
+        registry.put(IConfigScanImages.SELECT_PREV, getDescriptor(IConfigScanImages.SELECT_PREV));
+        registry.put(IConfigScanImages.STOP, getDescriptor(IConfigScanImages.STOP));
+        registry.put(IConfigScanImages.WARNING, getDescriptor(IConfigScanImages.WARNING));
+        registry.put(IConfigScanImages.FLAT_LAYOUT, getDescriptor(IConfigScanImages.FLAT_LAYOUT));
+        registry.put(IConfigScanImages.HIERARCHICAL_LAYOUT, getDescriptor(IConfigScanImages.HIERARCHICAL_LAYOUT));
+        registry.put(IConfigScanImages.FYSBEE, getDescriptor(IConfigScanImages.FYSBEE));
+        registry.put(IConfigScanImages.TESTS, getDescriptor(IConfigScanImages.TESTS));
         super.initializeImageRegistry(registry);
-        Bundle bundle = Platform.getBundle(ID);
-
-        
-        ImageDescriptor success = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/s.gif"), null));
-        ImageDescriptor failure = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/e.gif"), null));
-        ImageDescriptor relaunch = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/relaunch.gif"), null));
-        ImageDescriptor relaunchf = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/relaunchf.gif"), null));
-        ImageDescriptor select_next = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/select_next.gif"), null));
-        ImageDescriptor select_prev = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/select_prev.gif"), null));
-        ImageDescriptor stop = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/stop.gif"), null));
-        ImageDescriptor w = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/w.gif"), null));
-        ImageDescriptor failures = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/failures.gif"), null));
-        ImageDescriptor flatLayout = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/flatLayout.gif"), null));
-        ImageDescriptor hierarchicalLayout = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/hierarchicalLayout.gif"), null));
-        ImageDescriptor expandAll = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/expandall.gif"), null));
-        ImageDescriptor collapseAll = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/collapseall.gif"), null));
-        ImageDescriptor configscan = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/Fysbee.png"), null));
-        ImageDescriptor cmlt = ImageDescriptor.createFromURL(FileLocator.find(bundle, new Path("icons/tests.png"), null));
-        
-        registry.put("s", success);
-        registry.put("f", failure);
-        registry.put("relaunch", relaunch);
-        registry.put("relaunchf", relaunchf);
-        registry.put("select_next", select_next);
-        registry.put("select_prev", select_prev);
-        registry.put("stop", stop);
-        registry.put("w", w);
-        registry.put("failures", failures);
-        registry.put("flatLayout", flatLayout);
-        registry.put("hierarchicalLayout", hierarchicalLayout);
-        registry.put("expandAll", expandAll);
-        registry.put("collapseAll", collapseAll);
-        registry.put("configscan", configscan);
-        registry.put("cmlt", cmlt);
     }
-
+	
+	private ImageDescriptor getDescriptor(String imageName) {
+		 return ImageDescriptor.createFromURL(FileLocator.find(getBundle(), new Path(ICON_PATH + imageName), null));
+	}
 }

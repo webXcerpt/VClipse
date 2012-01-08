@@ -9,14 +9,16 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.debug.core,
  org.eclipse.debug.ui,
+ org.vclipse.connection,
  org.eclipse.xtext,
- org.eclipse.xtext.ui,
- org.vclipse.connection
+ org.eclipse.xtext.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.google.inject,
  com.sap.conn.jco
 Export-Package: org.vclipse.configscan,
  org.vclipse.configscan.actions,
+ org.vclipse.configscan.extension,
+ org.vclipse.configscan.utils,
  org.vclipse.configscan.views
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
