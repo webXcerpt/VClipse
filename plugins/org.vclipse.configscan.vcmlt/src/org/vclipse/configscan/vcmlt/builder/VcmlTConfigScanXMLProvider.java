@@ -123,7 +123,6 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 	}
 
 	@Override
-	// ToDo: NumericLiteral
 	// ToDo: NumericInterval
 	// ToDo: re-think vcmlt design: '=' in check is redundant
 	public Object caseCheckSingleValue (final CheckSingleValue object) {
@@ -152,7 +151,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 			Element ec = doc.createElement("checksinglevalue");
 			ec.setAttribute("name", (object.getCstic()).getName());
 			// ToDo: strip off surrounding quotes
-			ec.setAttribute("value", getValue((SymbolicLiteral) object.getValue()));
+			ec.setAttribute("value", getValue((Literal)object.getValue()));
 			ec.setAttribute("bompath", getChildPath(object.getBompath()));
 			map.put(ec, EcoreUtil.getURI(object));
 			current.appendChild(ec);

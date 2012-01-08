@@ -8,6 +8,8 @@ testgroup 'ExampleTG' "Example Test Group" success {
 	CORE = 'NOCORE' @ / MAT1
 	CORE = 'NOCORE' @ / MAT1 / MAT2
 	CORE = 'NOCORE' @ / MAT1 / MAT2 / (0030) MAT3 / (0040) MAT4
+	USERMANUAL = 2 @ /
+	check USERMANUAL = 2 @ /
 	check TEMPVAR hidden disabled unset @ /
 	check POWERSUPPLY enabled visible set = 'DC' @ /
 	check CORE = '013' @ /
