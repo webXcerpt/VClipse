@@ -63,7 +63,7 @@ public class DocumentUtility {
 		}
 	}
 	
-	public boolean isSuccess(Element element) {
+	public boolean hasSuccessStatus(Element element) {
 		return STATUS_SUCCESS.equals(element.getAttribute(ATTRIBUTE_STATUS));
 	}
 	
@@ -96,7 +96,7 @@ public class DocumentUtility {
 		for(int i = 0; i<list.getLength(); i++) {
 			Node node = list.item(i);
 			if(node instanceof Element) {
-				if(!isSuccess((Element)node)) {
+				if(!hasSuccessStatus((Element)node)) {
 					failure++;
 				}
 			}
@@ -114,7 +114,7 @@ public class DocumentUtility {
 		for(int i = 0; i<list.getLength(); i++) {
 			Node node = list.item(i);
 			if(node instanceof Element) {
-				if(isSuccess((Element) node)) {
+				if(hasSuccessStatus((Element) node)) {
 					success++;
 				}
 			}

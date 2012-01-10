@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.xtext.util.Files;
 import org.vclipse.configscan.ConfigScanPlugin;
+import org.vclipse.configscan.utils.DocumentUtility;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -41,7 +42,7 @@ import com.google.inject.Inject;
  *
  */
 public class FileAction extends Action implements IMenuCreator {
-	private Menu fMenu;
+	private Menu menu;
 	private Composite parent;
 	private TreeViewer viewer;
 	private Labels labels;
@@ -52,38 +53,31 @@ public class FileAction extends Action implements IMenuCreator {
 		this.labels = labels;
 		setMenuCreator(this);
 		setText("File");
-		setToolTipText("File menu");
-		
-		
+		setToolTipText("File menu");	
 	}
 	
 	@Override
 	public void dispose() {
-		if(fMenu != null) {
-			fMenu.dispose();
-			fMenu = null;
+		if(menu != null) {
+			menu.dispose();
+			menu = null;
 		}
 	}
 
 	@Override
 	public Menu getMenu(Control parent) {
-		if(fMenu != null) {
-			fMenu.dispose();
+		if(menu != null) {
+			menu.dispose();
 		}
-		fMenu = new Menu(parent);
-		
-		
-		MenuItem saveAs = new MenuItem(fMenu, SWT.PUSH | SWT.Deactivate);
+		menu = new Menu(parent);
+		MenuItem saveAs = new MenuItem(menu, SWT.PUSH | SWT.Deactivate);
 		saveAs.setText("Save ConfigScan log (XML) as...");
 		saveAs.addSelectionListener(new SaveAsSelectionListener());
 		
-		MenuItem importXml = new MenuItem(fMenu, SWT.PUSH);
+		MenuItem importXml = new MenuItem(menu, SWT.PUSH);
 		importXml.setText("Import ConfigScan log (XML)");
 		importXml.addSelectionListener(new ImportXmlSelectionListener());
-		
-		
-				
-		return fMenu;
+		return menu;
 		
 	}
 
@@ -94,6 +88,9 @@ public class FileAction extends Action implements IMenuCreator {
 
 	@Inject
 	private DocumentBuilder documentBuilder;
+	
+	@Inject
+	private DocumentUtility documentUtility;
 	
 	public class ImportXmlSelectionListener implements SelectionListener {
 
@@ -107,23 +104,20 @@ public class FileAction extends Action implements IMenuCreator {
 				// Cancelled
 			}
 			else {
-//				String content = Files.readFileIntoString(path);
-//				try {
-//					Document document = documentBuilder.parse(content);
-//					viewer.setInput(document);
-//					viewer.expandToLevel(ConfigScanConfiguration.EXPAND_LEVEL);
-//					viewer.refresh();
-//					
-//					int runs = ((ContentProvider) viewer.getContentProvider()).getNumberOfRuns();
-//					int successes = ((ContentProvider) viewer.getContentProvider()).getNumberOfSuccess();
-//					int failures = ((ContentProvider) viewer.getContentProvider()).getNumberOfFailure();
-//					int time = 0;
-//					labels.updateLabels(runs, failures, successes, time);
-//				} catch (SAXException exception) {
-//					ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR, exception);
-//				} catch (IOException exception) {
-//					ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR, exception);
-//				}
+				String content = Files.readFileIntoString(path);
+				try {
+					Document document = documentBuilder.parse(content);
+					viewer.setInput(document);
+					viewer.expandToLevel(ConfigScanConfiguration.EXPAND_LEVEL);
+					viewer.refresh();
+					int time = 0;
+					labels.updateLabels(documentUtility.getNumberOfRuns(document), documentUtility.getNumberOfFailure(document), 
+							documentUtility.getNumberOfSuccess(document), time);
+				} catch (SAXException exception) {
+					ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR, exception);
+				} catch (IOException exception) {
+					ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR, exception);
+				}
 			}
 		}
 

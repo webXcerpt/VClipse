@@ -54,7 +54,7 @@ class SuccessFilter extends ViewerFilter {
 	 * @return
 	 */
 	private boolean isAnythingSuccessUnderNode(Element element) {
-		if(documentUtility.isSuccess(element)) {
+		if(documentUtility.hasSuccessStatus(element)) {
 			return true;
 		} else {
 			NodeList nodes = element.getChildNodes();

@@ -80,7 +80,7 @@ public final class LabelProvider extends ColumnLabelProvider  {
 		} else {
 			if(object instanceof Element) {
 				if(object instanceof Element) {
-					return documentUtility.isSuccess((Element)object) ? 
+					return documentUtility.hasSuccessStatus((Element)object) ? 
 							imageHelper.getImage(IConfigScanImages.SUCCESS) : imageHelper.getImage(IConfigScanImages.ERROR);
 				}
 			}
