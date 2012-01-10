@@ -283,21 +283,6 @@
     </provider>
   </extension>
  <extension
-       point="org.eclipse.ui.viewActions">
-    <viewContribution
-          id="org.vclipse.vcml.ui.viewContribution3"
-          targetID="org.eclipse.ui.navigator.ProjectExplorer">
-       <action
-             class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.vclipse.vcml.ui.PrettyPrinterAction"
-             icon="icons/table.png"
-             id="org.vclipse.vcml.ui.action3"
-             label="Pretty Printer"
-             style="push"
-             toolbarPath="additions">
-       </action>
-    </viewContribution>
- </extension>
- <extension
        point="org.eclipse.ui.perspectives">
     <perspective
           class="org.vclipse.vcml.ui.VClipsePerspectiveFactory"
