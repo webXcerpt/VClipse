@@ -390,7 +390,7 @@ public final class ConfigScanView extends ViewPart {
 							defaultLabelProvider.setLabelProviderExtension(second);
 						}
 						
-						toggleContent.setImageDescriptor(ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("cmlt"));
+						toggleContent.setImageDescriptor(imageHelper.getImageDescriptor("cmlt.png"));
 						toggleContent.setToolTipText("Display with ConfigScan labels");
 						viewer.refresh();
 					} else {
@@ -400,7 +400,7 @@ public final class ConfigScanView extends ViewPart {
 						defaultLabelProvider.setLabelProviderExtension(null);
 						labelProvider.setElementMap(mapLogInput);
 						labelProvider.setInputEObjectMap(inputToEObject);
-						toggleContent.setImageDescriptor(ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("configscan"));
+						toggleContent.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.FYSBEE));
 						toggleContent.setToolTipText("Display with CMLT labels");
 					}
 				}
