@@ -18,6 +18,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.service.AbstractGenericModule;
+import org.eclipse.xtext.ui.IImageHelper;
+import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.IConfigScanRemoteConnections;
 import org.vclipse.configscan.IConfigScanRunner;
 import org.vclipse.configscan.IConfigScanXMLProvider;
@@ -59,7 +61,15 @@ public final class ConfigScanModule extends AbstractGenericModule {
 		return ConfigScanXmlProvider.class;
 	}
 	
+	public Class<? extends IImageHelper> bindIImageHelper() {
+		return ClasspathAwareImageHelper.class;
+	}
+	
 	public DocumentBuilder bindDocumentBuilder() throws ParserConfigurationException {
 		return DocumentBuilderFactory.newInstance().newDocumentBuilder();
+	}
+	
+	public AbstractUIPlugin bindAbstractUIPlugin() {
+		return plugin;
 	}
 }

@@ -5,11 +5,10 @@ import java.util.Map;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.vclipse.configscan.ConfigScanPlugin;
+import org.eclipse.xtext.ui.IImageHelper;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.utils.DocumentUtility;
 import org.w3c.dom.Element;
@@ -21,12 +20,14 @@ import com.google.inject.Inject;
 
 public final class LabelProvider extends ColumnLabelProvider  {
 
-	private static final String EMPTY = "";
-	
-	private ImageRegistry imageRegistry;
-	
 	@Inject
 	private DocumentUtility documentUtility;
+	
+	@Inject
+	private IImageHelper imageHelper;
+	
+	
+	private static final String EMPTY = "";
 	
 	protected Map<Element, Element> elementMap;
 	
@@ -39,7 +40,6 @@ public final class LabelProvider extends ColumnLabelProvider  {
 	private ILabelProvider labelProviderExtension;
 	
 	public LabelProvider() {
-		imageRegistry = ConfigScanPlugin.getDefault().getImageRegistry();
 		elementMap = Maps.newHashMap();
 		inputToUri = Maps.newHashMap();
 	}
@@ -81,7 +81,7 @@ public final class LabelProvider extends ColumnLabelProvider  {
 			if(object instanceof Element) {
 				if(object instanceof Element) {
 					return documentUtility.isSuccess((Element)object) ? 
-							imageRegistry.get(IConfigScanImages.SUCCESS) : imageRegistry.get(IConfigScanImages.ERROR);							
+							imageHelper.getImage(IConfigScanImages.SUCCESS) : imageHelper.getImage(IConfigScanImages.ERROR);
 				}
 			}
 		}

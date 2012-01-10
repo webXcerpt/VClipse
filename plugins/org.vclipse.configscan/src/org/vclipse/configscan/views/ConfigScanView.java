@@ -24,7 +24,6 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -45,7 +44,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.DrillDownAdapter;
-import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
@@ -53,6 +51,7 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.util.ResourceUtil;
 import org.eclipse.xtext.util.Pair;
+import org.vclipse.configscan.ConfigScanImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.IConfigScanLabelProvider;
@@ -71,8 +70,8 @@ public final class ConfigScanView extends ViewPart {
 	public static final String ID = "org.vclipse.configscan.ConfigScanView";
 	
 	@Inject
-	private ImageRegistry imageRegistry;
-	
+	private ConfigScanImageHelper imageHelper;
+
 	@Inject
 	private ExtensionPointReader extensionPointReader;
 	
@@ -208,7 +207,8 @@ public final class ConfigScanView extends ViewPart {
 			}
 		};
 		collapseAll.setText("Collapse all");
-		collapseAll.setImageDescriptor(imageRegistry.getDescriptor(IConfigScanImages.COLLAPSE_ALL));
+		
+		collapseAll.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.COLLAPSE_ALL));
 		collapseAll.setToolTipText("Collapse all");
 		
 		expandAll = new Action() {
@@ -218,12 +218,12 @@ public final class ConfigScanView extends ViewPart {
 			}
 		};
 		expandAll.setText("Expand all");
-		expandAll.setImageDescriptor(imageRegistry.getDescriptor(IConfigScanImages.EXPAND_ALL));
+		expandAll.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.EXPAND_ALL));
 		expandAll.setToolTipText("Expand all");
 
 		failures = new Action("", IAction.AS_CHECK_BOX) {
 			public void run() {
-				failures.setImageDescriptor(imageRegistry.getDescriptor(IConfigScanImages.FAILURES));
+				failures.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.FAILURES));
 				if(filter == null) {
 					setChecked(true);				
 					filter = new FailureFilter();
@@ -237,7 +237,7 @@ public final class ConfigScanView extends ViewPart {
 			}
 		};
 		failures.setToolTipText("Show only failures");
-		failures.setImageDescriptor(imageRegistry.getDescriptor(IConfigScanImages.FAILURES));
+		failures.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.FAILURES));
 		
 		rerunAll = new Action() {
 			public void run() {
@@ -245,7 +245,7 @@ public final class ConfigScanView extends ViewPart {
 			}
 		};
 		rerunAll.setText("Rerun all tests");
-		rerunAll.setImageDescriptor(imageRegistry.getDescriptor(IConfigScanImages.RELAUNCH));
+		rerunAll.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.RELAUNCH));
 		rerunAll.setToolTipText("Reruns all tests");
 		
 		rerunFailures = new Action() {
@@ -254,7 +254,7 @@ public final class ConfigScanView extends ViewPart {
 			}
 		};
 		rerunFailures.setText("Rerun failures");
-		rerunFailures.setImageDescriptor(imageRegistry.getDescriptor(IConfigScanImages.RELAUNCHF));
+		rerunFailures.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.RELAUNCHF));
 		rerunFailures.setToolTipText("Reruns all failed tests");
 		
 		nextFailure = new Action() {
@@ -296,7 +296,7 @@ public final class ConfigScanView extends ViewPart {
 			}
 		};
 		nextFailure.setText("Show next failure");
-		nextFailure.setImageDescriptor(imageRegistry.getDescriptor(IConfigScanImages.SELECT_NEXT));
+		nextFailure.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.SELECT_NEXT));
 		nextFailure.setToolTipText("Jump to next failed test");
 
 		
@@ -351,7 +351,7 @@ public final class ConfigScanView extends ViewPart {
 			}
 		};
 		previousFailure.setText("Previous failure");
-		previousFailure.setImageDescriptor(imageRegistry.getDescriptor(IConfigScanImages.SELECT_PREV));
+		previousFailure.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.SELECT_PREV));
 		previousFailure.setToolTipText("Jump to previous failed test");
 		
 		showTime = new Action("Show Time") {
@@ -407,7 +407,7 @@ public final class ConfigScanView extends ViewPart {
 				viewer.refresh();
 			}
 		};
-		toggleContent.setImageDescriptor(imageRegistry.getDescriptor(IConfigScanImages.FYSBEE));
+		toggleContent.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.FYSBEE));
 		toggleContent.setToolTipText("Display with CMLT labels");
 		
 		
