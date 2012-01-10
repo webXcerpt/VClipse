@@ -81,6 +81,7 @@ public class ConfigScanPlugin extends AbstractUIPlugin {
         registry.put(IConfigScanImages.HIERARCHICAL_LAYOUT, getDescriptor(IConfigScanImages.HIERARCHICAL_LAYOUT));
         registry.put(IConfigScanImages.FYSBEE, getDescriptor(IConfigScanImages.FYSBEE));
         registry.put(IConfigScanImages.TESTS, getDescriptor(IConfigScanImages.TESTS));
+        registry.put(IConfigScanImages.ERROR, getDescriptor(IConfigScanImages.ERROR));
         super.initializeImageRegistry(registry);
     }
 	

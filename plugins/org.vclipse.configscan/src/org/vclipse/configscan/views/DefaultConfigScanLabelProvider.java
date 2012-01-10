@@ -1,13 +1,13 @@
 package org.vclipse.configscan.views;
 
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
@@ -19,7 +19,7 @@ import org.w3c.dom.Node;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
-public class DefaultConfigScanLabelProvider extends ColumnLabelProvider implements IConfigScanLabelProvider {
+public class DefaultConfigScanLabelProvider extends ColumnLabelProvider  {
 
 	private static final String EMPTY = "";
 	
@@ -34,25 +34,40 @@ public class DefaultConfigScanLabelProvider extends ColumnLabelProvider implemen
 	
 	private ResourceSet resourceSet;
 	
-	public DefaultConfigScanLabelProvider() {
+	private boolean shouldDelegate;
 	
+	private ILabelProvider labelProviderExtension;
+	
+	public DefaultConfigScanLabelProvider() {
 		imageRegistry = ConfigScanPlugin.getDefault().getImageRegistry();
 		elementMap = Maps.newHashMap();
 		inputToUri = Maps.newHashMap();
 	}
 	
+	public void setDelegate(boolean delegate) {
+		this.shouldDelegate = delegate;
+	}
+	
+	public void setLabelProviderExtension(ILabelProvider extension) {
+		this.labelProviderExtension = extension;
+	}
+	
 	@Override
 	public String getText(Object object) {
-		if(object instanceof Element) {
-			Element element = (Element)object;
-			if(DocumentUtility.LOG_SESSION.equals(element.getTagName())) {
-				return element.getAttribute(DocumentUtility.TITLE);
-			} else if(DocumentUtility.LOG_TEST_GRP.equals(element.getTagName())) {
-				return element.getAttribute(DocumentUtility.TITLE);
-			} else if(DocumentUtility.NODE_NAME_LOG_MSG.equals(element.getTagName())) {
-				return element.getAttribute(DocumentUtility.TITLE);
-			} else {
-				return element.getAttribute(DocumentUtility.TITLE);
+		if(shouldDelegate && labelProviderExtension != null) {
+			return labelProviderExtension.getText(object);
+		} else {
+			if(object instanceof Element) {
+				Element element = (Element)object;
+				if(DocumentUtility.LOG_SESSION.equals(element.getTagName())) {
+					return element.getAttribute(DocumentUtility.TITLE);
+				} else if(DocumentUtility.LOG_TEST_GRP.equals(element.getTagName())) {
+					return element.getAttribute(DocumentUtility.TITLE);
+				} else if(DocumentUtility.NODE_NAME_LOG_MSG.equals(element.getTagName())) {
+					return element.getAttribute(DocumentUtility.TITLE);
+				} else {
+					return element.getAttribute(DocumentUtility.TITLE);
+				}
 			}
 		}
 		return EMPTY;
@@ -60,10 +75,14 @@ public class DefaultConfigScanLabelProvider extends ColumnLabelProvider implemen
 	
 	@Override
 	public Image getImage(Object object) {
-		if(object instanceof Element) {
+		if(shouldDelegate && labelProviderExtension != null) {
+			return labelProviderExtension.getImage(object);
+		} else {
 			if(object instanceof Element) {
-				return documentUtility.isSuccess((Element)object) ? 
-						imageRegistry.get(IConfigScanImages.SUCCESS) : imageRegistry.get(IConfigScanImages.WARNING);							
+				if(object instanceof Element) {
+					return documentUtility.isSuccess((Element)object) ? 
+							imageRegistry.get(IConfigScanImages.SUCCESS) : imageRegistry.get(IConfigScanImages.ERROR);							
+				}
 			}
 		}
 		return null;
@@ -129,33 +148,5 @@ public class DefaultConfigScanLabelProvider extends ColumnLabelProvider implemen
 		this.inputToUri = inputToEObject;
 	}
 
-	@Override
-	public Element getIputElement(Element logElement) {
-		return elementMap.get(logElement);
-	}
-
-	@Override
-	public Element getLogElement(Element inputElement) {
-		for(Entry<Element, Element> entry : elementMap.entrySet()) {
-			if(entry.getValue().equals(inputElement)) {
-				return entry.getKey();
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public URI getInputUri(Element inputElement) {
-		return inputToUri.get(inputElement);
-	}
-
-	@Override
-	public Element getInputElement(URI uri) {
-		for(Entry<Element,URI> entry : inputToUri.entrySet()) {
-			if(entry.getValue().equals(uri)) {
-				return entry.getKey();
-			}
-		}
-		return null;
-	}
+	
 }

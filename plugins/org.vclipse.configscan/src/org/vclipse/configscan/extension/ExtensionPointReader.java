@@ -8,11 +8,11 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanXMLProvider;
+import org.vclipse.configscan.views.IConfigScanLabelProvider;
 
 import com.google.common.collect.Maps;
 
@@ -29,9 +29,9 @@ public class ExtensionPointReader {
 	private static final String ATTRIBUTE_LABEL_PROVIDER = "labelProvider";
 	private static final String ATTRIBUTE_FILE_EXTENSION = "file_extension";
 
-	private Map<String, Pair<IConfigScanXMLProvider, ILabelProvider>> languageExtensions;
+	private Map<String, Pair<IConfigScanXMLProvider, IConfigScanLabelProvider>> languageExtensions;
 
-	public Map<String, Pair<IConfigScanXMLProvider, ILabelProvider>> getExtensions() {
+	public Map<String, Pair<IConfigScanXMLProvider, IConfigScanLabelProvider>> getExtensions() {
 		if(languageExtensions == null) {
 			languageExtensions = Maps.newHashMapWithExpectedSize(5);
 			readXmlProviderExtension();
@@ -59,10 +59,10 @@ public class ExtensionPointReader {
 								IConfigScanXMLProvider xmlProvider = (IConfigScanXMLProvider)xmlProviderObject;
 
 								// get the label provider, its optional
-								ILabelProvider labelProvider = null;
+								IConfigScanLabelProvider labelProvider = null;
 								Object labelProviderObject = configurationElement.createExecutableExtension(ATTRIBUTE_LABEL_PROVIDER);
-								if(labelProviderObject instanceof ILabelProvider) {
-									labelProvider = (ILabelProvider)labelProviderObject;
+								if(labelProviderObject instanceof IConfigScanLabelProvider) {
+									labelProvider = (IConfigScanLabelProvider)labelProviderObject;
 								}
 								languageExtensions.put(fileExtension, Tuples.create(xmlProvider, labelProvider));
 							}

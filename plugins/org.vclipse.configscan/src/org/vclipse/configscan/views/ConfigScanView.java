@@ -10,19 +10,9 @@
  ******************************************************************************/
 package org.vclipse.configscan.views;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -45,17 +35,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
-import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.xtext.nodemodel.INode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.ui.editor.XtextEditor;
-import org.eclipse.xtext.ui.util.ResourceUtil;
 import org.eclipse.xtext.util.Pair;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
@@ -69,23 +50,6 @@ import org.w3c.dom.NodeList;
 
 import com.google.inject.Inject;
 
-/**
- * This sample class demonstrates how to plug-in a new
- * workbench view. The view shows data obtained from the
- * model. The sample creates a dummy model on the fly,
- * but a real implementation would connect to the model
- * available either in this or another plug-in (e.g. the workspace).
- * The view is connected to the model using a content provider.
- * <p>
- * The view uses a label provider to define how model
- * objects should be presented in the view. Each
- * view can present the same model objects using
- * different labels and icons, if needed. Alternatively,
- * a single label provider can be shared between views
- * in order to ensure that objects of the same type are
- * presented in the same way everywhere.
- * <p>
- */
 public final class ConfigScanView extends ViewPart {
 
 	public static final String ID = "org.vclipse.configscan.ConfigScanView";
@@ -128,6 +92,12 @@ public final class ConfigScanView extends ViewPart {
 	private Labels labels;
 	
 	
+	private String fileExtension;
+	
+	public void setFileExtension(String fileExtension) {
+		this.fileExtension = fileExtension;
+	}
+	
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}
@@ -140,25 +110,14 @@ public final class ConfigScanView extends ViewPart {
 		
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setAutoExpandLevel(ConfigScanConfiguration.EXPAND_LEVEL);
-		
+		viewer.setLabelProvider(labelProvider);		// at initialization we have no map			
+		viewer.setContentProvider(contentProvider);
+		viewer.addFilter(new RemoveLogHeaderFilter());
 		
 		drillDownAdapter = new DrillDownAdapter(viewer);
-		viewer.setContentProvider(contentProvider);
 		
 		ColumnViewerToolTipSupport.enableFor(viewer);
 		
-		Map<String, Pair<IConfigScanXMLProvider, ILabelProvider>> extensions = extensionPointReader.getExtensions();
-		Pair<IConfigScanXMLProvider, ILabelProvider> pair = extensions.get("cmlt");
-		if(pair != null) {
-			viewer.setLabelProvider(pair.getSecond());
-		} else {
-			viewer.setLabelProvider(labelProvider);		// at initialization we have no map			
-		}
-		viewer.addFilter(new RemoveLogHeaderFilter());
-		
-		
-		// viewer.setSorter(new NameSorter());
-		viewer.setInput(getViewSite());
 		this.parent = parent;
 		Tree tree = viewer.getTree();
 		GridData data = new GridData(GridData.FILL_BOTH);
@@ -166,7 +125,6 @@ public final class ConfigScanView extends ViewPart {
 		tree.setLayoutData(data);
 		
 		makeActions();
-//		hookContextMenu();
 		hookDoubleClickAction();
 		contributeToActionBars();		
 	}
@@ -405,29 +363,36 @@ public final class ConfigScanView extends ViewPart {
 		
 		toggleContent = new Action("", IAction.AS_CHECK_BOX) {
 			public void run() {
-//				Map<Element, Element> mapLogInput = ((DefaultConfigScanLabelProvider) viewer.getLabelProvider()).getMapLogInput();
-//				Map<Element, URI> inputToEObject = ((DefaultConfigScanLabelProvider) viewer.getLabelProvider()).getMapInputUri();
-//				if(mapLogInput != null && inputToEObject != null) {
-//					if(isChecked()) {
-//						setChecked(true);				
-//						
-//						ViewOtherLabelProvider labelProvider = new ViewOtherLabelProvider();
-//						labelProvider.setElementMap(mapLogInput);
-//						labelProvider.setInputEObjectMap(inputToEObject);
-//						viewer.setLabelProvider(labelProvider);
-//		
-//						toggleContent.setImageDescriptor(ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("cmlt"));
-//						toggleContent.setToolTipText("Display with ConfigScan labels");
-//					} else {
-//						setChecked(false);
-//						labelProvider.setElementMap(mapLogInput);
-//						labelProvider.setInputEObjectMap(inputToEObject);
-//						viewer.setLabelProvider(labelProvider);
-//						toggleContent.setImageDescriptor(ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("configscan"));
-//						toggleContent.setToolTipText("Display with CMLT labels");
-//					}
-//				}
-//				viewer.refresh();
+				Map<Element, Element> mapLogInput = ((DefaultConfigScanLabelProvider) viewer.getLabelProvider()).getMapLogInput();
+				Map<Element, URI> inputToEObject = ((DefaultConfigScanLabelProvider) viewer.getLabelProvider()).getMapInputUri();
+				if(mapLogInput != null && inputToEObject != null) {
+					DefaultConfigScanLabelProvider defaultLabelProvider = (DefaultConfigScanLabelProvider)viewer.getLabelProvider();
+					if(isChecked()) {
+						setChecked(true);
+						Pair<IConfigScanXMLProvider, IConfigScanLabelProvider> pair = extensionPointReader.getExtensions().get(fileExtension);
+						if(pair != null) {
+							IConfigScanLabelProvider second = pair.getSecond();
+							second.setElementMap(mapLogInput);
+							second.setInputEObjectMap(inputToEObject);
+							defaultLabelProvider.setDelegate(true);
+							defaultLabelProvider.setLabelProviderExtension(second);
+						}
+						
+						toggleContent.setImageDescriptor(ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("cmlt"));
+						toggleContent.setToolTipText("Display with ConfigScan labels");
+						viewer.refresh();
+					} else {
+						defaultLabelProvider.setDelegate(false);
+						setChecked(false);
+						defaultLabelProvider.setDelegate(false);
+						defaultLabelProvider.setLabelProviderExtension(null);
+						labelProvider.setElementMap(mapLogInput);
+						labelProvider.setInputEObjectMap(inputToEObject);
+						toggleContent.setImageDescriptor(ConfigScanPlugin.getDefault().getImageRegistry().getDescriptor("configscan"));
+						toggleContent.setToolTipText("Display with CMLT labels");
+					}
+				}
+				viewer.refresh();
 			}
 		};
 		toggleContent.setImageDescriptor(imageRegistry.getDescriptor(IConfigScanImages.FYSBEE));

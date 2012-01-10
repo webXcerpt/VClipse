@@ -45,6 +45,7 @@ import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.extension.ExtensionPointReader;
 import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.views.ConfigScanView;
+import org.vclipse.configscan.views.IConfigScanLabelProvider;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -72,7 +73,7 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 
 	@Override
 	public void launch(final ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
-		final Map<String, Pair<IConfigScanXMLProvider, ILabelProvider>> extensions = extensionPointReader.getExtensions();
+		final Map<String, Pair<IConfigScanXMLProvider, IConfigScanLabelProvider>> extensions = extensionPointReader.getExtensions();
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
@@ -132,6 +133,7 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 														ConfigScanView view;
 														try {
 															view = (ConfigScanView)page.showView(ConfigScanView.ID);
+															view.setFileExtension(fileExtension);
 															view.setInput(xmlLogDocument, xmlInputDocument, mapLogInput, inputToUriMap);
 														} catch (PartInitException exception) {
 															ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR, exception.getCause());

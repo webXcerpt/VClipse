@@ -30,5 +30,5 @@ public interface IConfigScanImages {
 
 	public static final String SUCCESS = "success.gif";
 	
-	
+	public static final String ERROR = "error.gif";
 }
