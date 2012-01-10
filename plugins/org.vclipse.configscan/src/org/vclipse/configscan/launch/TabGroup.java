@@ -15,15 +15,21 @@ import org.eclipse.debug.ui.ILaunchConfigurationDialog;
 import org.eclipse.debug.ui.ILaunchConfigurationTab;
 
 import com.google.inject.Inject;
-import org.vclipse.configscan.IConfigScanRemoteConnections;
 
-public class LaunchConfigurationTabGroup extends AbstractLaunchConfigurationTabGroup {
+public class TabGroup extends AbstractLaunchConfigurationTabGroup {
 
+	//@Inject
+	//private ManyConnectionsTab manyConnectionsTab;
+	
 	@Inject
-	private IConfigScanRemoteConnections remoteConnections;
+	private OneConnectionTab oneConnectionTab;
 	
 	@Override
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
-		setTabs(new ILaunchConfigurationTab[]{new OptionsLaunchConfigurationTab(remoteConnections)});
+		setTabs(
+				new ILaunchConfigurationTab[] {
+						oneConnectionTab
+						//manyConnectionsTab
+						});
 	}
 }

@@ -5,7 +5,7 @@
 	 <extension
          point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
-            delegate="org.vclipse.configscan.injection.ExecutableExtensionFactory:org.vclipse.configscan.launch.CSLaunchConfigurationDelegate"
+            delegate="org.vclipse.configscan.injection.ExecutableExtensionFactory:org.vclipse.configscan.launch.LaunchDelegate"
             id="org.vclipse.configscan.launchConfiguration"
             modes="run"
             name="ConfigScan"
@@ -15,7 +15,7 @@
    <extension
          point="org.eclipse.debug.ui.launchConfigurationTabGroups">
       <launchConfigurationTabGroup
-            class="org.vclipse.configscan.injection.ExecutableExtensionFactory:org.vclipse.configscan.launch.LaunchConfigurationTabGroup"
+            class="org.vclipse.configscan.injection.ExecutableExtensionFactory:org.vclipse.configscan.launch.TabGroup"
             description="Create a configuration for running tests in the SAP System"
             id="ConfigScanLaunchConfigurationTabGroup"
             type="org.vclipse.configscan.launchConfiguration">

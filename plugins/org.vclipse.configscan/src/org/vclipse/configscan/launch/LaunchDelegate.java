@@ -51,7 +51,7 @@ import org.w3c.dom.Element;
 import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
 
-public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
+public class LaunchDelegate extends LaunchConfigurationDelegate {
 
 	private static final String MISSING_EXTENSION_WARNING_MESSAGE = "There is no registered xml provider for files with extension ";
 
@@ -112,7 +112,7 @@ public class CSLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
 										}
 
 										try {
-											int connectionIndex = configuration.getAttribute(OptionsLaunchConfigurationTab.CURRENT_CONNECTION_INDEX, 0);
+											int connectionIndex = configuration.getAttribute(OneConnectionTab.CURRENT_CONNECTION_INDEX, 0);
 											List<? extends RemoteConnection> remoteConnectionsList = remoteConnections.readConfigScanRemoteConnections();
 											if(connectionIndex < remoteConnectionsList.size()) {
 												RemoteConnection remoteConnection = remoteConnectionsList.get(connectionIndex);

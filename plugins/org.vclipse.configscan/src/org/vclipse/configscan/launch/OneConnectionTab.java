@@ -25,11 +25,12 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
 import org.vclipse.configscan.IConfigScanRemoteConnections;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
 
-public class OptionsLaunchConfigurationTab extends AbstractLaunchConfigurationTab {
+public class OneConnectionTab extends AbstractLaunchConfigurationTab {
 
 	public static final String CURRENT_CONNECTION_INDEX = "currentConnectionIndex";
 	
@@ -39,7 +40,8 @@ public class OptionsLaunchConfigurationTab extends AbstractLaunchConfigurationTa
 	
 	private Combo combo;
 	
-	public OptionsLaunchConfigurationTab(IConfigScanRemoteConnections connections) {
+	@Inject
+	public OneConnectionTab(IConfigScanRemoteConnections connections) {
 		this.remoteConnections = connections;
 	}
 	
