@@ -1,4 +1,4 @@
-package org.vclipse.configscan.views;
+package org.vclipse.configscan;
 
 import java.util.Map;
 

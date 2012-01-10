@@ -11,8 +11,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 import org.vclipse.configscan.ConfigScanPlugin;
+import org.vclipse.configscan.IConfigScanLabelProvider;
 import org.vclipse.configscan.IConfigScanXMLProvider;
-import org.vclipse.configscan.views.IConfigScanLabelProvider;
 
 import com.google.common.collect.Maps;
 

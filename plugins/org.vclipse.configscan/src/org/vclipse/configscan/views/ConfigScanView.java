@@ -10,9 +10,14 @@
  ******************************************************************************/
 package org.vclipse.configscan.views;
 
+import java.net.URISyntaxException;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -23,7 +28,6 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -35,11 +39,23 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.DrillDownAdapter;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.ui.editor.XtextEditor;
+import org.eclipse.xtext.ui.util.ResourceUtil;
 import org.eclipse.xtext.util.Pair;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
+import org.vclipse.configscan.IConfigScanLabelProvider;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.extension.ExtensionPointReader;
 import org.vclipse.configscan.utils.DocumentUtility;
@@ -64,7 +80,7 @@ public final class ConfigScanView extends ViewPart {
 	private ContentProvider contentProvider;
 	
 	@Inject
-	private DefaultConfigScanLabelProvider labelProvider;
+	private LabelProvider labelProvider;
 	
 	@Inject
 	private DocumentUtility documentUtility;
@@ -129,10 +145,6 @@ public final class ConfigScanView extends ViewPart {
 		contributeToActionBars();		
 	}
 
-	protected TreeViewer getTreeViewer() {
-		return viewer;
-	}
-	
 	private void hookContextMenu() {
 		MenuManager menuMgr = new MenuManager("#PopupMenu");
 		menuMgr.setRemoveAllWhenShown(true);
@@ -363,10 +375,10 @@ public final class ConfigScanView extends ViewPart {
 		
 		toggleContent = new Action("", IAction.AS_CHECK_BOX) {
 			public void run() {
-				Map<Element, Element> mapLogInput = ((DefaultConfigScanLabelProvider) viewer.getLabelProvider()).getMapLogInput();
-				Map<Element, URI> inputToEObject = ((DefaultConfigScanLabelProvider) viewer.getLabelProvider()).getMapInputUri();
+				Map<Element, Element> mapLogInput = ((LabelProvider) viewer.getLabelProvider()).getMapLogInput();
+				Map<Element, URI> inputToEObject = ((LabelProvider) viewer.getLabelProvider()).getMapInputUri();
 				if(mapLogInput != null && inputToEObject != null) {
-					DefaultConfigScanLabelProvider defaultLabelProvider = (DefaultConfigScanLabelProvider)viewer.getLabelProvider();
+					LabelProvider defaultLabelProvider = (LabelProvider)viewer.getLabelProvider();
 					if(isChecked()) {
 						setChecked(true);
 						Pair<IConfigScanXMLProvider, IConfigScanLabelProvider> pair = extensionPointReader.getExtensions().get(fileExtension);
@@ -434,50 +446,51 @@ public final class ConfigScanView extends ViewPart {
 	private void hookDoubleClickAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
-//				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-//				
-//				Map<Element, Element> mapLogInput = ((ViewLabelProvider) viewer.getLabelProvider()).getMapLogInput();
-//				Map<Element, URI> inputToUri = ((ViewLabelProvider) viewer.getLabelProvider()).getMapInputUri();
-//				
-//				
-//				
-//				if(mapLogInput != null && inputToUri != null) {
-//					Element el =  (Element) selection.getFirstElement();
-//					Element inputEl = mapLogInput.get(el);
-//					if(inputEl != null) {
-//						URI uri = inputToUri.get(inputEl);
-//						
-//						if(uri != null) {
-//							Resource res = new XtextResourceSet().getResource(uri, true);
-//							if (res == null) {
-//								throw new IllegalArgumentException("resource null");
-//							}
-//							
-//							
-//							EObject eObj = res.getResourceSet().getEObject(uri, true);
-//							if(eObj != null) {
-//	
-//								IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-//								try {
-//									Resource eResource = eObj.eResource();
-//									IFile file = ResourceUtil.getFile(eResource);
-//									IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(new java.net.URI(uri.toString()));
-//									for (IFile f : files) {
-//										System.err.println(f.getFullPath());
-//									}
-//									XtextEditor cmltEditor = (XtextEditor)activePage.openEditor(
-//											new FileEditorInput(file), "com.webxcerpt.cm.nsn.cmlt.CmlT");
-//									INode n = NodeModelUtils.getNode(eObj);
-//									cmltEditor.selectAndReveal(n.getOffset(), n.getLength());
-//								} catch (PartInitException e) {
-//									e.printStackTrace();
-//								} catch (URISyntaxException e) {
-//									e.printStackTrace();
-//								}
-//							}
-//						}
-//					}
-//				}
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				
+				Map<Element, Element> mapLogInput = ((LabelProvider) viewer.getLabelProvider()).getMapLogInput();
+				Map<Element, URI> inputToUri = ((LabelProvider) viewer.getLabelProvider()).getMapInputUri();
+
+				
+				if(mapLogInput != null && inputToUri != null) {
+					Element el =  (Element) selection.getFirstElement();
+					Element inputEl = mapLogInput.get(el);
+					if(inputEl != null) {
+						URI uri = inputToUri.get(inputEl);
+						
+						if(uri != null) {
+							Resource res = new XtextResourceSet().getResource(uri, true);
+							if (res == null) {
+								throw new IllegalArgumentException("resource null");
+							}
+							
+							
+							EObject eObj = res.getResourceSet().getEObject(uri, true);
+							if(eObj != null) {
+	
+								IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+								try {
+									Resource eResource = eObj.eResource();
+									IFile file = ResourceUtil.getFile(eResource);
+									IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(new java.net.URI(uri.toString()));
+									for (IFile f : files) {
+										System.err.println(f.getFullPath());
+									}
+									
+									IEditorPart openEditor = IDE.openEditor(activePage, file, true);
+									if(openEditor instanceof XtextEditor) {
+										INode n = NodeModelUtils.getNode(eObj);
+										((XtextEditor)openEditor).selectAndReveal(n.getOffset(), n.getLength());
+									}
+								} catch (PartInitException e) {
+									e.printStackTrace();
+								} catch (URISyntaxException e) {
+									e.printStackTrace();
+								}
+							}
+						}
+					}
+				}
 			}
 		});
 	}

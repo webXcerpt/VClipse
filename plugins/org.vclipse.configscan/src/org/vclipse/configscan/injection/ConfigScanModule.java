@@ -16,7 +16,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.service.AbstractGenericModule;
 import org.vclipse.configscan.IConfigScanRemoteConnections;
@@ -25,7 +24,6 @@ import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.MockConfigScanRemoteConnections;
 import org.vclipse.configscan.MockConfigScanRunner;
 import org.vclipse.configscan.implementation.ConfigScanXmlProvider;
-import org.vclipse.configscan.views.DefaultConfigScanLabelProvider;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.connection.VClipseConnectionPlugin;
 
@@ -55,10 +53,6 @@ public final class ConfigScanModule extends AbstractGenericModule {
 	
 	public Class<? extends IConfigScanRunner> bindConfigScanRunner() {
 		return MockConfigScanRunner.class;
-	}
-	
-	public Class<? extends ILabelProvider> bindILabelProvider() {
-		return DefaultConfigScanLabelProvider.class;
 	}
 	
 	public Class<? extends IConfigScanXMLProvider> bindConfigScanXmlProvider() {

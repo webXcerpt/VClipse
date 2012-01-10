@@ -19,7 +19,7 @@ import org.w3c.dom.Node;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
-public class DefaultConfigScanLabelProvider extends ColumnLabelProvider  {
+public final class LabelProvider extends ColumnLabelProvider  {
 
 	private static final String EMPTY = "";
 	
@@ -38,7 +38,7 @@ public class DefaultConfigScanLabelProvider extends ColumnLabelProvider  {
 	
 	private ILabelProvider labelProviderExtension;
 	
-	public DefaultConfigScanLabelProvider() {
+	public LabelProvider() {
 		imageRegistry = ConfigScanPlugin.getDefault().getImageRegistry();
 		elementMap = Maps.newHashMap();
 		inputToUri = Maps.newHashMap();
