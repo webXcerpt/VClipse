@@ -40,6 +40,7 @@ import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanLabelProvider;
 import org.vclipse.configscan.IConfigScanRemoteConnections;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
+import org.vclipse.configscan.IConfigScanReverseXmlTransformation;
 import org.vclipse.configscan.IConfigScanRunner;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.extension.ExtensionPointReader;
@@ -66,6 +67,9 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 	
 	@Inject
 	private IConfigScanXMLProvider xmlProvider;
+	
+	@Inject
+	private IConfigScanReverseXmlTransformation reverseXmlTransformation;
 	
 	@Inject
 	private ExtensionPointReader extensionPointReader;
@@ -123,7 +127,7 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 												
 												
 												final Document xmlLogDocument = documentUtility.parse(xmlLog);
-												final Map<Element, Element> mapLogInput = xmlProvider.computeConfigScanMap(xmlLogDocument, xmlInputDocument);
+												final Map<Element, Element> mapLogInput = reverseXmlTransformation.computeConfigScanMap(xmlLogDocument, xmlInputDocument);
 
 
 												Display.getDefault().syncExec(new Runnable() {

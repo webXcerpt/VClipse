@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.vclipse.configscan.implementation;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -22,8 +21,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import com.google.common.collect.Maps;
 
 /**
  * Default implementation for the {@link IConfigScanXMLProvider} interface.
@@ -46,17 +43,8 @@ public class ConfigScanXmlProvider implements IConfigScanXMLProvider {
 	}
 
 	@Override
-	public HashMap<Element, Element> computeConfigScanMap(Document xmlLog, Document xmlInput) {
-		return Maps.newHashMap();
-	}
-
-	@Override
 	public String getMaterialNumber(EObject model) {
 		return EMPTY;
 	}
 
-	@Override
-	public String getBomApplication(EObject model) {
-		return EMPTY;
-	}
 }

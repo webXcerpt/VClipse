@@ -304,21 +304,8 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 	}
 	
 	@Override
-	public HashMap<Element, Element> computeConfigScanMap(Document xmlLog,
-			Document xmlInput) {
-		// will be removed from here
-		return null;
-	}
-
-	@Override
 	public String getMaterialNumber(EObject model) {
 		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getBomApplication(EObject model) {
-		// will be removed from here
 		return null;
 	}
 
