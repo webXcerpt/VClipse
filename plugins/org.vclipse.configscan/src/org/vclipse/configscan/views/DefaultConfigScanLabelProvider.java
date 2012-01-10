@@ -2,14 +2,12 @@ package org.vclipse.configscan.views;
 
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
@@ -25,8 +23,6 @@ public class DefaultConfigScanLabelProvider extends ColumnLabelProvider implemen
 
 	private static final String EMPTY = "";
 	
-	private ILabelProvider delegate;
-	
 	private ImageRegistry imageRegistry;
 	
 	@Inject
@@ -38,8 +34,8 @@ public class DefaultConfigScanLabelProvider extends ColumnLabelProvider implemen
 	
 	private ResourceSet resourceSet;
 	
-	public DefaultConfigScanLabelProvider(ILabelProvider delegate) {
-		this.delegate = delegate;
+	public DefaultConfigScanLabelProvider() {
+	
 		imageRegistry = ConfigScanPlugin.getDefault().getImageRegistry();
 		elementMap = Maps.newHashMap();
 		inputToUri = Maps.newHashMap();
@@ -47,36 +43,30 @@ public class DefaultConfigScanLabelProvider extends ColumnLabelProvider implemen
 	
 	@Override
 	public String getText(Object object) {
-		String text = delegate.getText(object);
-		if(text != null && !text.isEmpty()) {
-			return text;
-		} else {
-			if(object instanceof Element) {
-				Element element = (Element)object;
-	        	if(DocumentUtility.LOG_SESSION.equals(element.getTagName())) {
-	        		return element.getAttribute(DocumentUtility.TITLE);
-	        	} else if(DocumentUtility.LOG_TEST_GRP.equals(element.getTagName())) {
-	        		return element.getAttribute(DocumentUtility.TITLE);
-	        	} else if(DocumentUtility.NODE_NAME_LOG_MSG.equals(element.getTagName())) {
-	        		return element.getAttribute(DocumentUtility.TITLE);
-	        	} else {
-	        		return element.getAttribute(DocumentUtility.TITLE);
-	        	}
+		if(object instanceof Element) {
+			Element element = (Element)object;
+			if(DocumentUtility.LOG_SESSION.equals(element.getTagName())) {
+				return element.getAttribute(DocumentUtility.TITLE);
+			} else if(DocumentUtility.LOG_TEST_GRP.equals(element.getTagName())) {
+				return element.getAttribute(DocumentUtility.TITLE);
+			} else if(DocumentUtility.NODE_NAME_LOG_MSG.equals(element.getTagName())) {
+				return element.getAttribute(DocumentUtility.TITLE);
+			} else {
+				return element.getAttribute(DocumentUtility.TITLE);
 			}
-			return EMPTY;
 		}
+		return EMPTY;
 	}
 	
 	@Override
 	public Image getImage(Object object) {
-		Image image = delegate.getImage(object);
-		if(image == null && object instanceof Element) {
+		if(object instanceof Element) {
 			if(object instanceof Element) {
 				return documentUtility.isSuccess((Element)object) ? 
 						imageRegistry.get(IConfigScanImages.SUCCESS) : imageRegistry.get(IConfigScanImages.WARNING);							
 			}
 		}
-		return image;
+		return null;
 	}
 
 	@Override
@@ -124,7 +114,7 @@ public class DefaultConfigScanLabelProvider extends ColumnLabelProvider implemen
 			URI uri = inputToUri.get(elementInput);
 			EObject eObject = getEObjectForUri(uri);
 			if(eObject != null) {
-				tooltip += "\nCMLT: " + delegate.getText(eObject);
+				//tooltip += "\nCMLT: " + delegate.getText(eObject);
 			}
 			return tooltip;
 		}
