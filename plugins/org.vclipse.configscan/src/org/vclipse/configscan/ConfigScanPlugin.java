@@ -38,6 +38,10 @@ public class ConfigScanPlugin extends AbstractUIPlugin {
 		getDefault().getLog().log(new Status(severity, ID, IStatus.OK, message, throwable));
 	}
 	
+	public static void log(String message, int severity) {
+		getDefault().getLog().log(new Status(severity, ID, message));
+	}
+	
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;

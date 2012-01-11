@@ -21,10 +21,12 @@ import org.eclipse.xtext.service.AbstractGenericModule;
 import org.eclipse.xtext.ui.IImageHelper;
 import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.IConfigScanRemoteConnections;
+import org.vclipse.configscan.IConfigScanReverseXmlTransformation;
 import org.vclipse.configscan.IConfigScanRunner;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.MockConfigScanRemoteConnections;
 import org.vclipse.configscan.MockConfigScanRunner;
+import org.vclipse.configscan.implementation.ConfigScanReverseXmlTransformation;
 import org.vclipse.configscan.implementation.ConfigScanXmlProvider;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.connection.VClipseConnectionPlugin;
@@ -65,6 +67,10 @@ public final class ConfigScanModule extends AbstractGenericModule {
 		return ClasspathAwareImageHelper.class;
 	}
 	
+	public Class<? extends IConfigScanReverseXmlTransformation> bindIConfigScanReverseXmlTransformation() {
+		return ConfigScanReverseXmlTransformation.class;
+	}
+	
 	public DocumentBuilder bindDocumentBuilder() throws ParserConfigurationException {
 		return DocumentBuilderFactory.newInstance().newDocumentBuilder();
 	}
@@ -72,4 +78,6 @@ public final class ConfigScanModule extends AbstractGenericModule {
 	public AbstractUIPlugin bindAbstractUIPlugin() {
 		return plugin;
 	}
+	
+	
 }
