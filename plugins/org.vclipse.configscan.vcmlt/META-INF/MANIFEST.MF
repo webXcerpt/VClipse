@@ -37,3 +37,4 @@ Export-Package: org.vclipse.configscan.vcmlt,
  org.vclipse.configscan.vcmlt.vcmlT,
  org.vclipse.configscan.vcmlt.vcmlT.impl,
  org.vclipse.configscan.vcmlt.vcmlT.util
+
