@@ -305,8 +305,10 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 	
 	@Override
 	public String getMaterialNumber(EObject model) {
-		// TODO Auto-generated method stub
-		return null;
+		if (!(model instanceof Model)) {
+			throw new IllegalArgumentException("not a Model: " + model);
+		}
+		return ((Model)model).getMaterial().getName();
 	}
 
 }

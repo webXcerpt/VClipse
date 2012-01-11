@@ -9,6 +9,7 @@ generate vcmlT "http://www.vclipse.org/configscan/vcmlt/VcmlT"
 
 Model
 	:	imports+=Import*
+		'material' material=[VCML::Material|EXTENDED_ID] // TODO refine with further information for test-case upload
 		testgroups+=TestGroup*
 	;
 	
