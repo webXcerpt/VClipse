@@ -122,8 +122,8 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 												RemoteConnection remoteConnection = remoteConnectionsList.get(connectionIndex);
 												final HashMap<Element, URI> inputToUriMap = new HashMap<Element, URI>();
 												final Document xmlInputDocument = xmlProvider.transform(contents.get(0), inputToUriMap);
-												String xmlLog = runner.execute(currentFile, documentUtility.parse(xmlInputDocument), 
-														remoteConnection, xmlProvider.getMaterialNumber(contents.get(0)));
+												String xmlLog = runner.execute(documentUtility.parse(xmlInputDocument), remoteConnection, 
+														xmlProvider.getMaterialNumber(contents.get(0)));
 												
 												
 												final Document xmlLogDocument = documentUtility.parse(xmlLog);

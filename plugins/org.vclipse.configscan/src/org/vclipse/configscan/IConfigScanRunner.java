@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.vclipse.configscan;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
 import org.vclipse.configscan.implementation.ConfigScanRunner;
@@ -21,8 +20,6 @@ import com.sap.conn.jco.JCoException;
 @ImplementedBy(ConfigScanRunner.class)
 public interface IConfigScanRunner {
 
-	public String execute(IFile inputFile, String output, 
-			RemoteConnection remoteConnection, String materialNumber) throws JCoException, CoreException;
+	public String execute(String output, RemoteConnection remoteConnection, String materialNumber) throws JCoException, CoreException;
 
-	
 }

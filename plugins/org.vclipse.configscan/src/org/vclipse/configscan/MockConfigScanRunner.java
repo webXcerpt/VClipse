@@ -2,6 +2,10 @@ package org.vclipse.configscan;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.xtext.util.Files;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
 
@@ -9,22 +13,32 @@ import com.sap.conn.jco.JCoException;
 
 public class MockConfigScanRunner implements IConfigScanRunner {
 
-	public String execute(IFile file, String xmlInput, RemoteConnection rc, String matNr) throws JCoException, CoreException {
-		
-		System.err.println("MockConfigScanRunner: executing " + file.getName()); 
-		
-//		return "TODO: dies ist zu ersetzen"; // TODO Inhalt der Datei file.getName() + ".log" zurückgeben
-		
-//		File f = new File(file.getFullPath().toPortableString() + ".log");
+	public String execute(String xmlInput, RemoteConnection rc, String matNr) throws JCoException, CoreException {
+		GetSelectedFileRunnable run = new GetSelectedFileRunnable();
+		Display.getDefault().syncExec(run);
+		IFile selectedFile = run.selectedFile;
+		System.err.println("MockConfigScanRunner: executing " + selectedFile.getName()); 
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return Files.readFileIntoString(file.getLocation().toPortableString() + ".xml.log");
-		
-//		return Files.readStreamIntoString(file.getContents());
+		return Files.readFileIntoString(selectedFile.getLocation().toPortableString() + ".xml.log");
 	}
+}
 
+class GetSelectedFileRunnable implements Runnable {
+	
+	public IFile selectedFile;
+	
+	@Override
+	public void run() {
+		ISelection selection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getSelection();
+		if(!selection.isEmpty() && selection instanceof IStructuredSelection) {
+			Object firstElement = ((IStructuredSelection)selection).getFirstElement();
+			if(firstElement instanceof IFile) {
+				selectedFile = (IFile)firstElement;
+			}
+		}
+	}
 }

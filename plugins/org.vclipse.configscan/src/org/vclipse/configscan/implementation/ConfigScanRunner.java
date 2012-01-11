@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.vclipse.configscan.implementation;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
 import org.vclipse.configscan.IConfigScanRunner;
@@ -27,7 +26,7 @@ public class ConfigScanRunner implements IConfigScanRunner {
 	@Inject
 	private IConnectionHandler handler;
 	
-	public String execute(IFile file, String output, RemoteConnection rc, String matNr) throws JCoException, CoreException {
+	public String execute(String output, RemoteConnection rc, String matNr) throws JCoException, CoreException {
 		IConnection currentConnection = handler.getCurrentConnection();
 		if (currentConnection==null) {
 			throw new IllegalArgumentException("not connected");
