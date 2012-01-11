@@ -8,6 +8,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.ui.IImageHelper;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.utils.DocumentUtility;
@@ -33,7 +34,7 @@ public final class LabelProvider extends ColumnLabelProvider  {
 	
 	protected Map<Element, URI> inputToUri;
 	
-	private ResourceSet resourceSet;
+	private ResourceSet resourceSet = new XtextResourceSet();
 	
 	private boolean shouldDelegate;
 	
@@ -132,8 +133,8 @@ public final class LabelProvider extends ColumnLabelProvider  {
 			}
 			URI uri = inputToUri.get(elementInput);
 			EObject eObject = getEObjectForUri(uri);
-			if(eObject != null) {
-				//tooltip += "\nCMLT: " + delegate.getText(eObject);
+			if(eObject != null && shouldDelegate && labelProviderExtension != null) {
+				tooltip += "\n" + labelProviderExtension.getText(eObject);
 			}
 			return tooltip;
 		}
