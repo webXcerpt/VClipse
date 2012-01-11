@@ -20,14 +20,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.service.AbstractGenericModule;
 import org.eclipse.xtext.ui.IImageHelper;
 import org.vclipse.base.ui.ClasspathAwareImageHelper;
-import org.vclipse.configscan.IConfigScanRemoteConnections;
-import org.vclipse.configscan.IConfigScanReverseXmlTransformation;
-import org.vclipse.configscan.IConfigScanRunner;
-import org.vclipse.configscan.IConfigScanXMLProvider;
-import org.vclipse.configscan.MockConfigScanRemoteConnections;
-import org.vclipse.configscan.MockConfigScanRunner;
-import org.vclipse.configscan.implementation.ConfigScanReverseXmlTransformation;
-import org.vclipse.configscan.implementation.ConfigScanXmlProvider;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.connection.VClipseConnectionPlugin;
 
@@ -51,24 +43,16 @@ public final class ConfigScanModule extends AbstractGenericModule {
 		return VClipseConnectionPlugin.getDefault().getInjector().getInstance(IConnectionHandler.class);
 	}
 	
-	public Class<? extends IConfigScanRemoteConnections> bindConfigScanRemoteConnections() {
-		return MockConfigScanRemoteConnections.class;
-	}
-	
-	public Class<? extends IConfigScanRunner> bindConfigScanRunner() {
-		return MockConfigScanRunner.class;
-	}
-	
-	public Class<? extends IConfigScanXMLProvider> bindConfigScanXmlProvider() {
-		return ConfigScanXmlProvider.class;
-	}
+//	public Class<? extends IConfigScanRemoteConnections> bindConfigScanRemoteConnections() {
+//		return MockConfigScanRemoteConnections.class;
+//	}
+//	
+//	public Class<? extends IConfigScanRunner> bindConfigScanRunner() {
+//		return MockConfigScanRunner.class;
+//	}
 	
 	public Class<? extends IImageHelper> bindIImageHelper() {
 		return ClasspathAwareImageHelper.class;
-	}
-	
-	public Class<? extends IConfigScanReverseXmlTransformation> bindIConfigScanReverseXmlTransformation() {
-		return ConfigScanReverseXmlTransformation.class;
 	}
 	
 	public DocumentBuilder bindDocumentBuilder() throws ParserConfigurationException {
@@ -78,6 +62,5 @@ public final class ConfigScanModule extends AbstractGenericModule {
 	public AbstractUIPlugin bindAbstractUIPlugin() {
 		return plugin;
 	}
-	
 	
 }
