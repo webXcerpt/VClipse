@@ -52,7 +52,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 	private DocumentBuilder xmlDocBuilder;
 
 	@Override
-	public Document transform(EObject model, Map<Element, URI> map) {
+	public synchronized Document transform(EObject model, Map<Element, URI> map) {
 		try {
 			this.xmlDocBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
