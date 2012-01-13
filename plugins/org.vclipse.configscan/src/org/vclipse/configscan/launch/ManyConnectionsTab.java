@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
@@ -22,6 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanRemoteConnections;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
 
@@ -64,8 +66,8 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 		List<? extends RemoteConnection> connections = Lists.newArrayList();
 		try {
 			connections = remoteConnections.readConfigScanRemoteConnections();
-		} catch (JCoException e) {
-			throw new RuntimeException(e);
+		} catch (JCoException exception) {
+			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 		}
 	
 		connectionsViewer.setLabelProvider(new LabelProvider());

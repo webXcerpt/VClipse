@@ -13,6 +13,7 @@ package org.vclipse.configscan.launch;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
@@ -27,6 +28,8 @@ import org.eclipse.swt.widgets.Label;
 
 import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
+
+import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanRemoteConnections;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
 
@@ -54,8 +57,8 @@ public class OneConnectionTab extends AbstractLaunchConfigurationTab {
 		label.setText("Please select a connection: ");
 		try {
 			connections = remoteConnections.readConfigScanRemoteConnections();
-		} catch (JCoException e) {
-			throw new RuntimeException(e);
+		} catch (JCoException exception) {
+			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 		}
 		combo = new Combo(mainArea, SWT.DROP_DOWN | SWT.READ_ONLY);
 		combo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

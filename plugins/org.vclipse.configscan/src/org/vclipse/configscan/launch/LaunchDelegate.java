@@ -67,8 +67,8 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 		List<? extends RemoteConnection> remoteConnectionsList = Lists.newArrayList();
 		try {
 			remoteConnectionsList = remoteConnections.readConfigScanRemoteConnections();
-		} catch (JCoException e) {
-			e.printStackTrace();
+		} catch (JCoException exception) {
+			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 		}
 		
 		monitor.subTask("Collecting selected connections");
