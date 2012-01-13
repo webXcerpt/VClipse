@@ -1,5 +1,7 @@
 import "ABC.vcml"
 
+material 'ABC'
+
 testgroup 'ExampleTG' "Example Test Group" success {
 	CORE = 'NOCORE' @ /
 	CORE = 'NOCORE' @ / (0010) MAT1
