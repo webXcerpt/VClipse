@@ -109,21 +109,22 @@ public final class ConfigScanTestCase implements IConfigScanTestObject {
 	}
 
 	public void fetchDeferredChildren(Object object, IElementCollector collector, IProgressMonitor monitor) {
-		testCases = Lists.newArrayList();
-		NodeList childNodes = logElement.getChildNodes();
-		for(int i=0; i<childNodes.getLength(); i++) {
-			Node item = childNodes.item(i);
-			if((item.getNodeType() == Node.ELEMENT_NODE)) { 
-				Element childElement = (Element)item;
-				if(documentUtility.passesFilter(childElement)) {
-					ConfigScanTestCase testCase = new ConfigScanTestCase(this, inputToUriMap, mapLogInput);
-					testCase.setLogElement(childElement);
-					Element inputElement = mapLogInput.get(childElement);
-					testCase.setInputElement(inputElement);
-					testCase.setTestStatementUri(inputToUriMap.get(inputElement));
-					testCase.setImageHelper(imageHelper);
-					testCase.setDocumentUtility(documentUtility);
-					testCases.add(testCase);
+		if(testCases.isEmpty()) {
+			NodeList childNodes = logElement.getChildNodes();
+			for(int i=0; i<childNodes.getLength(); i++) {
+				Node item = childNodes.item(i);
+				if((item.getNodeType() == Node.ELEMENT_NODE)) { 
+					Element childElement = (Element)item;
+					if(documentUtility.passesFilter(childElement)) {
+						ConfigScanTestCase testCase = new ConfigScanTestCase(this, inputToUriMap, mapLogInput);
+						testCase.setLogElement(childElement);
+						Element inputElement = mapLogInput.get(childElement);
+						testCase.setInputElement(inputElement);
+						testCase.setTestStatementUri(inputToUriMap.get(inputElement));
+						testCase.setImageHelper(imageHelper);
+						testCase.setDocumentUtility(documentUtility);
+						testCases.add(testCase);
+					}
 				}
 			}
 		}
