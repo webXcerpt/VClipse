@@ -20,6 +20,10 @@ Import-Package: com.google.inject,
 Export-Package: org.vclipse.configscan,
  org.vclipse.configscan.actions,
  org.vclipse.configscan.extension,
+ org.vclipse.configscan.implementation,
+ org.vclipse.configscan.injection,
+ org.vclipse.configscan.launch,
+ org.vclipse.configscan.preferences,
  org.vclipse.configscan.utils,
  org.vclipse.configscan.views
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)

@@ -1,0 +1,24 @@
+package org.vclipse.configscan.preferences;
+
+import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.vclipse.configscan.views.ConfigScanConfiguration;
+
+import com.google.inject.Inject;
+
+public class PreferencesInitializer extends AbstractPreferenceInitializer {
+
+	private final IPreferenceStore store;
+	
+	@Inject
+	public PreferencesInitializer(IPreferenceStore preferenceStore) {
+		store = preferenceStore;
+	}
+	
+	@Override
+	public void initializeDefaultPreferences() {
+		store.setDefault(ConfigScanConfiguration.EXPAND_TREE_ON_INPUT, true);
+		store.setDefault(ConfigScanConfiguration.EXPORT_XML_INPUT_TO_DISK, true);
+	}
+
+}
