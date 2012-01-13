@@ -31,7 +31,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -88,9 +87,6 @@ public final class ConfigScanView extends ViewPart {
 	
 	private ToggleLabelProviderAction toggleContent;
 	
-	private Composite parent;
-	private Labels labels;
-
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}
@@ -102,28 +98,21 @@ public final class ConfigScanView extends ViewPart {
 	}
 
 	public void createPartControl(Composite parent) {
-		parent.setLayout(new GridLayout(4, true));
-		
-		labels = new Labels(parent, 0, 0, 0, 0);
+		parent.setLayout(new GridLayout());
 		
 		viewer = new JobAwareTreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
 		viewer.setLabelProvider(labelProvider);				
 		viewer.setContentProvider(contentProvider);
+		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 		
 		preferenceStore.addPropertyChangeListener(propertyChangeListener = new PropertyChangeListener(viewer));
 		if(preferenceStore.getBoolean(IConfigScanConfiguration.EXPAND_TREE_ON_INPUT)) {
 			viewer.setAutoExpandLevel(IConfigScanConfiguration.DEFAULT_EXPAND_LEVEL);			
 		}
-		new DrillDownAdapter(viewer);
 		
+		new DrillDownAdapter(viewer);
 		ColumnViewerToolTipSupport.enableFor(viewer);
 		
-		this.parent = parent;
-		Tree tree = viewer.getTree();
-		GridData data = new GridData(GridData.FILL_BOTH);
-		data.horizontalSpan = 4;
-		tree.setLayoutData(data);
-	
 		createActions();
 		contributeToActionBars();		
 		hookDoubleClickAction();
@@ -140,7 +129,7 @@ public final class ConfigScanView extends ViewPart {
 	private void contributeToActionBars() {
 		IActionBars bars = getViewSite().getActionBars();
 		IToolBarManager toolBarManager = bars.getToolBarManager();
-		FileAction file = new FileAction(parent, viewer, labels, imageHelper);	
+		//FileAction file = new FileAction(parent, viewer, labels, imageHelper);	
 		toolBarManager.add(toggleContent);
 		toolBarManager.add(new Separator());
 		toolBarManager.add(expandAll);
@@ -150,8 +139,6 @@ public final class ConfigScanView extends ViewPart {
 		toolBarManager.add(new Separator());
 		toolBarManager.add(previousFailure);
 		toolBarManager.add(nextFailure);
-		toolBarManager.add(new Separator());
-		toolBarManager.add(file);
 	}
 
 	private void createActions() {
@@ -355,11 +342,3 @@ public final class ConfigScanView extends ViewPart {
 	}
 
 }
-
-//public void setInput(Document xmlLogDoc, Document xmlInputDoc, Map<Element, Element> mapLogInput, final Map<Element, URI> inputToUri) {
-//int runs = documentUtility.getNumberOfRuns(xmlLogDoc);
-//int successes = documentUtility.getNumberOfSuccess(xmlLogDoc);
-//int failures = documentUtility.getNumberOfFailure(xmlLogDoc);
-//int time = 0;
-//labels.updateLabels(runs, failures, successes, time);
-//}
