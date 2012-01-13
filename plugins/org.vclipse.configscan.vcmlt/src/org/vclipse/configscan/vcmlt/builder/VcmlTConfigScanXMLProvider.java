@@ -281,8 +281,8 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 	private String getValue(Literal lit) {
 		if (lit instanceof SymbolicLiteral) {
 			String str = ((SymbolicLiteral)lit).getValue();
-			// strip off surrounding quotes
-		    return (str.substring(1, str.length()-1));
+			// strips also off surrounding quotes
+			return (str);
 		} else if (lit instanceof NumericLiteral) {
 		    return ((NumericLiteral)lit).getValue();
 		} else {
