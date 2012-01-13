@@ -92,50 +92,52 @@ public final class ConfigScanTestRun implements IConfigScanTestObject {
 	public void fetchDeferredChildren(Object object, IElementCollector collector, IProgressMonitor monitor) {
 		// this is computed each time the tree is new constructed, we should probably check if xmlLogDocument is null
 		// if it is not null, do not run the whole code beneath
-		testCases = Lists.newArrayList();
-		monitor.beginTask("Running tests for " + testModel.eResource().getURI().lastSegment() + " and " + connection.getDescription() + " connection", IProgressMonitor.UNKNOWN);
-		
-		Map<Element, URI> inputToUriMap = Maps.newHashMap();
-		Document xmlInputDocument = xmlProvider.transform(testModel, inputToUriMap);
-		
-		// log on disk -> asks the preference store if logging is required
-		documentUtility.exportXmlToDisk(xmlInputDocument);
-		
-		String parseResult = documentUtility.parse(xmlInputDocument);
-		String materialNumber = xmlProvider.getMaterialNumber(testModel);
-		
-		try {
-			String result = runner.execute(parseResult, connection, materialNumber, ResourceUtil.getFile(testModel.eResource()));
-			Document xmlLogDocument = documentUtility.parse(result);
-			documentUtility.exportXmlToDisk(xmlLogDocument);
-			Map<Element, Element> mapLogInput = reverseXmlTransformation.computeConfigScanMap(xmlLogDocument, xmlInputDocument);
-			Node nextSibling = xmlLogDocument.getDocumentElement().getFirstChild().getNextSibling();
-			NodeList childNodes = nextSibling.getChildNodes();
-			for(int i=0; i<childNodes.getLength(); i++) {
-				Node item = childNodes.item(i);
-				if((item.getNodeType() == Node.ELEMENT_NODE)) { 
-					Element logElement = (Element)item;
-					if(documentUtility.passesFilter(logElement)) {
-						ConfigScanTestCase testCase = new ConfigScanTestCase(this, inputToUriMap, mapLogInput);
-						testCase.setLogElement(logElement);
-						Element inputElement = mapLogInput.get(logElement);
-						testCase.setInputElement(inputElement);
-						testCase.setTestStatementUri(inputToUriMap.get(inputElement));
-						testCase.setImageHelper(imageHelper);
-						testCase.setDocumentUtility(documentUtility);
-						testCases.add(testCase);
+		if(testCases.isEmpty()) {
+			monitor.beginTask("Running tests for " + testModel.eResource().getURI().lastSegment() + " and " + connection.getDescription() + " connection", IProgressMonitor.UNKNOWN);
+
+			Map<Element, URI> inputToUriMap = Maps.newHashMap();
+			Document xmlInputDocument = xmlProvider.transform(testModel, inputToUriMap);
+
+			// log on disk -> asks the preference store if logging is required
+			documentUtility.exportXmlToDisk(xmlInputDocument);
+
+			String parseResult = documentUtility.parse(xmlInputDocument);
+			String materialNumber = xmlProvider.getMaterialNumber(testModel);
+
+			try {
+				String result = runner.execute(parseResult, connection, materialNumber, ResourceUtil.getFile(testModel.eResource()));
+				Document xmlLogDocument = documentUtility.parse(result);
+				documentUtility.exportXmlToDisk(xmlLogDocument);
+				Map<Element, Element> mapLogInput = reverseXmlTransformation.computeConfigScanMap(xmlLogDocument, xmlInputDocument);
+				Node nextSibling = xmlLogDocument.getDocumentElement().getFirstChild().getNextSibling();
+				NodeList childNodes = nextSibling.getChildNodes();
+				for(int i=0; i<childNodes.getLength(); i++) {
+					Node item = childNodes.item(i);
+					if((item.getNodeType() == Node.ELEMENT_NODE)) { 
+						Element logElement = (Element)item;
+						if(documentUtility.passesFilter(logElement)) {
+							ConfigScanTestCase testCase = new ConfigScanTestCase(this, inputToUriMap, mapLogInput);
+							testCase.setLogElement(logElement);
+							Element inputElement = mapLogInput.get(logElement);
+							testCase.setInputElement(inputElement);
+							testCase.setTestStatementUri(inputToUriMap.get(inputElement));
+							testCase.setImageHelper(imageHelper);
+							testCase.setDocumentUtility(documentUtility);
+							testCases.add(testCase);
+						}
 					}
 				}
+			} catch (JCoException e) {
+				ConfigScanPlugin.log(e.getMessage(), IStatus.ERROR);
+			} catch (CoreException e) {
+				ConfigScanPlugin.log(e.getMessage(), IStatus.ERROR);
 			}
-			for(IConfigScanTestObject testCase : testCases) {
-				collector.add(testCase, monitor);
-			}
-		} catch (JCoException e) {
-			ConfigScanPlugin.log(e.getMessage(), IStatus.ERROR);
-		} catch (CoreException e) {
-			ConfigScanPlugin.log(e.getMessage(), IStatus.ERROR);
+			monitor.done();
 		}
-		monitor.done();
+
+		for(IConfigScanTestObject testCase : testCases) {
+			collector.add(testCase, monitor);
+		}
 	}
 	
 	public boolean isContainer() {
