@@ -14,10 +14,10 @@ class PropertyChangeListener implements IPropertyChangeListener {
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
-		if(ConfigScanConfiguration.EXPAND_TREE_ON_INPUT.equals(event.getProperty())) {
+		if(IConfigScanConfiguration.EXPAND_TREE_ON_INPUT.equals(event.getProperty())) {
 			Object object = event.getNewValue();
 			if(object instanceof Boolean) {
-				treeViewer.setAutoExpandLevel((Boolean)object ? ConfigScanConfiguration.DEFAULT_EXPAND_LEVEL : 0);
+				treeViewer.setAutoExpandLevel((Boolean)object ? IConfigScanConfiguration.DEFAULT_EXPAND_LEVEL : 0);
 			}
 		}
 	}

@@ -85,6 +85,7 @@ public final class ConfigScanView extends ViewPart {
 	private Action previousFailure;
 	private Action collapseAll;
 	private Action expandAll;
+	
 	private ToggleLabelProviderAction toggleContent;
 	
 	private Composite parent;
@@ -110,8 +111,8 @@ public final class ConfigScanView extends ViewPart {
 		viewer.setContentProvider(contentProvider);
 		
 		preferenceStore.addPropertyChangeListener(propertyChangeListener = new PropertyChangeListener(viewer));
-		if(preferenceStore.getBoolean(ConfigScanConfiguration.EXPAND_TREE_ON_INPUT)) {
-			viewer.setAutoExpandLevel(ConfigScanConfiguration.DEFAULT_EXPAND_LEVEL);			
+		if(preferenceStore.getBoolean(IConfigScanConfiguration.EXPAND_TREE_ON_INPUT)) {
+			viewer.setAutoExpandLevel(IConfigScanConfiguration.DEFAULT_EXPAND_LEVEL);			
 		}
 		new DrillDownAdapter(viewer);
 		
@@ -129,7 +130,10 @@ public final class ConfigScanView extends ViewPart {
 	}
 
 	public void setInput(List<ConfigScanTestRun> testRuns) {
+		// disable this action on input -> 
+		// it will be enabled as soon as tree is constructed 
 		toggleContent.setEnabled(false);
+		
 		viewer.setInput(testRuns);
 	}
 	
@@ -154,7 +158,7 @@ public final class ConfigScanView extends ViewPart {
 		collapseAll = new Action() {
 			public void run() {
 				viewer.collapseAll();
-				viewer.expandToLevel(ConfigScanConfiguration.DEFAULT_EXPAND_LEVEL);
+				viewer.expandToLevel(IConfigScanConfiguration.DEFAULT_EXPAND_LEVEL);
 			}
 		};
 		collapseAll.setText("Collapse all");
