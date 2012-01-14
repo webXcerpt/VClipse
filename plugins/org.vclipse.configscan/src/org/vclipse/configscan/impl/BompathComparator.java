@@ -1,4 +1,4 @@
-package org.vclipse.configscan.implementation;
+package org.vclipse.configscan.impl;
 
 import java.util.Comparator;
 

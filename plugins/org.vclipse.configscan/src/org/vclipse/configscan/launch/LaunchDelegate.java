@@ -39,13 +39,16 @@ import org.vclipse.configscan.IConfigScanRemoteConnections;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.extension.ExtensionPointReader;
-import org.vclipse.configscan.implementation.ConfigScanTestRun;
+import org.vclipse.configscan.impl.model.TestCase;
+import org.vclipse.configscan.impl.model.TestRunAdapter;
+import org.vclipse.configscan.impl.model.TestRunAdapterFactory;
 import org.vclipse.configscan.views.ConfigScanView;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.sap.conn.jco.JCoException;
 
 public class LaunchDelegate extends LaunchConfigurationDelegate {
@@ -57,6 +60,12 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 	
 	@Inject
 	private ExtensionPointReader extensionPointReader;
+	
+	@Inject
+	private Provider<TestCase> testCaseProvider;
+	
+	@Inject
+	private Provider<TestRunAdapter> testRunAdapter;
 	
 	@Override
 	public void launch(final ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
@@ -88,13 +97,7 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 					selectedConnections.put(name, rc);
 				}
 			}
-		} else {
-			int attribute = configuration.getAttribute(OneConnectionTab.CURRENT_CONNECTION_INDEX, 0);
-			if(attribute < remoteConnectionsList.size()) {
-				RemoteConnection rc = remoteConnectionsList.get(attribute);
-				selectedConnections.put(rc.getDescription(), rc);
-			}
-		}
+		} 
 		
 		if(selectedConnections.isEmpty()) {
 			monitor.done();
@@ -108,7 +111,7 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 			} else {
 				Iterator<?> iterator = selection.iterator();
 				XtextResourceSet resourceSet = new XtextResourceSet();
-				final List<ConfigScanTestRun> testRuns = Lists.newArrayList();
+				final List<TestCase> testRuns = Lists.newArrayList();
 				while(iterator.hasNext()) {
 					Object next = iterator.next();
 					if(next instanceof IFile) {
@@ -128,11 +131,15 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 								continue;
 							} else {
 								for(RemoteConnection rc : selectedConnections.values()) {
-									ConfigScanTestRun newTestRun = ConfigScanPlugin.getDefault().getInjector().getInstance(ConfigScanTestRun.class);
-									newTestRun.setTestModel(currentResource.getContents().get(0));
-									newTestRun.setXmlProvider(xmlProvider);
-									newTestRun.setConnection(rc);
-									testRuns.add(newTestRun);
+									TestCase testCase = testCaseProvider.get();
+									testCase.setTitle(uri.lastSegment() + " on " + rc.getDescription());
+							
+									TestRunAdapter adapter = testRunAdapter.get();
+									adapter.setConnection(rc);
+									adapter.setXmlProvider(xmlProvider);
+									adapter.setTestModel(currentResource.getContents().get(0));
+									TestRunAdapterFactory.getDefault().adapt(adapter, testCase);		
+									testRuns.add(testCase);
 								}
 							}
 						}

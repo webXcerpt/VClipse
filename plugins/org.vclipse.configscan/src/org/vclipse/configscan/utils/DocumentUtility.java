@@ -22,7 +22,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.vclipse.configscan.ConfigScanPlugin;
-import org.vclipse.configscan.views.IConfigScanConfiguration;
+import org.vclipse.configscan.IConfigScanConfiguration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -71,7 +71,7 @@ public class DocumentUtility {
 	
 	@Inject
 	private IPreferenceStore preferenceStore;
-
+	
 	public DocumentUtility() {
 		try {
 			documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -79,6 +79,8 @@ public class DocumentUtility {
 			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 		}
 	}
+	
+	
 	
 	public boolean hasSuccessStatus(Element element) {
 		return STATUS_SUCCESS.equals(element.getAttribute(ATTRIBUTE_STATUS));

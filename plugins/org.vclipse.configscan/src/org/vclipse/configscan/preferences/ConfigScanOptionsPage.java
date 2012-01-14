@@ -5,7 +5,7 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.vclipse.configscan.views.IConfigScanConfiguration;
+import org.vclipse.configscan.IConfigScanConfiguration;
 
 import com.google.inject.Inject;
 

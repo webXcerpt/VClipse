@@ -2,7 +2,7 @@ package org.vclipse.configscan.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.vclipse.configscan.views.IConfigScanConfiguration;
+import org.vclipse.configscan.IConfigScanConfiguration;
 
 import com.google.inject.Inject;
 

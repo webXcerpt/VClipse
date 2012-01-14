@@ -16,8 +16,10 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.progress.DeferredTreeContentManager;
-import org.eclipse.ui.progress.IDeferredWorkbenchAdapter;
-import org.vclipse.configscan.implementation.ConfigScanTestCase;
+import org.vclipse.configscan.impl.model.TestCase;
+import org.vclipse.configscan.impl.model.TestRunAdapter;
+
+import com.google.common.collect.Lists;
 
 public class ContentProvider implements ITreeContentProvider {
 	
@@ -36,23 +38,46 @@ public class ContentProvider implements ITreeContentProvider {
 	}
 
 	public Object getParent(Object child) {
-		if(child instanceof ConfigScanTestCase) {
-			return ((ConfigScanTestCase)child).getParent(null);
+		if(child instanceof TestCase) {
+			return ((TestCase)child).getParent();
 		}
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object [] getChildren(Object parent) {
 		if(parent instanceof List<?>) {
-			return ((List<?>)parent).toArray();
-		} else if(parent instanceof IDeferredWorkbenchAdapter) {
-			return contentManager.getChildren(parent);
+			List<TestRunAdapter> testCases = Lists.newArrayList();
+			for(TestCase testCase : (List<TestCase>)parent) {
+				Object adapter = testCase.getAdapter(TestRunAdapter.class);
+				if(adapter != null) {
+					testCases.add((TestRunAdapter)adapter);
+				}
+			}
+			if(testCases.isEmpty()) {
+				return ((List<?>)parent).toArray();
+			}
+			return testCases.toArray();
+		} else if(parent instanceof TestCase) {
+			Object adapter = ((TestCase)parent).getAdapter(TestRunAdapter.class);
+			if(adapter != null) {
+				return ((TestRunAdapter)adapter).getChildren(null);				
+			}
+			return ((TestCase)parent).getChildren().toArray();
+		} else if(parent instanceof TestRunAdapter) {
+			return contentManager.getChildren((TestRunAdapter)parent);				
 		}
 		return new Object[0];
 	}
 
 	public boolean hasChildren(Object parent) {
-		if(parent instanceof IDeferredWorkbenchAdapter) {
+		if(parent instanceof TestCase) {
+			Object adapter = ((TestCase)parent).getAdapter(TestRunAdapter.class);
+			if(adapter != null) {
+				return contentManager.mayHaveChildren((TestRunAdapter)adapter);				
+			}
+			return ((TestCase)parent).getChildren().size() > 0;
+		} else if(parent instanceof TestRunAdapter) {
 			return contentManager.mayHaveChildren(parent);
 		}
 		return false;

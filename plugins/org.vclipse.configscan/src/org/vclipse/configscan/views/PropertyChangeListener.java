@@ -3,6 +3,7 @@ package org.vclipse.configscan.views;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.vclipse.configscan.IConfigScanConfiguration;
 
 class PropertyChangeListener implements IPropertyChangeListener {
 	

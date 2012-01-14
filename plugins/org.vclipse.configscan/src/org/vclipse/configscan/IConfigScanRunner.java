@@ -14,7 +14,7 @@ package org.vclipse.configscan;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
-import org.vclipse.configscan.implementation.ConfigScanRunner;
+import org.vclipse.configscan.impl.ConfigScanRunner;
 
 import com.google.inject.ImplementedBy;
 import com.sap.conn.jco.JCoException;

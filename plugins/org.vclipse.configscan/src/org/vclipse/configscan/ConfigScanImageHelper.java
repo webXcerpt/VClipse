@@ -17,6 +17,10 @@ public class ConfigScanImageHelper {
 		return image == null ? null : ImageDescriptor.createFromImage(image);
 	}
 
+	public Image getImage(String name) {
+		return imageHelper.getImage(name);
+	}
+	
 	public Image getImage(ImageDescriptor imageDescriptor) {
 		return imageHelper.getImage(imageDescriptor);
 	}

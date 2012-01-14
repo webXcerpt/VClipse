@@ -7,22 +7,23 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.progress.IDeferredWorkbenchAdapter;
 import org.eclipse.ui.progress.PendingUpdateAdapter;
 import org.eclipse.xtext.util.Pair;
 import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.extension.ExtensionPointReader;
-import org.vclipse.configscan.implementation.ConfigScanTestCase;
-import org.vclipse.configscan.implementation.ConfigScanTestRun;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
+import org.vclipse.configscan.impl.model.TestCase;
+import org.vclipse.configscan.impl.model.TestCase.Status;
+import org.vclipse.configscan.impl.model.TestRunAdapter;
+import org.vclipse.configscan.utils.TestCaseUtility;
 
 import com.google.inject.Inject;
 
 public final class LabelProvider extends ColumnLabelProvider  {
 
+	private TestCaseUtility testCaseUtility;
+	
 	private ConfigScanImageHelper imageHelper;
 	
 	private static final String EMPTY = "";
@@ -32,9 +33,10 @@ public final class LabelProvider extends ColumnLabelProvider  {
 	private Map<String, Pair<IConfigScanXMLProvider, ILabelProvider>> extensions;
 	
 	@Inject
-	public LabelProvider(ConfigScanImageHelper imageHelper, ExtensionPointReader reader) {
+	public LabelProvider(ConfigScanImageHelper imageHelper, ExtensionPointReader reader, TestCaseUtility utility) {
 		extensions = reader.getExtensions();
 		this.imageHelper = imageHelper;
+		this.testCaseUtility = utility;
 	}
 	
 	public void enableExtension(boolean delegate) {
@@ -43,28 +45,38 @@ public final class LabelProvider extends ColumnLabelProvider  {
 	
 	@Override
 	public String getText(Object object) {
-		if(shouldDelegate && object instanceof ConfigScanTestCase) {
-			ILabelProvider labelProvider = getLabelProviderExtension((ConfigScanTestCase)object);
-			if(labelProvider != null) {
-				return labelProvider.getText(object);
+		if(object instanceof TestRunAdapter) {
+			return ((TestRunAdapter)object).getLabel(null);
+		} else if(object instanceof TestCase) {
+			if(shouldDelegate) {
+				ILabelProvider labelProvider = getLabelProviderExtension((TestCase)object);
+				if(labelProvider != null) {
+					return labelProvider.getText(object);
+				}
 			}
+			return ((TestCase)object).getTitle();
 		} else if(object instanceof PendingUpdateAdapter) {
 			return ((PendingUpdateAdapter)object).getLabel(object);
-		} if(object instanceof IDeferredWorkbenchAdapter) {
-			return ((IDeferredWorkbenchAdapter)object).getLabel(null);
 		}
 		return EMPTY;
 	}
 	
 	@Override
 	public Image getImage(Object object) {
-		if(shouldDelegate && object instanceof ConfigScanTestCase) {
-			ILabelProvider labelProvider = getLabelProviderExtension((ConfigScanTestCase)object);
-			if(labelProvider != null) {
-				return labelProvider.getImage(object);
+		if(object instanceof TestRunAdapter) {
+			return imageHelper.getImage(((TestRunAdapter)object).getImageDescriptor(null));
+		} else if(object instanceof TestCase) {
+			TestCase testCase = (TestCase)object;
+			if(shouldDelegate) {
+				ILabelProvider labelProvider = getLabelProviderExtension(testCase);
+				if(labelProvider != null) {
+					return labelProvider.getImage(object);
+				}
+			} else {
+				return testCase.getStatus() == Status.SUCCESS 
+						? imageHelper.getImage(IConfigScanImages.SUCCESS) 
+								: imageHelper.getImage(IConfigScanImages.ERROR);
 			}
-		} else if(object instanceof IDeferredWorkbenchAdapter) {
-			return imageHelper.getImage(((IDeferredWorkbenchAdapter)object).getImageDescriptor(null));
 		}
 		return null;
 	}
@@ -80,19 +92,23 @@ public final class LabelProvider extends ColumnLabelProvider  {
  	}
 	
  	public String getToolTipText(Object object) {
- 		if(object instanceof ConfigScanTestCase) {
- 			ConfigScanTestCase testCase = (ConfigScanTestCase)object;
- 			if(!testCase.isContainer()) {
- 				ILabelProvider labelProviderExtension = getLabelProviderExtension(testCase);
- 				Element inputElement = testCase.getInputElement();
- 	 			String tooltip = "ConfigScan XML LOG: " + inputElement.getTagName();
- 	 			NamedNodeMap namedNodeMap = inputElement.getAttributes();
- 	 			for(int i = 0; i < namedNodeMap.getLength(); i++) {
- 	 				Node node = namedNodeMap.item(i);
- 	 				tooltip += " " + node.getNodeName() + "=\"" + node.getNodeValue() + "\"";
- 	 			}
- 	 			URI uri = testCase.getTestStatementUri();
- 	 			EObject testModel = testCase.getTestRun().getTestModel();
+ 		if(object instanceof TestCase) {
+ 			TestCase testCase = (TestCase)object;
+ 			if(testCase.getAdapter(TestRunAdapter.class) == null) {
+  				ILabelProvider labelProviderExtension = getLabelProviderExtension(testCase);
+  				String[] split = testCase.getTitle().split("on");
+  				if(split.length == 2) {
+  					
+  				}
+ 	 			String tooltip = "ConfigScan XML LOG: " + split[0];
+// 	 			NamedNodeMap namedNodeMap = inputElement.getAttributes();
+// 	 			for(int i = 0; i < namedNodeMap.getLength(); i++) {
+// 	 				Node node = namedNodeMap.item(i);
+// 	 				tooltip += " " + node.getNodeName() + "=\"" + node.getNodeValue() + "\"";
+// 	 			}
+ 	 			URI uri = testCase.getSourceUri();
+ 	 			TestCase root = testCaseUtility.getRoot(testCase);
+ 	 			EObject testModel = ((TestRunAdapter)root.getAdapter(TestRunAdapter.class)).getTestModel();
  	 			EObject eObject = testModel.eResource().getResourceSet().getEObject(uri, true);
  	 			if(eObject != null && shouldDelegate && labelProviderExtension != null) {
  	 				tooltip += "\n" + labelProviderExtension.getText(eObject);
@@ -103,13 +119,21 @@ public final class LabelProvider extends ColumnLabelProvider  {
  		return null;
  	}
 
- 	private boolean canHandleExtension(ConfigScanTestCase testObject, String targetExtension) {
- 		ConfigScanTestRun testRun = ((ConfigScanTestCase)testObject).getTestRun();
- 		String fileExtension = testRun.getTestModel().eResource().getURI().fileExtension();
- 		return targetExtension.equals(fileExtension);
+ 	private boolean canHandleExtension(TestCase testObject, String targetExtension) {
+ 		TestCase testCase = testCaseUtility.getRoot(testObject);
+ 		if(testCase == null) {
+ 			return false;
+ 		}
+ 		Object adapter = testCase.getAdapter(TestRunAdapter.class);
+ 		if(adapter != null) {
+ 			TestRunAdapter testRun = (TestRunAdapter)adapter;
+ 			String fileExtension = testRun.getTestModel().eResource().getURI().fileExtension();
+ 			return targetExtension.equals(fileExtension); 			
+ 		}
+ 		return false;
  	}
  	
- 	private ILabelProvider getLabelProviderExtension(ConfigScanTestCase testCase) {
+ 	private ILabelProvider getLabelProviderExtension(TestCase testCase) {
  		for(String fileExtension : extensions.keySet()) {
 			if(canHandleExtension(testCase, fileExtension)) {
 				return extensions.get(fileExtension).getSecond();

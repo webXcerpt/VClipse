@@ -46,15 +46,16 @@ import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.util.ResourceUtil;
 import org.vclipse.configscan.ConfigScanImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
+import org.vclipse.configscan.IConfigScanConfiguration;
 import org.vclipse.configscan.IConfigScanImages;
-import org.vclipse.configscan.implementation.ConfigScanTestCase;
-import org.vclipse.configscan.implementation.ConfigScanTestRun;
-import org.vclipse.configscan.utils.DocumentUtility;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.vclipse.configscan.impl.model.TestCase;
+import org.vclipse.configscan.impl.model.TestCase.Status;
+import org.vclipse.configscan.impl.model.TestRunAdapter;
+import org.vclipse.configscan.utils.TestCaseUtility;
+import org.vclipse.configscan.views.actions.ImportExportAction;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 public final class ConfigScanView extends ViewPart {
 
@@ -70,10 +71,10 @@ public final class ConfigScanView extends ViewPart {
 	private LabelProvider labelProvider;
 	
 	@Inject
-	private DocumentUtility documentUtility;
+	private IPreferenceStore preferenceStore;
 	
 	@Inject
-	private IPreferenceStore preferenceStore;
+	private TestCaseUtility testCaseUtility;
 	
 	private PropertyChangeListener propertyChangeListener;
 	
@@ -118,13 +119,16 @@ public final class ConfigScanView extends ViewPart {
 		hookDoubleClickAction();
 	}
 
-	public void setInput(List<ConfigScanTestRun> testRuns) {
+	public void setInput(List<TestCase> testCases) {
 		// disable this action on input -> 
 		// it will be enabled as soon as tree is constructed 
 		toggleContent.setEnabled(false);
 		
-		viewer.setInput(testRuns);
+		viewer.setInput(testCases);
 	}
+	
+	@Inject
+	private Provider<ImportExportAction> fileActionProvider;
 	
 	private void contributeToActionBars() {
 		IActionBars bars = getViewSite().getActionBars();
@@ -139,6 +143,11 @@ public final class ConfigScanView extends ViewPart {
 		toolBarManager.add(new Separator());
 		toolBarManager.add(previousFailure);
 		toolBarManager.add(nextFailure);
+		toolBarManager.add(new Separator());
+		
+		ImportExportAction fileAction = fileActionProvider.get();
+		fileAction.setTreeViewer(viewer);
+		toolBarManager.add(fileAction);
 	}
 
 	private void createActions() {
@@ -164,8 +173,8 @@ public final class ConfigScanView extends ViewPart {
 		final ViewerFilter failureFilter = new ViewerFilter() {
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if(element instanceof ConfigScanTestCase) {
-					return !documentUtility.hasSuccessStatus(((ConfigScanTestCase)element).getLogElement());
+				if(element instanceof TestCase && ((TestCase)element).getAdapter(TestRunAdapter.class) == null) {
+					return ((TestCase)element).getStatus() == Status.FAILURE;
 				}
 				return true;
 			}
@@ -182,140 +191,30 @@ public final class ConfigScanView extends ViewPart {
 		failures.setToolTipText("Show only failures");
 		failures.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.FAILURES));
 		
-		nextFailure = new Action() {
-			public void run() {
-//				ISelection selection = viewer.getSelection();
-//				IStructuredSelection ss = ((IStructuredSelection) selection);
-//				Element lastSelected = ((Element) ss.getFirstElement());
-//				Document logDocument = ((ContentProvider) viewer.getContentProvider()).getInput();
-//				NodeList allElements = null;
-//				if(logDocument != null) {
-//					allElements = logDocument.getElementsByTagName(DocumentUtility.NODE_NAME_LOG_MSG);	
-//				}
-//				if(allElements != null) {
-//					if(lastSelected == null) {
-//						lastSelected = (Element) allElements.item(0);
-//						ss = new StructuredSelection(lastSelected);
-//						viewer.setSelection(ss);
-//					}
-//				} else {
-//					return;
-//				}
-//				Element nextEl = null;
-//				lastSelected = findNextDeepestChild(lastSelected);
-//				for(int i = 0; i < allElements.getLength() - 1; i++) {
-//					if(allElements.item(i).equals(lastSelected)) {
-//						do {
-//							nextEl = (Element)(allElements.item(++i)); 
-//						} while(i < allElements.getLength() - 1 && !DocumentUtility.ATTRIBUTE_VALUE_E.equals(
-//								nextEl.getAttribute(DocumentUtility.ATTRIBUTE_STATUS)));
-//						break;
-//					}
-//				}
-//				if(nextEl != null && DocumentUtility.ATTRIBUTE_VALUE_E.equals(DocumentUtility.ATTRIBUTE_STATUS)) {
-//					StructuredSelection next = new StructuredSelection(nextEl);
-//					viewer.setSelection(next);
-//				}
-//				else {
-//					viewer.setSelection(ss);
-//				}
-			}
-		};
-		nextFailure.setText("Show next failure");
-		nextFailure.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.SELECT_NEXT));
-		nextFailure.setToolTipText("Jump to next failed test");
+//		nextFailure = new FindNextTestCaseAction(viewer, testCaseUtility);
+//		nextFailure.setText("Show next failure");
+//		nextFailure.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.SELECT_NEXT));
+//		nextFailure.setToolTipText("Jump to next failed test");
 
-		previousFailure = new Action() {
-			public void run() {
-//				ISelection selection = viewer.getSelection();
-//				IStructuredSelection ss = ((IStructuredSelection) selection);
-//				Element lastSelected = ((Element) ss.getFirstElement());
-//				
-//				Document logDocument = ((ContentProvider) viewer.getContentProvider()).getInput();
-//				NodeList allElements = null;
-//				
-//				if(logDocument != null) {
-//					allElements = logDocument.getElementsByTagName(DocumentUtility.NODE_NAME_LOG_MSG);	
-//				}
-//				
-//				if(allElements != null) {
-//					if(lastSelected == null) {
-//						lastSelected = (Element) allElements.item(0);
-//						ss = new StructuredSelection(lastSelected);
-//					}
-//				}
-//				else {
-//					return;
-//				}
-//				
-//				Element nextEl = null;
-//				
-//				lastSelected = findNextDeepestChild(lastSelected);
-//				
-//				for(int i = allElements.getLength() - 1; i > 0; i--) {
-//					if(allElements.item(i).equals(lastSelected)) {
-//						do {
-//							
-//							nextEl = (Element)(allElements.item(--i)); 
-//						} while(i > 1 && !DocumentUtility.ATTRIBUTE_VALUE_E.equals(
-//								nextEl.getAttribute(DocumentUtility.ATTRIBUTE_STATUS)));
-//						break;
-//					}
-//
-//				}
-//				
-//				if(nextEl != null && DocumentUtility.ATTRIBUTE_VALUE_E.equals(nextEl.getAttribute(DocumentUtility.ATTRIBUTE_STATUS))) {
-//						StructuredSelection next = new StructuredSelection(nextEl);
-//						viewer.setSelection(next);
-//				}
-//				else {
-//					viewer.setSelection(ss);
-//				}
-			}
-		};
-		previousFailure.setText("Previous failure");
-		previousFailure.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.SELECT_PREV));
+//		previousFailure = new Action() {
+//			
+//			public void run() {
+//			}
+//		};
+//		previousFailure.setText("Previous failure");
+//		previousFailure.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.SELECT_PREV));
 		previousFailure.setToolTipText("Jump to previous failed test");
 		
 		toggleContent = new ToggleLabelProviderAction(viewer, imageHelper);
-	}
-	
-	protected Element findNextDeepestChild(Element lastSelected) {
-		if("3".equals(lastSelected.getAttribute(DocumentUtility.ATTRIBUTE_LEVEL))) {
-			return lastSelected;
-		}
-		
-		NodeList nodes = lastSelected.getChildNodes();
-		for(int i = 0; i < nodes.getLength(); i++) {
-			if(nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
-				Element nextDeepestChild = findNextDeepestChild((Element) nodes.item(i));
-				if(nextDeepestChild != null && "3".equals(nextDeepestChild.getAttribute(DocumentUtility.ATTRIBUTE_LEVEL))) {
-					return nextDeepestChild;
-				}
-			}
-		}
-		// TODO: if-loop below is obviously not necessary
-		if("2".equals(lastSelected.getAttribute(DocumentUtility.ATTRIBUTE_LEVEL))) {
-			Node nextSibling = lastSelected.getNextSibling();
-			while(nextSibling != null && nextSibling.getNodeType() != Node.ELEMENT_NODE) {
-				nextSibling = nextSibling.getNextSibling();
-			}
-			if(nextSibling != null) {
-				Element nextEl = (Element) nextSibling;
-				return findNextDeepestChild(nextEl);
-			}
-			
-		}
-		return lastSelected;
 	}
 
 	private void hookDoubleClickAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				Object selectedObject = ((IStructuredSelection)event.getSelection()).getFirstElement();
-				if(selectedObject instanceof ConfigScanTestCase) {
-					ConfigScanTestCase testCase = (ConfigScanTestCase)selectedObject;
-					URI testStatementUri = testCase.getTestStatementUri();
+				if(selectedObject instanceof TestCase) {
+					TestCase testCase = (TestCase)selectedObject;
+					URI testStatementUri = testCase.getSourceUri();
 					if(testStatementUri != null) {
 						Resource resource = new XtextResourceSet().getResource(testStatementUri, true);
 						if(resource == null) {

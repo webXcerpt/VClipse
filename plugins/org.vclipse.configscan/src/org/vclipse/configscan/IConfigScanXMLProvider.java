@@ -15,7 +15,7 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.vclipse.configscan.implementation.ConfigScanXmlProvider;
+import org.vclipse.configscan.impl.ConfigScanXmlProvider;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

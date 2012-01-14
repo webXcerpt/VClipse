@@ -8,7 +8,7 @@
  * Contributors:
  *    webXcerpt Software GmbH - initial creator
  ******************************************************************************/
-package org.vclipse.configscan.implementation;
+package org.vclipse.configscan.impl;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;

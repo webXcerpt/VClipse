@@ -16,7 +16,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xtext.service.AbstractGenericModule;
 import org.eclipse.xtext.ui.IImageHelper;
 import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
@@ -26,19 +25,17 @@ import org.vclipse.configscan.IConfigScanRunner;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.MockConfigScanRemoteConnections;
 import org.vclipse.configscan.MockConfigScanRunner;
-import org.vclipse.configscan.implementation.ConfigScanReverseXmlTransformation;
-import org.vclipse.configscan.implementation.ConfigScanXmlProvider;
+import org.vclipse.configscan.impl.ConfigScanReverseXmlTransformation;
+import org.vclipse.configscan.impl.ConfigScanXmlProvider;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.connection.VClipseConnectionPlugin;
 
-public final class ConfigScanModule extends AbstractGenericModule {
-
-	private final ConfigScanPlugin plugin;
+public final class ConfigScanModule extends ProviderModule {
 
 	public ConfigScanModule(ConfigScanPlugin plugin) {
-		this.plugin = plugin;
+		super(plugin);
 	}
-	
+
 	public IPreferenceStore bindIPreferenceStore() {
 		return plugin.getPreferenceStore();
 	}

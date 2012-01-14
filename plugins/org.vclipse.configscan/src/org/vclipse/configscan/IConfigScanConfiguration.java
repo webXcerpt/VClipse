@@ -8,9 +8,8 @@
  * Contributors:
  *    webXcerpt Software GmbH - initial creator
  ******************************************************************************/
-package org.vclipse.configscan.views;
+package org.vclipse.configscan;
 
-import org.vclipse.configscan.ConfigScanPlugin;
 
 public interface IConfigScanConfiguration {
 
