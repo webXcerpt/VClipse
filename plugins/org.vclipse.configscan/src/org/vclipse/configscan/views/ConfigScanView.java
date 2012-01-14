@@ -141,8 +141,8 @@ public final class ConfigScanView extends ViewPart {
 		toolBarManager.add(new Separator());
 		toolBarManager.add(failures);
 		toolBarManager.add(new Separator());
-		toolBarManager.add(previousFailure);
-		toolBarManager.add(nextFailure);
+		//toolBarManager.add(previousFailure);
+		//toolBarManager.add(nextFailure);
 		toolBarManager.add(new Separator());
 		
 		ImportExportAction fileAction = fileActionProvider.get();
@@ -203,7 +203,7 @@ public final class ConfigScanView extends ViewPart {
 //		};
 //		previousFailure.setText("Previous failure");
 //		previousFailure.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.SELECT_PREV));
-		previousFailure.setToolTipText("Jump to previous failed test");
+//		previousFailure.setToolTipText("Jump to previous failed test");
 		
 		toggleContent = new ToggleLabelProviderAction(viewer, imageHelper);
 	}
