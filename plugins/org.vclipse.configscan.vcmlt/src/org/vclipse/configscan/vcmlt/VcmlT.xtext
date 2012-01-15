@@ -9,12 +9,24 @@ generate vcmlT "http://www.vclipse.org/configscan/vcmlt/VcmlT"
 
 Model
 	:	imports+=Import*
-		'material' material=[VCML::Material|EXTENDED_ID] // TODO refine with further information for test-case upload
+	    testcase=TestCase
 		testgroups+=TestGroup*
 	;
 	
 Import
 	:	'import' importURI=STRING
+	;
+
+// ToDo: define version and part syntax more exactly
+TestCase
+	:	'testcase' item=[VCML::Material|EXTENDED_ID]
+		('['	(
+					('document' document=STRING)
+				&	('description' description=STRING)
+				&	('version' version=STRING)?
+				&	('part' part=STRING)?
+				)
+        ']')?
 	;
 
 TestGroup
