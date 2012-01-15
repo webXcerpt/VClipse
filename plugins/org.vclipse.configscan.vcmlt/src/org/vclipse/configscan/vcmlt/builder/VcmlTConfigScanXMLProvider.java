@@ -26,6 +26,7 @@ import org.vclipse.configscan.vcmlt.vcmlT.DomainStrictValue;
 import org.vclipse.configscan.vcmlt.vcmlT.DomainValue;
 import org.vclipse.configscan.vcmlt.vcmlT.Model;
 import org.vclipse.configscan.vcmlt.vcmlT.NumericInterval;
+import org.vclipse.configscan.vcmlt.vcmlT.TestCase;
 import org.vclipse.configscan.vcmlt.vcmlT.TestGroup;
 import org.vclipse.configscan.vcmlt.vcmlT.Action;
 import org.vclipse.configscan.vcmlt.vcmlT.SetValue;
@@ -87,8 +88,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 		return this; // caseModel was successful
 	}
 
-
-
+	
 	@Override
 	public Object caseTestGroup(final TestGroup testGroup) {
 		Element tg = doc.createElement("testgroup");
@@ -304,11 +304,16 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 	}
 	
 	@Override
-	public String getMaterialNumber(EObject model) {
-		if (!(model instanceof Model)) {
-			throw new IllegalArgumentException("not a Model: " + model);
+	public String getMaterialNumber(EObject obj) {
+		if (!(obj instanceof Model)) {
+			throw new IllegalArgumentException("not a Model: " + obj);
 		}
-		return ((Model)model).getMaterial().getName();
+		Model model = (Model) obj;
+		TestCase testcase = model.getTestcase();
+		if (testcase==null) {
+			throw new IllegalArgumentException("no testcase element found");
+		}
+		return testcase.getItem().getName();
 	}
 
 }

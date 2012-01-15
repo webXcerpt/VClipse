@@ -1,6 +1,8 @@
 import "ABC.vcml"
 
-material 'ABC'
+// material 'ABC'
+
+testcase 'ABC' [document "Example TC" description "some description"]
 
 testgroup 'ExampleTG' "Example Test Group" success {
 	CORE = 'NOCORE' @ /
