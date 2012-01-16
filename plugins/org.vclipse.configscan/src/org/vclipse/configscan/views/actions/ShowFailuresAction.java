@@ -22,9 +22,10 @@ public class ShowFailuresAction extends SimpleTreeViewerAction {
 		failureFilter = new ViewerFilter() {
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				return element instanceof TestCase 
-						&& ((TestCase)element).getAdapter(TestRunAdapter.class) == null 
-							&& ((TestCase)element).getStatus() == Status.FAILURE;
+				if(element instanceof TestCase && ((TestCase)element).getAdapter(TestRunAdapter.class) == null) {
+					return ((TestCase)element).getStatus() == Status.FAILURE;
+				}
+				return true;
 			}
 		};
 	}
