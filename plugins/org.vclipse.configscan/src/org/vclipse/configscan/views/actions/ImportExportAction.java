@@ -12,7 +12,9 @@ package org.vclipse.configscan.views.actions;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IMenuCreator;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -22,10 +24,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.xtext.util.Files;
 import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.impl.model.TestCase;
+import org.vclipse.configscan.impl.model.TestRunAdapter;
 import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.TestCaseUtility;
 import org.w3c.dom.Document;
@@ -94,27 +99,16 @@ public class ImportExportAction extends SimpleTreeViewerAction implements IMenuC
 		return null;
 	}
 	
-//			FileDialog fd = new FileDialog(parent.getShell(), SWT.SAVE);
-//			fd.setText("XML File Dialog");
-//			System.err.println("Trying to show FileDialog");
-//			String path = fd.open();
-//			if(path == null) {
-//				// Cancelled
-//			}
-//			else {
-//				String content = new XmlLoader().parseXmlToString(((ContentProvider) viewer.getContentProvider()).getLogDocument());
-//				Files.writeStringIntoFile(path, content);
-//			}
-
 	@Override
 	public void widgetSelected(SelectionEvent event) {
 		Object source = event.getSource();
 		if(source instanceof MenuItem) {
 			MenuItem menuItem = (MenuItem)source;
 			int id = menuItem.getID();
+			Shell activeShell = Display.getDefault().getActiveShell();
 			if(IMPORT_ITEM == id) {
 				List<TestCase> testCases = Lists.newArrayList();
-				FileDialog fileDialog = new FileDialog(Display.getDefault().getActiveShell(), SWT.OPEN);
+				FileDialog fileDialog = new FileDialog(activeShell, SWT.OPEN);
 				fileDialog.setText("File dialog for log file import");
 				String selectedPath = fileDialog.open();
 				if(selectedPath != null) {
@@ -133,6 +127,23 @@ public class ImportExportAction extends SimpleTreeViewerAction implements IMenuC
 						}
 					}	
 					treeViewer.setInput(testCases);
+				}
+			} else if(EXPORT_ITEM == id) {
+				IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
+				Object firstElement = selection.getFirstElement();
+				if(firstElement instanceof TestRunAdapter) {
+					TestRunAdapter testRun = (TestRunAdapter)firstElement;
+					Document logDocument = testRun.getLogDocument();
+					if(logDocument == null) {
+						ConfigScanPlugin.log("Log document not available for " + testRun.getLabel(null), IStatus.ERROR);
+					} else {
+						FileDialog fileDialog = new FileDialog(activeShell, SWT.SAVE);
+						fileDialog.setText("File dialog for log file export");
+						String path = fileDialog.open();
+						if(path != null) {
+							Files.writeStringIntoFile(path, documentUtility.parse(logDocument));
+						}
+					}
 				}
 			}
 		}

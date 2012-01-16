@@ -32,6 +32,8 @@ import com.sap.conn.jco.JCoException;
 
 public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 
+	public static final String SKIP_MATERIAL_TESTS = "SkipMaterialTests";
+	
 	@Inject
 	private ConfigScanImageHelper imageHelper;
 	
@@ -55,12 +57,24 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 	
 	private TestCase testCase;
 	
-	public boolean isAdapterForType(Object type) {
-		return type instanceof TestCase;
+	private Map<String, Object> options;
+	
+	private Document inputDocument;
+	
+	private Document logDocument;
+	
+	public TestRunAdapter() {
+		options = Maps.newHashMap();
 	}
 	
 	public void setTestCase(TestCase testCase) {
 		this.testCase = testCase;
+	}
+	
+	public void setOptions(Map<String, Object> options) {
+		if(options != null) {
+			this.options = options;			
+		}
 	}
 	
 	public TestCase getTestCase() {
@@ -81,6 +95,14 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 
 	public EObject getTestModel() {
 		return testModel;
+	}
+	
+	public Document getLogDocument() {
+		return logDocument;
+	}
+	
+	public Document getInputDocument() {
+		return inputDocument;
 	}
 	
 	public Object[] getChildren(Object object) {
@@ -104,20 +126,20 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 			monitor.beginTask("Running tests for " + testModel.eResource().getURI().lastSegment() + " and " + connection.getDescription() + " connection", IProgressMonitor.UNKNOWN);
 
 			Map<Element, URI> inputToUriMap = Maps.newHashMap();
-			Document xmlInputDocument = xmlProvider.transform(testModel, inputToUriMap);
+			inputDocument = xmlProvider.transform(testModel, inputToUriMap);
 
 			// log on disk -> asks the preference store if logging is required
-			documentUtility.exportXmlToDisk(xmlInputDocument);
+			documentUtility.exportXmlToDisk(inputDocument);
 
-			String parseResult = documentUtility.parse(xmlInputDocument);
+			String parseResult = documentUtility.parse(inputDocument);
 			String materialNumber = xmlProvider.getMaterialNumber(testModel);
 
 			try {
 				String result = runner.execute(parseResult, connection, materialNumber, ResourceUtil.getFile(testModel.eResource()));
-				Document xmlLogDocument = documentUtility.parse(result);
-				documentUtility.exportXmlToDisk(xmlLogDocument);
-				Map<Element, Element> mapLogInput = reverseXmlTransformation.computeConfigScanMap(xmlLogDocument, xmlInputDocument);
-				Node nextSibling = xmlLogDocument.getDocumentElement().getFirstChild().getNextSibling();
+				logDocument = documentUtility.parse(result);
+				documentUtility.exportXmlToDisk(logDocument);
+				Map<Element, Element> mapLogInput = reverseXmlTransformation.computeConfigScanMap(logDocument, inputDocument);
+				Node nextSibling = logDocument.getDocumentElement().getFirstChild().getNextSibling();
 				
 				NodeList childNodes = nextSibling.getChildNodes();
 				for(int i=0; i<childNodes.getLength(); i++) {
