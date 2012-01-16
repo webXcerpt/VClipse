@@ -44,10 +44,13 @@ import com.google.inject.Inject;
 public class ImportExportAction extends SimpleTreeViewerAction implements IMenuCreator, SelectionListener {
 	
 	// id for the save/export item in menu
-	private static final int EXPORT_ITEM = 0;
+	private static final int EXPORT_ITEM_LOG = 0;
 	
 	// id for the import item in menu
 	private static final int IMPORT_ITEM = 1;
+	
+	// 
+	private static final int EXPORT_ITEM_INPUT = 2;
 	
 	private Menu menu;
 	
@@ -84,7 +87,12 @@ public class ImportExportAction extends SimpleTreeViewerAction implements IMenuC
 		menu = new Menu(parent);
 		MenuItem item = new MenuItem(menu, SWT.PUSH | SWT.Deactivate);
 		item.setText("Save ConfigScan log file");
-		item.setID(EXPORT_ITEM);
+		item.setID(EXPORT_ITEM_LOG);
+		item.addSelectionListener(this);
+		
+		item = new MenuItem(menu, SWT.PUSH | SWT.Deactivate);
+		item.setText("Save ConfigScan input file");
+		item.setID(EXPORT_ITEM_INPUT);
 		item.addSelectionListener(this);
 		
 		item = new MenuItem(menu, SWT.PUSH);
@@ -128,7 +136,7 @@ public class ImportExportAction extends SimpleTreeViewerAction implements IMenuC
 					}	
 					treeViewer.setInput(testCases);
 				}
-			} else if(EXPORT_ITEM == id) {
+			} else if(EXPORT_ITEM_LOG == id) {
 				IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
 				Object firstElement = selection.getFirstElement();
 				if(firstElement instanceof TestRunAdapter) {
@@ -139,6 +147,23 @@ public class ImportExportAction extends SimpleTreeViewerAction implements IMenuC
 					} else {
 						FileDialog fileDialog = new FileDialog(activeShell, SWT.SAVE);
 						fileDialog.setText("File dialog for log file export");
+						String path = fileDialog.open();
+						if(path != null) {
+							Files.writeStringIntoFile(path, documentUtility.parse(logDocument));
+						}
+					}
+				}
+			} else if(EXPORT_ITEM_INPUT == id) {
+				IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
+				Object firstElement = selection.getFirstElement();
+				if(firstElement instanceof TestRunAdapter) {
+					TestRunAdapter testRun = (TestRunAdapter)firstElement;
+					Document logDocument = testRun.getInputDocument();
+					if(logDocument == null) {
+						ConfigScanPlugin.log("Input document not available for " + testRun.getLabel(null), IStatus.ERROR);
+					} else {
+						FileDialog fileDialog = new FileDialog(activeShell, SWT.SAVE);
+						fileDialog.setText("File dialog for input file export");
 						String path = fileDialog.open();
 						if(path != null) {
 							Files.writeStringIntoFile(path, documentUtility.parse(logDocument));
