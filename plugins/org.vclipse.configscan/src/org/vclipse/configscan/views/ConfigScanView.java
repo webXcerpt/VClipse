@@ -51,8 +51,9 @@ import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestCase.Status;
 import org.vclipse.configscan.impl.model.TestRunAdapter;
-import org.vclipse.configscan.utils.TestCaseUtility;
 import org.vclipse.configscan.views.actions.ImportExportAction;
+import org.vclipse.configscan.views.actions.NextFailureAction;
+import org.vclipse.configscan.views.actions.PrevFailureAction;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -73,16 +74,11 @@ public final class ConfigScanView extends ViewPart {
 	@Inject
 	private IPreferenceStore preferenceStore;
 	
-	@Inject
-	private TestCaseUtility testCaseUtility;
-	
 	private PropertyChangeListener propertyChangeListener;
 	
 	private JobAwareTreeViewer viewer;
 	
 	private Action failures;
-	private Action nextFailure;
-	private Action previousFailure;
 	private Action collapseAll;
 	private Action expandAll;
 	
@@ -133,7 +129,6 @@ public final class ConfigScanView extends ViewPart {
 	private void contributeToActionBars() {
 		IActionBars bars = getViewSite().getActionBars();
 		IToolBarManager toolBarManager = bars.getToolBarManager();
-		//FileAction file = new FileAction(parent, viewer, labels, imageHelper);	
 		toolBarManager.add(toggleContent);
 		toolBarManager.add(new Separator());
 		toolBarManager.add(expandAll);
@@ -141,10 +136,9 @@ public final class ConfigScanView extends ViewPart {
 		toolBarManager.add(new Separator());
 		toolBarManager.add(failures);
 		toolBarManager.add(new Separator());
-		//toolBarManager.add(previousFailure);
-		//toolBarManager.add(nextFailure);
+		toolBarManager.add(new NextFailureAction(viewer, imageHelper));
+		toolBarManager.add(new PrevFailureAction(viewer, imageHelper));
 		toolBarManager.add(new Separator());
-		
 		ImportExportAction fileAction = fileActionProvider.get();
 		fileAction.setTreeViewer(viewer);
 		toolBarManager.add(fileAction);
@@ -190,21 +184,7 @@ public final class ConfigScanView extends ViewPart {
 		};
 		failures.setToolTipText("Show only failures");
 		failures.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.FAILURES));
-		
-//		nextFailure = new FindNextTestCaseAction(viewer, testCaseUtility);
-//		nextFailure.setText("Show next failure");
-//		nextFailure.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.SELECT_NEXT));
-//		nextFailure.setToolTipText("Jump to next failed test");
 
-//		previousFailure = new Action() {
-//			
-//			public void run() {
-//			}
-//		};
-//		previousFailure.setText("Previous failure");
-//		previousFailure.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.SELECT_PREV));
-//		previousFailure.setToolTipText("Jump to previous failed test");
-		
 		toggleContent = new ToggleLabelProviderAction(viewer, imageHelper);
 	}
 

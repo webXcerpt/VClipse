@@ -35,12 +35,6 @@ public class DocumentUtility {
 
 	public static final String LOG_RESULTS = "log_results";
 	
-	public static final String LOG_RESULT = "log_result";
-	
-	public static final String LOG_SESSION = "log_session";
-	
-	public static final String LOG_TEST_GRP = "log_testgrp";
-	
 	public static final String NODE_NAME_LOG_MSG = "log_msg";
 	
 	public static final String LOG_HEADER = "log_header";
@@ -53,21 +47,11 @@ public class DocumentUtility {
 	
 	public static final String ATTRIBUTE_STATUS = "status";
 	
-	public static final String ATTRIBUTE_LEVEL = "level";
-	
-	public static final String ATTRIBUTE_TITLE = "title";
-	
-	public static final String ATTRIBUTE_CMD = "cmd";
-	
 	public static final String STATUS_SUCCESS = "S";
 	
 	// do not use injection for document builder -> there is a NullPointerException
 	// during fetching the deferred nodes in the tree viewer
 	private DocumentBuilder documentBuilder;
-	
-	public static final String ATTRIBUTE_VALUE_E = "E";
-	
-	public static final String ATTRIBUTE_VALUE_ONE = "1";
 	
 	@Inject
 	private IPreferenceStore preferenceStore;
@@ -79,8 +63,6 @@ public class DocumentUtility {
 			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 		}
 	}
-	
-	
 	
 	public boolean hasSuccessStatus(Element element) {
 		return STATUS_SUCCESS.equals(element.getAttribute(ATTRIBUTE_STATUS));
