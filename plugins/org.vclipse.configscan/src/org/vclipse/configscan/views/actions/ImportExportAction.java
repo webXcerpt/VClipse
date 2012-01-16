@@ -12,7 +12,6 @@ package org.vclipse.configscan.views.actions;
 
 import java.util.List;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -37,7 +36,7 @@ import org.w3c.dom.NodeList;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
-public class ImportExportAction extends Action implements IMenuCreator, SelectionListener {
+public class ImportExportAction extends SimpleTreeViewerAction implements IMenuCreator, SelectionListener {
 	
 	// id for the save/export item in menu
 	private static final int EXPORT_ITEM = 0;
@@ -47,41 +46,21 @@ public class ImportExportAction extends Action implements IMenuCreator, Selectio
 	
 	private Menu menu;
 	
-	private TreeViewer viewer;
-	
-	private ConfigScanImageHelper imageHelper;
-
+	@Inject
 	private DocumentUtility documentUtility;
 	
+	@Inject
 	private TestCaseUtility testCaseUtility;
 	
-	public ImportExportAction() {
+	public ImportExportAction(TreeViewer treeViewer, ConfigScanImageHelper imageHelper, 
+			DocumentUtility documentUtility, TestCaseUtility testCaseUtility) {
+		super(treeViewer, imageHelper);
 		setMenuCreator(this);
 		setText("File");
 		setToolTipText("File menu");	
-	}
-	
-	@Inject
-	public void setImageHelper(ConfigScanImageHelper imageHelper) {
-		this.imageHelper = imageHelper;
-		if(this.imageHelper != null) {
-			setImageDescriptor(
-					this.imageHelper.getImageDescriptor(IConfigScanImages.DISK));			
-		}
-	}
-	
-	@Inject
-	public void setDocumentUtility(DocumentUtility documentUtility) {
+		setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.DISK));	
 		this.documentUtility = documentUtility;
-	}
-	
-	@Inject
-	public void setTestCaseUtility(TestCaseUtility testCaseUtility) {
 		this.testCaseUtility = testCaseUtility;
-	}
-	
-	public void setTreeViewer(TreeViewer treeViewer) {
-		this.viewer = treeViewer;
 	}
 	
 	@Override
@@ -153,7 +132,7 @@ public class ImportExportAction extends Action implements IMenuCreator, Selectio
 							}
 						}
 					}	
-					viewer.setInput(testCases);
+					treeViewer.setInput(testCases);
 				}
 			}
 		}

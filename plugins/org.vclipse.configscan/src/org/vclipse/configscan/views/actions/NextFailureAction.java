@@ -1,27 +1,20 @@
 package org.vclipse.configscan.views.actions;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.vclipse.configscan.ConfigScanImageHelper;
-import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestRunAdapter;
 
-public class NextFailureAction extends Action {
+public class NextFailureAction extends SimpleTreeViewerAction {
 
-	public static final String ID = ConfigScanPlugin.ID + ".nextFailureAction";
-	
-	private TreeViewer treeViewer;
-	
 	public NextFailureAction(TreeViewer treeViewer, ConfigScanImageHelper imageHelper) {
-		setId(ID);
+		super(treeViewer, imageHelper);
 		setText("Show next failure");
 		setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.SELECT_NEXT));
 		setToolTipText("Jump to next failed test");
-		this.treeViewer = treeViewer;
 	}
 	
 	@Override

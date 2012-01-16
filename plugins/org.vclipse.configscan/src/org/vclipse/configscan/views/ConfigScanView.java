@@ -17,7 +17,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -25,13 +24,10 @@ import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -47,24 +43,23 @@ import org.eclipse.xtext.ui.util.ResourceUtil;
 import org.vclipse.configscan.ConfigScanImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanConfiguration;
-import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.impl.model.TestCase;
-import org.vclipse.configscan.impl.model.TestCase.Status;
-import org.vclipse.configscan.impl.model.TestRunAdapter;
+import org.vclipse.configscan.utils.DocumentUtility;
+import org.vclipse.configscan.utils.TestCaseUtility;
+import org.vclipse.configscan.views.actions.CollapseTreeAction;
+import org.vclipse.configscan.views.actions.ExpandTreeAction;
 import org.vclipse.configscan.views.actions.ImportExportAction;
 import org.vclipse.configscan.views.actions.NextFailureAction;
 import org.vclipse.configscan.views.actions.PrevFailureAction;
+import org.vclipse.configscan.views.actions.ShowFailuresAction;
+import org.vclipse.configscan.views.actions.ToggleLabelProviderAction;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 public final class ConfigScanView extends ViewPart {
 
 	public static final String ID = "org.vclipse.configscan.ConfigScanView";
 	
-	@Inject
-	private ConfigScanImageHelper imageHelper;
-
 	@Inject
 	private ContentProvider contentProvider;
 	
@@ -74,15 +69,20 @@ public final class ConfigScanView extends ViewPart {
 	@Inject
 	private IPreferenceStore preferenceStore;
 	
+	@Inject
+	private ConfigScanImageHelper imageHelper;
+	
+	@Inject
+	private DocumentUtility documentUtility;
+	
+	@Inject
+	private TestCaseUtility testCaseUtility;
+	
 	private PropertyChangeListener propertyChangeListener;
 	
 	private JobAwareTreeViewer viewer;
-	
-	private Action failures;
-	private Action collapseAll;
-	private Action expandAll;
-	
-	private ToggleLabelProviderAction toggleContent;
+
+	private Action toggleContent;
 	
 	public void setFocus() {
 		viewer.getControl().setFocus();
@@ -110,7 +110,6 @@ public final class ConfigScanView extends ViewPart {
 		new DrillDownAdapter(viewer);
 		ColumnViewerToolTipSupport.enableFor(viewer);
 		
-		createActions();
 		contributeToActionBars();		
 		hookDoubleClickAction();
 	}
@@ -123,69 +122,19 @@ public final class ConfigScanView extends ViewPart {
 		viewer.setInput(testCases);
 	}
 	
-	@Inject
-	private Provider<ImportExportAction> fileActionProvider;
-	
 	private void contributeToActionBars() {
-		IActionBars bars = getViewSite().getActionBars();
-		IToolBarManager toolBarManager = bars.getToolBarManager();
-		toolBarManager.add(toggleContent);
+		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
+		toolBarManager.add(toggleContent = new ToggleLabelProviderAction(viewer, imageHelper));
 		toolBarManager.add(new Separator());
-		toolBarManager.add(expandAll);
-		toolBarManager.add(collapseAll);
+		toolBarManager.add(new ExpandTreeAction(viewer, imageHelper));
+		toolBarManager.add(new CollapseTreeAction(viewer, imageHelper));
 		toolBarManager.add(new Separator());
-		toolBarManager.add(failures);
+		toolBarManager.add(new ShowFailuresAction(viewer, imageHelper));
 		toolBarManager.add(new Separator());
-		toolBarManager.add(new NextFailureAction(viewer, imageHelper));
 		toolBarManager.add(new PrevFailureAction(viewer, imageHelper));
+		toolBarManager.add(new NextFailureAction(viewer, imageHelper));
 		toolBarManager.add(new Separator());
-		ImportExportAction fileAction = fileActionProvider.get();
-		fileAction.setTreeViewer(viewer);
-		toolBarManager.add(fileAction);
-	}
-
-	private void createActions() {
-		collapseAll = new Action() {
-			public void run() {
-				viewer.collapseAll();
-				viewer.expandToLevel(IConfigScanConfiguration.DEFAULT_EXPAND_LEVEL);
-			}
-		};
-		collapseAll.setText("Collapse all");
-		collapseAll.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.COLLAPSE_ALL));
-		collapseAll.setToolTipText("Collapse all");
-		
-		expandAll = new Action() {
-			public void run() {
-				viewer.expandAll();
-			}
-		};
-		expandAll.setText("Expand all");
-		expandAll.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.EXPAND_ALL));
-		expandAll.setToolTipText("Expand all");
-
-		final ViewerFilter failureFilter = new ViewerFilter() {
-			@Override
-			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if(element instanceof TestCase && ((TestCase)element).getAdapter(TestRunAdapter.class) == null) {
-					return ((TestCase)element).getStatus() == Status.FAILURE;
-				}
-				return true;
-			}
-		};
-		failures = new Action("", IAction.AS_CHECK_BOX) {
-			public void run() {
-				if(isChecked()) {
-					viewer.addFilter(failureFilter);
-				} else {
-					viewer.removeFilter(failureFilter);
-				}
-			}
-		};
-		failures.setToolTipText("Show only failures");
-		failures.setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.FAILURES));
-
-		toggleContent = new ToggleLabelProviderAction(viewer, imageHelper);
+		toolBarManager.add(new ImportExportAction(viewer, imageHelper, documentUtility, testCaseUtility));
 	}
 
 	private void hookDoubleClickAction() {
@@ -219,5 +168,4 @@ public final class ConfigScanView extends ViewPart {
 			}
 		});
 	}
-
 }

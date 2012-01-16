@@ -4,11 +4,10 @@ import org.eclipse.xtext.service.AbstractGenericModule;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestRunAdapter;
-import org.vclipse.configscan.views.actions.ImportExportAction;
 
 import com.google.inject.Provider;
 
-public abstract class ProviderModule extends AbstractGenericModule {
+public class ProviderModule extends AbstractGenericModule {
 	
 	protected final ConfigScanPlugin plugin;
 
@@ -30,14 +29,6 @@ public abstract class ProviderModule extends AbstractGenericModule {
 			@Override
 			public TestRunAdapter get() {
 				return plugin.getInjector().getInstance(TestRunAdapter.class);
-			}
-		};
-	}
-	
-	public Provider<ImportExportAction> registerFileActionProvider() {
-		return new ProviderAdapter<ImportExportAction>() {
-			public ImportExportAction get() {
-				return plugin.getInjector().getInstance(ImportExportAction.class);
 			}
 		};
 	}

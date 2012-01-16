@@ -1,25 +1,23 @@
-package org.vclipse.configscan.views;
+package org.vclipse.configscan.views.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.vclipse.configscan.ConfigScanImageHelper;
 import org.vclipse.configscan.IConfigScanImages;
+import org.vclipse.configscan.views.JobAwareTreeViewer;
 import org.vclipse.configscan.views.JobAwareTreeViewer.ITreeViewerLockListener;
 import org.vclipse.configscan.views.JobAwareTreeViewer.TreeViewerLockEvent;
+import org.vclipse.configscan.views.LabelProvider;
 
-class ToggleLabelProviderAction extends Action implements ITreeViewerLockListener {
+public class ToggleLabelProviderAction extends SimpleTreeViewerAction implements ITreeViewerLockListener {
 
-	private JobAwareTreeViewer treeViewer;
-	
-	private ConfigScanImageHelper imageHelper;
-	
-	public ToggleLabelProviderAction(JobAwareTreeViewer treeViewer, ConfigScanImageHelper imageHelper) {
-		super("", Action.AS_CHECK_BOX);
-		this.treeViewer = treeViewer;
-		this.imageHelper = imageHelper;
-		setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.LABEL_EXTENSION));
+	public ToggleLabelProviderAction(TreeViewer treeViewer, ConfigScanImageHelper imageHelper) {
+		super(treeViewer, imageHelper, Action.AS_CHECK_BOX);
+		setText("Switch labels");
 		setToolTipText("Display with labels from test language");
-		treeViewer.addTreeViewerLockListener(this);
+		setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.LABEL_EXTENSION));
 		setEnabled(false);
+		((JobAwareTreeViewer)treeViewer).addTreeViewerLockListener(this);
 	}
 	
 	public void run() {
@@ -46,5 +44,4 @@ class ToggleLabelProviderAction extends Action implements ITreeViewerLockListene
 	public void locked(TreeViewerLockEvent event) {
 		
 	}
-	
 }
