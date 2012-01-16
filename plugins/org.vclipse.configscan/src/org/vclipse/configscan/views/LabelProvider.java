@@ -1,13 +1,19 @@
 package org.vclipse.configscan.views;
 
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.progress.PendingUpdateAdapter;
+import org.eclipse.xtext.ui.editor.utils.TextStyle;
+import org.eclipse.xtext.ui.label.StylerFactory;
 import org.eclipse.xtext.util.Pair;
 import org.vclipse.configscan.ConfigScanImageHelper;
 import org.vclipse.configscan.IConfigScanImages;
@@ -20,7 +26,7 @@ import org.vclipse.configscan.utils.TestCaseUtility;
 
 import com.google.inject.Inject;
 
-public final class LabelProvider extends ColumnLabelProvider  {
+public final class LabelProvider extends ColumnLabelProvider implements IStyledLabelProvider {
 
 	private TestCaseUtility testCaseUtility;
 	
@@ -32,15 +38,35 @@ public final class LabelProvider extends ColumnLabelProvider  {
 	
 	private Map<String, Pair<IConfigScanXMLProvider, ILabelProvider>> extensions;
 	
+	private TextStyle failureStyle;
+	
+	private TextStyle successStyle;
+	
 	@Inject
 	public LabelProvider(ConfigScanImageHelper imageHelper, ExtensionPointReader reader, TestCaseUtility utility) {
 		extensions = reader.getExtensions();
 		this.imageHelper = imageHelper;
 		this.testCaseUtility = utility;
+		
+		failureStyle = new TextStyle();
+		failureStyle.setColor(new RGB(0xcc, 0, 0));
+				
+		successStyle = new TextStyle();
+		successStyle.setColor(new RGB(0x32, 0x92, 0));
 	}
 	
 	public void enableExtension(boolean delegate) {
 		this.shouldDelegate = delegate;
+	}
+	
+	@Override
+	public StyledString getStyledText(Object element) {
+		if(element instanceof TestCase && !shouldDelegate) {
+			TestCase testCase = (TestCase)element;
+			return new StyledString(testCase.getTitle()).append(getStatistics(testCase));
+		} else {
+			return new StyledString(getText(element));
+		}
 	}
 	
 	@Override
@@ -119,6 +145,26 @@ public final class LabelProvider extends ColumnLabelProvider  {
  		return null;
  	}
 
+ 	protected StyledString getStatistics(TestCase testCase) {
+		List<TestCase> children = testCase.getChildren();
+		if(!children.isEmpty()) {
+			int failures = 0;
+			for(TestCase childTestCase : testCase.getChildren()) {
+				if(Status.FAILURE == childTestCase.getStatus()) {
+					failures++;
+				}
+			}
+			
+			int numberOfTestCases = children.size();
+			StyledString numberOfTests = new StyledString("     Number of tests = { " + numberOfTestCases + " } ");
+			StylerFactory stylerFactory = new StylerFactory();
+			numberOfTests.append(stylerFactory.createFromXtextStyle("Success = { " + (numberOfTestCases - failures) + " } ", successStyle));
+			numberOfTests.append(new StylerFactory().createFromXtextStyle("Failures = { " + failures + " } ", failureStyle));
+			return numberOfTests;
+		}
+		return new StyledString();
+ 	}
+ 	
  	private boolean canHandleExtension(TestCase testObject, String targetExtension) {
  		TestCase testCase = testCaseUtility.getRoot(testObject);
  		if(testCase == null) {
@@ -141,4 +187,5 @@ public final class LabelProvider extends ColumnLabelProvider  {
 		}
  		return null;
  	}
+
 }

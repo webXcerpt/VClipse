@@ -21,6 +21,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -98,7 +99,7 @@ public final class ConfigScanView extends ViewPart {
 		parent.setLayout(new GridLayout());
 		
 		viewer = new JobAwareTreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
-		viewer.setLabelProvider(labelProvider);				
+		viewer.setLabelProvider(new DelegatingStyledCellLabelProvider(labelProvider));				
 		viewer.setContentProvider(contentProvider);
 		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 		
@@ -131,8 +132,8 @@ public final class ConfigScanView extends ViewPart {
 		toolBarManager.add(new Separator());
 		toolBarManager.add(new ShowFailuresAction(viewer, imageHelper));
 		toolBarManager.add(new Separator());
-		toolBarManager.add(new PrevFailureAction(viewer, imageHelper));
 		toolBarManager.add(new NextFailureAction(viewer, imageHelper));
+		toolBarManager.add(new PrevFailureAction(viewer, imageHelper));
 		toolBarManager.add(new Separator());
 		toolBarManager.add(new ImportExportAction(viewer, imageHelper, documentUtility, testCaseUtility));
 	}
