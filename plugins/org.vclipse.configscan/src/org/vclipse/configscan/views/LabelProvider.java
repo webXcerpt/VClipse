@@ -65,7 +65,8 @@ public final class LabelProvider extends ColumnLabelProvider implements IStyledL
 			TestCase testCase = (TestCase)element;
 			return new StyledString(testCase.getTitle()).append(getStatistics(testCase));
 		} else {
-			return new StyledString(getText(element));
+			String text = getText(element);
+			return new StyledString(text == null ? EMPTY : text);
 		}
 	}
 	
