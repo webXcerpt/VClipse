@@ -73,14 +73,9 @@ public final class ConfigScanView extends ViewPart {
 			String property = event.getProperty();
 			Object object = event.getNewValue();
 			if(IConfigScanConfiguration.EXPAND_TREE_ON_INPUT.equals(property)) {
-				if(object instanceof Boolean) {
-					viewer.setAutoExpandLevel((Boolean)object ? IConfigScanConfiguration.DEFAULT_EXPAND_LEVEL : 0);
-				}
+				viewer.setAutoExpandLevel((Boolean)object ? IConfigScanConfiguration.DEFAULT_EXPAND_LEVEL : 0);
 			} else if(IConfigScanConfiguration.SAVE_HISTORY.equals(property)) {
-				if(object instanceof Boolean) {
-					handleHistory = (Boolean)object;
-					showHistoryAction.setEnabled(handleHistory);
-				}
+				showHistoryAction.setEnabled((Boolean)object);
 			}
 		}
 	}
@@ -117,8 +112,6 @@ public final class ConfigScanView extends ViewPart {
 
 	private ConfigScanViewInput input;
 	
-	private boolean handleHistory;
-	
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}
@@ -149,13 +142,6 @@ public final class ConfigScanView extends ViewPart {
 		contributeToActionBars();		
 		createContextMenu();
 		hookDoubleClickAction();
-		
-		handleHistory = preferenceStore.getBoolean(IConfigScanConfiguration.SAVE_HISTORY);
-		if(handleHistory) {
-			history.load();			
-		} else {
-			showHistoryAction.setEnabled(false);
-		}
 	}
 
 	public void setInput(ConfigScanViewInput input) {
@@ -184,7 +170,10 @@ public final class ConfigScanView extends ViewPart {
 		toolBarManager.add(new PrevFailureAction(viewer, imageHelper));
 		toolBarManager.add(new Separator());
 		toolBarManager.add(new ImportExportAction(viewer, imageHelper, documentUtility, testCaseUtility));
-		toolBarManager.add(showHistoryAction = new ShowHistroyAction(viewer, imageHelper, history));
+		
+		showHistoryAction = new ShowHistroyAction(viewer, imageHelper, history);
+		showHistoryAction.setEnabled(preferenceStore.getBoolean(IConfigScanConfiguration.SAVE_HISTORY));
+		toolBarManager.add(showHistoryAction);
 	}
 	
 	private void createContextMenu() {

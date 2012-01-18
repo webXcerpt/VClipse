@@ -51,6 +51,9 @@ public class ConfigScanPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		if(getPreferenceStore().getBoolean(IConfigScanConfiguration.SAVE_HISTORY)) {
+			history.load();
+		}
 	}
 
 	public void stop(BundleContext context) throws Exception {

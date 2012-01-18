@@ -55,7 +55,7 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 	
 	private LinkedList<ConfigScanViewInput> history;
 	
-	private int historyEntriesNumber = 0;
+	private int historyEntriesNumber;
 	
 	@Inject
 	public TestRunsHistory(AbstractUIPlugin plugin, DocumentUtility utility, TestCaseUtility testCaseUtility) {
@@ -167,10 +167,12 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 		if(input instanceof ConfigScanViewInput) {
 			ConfigScanViewInput viewInput = (ConfigScanViewInput)input;
 			if(!history.contains(viewInput)) {
+				if(history.size() == historyEntriesNumber) {
+					history.removeLast();
+				}
 				history.add(viewInput);				
 			}
 		}
-		save();
 	}
 
 	public void locked(TreeViewerLockEvent event) {
