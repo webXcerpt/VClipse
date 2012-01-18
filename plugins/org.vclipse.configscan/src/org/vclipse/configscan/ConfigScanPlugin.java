@@ -16,10 +16,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.vclipse.configscan.injection.ConfigScanModule;
-import org.vclipse.configscan.views.TestRunsHistory;
 
 import com.google.inject.Guice;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 /**
@@ -33,9 +31,6 @@ public class ConfigScanPlugin extends AbstractUIPlugin {
 	
 	private Injector injector;
 	
-	@Inject
-	private TestRunsHistory history;
-
 	public static ConfigScanPlugin getDefault() {
 		return plugin;
 	}
@@ -51,16 +46,10 @@ public class ConfigScanPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		if(getPreferenceStore().getBoolean(IConfigScanConfiguration.SAVE_HISTORY)) {
-			history.load();
-		}
 	}
 
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
-		if(getPreferenceStore().getBoolean(IConfigScanConfiguration.SAVE_HISTORY)) {
-			history.save();			
-		}
 		super.stop(context);
 	}
 

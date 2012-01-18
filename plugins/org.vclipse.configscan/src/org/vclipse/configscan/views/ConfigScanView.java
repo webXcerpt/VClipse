@@ -119,6 +119,9 @@ public final class ConfigScanView extends ViewPart {
 	@Override
 	public void dispose() {
 		preferenceStore.removePropertyChangeListener(propertyChangeListener);
+		if(preferenceStore.getBoolean(IConfigScanConfiguration.SAVE_HISTORY)) {
+			history.save();			
+		}
 		super.dispose();
 	}
 
@@ -142,6 +145,10 @@ public final class ConfigScanView extends ViewPart {
 		contributeToActionBars();		
 		createContextMenu();
 		hookDoubleClickAction();
+		
+		if(preferenceStore.getBoolean(IConfigScanConfiguration.SAVE_HISTORY)) {
+			history.load();
+		}
 	}
 
 	public void setInput(ConfigScanViewInput input) {
