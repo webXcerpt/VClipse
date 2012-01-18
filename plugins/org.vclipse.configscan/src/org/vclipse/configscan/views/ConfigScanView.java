@@ -70,10 +70,16 @@ public final class ConfigScanView extends ViewPart {
 	class PreferenceStoreListener implements IPropertyChangeListener {
 		@Override
 		public void propertyChange(PropertyChangeEvent event) {
-			if(IConfigScanConfiguration.EXPAND_TREE_ON_INPUT.equals(event.getProperty())) {
-				Object object = event.getNewValue();
+			String property = event.getProperty();
+			Object object = event.getNewValue();
+			if(IConfigScanConfiguration.EXPAND_TREE_ON_INPUT.equals(property)) {
 				if(object instanceof Boolean) {
 					viewer.setAutoExpandLevel((Boolean)object ? IConfigScanConfiguration.DEFAULT_EXPAND_LEVEL : 0);
+				}
+			} else if(IConfigScanConfiguration.SAVE_HISTORY.equals(property)) {
+				if(object instanceof Boolean) {
+					handleHistory = (Boolean)object;
+					showHistoryAction.setEnabled(handleHistory);
 				}
 			}
 		}
@@ -107,8 +113,11 @@ public final class ConfigScanView extends ViewPart {
 	private JobAwareTreeViewer viewer;
 
 	private Action toggleContent;
+	private Action showHistoryAction;
 
 	private ConfigScanViewInput input;
+	
+	private boolean handleHistory;
 	
 	public void setFocus() {
 		viewer.getControl().setFocus();
@@ -122,8 +131,6 @@ public final class ConfigScanView extends ViewPart {
 
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout());
-		
-		history.load();
 		
 		viewer = new JobAwareTreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
 		viewer.setLabelProvider(new DelegatingStyledCellLabelProvider(labelProvider));				
@@ -142,6 +149,13 @@ public final class ConfigScanView extends ViewPart {
 		contributeToActionBars();		
 		createContextMenu();
 		hookDoubleClickAction();
+		
+		handleHistory = preferenceStore.getBoolean(IConfigScanConfiguration.SAVE_HISTORY);
+		if(handleHistory) {
+			history.load();			
+		} else {
+			showHistoryAction.setEnabled(false);
+		}
 	}
 
 	public void setInput(ConfigScanViewInput input) {
@@ -170,7 +184,7 @@ public final class ConfigScanView extends ViewPart {
 		toolBarManager.add(new PrevFailureAction(viewer, imageHelper));
 		toolBarManager.add(new Separator());
 		toolBarManager.add(new ImportExportAction(viewer, imageHelper, documentUtility, testCaseUtility));
-		toolBarManager.add(new ShowHistroyAction(viewer, imageHelper, history));
+		toolBarManager.add(showHistoryAction = new ShowHistroyAction(viewer, imageHelper, history));
 	}
 	
 	private void createContextMenu() {

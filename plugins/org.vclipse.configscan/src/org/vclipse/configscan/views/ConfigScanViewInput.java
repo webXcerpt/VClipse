@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.vclipse.configscan.IConfigScanConfiguration;
 import org.vclipse.configscan.impl.model.TestCase;
@@ -16,8 +17,14 @@ public class ConfigScanViewInput {
 	
 	private List<TestCase> testCases;
 	
+	private Map<String, Object> options;
+	
 	public void setTestCases(List<TestCase> testCases) {
 		this.testCases = testCases;
+	}
+	
+	public void setOptions(Map<String, Object> options) {
+		this.options = options;
 	}
 	
 	public void setConfigurationName(String name) {
@@ -26,6 +33,10 @@ public class ConfigScanViewInput {
 	
 	public List<TestCase> getTestCases() {
 		return Collections.unmodifiableList(testCases);
+	}
+	
+	public Map<String, Object> getOptions() {
+		return Collections.unmodifiableMap(options);
 	}
 	
 	public String getConfigurationName() {

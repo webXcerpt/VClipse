@@ -3,6 +3,8 @@ package org.vclipse.configscan.preferences;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.vclipse.configscan.IConfigScanConfiguration;
@@ -15,7 +17,6 @@ public class ConfigScanOptionsPage extends FieldEditorPreferencePage  implements
 	public ConfigScanOptionsPage(IPreferenceStore preferenceStore) {
 		super(GRID);
 		setPreferenceStore(preferenceStore);
-		setDescription("Options for ConfigScan view.");
 	}
 
 	@Override
@@ -25,8 +26,11 @@ public class ConfigScanOptionsPage extends FieldEditorPreferencePage  implements
 
 	@Override
 	protected void createFieldEditors() {
-		addField(new BooleanFieldEditor(IConfigScanConfiguration.EXPAND_TREE_ON_INPUT, "Expand tree on input", getFieldEditorParent()));
-		addField(new BooleanFieldEditor(IConfigScanConfiguration.EXPORT_XML_INPUT_TO_DISK, "Export xml input document to disk", getFieldEditorParent()));
+		Composite fieldEditorParent = getFieldEditorParent();
+		addField(new BooleanFieldEditor(IConfigScanConfiguration.EXPAND_TREE_ON_INPUT, "Expand tree on input", fieldEditorParent));
+		addField(new BooleanFieldEditor(IConfigScanConfiguration.EXPORT_XML_INPUT_TO_DISK, "Export xml input document to disk", fieldEditorParent));
+		addField(new BooleanFieldEditor(IConfigScanConfiguration.SAVE_HISTORY, "Save history for test runs", fieldEditorParent));
+		addField(new IntegerFieldEditor(IConfigScanConfiguration.HISTORY_ENTRIES_NUMBER, "Number of history entries", fieldEditorParent));
 	}
 
 }
