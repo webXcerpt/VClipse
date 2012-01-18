@@ -1,6 +1,7 @@
 package org.vclipse.configscan.views.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.vclipse.configscan.ConfigScanImageHelper;
 import org.vclipse.configscan.IConfigScanImages;
@@ -21,7 +22,8 @@ public class ToggleLabelProviderAction extends SimpleTreeViewerAction implements
 	}
 	
 	public void run() {
-		LabelProvider labelProvider = (LabelProvider)treeViewer.getLabelProvider();
+		DelegatingStyledCellLabelProvider delegatingProvider = (DelegatingStyledCellLabelProvider)treeViewer.getLabelProvider();
+		LabelProvider labelProvider = (LabelProvider)delegatingProvider.getStyledStringProvider();
 		if(isChecked()) {
 			labelProvider.enableExtension(true);
 			setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.FYSBEE));
