@@ -19,6 +19,8 @@ public class PreferencesInitializer extends AbstractPreferenceInitializer {
 	public void initializeDefaultPreferences() {
 		store.setDefault(IConfigScanConfiguration.EXPAND_TREE_ON_INPUT, true);
 		store.setDefault(IConfigScanConfiguration.EXPORT_XML_INPUT_TO_DISK, true);
+		store.setDefault(IConfigScanConfiguration.SAVE_HISTORY, true);
+		store.setDefault(IConfigScanConfiguration.HISTORY_ENTRIES_NUMBER, 10);
 	}
 
 }

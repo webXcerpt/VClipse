@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.text.SimpleDateFormat;
@@ -35,6 +36,10 @@ public class DocumentUtility {
 
 	public static final String LOG_RESULTS = "log_results";
 	
+	public static final String LOG_RESULT = "log_result";
+	
+	public static final String LOG_SESSION = "log_session";
+	
 	public static final String NODE_NAME_LOG_MSG = "log_msg";
 	
 	public static final String LOG_HEADER = "log_header";
@@ -49,6 +54,12 @@ public class DocumentUtility {
 	
 	public static final String STATUS_SUCCESS = "S";
 	
+	public static final String INPUT = "input";
+	
+	public static final String NAME = "name";
+	
+	public static final String DATE = "date";
+	
 	// do not use injection for document builder -> there is a NullPointerException
 	// during fetching the deferred nodes in the tree viewer
 	private DocumentBuilder documentBuilder;
@@ -62,6 +73,34 @@ public class DocumentUtility {
 		} catch (ParserConfigurationException exception) {
 			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 		}
+	}
+	
+	public Node getLogSession(Document document) {
+		Node logResultNode = document.getDocumentElement().getFirstChild().getNextSibling();
+		String nodeName = logResultNode.getNodeName();
+		if(!LOG_RESULT.equals(nodeName)) {
+			throw new IllegalArgumentException("Expected log_result tag in the document. The tag was " + nodeName);
+		} else {
+			NodeList childNodes = logResultNode.getChildNodes();
+			for(int i=0; i<childNodes.getLength(); i++) {
+				Node item = childNodes.item(i);
+				nodeName = item.getNodeName();
+				if(item.getNodeType() == Node.ELEMENT_NODE) { 
+					if(LOG_SESSION.equals(nodeName)) {
+						return item;
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	public Node getLogResult(Document document) {
+		return document.getDocumentElement().getFirstChild().getNextSibling();
+	}
+	
+	public Node getLogResults(Document document) {
+		return document.getDocumentElement();
 	}
 	
 	public boolean hasSuccessStatus(Element element) {
@@ -152,5 +191,21 @@ public class DocumentUtility {
 			return false;
 		}
 		return true;
+	}
+
+	
+	public Document newDocument() {
+		return documentBuilder.newDocument();
+	}
+
+	public Document parse(InputStream imputStream) {
+		try {
+			return documentBuilder.parse(imputStream);
+		} catch (IOException exception) {
+			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+		} catch (SAXException exception) {
+			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+		}
+		return null;
 	}
 }

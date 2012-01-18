@@ -44,18 +44,17 @@ public class ContentProvider implements ITreeContentProvider {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	public Object [] getChildren(Object parent) {
-		if(parent instanceof List<?>) {
+		if(parent instanceof ConfigScanViewInput) {
 			List<TestRunAdapter> testCases = Lists.newArrayList();
-			for(TestCase testCase : (List<TestCase>)parent) {
+			for(TestCase testCase : ((ConfigScanViewInput)parent).getTestCases()) {
 				Object adapter = testCase.getAdapter(TestRunAdapter.class);
 				if(adapter != null) {
 					testCases.add((TestRunAdapter)adapter);
 				}
 			}
 			if(testCases.isEmpty()) {
-				return ((List<?>)parent).toArray();
+				return ((ConfigScanViewInput)parent).getTestCases().toArray();
 			}
 			return testCases.toArray();
 		} else if(parent instanceof TestCase) {

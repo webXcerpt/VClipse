@@ -85,12 +85,12 @@ public class ImportExportAction extends SimpleTreeViewerAction implements IMenuC
 			menu.dispose();
 		}
 		menu = new Menu(parent);
-		MenuItem item = new MenuItem(menu, SWT.PUSH | SWT.Deactivate);
+		MenuItem item = new MenuItem(menu, SWT.PUSH);
 		item.setText("Save ConfigScan log file");
 		item.setID(EXPORT_ITEM_LOG);
 		item.addSelectionListener(this);
 		
-		item = new MenuItem(menu, SWT.PUSH | SWT.Deactivate);
+		item = new MenuItem(menu, SWT.PUSH);
 		item.setText("Save ConfigScan input file");
 		item.setID(EXPORT_ITEM_INPUT);
 		item.addSelectionListener(this);

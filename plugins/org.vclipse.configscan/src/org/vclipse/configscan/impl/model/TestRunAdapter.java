@@ -24,7 +24,6 @@ import org.vclipse.configscan.utils.TestCaseUtility;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -57,24 +56,16 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 	
 	private TestCase testCase;
 	
-	private Map<String, Object> options;
-	
 	private Document inputDocument;
 	
 	private Document logDocument;
 	
 	public TestRunAdapter() {
-		options = Maps.newHashMap();
+		
 	}
 	
 	public void setTestCase(TestCase testCase) {
 		this.testCase = testCase;
-	}
-	
-	public void setOptions(Map<String, Object> options) {
-		if(options != null) {
-			this.options = options;			
-		}
 	}
 	
 	public TestCase getTestCase() {
@@ -138,22 +129,13 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 				String result = runner.execute(parseResult, connection, materialNumber, ResourceUtil.getFile(testModel.eResource()));
 				logDocument = documentUtility.parse(result);
 				documentUtility.exportXmlToDisk(logDocument);
+				
 				Map<Element, Element> mapLogInput = reverseXmlTransformation.computeConfigScanMap(logDocument, inputDocument);
-				Node nextSibling = logDocument.getDocumentElement().getFirstChild().getNextSibling();
 				
-				NodeList childNodes = nextSibling.getChildNodes();
-				for(int i=0; i<childNodes.getLength(); i++) {
-					Node item = childNodes.item(i);
-					if(item.getNodeType() == Node.ELEMENT_NODE) { 
-						TestCase childTestCase = 
-								testCaseUtility.createTestCase((Element)item, testCase, inputToUriMap, mapLogInput);
-						if(childTestCase == null) {
-							continue;
-						}
-						testCase.addTestCase(childTestCase);
-					}
+				Node logSession = documentUtility.getLogSession(logDocument);
+				if(logSession != null) {
+					testCase.addTestCase(testCaseUtility.createTestCase((Element)logSession, testCase, inputToUriMap, mapLogInput));
 				}
-				
 			} catch (JCoException exception) {
 				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 			} catch (CoreException exception) {

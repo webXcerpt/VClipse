@@ -43,6 +43,7 @@ import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestRunAdapter;
 import org.vclipse.configscan.impl.model.TestRunAdapterFactory;
 import org.vclipse.configscan.views.ConfigScanView;
+import org.vclipse.configscan.views.ConfigScanViewInput;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -145,12 +146,18 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 						}
 					}
 				}
+				
+				final ConfigScanViewInput input = new ConfigScanViewInput();
+				input.setConfigurationName(configuration.getName());
+				input.setTestCases(testRuns);
+				input.setDate(null);
+				
 				Display.getDefault().syncExec(new Runnable() {
 					@Override
 					public void run() {
 						try {
 							ConfigScanView view = (ConfigScanView)activePage.showView(ConfigScanView.ID);
-							view.setInput(testRuns);
+							view.setInput(input);
 						} catch (PartInitException exception) {
 							ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 						}

@@ -10,16 +10,19 @@
  ******************************************************************************/
 package org.vclipse.configscan.views;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -29,6 +32,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -53,14 +58,29 @@ import org.vclipse.configscan.views.actions.ImportExportAction;
 import org.vclipse.configscan.views.actions.NextFailureAction;
 import org.vclipse.configscan.views.actions.PrevFailureAction;
 import org.vclipse.configscan.views.actions.ShowFailuresAction;
+import org.vclipse.configscan.views.actions.ShowHistroyAction;
 import org.vclipse.configscan.views.actions.ToggleLabelProviderAction;
 
 import com.google.inject.Inject;
 
 public final class ConfigScanView extends ViewPart {
-
+	
 	public static final String ID = "org.vclipse.configscan.ConfigScanView";
 	
+	class PreferenceStoreListener implements IPropertyChangeListener {
+		@Override
+		public void propertyChange(PropertyChangeEvent event) {
+			if(IConfigScanConfiguration.EXPAND_TREE_ON_INPUT.equals(event.getProperty())) {
+				Object object = event.getNewValue();
+				if(object instanceof Boolean) {
+					viewer.setAutoExpandLevel((Boolean)object ? IConfigScanConfiguration.DEFAULT_EXPAND_LEVEL : 0);
+				}
+			}
+		}
+	}
+
+	private static final String CONTEXT_MENU_ID = "ConfigScanViewContextMenu";
+
 	@Inject
 	private ContentProvider contentProvider;
 	
@@ -79,11 +99,16 @@ public final class ConfigScanView extends ViewPart {
 	@Inject
 	private TestCaseUtility testCaseUtility;
 	
-	private PropertyChangeListener propertyChangeListener;
+	@Inject
+	private TestRunsHistory history;
+	
+	private PreferenceStoreListener propertyChangeListener;
 	
 	private JobAwareTreeViewer viewer;
 
 	private Action toggleContent;
+
+	private ConfigScanViewInput input;
 	
 	public void setFocus() {
 		viewer.getControl().setFocus();
@@ -98,12 +123,15 @@ public final class ConfigScanView extends ViewPart {
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout());
 		
+		history.load();
+		
 		viewer = new JobAwareTreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
 		viewer.setLabelProvider(new DelegatingStyledCellLabelProvider(labelProvider));				
 		viewer.setContentProvider(contentProvider);
 		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
+		viewer.addTreeViewerLockListener(history);
 		
-		preferenceStore.addPropertyChangeListener(propertyChangeListener = new PropertyChangeListener(viewer));
+		preferenceStore.addPropertyChangeListener(propertyChangeListener = new PreferenceStoreListener());
 		if(preferenceStore.getBoolean(IConfigScanConfiguration.EXPAND_TREE_ON_INPUT)) {
 			viewer.setAutoExpandLevel(IConfigScanConfiguration.DEFAULT_EXPAND_LEVEL);			
 		}
@@ -112,15 +140,21 @@ public final class ConfigScanView extends ViewPart {
 		ColumnViewerToolTipSupport.enableFor(viewer);
 		
 		contributeToActionBars();		
+		createContextMenu();
 		hookDoubleClickAction();
 	}
 
-	public void setInput(List<TestCase> testCases) {
-		// disable this action on input -> 
-		// it will be enabled as soon as tree is constructed 
+	public void setInput(ConfigScanViewInput input) {
+		this.input = input;
+		
+		// disable this action on input -> is enabled as soon as tree is constructed 
 		toggleContent.setEnabled(false);
 		
-		viewer.setInput(testCases);
+		viewer.setInput(input);
+	}
+
+	public ConfigScanViewInput getInput() {
+		return input;
 	}
 	
 	private void contributeToActionBars() {
@@ -136,6 +170,19 @@ public final class ConfigScanView extends ViewPart {
 		toolBarManager.add(new PrevFailureAction(viewer, imageHelper));
 		toolBarManager.add(new Separator());
 		toolBarManager.add(new ImportExportAction(viewer, imageHelper, documentUtility, testCaseUtility));
+		toolBarManager.add(new ShowHistroyAction(viewer, imageHelper, history));
+	}
+	
+	private void createContextMenu() {
+		MenuManager menuManager = new MenuManager(CONTEXT_MENU_ID);
+		menuManager.setRemoveAllWhenShown(true);
+		menuManager.addMenuListener(new IMenuListener() {	
+			public void menuAboutToShow(IMenuManager manager) {
+			}
+		});
+		Control control = viewer.getControl();
+		Menu menu = menuManager.createContextMenu(control);
+		control.setMenu(menu);
 	}
 
 	private void hookDoubleClickAction() {

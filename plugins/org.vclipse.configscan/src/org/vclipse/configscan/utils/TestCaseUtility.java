@@ -59,4 +59,13 @@ public class TestCaseUtility {
 		}
 		return null;
 	}
+
+//	public boolean compare(TestCase first, TestCase second) {
+//		boolean simpleEquality = first.equals(second);
+//		if(!simpleEquality) {
+//			return false;
+//		} else {
+//			
+//		}
+//	}
 }

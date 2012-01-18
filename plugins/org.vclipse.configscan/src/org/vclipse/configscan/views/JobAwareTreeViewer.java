@@ -83,15 +83,11 @@ public class JobAwareTreeViewer extends TreeViewer implements IJobChangeListener
 
 	@Override
 	public void scheduled(IJobChangeEvent event) {
-		for(ITreeViewerLockListener lockListener : listener) {
-			lockListener.locked(new TreeViewerLockEvent(this));
-		}
+		
 	}
 
 	@Override
 	public void sleeping(IJobChangeEvent event) {
-		for(ITreeViewerLockListener lockListener : listener) {
-			lockListener.available(new TreeViewerLockEvent(this));
-		}
+		
 	}	
 }
