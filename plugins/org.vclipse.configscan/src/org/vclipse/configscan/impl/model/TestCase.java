@@ -109,17 +109,4 @@ public class TestCase {
 		strBuffer.append("}");
 		return strBuffer.toString();
 	}
-
-	@Override
-	public boolean equals(Object object) {
-		boolean same = super.equals(object);
-		if(!same && object instanceof TestCase) {
-			TestCase compareWith = (TestCase)object;
-			return title.equals(compareWith.getTitle()) 
-					&& status == compareWith.getStatus()
-						&& sourceUri.equals(compareWith.getSourceUri())
-							&& children.size() == compareWith.getChildren().size();
-		}
-		return false;
-	}
 }

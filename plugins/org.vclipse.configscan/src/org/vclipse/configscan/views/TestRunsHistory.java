@@ -137,19 +137,22 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 							input.setDate(date);
 							
 							List<TestCase> testCases = Lists.newArrayList();
-							// handle log_result
-							NodeList childNodes2 = item.getFirstChild().getNextSibling().getChildNodes();
-							for(int k=0; k<childNodes2.getLength(); k++) {
-								Node item2 = childNodes2.item(k);
-								if(Node.ELEMENT_NODE == item2.getNodeType()) {
-									TestCase createTestCase = testCaseUtility.createTestCase((Element)item2, null);
-									if(createTestCase != null) {
-										testCases.add(createTestCase);										
+							Node firstChild = item.getFirstChild();
+							if(firstChild != null) {
+								// handle log_result
+								NodeList childNodes2 = firstChild.getNextSibling().getChildNodes();
+								for(int k=0; k<childNodes2.getLength(); k++) {
+									Node item2 = childNodes2.item(k);
+									if(Node.ELEMENT_NODE == item2.getNodeType()) {
+										TestCase createTestCase = testCaseUtility.createTestCase((Element)item2, null);
+										if(createTestCase != null) {
+											testCases.add(createTestCase);										
+										}
 									}
 								}
+								input.setTestCases(testCases);
+								history.add(input);
 							}
-							input.setTestCases(testCases);
-							history.add(input);
 						}
 					}
 				}
