@@ -64,8 +64,8 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 	}
 
 	protected StyledString styledText(TestCase testCase) {
+		IBaseLabelProvider labelProvider = getLabelProviderExtension(testCase);
 		if(extensionEnabled) {
-			IBaseLabelProvider labelProvider = getLabelProviderExtension(testCase);
 			Object result = extensionCall(labelProvider, "getStyledText", testCase);
 			if(result instanceof StyledString) {
 				return (StyledString)result;
@@ -75,7 +75,12 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 				return new StyledString((String)result);
 			}
 		} else {
-			return new StyledString(testCase.getTitle()).append(getStatistics(testCase));
+			StyledString styledString = new StyledString(testCase.getTitle()).append(getStatistics(testCase));	
+			String extensionCall = (String)extensionCall(labelProvider, "getText", getReferencedEObject(testCase));
+			if(extensionCall != null && !extensionCall.isEmpty()) {
+				styledString.append(new StyledString("     Descriprion: " + extensionCall, StyledString.DECORATIONS_STYLER));
+			} 
+			return styledString;
 		}
 		return new StyledString(EMPTY);
 	}

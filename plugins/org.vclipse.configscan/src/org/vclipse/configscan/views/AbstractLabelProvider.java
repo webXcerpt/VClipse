@@ -82,22 +82,22 @@ public abstract class AbstractLabelProvider extends ColumnLabelProvider implemen
 	}
 
 	@Override
-	public StyledString getStyledText(Object element) {
+	public final StyledString getStyledText(Object element) {
 		return (StyledString)styledTextDispatcher.invoke(element);
 	}
 
 	@Override
-	public Image getImage(Object element) {
+	public final Image getImage(Object element) {
 		return (Image)imageDispatcher.invoke(element);
 	}
 	
 	@Override
-	public String getText(Object element) {
+	public final String getText(Object element) {
 		return (String)textDispatcher.invoke(element);
 	}
 	
 	@Override
-	public String getToolTipText(Object element) {
+	public final String getToolTipText(Object element) {
 		return (String)toolTipDispatcher.invoke(element);
 	}
 
