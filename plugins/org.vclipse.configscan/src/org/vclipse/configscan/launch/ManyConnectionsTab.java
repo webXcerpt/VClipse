@@ -37,18 +37,11 @@ import com.sap.conn.jco.JCoException;
 
 public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 
-	public static final String SEPARATOR = "::";
-	
 	private final IConfigScanRemoteConnections remoteConnections;
 	
-	private Table table;
+	private Table connectionsTable;
 	
 	private Button skipMaterialTestsButton;
-	
-	// map for selected items at initialization
-	private Map<String, TableItem> name2Item = Maps.newHashMap();
-	
-	private Map<String, Object> nameValue = Maps.newHashMap();
 	
 	@Inject
 	public ManyConnectionsTab(IConfigScanRemoteConnections remoteConnections) {
@@ -66,8 +59,8 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 		
 		TableViewer connectionsViewer = new TableViewer(mainArea, SWT.BORDER | SWT.CHECK 
 				| SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
-		table = connectionsViewer.getTable();
-		table.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		connectionsTable = connectionsViewer.getTable();
+		connectionsTable.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		List<? extends RemoteConnection> connections = Lists.newArrayList();
 		try {
@@ -79,7 +72,7 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 		connectionsViewer.setLabelProvider(new LabelProvider());
 		connectionsViewer.setContentProvider(new ContentProvider());
 		connectionsViewer.setInput(connections);
-		table.addSelectionListener(new SelectionAdapter() {
+		connectionsTable.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 				if(event.detail == SWT.CHECK) {
@@ -110,31 +103,17 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 	@Override
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		try {
-			String prefix = configuration.getName() + SEPARATOR;
-			
-			// handle the connection values
-			Map<String, Boolean> name2Checked = Maps.newHashMap();
 			Map<?, ?> attributes = configuration.getAttributes();
-			if(!attributes.isEmpty()) {
-				for(Object key : attributes.keySet()) {
-					if(key instanceof String && ((String)key).startsWith(prefix)) {
-						Object value = attributes.get(key);
-						if(value instanceof Boolean) {
-							name2Checked.put((String)key, (Boolean)value);
-						}
-					}
-				}
+			
+			Object object = attributes.get(TestRunAdapter.SKIP_MATERIAL_TESTS);
+			if(object != null) {
+				skipMaterialTestsButton.setSelection((Boolean)object);
 			}
 			
-			for(TableItem item : table.getItems()) {
-				// init state
-				item.setChecked(false);
-				
-				// enable item 
-				String key = prefix + ((RemoteConnection)item.getData()).getDescription();
-				if(name2Checked.containsKey(key)) {
-					item.setChecked(true);
-					name2Item.put(key, item);
+			for(TableItem item : connectionsTable.getItems()) {
+				object = attributes.get(item.getText());
+				if(object instanceof Boolean) {
+					item.setChecked((Boolean)object);
 				}
 			}
 		} catch (CoreException exception) {
@@ -144,31 +123,17 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 
 	@Override
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
-		// table == null if the launch configuration does not exist
-		String prefixName = configuration.getName() + SEPARATOR;
-		if(table != null) {
-			for(String name : name2Item.keySet()) {
-				if(name.startsWith(prefixName)) {
-					name2Item.get(name).setChecked(true);
-				}
-			}
-		}
+		// not used
 	}
 
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
-		configuration.setAttribute(TestRunAdapter.SKIP_MATERIAL_TESTS, skipMaterialTestsButton.getSelection());
-		String prefix = configuration.getName() + SEPARATOR;
-		Map<String, Boolean> name2Checked = Maps.newHashMap();
-		for(TableItem item : table.getItems()) {
-			String key = prefix + ((RemoteConnection)item.getData()).getDescription();
-			if(item.getChecked()) {
-				name2Checked.put(key, true);
-			} else {
-				name2Item.remove(key);
-			}
+		Map<String, Boolean> map = Maps.newHashMap();
+		map.put(TestRunAdapter.SKIP_MATERIAL_TESTS, skipMaterialTestsButton.getSelection());
+		for(TableItem item : connectionsTable.getItems()) {
+			map.put(item.getText(), item.getChecked());
 		}
-		configuration.setAttributes(name2Checked);
+		configuration.setAttributes(map);
 	}
 
 	@Override

@@ -85,16 +85,18 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 		Map<String, RemoteConnection> selectedConnections = Maps.newHashMap();
 		Map<?, ?> attributes = configuration.getAttributes();
 		if(!attributes.isEmpty()) {
-			String prefix = configuration.getName() + ManyConnectionsTab.SEPARATOR;
-			Set<String> names = Sets.newHashSet();
+			Set<String> selectedConnectionsNames = Sets.newHashSet();
 			for(Object key : attributes.keySet()) {
-				if(key instanceof String && ((String)key).startsWith(prefix)) {
-					names.add(((String)key).replace(prefix, ""));
+				if(key instanceof String) {
+					Object object = attributes.get(key);
+					if(object instanceof Boolean && (Boolean)object) {
+						selectedConnectionsNames.add((String)key);
+					}
 				}
 			}
 			for(RemoteConnection rc : remoteConnectionsList) {
 				String name = rc.getDescription();
-				if(names.contains(name)) {
+				if(selectedConnectionsNames.contains(name)) {
 					selectedConnections.put(name, rc);
 				}
 			}
@@ -151,6 +153,11 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 				input.setConfigurationName(configuration.getName());
 				input.setTestCases(testRuns);
 				input.setDate(null);
+				
+				Map<String, Object> options = Maps.newHashMap();
+				options.put(TestRunAdapter.SKIP_MATERIAL_TESTS, attributes.get(TestRunAdapter.SKIP_MATERIAL_TESTS));
+				
+				input.setOptions(options);
 				
 				Display.getDefault().syncExec(new Runnable() {
 					@Override

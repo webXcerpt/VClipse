@@ -103,7 +103,6 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 				}
 			}
 			String string = documentUtility.parse(historyDocument);
-			System.out.println(string);
 			File historyFile = outputPath.toFile();
 			if(!historyFile.exists()) {
 				historyFile.createNewFile();
