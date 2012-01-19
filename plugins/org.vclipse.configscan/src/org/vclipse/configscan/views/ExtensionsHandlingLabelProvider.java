@@ -35,80 +35,73 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 		this.extensionEnabled = enable;
 	}
 	
-	@Override
-	public StyledString getStyledText(Object element) {
-		if(element instanceof TestCase) {
-			TestCase testCase = (TestCase)element;
-			if(extensionEnabled) {
-				IBaseLabelProvider labelProvider = getLabelProviderExtension(testCase);
-				Object result = extensionCall(labelProvider, "getStyledText", element);
-				if(result instanceof StyledString) {
-					return (StyledString)result;
-				} 
-				result = extensionCall(labelProvider, "getText", element);
-				if(result instanceof String) {
-					return new StyledString((String)result);
-				}
-			} else {
-				return new StyledString(testCase.getTitle()).append(getStatistics(testCase));
+	protected String toolTip(TestCase testCase) {
+		if(extensionEnabled) {
+			IBaseLabelProvider labelProvider = getLabelProviderExtension(testCase);
+			Object result = extensionCall(labelProvider, "getToolTipText", testCase);
+			if(result instanceof String) {
+				return (String)result;
 			}
-		} else if(element instanceof TestRunAdapter) {
-			return new StyledString(((TestRunAdapter)element).getLabel(null));
-		}  else if(element instanceof PendingUpdateAdapter) {
-			return new StyledString(((PendingUpdateAdapter)element).getLabel(element));
+		} else {
+			if(testCase.getAdapter(TestRunAdapter.class) == null) {
+				String tooltip = "ConfigScan XML LOG: " + testCase.getTitle();
+				// 	 	 			NamedNodeMap namedNodeMap = inputElement.getAttributes();
+				// 	 	 			for(int i = 0; i < namedNodeMap.getLength(); i++) {
+				// 	 	 				Node node = namedNodeMap.item(i);
+				// 	 	 				tooltip += " " + node.getNodeName() + "=\"" + node.getNodeValue() + "\"";
+				// 	 	 			}
+				// 	 	 			URI uri = testCase.getSourceUri();
+				// 	 	 			TestCase root = testCaseUtility.getRoot(testCase);
+				// 	 	 			EObject testModel = ((TestRunAdapter)root.getAdapter(TestRunAdapter.class)).getTestModel();
+				// 	 	 			EObject eObject = testModel.eResource().getResourceSet().getEObject(uri, true);
+				// 	 	 			if(eObject != null && extensionEnabled && getLabelProviderExtension(testCase) != null) {
+				// 	 	 				//tooltip += "\n" + labelProviderExtension.getText(eObject);
+				// 	 	 			}
+				return tooltip;
+			}
 		}
-		return new StyledString(EMPTY);
-	}
-	
-	@Override
-	public Image getImage(Object element) {
-		if(element instanceof TestCase) {
-			TestCase testCase = (TestCase)element;
-			if(extensionEnabled) {
-				return (Image)extensionCall(getLabelProviderExtension(testCase), "getImage", element);
-			} else {
-				return testCase.getStatus() == Status.SUCCESS 
-						? imageHelper.getImage(IConfigScanImages.SUCCESS) 
-								: imageHelper.getImage(IConfigScanImages.ERROR);
-			}
-		} else if(element instanceof TestRunAdapter) {
-			return imageHelper.getImage(((TestRunAdapter)element).getImageDescriptor(null));
-		} 
 		return null;
 	}
 
-	@Override
- 	public String getToolTipText(Object object) {
- 		if(object instanceof TestCase) {
- 			TestCase testCase = (TestCase)object;
- 			if(extensionEnabled) {
- 				IBaseLabelProvider labelProvider = getLabelProviderExtension(testCase);
- 				Object result = extensionCall(labelProvider, "getToolTipText", object);
- 				if(result instanceof String) {
- 					return (String)result;
- 				}
- 			} else {
- 				if(testCase.getAdapter(TestRunAdapter.class) == null) {
- 	 				String tooltip = "ConfigScan XML LOG: " + testCase.getTitle();
-// 	 	 			NamedNodeMap namedNodeMap = inputElement.getAttributes();
-// 	 	 			for(int i = 0; i < namedNodeMap.getLength(); i++) {
-// 	 	 				Node node = namedNodeMap.item(i);
-// 	 	 				tooltip += " " + node.getNodeName() + "=\"" + node.getNodeValue() + "\"";
-// 	 	 			}
-// 	 	 			URI uri = testCase.getSourceUri();
-// 	 	 			TestCase root = testCaseUtility.getRoot(testCase);
-// 	 	 			EObject testModel = ((TestRunAdapter)root.getAdapter(TestRunAdapter.class)).getTestModel();
-// 	 	 			EObject eObject = testModel.eResource().getResourceSet().getEObject(uri, true);
-// 	 	 			if(eObject != null && extensionEnabled && getLabelProviderExtension(testCase) != null) {
-// 	 	 				//tooltip += "\n" + labelProviderExtension.getText(eObject);
-// 	 	 			}
- 	 	 			return tooltip;
- 	 			}
- 			}
- 		}
- 		return null;
- 	}
+	protected StyledString styledText(TestCase testCase) {
+		if(extensionEnabled) {
+			IBaseLabelProvider labelProvider = getLabelProviderExtension(testCase);
+			Object result = extensionCall(labelProvider, "getStyledText", testCase);
+			if(result instanceof StyledString) {
+				return (StyledString)result;
+			} 
+			result = extensionCall(labelProvider, "getText", testCase);
+			if(result instanceof String) {
+				return new StyledString((String)result);
+			}
+		} else {
+			return new StyledString(testCase.getTitle()).append(getStatistics(testCase));
+		}
+		return new StyledString(EMPTY);
+	}
 
+	protected StyledString styledText(TestRunAdapter testRun) {
+		return new StyledString(testRun.getLabel(null));
+	}
+	
+	protected StyledString styledText(PendingUpdateAdapter adapter) {
+		return new StyledString(adapter.getLabel(null));
+	}
+	
+	protected Image image(TestCase testCase) {
+		if(extensionEnabled) {
+			return (Image)extensionCall(getLabelProviderExtension(testCase), "getImage", testCase);
+		} else {
+			return testCase.getStatus() == Status.SUCCESS 
+					? imageHelper.getImage(IConfigScanImages.SUCCESS) 
+							: imageHelper.getImage(IConfigScanImages.ERROR);
+		}
+	}
+	
+	protected Image image(TestRunAdapter adapter) {
+		return imageHelper.getImage(adapter.getImageDescriptor(null));
+	}
+	
  	private IBaseLabelProvider getLabelProviderExtension(TestCase testCase) {
  		for(String fileExtension : extensions.keySet()) {
 			if(canHandleExtension(testCase, fileExtension)) {
