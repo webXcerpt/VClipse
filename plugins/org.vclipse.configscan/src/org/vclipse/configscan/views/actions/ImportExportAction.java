@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.vclipse.configscan.views.actions;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -128,9 +129,10 @@ public class ImportExportAction extends SimpleTreeViewerAction implements IMenuC
 						Node item = childNodes.item(i);
 						if(item.getNodeType() == Node.ELEMENT_NODE) {
 							Element element = (Element)item;
-							if(documentUtility.passesFilter(element)) {
-								TestCase testCase = testCaseUtility.createTestCase(element, null);
-								testCases.add(testCase);
+							TestCase testCase = 
+										testCaseUtility.createTestCase(element, null, documentUtility, new HashMap<String, Object>());
+							if(testCase != null) {
+								testCases.add(testCase);								
 							}
 						}
 					}	

@@ -141,6 +141,9 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 									adapter.setConnection(rc);
 									adapter.setXmlProvider(xmlProvider);
 									adapter.setTestModel(currentResource.getContents().get(0));
+									Map<String, Object> options = Maps.newHashMap();
+									options.put(TestRunAdapter.SKIP_MATERIAL_TESTS, attributes.get(TestRunAdapter.SKIP_MATERIAL_TESTS));
+									adapter.setOptions(options);
 									TestRunAdapterFactory.getDefault().adapt(adapter, testCase);		
 									testRuns.add(testCase);
 								}
@@ -153,11 +156,6 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 				input.setConfigurationName(configuration.getName());
 				input.setTestCases(testRuns);
 				input.setDate(null);
-				
-				Map<String, Object> options = Maps.newHashMap();
-				options.put(TestRunAdapter.SKIP_MATERIAL_TESTS, attributes.get(TestRunAdapter.SKIP_MATERIAL_TESTS));
-				
-				input.setOptions(options);
 				
 				Display.getDefault().syncExec(new Runnable() {
 					@Override

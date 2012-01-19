@@ -9,6 +9,7 @@ import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,6 +25,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanConfiguration;
+import org.vclipse.configscan.impl.model.TestRunAdapter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -179,7 +181,7 @@ public class DocumentUtility {
 		}
 	}
 
-	public boolean passesFilter(Element element) {
+	public boolean passesNodeFilter(Element element) {
 		// we do not want see following elements in the tree
 		String name = element.getNodeName();
 		String title = element.getAttribute(TITLE);
@@ -192,8 +194,20 @@ public class DocumentUtility {
 		}
 		return true;
 	}
-
 	
+	public boolean passesOptionsFilter(Element element, Map<String, Object> options) {
+		Object object = options.get(TestRunAdapter.SKIP_MATERIAL_TESTS);
+		if(object instanceof Boolean && (Boolean)object) {
+			String commandAttribute = element.getAttribute("cmd");
+			if(commandAttribute.equals("CHECK ITEM QUANTITY")
+					|| commandAttribute.equals("CHECK ITEM EXIST")
+						|| commandAttribute.equals("CHECK ITEM STATUS")) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public Document newDocument() {
 		return documentBuilder.newDocument();
 	}

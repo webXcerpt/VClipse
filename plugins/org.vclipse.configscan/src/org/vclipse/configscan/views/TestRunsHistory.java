@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -145,11 +146,9 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 									Node item2 = childNodes2.item(k);
 									if(Node.ELEMENT_NODE == item2.getNodeType()) {
 										Element element = (Element)item2;
-										if(documentUtility.passesFilter(element)) {
-											TestCase createTestCase = testCaseUtility.createTestCase(element, null);
-											if(createTestCase != null) {
-												testCases.add(createTestCase);										
-											}
+										TestCase createTestCase = testCaseUtility.createTestCase(element, null, documentUtility, new HashMap<String, Object>());
+										if(createTestCase != null) {
+											testCases.add(createTestCase);										
 										}
 									}
 								}

@@ -60,8 +60,10 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 	
 	private Document logDocument;
 	
+	private Map<String, Object> options;
+	
 	public TestRunAdapter() {
-		
+		options = Maps.newHashMap();
 	}
 	
 	public void setTestCase(TestCase testCase) {
@@ -74,6 +76,10 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 	
 	public void setTestModel(EObject testModel) {
 		this.testModel = testModel;
+	}
+	
+	public void setOptions(Map<String, Object> options) {
+		this.options = options;
 	}
 	
 	public void setXmlProvider(IConfigScanXMLProvider provider) {
@@ -134,7 +140,8 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 				
 				Node logSession = documentUtility.getLogSession(logDocument);
 				if(logSession != null) {
-					testCase.addTestCase(testCaseUtility.createTestCase((Element)logSession, testCase, inputToUriMap, mapLogInput));
+					testCase.addTestCase(
+							testCaseUtility.createTestCase((Element)logSession, testCase, documentUtility, options, inputToUriMap, mapLogInput));
 				}
 			} catch (JCoException exception) {
 				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);

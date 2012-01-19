@@ -26,30 +26,33 @@ public class TestCaseUtility {
 		}
 	}
 	
-	public TestCase createTestCase(Element element, TestCase parent) {
-		return createTestCase(element, parent, emptyMapInputUri, emptyMapLogInput);
+	public TestCase createTestCase(Element element, TestCase parent, DocumentUtility documentUtility, Map<String, Object> options) {
+		return createTestCase(element, parent, documentUtility, options, emptyMapInputUri, emptyMapLogInput);
 	}
 	
-	public TestCase createTestCase(Element element, TestCase parent, Map<Element, URI> inputToUriMap, Map<Element, Element> mapLogInput) {
-		TestCase testCase = new TestCase();
-		testCase.setTitle(element.getAttribute(DocumentUtility.TITLE));
-		testCase.setStatus(element.getAttribute(DocumentUtility.ATTRIBUTE_STATUS).equals(DocumentUtility.STATUS_SUCCESS) 
-				? Status.SUCCESS : Status.FAILURE );
+	public TestCase createTestCase(Element element, TestCase parent, DocumentUtility documentUtility, Map<String,Object> options, Map<Element, URI> inputToUriMap, Map<Element, Element> mapLogInput) {
+		if(documentUtility.passesNodeFilter(element) && documentUtility.passesOptionsFilter(element, options)) {
+			TestCase testCase = new TestCase();
+			testCase.setTitle(element.getAttribute(DocumentUtility.TITLE));
+			testCase.setStatus(element.getAttribute(DocumentUtility.ATTRIBUTE_STATUS).equals(DocumentUtility.STATUS_SUCCESS) 
+					? Status.SUCCESS : Status.FAILURE );
 
-		Element inputElement = mapLogInput.get(element);
-		testCase.setSourceUri(inputToUriMap.get(inputElement));
-		testCase.setParent(parent);
+			Element inputElement = mapLogInput.get(element);
+			testCase.setSourceUri(inputToUriMap.get(inputElement));
+			testCase.setParent(parent);
 
-		NodeList childNodes = element.getChildNodes();
-		for(int i=0; i<childNodes.getLength(); i++) {
-			Node item = childNodes.item(i);
-			if(Node.ELEMENT_NODE == item.getNodeType()) {
-				TestCase childTestCase = createTestCase((Element)item, testCase, inputToUriMap, mapLogInput);
-				if(childTestCase != null) {
-					testCase.addTestCase(childTestCase);						
+			NodeList childNodes = element.getChildNodes();
+			for(int i=0; i<childNodes.getLength(); i++) {
+				Node item = childNodes.item(i);
+				if(Node.ELEMENT_NODE == item.getNodeType()) {
+					TestCase childTestCase = createTestCase((Element)item, testCase, documentUtility, options, inputToUriMap, mapLogInput);
+					if(childTestCase != null) {
+						testCase.addTestCase(childTestCase);						
+					}
 				}
 			}
+			return testCase;
 		}
-		return testCase;
+		return null;
 	}
 }
