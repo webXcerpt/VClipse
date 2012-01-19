@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -24,7 +23,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -39,7 +37,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
@@ -86,7 +83,7 @@ public final class ConfigScanView extends ViewPart {
 	private ContentProvider contentProvider;
 	
 	@Inject
-	private LabelProvider labelProvider;
+	private ExtensionsHandlingLabelProvider labelProvider;
 	
 	@Inject
 	private IPreferenceStore preferenceStore;
@@ -107,8 +104,8 @@ public final class ConfigScanView extends ViewPart {
 	
 	private JobAwareTreeViewer viewer;
 
-	private Action toggleContent;
-	private Action showHistoryAction;
+	private ToggleLabelProviderAction toggleContent;
+	private ShowHistroyAction showHistoryAction;
 
 	private ConfigScanViewInput input;
 	
@@ -122,6 +119,8 @@ public final class ConfigScanView extends ViewPart {
 		if(preferenceStore.getBoolean(IConfigScanConfiguration.SAVE_HISTORY)) {
 			history.save();			
 		}
+		viewer.removeTreeViewerLockListener(history);
+		viewer.removeTreeViewerLockListener(toggleContent);
 		super.dispose();
 	}
 
@@ -129,7 +128,7 @@ public final class ConfigScanView extends ViewPart {
 		parent.setLayout(new GridLayout());
 		
 		viewer = new JobAwareTreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
-		viewer.setLabelProvider(new DelegatingStyledCellLabelProvider(labelProvider));				
+		viewer.setLabelProvider(new DefaultLabelProvider(labelProvider));				
 		viewer.setContentProvider(contentProvider);
 		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 		viewer.addTreeViewerLockListener(history);
@@ -139,7 +138,6 @@ public final class ConfigScanView extends ViewPart {
 			viewer.setAutoExpandLevel(IConfigScanConfiguration.DEFAULT_EXPAND_LEVEL);			
 		}
 		
-		new DrillDownAdapter(viewer);
 		ColumnViewerToolTipSupport.enableFor(viewer);
 		
 		contributeToActionBars();		

@@ -8,7 +8,7 @@ import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.views.JobAwareTreeViewer;
 import org.vclipse.configscan.views.JobAwareTreeViewer.ITreeViewerLockListener;
 import org.vclipse.configscan.views.JobAwareTreeViewer.TreeViewerLockEvent;
-import org.vclipse.configscan.views.LabelProvider;
+import org.vclipse.configscan.views.ExtensionsHandlingLabelProvider;
 
 public class ToggleLabelProviderAction extends SimpleTreeViewerAction implements ITreeViewerLockListener {
 
@@ -23,7 +23,7 @@ public class ToggleLabelProviderAction extends SimpleTreeViewerAction implements
 	
 	public void run() {
 		DelegatingStyledCellLabelProvider delegatingProvider = (DelegatingStyledCellLabelProvider)treeViewer.getLabelProvider();
-		LabelProvider labelProvider = (LabelProvider)delegatingProvider.getStyledStringProvider();
+		ExtensionsHandlingLabelProvider labelProvider = (ExtensionsHandlingLabelProvider)delegatingProvider.getStyledStringProvider();
 		if(isChecked()) {
 			labelProvider.enableExtension(true);
 			setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.FYSBEE));
