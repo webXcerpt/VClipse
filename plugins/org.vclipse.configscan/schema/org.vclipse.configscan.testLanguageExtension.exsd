@@ -72,7 +72,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.jface.viewers.ILabelProvider"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.jface.viewers.IBaseLabelProvider"/>
                </appinfo>
             </annotation>
          </attribute>

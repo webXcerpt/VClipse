@@ -24,7 +24,7 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
@@ -70,7 +70,7 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 	
 	@Override
 	public void launch(final ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
-		final Map<String, Pair<IConfigScanXMLProvider, ILabelProvider>> extensions = extensionPointReader.getExtensions();
+		final Map<String, Pair<IConfigScanXMLProvider, IBaseLabelProvider>> extensions = extensionPointReader.getExtensions();
 		
 		monitor.beginTask("Sending test cases to ConfigScan", IProgressMonitor.UNKNOWN);
 		monitor.subTask("Reading available remote connections");

@@ -1,13 +1,16 @@
 package org.vclipse.configscan.views;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
-import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
@@ -16,6 +19,7 @@ import org.eclipse.xtext.ui.editor.utils.TextStyle;
 import org.eclipse.xtext.ui.label.StylerFactory;
 import org.eclipse.xtext.util.Pair;
 import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.extension.ExtensionPointReader;
@@ -34,9 +38,9 @@ public final class LabelProvider extends ColumnLabelProvider implements IStyledL
 	
 	private static final String EMPTY = "";
 	
-	private boolean shouldDelegate;
+	private boolean extensionEnabled;
 	
-	private Map<String, Pair<IConfigScanXMLProvider, ILabelProvider>> extensions;
+	private Map<String, Pair<IConfigScanXMLProvider, IBaseLabelProvider>> extensions;
 	
 	private TextStyle failureStyle;
 	
@@ -55,50 +59,48 @@ public final class LabelProvider extends ColumnLabelProvider implements IStyledL
 		successStyle.setColor(new RGB(0x32, 0x92, 0));
 	}
 	
-	public void enableExtension(boolean delegate) {
-		this.shouldDelegate = delegate;
+	public void enableExtension(boolean enable) {
+		this.extensionEnabled = enable;
 	}
 	
 	@Override
 	public StyledString getStyledText(Object element) {
-		if(element instanceof TestCase && !shouldDelegate) {
+		if(element instanceof TestCase && !extensionEnabled) {
 			TestCase testCase = (TestCase)element;
 			return new StyledString(testCase.getTitle()).append(getStatistics(testCase));
 		} else {
-			String text = getText(element);
-			return new StyledString(text == null ? EMPTY : text);
-		}
-	}
-	
-	@Override
-	public String getText(Object object) {
-		if(object instanceof TestRunAdapter) {
-			return ((TestRunAdapter)object).getLabel(null);
-		} else if(object instanceof TestCase) {
-			if(shouldDelegate) {
-				ILabelProvider labelProvider = getLabelProviderExtension((TestCase)object);
-				if(labelProvider != null) {
-					return labelProvider.getText(object);
+			if(element instanceof TestRunAdapter) {
+				return new StyledString(((TestRunAdapter)element).getLabel(null));
+			} else if(element instanceof TestCase) {
+				if(extensionEnabled) {
+					IBaseLabelProvider labelProvider = getLabelProviderExtension((TestCase)element);
+					Object result = makeExtensionCallFor(labelProvider, "getStyledText", element);
+					if(result instanceof StyledString) {
+						return (StyledString)result;
+					} 
+					result = makeExtensionCallFor(labelProvider, "getText", element);
+					if(result instanceof String) {
+						return new StyledString((String)result);
+					}
+				} else {
+					TestCase testCase = (TestCase)element;
+					return new StyledString(testCase.getTitle()).append(getStatistics(testCase));
 				}
+			} else if(element instanceof PendingUpdateAdapter) {
+				return new StyledString(((PendingUpdateAdapter)element).getLabel(element));
 			}
-			return ((TestCase)object).getTitle();
-		} else if(object instanceof PendingUpdateAdapter) {
-			return ((PendingUpdateAdapter)object).getLabel(object);
+			return new StyledString(EMPTY);
 		}
-		return EMPTY;
 	}
 	
 	@Override
-	public Image getImage(Object object) {
-		if(object instanceof TestRunAdapter) {
-			return imageHelper.getImage(((TestRunAdapter)object).getImageDescriptor(null));
-		} else if(object instanceof TestCase) {
-			TestCase testCase = (TestCase)object;
-			if(shouldDelegate) {
-				ILabelProvider labelProvider = getLabelProviderExtension(testCase);
-				if(labelProvider != null) {
-					return labelProvider.getImage(object);
-				}
+	public Image getImage(Object element) {
+		if(element instanceof TestRunAdapter) {
+			return imageHelper.getImage(((TestRunAdapter)element).getImageDescriptor(null));
+		} else if(element instanceof TestCase) {
+			TestCase testCase = (TestCase)element;
+			if(extensionEnabled) {
+				return (Image)makeExtensionCallFor(getLabelProviderExtension(testCase), "getImage", element);
 			} else {
 				return testCase.getStatus() == Status.SUCCESS 
 						? imageHelper.getImage(IConfigScanImages.SUCCESS) 
@@ -110,43 +112,66 @@ public final class LabelProvider extends ColumnLabelProvider implements IStyledL
 
 	@Override
 	public int getToolTipDisplayDelayTime(Object object) {
+		if(object instanceof TestCase && extensionEnabled) {
+			IBaseLabelProvider labelProvider = getLabelProviderExtension((TestCase)object);
+			Object result = makeExtensionCallFor(labelProvider, "getToolTipDisplayDelayTime", object);
+			if(result instanceof Integer) {
+				return (Integer)result;
+			}
+		}
 		return 500;
 	}
 	
 	@Override
 	public int getToolTipTimeDisplayed(Object object) {
+		if(object instanceof TestCase && extensionEnabled) {
+			IBaseLabelProvider labelProvider = getLabelProviderExtension((TestCase)object);
+			Object result = makeExtensionCallFor(labelProvider, "getToolTipTimeDisplayed", object);
+			if(result instanceof Integer) {
+				return (Integer)result;
+			}
+		}
  		return 10000;
  	}
 	
+	@Override
  	public String getToolTipText(Object object) {
  		if(object instanceof TestCase) {
  			TestCase testCase = (TestCase)object;
- 			if(testCase.getAdapter(TestRunAdapter.class) == null) {
-  				ILabelProvider labelProviderExtension = getLabelProviderExtension(testCase);
-  				String[] split = testCase.getTitle().split("on");
-  				if(split.length == 2) {
-  					
-  				}
- 	 			String tooltip = "ConfigScan XML LOG: " + split[0];
-// 	 			NamedNodeMap namedNodeMap = inputElement.getAttributes();
-// 	 			for(int i = 0; i < namedNodeMap.getLength(); i++) {
-// 	 				Node node = namedNodeMap.item(i);
-// 	 				tooltip += " " + node.getNodeName() + "=\"" + node.getNodeValue() + "\"";
-// 	 			}
- 	 			URI uri = testCase.getSourceUri();
- 	 			TestCase root = testCaseUtility.getRoot(testCase);
- 	 			EObject testModel = ((TestRunAdapter)root.getAdapter(TestRunAdapter.class)).getTestModel();
- 	 			EObject eObject = testModel.eResource().getResourceSet().getEObject(uri, true);
- 	 			if(eObject != null && shouldDelegate && labelProviderExtension != null) {
- 	 				tooltip += "\n" + labelProviderExtension.getText(eObject);
+ 			if(extensionEnabled) {
+ 				IBaseLabelProvider labelProvider = getLabelProviderExtension(testCase);
+ 				Object result = makeExtensionCallFor(labelProvider, "getToolTipText", object);
+ 				if(result instanceof String) {
+ 					return (String)result;
+ 				}
+ 			} else {
+ 				if(testCase.getAdapter(TestRunAdapter.class) == null) {
+ 	 				IBaseLabelProvider labelProviderExtension = getLabelProviderExtension(testCase);
+ 	  				String[] split = testCase.getTitle().split("on");
+ 	  				if(split.length == 2) {
+ 	  					
+ 	  				}
+ 	 	 			String tooltip = "ConfigScan XML LOG: " + split[0];
+// 	 	 			NamedNodeMap namedNodeMap = inputElement.getAttributes();
+// 	 	 			for(int i = 0; i < namedNodeMap.getLength(); i++) {
+// 	 	 				Node node = namedNodeMap.item(i);
+// 	 	 				tooltip += " " + node.getNodeName() + "=\"" + node.getNodeValue() + "\"";
+// 	 	 			}
+ 	 	 			URI uri = testCase.getSourceUri();
+ 	 	 			TestCase root = testCaseUtility.getRoot(testCase);
+ 	 	 			EObject testModel = ((TestRunAdapter)root.getAdapter(TestRunAdapter.class)).getTestModel();
+ 	 	 			EObject eObject = testModel.eResource().getResourceSet().getEObject(uri, true);
+ 	 	 			if(eObject != null && extensionEnabled && labelProviderExtension != null) {
+ 	 	 				//tooltip += "\n" + labelProviderExtension.getText(eObject);
+ 	 	 			}
+ 	 	 			return tooltip;
  	 			}
- 	 			return tooltip;
  			}
  		}
  		return null;
  	}
 
- 	protected StyledString getStatistics(TestCase testCase) {
+ 	private StyledString getStatistics(TestCase testCase) {
 		List<TestCase> children = testCase.getChildren();
 		if(!children.isEmpty()) {
 			int failures = 0;
@@ -155,7 +180,6 @@ public final class LabelProvider extends ColumnLabelProvider implements IStyledL
 					failures++;
 				}
 			}
-			
 			int numberOfTestCases = children.size();
 			StyledString numberOfTests = new StyledString("     Number of tests = { " + numberOfTestCases + " } ");
 			StylerFactory stylerFactory = new StylerFactory();
@@ -180,13 +204,35 @@ public final class LabelProvider extends ColumnLabelProvider implements IStyledL
  		return false;
  	}
  	
- 	private ILabelProvider getLabelProviderExtension(TestCase testCase) {
+ 	private IBaseLabelProvider getLabelProviderExtension(TestCase testCase) {
  		for(String fileExtension : extensions.keySet()) {
 			if(canHandleExtension(testCase, fileExtension)) {
 				return extensions.get(fileExtension).getSecond();
 			}
+			ConfigScanPlugin.log("There is no registered label provider for files with extension " + fileExtension, IStatus.ERROR);
 		}
  		return null;
  	}
 
+ 	private Object makeExtensionCallFor(IBaseLabelProvider labelProvider, String methodName, Object object) {
+		if(labelProvider == null) {
+			return null;
+		} else {
+			try {
+				Method method = labelProvider.getClass().getMethod(methodName, Object.class);
+				return method.invoke(labelProvider, object);
+			} catch (SecurityException exception) {
+				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+			} catch (NoSuchMethodException exception) {
+				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+			} catch (IllegalArgumentException exception) {
+				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+			} catch (IllegalAccessException exception) {
+				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+			} catch (InvocationTargetException exception) {
+				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+			}
+		}
+		return null;
+	}
 }
