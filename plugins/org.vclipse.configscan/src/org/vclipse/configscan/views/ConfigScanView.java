@@ -164,6 +164,10 @@ public final class ConfigScanView extends ViewPart {
 		return input;
 	}
 	
+	public JobAwareTreeViewer getViewer() {
+		return viewer;
+	}
+	
 	private void contributeToActionBars() {
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 		toolBarManager.add(toggleContent = new ToggleLabelProviderAction(viewer, imageHelper));
@@ -178,7 +182,7 @@ public final class ConfigScanView extends ViewPart {
 		toolBarManager.add(new Separator());
 		toolBarManager.add(new ImportExportAction(viewer, imageHelper, documentUtility, testCaseUtility));
 		
-		showHistoryAction = new ShowHistroyAction(viewer, imageHelper, history);
+		showHistoryAction = new ShowHistroyAction(this, imageHelper, history);
 		showHistoryAction.setEnabled(preferenceStore.getBoolean(IConfigScanConfiguration.SAVE_HISTORY));
 		toolBarManager.add(showHistoryAction);
 	}

@@ -3,7 +3,6 @@ package org.vclipse.configscan.views.actions;
 import java.util.List;
 
 import org.eclipse.jface.action.IMenuCreator;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -12,6 +11,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.vclipse.configscan.ConfigScanImageHelper;
 import org.vclipse.configscan.IConfigScanImages;
+import org.vclipse.configscan.views.ConfigScanView;
 import org.vclipse.configscan.views.ConfigScanViewInput;
 import org.vclipse.configscan.views.TestRunsHistory;
 
@@ -20,14 +20,17 @@ public class ShowHistroyAction extends SimpleTreeViewerAction implements IMenuCr
 	private Menu menu;
 	
 	private TestRunsHistory history;
+
+	private ConfigScanView view;
 	
-	public ShowHistroyAction(TreeViewer treeViewer, ConfigScanImageHelper imageHelper, TestRunsHistory history) {
-		super(treeViewer, imageHelper);
+	public ShowHistroyAction(ConfigScanView view, ConfigScanImageHelper imageHelper, TestRunsHistory history) {
+		super(view.getViewer(), imageHelper);
 		setMenuCreator(this);
 		setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.HISTORY));
 		setText("Test run history");
 		setToolTipText("Test run history");
 		this.history = history;
+		this.view = view;
 	}
 
 	@Override
@@ -64,7 +67,7 @@ public class ShowHistroyAction extends SimpleTreeViewerAction implements IMenuCr
 		MenuItem item = (MenuItem)event.getSource();
 		int id = item.getID();
 		ConfigScanViewInput configScanViewInput = history.getHistory().get(id);
-		treeViewer.setInput(configScanViewInput);
+		view.setInput(configScanViewInput);
 	}
 
 	@Override
