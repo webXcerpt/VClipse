@@ -102,13 +102,14 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 					}
 				}
 			}
-			String documentAsString = documentUtility.parse(historyDocument);
+			String string = documentUtility.parse(historyDocument);
+			System.out.println(string);
 			File historyFile = outputPath.toFile();
 			if(!historyFile.exists()) {
 				historyFile.createNewFile();
 			}
 			BufferedWriter out = new BufferedWriter(new FileWriter(historyFile));
-			out.write(documentAsString);
+			out.write(string);
 			out.close();
 		} catch (IOException exception) {
 			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
@@ -144,9 +145,12 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 								for(int k=0; k<childNodes2.getLength(); k++) {
 									Node item2 = childNodes2.item(k);
 									if(Node.ELEMENT_NODE == item2.getNodeType()) {
-										TestCase createTestCase = testCaseUtility.createTestCase((Element)item2, null);
-										if(createTestCase != null) {
-											testCases.add(createTestCase);										
+										Element element = (Element)item2;
+										if(documentUtility.passesFilter(element)) {
+											TestCase createTestCase = testCaseUtility.createTestCase(element, null);
+											if(createTestCase != null) {
+												testCases.add(createTestCase);										
+											}
 										}
 									}
 								}
