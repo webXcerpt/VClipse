@@ -107,6 +107,10 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 		return imageHelper.getImage(adapter.getImageDescriptor(null));
 	}
 	
+	protected Image image(PendingUpdateAdapter adapter) {
+		return imageHelper.getImage(IConfigScanImages.HOURGLASS);
+	}
+	
  	private IBaseLabelProvider getLabelProviderExtension(TestCase testCase) {
  		for(String fileExtension : extensions.keySet()) {
 			if(canHandleExtension(testCase, fileExtension)) {

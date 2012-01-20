@@ -38,4 +38,6 @@ public interface IConfigScanImages {
 	public static final String DISK = "disk.png";
 	
 	public static final String HISTORY = "history.gif";
+	
+	public static final String HOURGLASS = "hourglass.png";
 }
