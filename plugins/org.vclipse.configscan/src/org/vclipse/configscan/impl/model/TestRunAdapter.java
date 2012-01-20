@@ -125,19 +125,26 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 			Map<Element, URI> inputToUriMap = Maps.newHashMap();
 			inputDocument = xmlProvider.transform(testModel, inputToUriMap);
 
-			// log on disk -> asks the preference store if logging is required
-			documentUtility.exportXmlToDisk(inputDocument);
-
+			if(monitor.isCanceled()) {
+				monitor.done();
+				return;
+			}
 			String parseResult = documentUtility.parse(inputDocument);
 			String materialNumber = xmlProvider.getMaterialNumber(testModel);
-
+			
 			try {
+				if(monitor.isCanceled()) {
+					monitor.done();
+					return;
+				}
 				String result = runner.execute(parseResult, connection, materialNumber, ResourceUtil.getFile(testModel.eResource()));
 				logDocument = documentUtility.parse(result);
-				documentUtility.exportXmlToDisk(logDocument);
 				
+				if(monitor.isCanceled()) {
+					monitor.done();
+					return;
+				}
 				Map<Element, Element> mapLogInput = reverseXmlTransformation.computeConfigScanMap(logDocument, inputDocument);
-				
 				Node logSession = documentUtility.getLogSession(logDocument);
 				if(logSession != null) {
 					testCase.addTestCase(
@@ -149,7 +156,11 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 			}
 		}
-
+		
+		if(monitor.isCanceled()) {
+			monitor.done();
+			return;
+		}
 		for(TestCase childTestCase : testCase.getChildren()) {
 			collector.add(childTestCase, monitor);
 		}

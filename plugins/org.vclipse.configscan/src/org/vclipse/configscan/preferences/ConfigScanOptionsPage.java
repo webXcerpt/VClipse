@@ -28,7 +28,6 @@ public class ConfigScanOptionsPage extends FieldEditorPreferencePage  implements
 	protected void createFieldEditors() {
 		Composite fieldEditorParent = getFieldEditorParent();
 		addField(new BooleanFieldEditor(IConfigScanConfiguration.EXPAND_TREE_ON_INPUT, "Expand tree on input", fieldEditorParent));
-		addField(new BooleanFieldEditor(IConfigScanConfiguration.EXPORT_XML_INPUT_TO_DISK, "Export xml input document to disk", fieldEditorParent));
 		addField(new BooleanFieldEditor(IConfigScanConfiguration.SAVE_HISTORY, "Save history for test runs", fieldEditorParent));
 		addField(new IntegerFieldEditor(IConfigScanConfiguration.HISTORY_ENTRIES_NUMBER, "Number of history entries", fieldEditorParent));
 	}

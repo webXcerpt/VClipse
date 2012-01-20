@@ -1,14 +1,10 @@
 package org.vclipse.configscan.utils;
 
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -22,17 +18,13 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.vclipse.configscan.ConfigScanPlugin;
-import org.vclipse.configscan.IConfigScanConfiguration;
 import org.vclipse.configscan.impl.model.TestRunAdapter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import com.google.inject.Inject;
 
 public class DocumentUtility {
 
@@ -65,9 +57,6 @@ public class DocumentUtility {
 	// do not use injection for document builder -> there is a NullPointerException
 	// during fetching the deferred nodes in the tree viewer
 	private DocumentBuilder documentBuilder;
-	
-	@Inject
-	private IPreferenceStore preferenceStore;
 	
 	public DocumentUtility() {
 		try {
@@ -162,23 +151,6 @@ public class DocumentUtility {
 			}
 		}
 		return success;
-	}
-
-	public void exportXmlToDisk(Document document) {
-		if(preferenceStore.getBoolean(IConfigScanConfiguration.EXPORT_XML_INPUT_TO_DISK)) {
-			SimpleDateFormat sdf = new SimpleDateFormat(IConfigScanConfiguration.DATE_FORMAT);
-		    Calendar calendar = Calendar.getInstance(); // today
-		    String today = sdf.format(calendar.getTime());
-			String currentFilename = "XML_LOG_" + today + ".xml";
-			String xmlLog = parse(document);
-			try {
-				BufferedWriter out = new BufferedWriter(new FileWriter(currentFilename));
-				out.write(xmlLog);
-				out.close();
-			} catch (IOException exception) {
-				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
-			}
-		}
 	}
 
 	public boolean passesNodeFilter(Element element) {
