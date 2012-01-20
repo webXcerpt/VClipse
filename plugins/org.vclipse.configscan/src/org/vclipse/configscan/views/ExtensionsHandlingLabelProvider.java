@@ -100,7 +100,7 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 			}
 		} else {
 			StyledString styledString = new StyledString(testCase.getTitle()).append(getStatistics(testCase));	
-			String extensionCall = (String)extensionCall(labelProvider, "getText", testCase);
+			String extensionCall = (String)extensionCall(labelProvider, "getText", getReferencedEObject(testCase));
 			if(extensionCall != null && !extensionCall.isEmpty()) {
 				styledString.append(new StyledString("     Descriprion: " + extensionCall, StyledString.DECORATIONS_STYLER));
 			} 
