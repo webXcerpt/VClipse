@@ -31,7 +31,10 @@ import com.sap.conn.jco.JCoException;
 
 public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 
+	// names for options
 	public static final String SKIP_MATERIAL_TESTS = "SkipMaterialTests";
+	public static final String KBOBJECT = "kbobject";
+	public static final String RTV = "rtv";
 	
 	@Inject
 	private ConfigScanImageHelper imageHelper;

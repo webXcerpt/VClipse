@@ -14,6 +14,8 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -25,6 +27,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanRemoteConnections;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
@@ -42,6 +45,10 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 	private Table connectionsTable;
 	
 	private Button skipMaterialTestsButton;
+	
+	private Text kbObjectText;
+	
+	private Text rtvText;
 	
 	@Inject
 	public ManyConnectionsTab(IConfigScanRemoteConnections remoteConnections) {
@@ -97,6 +104,36 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 			}
 		});
 		
+		GridData layoutData = new GridData();
+		layoutData.horizontalSpan = 2;
+		skipMaterialTestsButton.setLayoutData(layoutData);
+		
+		new Label(group, SWT.NONE).setText("KBOBJECT: ");
+		kbObjectText = new Text(group, SWT.BORDER);
+		kbObjectText.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent event) {
+				setDirty(true);
+				updateLaunchConfigurationDialog();
+			}
+		});
+		GridData gridData = new GridData();
+		gridData.widthHint = 100;
+		kbObjectText.setLayoutData(gridData);
+		
+		new Label(group, SWT.NONE).setText("RTV: ");
+		rtvText = new Text(group, SWT.BORDER);
+		rtvText.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent event) {
+				setDirty(true);
+				updateLaunchConfigurationDialog();
+			}
+		});
+		gridData = new GridData();
+		gridData.widthHint = 100;
+		rtvText.setLayoutData(gridData);
+		
 		setControl(mainArea);
 	}
 	
@@ -108,6 +145,16 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 			Object object = attributes.get(TestRunAdapter.SKIP_MATERIAL_TESTS);
 			if(object != null) {
 				skipMaterialTestsButton.setSelection((Boolean)object);
+			}
+			
+			object = attributes.get(TestRunAdapter.KBOBJECT);
+			if(object != null) {
+				kbObjectText.setText((String)object);
+			}
+			
+			object = attributes.get(TestRunAdapter.RTV);
+			if(object != null) {
+				rtvText.setText((String)object);
 			}
 			
 			for(TableItem item : connectionsTable.getItems()) {
@@ -128,8 +175,12 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
-		Map<String, Boolean> map = Maps.newHashMap();
+		Map<String, Object> map = Maps.newHashMap();
+		
 		map.put(TestRunAdapter.SKIP_MATERIAL_TESTS, skipMaterialTestsButton.getSelection());
+		map.put(TestRunAdapter.KBOBJECT, kbObjectText.getText());
+		map.put(TestRunAdapter.RTV, rtvText.getText());
+		
 		for(TableItem item : connectionsTable.getItems()) {
 			map.put(item.getText(), item.getChecked());
 		}

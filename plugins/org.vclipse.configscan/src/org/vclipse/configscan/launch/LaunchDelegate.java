@@ -141,9 +141,14 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 									adapter.setConnection(rc);
 									adapter.setXmlProvider(xmlProvider);
 									adapter.setTestModel(currentResource.getContents().get(0));
+									
 									Map<String, Object> options = Maps.newHashMap();
 									options.put(TestRunAdapter.SKIP_MATERIAL_TESTS, attributes.get(TestRunAdapter.SKIP_MATERIAL_TESTS));
+									options.put(TestRunAdapter.KBOBJECT, attributes.get(TestRunAdapter.KBOBJECT));
+									options.put(TestRunAdapter.RTV, attributes.get(TestRunAdapter.RTV));
+									
 									adapter.setOptions(options);
+									
 									TestRunAdapterFactory.getDefault().adapt(adapter, testCase);		
 									testRuns.add(testCase);
 								}
