@@ -137,7 +137,7 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 		} else {
 			try {
 				Method method = labelProvider.getClass().getMethod(methodName, Object.class);
-				return method.invoke(labelProvider, object);
+				return method.invoke(labelProvider, getReferencedEObject(object));
 			} catch (SecurityException exception) {
 				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 			} catch (NoSuchMethodException exception) {
