@@ -7,6 +7,7 @@ import org.vclipse.configscan.ConfigScanImageHelper;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestRunAdapter;
+import org.vclipse.configscan.utils.FailureTreeTraverser;
 
 public class NextFailureAction extends SimpleTreeViewerAction {
 
@@ -21,14 +22,12 @@ public class NextFailureAction extends SimpleTreeViewerAction {
 	public void run() {
 		IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
 		if(!selection.isEmpty()) {
-			SwtTreeTraverser treeTraverser = new SwtTreeTraverser();
 			Object firstSelected = selection.getFirstElement();
 			if(firstSelected instanceof TestRunAdapter) {
 				firstSelected = ((TestRunAdapter)firstSelected).getTestCase();
 			}
 			if(firstSelected instanceof TestCase) {
-				TestCase selectedTestCase = (TestCase)firstSelected;
-				TestCase nextNode = treeTraverser.getNextNode(selectedTestCase);
+				TestCase nextNode = new FailureTreeTraverser().getNextItem((TestCase)firstSelected);
 				if(nextNode != null) {
 					treeViewer.setSelection(new StructuredSelection(nextNode));
 				}
