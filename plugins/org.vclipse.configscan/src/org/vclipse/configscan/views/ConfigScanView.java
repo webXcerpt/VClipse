@@ -49,6 +49,8 @@ import org.vclipse.configscan.IConfigScanConfiguration;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.TestCaseUtility;
+import org.vclipse.configscan.views.JobAwareTreeViewer.ITreeViewerLockListener;
+import org.vclipse.configscan.views.JobAwareTreeViewer.TreeViewerLockEvent;
 import org.vclipse.configscan.views.actions.CollapseTreeAction;
 import org.vclipse.configscan.views.actions.ExpandTreeAction;
 import org.vclipse.configscan.views.actions.ImportExportAction;
@@ -76,6 +78,18 @@ public final class ConfigScanView extends ViewPart {
 			}
 		}
 	}
+	
+	class TreeViewerLockListener implements ITreeViewerLockListener {
+		@Override
+		public void available(TreeViewerLockEvent event) {
+			enableActions();
+		}
+
+		@Override
+		public void locked(TreeViewerLockEvent event) {
+			
+		}
+	}
 
 	private static final String CONTEXT_MENU_ID = "ConfigScanViewContextMenu";
 
@@ -101,11 +115,18 @@ public final class ConfigScanView extends ViewPart {
 	private TestRunsHistory history;
 	
 	private PreferenceStoreListener propertyChangeListener;
+	private TreeViewerLockListener treeViewerLockListener;
 	
 	private JobAwareTreeViewer viewer;
 
 	private ToggleLabelProviderAction toggleContent;
 	private ShowHistroyAction showHistoryAction;
+	private ExpandTreeAction expandTreeAction;
+	private CollapseTreeAction collapseTreeAction;
+	private ShowFailuresAction showFailuresAction;
+	private NextFailureAction nextFailureAction;
+	private PrevFailureAction prevFailureAction;
+	private ImportExportAction importExportAction;
 
 	private ConfigScanViewInput input;
 	
@@ -120,7 +141,7 @@ public final class ConfigScanView extends ViewPart {
 			history.save();			
 		}
 		viewer.removeTreeViewerLockListener(history);
-		viewer.removeTreeViewerLockListener(toggleContent);
+		viewer.removeTreeViewerLockListener(treeViewerLockListener);
 		super.dispose();
 	}
 
@@ -131,7 +152,9 @@ public final class ConfigScanView extends ViewPart {
 		viewer.setLabelProvider(new DefaultLabelProvider(labelProvider));				
 		viewer.setContentProvider(contentProvider);
 		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
+		
 		viewer.addTreeViewerLockListener(history);
+		viewer.addTreeViewerLockListener(treeViewerLockListener = new TreeViewerLockListener());
 		
 		preferenceStore.addPropertyChangeListener(propertyChangeListener = new PreferenceStoreListener());
 		if(preferenceStore.getBoolean(IConfigScanConfiguration.EXPAND_TREE_ON_INPUT)) {
@@ -151,10 +174,7 @@ public final class ConfigScanView extends ViewPart {
 
 	public void setInput(ConfigScanViewInput input) {
 		this.input = input;
-		
-		// disable this action on input -> is enabled as soon as tree is constructed 
-		toggleContent.setEnabled(false);
-		
+		disableActions();
 		viewer.setInput(input);
 	}
 
@@ -170,19 +190,39 @@ public final class ConfigScanView extends ViewPart {
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 		toolBarManager.add(toggleContent = new ToggleLabelProviderAction(viewer, imageHelper));
 		toolBarManager.add(new Separator());
-		toolBarManager.add(new ExpandTreeAction(viewer, imageHelper));
-		toolBarManager.add(new CollapseTreeAction(viewer, imageHelper));
+		toolBarManager.add(expandTreeAction = new ExpandTreeAction(viewer, imageHelper));
+		toolBarManager.add(collapseTreeAction = new CollapseTreeAction(viewer, imageHelper));
 		toolBarManager.add(new Separator());
-		toolBarManager.add(new ShowFailuresAction(viewer, imageHelper));
+		toolBarManager.add(showFailuresAction = new ShowFailuresAction(viewer, imageHelper));
 		toolBarManager.add(new Separator());
-		toolBarManager.add(new NextFailureAction(viewer, imageHelper));
-		toolBarManager.add(new PrevFailureAction(viewer, imageHelper));
+		toolBarManager.add(nextFailureAction = new NextFailureAction(viewer, imageHelper));
+		toolBarManager.add(prevFailureAction = new PrevFailureAction(viewer, imageHelper));
 		toolBarManager.add(new Separator());
-		toolBarManager.add(new ImportExportAction(viewer, imageHelper, documentUtility, testCaseUtility));
-		
-		showHistoryAction = new ShowHistroyAction(this, imageHelper, history);
+		toolBarManager.add(importExportAction = new ImportExportAction(viewer, imageHelper, documentUtility, testCaseUtility));
+		toolBarManager.add(showHistoryAction = new ShowHistroyAction(this, imageHelper, history));
+		disableActions();
+	}
+	
+	private void disableActions() {
+		toggleContent.setEnabled(false);
+		expandTreeAction.setEnabled(false);
+		collapseTreeAction.setEnabled(false);
+		showFailuresAction.setEnabled(false);
+		nextFailureAction.setEnabled(false);
+		prevFailureAction.setEnabled(false);
+		importExportAction.setEnabled(false);
+		showHistoryAction.setEnabled(false);
+	}
+	
+	private void enableActions() {
+		toggleContent.setEnabled(true);
+		expandTreeAction.setEnabled(true);
+		collapseTreeAction.setEnabled(true);
+		showFailuresAction.setEnabled(true);
+		nextFailureAction.setEnabled(true);
+		prevFailureAction.setEnabled(true);
+		importExportAction.setEnabled(true);
 		showHistoryAction.setEnabled(preferenceStore.getBoolean(IConfigScanConfiguration.SAVE_HISTORY));
-		toolBarManager.add(showHistoryAction);
 	}
 	
 	private void createContextMenu() {

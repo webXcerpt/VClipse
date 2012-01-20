@@ -74,4 +74,5 @@ public class ShowHistroyAction extends SimpleTreeViewerAction implements IMenuCr
 	public void widgetDefaultSelected(SelectionEvent e) {
 		// not used
 	}
+
 }
