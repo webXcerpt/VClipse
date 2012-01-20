@@ -41,7 +41,7 @@ public abstract class AbstractLabelProvider extends ColumnLabelProvider implemen
 	private final PolymorphicDispatcher<Object> toolTipDispatcher = new PolymorphicDispatcher<Object>("toolTip", 1, 1,
 			Collections.singletonList(this), new ErrorHandler<Object>() {
 				public Object handle(Object[] params, Throwable e) {
-					return EMPTY;
+					return null;
 				}
 			});
 	

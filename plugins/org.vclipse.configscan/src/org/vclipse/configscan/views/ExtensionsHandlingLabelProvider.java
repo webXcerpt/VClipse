@@ -45,6 +45,12 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 		} else {
 			if(testCase.getAdapter(TestRunAdapter.class) == null) {
 				String tooltip = "ConfigScan XML LOG: " + testCase.getTitle();
+				
+				tooltip += "\n\nTestrun : " + testCaseUtility.getRoot(testCase).getTitle();
+				tooltip += "\nTestgroup : " + testCase.getParent().getTitle();
+				
+				// TODO which info is interesting for the user ?
+				
 				// 	 	 			NamedNodeMap namedNodeMap = inputElement.getAttributes();
 				// 	 	 			for(int i = 0; i < namedNodeMap.getLength(); i++) {
 				// 	 	 				Node node = namedNodeMap.item(i);
@@ -62,7 +68,7 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 		}
 		return null;
 	}
-
+	
 	protected StyledString styledText(TestCase testCase) {
 		IBaseLabelProvider labelProvider = getLabelProviderExtension(testCase);
 		if(extensionEnabled) {
@@ -76,7 +82,7 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 			}
 		} else {
 			StyledString styledString = new StyledString(testCase.getTitle()).append(getStatistics(testCase));	
-			String extensionCall = (String)extensionCall(labelProvider, "getText", getReferencedEObject(testCase));
+			String extensionCall = (String)extensionCall(labelProvider, "getText", testCase);
 			if(extensionCall != null && !extensionCall.isEmpty()) {
 				styledString.append(new StyledString("     Descriprion: " + extensionCall, StyledString.DECORATIONS_STYLER));
 			} 
