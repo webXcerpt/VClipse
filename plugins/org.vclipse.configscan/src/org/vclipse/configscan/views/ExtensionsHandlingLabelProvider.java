@@ -45,8 +45,12 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 			ImageDescriptor[] overlay = new ImageDescriptor[5];
 			overlay[2] = imageHelper.getImageDescriptor(IConfigScanImages.ERROR_OVERLAY);
 			return new DecorationOverlayIcon(image, overlay, new Point(imageData.width, imageData.height)).createImage();
+		} else {
+			ImageData imageData = image.getImageData();
+			ImageDescriptor[] overlay = new ImageDescriptor[5];
+			overlay[2] = imageHelper.getImageDescriptor(IConfigScanImages.SUCCESS_OVERLAY);
+			return new DecorationOverlayIcon(image, overlay, new Point(imageData.width, imageData.height)).createImage();
 		}
-		return image;
 	}
 	
 	protected String toolTip(TestCase testCase) {

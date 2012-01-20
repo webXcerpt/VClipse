@@ -33,6 +33,8 @@ public interface IConfigScanImages {
 
 	public static final String SUCCESS = "success.gif";
 	
+	public static final String SUCCESS_OVERLAY = "success_overlay.gif";
+	
 	public static final String ERROR = "error.gif";
 	
 	public static final String ERROR_OVERLAY = "error_overlay.gif";
