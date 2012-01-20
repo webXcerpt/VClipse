@@ -35,6 +35,8 @@ public interface IConfigScanImages {
 	
 	public static final String ERROR = "error.gif";
 	
+	public static final String ERROR_OVERLAY = "error_overlay.gif";
+	
 	public static final String DISK = "disk.png";
 	
 	public static final String HISTORY = "history.gif";

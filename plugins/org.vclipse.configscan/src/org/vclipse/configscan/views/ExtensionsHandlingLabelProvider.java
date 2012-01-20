@@ -5,9 +5,13 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.progress.PendingUpdateAdapter;
 import org.eclipse.xtext.util.Pair;
 import org.vclipse.configscan.ConfigScanPlugin;
@@ -33,6 +37,16 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 	
 	public void enableExtension(boolean enable) {
 		this.extensionEnabled = enable;
+	}
+	
+	protected Image decorateImage(Image image, TestCase testCase) {
+		if(Status.FAILURE == testCase.getStatus()) {
+			ImageData imageData = image.getImageData();
+			ImageDescriptor[] overlay = new ImageDescriptor[5];
+			overlay[2] = imageHelper.getImageDescriptor(IConfigScanImages.ERROR_OVERLAY);
+			return new DecorationOverlayIcon(image, overlay, new Point(imageData.width, imageData.height)).createImage();
+		}
+		return image;
 	}
 	
 	protected String toolTip(TestCase testCase) {
@@ -101,7 +115,8 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 	
 	protected Image image(TestCase testCase) {
 		if(extensionEnabled) {
-			return (Image)extensionCall(getLabelProviderExtension(testCase), "getImage", testCase);
+			return decorateImage(
+					(Image)extensionCall(getLabelProviderExtension(testCase), "getImage", testCase), testCase);
 		} else {
 			return testCase.getStatus() == Status.SUCCESS 
 					? imageHelper.getImage(IConfigScanImages.SUCCESS) 

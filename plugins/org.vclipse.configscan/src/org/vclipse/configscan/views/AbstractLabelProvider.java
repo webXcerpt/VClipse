@@ -7,6 +7,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider.IStyledLabelProvider;
+import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
@@ -22,7 +23,7 @@ import org.vclipse.configscan.utils.TestCaseUtility;
 
 import com.google.inject.Inject;
 
-public abstract class AbstractLabelProvider extends ColumnLabelProvider implements IStyledLabelProvider {
+public abstract class AbstractLabelProvider extends ColumnLabelProvider implements IStyledLabelProvider, ILabelDecorator {
 
 	private final PolymorphicDispatcher<Object> textDispatcher = new PolymorphicDispatcher<Object>("text", 1, 1,
 			Collections.singletonList(this), new ErrorHandler<Object>() {
@@ -46,6 +47,13 @@ public abstract class AbstractLabelProvider extends ColumnLabelProvider implemen
 			});
 	
 	private final PolymorphicDispatcher<Object> styledTextDispatcher = new PolymorphicDispatcher<Object>("styledText", 1, 1,
+			Collections.singletonList(this), new ErrorHandler<Object>() {
+				public Object handle(Object[] params, Throwable e) {
+					return new StyledString(EMPTY);
+				}
+			});
+	
+	private final PolymorphicDispatcher<Object> decorateImageDispatcher = new PolymorphicDispatcher<Object>("decoratedImage", 2, 2,
 			Collections.singletonList(this), new ErrorHandler<Object>() {
 				public Object handle(Object[] params, Throwable e) {
 					return new StyledString(EMPTY);
@@ -79,6 +87,16 @@ public abstract class AbstractLabelProvider extends ColumnLabelProvider implemen
 	@Inject
 	public void setTestCaseUtility(TestCaseUtility testCaseUtility) {
 		this.testCaseUtility = testCaseUtility;
+	}
+	
+	@Override
+	public final Image decorateImage(Image image, Object element) {
+		return (Image)decorateImageDispatcher.invoke(image, element);
+	}
+
+	@Override
+	public final String decorateText(String text, Object element) {
+		return null;
 	}
 
 	@Override
@@ -139,5 +157,4 @@ public abstract class AbstractLabelProvider extends ColumnLabelProvider implemen
 		}
 		return new StyledString(EMPTY);
  	}
-
 }
