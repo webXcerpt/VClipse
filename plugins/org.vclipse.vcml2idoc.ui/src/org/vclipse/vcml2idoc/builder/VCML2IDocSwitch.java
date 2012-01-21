@@ -26,7 +26,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.util.Strings;
 import org.vclipse.idoc.iDoc.IDoc;
 import org.vclipse.idoc.iDoc.IDocFactory;
 import org.vclipse.idoc.iDoc.NumberField;
