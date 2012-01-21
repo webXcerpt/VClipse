@@ -22,12 +22,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang.WordUtils;
-import org.apache.commons.lang.text.StrTokenizer;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.util.Strings;
 import org.vclipse.idoc.iDoc.IDoc;
 import org.vclipse.idoc.iDoc.IDocFactory;
 import org.vclipse.idoc.iDoc.NumberField;
@@ -529,20 +528,17 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		new DocumentationHandler() {
 			@Override
 			public void addDocumentationEntry(final Language language, final String text, final String format) {
-				String wrappedText = WordUtils.wrap(text, 132);		// 132 is SAP hard limit for length of a single documentation line
-				StrTokenizer tokenizer = new StrTokenizer(wrappedText, System.getProperty("line.separator"));
 				boolean firstLine = true;
-				while (tokenizer.hasNext()) {
-					String docText = tokenizer.nextToken();
+				int i = 0;
+				while (i<text.length()) {
+					String docText = text.substring(i, Math.min(text.length(), i+132));
 					final Segment segmentE1TEXTx = addChildSegment(parentSegment, segmentType);
 					setValue(segmentE1TEXTx, "MSGFN", "004");
-					if (firstLine) {
-						setValue(segmentE1TEXTx, "TDFORMAT", format);
-					}
+					setValue(segmentE1TEXTx, "TDFORMAT", firstLine ? format : "="); // = means to append to the previous line
 					setValue(segmentE1TEXTx, "TDLINE", docText);
 					setValue(segmentE1TEXTx, "LANGUAGE_ISO", language.toString());
-					
 					firstLine = false;
+					i += 132;
 				}
 			}
 		}.handleDocumentation(documentation);
