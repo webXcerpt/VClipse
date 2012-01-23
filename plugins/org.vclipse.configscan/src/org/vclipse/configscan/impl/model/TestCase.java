@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
+import org.w3c.dom.Element;
 
 import com.google.common.collect.Lists;
 
@@ -25,6 +26,10 @@ public class TestCase {
 	
 	private URI sourceUri;
 	
+	private Element inputElement;
+	
+	private Element logElement;
+	
 	public TestCase() {
 		this("no name", Status.SUCCESS);
 	}
@@ -38,6 +43,14 @@ public class TestCase {
 		this.status = status;
 		this.children = children;
 		adapters = Lists.newArrayList();
+	}
+	
+	public void setInputElement(Element element) {
+		this.inputElement = element;
+	}
+	
+	public void setLogElement(Element element) {
+		this.logElement = element;
 	}
 	
 	public void setTitle(String title) {
@@ -58,6 +71,14 @@ public class TestCase {
 	
 	public void addTestCase(TestCase testCase) {
 		children.add(testCase);
+	}
+	
+	public Element getLogElement() {
+		return this.logElement;
+	}
+	
+	public Element getInputElement() {
+		return this.inputElement;
 	}
 	
 	public URI getSourceUri() {

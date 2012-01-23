@@ -151,7 +151,8 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 				Node logSession = documentUtility.getLogSession(logDocument);
 				if(logSession != null) {
 					testCase.addTestCase(
-							testCaseUtility.createTestCase((Element)logSession, testCase, documentUtility, options, inputToUriMap, mapLogInput));
+							testCaseUtility.createTestCase(
+									(Element)logSession, testCase, documentUtility, options, inputToUriMap, mapLogInput));
 				}
 			} catch (JCoException exception) {
 				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);

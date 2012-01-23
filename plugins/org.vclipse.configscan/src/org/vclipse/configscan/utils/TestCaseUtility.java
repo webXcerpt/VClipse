@@ -38,6 +38,8 @@ public class TestCaseUtility {
 					? Status.SUCCESS : Status.FAILURE );
 
 			Element inputElement = mapLogInput.get(element);
+			testCase.setInputElement(inputElement);
+			testCase.setLogElement(element);
 			testCase.setSourceUri(inputToUriMap.get(inputElement));
 			testCase.setParent(parent);
 
