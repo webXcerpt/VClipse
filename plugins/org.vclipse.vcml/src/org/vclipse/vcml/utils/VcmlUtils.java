@@ -73,7 +73,7 @@ import org.vclipse.vcml.vcml.VcmlFactory;
 
 public class VcmlUtils {
 
-	public static final String DEFAULT_FORMAT = "*";
+	public static final String DEFAULT_FORMAT = "(";
 	
 	public static final String DEFAULT_VALIDITY_START = "19000101";
 
