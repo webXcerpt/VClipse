@@ -27,7 +27,6 @@ public class RelaunchedFailedAction extends SimpleTreeViewerAction {
 
 	@Override
 	public void run() {
-		
 		Object object = treeViewer.getInput();
 		if(object instanceof ConfigScanViewInput) {
 			ConfigScanViewInput input = (ConfigScanViewInput)object;

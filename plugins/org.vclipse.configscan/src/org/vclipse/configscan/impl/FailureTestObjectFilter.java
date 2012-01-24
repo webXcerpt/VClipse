@@ -17,19 +17,16 @@ public class FailureTestObjectFilter implements ITestObjectFilter {
 		TestCaseAdapter adapter = (TestCaseAdapter)EcoreUtil.getAdapter(object.eAdapters(), EObject.class);
 		if(adapter != null) {
 			boolean passes = Status.FAILURE == adapter.getTestCase().getStatus();
-			removeAdapter(object.eAdapters(), EObject.class);
+			List<Adapter> adapters = object.eAdapters();
+			Adapter[] adapterListCopy = (Adapter[])Arrays.copyOf(adapters.toArray(), adapters.size());
+			adapters.clear();
+			for(Adapter adapter1 : adapterListCopy) {
+				if(!adapter1.isAdapterForType(EObject.class)) {
+					adapters.add(adapter1);
+				}
+			}
 			return passes;
 		}
 		return false;
-	}
-	
-	protected void removeAdapter(List<Adapter> adapters, Object type) {
-		Adapter[] adapterListCopy = (Adapter[])Arrays.copyOf(adapters.toArray(), adapters.size());
-		adapters.clear();
-		for(Adapter adapter : adapterListCopy) {
-			if(!adapter.isAdapterForType(type)) {
-				adapters.add(adapter);
-			}
-		}
 	}
 }
