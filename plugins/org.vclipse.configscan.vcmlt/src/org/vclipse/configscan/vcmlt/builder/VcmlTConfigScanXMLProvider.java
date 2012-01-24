@@ -1,6 +1,5 @@
 package org.vclipse.configscan.vcmlt.builder;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -13,6 +12,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.vclipse.configscan.IConfigScanXMLProvider;
+import org.vclipse.configscan.vcmlt.vcmlT.Action;
 import org.vclipse.configscan.vcmlt.vcmlT.BomPath;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckBomCountItems;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckBomItemQty;
@@ -26,34 +26,25 @@ import org.vclipse.configscan.vcmlt.vcmlT.DomainStrictValue;
 import org.vclipse.configscan.vcmlt.vcmlT.DomainValue;
 import org.vclipse.configscan.vcmlt.vcmlT.Model;
 import org.vclipse.configscan.vcmlt.vcmlT.NumericInterval;
+import org.vclipse.configscan.vcmlt.vcmlT.SetValue;
 import org.vclipse.configscan.vcmlt.vcmlT.TestCase;
 import org.vclipse.configscan.vcmlt.vcmlT.TestGroup;
-import org.vclipse.configscan.vcmlt.vcmlT.Action;
-import org.vclipse.configscan.vcmlt.vcmlT.SetValue;
 import org.vclipse.configscan.vcmlt.vcmlT.util.VcmlTSwitch;
 import org.vclipse.vcml.vcml.Literal;
-import org.vclipse.vcml.vcml.Material;
-import org.vclipse.vcml.vcml.NumericCharacteristicValue;
 import org.vclipse.vcml.vcml.NumericLiteral;
-import org.vclipse.vcml.vcml.ObjectType;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
-import org.vclipse.vcml.vcml.TypeOf;
-import org.vclipse.vcml.vcml.impl.NumericCharacteristicValueImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-
-
-public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
-		IConfigScanXMLProvider {
+public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements IConfigScanXMLProvider {
 
 	private Document doc;
 	private Map<Element, URI> map;
 	private Element current;
 	private DocumentBuilder xmlDocBuilder;
-
+	
 	@Override
-	public synchronized Document transform(EObject model, Map<Element, URI> map) {
+	public Document transform(EObject model, Map<Element, URI> map) {
 		try {
 			this.xmlDocBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
@@ -315,5 +306,4 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements
 		}
 		return testcase.getItem().getName();
 	}
-
 }
