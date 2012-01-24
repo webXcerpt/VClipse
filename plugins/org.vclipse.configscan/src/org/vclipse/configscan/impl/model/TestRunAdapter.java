@@ -19,6 +19,7 @@ import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
 import org.vclipse.configscan.IConfigScanReverseXmlTransformation;
 import org.vclipse.configscan.IConfigScanRunner;
 import org.vclipse.configscan.IConfigScanXMLProvider;
+import org.vclipse.configscan.ITestObjectFilter;
 import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.TestCaseUtility;
 import org.w3c.dom.Document;
@@ -50,6 +51,9 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 	
 	@Inject
 	private TestCaseUtility testCaseUtility;
+	
+	@Inject
+	private ITestObjectFilter filter;
 	
 	private RemoteConnection connection;
 	
@@ -85,6 +89,10 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 	
 	public void setTestModel(EObject testModel) {
 		this.testModel = testModel;
+	}
+	
+	public void setFilter(ITestObjectFilter filter) {
+		this.filter = filter;
 	}
 	
 	public void setOptions(Map<String, Object> options) {
@@ -144,7 +152,7 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 			monitor.beginTask("Running tests for " + testModel.eResource().getURI().lastSegment() + " and " + connection.getDescription() + " connection", IProgressMonitor.UNKNOWN);
 
 			input2Uri = Maps.newHashMap();
-			inputDocument = xmlProvider.transform(testModel, input2Uri);
+			inputDocument = xmlProvider.transform(testModel, filter, input2Uri);
 
 			if(monitor.isCanceled()) {
 				monitor.done();

@@ -19,6 +19,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.vclipse.configscan.IConfigScanXMLProvider;
+import org.vclipse.configscan.ITestObjectFilter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -33,7 +34,7 @@ public class ConfigScanXmlProvider implements IConfigScanXMLProvider {
 	protected DocumentBuilder documentBuilder;
 	
 	@Override
-	public Document transform(EObject model, Map<Element, URI> map) {
+	public Document transform(EObject model, ITestObjectFilter filter, Map<Element, URI> map) {
 		try {
 			documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		} catch(ParserConfigurationException exception) {

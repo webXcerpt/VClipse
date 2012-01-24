@@ -45,6 +45,10 @@ public class TestCase {
 		adapters = Lists.newArrayList();
 	}
 	
+	public void clearChildren() {
+		children.clear();
+	}
+	
 	public void setInputElement(Element element) {
 		this.inputElement = element;
 	}

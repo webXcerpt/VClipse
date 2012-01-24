@@ -10,7 +10,6 @@ package org.vclipse.configscan;
  *    webXcerpt Software GmbH - initial creator
  ******************************************************************************/
 
-
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
@@ -24,7 +23,7 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(ConfigScanXmlProvider.class)
 public interface IConfigScanXMLProvider {
 	
-	public Document transform(EObject model,  Map<Element, URI> map);
+	public Document transform(EObject model, ITestObjectFilter filter, Map<Element, URI> map);
 	
 	public String getMaterialNumber(EObject model);
 }

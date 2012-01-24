@@ -12,6 +12,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.vclipse.configscan.IConfigScanXMLProvider;
+import org.vclipse.configscan.ITestObjectFilter;
 import org.vclipse.configscan.vcmlt.vcmlT.Action;
 import org.vclipse.configscan.vcmlt.vcmlT.BomPath;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckBomCountItems;
@@ -43,8 +44,10 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 	private Element current;
 	private DocumentBuilder xmlDocBuilder;
 	
+	private ITestObjectFilter filter;
+	
 	@Override
-	public Document transform(EObject model, Map<Element, URI> map) {
+	public Document transform(EObject model, ITestObjectFilter filter, Map<Element, URI> map) {
 		try {
 			this.xmlDocBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
@@ -53,7 +56,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 		this.doc = xmlDocBuilder.newDocument();
 		this.map = map;
 		this.current = null;
-		
+		this.filter = filter;
 		doSwitch(model);
 		
 		return doc;
