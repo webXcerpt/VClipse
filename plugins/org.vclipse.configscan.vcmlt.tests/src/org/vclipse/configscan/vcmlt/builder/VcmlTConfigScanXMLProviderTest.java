@@ -9,6 +9,7 @@ import org.eclipselabs.xtext.utils.unittesting.XtextRunner2;
 import org.eclipselabs.xtext.utils.unittesting.XtextTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.vclipse.configscan.ITestObjectFilter;
 import org.vclipse.configscan.vcmlt.VcmlTInjectorProviderWithVCML;
 import org.vclipse.configscan.views.XmlLoader;
 import org.w3c.dom.Document;
@@ -27,13 +28,16 @@ public class VcmlTConfigScanXMLProviderTest extends XtextTest {
 	@Inject
 	XmlLoader xmlLoader; // might be refactored in future
 	
+	@Inject
+	ITestObjectFilter filter;
+	
 	@Test
 	public void transformToXML() {
 		ignoreSerializationDifferences();
 		testFile("simpleTestFile.vcmlt", "ABC.vcml");
 		EObject root = getModelRoot();
 		HashMap<Element, URI> map = Maps.newHashMap();
-		Document document = csXmlProvider.transform(root, map);
+		Document document = csXmlProvider.transform(root, filter, map);
 		System.err.println(xmlLoader.parseXmlToString(document));
 	}
 }
