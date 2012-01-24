@@ -75,7 +75,7 @@
             id="org.vclipse.configscan.popupMenu.resourceContribution"
             objectClass="org.eclipse.core.resources.IResource">
          <menu
-               icon="icons/Fysbee.png"
+               icon="icons/fysbee.png"
                id="org.vclipse.configscan.popupMenu.resource"
                label="ConfigScan"
                path="additions">
