@@ -65,8 +65,14 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 	
 	private Map<String, Object> options;
 	
+	private Map<Element, URI> input2Uri;
+	
+	private Map<Element, Element> input2Log;
+	
 	public TestRunAdapter() {
 		options = Maps.newHashMap();
+		input2Uri = Maps.newHashMap();
+		input2Log = Maps.newHashMap();
 	}
 	
 	public void setTestCase(TestCase testCase) {
@@ -92,6 +98,10 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 	public void setConnection(RemoteConnection connection) {
 		this.connection = connection;
 	}
+	
+	public RemoteConnection getConnection() {
+		return connection;
+	}
 
 	public EObject getTestModel() {
 		return testModel;
@@ -107,6 +117,14 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 	
 	public Object[] getChildren(Object object) {
 		return testCase.getChildren().toArray();
+	}
+	
+	public Map<Element, URI> getInputUri() {
+		return input2Uri;
+	}
+	
+	public Map<Element, Element> getInputLog() {
+		return input2Log;
 	}
 
 	public ImageDescriptor getImageDescriptor(Object object) {
@@ -125,8 +143,8 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 		if(testCase.getChildren().isEmpty()) {
 			monitor.beginTask("Running tests for " + testModel.eResource().getURI().lastSegment() + " and " + connection.getDescription() + " connection", IProgressMonitor.UNKNOWN);
 
-			Map<Element, URI> inputToUriMap = Maps.newHashMap();
-			inputDocument = xmlProvider.transform(testModel, inputToUriMap);
+			input2Uri = Maps.newHashMap();
+			inputDocument = xmlProvider.transform(testModel, input2Uri);
 
 			if(monitor.isCanceled()) {
 				monitor.done();
@@ -147,12 +165,12 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 					monitor.done();
 					return;
 				}
-				Map<Element, Element> mapLogInput = reverseXmlTransformation.computeConfigScanMap(logDocument, inputDocument);
+				input2Log = reverseXmlTransformation.computeConfigScanMap(logDocument, inputDocument);
 				Node logSession = documentUtility.getLogSession(logDocument);
 				if(logSession != null) {
 					testCase.addTestCase(
 							testCaseUtility.createTestCase(
-									(Element)logSession, testCase, documentUtility, options, inputToUriMap, mapLogInput));
+									(Element)logSession, testCase, documentUtility, options, input2Uri, input2Log));
 				}
 			} catch (JCoException exception) {
 				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);

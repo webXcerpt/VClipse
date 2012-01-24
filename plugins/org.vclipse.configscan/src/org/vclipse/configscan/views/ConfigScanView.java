@@ -47,6 +47,7 @@ import org.vclipse.configscan.ConfigScanImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanConfiguration;
 import org.vclipse.configscan.impl.model.TestCase;
+import org.vclipse.configscan.impl.model.TestRunAdapter;
 import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.TestCaseUtility;
 import org.vclipse.configscan.views.JobAwareTreeViewer.ITreeViewerLockListener;
@@ -56,11 +57,14 @@ import org.vclipse.configscan.views.actions.ExpandTreeAction;
 import org.vclipse.configscan.views.actions.ImportExportAction;
 import org.vclipse.configscan.views.actions.NextFailureAction;
 import org.vclipse.configscan.views.actions.PrevFailureAction;
+import org.vclipse.configscan.views.actions.RelaunchAction;
+import org.vclipse.configscan.views.actions.RelaunchedFailedAction;
 import org.vclipse.configscan.views.actions.ShowFailuresAction;
 import org.vclipse.configscan.views.actions.ShowHistroyAction;
 import org.vclipse.configscan.views.actions.ToggleLabelProviderAction;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 public final class ConfigScanView extends ViewPart {
 	
@@ -114,6 +118,10 @@ public final class ConfigScanView extends ViewPart {
 	@Inject
 	private TestRunsHistory history;
 	
+	@Inject
+	private Provider<TestRunAdapter> testRunProvider;
+	
+	
 	private PreferenceStoreListener propertyChangeListener;
 	private TreeViewerLockListener treeViewerLockListener;
 	
@@ -123,6 +131,8 @@ public final class ConfigScanView extends ViewPart {
 	private ShowHistroyAction showHistoryAction;
 	private ExpandTreeAction expandTreeAction;
 	private CollapseTreeAction collapseTreeAction;
+	private RelaunchAction relaunchAction;
+	private RelaunchedFailedAction relaunchFailedAction;
 	private ShowFailuresAction showFailuresAction;
 	private NextFailureAction nextFailureAction;
 	private PrevFailureAction prevFailureAction;
@@ -188,17 +198,20 @@ public final class ConfigScanView extends ViewPart {
 	
 	private void contributeToActionBars() {
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
-		toolBarManager.add(toggleContent = new ToggleLabelProviderAction(viewer, imageHelper));
+		toolBarManager.add(toggleContent = new ToggleLabelProviderAction(this, imageHelper));
 		toolBarManager.add(new Separator());
-		toolBarManager.add(expandTreeAction = new ExpandTreeAction(viewer, imageHelper));
-		toolBarManager.add(collapseTreeAction = new CollapseTreeAction(viewer, imageHelper));
+		toolBarManager.add(expandTreeAction = new ExpandTreeAction(this, imageHelper));
+		toolBarManager.add(collapseTreeAction = new CollapseTreeAction(this, imageHelper));
 		toolBarManager.add(new Separator());
-		toolBarManager.add(showFailuresAction = new ShowFailuresAction(viewer, imageHelper));
+		toolBarManager.add(showFailuresAction = new ShowFailuresAction(this, imageHelper));
 		toolBarManager.add(new Separator());
-		toolBarManager.add(nextFailureAction = new NextFailureAction(viewer, imageHelper));
-		toolBarManager.add(prevFailureAction = new PrevFailureAction(viewer, imageHelper));
+		toolBarManager.add(relaunchAction = new RelaunchAction(this, imageHelper));
+		toolBarManager.add(relaunchFailedAction = new RelaunchedFailedAction(this, imageHelper, testRunProvider));
 		toolBarManager.add(new Separator());
-		toolBarManager.add(importExportAction = new ImportExportAction(viewer, imageHelper, documentUtility, testCaseUtility));
+		toolBarManager.add(nextFailureAction = new NextFailureAction(this, imageHelper));
+		toolBarManager.add(prevFailureAction = new PrevFailureAction(this, imageHelper));
+		toolBarManager.add(new Separator());
+		toolBarManager.add(importExportAction = new ImportExportAction(this, imageHelper, documentUtility, testCaseUtility));
 		toolBarManager.add(showHistoryAction = new ShowHistroyAction(this, imageHelper, history));
 		disableActions();
 	}

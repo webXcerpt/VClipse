@@ -18,7 +18,7 @@ public class MockConfigScanRunner implements IConfigScanRunner {
 		
 		System.err.println("MockConfigScanRunner: executing " + file.getName()); 
 		try {
-			Thread.sleep(10000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

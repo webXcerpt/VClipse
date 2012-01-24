@@ -1,13 +1,13 @@
 package org.vclipse.configscan.views.actions;
 
-import org.eclipse.jface.viewers.TreeViewer;
 import org.vclipse.configscan.ConfigScanImageHelper;
 import org.vclipse.configscan.IConfigScanImages;
+import org.vclipse.configscan.views.ConfigScanView;
 
 public class ExpandTreeAction extends SimpleTreeViewerAction {
 
-	public ExpandTreeAction(TreeViewer treeViewer, ConfigScanImageHelper imageHelper) {
-		super(treeViewer, imageHelper);
+	public ExpandTreeAction(ConfigScanView view, ConfigScanImageHelper imageHelper) {
+		super(view, imageHelper);
 		setText("Expand all");
 		setToolTipText("Expand all");
 		setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.EXPAND_ALL));

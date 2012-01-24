@@ -3,6 +3,7 @@ package org.vclipse.configscan.views.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.configscan.views.ConfigScanView;
 
 public abstract class SimpleTreeViewerAction extends Action {
 
@@ -10,18 +11,18 @@ public abstract class SimpleTreeViewerAction extends Action {
 	
 	protected TreeViewer treeViewer;
 	
-	public SimpleTreeViewerAction(TreeViewer treeViewer, ConfigScanImageHelper imageHelper, int style) {
+	protected ConfigScanView view;
+	
+	public SimpleTreeViewerAction(ConfigScanView view, ConfigScanImageHelper imageHelper, int style) {
 		super("", style);
 		this.imageHelper = imageHelper;
-		this.treeViewer = treeViewer;
+		this.treeViewer = view.getViewer();
+		this.view = view;
 	}
 	
-	public SimpleTreeViewerAction(TreeViewer treeViewer, ConfigScanImageHelper imageHelper) {
+	public SimpleTreeViewerAction(ConfigScanView view, ConfigScanImageHelper imageHelper) {
 		this.imageHelper = imageHelper;
-		this.treeViewer = treeViewer;
-	}
-	
-	public void setTreeViewer(TreeViewer treeViewer) {
-		this.treeViewer = treeViewer;
+		this.treeViewer = view.getViewer();
+		this.view = view;
 	}
 }

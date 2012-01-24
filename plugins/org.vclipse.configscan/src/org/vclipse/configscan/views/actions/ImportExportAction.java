@@ -16,7 +16,6 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -34,6 +33,7 @@ import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestRunAdapter;
 import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.TestCaseUtility;
+import org.vclipse.configscan.views.ConfigScanView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -61,9 +61,9 @@ public class ImportExportAction extends SimpleTreeViewerAction implements IMenuC
 	@Inject
 	private TestCaseUtility testCaseUtility;
 	
-	public ImportExportAction(TreeViewer treeViewer, ConfigScanImageHelper imageHelper, 
+	public ImportExportAction(ConfigScanView view, ConfigScanImageHelper imageHelper, 
 			DocumentUtility documentUtility, TestCaseUtility testCaseUtility) {
-		super(treeViewer, imageHelper);
+		super(view, imageHelper);
 		setMenuCreator(this);
 		setText("File");
 		setToolTipText("File menu");	

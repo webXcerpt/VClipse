@@ -9,6 +9,8 @@ import java.util.Map;
 import org.vclipse.configscan.IConfigScanConfiguration;
 import org.vclipse.configscan.impl.model.TestCase;
 
+import com.google.common.collect.Maps;
+
 public class ConfigScanViewInput {
 
 	private String configurationName;
@@ -21,6 +23,7 @@ public class ConfigScanViewInput {
 	
 	public void setTestCases(List<TestCase> testCases) {
 		this.testCases = testCases;
+		options = Maps.newHashMap();
 	}
 	
 	public void setOptions(Map<String, Object> options) {

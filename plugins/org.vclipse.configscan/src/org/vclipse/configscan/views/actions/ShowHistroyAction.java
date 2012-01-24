@@ -24,7 +24,7 @@ public class ShowHistroyAction extends SimpleTreeViewerAction implements IMenuCr
 	private ConfigScanView view;
 	
 	public ShowHistroyAction(ConfigScanView view, ConfigScanImageHelper imageHelper, TestRunsHistory history) {
-		super(view.getViewer(), imageHelper);
+		super(view, imageHelper);
 		setMenuCreator(this);
 		setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.HISTORY));
 		setText("Test run history");
