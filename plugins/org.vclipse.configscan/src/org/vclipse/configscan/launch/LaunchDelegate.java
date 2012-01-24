@@ -24,7 +24,6 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
@@ -33,11 +32,9 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.util.Pair;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanRemoteConnections;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
-import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.extension.ExtensionPointReader;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestRunAdapter;
@@ -70,8 +67,6 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 	
 	@Override
 	public void launch(final ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
-		final Map<String, Pair<IConfigScanXMLProvider, IBaseLabelProvider>> extensions = extensionPointReader.getExtensions();
-		
 		monitor.beginTask("Sending test cases to ConfigScan", IProgressMonitor.UNKNOWN);
 		monitor.subTask("Reading available remote connections");
 		List<? extends RemoteConnection> remoteConnectionsList = Lists.newArrayList();
@@ -116,39 +111,35 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 				XtextResourceSet resourceSet = new XtextResourceSet();
 				final List<TestCase> testRuns = Lists.newArrayList();
 				while(iterator.hasNext()) {
-					Object next = iterator.next();
-					if(next instanceof IFile) {
-						IFile currentFile = (IFile)next;
-						String fileExtension = currentFile.getFileExtension();
+					Object nextObject = iterator.next();
+					if(nextObject instanceof IFile) {
+						IFile currentFile = (IFile)nextObject;
+						String extension = currentFile.getFileExtension();
 						
-						// search for the extension
-						if(!extensions.containsKey(fileExtension)) {
-							ConfigScanPlugin.log(MISSING_EXTENSION_WARNING_MESSAGE + fileExtension, IStatus.WARNING);
+						if(!extensionPointReader.hasExtensionFor(extension)) {
+							ConfigScanPlugin.log(MISSING_EXTENSION_WARNING_MESSAGE + extension, IStatus.WARNING);
 						} else {
-							IConfigScanXMLProvider xmlProvider = extensions.get(fileExtension).getFirst();
 							URI uri = URI.createURI(currentFile.getLocationURI().toString());
 							Resource currentResource = resourceSet.getResource(uri, true);
-							
 							if(currentResource == null) {
 								ConfigScanPlugin.log("Can not create a resource for the file " + currentFile.getName(), IStatus.WARNING);
 								continue;
 							} else {
 								for(RemoteConnection rc : selectedConnections.values()) {
-									TestCase testCase = testCaseProvider.get();
-									testCase.setTitle(uri.lastSegment() + " on " + rc.getDescription());
-							
 									TestRunAdapter adapter = testRunAdapter.get();
 									adapter.setConnection(rc);
-									adapter.setXmlProvider(xmlProvider);
+									adapter.setXmlProvider(extensionPointReader.getXmlProvider(extension));
 									adapter.setTestModel(currentResource.getContents().get(0));
-									
+										
 									Map<String, Object> options = Maps.newHashMap();
 									options.put(TestRunAdapter.SKIP_MATERIAL_TESTS, attributes.get(TestRunAdapter.SKIP_MATERIAL_TESTS));
 									options.put(TestRunAdapter.KBOBJECT, attributes.get(TestRunAdapter.KBOBJECT));
 									options.put(TestRunAdapter.RTV, attributes.get(TestRunAdapter.RTV));
-									
+										
 									adapter.setOptions(options);
 									
+									TestCase testCase = testCaseProvider.get();
+									testCase.setTitle(uri.lastSegment() + " on " + rc.getDescription());
 									TestRunAdapterFactory.getDefault().adapt(adapter, testCase);		
 									testRuns.add(testCase);
 								}

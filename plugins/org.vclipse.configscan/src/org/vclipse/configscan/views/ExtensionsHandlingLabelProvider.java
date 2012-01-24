@@ -13,30 +13,32 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.progress.PendingUpdateAdapter;
-import org.eclipse.xtext.util.Pair;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
-import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.extension.ExtensionPointReader;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestCase.Status;
 import org.vclipse.configscan.impl.model.TestRunAdapter;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider {
 
 	private boolean extensionEnabled;
 	
-	private Map<String, Pair<IConfigScanXMLProvider, IBaseLabelProvider>> extensions;
+	private final ExtensionPointReader extensionPointReader;
+	
+	private Map<String, IBaseLabelProvider> extension2LabelProvider;
 	
 	@Inject
 	public ExtensionsHandlingLabelProvider(ExtensionPointReader reader) {
-		extensions = reader.getExtensions();
+		extensionPointReader = reader;
+		extension2LabelProvider = Maps.newHashMap();
 	}
 	
 	public void enableExtension(boolean enable) {
-		this.extensionEnabled = enable;
+		extensionEnabled = enable;
 	}
 	
 	protected Image decorateImage(Image image, TestCase testCase) {
@@ -137,29 +139,20 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 	}
 	
  	private IBaseLabelProvider getLabelProviderExtension(TestCase testCase) {
- 		for(String fileExtension : extensions.keySet()) {
-			if(canHandleExtension(testCase, fileExtension)) {
-				return extensions.get(fileExtension).getSecond();
-			}
-			ConfigScanPlugin.log("There is no registered label provider for files with extension " + fileExtension, IStatus.ERROR);
-		}
- 		return null;
+ 		Object adapter = testCase.getAdapter(TestRunAdapter.class);
+ 		if(adapter == null) {
+ 			adapter = testCaseUtility.getRoot(testCase).getAdapter(TestRunAdapter.class);
+ 		}
+ 		String fileExtension = ((TestRunAdapter)adapter).getTestModel().eResource().getURI().fileExtension();
+ 		if(!extension2LabelProvider.containsKey(fileExtension)) {
+ 			IBaseLabelProvider labelProvider = extensionPointReader.getLabelProvider(fileExtension);
+			extension2LabelProvider.put(fileExtension, labelProvider);
+			return labelProvider;
+ 		} else {
+ 			return extensionPointReader.getLabelProvider(fileExtension);
+ 		}
  	}
  	
- 	private boolean canHandleExtension(TestCase testObject, String targetExtension) {
- 		TestCase testCase = testCaseUtility.getRoot(testObject);
- 		if(testCase == null) {
- 			return false;
- 		}
- 		Object adapter = testCase.getAdapter(TestRunAdapter.class);
- 		if(adapter != null) {
- 			TestRunAdapter testRun = (TestRunAdapter)adapter;
- 			String fileExtension = testRun.getTestModel().eResource().getURI().fileExtension();
- 			return targetExtension.equals(fileExtension); 			
- 		}
- 		return false;
- 	}
-
  	private Object extensionCall(IBaseLabelProvider labelProvider, String methodName, Object object) {
 		if(labelProvider == null) {
 			return null;

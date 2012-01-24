@@ -5,21 +5,22 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionDelta;
 import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IRegistryChangeEvent;
+import org.eclipse.core.runtime.IRegistryChangeListener;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.eclipse.xtext.util.Pair;
-import org.eclipse.xtext.util.Tuples;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 
 import com.google.common.collect.Maps;
 
-public class ExtensionPointReader {
+public class ExtensionPointReader implements IRegistryChangeListener {
 
 	// the id of the extension point
-	private static final String XML_PROVIDER_EXTENSION_POINT_ID = "org.vclipse.configscan.testLanguageExtension";
+	private static final String LANGUAGE_EXTENSION_POINT_ID = "org.vclipse.configscan.testLanguageExtension";
 
 	// the name of the configuration element we are interested in
 	private static final String CONFIGURATION_ELEMENT_NAME = "languageExtension";
@@ -29,53 +30,60 @@ public class ExtensionPointReader {
 	private static final String ATTRIBUTE_LABEL_PROVIDER = "labelProvider";
 	private static final String ATTRIBUTE_FILE_EXTENSION = "file_extension";
 
-	private Map<String, Pair<IConfigScanXMLProvider, IBaseLabelProvider>> languageExtensions;
+	private Map<String, IConfigurationElement> extension2Element;
 
-	public Map<String, Pair<IConfigScanXMLProvider, IBaseLabelProvider>> getExtensions() {
-		if(languageExtensions == null) {
-			languageExtensions = Maps.newHashMapWithExpectedSize(5);
-			readXmlProviderExtension();
+	public ExtensionPointReader() {
+		extension2Element = Maps.newHashMap();
+		IExtensionPoint point = Platform.getExtensionRegistry().getExtensionPoint(LANGUAGE_EXTENSION_POINT_ID);
+		for(IExtension extension : point.getExtensions()) {
+			for(IConfigurationElement element : extension.getConfigurationElements()) {
+				if(CONFIGURATION_ELEMENT_NAME.equals(element.getName())) {
+					extension2Element.put(element.getAttribute(ATTRIBUTE_FILE_EXTENSION), element);
+				}
+			}
 		}
-		return languageExtensions;
 	}
-
-	// reads the extension point
-	private void readXmlProviderExtension() {
-		IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(XML_PROVIDER_EXTENSION_POINT_ID);
-		for(IExtension extension : extensionPoint.getExtensions()) {
-			for(IConfigurationElement configurationElement : extension.getConfigurationElements()) {
-				if(CONFIGURATION_ELEMENT_NAME.equals(configurationElement.getName())) {
-					String fileExtension = configurationElement.getAttribute(ATTRIBUTE_FILE_EXTENSION);
-					if(fileExtension != null && !fileExtension.isEmpty()) {
-						// only one xml provider for one file extension is allowed
-						if(languageExtensions.containsKey(fileExtension)) {
-							continue;
+	
+	public boolean hasExtensionFor(String fileExtension) {
+		return extension2Element.containsKey(fileExtension);
+	}
+	
+	public void registryChanged(IRegistryChangeEvent event) {
+		for(IExtensionDelta delta : event.getExtensionDeltas()) {
+			if(delta.getExtensionPoint().getUniqueIdentifier().equals(LANGUAGE_EXTENSION_POINT_ID)) {
+				if(IExtensionDelta.ADDED == delta.getKind()) {
+					for(IConfigurationElement element : delta.getExtension().getConfigurationElements()) {
+						if(CONFIGURATION_ELEMENT_NAME.equals(element.getName())) {
+							extension2Element.put(element.getAttribute(ATTRIBUTE_FILE_EXTENSION), element);
 						}
-
-						try {
-							// get the xml provider
-							Object xmlProviderObject = configurationElement.createExecutableExtension(ATTRIBUTE_XML_PROVIDER);
-							if(xmlProviderObject instanceof IConfigScanXMLProvider) {
-								IConfigScanXMLProvider xmlProvider = (IConfigScanXMLProvider)xmlProviderObject;
-
-								// get the label provider, its optional
-								IBaseLabelProvider labelProvider = null;
-								Object labelProviderObject = configurationElement.createExecutableExtension(ATTRIBUTE_LABEL_PROVIDER);
-								if(labelProviderObject instanceof IBaseLabelProvider) {
-									labelProvider = (IBaseLabelProvider)labelProviderObject;
-								}
-								languageExtensions.put(fileExtension, Tuples.create(xmlProvider, labelProvider));
-							}
-						} catch (CoreException exception) {
-							// log the error
-							ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR, exception.getCause());
-
-							// handle the next extension
-							continue;
+					}
+				} else {
+					for(IConfigurationElement element : delta.getExtension().getConfigurationElements()) {
+						if(CONFIGURATION_ELEMENT_NAME.equals(element.getName())) {
+							extension2Element.remove(element.getAttribute(ATTRIBUTE_FILE_EXTENSION));
 						}
 					}
 				}
 			}
 		}
 	}
+	
+	public IConfigScanXMLProvider getXmlProvider(String extension) {
+		try {
+			return (IConfigScanXMLProvider)extension2Element.get(extension).createExecutableExtension(ATTRIBUTE_XML_PROVIDER);
+		} catch (CoreException exception) {
+			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+			return null;
+		}
+	}
+	
+	public IBaseLabelProvider getLabelProvider(String extension) {
+		try {
+			return (IBaseLabelProvider)extension2Element.get(extension).createExecutableExtension(ATTRIBUTE_LABEL_PROVIDER);
+		} catch (CoreException exception) {
+			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+			return null;
+		}
+	}
+
 }

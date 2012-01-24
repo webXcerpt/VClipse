@@ -24,14 +24,6 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(ConfigScanXmlProvider.class)
 public interface IConfigScanXMLProvider {
 	
-	/**
-	 * Please note, that implementation of this method must be synchronized.
-	 * Otherwise one will get a {@link org.w3c.dom.DOMException} during the transformation. 
-	 * 
-	 * @param model
-	 * @param map
-	 * @return
-	 */
 	public Document transform(EObject model,  Map<Element, URI> map);
 	
 	public String getMaterialNumber(EObject model);
