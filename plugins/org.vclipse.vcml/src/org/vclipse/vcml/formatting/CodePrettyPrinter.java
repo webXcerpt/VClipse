@@ -333,17 +333,17 @@ public abstract class CodePrettyPrinter extends VcmlSwitch<DataLayouter<NoExcept
 	 */
 	@Override
 	public DataLayouter<NoExceptions> caseNumberList(NumberList object) {
-		layouter.print("(");
+		layouter.print("(").beginI();
 		boolean start = true;
 		for(NumberListEntry entry : object.getEntries()) {
 			if(start) {
 				start = false;
 			} else {
-				layouter.print(", ");
+				layouter.print(", ").brk();
 			}
 			doSwitch(entry);
 		}
-		return layouter.print(")");
+		return layouter.end().print(")");
 	}
 	
 	/**
