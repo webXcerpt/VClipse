@@ -15,5 +15,8 @@
    <feature url="features/org.vclipse.rfc_feature-0.4.1.qualifier.jar" id="org.vclipse.rfc_feature" version="0.4.1.qualifier">
       <category name="org.vclipse"/>
    </feature>
+   <feature url="features/org.vclipse.configscan_feature_0.4.1.qualifier.jar" id="org.vclipse.configscan_feature" version="0.4.1.qualifier">
+      <category name="org.vclipse"/>
+   </feature>
    <category-def name="org.vclipse" label="VClipse"/>
 </site>
