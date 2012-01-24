@@ -217,6 +217,8 @@ public final class ConfigScanView extends ViewPart {
 	}
 	
 	private void disableActions() {
+		relaunchAction.setEnabled(false);
+		relaunchFailedAction.setEnabled(false);
 		toggleContent.setEnabled(false);
 		expandTreeAction.setEnabled(false);
 		collapseTreeAction.setEnabled(false);
@@ -228,6 +230,8 @@ public final class ConfigScanView extends ViewPart {
 	}
 	
 	private void enableActions() {
+		relaunchAction.setEnabled(true);
+		relaunchFailedAction.setEnabled(true);
 		toggleContent.setEnabled(true);
 		expandTreeAction.setEnabled(true);
 		collapseTreeAction.setEnabled(true);
