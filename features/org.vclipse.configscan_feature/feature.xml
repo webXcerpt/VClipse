@@ -201,6 +201,14 @@ waives its rights to a jury trial in any resulting litigation.
       <import plugin="org.eclipse.xtext.common.types.ui"/>
       <import plugin="org.eclipse.xtext.ui.codetemplates.ui"/>
       <import plugin="org.eclipse.compare"/>
+      <import plugin="org.vclipse.configscan"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.debug.core"/>
+      <import plugin="org.eclipse.debug.ui"/>
+      <import plugin="org.vclipse.connection"/>
+      <import plugin="org.vclipse.base.ui"/>
+      <import plugin="com.google.inject"/>
+      <import plugin="com.sap.conn.jco"/>
    </requires>
 
    <plugin
