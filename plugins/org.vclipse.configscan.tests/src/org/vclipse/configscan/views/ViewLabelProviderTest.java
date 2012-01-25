@@ -42,7 +42,7 @@ public class ViewLabelProviderTest {
 	private Element child1_3Input;
 	private Element child1_4Input;
 	 
-	private ViewLabelProvider vlp;
+	//private ViewLabelProvider vlp;
 	
 	private ConfigScanView configScanView;
 	
@@ -178,7 +178,7 @@ public class ViewLabelProviderTest {
 	    
 	    
 	    
-	    vlp = (ViewLabelProvider) configScanView.getTreeViewer().getLabelProvider();
+	   // vlp = (ViewLabelProvider) configScanView.getTreeViewer().getLabelProvider();
 	    
 	    // vlp = new ViewLabelProvider(elMap, eObjectMap);
 	
@@ -216,15 +216,15 @@ public class ViewLabelProviderTest {
 		
 	}
 	
-	@Test
-	public void testGetTextObject() {
-		vlp = new ViewLabelProvider();
-		assertEquals("", vlp.getText(child1_0));
-	}
-
-	@Test
-	public void testGetImageObject() {
-		System.out.println("Image is " + vlp.getImage(child1_0));
-	}
+//	@Test
+//	public void testGetTextObject() {
+//		vlp = new ViewLabelProvider();
+//		assertEquals("", vlp.getText(child1_0));
+//	}
+//
+//	@Test
+//	public void testGetImageObject() {
+//		System.out.println("Image is " + vlp.getImage(child1_0));
+//	}
 
 }

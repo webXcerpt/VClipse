@@ -80,14 +80,6 @@ public class ConfigScanViewTest {
 		fail("Not yet implemented");
 	}
 
-	@Test
-	public void testFindNextDeepestChild() {
-		Document doc = createDoc();
-		Element next = configScanView.findNextDeepestChild((Element) doc.getDocumentElement());
-//		System.out.println(next.getNodeName() + " " + next.getAttribute("status"));
-		assertEquals("level of element must be 3", "3", next.getAttribute("level"));
-	}
-
 	private Document createDoc() {
 		// TODO Auto-generated method stub
 		Document docLog;
@@ -192,12 +184,4 @@ public class ConfigScanViewTest {
 		fail("Not yet implemented");
 	}
 
-	@Test
-	public void testGetTreeViewer() {
-		TreeViewer viewer = configScanView.getTreeViewer();
-		assertNotNull("TreeViewer must not be null", viewer);
-
-	}
-
-	
 }

@@ -9,8 +9,8 @@ import com.sap.conn.jco.JCoException;
 
 public class MockConfigScanRunner implements IConfigScanRunner {
 
-	public String execute(IFile file, String xmlInput, RemoteConnection rc, String matNr) throws JCoException, CoreException {
-		
+	@Override
+	public String execute(String output, RemoteConnection remoteConnection, String materialNumber, IFile file) throws JCoException, CoreException {
 		System.err.println("MockConfigScanRunner: executing " + file.getName()); 
 		
 //		return "TODO: dies ist zu ersetzen"; // TODO Inhalt der Datei file.getName() + ".log" zurückgeben

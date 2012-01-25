@@ -25,7 +25,6 @@ public class ViewContentProviderTest {
 	private Element child3;
 	
 	private ConfigScanView configScanView;
-	private ViewContentProvider vcp;
 	
 	
 	@Before
@@ -63,7 +62,7 @@ public class ViewContentProviderTest {
 
 	    
 		
-		vcp = new ViewContentProvider(doc); 
+		
 //		configScanView.getTreeViewer().setContentProvider(new ViewContentProvider());			
 	}
 
@@ -97,60 +96,60 @@ public class ViewContentProviderTest {
 	@After
 	public void tearDown() throws Exception {
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(configScanView);
-		vcp = null;
+		
 		doc = null;
 	
 	}
 
-	@Ignore
-	@Test
-	public void testInputChanged() {
-		System.out.println(configScanView.getTreeViewer().getInput());
-		vcp = new ViewContentProvider(doc); 
-		configScanView.getTreeViewer().setContentProvider(vcp);
-		System.out.println(configScanView.getTreeViewer().getInput());
-	}
-
-	@Test
-	public void testGetElements() {
+//	@Ignore
+//	@Test
+//	public void testInputChanged() {
+//		System.out.println(configScanView.getTreeViewer().getInput());
+//		vcp = new ViewContentProvider(doc); 
 //		configScanView.getTreeViewer().setContentProvider(vcp);
-		Object[] objs = vcp.getElements(doc.getDocumentElement());
-		assertEquals("objs[] size must be 2", 2, objs.length);
-		Element retrieve1 = (Element) objs[0];
-		Element retrieve2 = (Element) objs[1];
-		assertEquals(retrieve1, child1);
-		assertEquals(retrieve2, child2);
-	}
+//		System.out.println(configScanView.getTreeViewer().getInput());
+//	}
 
-	@Test
-	public void testGetParent() {
-		assertNotNull("Parent must not be null", vcp.getParent(child2));
-		assertEquals(root, vcp.getParent(child2));
-	}
+//	@Test
+//	public void testGetElements() {
+////		configScanView.getTreeViewer().setContentProvider(vcp);
+//		Object[] objs = vcp.getElements(doc.getDocumentElement());
+//		assertEquals("objs[] size must be 2", 2, objs.length);
+//		Element retrieve1 = (Element) objs[0];
+//		Element retrieve2 = (Element) objs[1];
+//		assertEquals(retrieve1, child1);
+//		assertEquals(retrieve2, child2);
+//	}
 
-	@Test
-	public void testGetChildren() {
-		assertEquals("#Children must be 2", 2, vcp.getChildren(root).length);
-	}
-
-	@Test
-	public void testHasChildren() {
-		assertTrue("root must have children", vcp.hasChildren(root));
-	}
-	
-	@Test
-	public void testGetNumberOfFailure() {
-		assertEquals("#Failures should be 2", 2, vcp.getNumberOfFailure());
-	}
-	
-	@Test
-	public void testGetNumberOfSuccess(){
-		assertEquals("#Success should be 1", 1, vcp.getNumberOfSuccess());
-	}
-	
-	@Test
-	public void testGetNumberOfRuns() {
-		assertEquals("#Runs should be #Success + #Failures", 3, vcp.getNumberOfRuns());
-	}
+//	@Test
+//	public void testGetParent() {
+//		assertNotNull("Parent must not be null", vcp.getParent(child2));
+//		assertEquals(root, vcp.getParent(child2));
+//	}
+//
+//	@Test
+//	public void testGetChildren() {
+//		assertEquals("#Children must be 2", 2, vcp.getChildren(root).length);
+//	}
+//
+//	@Test
+//	public void testHasChildren() {
+//		assertTrue("root must have children", vcp.hasChildren(root));
+//	}
+//	
+//	@Test
+//	public void testGetNumberOfFailure() {
+//		assertEquals("#Failures should be 2", 2, vcp.getNumberOfFailure());
+//	}
+//	
+//	@Test
+//	public void testGetNumberOfSuccess(){
+//		assertEquals("#Success should be 1", 1, vcp.getNumberOfSuccess());
+//	}
+//	
+//	@Test
+//	public void testGetNumberOfRuns() {
+//		assertEquals("#Runs should be #Success + #Failures", 3, vcp.getNumberOfRuns());
+//	}
 
 }

@@ -11,7 +11,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.vclipse.configscan.views.FailureFilter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -53,13 +52,6 @@ public class FailureFilterTest {
 		doc = null;
 	}
 
-	
-	@Test
-	public void testSelect1() {
-		assertNotNull("Document doc must not be null", doc);
-		Element el = doc.getDocumentElement();
-		assertTrue("Object is not of type Element or status is not \"E\"", new FailureFilter().select(null, null, el));
-	}
 	
 	@Ignore
 	@Test
