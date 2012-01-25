@@ -50,6 +50,9 @@
 		<module>../org.vclipse.vcml.ui.actions</module>
 		<module>../org.vclipse.vcml.ui.wizards.imports</module>
 		<module>../org.vclipse.vcml2idoc.ui</module>
+		<module>../org.vclipse.configscan</module>
+		<module>../org.vclipse.configscan.vcmlt</module>
+		<module>../org.vclipse.configscan.vcmlt.ui</module>
 		
 		<!-- VClipse Features -->
 		<module>../org.vclipse.idoc_feature</module>
