@@ -57,6 +57,7 @@
 		<module>../org.vclipse.rfc_feature</module>
 		<module>../org.vclipse.vcml_feature</module>
 		<module>../org.vclipse.vcml2idoc_feature</module>
+		<module>../org.vclipse.configscan_feature</module>
 	</modules>
 
 	<build>
