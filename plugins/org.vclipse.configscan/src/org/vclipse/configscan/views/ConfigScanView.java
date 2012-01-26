@@ -10,10 +10,13 @@
  ******************************************************************************/
 package org.vclipse.configscan.views;
 
+import java.util.Map;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -63,6 +66,7 @@ import org.vclipse.configscan.views.actions.ShowFailuresAction;
 import org.vclipse.configscan.views.actions.ShowHistroyAction;
 import org.vclipse.configscan.views.actions.ToggleLabelProviderAction;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 public final class ConfigScanView extends ViewPart {
@@ -135,7 +139,9 @@ public final class ConfigScanView extends ViewPart {
 	private NextFailureAction nextFailureAction;
 	private PrevFailureAction prevFailureAction;
 	private ImportExportAction importExportAction;
-
+	
+	private Map<String, Action> id2Action;
+ 
 	private ConfigScanViewInput input;
 	
 	public void setFocus() {
@@ -154,6 +160,7 @@ public final class ConfigScanView extends ViewPart {
 	}
 
 	public void createPartControl(Composite parent) {
+		id2Action = Maps.newHashMap();
 		parent.setLayout(new GridLayout());
 		
 		viewer = new JobAwareTreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
@@ -178,11 +185,14 @@ public final class ConfigScanView extends ViewPart {
 		if(preferenceStore.getBoolean(IConfigScanConfiguration.SAVE_HISTORY)) {
 			history.load(plugin.getStateLocation().append(IConfigScanConfiguration.HISTORY_FILE_NAME).toString());
 		}
+		disableActions();
+		enableOrDisable(ImportExportAction.ID, true);
+		enableOrDisable(ShowHistroyAction.ID, true);
 	}
 
 	public void setInput(ConfigScanViewInput input) {
 		this.input = input;
-		//disableActions();
+		enableActions();
 		viewer.setInput(input);
 	}
 
@@ -194,50 +204,64 @@ public final class ConfigScanView extends ViewPart {
 		return viewer;
 	}
 	
+	public void enableOrDisable(String id, boolean enable) {
+		id2Action.get(id).setEnabled(enable);
+	}
+	
+	public void disableActions() {
+		for(String id : id2Action.keySet()) {
+			enableOrDisable(id, false);
+		}
+	}
+	
+	public void enableActions() {
+		for(String id : id2Action.keySet()) {
+			enableOrDisable(id, true);
+		}
+	}
+	
 	private void contributeToActionBars() {
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
+		
 		toolBarManager.add(toggleContent = new ToggleLabelProviderAction(this, imageHelper));
+		id2Action.put(ToggleLabelProviderAction.ID, toggleContent);
+		
 		toolBarManager.add(new Separator());
+		
 		toolBarManager.add(expandTreeAction = new ExpandTreeAction(this, imageHelper));
+		id2Action.put(ExpandTreeAction.ID, expandTreeAction);
+		
 		toolBarManager.add(collapseTreeAction = new CollapseTreeAction(this, imageHelper));
+		id2Action.put(CollapseTreeAction.ID, collapseTreeAction);
+		
 		toolBarManager.add(new Separator());
+		
 		toolBarManager.add(showFailuresAction = new ShowFailuresAction(this, imageHelper));
+		id2Action.put(ShowFailuresAction.ID, showFailuresAction);
+		
 		toolBarManager.add(new Separator());
+		
 		toolBarManager.add(relaunchAction = new RelaunchAction(this, imageHelper));
+		id2Action.put(RelaunchAction.ID, relaunchAction);
+		
 		toolBarManager.add(relaunchFailedAction = new RelaunchedFailedAction(this, imageHelper));
+		id2Action.put(RelaunchedFailedAction.ID, relaunchFailedAction);
+		
 		toolBarManager.add(new Separator());
+		
 		toolBarManager.add(nextFailureAction = new NextFailureAction(this, imageHelper));
+		id2Action.put(NextFailureAction.ID, nextFailureAction);
+		
 		toolBarManager.add(prevFailureAction = new PrevFailureAction(this, imageHelper));
+		id2Action.put(PrevFailureAction.ID, prevFailureAction);
+		
 		toolBarManager.add(new Separator());
+		
 		toolBarManager.add(importExportAction = new ImportExportAction(this, imageHelper, documentUtility, testCaseFactoy));
+		id2Action.put(ImportExportAction.ID, importExportAction);
+		
 		toolBarManager.add(showHistoryAction = new ShowHistroyAction(this, imageHelper, history));
-		//disableActions();
-	}
-	
-	private void disableActions() {
-		relaunchAction.setEnabled(false);
-		relaunchFailedAction.setEnabled(false);
-		toggleContent.setEnabled(false);
-		expandTreeAction.setEnabled(false);
-		collapseTreeAction.setEnabled(false);
-		showFailuresAction.setEnabled(false);
-		nextFailureAction.setEnabled(false);
-		prevFailureAction.setEnabled(false);
-		importExportAction.setEnabled(false);
-		showHistoryAction.setEnabled(false);
-	}
-	
-	private void enableActions() {
-		relaunchAction.setEnabled(true);
-		relaunchFailedAction.setEnabled(true);
-		toggleContent.setEnabled(true);
-		expandTreeAction.setEnabled(true);
-		collapseTreeAction.setEnabled(true);
-		showFailuresAction.setEnabled(true);
-		nextFailureAction.setEnabled(true);
-		prevFailureAction.setEnabled(true);
-		importExportAction.setEnabled(true);
-		showHistoryAction.setEnabled(preferenceStore.getBoolean(IConfigScanConfiguration.SAVE_HISTORY));
+		id2Action.put(ShowHistroyAction.ID, showHistoryAction);
 	}
 	
 	private void createContextMenu() {

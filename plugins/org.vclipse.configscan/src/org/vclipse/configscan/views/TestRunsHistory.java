@@ -117,6 +117,9 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 					
 					for(TestRun testRun : input.getTestRuns()) {
 						Node logResult = documentUtility.getLogResult((Document)testRun.getLogElement());
+						if(logResult == null) {
+							continue;
+						}
 						inputElement.appendChild(historyDocument.importNode(logResult, true));
 					}
 				}

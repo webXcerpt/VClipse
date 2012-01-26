@@ -10,20 +10,34 @@
  ******************************************************************************/
 package org.vclipse.configscan.views.actions;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IMenuCreator;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.xtext.util.Files;
 import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
+import org.vclipse.configscan.impl.model.TestRun;
 import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.TestCaseFactory;
 import org.vclipse.configscan.views.ConfigScanView;
+import org.vclipse.configscan.views.ConfigScanViewInput;
+import org.w3c.dom.Document;
 
-public class ImportExportAction extends SimpleTreeViewerAction implements IMenuCreator, SelectionListener {
+import com.google.common.collect.Lists;
+
+public final class ImportExportAction extends SimpleTreeViewerAction implements IMenuCreator, SelectionListener {
+	
+	public static final String ID = ConfigScanPlugin.ID + "." + ImportExportAction.class.getSimpleName();
 	
 	// id for the save/export item in menu
 	private static final int EXPORT_ITEM_LOG = 0;
@@ -49,6 +63,7 @@ public class ImportExportAction extends SimpleTreeViewerAction implements IMenuC
 		setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.DISK));	
 		this.documentUtility = documentUtility;
 		this.testCaseUtility = testCaseFactory;
+		setId(ID);
 	}
 	
 	@Override
@@ -89,70 +104,70 @@ public class ImportExportAction extends SimpleTreeViewerAction implements IMenuC
 	
 	@Override
 	public void widgetSelected(SelectionEvent event) {
-//		Object source = event.getSource();
-//		if(source instanceof MenuItem) {
-//			MenuItem menuItem = (MenuItem)source;
-//			int id = menuItem.getID();
-//			Shell activeShell = Display.getDefault().getActiveShell();
-//			if(IMPORT_ITEM == id) {
-//				List<TestCase> testCases = Lists.newArrayList();
-//				FileDialog fileDialog = new FileDialog(activeShell, SWT.OPEN);
-//				fileDialog.setText("File dialog for log file import");
-//				String selectedPath = fileDialog.open();
-//				if(selectedPath != null) {
-//					String content = Files.readFileIntoString(selectedPath);
-//					Document document = documentUtility.parse(content);
-//					Node nextSibling = document.getDocumentElement().getFirstChild().getNextSibling();
-//					NodeList childNodes = nextSibling.getChildNodes();
-//					for(int i=0; i<childNodes.getLength(); i++) {
-//						Node item = childNodes.item(i);
-//						if(item.getNodeType() == Node.ELEMENT_NODE) {
-//							Element element = (Element)item;
-//							TestCase testCase = 
-//										testCaseUtility.createTestCase(element, null, documentUtility, new HashMap<String, Object>());
-//							if(testCase != null) {
-//								testCases.add(testCase);								
-//							}
-//						}
-//					}	
-//					treeViewer.setInput(testCases);
-//				}
-//			} else if(EXPORT_ITEM_LOG == id) {
-//				IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
-//				Object firstElement = selection.getFirstElement();
-//				if(firstElement instanceof TestRunAdapter) {
-//					TestRunAdapter testRun = (TestRunAdapter)firstElement;
-//					Document logDocument = testRun.getLogDocument();
-//					if(logDocument == null) {
-//						ConfigScanPlugin.log("Log document not available for " + testRun.getLabel(null), IStatus.ERROR);
-//					} else {
-//						FileDialog fileDialog = new FileDialog(activeShell, SWT.SAVE);
-//						fileDialog.setText("File dialog for log file export");
-//						String path = fileDialog.open();
-//						if(path != null) {
-//							Files.writeStringIntoFile(path, documentUtility.parse(logDocument));
-//						}
-//					}
-//				}
-//			} else if(EXPORT_ITEM_INPUT == id) {
-//				IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
-//				Object firstElement = selection.getFirstElement();
-//				if(firstElement instanceof TestRunAdapter) {
-//					TestRunAdapter testRun = (TestRunAdapter)firstElement;
-//					Document logDocument = testRun.getInputDocument();
-//					if(logDocument == null) {
-//						ConfigScanPlugin.log("Input document not available for " + testRun.getLabel(null), IStatus.ERROR);
-//					} else {
-//						FileDialog fileDialog = new FileDialog(activeShell, SWT.SAVE);
-//						fileDialog.setText("File dialog for input file export");
-//						String path = fileDialog.open();
-//						if(path != null) {
-//							Files.writeStringIntoFile(path, documentUtility.parse(logDocument));
-//						}
-//					}
-//				}
-//			}
-//		}
+		Object source = event.getSource();
+		if(source instanceof MenuItem) {
+			MenuItem menuItem = (MenuItem)source;
+			int id = menuItem.getID();
+			Shell activeShell = Display.getDefault().getActiveShell();
+			if(IMPORT_ITEM == id) {
+				FileDialog fileDialog = new FileDialog(activeShell, SWT.OPEN);
+				fileDialog.setText("File dialog for log file import");
+				String selectedPath = fileDialog.open();
+				if(selectedPath != null) {
+					String content = Files.readFileIntoString(selectedPath);
+					Document document = documentUtility.parse(content);
+					TestRun testRun = testCaseUtility.buildTestRun("Imported Config Scan input file", null, null, null);
+					testRun.setLogElement(document);
+					ConfigScanViewInput input = new ConfigScanViewInput();
+					input.setTestRuns(Lists.newArrayList(testRun));
+					testRun.addTestCase(testCaseUtility.buildTestCase(document, testRun));	
+					
+					view.setInput(input);
+					
+					Display.getDefault().timerExec(100, new Runnable() {
+						@Override
+						public void run() {
+							view.enableOrDisable(RelaunchAction.ID, false);
+							view.enableOrDisable(RelaunchedFailedAction.ID, false);
+							view.enableOrDisable(ToggleLabelProviderAction.ID, false);
+						}
+					});
+				}
+			} else if(EXPORT_ITEM_LOG == id) {
+				Object firstElement = ((IStructuredSelection)treeViewer.getSelection()).getFirstElement();
+				if(firstElement instanceof TestRun) {
+					TestRun testRun = (TestRun)firstElement;
+					Document logDocument = (Document)testRun.getLogElement();
+					if(logDocument == null) {
+						ConfigScanPlugin.log("Log document not available for " + testRun.getLabel(null), IStatus.ERROR);
+					} else {
+						FileDialog fileDialog = new FileDialog(activeShell, SWT.SAVE);
+						fileDialog.setText("File dialog for log file export");
+						String path = fileDialog.open();
+						if(path != null) {
+							Files.writeStringIntoFile(path, documentUtility.parse(logDocument));
+						}
+					}
+				}
+			} else if(EXPORT_ITEM_INPUT == id) {
+				Object firstElement = ((IStructuredSelection)treeViewer.getSelection()).getFirstElement();
+				if(firstElement instanceof TestRun) {
+					TestRun testRun = (TestRun)firstElement;
+					Document inputDocument = (Document)testRun.getInputElement();
+					if(inputDocument == null) {
+						ConfigScanPlugin.log("Input document not available for " + testRun.getLabel(null), IStatus.ERROR);
+					} else {
+						FileDialog fileDialog = new FileDialog(activeShell, SWT.SAVE);
+						fileDialog.setText("File dialog for input file export");
+						String path = fileDialog.open();
+						if(path != null) {
+							Files.writeStringIntoFile(path, documentUtility.parse(inputDocument));
+						}
+					}
+				}
+				
+			}
+		}
 	}
 
 	@Override

@@ -11,13 +11,16 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.views.ConfigScanView;
 import org.vclipse.configscan.views.ConfigScanViewInput;
 import org.vclipse.configscan.views.TestRunsHistory;
 
-public class ShowHistroyAction extends SimpleTreeViewerAction implements IMenuCreator, SelectionListener {
+public final class ShowHistroyAction extends SimpleTreeViewerAction implements IMenuCreator, SelectionListener {
 
+	public static final String ID = ConfigScanPlugin.ID + "." + ShowHistroyAction.class.getSimpleName();
+	
 	private static final int IMPORT_HISTORY = 1001;
 	private static final int EXPORT_HISTORY = 1002;
 	private static final int CLEAR_HISTORY = 1003;
@@ -36,6 +39,7 @@ public class ShowHistroyAction extends SimpleTreeViewerAction implements IMenuCr
 		setToolTipText("Test run history");
 		this.history = history;
 		this.view = view;
+		setId(ID);
 	}
 
 	@Override

@@ -110,7 +110,9 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 
 	@Override
 	public Object[] getChildren(Object o) {
-		addTestCase(testCaseFactory.buildTestCase(this));
+		if(getTestCases().isEmpty()) {
+			addTestCase(testCaseFactory.buildTestCase(this));			
+		}
 		return getTestCases().toArray();
 	}
 
@@ -133,6 +135,7 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 	public void fetchDeferredChildren(Object object, IElementCollector collector, IProgressMonitor monitor) {
 		List<TestCase> testCases = getTestCases();
 		if(testCases.isEmpty()) {
+			
 			monitor.beginTask("Running tests for " + testModel.eResource().getURI().lastSegment() + " and " + connection.getDescription() + " connection", IProgressMonitor.UNKNOWN);
 			
 			Map<Element, URI> input2Uri = Maps.newHashMap();
@@ -181,7 +184,7 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 		}
 		monitor.done();
 	}
-
+	
 	@Override
 	public boolean isContainer() {
 		return true;

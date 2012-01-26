@@ -4,13 +4,16 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestCase.Status;
 import org.vclipse.configscan.views.ConfigScanView;
 
-public class ShowFailuresAction extends SimpleTreeViewerAction {
+public final class ShowFailuresAction extends SimpleTreeViewerAction {
 
+	public static final String ID = ConfigScanPlugin.ID + "." + ShowFailuresAction.class.getSimpleName();
+	
 	private ViewerFilter failureFilter;
 	
 	public ShowFailuresAction(ConfigScanView view, ConfigScanImageHelper imageHelper) {
@@ -27,6 +30,7 @@ public class ShowFailuresAction extends SimpleTreeViewerAction {
 				return true;
 			}
 		};
+		setId(ID);
 	}
 	
 	@Override

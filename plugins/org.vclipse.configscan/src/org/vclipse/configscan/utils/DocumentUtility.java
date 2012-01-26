@@ -69,18 +69,20 @@ public class DocumentUtility {
 	}
 	
 	public Node getLogSession(Document document) {
-		Node logResultNode = document.getDocumentElement().getFirstChild().getNextSibling();
-		String nodeName = logResultNode.getNodeName();
-		if(!LOG_RESULT.equals(nodeName)) {
-			throw new IllegalArgumentException("Expected log_result tag in the document. The tag was " + nodeName);
-		} else {
-			NodeList childNodes = logResultNode.getChildNodes();
-			for(int i=0; i<childNodes.getLength(); i++) {
-				Node item = childNodes.item(i);
-				nodeName = item.getNodeName();
-				if(item.getNodeType() == Node.ELEMENT_NODE) { 
-					if(LOG_SESSION.equals(nodeName)) {
-						return item;
+		Node logResultNode = getLogResult(document);
+		if(logResultNode != null) {
+			String nodeName = logResultNode.getNodeName();
+			if(!LOG_RESULT.equals(nodeName)) {
+				throw new IllegalArgumentException("Expected log_result tag in the document. The tag was " + nodeName);
+			} else {
+				NodeList childNodes = logResultNode.getChildNodes();
+				for(int i=0; i<childNodes.getLength(); i++) {
+					Node item = childNodes.item(i);
+					nodeName = item.getNodeName();
+					if(item.getNodeType() == Node.ELEMENT_NODE) { 
+						if(LOG_SESSION.equals(nodeName)) {
+							return item;
+						}
 					}
 				}
 			}
@@ -89,7 +91,16 @@ public class DocumentUtility {
 	}
 	
 	public Node getLogResult(Document document) {
-		return document.getDocumentElement().getFirstChild().getNextSibling();
+		if(document != null) {
+			 Element documentElement = document.getDocumentElement();
+			 if(documentElement != null) {
+				 Node firstChild = documentElement.getFirstChild();
+				 if(firstChild != null) {
+					 return firstChild.getNextSibling();
+				 }
+			 }
+		}
+		return null;
 	}
 	
 	public Node getLogResults(Document document) {

@@ -1,6 +1,7 @@
 package org.vclipse.configscan.views;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -19,15 +20,17 @@ public class ConfigScanViewInput {
 	private List<TestRun> testRuns;
 	
 	public ConfigScanViewInput() {
+		configurationName = "";
+		date = "";
 		testRuns = Lists.newArrayList();
 	}
 	
 	public void setTestRuns(List<TestRun> testRuns) {
-		this.testRuns = testRuns;
+		this.testRuns = testRuns == null ? new ArrayList<TestRun>() : testRuns;
 	}
 	
 	public void setConfigurationName(String name) {
-		this.configurationName = name;
+		this.configurationName = name == null ? "" : name;
 	}
 	
 	public void setDate(String date) {

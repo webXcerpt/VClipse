@@ -73,7 +73,7 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 		try {
 			connections = remoteConnections.readConfigScanRemoteConnections();
 		} catch (JCoException exception) {
-			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+			ConfigScanPlugin.log(exception.toString(), IStatus.ERROR);
 		}
 	
 		connectionsViewer.setLabelProvider(new LabelProvider());

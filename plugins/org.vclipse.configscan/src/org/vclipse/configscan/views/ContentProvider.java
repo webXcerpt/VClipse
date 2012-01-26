@@ -30,8 +30,10 @@ public class ContentProvider implements ITreeContentProvider {
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if(viewer instanceof JobAwareTreeViewer) {
 			treeViewer = (JobAwareTreeViewer)viewer;
-			contentManager = new DeferredTreeContentManager(treeViewer);
-			contentManager.addUpdateCompleteListener(treeViewer);
+			if(contentManager == null) {
+				contentManager = new DeferredTreeContentManager(treeViewer);
+				contentManager.addUpdateCompleteListener(treeViewer);				
+			}
 			input = (ConfigScanViewInput)newInput;
 		}
 	}

@@ -4,6 +4,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.impl.FailureTestObjectFilter;
 import org.vclipse.configscan.impl.TestCaseAdapterFactory;
@@ -15,13 +16,16 @@ import org.vclipse.configscan.impl.model.TestRun;
 import org.vclipse.configscan.views.ConfigScanView;
 import org.vclipse.configscan.views.ConfigScanViewInput;
 
-public class RelaunchedFailedAction extends SimpleTreeViewerAction {
+public final class RelaunchedFailedAction extends SimpleTreeViewerAction {
 
+	public static final String ID = ConfigScanPlugin.ID + "." + RelaunchedFailedAction.class.getSimpleName();
+	
 	public RelaunchedFailedAction(ConfigScanView view, ConfigScanImageHelper imageHelper) {
 		super(view, imageHelper);
 		setText("Relaunched failed tests");
 		setToolTipText("Relaunch failed tests");
 		setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.RELAUNCHF));
+		setId(ID);
 	}
 
 	@Override
@@ -32,6 +36,9 @@ public class RelaunchedFailedAction extends SimpleTreeViewerAction {
 			for(TestRun testRun : input.getTestRuns()) {
 				testRun.setFilter(new FailureTestObjectFilter());
 				EObject testModel = testRun.getTestModel();
+				if(testModel == null) {
+					continue;
+				}
 				handleChildren(testRun, testModel.eResource().getResourceSet());
 				testRun.removeTestCases();
 			}
