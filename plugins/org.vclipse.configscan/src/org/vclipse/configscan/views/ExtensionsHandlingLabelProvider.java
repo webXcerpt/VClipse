@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
@@ -13,12 +13,12 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.progress.PendingUpdateAdapter;
-import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.extension.ExtensionPointReader;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestCase.Status;
-import org.vclipse.configscan.impl.model.TestRunAdapter;
+import org.vclipse.configscan.impl.model.TestGroup;
+import org.vclipse.configscan.impl.model.TestRun;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -42,7 +42,9 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 	}
 	
 	protected Image decorateImage(Image image, TestCase testCase) {
-		if(Status.FAILURE == testCase.getStatus()) {
+		if(image == null) {
+			return image;
+		} else if(Status.FAILURE == testCase.getStatus()) {
 			ImageData imageData = image.getImageData();
 			ImageDescriptor[] overlay = new ImageDescriptor[5];
 			overlay[2] = imageHelper.getImageDescriptor(IConfigScanImages.ERROR_OVERLAY);
@@ -62,29 +64,27 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 			if(result instanceof String) {
 				return (String)result;
 			}
-		} else {
-			if(testCase.getAdapter(TestRunAdapter.class) == null) {
-				String tooltip = "ConfigScan XML LOG: " + testCase.getTitle();
-				
-				tooltip += "\n\nTestrun : " + testCaseUtility.getRoot(testCase).getTitle();
-				tooltip += "\nTestgroup : " + testCase.getParent().getTitle();
-				
-				// TODO which info is interesting for the user ?
-				
-				// 	 	 			NamedNodeMap namedNodeMap = inputElement.getAttributes();
-				// 	 	 			for(int i = 0; i < namedNodeMap.getLength(); i++) {
-				// 	 	 				Node node = namedNodeMap.item(i);
-				// 	 	 				tooltip += " " + node.getNodeName() + "=\"" + node.getNodeValue() + "\"";
-				// 	 	 			}
-				// 	 	 			URI uri = testCase.getSourceUri();
-				// 	 	 			TestCase root = testCaseUtility.getRoot(testCase);
-				// 	 	 			EObject testModel = ((TestRunAdapter)root.getAdapter(TestRunAdapter.class)).getTestModel();
-				// 	 	 			EObject eObject = testModel.eResource().getResourceSet().getEObject(uri, true);
-				// 	 	 			if(eObject != null && extensionEnabled && getLabelProviderExtension(testCase) != null) {
-				// 	 	 				//tooltip += "\n" + labelProviderExtension.getText(eObject);
-				// 	 	 			}
-				return tooltip;
-			}
+		} else if(!(testCase instanceof TestGroup)) {
+			String tooltip = "ConfigScan XML LOG: " + testCase.getTitle();
+			tooltip += "\n\nTestrun : " + testCase.getRoot().getTitle();
+			tooltip += "\nTestgroup : " + testCase.getParent().getTitle();
+
+			// TODO which info is interesting for the user ?
+
+			// 	 	 			NamedNodeMap namedNodeMap = inputElement.getAttributes();
+			// 	 	 			for(int i = 0; i < namedNodeMap.getLength(); i++) {
+			// 	 	 				Node node = namedNodeMap.item(i);
+			// 	 	 				tooltip += " " + node.getNodeName() + "=\"" + node.getNodeValue() + "\"";
+			// 	 	 			}
+			// 	 	 			URI uri = testCase.getSourceUri();
+			// 	 	 			TestCase root = testCaseUtility.getRoot(testCase);
+			// 	 	 			EObject testModel = ((TestRunAdapter)root.getAdapter(TestRunAdapter.class)).getTestModel();
+			// 	 	 			EObject eObject = testModel.eResource().getResourceSet().getEObject(uri, true);
+			// 	 	 			if(eObject != null && extensionEnabled && getLabelProviderExtension(testCase) != null) {
+			// 	 	 				//tooltip += "\n" + labelProviderExtension.getText(eObject);
+			// 	 	 			}
+			return tooltip;
+
 		}
 		return null;
 	}
@@ -102,7 +102,7 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 			}
 		} else {
 			StyledString styledString = new StyledString(testCase.getTitle()).append(getStatistics(testCase));	
-			String extensionCall = (String)extensionCall(labelProvider, "getText", getReferencedEObject(testCase));
+			String extensionCall = (String)extensionCall(labelProvider, "getText", testCase);
 			if(extensionCall != null && !extensionCall.isEmpty()) {
 				styledString.append(new StyledString("     Descriprion: " + extensionCall, StyledString.DECORATIONS_STYLER));
 			} 
@@ -111,7 +111,7 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 		return new StyledString(EMPTY);
 	}
 
-	protected StyledString styledText(TestRunAdapter testRun) {
+	protected StyledString styledText(TestRun testRun) {
 		return new StyledString(testRun.getLabel(null));
 	}
 	
@@ -130,48 +130,50 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 		}
 	}
 	
-	protected Image image(TestRunAdapter adapter) {
-		return imageHelper.getImage(adapter.getImageDescriptor(null));
+	protected Image image(TestRun testRun) {
+		return imageHelper.getImage(testRun.getImageDescriptor(null));
 	}
-	
+
 	protected Image image(PendingUpdateAdapter adapter) {
 		return imageHelper.getImage(IConfigScanImages.HOURGLASS);
 	}
 	
  	private IBaseLabelProvider getLabelProviderExtension(TestCase testCase) {
- 		Object adapter = testCase.getAdapter(TestRunAdapter.class);
- 		if(adapter == null) {
- 			adapter = testCaseUtility.getRoot(testCase).getAdapter(TestRunAdapter.class);
+ 		TestCase root = testCase.getRoot();
+ 		if(root instanceof TestRun) {
+ 			EObject testModel = ((TestRun)root).getTestModel();
+ 			if(testModel != null) {
+ 				String fileExtension = testModel.eResource().getURI().fileExtension();
+ 	 			if(!extension2LabelProvider.containsKey(fileExtension)) {
+ 	 	 			IBaseLabelProvider labelProvider = extensionPointReader.getLabelProvider(fileExtension);
+ 	 				extension2LabelProvider.put(fileExtension, labelProvider);
+ 	 				return labelProvider;
+ 	 	 		} else {
+ 	 	 			return extensionPointReader.getLabelProvider(fileExtension);
+ 	 	 		}
+ 			}
  		}
- 		String fileExtension = ((TestRunAdapter)adapter).getTestModel().eResource().getURI().fileExtension();
- 		if(!extension2LabelProvider.containsKey(fileExtension)) {
- 			IBaseLabelProvider labelProvider = extensionPointReader.getLabelProvider(fileExtension);
-			extension2LabelProvider.put(fileExtension, labelProvider);
-			return labelProvider;
- 		} else {
- 			return extensionPointReader.getLabelProvider(fileExtension);
- 		}
+ 		return null;
  	}
  	
  	private Object extensionCall(IBaseLabelProvider labelProvider, String methodName, Object object) {
-		if(labelProvider == null) {
+		if(labelProvider == null || object == null) {
 			return null;
 		} else {
 			try {
 				Method method = labelProvider.getClass().getMethod(methodName, Object.class);
 				return method.invoke(labelProvider, object);
 			} catch (SecurityException exception) {
-				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+				return null;
 			} catch (NoSuchMethodException exception) {
-				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+				return null;
 			} catch (IllegalArgumentException exception) {
-				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+				return null;
 			} catch (IllegalAccessException exception) {
-				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+				return null;
 			} catch (InvocationTargetException exception) {
-				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+				return null;
 			}
 		}
-		return null;
 	}
 }

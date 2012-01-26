@@ -7,7 +7,6 @@ import org.vclipse.configscan.ConfigScanImageHelper;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestCase.Status;
-import org.vclipse.configscan.impl.model.TestRunAdapter;
 import org.vclipse.configscan.views.ConfigScanView;
 
 public class ShowFailuresAction extends SimpleTreeViewerAction {
@@ -22,7 +21,7 @@ public class ShowFailuresAction extends SimpleTreeViewerAction {
 		failureFilter = new ViewerFilter() {
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if(element instanceof TestCase && ((TestCase)element).getAdapter(TestRunAdapter.class) == null) {
+				if(element instanceof TestCase) {
 					return ((TestCase)element).getStatus() == Status.FAILURE;
 				}
 				return true;

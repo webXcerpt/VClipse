@@ -16,6 +16,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.service.AbstractGenericModule;
 import org.eclipse.xtext.ui.IImageHelper;
 import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
@@ -27,13 +28,19 @@ import org.vclipse.configscan.MockConfigScanRemoteConnections;
 import org.vclipse.configscan.MockConfigScanRunner;
 import org.vclipse.configscan.impl.ConfigScanReverseXmlTransformation;
 import org.vclipse.configscan.impl.ConfigScanXmlProvider;
+import org.vclipse.configscan.impl.model.TestRun;
+import org.vclipse.configscan.utils.TestCaseFactory;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.connection.VClipseConnectionPlugin;
 
-public final class ConfigScanModule extends ProviderModule {
+import com.google.inject.Provider;
 
+public final class ConfigScanModule extends AbstractGenericModule {
+
+	protected ConfigScanPlugin plugin;
+	
 	public ConfigScanModule(ConfigScanPlugin plugin) {
-		super(plugin);
+		this.plugin = plugin;
 	}
 
 	public IPreferenceStore bindIPreferenceStore() {
@@ -70,5 +77,18 @@ public final class ConfigScanModule extends ProviderModule {
 	
 	public Class<? extends IConfigScanReverseXmlTransformation> bindIConfigScanReverseXmlTransformation() {
 		return ConfigScanReverseXmlTransformation.class;
+	}
+	
+	public Class<? extends TestCaseFactory> bindTestCaseFactory() {
+		return TestCaseFactory.class;
+	}
+	
+	public Provider<TestRun> registerTestRunProvider() {
+		return new Provider<TestRun>() {
+			@Override
+			public TestRun get() {
+				return plugin.getInjector().getInstance(TestRun.class);
+			} 
+		};
 	}
 }

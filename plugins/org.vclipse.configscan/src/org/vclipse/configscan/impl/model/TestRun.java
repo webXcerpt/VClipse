@@ -1,5 +1,7 @@
 package org.vclipse.configscan.impl.model;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
@@ -21,16 +23,15 @@ import org.vclipse.configscan.IConfigScanRunner;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.ITestObjectFilter;
 import org.vclipse.configscan.utils.DocumentUtility;
-import org.vclipse.configscan.utils.TestCaseUtility;
+import org.vclipse.configscan.utils.TestCaseFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
 
-public class TestRunAdapter implements IDeferredWorkbenchAdapter {
+public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 
 	// names for options
 	public static final String SKIP_MATERIAL_TESTS = "SkipMaterialTests";
@@ -47,13 +48,13 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 	private IConfigScanReverseXmlTransformation reverseXmlTransformation;
 	
 	@Inject
-	private IConfigScanRunner runner;
-	
-	@Inject
-	private TestCaseUtility testCaseUtility;
+	private IConfigScanRunner configScanRunner;
 	
 	@Inject
 	private ITestObjectFilter filter;
+	
+	@Inject
+	private TestCaseFactory testCaseFactory;
 	
 	private RemoteConnection connection;
 	
@@ -61,34 +62,34 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 	
 	private IConfigScanXMLProvider xmlProvider;
 	
-	private TestCase testCase;
-	
-	private Document inputDocument;
-	
-	private Document logDocument;
-	
 	private Map<String, Object> options;
 	
-	private Map<Element, URI> input2Uri;
-	
-	private Map<Element, Element> input2Log;
-	
-	public TestRunAdapter() {
+	private String title;
+
+	public TestRun() {
+		super(null);
 		options = Maps.newHashMap();
-		input2Uri = Maps.newHashMap();
-		input2Log = Maps.newHashMap();
 	}
 	
-	public void setTestCase(TestCase testCase) {
-		this.testCase = testCase;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	
-	public TestCase getTestCase() {
-		return testCase;
+	@Override
+	public String getTitle() {
+		return title;
 	}
-	
+
 	public void setTestModel(EObject testModel) {
 		this.testModel = testModel;
+	}
+
+	public void setXmlProvider(IConfigScanXMLProvider xmlProvider) {
+		this.xmlProvider = xmlProvider;
+	}
+	
+	public void setRemoteConnection(RemoteConnection remoteConnection) {
+		this.connection = remoteConnection;
 	}
 	
 	public void setFilter(ITestObjectFilter filter) {
@@ -99,65 +100,50 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 		this.options = options;
 	}
 	
-	public void setXmlProvider(IConfigScanXMLProvider provider) {
-		this.xmlProvider = provider;
-	}
-	
-	public void setConnection(RemoteConnection connection) {
-		this.connection = connection;
-	}
-	
-	public RemoteConnection getConnection() {
-		return connection;
+	public Map<String, Object> getOptions() {
+		return Collections.unmodifiableMap(options);
 	}
 
 	public EObject getTestModel() {
 		return testModel;
 	}
-	
-	public Document getLogDocument() {
-		return logDocument;
-	}
-	
-	public Document getInputDocument() {
-		return inputDocument;
-	}
-	
-	public Object[] getChildren(Object object) {
-		return testCase.getChildren().toArray();
-	}
-	
-	public Map<Element, URI> getInputUri() {
-		return input2Uri;
-	}
-	
-	public Map<Element, Element> getInputLog() {
-		return input2Log;
+
+	@Override
+	public Object[] getChildren(Object o) {
+		addTestCase(testCaseFactory.buildTestCase(this));
+		return getTestCases().toArray();
 	}
 
+	@Override
 	public ImageDescriptor getImageDescriptor(Object object) {
 		return imageHelper.getImageDescriptor(IConfigScanImages.TESTS);
 	}
 
+	@Override
 	public String getLabel(Object object) {
-		return testCase.getTitle();
+		return title;
 	}
 
+	@Override
 	public Object getParent(Object object) {
-		return testCase.getParent();
+		return null;
 	}
 
+	@Override
 	public void fetchDeferredChildren(Object object, IElementCollector collector, IProgressMonitor monitor) {
-		if(testCase.getChildren().isEmpty()) {
+		List<TestCase> testCases = getTestCases();
+		if(testCases.isEmpty()) {
 			monitor.beginTask("Running tests for " + testModel.eResource().getURI().lastSegment() + " and " + connection.getDescription() + " connection", IProgressMonitor.UNKNOWN);
-
-			input2Uri = Maps.newHashMap();
-			inputDocument = xmlProvider.transform(testModel, filter, input2Uri);
-
+			
+			Map<Element, URI> input2Uri = Maps.newHashMap();
+			Document inputDocument = xmlProvider.transform(testModel, filter, input2Uri);
+			setInputElement(inputDocument);
+			
 			if(monitor.isCanceled()) {
 				monitor.done();
 				return;
 			}
+			
 			String parseResult = documentUtility.parse(inputDocument);
 			String materialNumber = xmlProvider.getMaterialNumber(testModel);
 			
@@ -166,41 +152,42 @@ public class TestRunAdapter implements IDeferredWorkbenchAdapter {
 					monitor.done();
 					return;
 				}
-				String result = runner.execute(parseResult, connection, materialNumber, ResourceUtil.getFile(testModel.eResource()));
-				logDocument = documentUtility.parse(result);
+				Document logDocument = documentUtility.parse(configScanRunner.execute(parseResult, connection, 
+						materialNumber, ResourceUtil.getFile(testModel.eResource())));
+				setLogElement(logDocument);
 				
 				if(monitor.isCanceled()) {
 					monitor.done();
 					return;
 				}
-				input2Log = reverseXmlTransformation.computeConfigScanMap(logDocument, inputDocument);
-				Node logSession = documentUtility.getLogSession(logDocument);
-				if(logSession != null) {
-					testCase.addTestCase(
-							testCaseUtility.createTestCase(
-									(Element)logSession, testCase, documentUtility, options, input2Uri, input2Log));
-				}
+				
+				testCaseFactory.setOptions(options);
+				Map<Element, Element> log2Input = reverseXmlTransformation.computeConfigScanMap(logDocument, inputDocument);
+				testCaseFactory.setInputUriMap(input2Uri);
+				testCaseFactory.setLogInputMap(log2Input);
+				addTestCase(testCaseFactory.buildTestCase(logDocument, this));					
 			} catch (JCoException exception) {
 				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 			} catch (CoreException exception) {
 				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 			}
 		}
-		
 		if(monitor.isCanceled()) {
 			monitor.done();
 			return;
 		}
-		for(TestCase childTestCase : testCase.getChildren()) {
+		for(TestCase childTestCase : getTestCases()) {
 			collector.add(childTestCase, monitor);
 		}
 		monitor.done();
 	}
-	
+
+	@Override
 	public boolean isContainer() {
 		return true;
 	}
 
+	@Override
 	public ISchedulingRule getRule(Object object) {
 		// not used
 		return null;

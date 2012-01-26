@@ -7,6 +7,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.vclipse.configscan.ConfigScanImageHelper;
@@ -17,6 +18,10 @@ import org.vclipse.configscan.views.TestRunsHistory;
 
 public class ShowHistroyAction extends SimpleTreeViewerAction implements IMenuCreator, SelectionListener {
 
+	private static final int IMPORT_HISTORY = 1001;
+	private static final int EXPORT_HISTORY = 1002;
+	private static final int CLEAR_HISTORY = 1003;
+	
 	private Menu menu;
 	
 	private TestRunsHistory history;
@@ -47,6 +52,7 @@ public class ShowHistroyAction extends SimpleTreeViewerAction implements IMenuCr
 			menu.dispose();
 		}
 		menu = new Menu(parent);
+		
 		List<ConfigScanViewInput> historyEntries = history.getHistory();
 		for(ConfigScanViewInput input : historyEntries) {
 			MenuItem item = new MenuItem(menu, SWT.PUSH);
@@ -54,25 +60,61 @@ public class ShowHistroyAction extends SimpleTreeViewerAction implements IMenuCr
 			item.setID(historyEntries.indexOf(input));
 			item.addSelectionListener(this);
 		}
+		
+		MenuItem item = new MenuItem(menu, SWT.SEPARATOR);
+		
+		item = new MenuItem(menu, SWT.PUSH);
+		item.setText("Import ...");
+		item.addSelectionListener(this);
+		item.setID(IMPORT_HISTORY);
+		
+		item = new MenuItem(menu, SWT.PUSH);
+		item.setText("Export ...");
+		item.addSelectionListener(this);
+		item.setID(EXPORT_HISTORY);
+		
+		item = new MenuItem(menu, SWT.PUSH);
+		item.setText("Clear ...");
+		item.setID(CLEAR_HISTORY);
+		item.addSelectionListener(this);
+		
 		return menu;
-	}
-
-	@Override
-	public Menu getMenu(Menu parent) {
-		return null;
 	}
 
 	@Override
 	public void widgetSelected(SelectionEvent event) {
 		MenuItem item = (MenuItem)event.getSource();
 		int id = item.getID();
-		ConfigScanViewInput configScanViewInput = history.getHistory().get(id);
-		view.setInput(configScanViewInput);
+		if(CLEAR_HISTORY == id) {
+			history.clear();
+			view.setInput(null);
+		} else if(IMPORT_HISTORY == id) {
+			FileDialog fileDialog = new FileDialog(view.getSite().getShell(), SWT.OPEN);
+			fileDialog.setFilterExtensions(new String[]{"*.xml"});
+			String selectedpath = fileDialog.open();
+			if(selectedpath != null) {
+				history.load(selectedpath);
+			}
+		} else if(EXPORT_HISTORY == id) {
+			FileDialog fileDialog = new FileDialog(view.getSite().getShell(), SWT.SAVE);
+			fileDialog.setFilterExtensions(new String[]{"*.xml"});
+			String selectedpath = fileDialog.open();
+			if(selectedpath != null) {
+				history.save(selectedpath);
+			}
+		} else {
+			view.setInput(history.getHistory().get(id));
+		}
 	}
 
+	@Override
+	public Menu getMenu(Menu parent) {
+		// not used
+		return null;
+	}
+	
 	@Override
 	public void widgetDefaultSelected(SelectionEvent e) {
 		// not used
 	}
-
 }

@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,10 +17,9 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanConfiguration;
-import org.vclipse.configscan.impl.model.TestCase;
-import org.vclipse.configscan.impl.model.TestRunAdapter;
+import org.vclipse.configscan.impl.model.TestRun;
 import org.vclipse.configscan.utils.DocumentUtility;
-import org.vclipse.configscan.utils.TestCaseUtility;
+import org.vclipse.configscan.utils.TestCaseFactory;
 import org.vclipse.configscan.views.JobAwareTreeViewer.ITreeViewerLockListener;
 import org.vclipse.configscan.views.JobAwareTreeViewer.TreeViewerLockEvent;
 import org.w3c.dom.Document;
@@ -51,15 +49,15 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 	private final DocumentUtility documentUtility;
 	
 	private final IPreferenceStore preferenceStore;
-	
-	private final TestCaseUtility testCaseUtility;
+
+	private TestCaseFactory testCaseUtility;
 	
 	private LinkedList<ConfigScanViewInput> history;
 	
 	private int historyEntriesNumber;
 	
 	@Inject
-	public TestRunsHistory(AbstractUIPlugin plugin, DocumentUtility utility, TestCaseUtility testCaseUtility) {
+	public TestRunsHistory(AbstractUIPlugin plugin, DocumentUtility utility, TestCaseFactory testCaseUtility) {
 		history = Lists.newLinkedList();
 		this.documentUtility = utility;
 		this.plugin = plugin;
@@ -70,98 +68,19 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 		this.testCaseUtility = testCaseUtility;
 	}
 	
+	public void clear() {
+		history.clear();
+		
+	}
+	
 	public List<ConfigScanViewInput> getHistory() {
 		return Collections.unmodifiableList(history);
 	}
 	
 	@Override
 	protected void finalize() throws Throwable {
-		this.preferenceStore.removePropertyChangeListener(preferenceStoreListener);
+		preferenceStore.removePropertyChangeListener(preferenceStoreListener);
 		super.finalize();
-	}
-
-	public void save() {
-		try {
-			Path outputPath = new Path(plugin.getStateLocation().append(IConfigScanConfiguration.HISTORY_FILE_NAME).toString());
-			Document historyDocument = documentUtility.newDocument();
-			
-			Element logResults = historyDocument.createElement(DocumentUtility.LOG_RESULTS);
-			historyDocument.appendChild(logResults);
-			
-			for(ConfigScanViewInput input : history) {
-				Element inputElement = historyDocument.createElement(DocumentUtility.INPUT);
-				inputElement.setAttribute(DocumentUtility.NAME, input.getConfigurationName());
-				inputElement.setAttribute(DocumentUtility.DATE, input.getDate());
-				logResults.appendChild(inputElement);
-				for(TestCase testCase : input.getTestCases()) {
-					Object adapter = testCase.getAdapter(TestRunAdapter.class);
-					if(adapter != null) {
-						TestRunAdapter testRun = (TestRunAdapter)adapter;
-						Node logResult = documentUtility.getLogResult(testRun.getLogDocument());
-						Node importedLogResult = historyDocument.importNode(logResult, true);
-						inputElement.appendChild(importedLogResult);
-					}
-				}
-			}
-			String string = documentUtility.parse(historyDocument);
-			File historyFile = outputPath.toFile();
-			if(!historyFile.exists()) {
-				historyFile.createNewFile();
-			}
-			BufferedWriter out = new BufferedWriter(new FileWriter(historyFile));
-			out.write(string);
-			out.close();
-		} catch (IOException exception) {
-			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
-		}
-	}
-	
-	public void load() {
-		Path outputPath = new Path(plugin.getStateLocation().append(IConfigScanConfiguration.HISTORY_FILE_NAME).toString());
-		try {
-			File historyFile = outputPath.toFile();
-			if(historyFile.exists()) {
-				FileInputStream fileInputStream = new FileInputStream(historyFile);
-				Document document = documentUtility.parse(fileInputStream);
-				if(document != null) {
-					NodeList childNodes = document.getDocumentElement().getChildNodes();
-					for(int i=0; i<childNodes.getLength(); i++) {
-						Node item = childNodes.item(i);
-						// handle input
-						if(Node.ELEMENT_NODE == item.getNodeType() && DocumentUtility.INPUT.equals(item.getNodeName())) {
-							NamedNodeMap attributes = item.getAttributes();
-							String date = attributes.getNamedItem(DocumentUtility.DATE).getNodeValue();
-							String name = attributes.getNamedItem(DocumentUtility.NAME).getNodeValue();
-							
-							ConfigScanViewInput input = new ConfigScanViewInput();
-							input.setConfigurationName(name);
-							input.setDate(date);
-							
-							List<TestCase> testCases = Lists.newArrayList();
-							Node firstChild = item.getFirstChild();
-							if(firstChild != null) {
-								// handle log_result
-								NodeList childNodes2 = firstChild.getNextSibling().getChildNodes();
-								for(int k=0; k<childNodes2.getLength(); k++) {
-									Node item2 = childNodes2.item(k);
-									if(Node.ELEMENT_NODE == item2.getNodeType()) {
-										Element element = (Element)item2;
-										TestCase createTestCase = testCaseUtility.createTestCase(element, null, documentUtility, new HashMap<String, Object>());
-										if(createTestCase != null) {
-											testCases.add(createTestCase);										
-										}
-									}
-								}
-								input.setTestCases(testCases);
-								history.add(input);
-							}
-						}
-					}
-				}
-			}
-		} catch(IOException exception) {
-			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
-		}
 	}
 
 	public void available(TreeViewerLockEvent event) {
@@ -179,5 +98,83 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 
 	public void locked(TreeViewerLockEvent event) {
 		// not used
+	}
+	
+	public void save(String path) {
+		if(path == null || path.isEmpty()) {
+			ConfigScanPlugin.log("Can not save history, no path is provided.", IStatus.WARNING);
+		} else {
+			try {
+				Document historyDocument = documentUtility.newDocument();
+				Element logResults = historyDocument.createElement(DocumentUtility.LOG_RESULTS);
+				historyDocument.appendChild(logResults);
+				
+				for(ConfigScanViewInput input : history) {
+					Element inputElement = historyDocument.createElement(DocumentUtility.INPUT);
+					inputElement.setAttribute(DocumentUtility.NAME, input.getConfigurationName());
+					inputElement.setAttribute(DocumentUtility.DATE, input.getDate());
+					logResults.appendChild(inputElement);
+					
+					for(TestRun testRun : input.getTestRuns()) {
+						Node logResult = documentUtility.getLogResult((Document)testRun.getLogElement());
+						inputElement.appendChild(historyDocument.importNode(logResult, true));
+					}
+				}
+				File historyFile = new Path(path).toFile();
+				if(!historyFile.exists()) {
+					historyFile.createNewFile();
+				}
+				BufferedWriter out = new BufferedWriter(new FileWriter(historyFile));
+				out.write(documentUtility.parse(historyDocument));
+				out.close();
+			} catch (IOException exception) {
+				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+			}
+		}
+	}
+	
+	public void load(String path) {
+		if(path == null || path.isEmpty()) {
+			ConfigScanPlugin.log("Can not load history, no path is provided.", IStatus.WARNING);
+		} else {
+			try {
+				File historyFile = new Path(path).toFile();
+				if(historyFile.exists()) {
+					Document document = documentUtility.parse(new FileInputStream(historyFile));
+					if(document != null) {
+						NodeList childNodes = document.getDocumentElement().getChildNodes();
+						for(int i=0; i<childNodes.getLength(); i++) {
+							Node item = childNodes.item(i);
+							// handle input
+							if(Node.ELEMENT_NODE == item.getNodeType() && DocumentUtility.INPUT.equals(item.getNodeName())) {
+								NamedNodeMap attributes = item.getAttributes();
+								String date = attributes.getNamedItem(DocumentUtility.DATE).getNodeValue();
+								String name = attributes.getNamedItem(DocumentUtility.NAME).getNodeValue();
+								TestRun testRun = testCaseUtility.buildTestRun("Testrun on " + date + " with " + name, null, null, null);
+								testRun.setLogElement(document);
+								ConfigScanViewInput input = new ConfigScanViewInput();
+								input.setConfigurationName(name);
+								input.setDate(date);
+								input.setTestRuns(Lists.newArrayList(testRun));
+								Node firstChild = item.getFirstChild();
+								if(firstChild != null) {
+									// handle log_result
+									NodeList childNodes2 = firstChild.getNextSibling().getChildNodes();
+									for(int k=0; k<childNodes2.getLength(); k++) {
+										Node item2 = childNodes2.item(k);
+										if(Node.ELEMENT_NODE == item2.getNodeType()) {
+											testRun.addTestCase(testCaseUtility.buildTestCase((Element)item2, testRun));										
+										}
+									}
+									history.add(input);
+								}
+							}
+						}
+					}
+				}
+			} catch(IOException exception) {
+				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+			}
+		}
 	}
 }

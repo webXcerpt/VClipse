@@ -5,7 +5,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.vclipse.configscan.ConfigScanImageHelper;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.impl.model.TestCase;
-import org.vclipse.configscan.impl.model.TestRunAdapter;
 import org.vclipse.configscan.utils.FailureTreeTraverser;
 import org.vclipse.configscan.views.ConfigScanView;
 
@@ -23,9 +22,6 @@ public class NextFailureAction extends SimpleTreeViewerAction {
 		IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
 		if(!selection.isEmpty()) {
 			Object firstSelected = selection.getFirstElement();
-			if(firstSelected instanceof TestRunAdapter) {
-				firstSelected = ((TestRunAdapter)firstSelected).getTestCase();
-			}
 			if(firstSelected instanceof TestCase) {
 				TestCase nextNode = new FailureTreeTraverser().getNextItem((TestCase)firstSelected);
 				if(nextNode != null) {

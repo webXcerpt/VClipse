@@ -17,9 +17,9 @@ import org.eclipse.xtext.util.PolymorphicDispatcher;
 import org.eclipse.xtext.util.PolymorphicDispatcher.ErrorHandler;
 import org.vclipse.configscan.ConfigScanImageHelper;
 import org.vclipse.configscan.impl.model.TestCase;
+import org.vclipse.configscan.impl.model.TestGroup;
 import org.vclipse.configscan.impl.model.TestCase.Status;
-import org.vclipse.configscan.impl.model.TestRunAdapter;
-import org.vclipse.configscan.utils.TestCaseUtility;
+import org.vclipse.configscan.impl.model.TestRun;
 
 import com.google.inject.Inject;
 
@@ -63,8 +63,6 @@ public abstract class AbstractLabelProvider extends ColumnLabelProvider implemen
 		
 	protected static final String EMPTY = "";
 
-	protected TestCaseUtility testCaseUtility;
-	
 	protected ConfigScanImageHelper imageHelper;
 	
 	protected TextStyle failureStyle;
@@ -82,11 +80,6 @@ public abstract class AbstractLabelProvider extends ColumnLabelProvider implemen
 	@Inject
 	public void setImageHelper(ConfigScanImageHelper imageHelper) {
 		this.imageHelper = imageHelper;
-	}
-	
-	@Inject
-	public void setTestCaseUtility(TestCaseUtility testCaseUtility) {
-		this.testCaseUtility = testCaseUtility;
 	}
 	
 	@Override
@@ -122,38 +115,36 @@ public abstract class AbstractLabelProvider extends ColumnLabelProvider implemen
 	protected EObject getReferencedEObject(Object element) {
 		if(element instanceof TestCase) {
 			TestCase testCase = (TestCase)element;
-			TestCase root = testCaseUtility.getRoot(testCase);
-			if(root != null) {
-				Object adapter = root.getAdapter(TestRunAdapter.class);
-				if(adapter != null) {
-					EObject testModel = ((TestRunAdapter)adapter).getTestModel();
-					if(testModel != null) {
-						URI sourceUri = testCase.getSourceUri();
-						if(sourceUri != null) {
-							return testModel.eResource().getResourceSet().getEObject(sourceUri, true);							
-						}
-					}
+			EObject testModel = ((TestRun)testCase.getRoot()).getTestModel();
+			if(testModel != null) {
+				URI sourceUri = testCase.getSourceURI();
+				if(sourceUri != null) {
+					return testModel.eResource().getResourceSet().getEObject(sourceUri, true);							
 				}
-			}			
+			}
 		}
 		return null;
 	}
 	
 	protected StyledString getStatistics(TestCase testCase) {
-		List<TestCase> children = testCase.getChildren();
-		if(!children.isEmpty()) {
-			int failures = 0;
-			for(TestCase childTestCase : testCase.getChildren()) {
-				if(Status.FAILURE == childTestCase.getStatus()) {
-					failures++;
+		if(testCase instanceof TestGroup) {
+			TestGroup testGroup = (TestGroup)testCase;
+			List<TestCase> testCases = testGroup.getTestCases();
+			if(!testCases.isEmpty()) {
+				int failures = 0;
+				for(TestCase childTestCase : testCases) {
+					if(Status.FAILURE == childTestCase.getStatus()) {
+						failures++;
+					}
 				}
+				int numberOfTestCases = testCases.size();
+				StyledString numberOfTests = new StyledString("     [ Number of tests = { " + numberOfTestCases + " } ");
+				StylerFactory stylerFactory = new StylerFactory();
+				numberOfTests.append(stylerFactory.createFromXtextStyle("Success = { " + (numberOfTestCases - failures) + " } ", successStyle));
+				numberOfTests.append(new StylerFactory().createFromXtextStyle("Failures = { " + failures + " } ", failureStyle));
+				numberOfTests.append(" ] ");
+				return numberOfTests;
 			}
-			int numberOfTestCases = children.size();
-			StyledString numberOfTests = new StyledString("     Number of tests = { " + numberOfTestCases + " } ");
-			StylerFactory stylerFactory = new StylerFactory();
-			numberOfTests.append(stylerFactory.createFromXtextStyle("Success = { " + (numberOfTestCases - failures) + " } ", successStyle));
-			numberOfTests.append(new StylerFactory().createFromXtextStyle("Failures = { " + failures + " } ", failureStyle));
-			return numberOfTests;
 		}
 		return new StyledString(EMPTY);
  	}

@@ -38,6 +38,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -47,9 +48,8 @@ import org.vclipse.configscan.ConfigScanImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanConfiguration;
 import org.vclipse.configscan.impl.model.TestCase;
-import org.vclipse.configscan.impl.model.TestRunAdapter;
 import org.vclipse.configscan.utils.DocumentUtility;
-import org.vclipse.configscan.utils.TestCaseUtility;
+import org.vclipse.configscan.utils.TestCaseFactory;
 import org.vclipse.configscan.views.JobAwareTreeViewer.ITreeViewerLockListener;
 import org.vclipse.configscan.views.JobAwareTreeViewer.TreeViewerLockEvent;
 import org.vclipse.configscan.views.actions.CollapseTreeAction;
@@ -64,7 +64,6 @@ import org.vclipse.configscan.views.actions.ShowHistroyAction;
 import org.vclipse.configscan.views.actions.ToggleLabelProviderAction;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 public final class ConfigScanView extends ViewPart {
 	
@@ -113,14 +112,13 @@ public final class ConfigScanView extends ViewPart {
 	private DocumentUtility documentUtility;
 	
 	@Inject
-	private TestCaseUtility testCaseUtility;
-	
-	@Inject
 	private TestRunsHistory history;
 	
 	@Inject
-	private Provider<TestRunAdapter> testRunProvider;
+	private AbstractUIPlugin plugin;
 	
+	@Inject
+	private TestCaseFactory testCaseFactoy;
 	
 	private PreferenceStoreListener propertyChangeListener;
 	private TreeViewerLockListener treeViewerLockListener;
@@ -148,7 +146,7 @@ public final class ConfigScanView extends ViewPart {
 	public void dispose() {
 		preferenceStore.removePropertyChangeListener(propertyChangeListener);
 		if(preferenceStore.getBoolean(IConfigScanConfiguration.SAVE_HISTORY)) {
-			history.save();			
+			history.save(plugin.getStateLocation().append(IConfigScanConfiguration.HISTORY_FILE_NAME).toString());			
 		}
 		viewer.removeTreeViewerLockListener(history);
 		viewer.removeTreeViewerLockListener(treeViewerLockListener);
@@ -168,7 +166,7 @@ public final class ConfigScanView extends ViewPart {
 		
 		preferenceStore.addPropertyChangeListener(propertyChangeListener = new PreferenceStoreListener());
 		if(preferenceStore.getBoolean(IConfigScanConfiguration.EXPAND_TREE_ON_INPUT)) {
-			viewer.setAutoExpandLevel(IConfigScanConfiguration.DEFAULT_EXPAND_LEVEL);			
+			viewer.setAutoExpandLevel(10);			
 		}
 		
 		ColumnViewerToolTipSupport.enableFor(viewer);
@@ -178,13 +176,13 @@ public final class ConfigScanView extends ViewPart {
 		hookDoubleClickAction();
 		
 		if(preferenceStore.getBoolean(IConfigScanConfiguration.SAVE_HISTORY)) {
-			history.load();
+			history.load(plugin.getStateLocation().append(IConfigScanConfiguration.HISTORY_FILE_NAME).toString());
 		}
 	}
 
 	public void setInput(ConfigScanViewInput input) {
 		this.input = input;
-		disableActions();
+		//disableActions();
 		viewer.setInput(input);
 	}
 
@@ -206,14 +204,14 @@ public final class ConfigScanView extends ViewPart {
 		toolBarManager.add(showFailuresAction = new ShowFailuresAction(this, imageHelper));
 		toolBarManager.add(new Separator());
 		toolBarManager.add(relaunchAction = new RelaunchAction(this, imageHelper));
-		toolBarManager.add(relaunchFailedAction = new RelaunchedFailedAction(this, imageHelper, testRunProvider));
+		toolBarManager.add(relaunchFailedAction = new RelaunchedFailedAction(this, imageHelper));
 		toolBarManager.add(new Separator());
 		toolBarManager.add(nextFailureAction = new NextFailureAction(this, imageHelper));
 		toolBarManager.add(prevFailureAction = new PrevFailureAction(this, imageHelper));
 		toolBarManager.add(new Separator());
-		toolBarManager.add(importExportAction = new ImportExportAction(this, imageHelper, documentUtility, testCaseUtility));
+		toolBarManager.add(importExportAction = new ImportExportAction(this, imageHelper, documentUtility, testCaseFactoy));
 		toolBarManager.add(showHistoryAction = new ShowHistroyAction(this, imageHelper, history));
-		disableActions();
+		//disableActions();
 	}
 	
 	private void disableActions() {
@@ -260,7 +258,7 @@ public final class ConfigScanView extends ViewPart {
 				Object selectedObject = ((IStructuredSelection)event.getSelection()).getFirstElement();
 				if(selectedObject instanceof TestCase) {
 					TestCase testCase = (TestCase)selectedObject;
-					URI testStatementUri = testCase.getSourceUri();
+					URI testStatementUri = testCase.getSourceURI();
 					if(testStatementUri != null) {
 						Resource resource = new XtextResourceSet().getResource(testStatementUri, true);
 						if(resource == null) {

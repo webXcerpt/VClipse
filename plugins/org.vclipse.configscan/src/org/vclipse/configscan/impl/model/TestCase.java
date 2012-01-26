@@ -1,12 +1,9 @@
 package org.vclipse.configscan.impl.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.emf.common.util.URI;
+import org.vclipse.configscan.utils.DocumentUtility;
 import org.w3c.dom.Element;
-
-import com.google.common.collect.Lists;
+import org.w3c.dom.Node;
 
 public class TestCase {
 	
@@ -14,124 +11,83 @@ public class TestCase {
 		SUCCESS, FAILURE
 	}
 	
-	private String title;
-	
-	private Status status;
+	public TestCase(TestCase parent) {
+		this.parent = parent;
+	}
 	
 	private TestCase parent;
 	
-	private List<TestCase> children;
+	private URI sourceURI;
 	
-	private List<Object> adapters;
+	private Node inputNode;
 	
-	private URI sourceUri;
+	private Node logNode;
 	
-	private Element inputElement;
-	
-	private Element logElement;
-	
-	public TestCase() {
-		this("no name", Status.SUCCESS);
+	public String getTitle() {
+		if(logNode instanceof Element) {
+			return ((Element)logNode).getAttribute(DocumentUtility.ATRRIBUTE_TITLE);			
+		} 
+		return null;
 	}
 	
-	public TestCase(String title, Status status) {
-		this(title, status, new ArrayList<TestCase>());
-	}
-	
-	public TestCase(String title, Status status, List<TestCase> children) {
-		this.title = title;
-		this.status = status;
-		this.children = children;
-		adapters = Lists.newArrayList();
-	}
-	
-	public void clearChildren() {
-		children.clear();
-	}
-	
-	public void setInputElement(Element element) {
-		this.inputElement = element;
-	}
-	
-	public void setLogElement(Element element) {
-		this.logElement = element;
-	}
-	
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	
-	public void setStatus(Status status) {
-		this.status = status;
+	public Status getStatus() {
+		if(logNode instanceof Element) {
+			return ((Element)logNode).getAttribute(DocumentUtility.ATTRIBUTE_STATUS).equals(DocumentUtility.STATUS_SUCCESS) ? Status.SUCCESS : Status.FAILURE;
+		}
+		return Status.FAILURE;
 	}
 	
 	public void setParent(TestCase parent) {
 		this.parent = parent;
 	}
 	
-	public void setSourceUri(URI uri) {
-		this.sourceUri = uri;
+	public void setSourceURI(URI sourceURI) {
+		this.sourceURI = sourceURI;
 	}
 	
-	public void addTestCase(TestCase testCase) {
-		children.add(testCase);
+	public void setInputElement(Node inputNode) {
+		this.inputNode = inputNode;
 	}
 	
-	public Element getLogElement() {
-		return this.logElement;
+	public void setLogElement(Node logNode) {
+		this.logNode = logNode;
 	}
-	
-	public Element getInputElement() {
-		return this.inputElement;
-	}
-	
-	public URI getSourceUri() {
-		return sourceUri;
-	}
-	
-	public String getTitle() {
-		return title;
-	}
-	
-	public Status getStatus() {
-		return status;
-	}
-	
+
 	public TestCase getParent() {
 		return parent;
 	}
-	
-	public List<TestCase> getChildren() {
-		return children;
+
+	public URI getSourceURI() {
+		return sourceURI;
 	}
 
-	public Object getAdapter(Class<?> type) {
-		for(Object object : adapters) {
-			if(object.getClass() == type) {
-				return object;
-			}
-		}
-		return null;
-	}
-	
-	public void addAdapter(Object adapter) {
-		if(adapters == null) {
-			adapters = Lists.newArrayListWithExpectedSize(5);
-		}
-		if(adapter != null) {
-			adapters.add(adapter);			
-		}
+	public Node getInputElement() {
+		return inputNode;
 	}
 
+	public Node getLogElement() {
+		return logNode;
+	}
+
+	public TestCase getRoot() {
+		return getRoot(this);
+	}
+	
+	protected TestCase getRoot(TestCase testCase) {
+		TestCase parent = testCase.getParent();
+		if(parent == null) {
+			return testCase;
+		} else {
+			return getRoot(parent);
+		}
+	}
+	
 	@Override
 	public String toString() {
-		StringBuffer strBuffer = new StringBuffer();
-		strBuffer.append("titel={");
-		strBuffer.append(title);
-		strBuffer.append("}");
-		strBuffer.append("status={");
-		strBuffer.append(status);
-		strBuffer.append("}");
-		return strBuffer.toString();
+		return "Title={" + getTitle() + "} " +
+				"Status={" + getStatus() + 
+				"} Source uri={" + sourceURI.toString() + 
+				"}" +  " Parent={" + parent == null 
+				? null : parent.getTitle() + "}";
 	}
 }

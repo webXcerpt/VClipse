@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Text;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanRemoteConnections;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
-import org.vclipse.configscan.impl.model.TestRunAdapter;
+import org.vclipse.configscan.impl.model.TestRun;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -142,17 +142,17 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 		try {
 			Map<?, ?> attributes = configuration.getAttributes();
 			
-			Object object = attributes.get(TestRunAdapter.SKIP_MATERIAL_TESTS);
+			Object object = attributes.get(TestRun.SKIP_MATERIAL_TESTS);
 			if(object != null) {
 				skipMaterialTestsButton.setSelection((Boolean)object);
 			}
 			
-			object = attributes.get(TestRunAdapter.KBOBJECT);
+			object = attributes.get(TestRun.KBOBJECT);
 			if(object != null) {
 				kbObjectText.setText((String)object);
 			}
 			
-			object = attributes.get(TestRunAdapter.RTV);
+			object = attributes.get(TestRun.RTV);
 			if(object != null) {
 				rtvText.setText((String)object);
 			}
@@ -177,9 +177,9 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		Map<String, Object> map = Maps.newHashMap();
 		
-		map.put(TestRunAdapter.SKIP_MATERIAL_TESTS, skipMaterialTestsButton.getSelection());
-		map.put(TestRunAdapter.KBOBJECT, kbObjectText.getText());
-		map.put(TestRunAdapter.RTV, rtvText.getText());
+		map.put(TestRun.SKIP_MATERIAL_TESTS, skipMaterialTestsButton.getSelection());
+		map.put(TestRun.KBOBJECT, kbObjectText.getText());
+		map.put(TestRun.RTV, rtvText.getText());
 		
 		for(TableItem item : connectionsTable.getItems()) {
 			map.put(item.getText(), item.getChecked());

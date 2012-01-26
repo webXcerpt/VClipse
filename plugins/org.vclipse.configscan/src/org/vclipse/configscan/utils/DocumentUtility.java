@@ -19,7 +19,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.core.runtime.IStatus;
 import org.vclipse.configscan.ConfigScanPlugin;
-import org.vclipse.configscan.impl.model.TestRunAdapter;
+import org.vclipse.configscan.impl.model.TestRun;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -45,6 +45,8 @@ public class DocumentUtility {
 	public static final String TITLE = "title";
 	
 	public static final String ATTRIBUTE_STATUS = "status";
+	
+	public static final String ATRRIBUTE_TITLE = "title";
 	
 	public static final String STATUS_SUCCESS = "S";
 	
@@ -168,7 +170,7 @@ public class DocumentUtility {
 	}
 	
 	public boolean passesOptionsFilter(Element element, Map<String, Object> options) {
-		Object object = options.get(TestRunAdapter.SKIP_MATERIAL_TESTS);
+		Object object = options.get(TestRun.SKIP_MATERIAL_TESTS);
 		if(object instanceof Boolean && (Boolean)object) {
 			String commandAttribute = element.getAttribute("cmd");
 			if(commandAttribute.equals("CHECK ITEM QUANTITY")

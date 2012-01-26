@@ -23,6 +23,7 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -35,10 +36,10 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanRemoteConnections;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
+import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.extension.ExtensionPointReader;
-import org.vclipse.configscan.impl.model.TestCase;
-import org.vclipse.configscan.impl.model.TestRunAdapter;
-import org.vclipse.configscan.impl.model.TestRunAdapterFactory;
+import org.vclipse.configscan.impl.model.TestRun;
+import org.vclipse.configscan.utils.TestCaseFactory;
 import org.vclipse.configscan.views.ConfigScanView;
 import org.vclipse.configscan.views.ConfigScanViewInput;
 
@@ -46,7 +47,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.sap.conn.jco.JCoException;
 
 public class LaunchDelegate extends LaunchConfigurationDelegate {
@@ -60,10 +60,7 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 	private ExtensionPointReader extensionPointReader;
 	
 	@Inject
-	private Provider<TestCase> testCaseProvider;
-	
-	@Inject
-	private Provider<TestRunAdapter> testRunAdapter;
+	private TestCaseFactory testCaseFactory;
 	
 	@Override
 	public void launch(final ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
@@ -109,7 +106,7 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 			} else {
 				Iterator<?> iterator = selection.iterator();
 				XtextResourceSet resourceSet = new XtextResourceSet();
-				final List<TestCase> testRuns = Lists.newArrayList();
+				final List<TestRun> testRuns = Lists.newArrayList();
 				while(iterator.hasNext()) {
 					Object nextObject = iterator.next();
 					if(nextObject instanceof IFile) {
@@ -125,23 +122,19 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 								ConfigScanPlugin.log("Can not create a resource for the file " + currentFile.getName(), IStatus.WARNING);
 								continue;
 							} else {
-								for(RemoteConnection rc : selectedConnections.values()) {
-									TestRunAdapter adapter = testRunAdapter.get();
-									adapter.setConnection(rc);
-									adapter.setXmlProvider(extensionPointReader.getXmlProvider(extension));
-									adapter.setTestModel(currentResource.getContents().get(0));
-										
-									Map<String, Object> options = Maps.newHashMap();
-									options.put(TestRunAdapter.SKIP_MATERIAL_TESTS, attributes.get(TestRunAdapter.SKIP_MATERIAL_TESTS));
-									options.put(TestRunAdapter.KBOBJECT, attributes.get(TestRunAdapter.KBOBJECT));
-									options.put(TestRunAdapter.RTV, attributes.get(TestRunAdapter.RTV));
-										
-									adapter.setOptions(options);
-									
-									TestCase testCase = testCaseProvider.get();
-									testCase.setTitle(uri.lastSegment() + " on " + rc.getDescription());
-									TestRunAdapterFactory.getDefault().adapt(adapter, testCase);		
-									testRuns.add(testCase);
+								// collect options
+								Map<String, Object> options = Maps.newHashMap();
+								options.put(TestRun.SKIP_MATERIAL_TESTS, attributes.get(TestRun.SKIP_MATERIAL_TESTS));
+								options.put(TestRun.KBOBJECT, attributes.get(TestRun.KBOBJECT));
+								options.put(TestRun.RTV, attributes.get(TestRun.RTV));
+								testCaseFactory.setOptions(options);
+								
+								EObject testModel = currentResource.getContents().get(0);
+								String fileName = currentFile.getName();
+								
+								for(RemoteConnection connection : selectedConnections.values()) {
+									IConfigScanXMLProvider xmlProvider = extensionPointReader.getXmlProvider(extension);
+									testRuns.add(testCaseFactory.buildTestRun(fileName, connection, xmlProvider, testModel));
 								}
 							}
 						}
@@ -150,7 +143,7 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 				
 				final ConfigScanViewInput input = new ConfigScanViewInput();
 				input.setConfigurationName(configuration.getName());
-				input.setTestCases(testRuns);
+				input.setTestRuns(testRuns);
 				input.setDate(null);
 				
 				Display.getDefault().syncExec(new Runnable() {
