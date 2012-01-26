@@ -27,6 +27,7 @@ public interface IConfigScanConfiguration {
 	
 	// other values used in code
 	public static final String DATE_FORMAT = "yyyyMMdd'T'HH-mm-ss";
+	public static final String DATE_FORMAT_UI_ENTRIES = "EEE, d MMM yyyy HH:mm:ss";
 	
 	public static final String HISTORY_FILE_NAME = "history.xml";
 

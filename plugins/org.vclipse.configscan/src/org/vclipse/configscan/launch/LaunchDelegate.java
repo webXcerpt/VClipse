@@ -34,6 +34,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.vclipse.configscan.ConfigScanPlugin;
+import org.vclipse.configscan.IConfigScanConfiguration;
 import org.vclipse.configscan.IConfigScanRemoteConnections;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
 import org.vclipse.configscan.IConfigScanXMLProvider;
@@ -144,7 +145,7 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 				final ConfigScanViewInput input = new ConfigScanViewInput();
 				input.setConfigurationName(configuration.getName());
 				input.setTestRuns(testRuns);
-				input.setDate(null);
+				input.setDate(null, IConfigScanConfiguration.DATE_FORMAT_UI_ENTRIES);
 				
 				Display.getDefault().syncExec(new Runnable() {
 					@Override

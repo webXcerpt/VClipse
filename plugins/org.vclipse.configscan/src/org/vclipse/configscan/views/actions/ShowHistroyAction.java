@@ -60,7 +60,7 @@ public final class ShowHistroyAction extends SimpleTreeViewerAction implements I
 		List<ConfigScanViewInput> historyEntries = history.getHistory();
 		for(ConfigScanViewInput input : historyEntries) {
 			MenuItem item = new MenuItem(menu, SWT.PUSH);
-			item.setText(input.getConfigurationName() + " at " + input.getDate());
+			item.setText(input.getConfigurationName() + " on " + input.getDate());
 			item.setID(historyEntries.indexOf(input));
 			item.addSelectionListener(this);
 		}

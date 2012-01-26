@@ -33,10 +33,10 @@ public class ConfigScanViewInput {
 		this.configurationName = name == null ? "" : name;
 	}
 	
-	public void setDate(String date) {
+	public void setDate(String date, String formatString) {
 		if(date == null) {
-			this.date = new SimpleDateFormat(
-					IConfigScanConfiguration.DATE_FORMAT).format(Calendar.getInstance().getTime());			
+			this.date = new SimpleDateFormat(formatString == null ? 
+					IConfigScanConfiguration.DATE_FORMAT : IConfigScanConfiguration.DATE_FORMAT_UI_ENTRIES).format(Calendar.getInstance().getTime());			
 		} else {
 			this.date = date;
 		}

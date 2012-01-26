@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.xtext.util.Files;
 import org.vclipse.configscan.ConfigScanImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
+import org.vclipse.configscan.IConfigScanConfiguration;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.impl.model.TestRun;
 import org.vclipse.configscan.utils.DocumentUtility;
@@ -120,6 +121,8 @@ public final class ImportExportAction extends SimpleTreeViewerAction implements 
 					testRun.setLogElement(document);
 					ConfigScanViewInput input = new ConfigScanViewInput();
 					input.setTestRuns(Lists.newArrayList(testRun));
+					input.setDate(null, IConfigScanConfiguration.DATE_FORMAT_UI_ENTRIES);
+					input.setConfigurationName(testRun.getTitle());
 					testRun.addTestCase(testCaseUtility.buildTestCase(document, testRun));	
 					
 					view.setInput(input);

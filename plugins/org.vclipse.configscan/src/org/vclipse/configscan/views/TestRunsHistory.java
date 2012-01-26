@@ -157,7 +157,7 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 								testRun.setLogElement(document);
 								ConfigScanViewInput input = new ConfigScanViewInput();
 								input.setConfigurationName(name);
-								input.setDate(date);
+								input.setDate(date, IConfigScanConfiguration.DATE_FORMAT_UI_ENTRIES);
 								input.setTestRuns(Lists.newArrayList(testRun));
 								Node firstChild = item.getFirstChild();
 								if(firstChild != null) {
