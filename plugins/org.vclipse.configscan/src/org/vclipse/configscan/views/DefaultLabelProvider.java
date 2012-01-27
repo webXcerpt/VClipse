@@ -120,7 +120,7 @@ public class DefaultLabelProvider extends DelegatingStyledCellLabelProvider impl
 		segments.add(testCase);
 		TestCase parent = testCase.getParent();
 		if(parent == null) {
-			return new TreePath(Lists.reverse(segments).toArray());
+			return new TreePath(/*Lists.reverse(segments)*/ segments.toArray());  // FIXME activate with Xtext 2.2
 		} else {
 			return getTreePath(parent, segments);
 		}
