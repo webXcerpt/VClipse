@@ -16,6 +16,7 @@ import org.vclipse.configscan.ITestObjectFilter;
 import org.vclipse.configscan.vcmlt.vcmlT.Action;
 import org.vclipse.configscan.vcmlt.vcmlT.BomPath;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckBomCountItems;
+import org.vclipse.configscan.vcmlt.vcmlT.CheckBomItemExists;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckBomItemQty;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckComplete;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckConflict;
@@ -81,7 +82,6 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 		
 		return this; // caseModel was successful
 	}
-
 	
 	@Override
 	public Object caseTestGroup(final TestGroup testGroup) {
@@ -179,6 +179,20 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 		Element e = doc.createElement("checkbomquantity");
 		e.setAttribute("quantity", Integer.toString(object.getAmount()));
 		e.setAttribute("operator", object.getOperator().getName());
+		e.setAttribute("bompath", getChildPath(object.getBompath()));
+		
+		map.put(e, EcoreUtil.getURI(object));
+		current.appendChild(e);
+		return this;
+	}
+
+	@Override
+	public Object caseCheckBomItemExists (final CheckBomItemExists object) {
+		Element e = doc.createElement("checkitemexist");
+		if (object.isExists())
+			e.setAttribute("value", "TRUE");
+		else
+			e.setAttribute("value", "FALSE");
 		e.setAttribute("bompath", getChildPath(object.getBompath()));
 		
 		map.put(e, EcoreUtil.getURI(object));

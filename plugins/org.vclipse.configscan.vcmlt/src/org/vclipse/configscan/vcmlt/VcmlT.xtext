@@ -48,7 +48,7 @@ Action
     |   CheckConflict
     |   CheckComplete
     |   CheckBomItemQty
-    |   CheckBomItem
+    |   CheckBomItemExists
     |   CheckBomCountItems
 	;
 	
@@ -155,8 +155,8 @@ CheckBomCountItems
 	:	'check' 'countitems' '=' value=INT ('@' bompath=BomPath)?		
 	;
 	
-CheckBomItem
-	:	'check' ('not')? 'bomitem' ('@' bompath=BomPath)?		
+CheckBomItemExists
+	:	'check' (exists?='exists' | 'notexists') ('@' bompath=BomPath)?		
 	;
 
 BomPath
