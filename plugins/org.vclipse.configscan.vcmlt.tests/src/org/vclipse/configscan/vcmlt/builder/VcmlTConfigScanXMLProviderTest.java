@@ -10,8 +10,8 @@ import org.eclipselabs.xtext.utils.unittesting.XtextTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.vclipse.configscan.ITestObjectFilter;
+import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.vcmlt.VcmlTInjectorProviderWithVCML;
-import org.vclipse.configscan.views.XmlLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -26,7 +26,7 @@ public class VcmlTConfigScanXMLProviderTest extends XtextTest {
 	VcmlTConfigScanXMLProvider csXmlProvider;
 	
 	@Inject
-	XmlLoader xmlLoader; // might be refactored in future
+	DocumentUtility documentUtility;
 	
 	@Inject
 	ITestObjectFilter filter;
@@ -38,6 +38,6 @@ public class VcmlTConfigScanXMLProviderTest extends XtextTest {
 		EObject root = getModelRoot();
 		HashMap<Element, URI> map = Maps.newHashMap();
 		Document document = csXmlProvider.transform(root, filter, map);
-		System.err.println(xmlLoader.parseXmlToString(document));
+		System.err.println(documentUtility.parse(document));
 	}
 }
