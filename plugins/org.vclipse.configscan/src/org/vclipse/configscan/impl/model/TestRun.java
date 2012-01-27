@@ -195,4 +195,42 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 		// not used
 		return null;
 	}
+
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((testModel == null) ? 0 : testModel.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		return result;
+	}
+
+	
+	@Override
+	public boolean equals(Object object) {
+		if(this == object)  {
+			return true;			
+		} else if(!super.equals(object)) {
+			return false;
+		} else if(getClass() != object.getClass()) {
+			return false;
+		}
+		TestRun other = (TestRun) object;
+		if(testModel == null) {
+			if(other.testModel != null) {
+				return false;
+			}
+		} else if(!testModel.equals(other.testModel)) {
+			return false;
+		}
+		if(title == null) {
+			if(other.title != null) {
+				return false;
+			}
+		} else if(!title.equals(other.title)) {
+			return false;
+		}
+		return true;
+	}
 }

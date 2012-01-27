@@ -32,4 +32,30 @@ public class TestGroup extends TestCase {
 	public void removeTestCases() {
 		testCases.clear();
 	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result
+				+ ((testCases == null) ? 0 : testCases.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TestGroup other = (TestGroup) obj;
+		if (testCases == null) {
+			if (other.testCases != null)
+				return false;
+		} else if (!testCases.equals(other.testCases))
+			return false;
+		return true;
+	}
 }

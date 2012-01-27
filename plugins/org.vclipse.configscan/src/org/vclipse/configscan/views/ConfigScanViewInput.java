@@ -61,16 +61,47 @@ public class ConfigScanViewInput {
 					testRuns.size() + "}";
 	}
 
-	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((configurationName == null) ? 0 : configurationName.hashCode());
+		result = prime * result + ((date == null) ? 0 : date.hashCode());
+		result = prime * result + ((testRuns == null) ? 0 : testRuns.hashCode());
+		return result;
+	}
+
 	@Override
 	public boolean equals(Object object) {
-		if(object instanceof ConfigScanViewInput) {
-			ConfigScanViewInput compare = (ConfigScanViewInput)object;
-			return configurationName.equals(compare.getConfigurationName()) 
-					&& date.equals(compare.getDate()) 
-						&& testRuns.size() == compare.getTestRuns().size();
-						
+		if(this == object) {
+			return true;
+		} else if(object == null) {
+			return false;
+		} else if (getClass() != object.getClass()) {
+			return false;
 		}
-		return super.equals(object);
+		
+		ConfigScanViewInput other = (ConfigScanViewInput) object;
+		if(configurationName == null) {
+			if(other.configurationName != null) {
+				return false;
+			}
+		} else if(!configurationName.equals(other.configurationName)) {
+			return false;
+		}
+		if(date == null) {
+			if(other.date != null) {
+				return false;
+			}
+		} else if(!date.equals(other.date)) {
+			return false;
+		} if(testRuns == null) {
+			if(other.testRuns != null) {
+				return false;
+			}
+		} else if(!testRuns.equals(other.testRuns)) {
+			return false;
+		}
+		return true;
 	}
 }

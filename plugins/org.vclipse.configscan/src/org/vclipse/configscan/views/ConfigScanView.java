@@ -56,6 +56,7 @@ import org.vclipse.configscan.utils.TestCaseFactory;
 import org.vclipse.configscan.views.JobAwareTreeViewer.ITreeViewerLockListener;
 import org.vclipse.configscan.views.JobAwareTreeViewer.TreeViewerLockEvent;
 import org.vclipse.configscan.views.actions.CollapseTreeAction;
+import org.vclipse.configscan.views.actions.CompareAction;
 import org.vclipse.configscan.views.actions.ExpandTreeAction;
 import org.vclipse.configscan.views.actions.ImportExportAction;
 import org.vclipse.configscan.views.actions.NextFailureAction;
@@ -128,7 +129,8 @@ public final class ConfigScanView extends ViewPart {
 	private TreeViewerLockListener treeViewerLockListener;
 	
 	private JobAwareTreeViewer viewer;
-
+	private DefaultLabelProvider defaultLabelProvider;
+	
 	private ToggleLabelProviderAction toggleContent;
 	private ShowHistroyAction showHistoryAction;
 	private ExpandTreeAction expandTreeAction;
@@ -139,6 +141,7 @@ public final class ConfigScanView extends ViewPart {
 	private NextFailureAction nextFailureAction;
 	private PrevFailureAction prevFailureAction;
 	private ImportExportAction importExportAction;
+	private CompareAction compareAction;
 	
 	private Map<String, Action> id2Action;
  
@@ -156,6 +159,7 @@ public final class ConfigScanView extends ViewPart {
 		}
 		viewer.removeTreeViewerLockListener(history);
 		viewer.removeTreeViewerLockListener(treeViewerLockListener);
+		viewer.removeSelectionChangedListener(defaultLabelProvider);
 		super.dispose();
 	}
 
@@ -164,7 +168,9 @@ public final class ConfigScanView extends ViewPart {
 		parent.setLayout(new GridLayout());
 		
 		viewer = new JobAwareTreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
-		viewer.setLabelProvider(new DefaultLabelProvider(labelProvider));				
+		defaultLabelProvider = new DefaultLabelProvider(labelProvider, viewer);
+		viewer.setLabelProvider(defaultLabelProvider);			
+		viewer.addSelectionChangedListener(defaultLabelProvider);
 		viewer.setContentProvider(contentProvider);
 		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
 		
@@ -225,6 +231,11 @@ public final class ConfigScanView extends ViewPart {
 		
 		toolBarManager.add(toggleContent = new ToggleLabelProviderAction(this, imageHelper));
 		id2Action.put(ToggleLabelProviderAction.ID, toggleContent);
+		
+		toolBarManager.add(new Separator());
+		
+		toolBarManager.add(compareAction = new CompareAction(this, imageHelper));
+		id2Action.put(CompareAction.ID, compareAction);
 		
 		toolBarManager.add(new Separator());
 		

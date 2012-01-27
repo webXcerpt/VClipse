@@ -22,6 +22,13 @@ public class MockConfigScanRunner implements IConfigScanRunner {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		
+		if(rc.getDescription().equals("IPC D75")) {
+			return Files.readFileIntoString(file.getLocation().toPortableString() + ".ipcd75.xml.log");
+		} else if(rc.getDescription().equals("IPC D79")) {
+			return Files.readFileIntoString(file.getLocation().toPortableString() + ".ipcd79.xml.log");
+		}
+		
 		return Files.readFileIntoString(file.getLocation().toPortableString() + ".xml.log");
 	}
 }
