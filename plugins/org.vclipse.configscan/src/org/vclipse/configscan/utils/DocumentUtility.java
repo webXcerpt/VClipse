@@ -60,12 +60,10 @@ public class DocumentUtility {
 	// during fetching the deferred nodes in the tree viewer
 	private DocumentBuilder documentBuilder;
 	
+	private DocumentBuilderFactory factory;
+	
 	public DocumentUtility() {
-		try {
-			documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		} catch (ParserConfigurationException exception) {
-			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
-		}
+		factory = DocumentBuilderFactory.newInstance();
 	}
 	
 	public Node getLogSession(Document document) {
@@ -194,15 +192,23 @@ public class DocumentUtility {
 	}
 
 	public Document newDocument() {
-		return documentBuilder.newDocument();
+		try {
+			return factory.newDocumentBuilder().newDocument();
+		} catch (ParserConfigurationException exception) {
+			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+			return null;
+		}
 	}
 
-	public Document parse(InputStream imputStream) {
+	public Document parse(InputStream inputStream) {
 		try {
-			return documentBuilder.parse(imputStream);
+			DocumentBuilder documentBuilder = factory.newDocumentBuilder();
+			return documentBuilder.parse(inputStream);
 		} catch (IOException exception) {
 			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 		} catch (SAXException exception) {
+			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+		} catch (ParserConfigurationException  exception) {
 			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 		}
 		return null;

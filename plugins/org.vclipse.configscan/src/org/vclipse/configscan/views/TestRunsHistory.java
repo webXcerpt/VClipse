@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,31 +69,37 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 		this.testCaseUtility = testCaseUtility;
 	}
 	
+	@Override
+	protected void finalize() throws Throwable {
+		preferenceStore.removePropertyChangeListener(preferenceStoreListener);
+		super.finalize();
+	}
+	
 	public void clear() {
 		history.clear();
-		
+	}
+	
+	public void addEntry(ConfigScanViewInput input) {
+		if(!history.contains(input)) {
+			if(history.size() == historyEntriesNumber) {
+				history.removeLast();
+			}
+			history.add(input);				
+		}
+	}
+	
+	public void removeEntry(ConfigScanViewInput input) {
+		history.remove(input);
 	}
 	
 	public List<ConfigScanViewInput> getHistory() {
 		return Collections.unmodifiableList(history);
 	}
 	
-	@Override
-	protected void finalize() throws Throwable {
-		preferenceStore.removePropertyChangeListener(preferenceStoreListener);
-		super.finalize();
-	}
-
 	public void available(TreeViewerLockEvent event) {
-		Object input = event.getViewer().getInput();
-		if(input instanceof ConfigScanViewInput) {
-			ConfigScanViewInput viewInput = (ConfigScanViewInput)input;
-			if(!history.contains(viewInput)) {
-				if(history.size() == historyEntriesNumber) {
-					history.removeLast();
-				}
-				history.add(viewInput);				
-			}
+		Object viewerInput = event.getViewer().getInput();
+		if(viewerInput instanceof ConfigScanViewInput) {
+			addEntry((ConfigScanViewInput)viewerInput);
 		}
 	}
 
@@ -100,6 +107,10 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 		// not used
 	}
 	
+	protected void save(InputStream stream) {
+		
+	}
+		
 	public void save(String path) {
 		if(path == null || path.isEmpty()) {
 			ConfigScanPlugin.log("Can not save history, no path is provided.", IStatus.WARNING);
@@ -143,41 +154,46 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 			try {
 				File historyFile = new Path(path).toFile();
 				if(historyFile.exists()) {
-					Document document = documentUtility.parse(new FileInputStream(historyFile));
-					if(document != null) {
-						NodeList childNodes = document.getDocumentElement().getChildNodes();
-						for(int i=0; i<childNodes.getLength(); i++) {
-							Node item = childNodes.item(i);
-							// handle input
-							if(Node.ELEMENT_NODE == item.getNodeType() && DocumentUtility.INPUT.equals(item.getNodeName())) {
-								NamedNodeMap attributes = item.getAttributes();
-								String date = attributes.getNamedItem(DocumentUtility.DATE).getNodeValue();
-								String name = attributes.getNamedItem(DocumentUtility.NAME).getNodeValue();
-								TestRun testRun = testCaseUtility.buildTestRun("Testrun on " + date + " with " + name, null, null, null);
-								testRun.setLogElement(document);
-								ConfigScanViewInput input = new ConfigScanViewInput();
-								input.setConfigurationName(name);
-								input.setDate(date, IConfigScanConfiguration.DATE_FORMAT_UI_ENTRIES);
-								input.setTestRuns(Lists.newArrayList(testRun));
-								Node firstChild = item.getFirstChild();
-								if(firstChild != null) {
-									// handle log_result
-									NodeList childNodes2 = firstChild.getNextSibling().getChildNodes();
-									for(int k=0; k<childNodes2.getLength(); k++) {
-										Node item2 = childNodes2.item(k);
-										if(Node.ELEMENT_NODE == item2.getNodeType()) {
-											testRun.addTestCase(testCaseUtility.buildTestCase((Element)item2, testRun));										
-										}
-									}
-									history.add(input);
-								}
-							}
-						}
-					}
+					load(new FileInputStream(historyFile));
 				}
 			} catch(IOException exception) {
 				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 			}
 		}
 	}
+	
+	public void load(InputStream stream) {
+		Document document = documentUtility.parse(stream);
+		if(document != null) {
+			NodeList childNodes = document.getDocumentElement().getChildNodes();
+			for(int i=0; i<childNodes.getLength(); i++) {
+				Node item = childNodes.item(i);
+				// handle input
+				if(Node.ELEMENT_NODE == item.getNodeType() && DocumentUtility.INPUT.equals(item.getNodeName())) {
+					NamedNodeMap attributes = item.getAttributes();
+					String date = attributes.getNamedItem(DocumentUtility.DATE).getNodeValue();
+					String name = attributes.getNamedItem(DocumentUtility.NAME).getNodeValue();
+					TestRun testRun = testCaseUtility.buildTestRun("Testrun on " + date + " with " + name, null, null, null);
+					testRun.setLogElement(document);
+					ConfigScanViewInput input = new ConfigScanViewInput();
+					input.setConfigurationName(name);
+					input.setDate(date, IConfigScanConfiguration.DATE_FORMAT_UI_ENTRIES);
+					input.setTestRuns(Lists.newArrayList(testRun));
+					Node firstChild = item.getFirstChild();
+					if(firstChild != null) {
+						// handle log_result
+						NodeList childNodes2 = firstChild.getNextSibling().getChildNodes();
+						for(int k=0; k<childNodes2.getLength(); k++) {
+							Node item2 = childNodes2.item(k);
+							if(Node.ELEMENT_NODE == item2.getNodeType()) {
+								testRun.addTestCase(testCaseUtility.buildTestCase((Element)item2, testRun));										
+							}
+						}
+						history.add(input);
+					}
+				}
+			}
+		}
+	}
+		
 }
