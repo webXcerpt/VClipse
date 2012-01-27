@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.vclipse.configscan.views;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
@@ -155,7 +157,13 @@ public final class ConfigScanView extends ViewPart {
 	public void dispose() {
 		preferenceStore.removePropertyChangeListener(propertyChangeListener);
 		if(preferenceStore.getBoolean(IConfigScanConfiguration.SAVE_HISTORY)) {
-			history.save(plugin.getStateLocation().append(IConfigScanConfiguration.HISTORY_FILE_NAME).toString());			
+			try {
+				history.save(plugin.getStateLocation().append(IConfigScanConfiguration.HISTORY_FILE_NAME).toString());
+			} catch (IllegalStateException exception) {
+				ConfigScanPlugin.log("Could not save history. " + exception.getMessage(), IStatus.ERROR);
+			} catch (IOException exception) {
+				ConfigScanPlugin.log("Could not save history. " + exception.getMessage(), IStatus.ERROR);
+			}			
 		}
 		viewer.removeTreeViewerLockListener(history);
 		viewer.removeTreeViewerLockListener(treeViewerLockListener);
@@ -189,7 +197,13 @@ public final class ConfigScanView extends ViewPart {
 		hookDoubleClickAction();
 		
 		if(preferenceStore.getBoolean(IConfigScanConfiguration.SAVE_HISTORY)) {
-			history.load(plugin.getStateLocation().append(IConfigScanConfiguration.HISTORY_FILE_NAME).toString());
+			try {
+				history.load(plugin.getStateLocation().append(IConfigScanConfiguration.HISTORY_FILE_NAME).toString());
+			} catch (FileNotFoundException exception) {
+				ConfigScanPlugin.log("Could not load history. " + exception.getMessage(), IStatus.ERROR);
+			} catch (IllegalStateException exception) {
+				ConfigScanPlugin.log("Could not load history. " + exception.getMessage(), IStatus.ERROR);
+			}
 		}
 		disableActions();
 		enableOrDisable(ImportExportAction.ID, true);

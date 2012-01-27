@@ -3,6 +3,7 @@ package org.vclipse.configscan.views;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -107,57 +108,50 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 		// not used
 	}
 	
-	protected void save(InputStream stream) {
-		
-	}
-		
-	public void save(String path) {
+	public void save(String path) throws IOException {
 		if(path == null || path.isEmpty()) {
 			ConfigScanPlugin.log("Can not save history, no path is provided.", IStatus.WARNING);
 		} else {
-			try {
-				Document historyDocument = documentUtility.newDocument();
-				Element logResults = historyDocument.createElement(DocumentUtility.LOG_RESULTS);
-				historyDocument.appendChild(logResults);
-				
-				for(ConfigScanViewInput input : history) {
-					Element inputElement = historyDocument.createElement(DocumentUtility.INPUT);
-					inputElement.setAttribute(DocumentUtility.NAME, input.getConfigurationName());
-					inputElement.setAttribute(DocumentUtility.DATE, input.getDate());
-					logResults.appendChild(inputElement);
-					
-					for(TestRun testRun : input.getTestRuns()) {
-						Node logResult = documentUtility.getLogResult((Document)testRun.getLogElement());
-						if(logResult == null) {
-							continue;
-						}
-						inputElement.appendChild(historyDocument.importNode(logResult, true));
-					}
-				}
-				File historyFile = new Path(path).toFile();
-				if(!historyFile.exists()) {
-					historyFile.createNewFile();
-				}
-				BufferedWriter out = new BufferedWriter(new FileWriter(historyFile));
-				out.write(documentUtility.parse(historyDocument));
-				out.close();
-			} catch (IOException exception) {
-				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+			File historyFile = new Path(path).toFile();
+			if(!historyFile.exists()) {
+				historyFile.createNewFile();
 			}
+			FileWriter fileWriter = new FileWriter(historyFile);
+			save(fileWriter);
 		}
 	}
 	
-	public void load(String path) {
+	public void save(FileWriter stream) throws IOException {
+		Document historyDocument = documentUtility.newDocument();
+		Element logResults = historyDocument.createElement(DocumentUtility.LOG_RESULTS);
+		historyDocument.appendChild(logResults);
+
+		for(ConfigScanViewInput input : history) {
+			Element inputElement = historyDocument.createElement(DocumentUtility.INPUT);
+			inputElement.setAttribute(DocumentUtility.NAME, input.getConfigurationName());
+			inputElement.setAttribute(DocumentUtility.DATE, input.getDate());
+			logResults.appendChild(inputElement);
+
+			for(TestRun testRun : input.getTestRuns()) {
+				Node logResult = documentUtility.getLogResult((Document)testRun.getLogElement());
+				if(logResult == null) {
+					continue;
+				}
+				inputElement.appendChild(historyDocument.importNode(logResult, true));
+			}
+		}
+		BufferedWriter out = new BufferedWriter(stream);
+		out.write(documentUtility.parse(historyDocument));
+		out.close();
+	}
+	
+	public void load(String path) throws FileNotFoundException {
 		if(path == null || path.isEmpty()) {
 			ConfigScanPlugin.log("Can not load history, no path is provided.", IStatus.WARNING);
 		} else {
-			try {
-				File historyFile = new Path(path).toFile();
-				if(historyFile.exists()) {
-					load(new FileInputStream(historyFile));
-				}
-			} catch(IOException exception) {
-				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+			File historyFile = new Path(path).toFile();
+			if(historyFile.exists()) {
+				load(new FileInputStream(historyFile));
 			}
 		}
 	}
@@ -195,5 +189,4 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 			}
 		}
 	}
-		
 }

@@ -1,7 +1,10 @@
 package org.vclipse.configscan.views.actions;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -97,14 +100,22 @@ public final class ShowHistroyAction extends SimpleTreeViewerAction implements I
 			fileDialog.setFilterExtensions(new String[]{"*.xml"});
 			String selectedpath = fileDialog.open();
 			if(selectedpath != null) {
-				history.load(selectedpath);
+				try {
+					history.load(selectedpath);
+				} catch (FileNotFoundException exception) {
+					ConfigScanPlugin.log("Could not import history from a file." + exception.getMessage(), IStatus.ERROR);
+				}
 			}
 		} else if(EXPORT_HISTORY == id) {
 			FileDialog fileDialog = new FileDialog(view.getSite().getShell(), SWT.SAVE);
 			fileDialog.setFilterExtensions(new String[]{"*.xml"});
 			String selectedpath = fileDialog.open();
 			if(selectedpath != null) {
-				history.save(selectedpath);
+				try {
+					history.save(selectedpath);
+				} catch (IOException exception) {
+					ConfigScanPlugin.log("Could not export history to a file." + exception.getMessage(), IStatus.ERROR);
+				}
 			}
 		} else {
 			view.setInput(history.getHistory().get(id));
