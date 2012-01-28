@@ -21,7 +21,7 @@
 <unit id="org.eclipse.emf.mwe.core.feature.group" version="1.2.1.v201112070431"/>
 <unit id="org.eclipse.emf.mwe.sdk.feature.group" version="1.2.1.v201112070431"/>
 <unit id="org.eclipse.emf.mwe2.language.sdk.feature.group" version="2.2.0.v201112071250"/>
-<unit id="org.eclipse.emf.mwe2.runtime.sdk.feature.group" version="2.2.0.v201112071250"/>
+<unit id="org.eclipse.emf.mwe2.runtime.sdk.feature.group" version="2.2.0.v201112070431"/>
 <unit id="org.eclipse.xtext.xtend2.sdk.feature.group" version="2.2.1.v201112130541"/>
 <unit id="org.eclipse.xtext.docs.feature.group" version="2.2.1.v201112130541"/>
 <unit id="org.eclipse.xtext.ui.feature.group" version="2.2.1.v201112130541"/>
