@@ -43,25 +43,25 @@ public class ConfigScanReverseXmlTransformation implements IConfigScanReverseXml
 		Element rootLog = xmlLog.getDocumentElement();
 		Element rootInput = xmlInput.getDocumentElement();
 		
-		
-		ArrayList<Element> nodeListLog = Lists.newArrayList();					// Node-List with nodes with wrong mapping (e.g. "CHECK ITEM EXIST")
-		ArrayList<Element> nodeListInput = Lists.newArrayList();				// Node-List with nodes with wrong mapping (e.g. checkitemexist)
-		
-		Element logSession = findString(rootLog, "log_session");
-		Element inputSession = findString(rootInput, "session");
-		
-		
-		transformNode(logSession, inputSession, configScanMap, nodeListInput, nodeListLog);
-		
-		Collections.sort(nodeListLog, new BompathComparator());
-		Collections.sort(nodeListInput, new BompathComparator());
-		
-		for(int i = 0; i < nodeListLog.size() && i < nodeListInput.size(); i++) {
-			Element key = nodeListLog.get(i);
-			Element value = nodeListInput.get(i);
-			configScanMap.put(key, value);
+		if (rootLog!=null && rootInput!=null) { // document element is null if ConfigScan did not deliver a result, i.e., when the product does not exist on the respective system
+			ArrayList<Element> nodeListLog = Lists.newArrayList();					// Node-List with nodes with wrong mapping (e.g. "CHECK ITEM EXIST")
+			ArrayList<Element> nodeListInput = Lists.newArrayList();				// Node-List with nodes with wrong mapping (e.g. checkitemexist)
+
+			Element logSession = findString(rootLog, "log_session");
+			Element inputSession = findString(rootInput, "session");
+
+
+			transformNode(logSession, inputSession, configScanMap, nodeListInput, nodeListLog);
+
+			Collections.sort(nodeListLog, new BompathComparator());
+			Collections.sort(nodeListInput, new BompathComparator());
+
+			for(int i = 0; i < nodeListLog.size() && i < nodeListInput.size(); i++) {
+				Element key = nodeListLog.get(i);
+				Element value = nodeListInput.get(i);
+				configScanMap.put(key, value);
+			}
 		}
-		
 		
 		return configScanMap;
 	}

@@ -148,7 +148,7 @@ public final class ImportExportAction extends SimpleTreeViewerAction implements 
 						fileDialog.setText("File dialog for log file export");
 						String path = fileDialog.open();
 						if(path != null) {
-							Files.writeStringIntoFile(path, documentUtility.parse(logDocument));
+							Files.writeStringIntoFile(path, documentUtility.serialize(logDocument));
 						}
 					}
 				}
@@ -164,7 +164,7 @@ public final class ImportExportAction extends SimpleTreeViewerAction implements 
 						fileDialog.setText("File dialog for input file export");
 						String path = fileDialog.open();
 						if(path != null) {
-							Files.writeStringIntoFile(path, documentUtility.parse(inputDocument));
+							Files.writeStringIntoFile(path, documentUtility.serialize(inputDocument));
 						}
 					}
 				}

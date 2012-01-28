@@ -141,7 +141,7 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 			}
 		}
 		BufferedWriter out = new BufferedWriter(stream);
-		out.write(documentUtility.parse(historyDocument));
+		out.write(documentUtility.serialize(historyDocument));
 		out.close();
 	}
 	

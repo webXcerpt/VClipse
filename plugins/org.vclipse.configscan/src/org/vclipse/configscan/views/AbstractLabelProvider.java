@@ -131,19 +131,26 @@ public abstract class AbstractLabelProvider extends ColumnLabelProvider implemen
 			TestGroup testGroup = (TestGroup)testCase;
 			List<TestCase> testCases = testGroup.getTestCases();
 			if(!testCases.isEmpty()) {
+				int numberOfTestCases = testCases.size();
 				int failures = 0;
 				for(TestCase childTestCase : testCases) {
 					if(Status.FAILURE == childTestCase.getStatus()) {
 						failures++;
 					}
 				}
-				int numberOfTestCases = testCases.size();
-				StyledString numberOfTests = new StyledString("     [ Number of tests = { " + numberOfTestCases + " } ");
+				StyledString result = new StyledString("  ");
 				StylerFactory stylerFactory = new StylerFactory();
-				numberOfTests.append(stylerFactory.createFromXtextStyle("Success = { " + (numberOfTestCases - failures) + " } ", successStyle));
-				numberOfTests.append(new StylerFactory().createFromXtextStyle("Failures = { " + failures + " } ", failureStyle));
-				numberOfTests.append(" ] ");
-				return numberOfTests;
+				int successes = numberOfTestCases - failures;
+				if (successes > 0) {
+					result.append(stylerFactory.createFromXtextStyle(successes + " success" + (successes > 1 ? "es" : ""), successStyle));
+				}
+				if (successes > 0 && failures > 0) {
+					result.append(", ");
+				}
+				if (failures > 0) {
+					result.append(new StylerFactory().createFromXtextStyle(failures + " failure" + (failures > 1 ? "s" : ""), failureStyle));
+				}
+				return result;
 			}
 		}
 		return new StyledString(EMPTY);

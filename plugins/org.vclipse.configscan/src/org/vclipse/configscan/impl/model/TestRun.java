@@ -147,7 +147,7 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 				return;
 			}
 			
-			String parseResult = documentUtility.parse(inputDocument);
+			String parseResult = documentUtility.serialize(inputDocument);
 			String materialNumber = xmlProvider.getMaterialNumber(testModel);
 			
 			try {

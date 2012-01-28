@@ -18,6 +18,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.xtext.util.Strings;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.impl.model.TestRun;
 import org.w3c.dom.Document;
@@ -110,16 +111,19 @@ public class DocumentUtility {
 	}
 	
 	public Document parse(String xmlString) {
+		if (Strings.isEmpty(xmlString)) {
+			return newDocument();
+		}
 		try {
 			return documentBuilder.parse(new org.xml.sax.InputSource(new StringReader(xmlString)));
 		} catch (SAXException e) {
-			return documentBuilder.newDocument();
+			return newDocument();
 		} catch (IOException e) {
-			return documentBuilder.newDocument();
+			return newDocument();
 		}
 	}
 	
-	public String parse(Document document) {
+	public String serialize(Document document) {
 		try {		
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			Transformer transformer = TransformerFactory.newInstance().newTransformer();

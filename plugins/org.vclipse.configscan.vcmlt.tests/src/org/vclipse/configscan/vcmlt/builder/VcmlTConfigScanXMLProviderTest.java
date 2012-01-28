@@ -38,6 +38,6 @@ public class VcmlTConfigScanXMLProviderTest extends XtextTest {
 		EObject root = getModelRoot();
 		HashMap<Element, URI> map = Maps.newHashMap();
 		Document document = csXmlProvider.transform(root, filter, map);
-		System.err.println(documentUtility.parse(document));
+		System.err.println(documentUtility.serialize(document));
 	}
 }
