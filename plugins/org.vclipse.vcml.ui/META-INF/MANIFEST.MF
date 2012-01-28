@@ -6,11 +6,11 @@ Bundle-Version: 0.4.1.qualifier
 Bundle-SymbolicName: org.vclipse.vcml.ui;singleton:=true
 Eclipse-RegisterBuddy: org.eclipse.xtext.log4j
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.xtext.ui;bundle-version="2.1.1",
- org.eclipse.xtext.ui.shared;bundle-version="2.1.1",
- org.eclipse.xtext.common.types.ui;bundle-version="2.1.1",
- org.eclipse.xtext.builder;bundle-version="2.1.1",
- org.eclipse.xtext.ui.codetemplates.ui;bundle-version="2.1.1",
+Require-Bundle: org.eclipse.xtext.ui;bundle-version="2.2.1",
+ org.eclipse.xtext.ui.shared;bundle-version="2.2.1",
+ org.eclipse.xtext.common.types.ui;bundle-version="2.2.1",
+ org.eclipse.xtext.builder;bundle-version="2.2.1",
+ org.eclipse.xtext.ui.codetemplates.ui;bundle-version="2.2.1",
  org.antlr.runtime;bundle-version="3.2.0",
  org.vclipse.base,
  org.vclipse.base.ui,

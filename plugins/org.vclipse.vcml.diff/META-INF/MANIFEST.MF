@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.vclipse.vcml.diff;singleton:=true
 Bundle-Version: 0.4.1.qualifier
 Bundle-Activator: org.vclipse.vcml.diff.VcmlDiffPlugin
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
-Require-Bundle: org.eclipse.xtext;bundle-version="2.1.1",
+Require-Bundle: org.eclipse.xtext;bundle-version="2.2.1",
  org.eclipse.emf.compare;bundle-version="1.2.1",
  org.eclipse.emf.compare.diff.edit;bundle-version="1.2.1",
  org.eclipse.emf.compare.match;bundle-version="1.2.1",

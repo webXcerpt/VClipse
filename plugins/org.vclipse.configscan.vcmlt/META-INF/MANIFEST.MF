@@ -5,19 +5,19 @@ Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com) and 
 Bundle-Version: 0.4.1.qualifier
 Bundle-SymbolicName: org.vclipse.configscan.vcmlt; singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.xtext;bundle-version="2.1.0";visibility:=reexport,
- org.eclipse.xtext.xbase;bundle-version="2.1.0";resolution:=optional;visibility:=reexport,
+Require-Bundle: org.eclipse.xtext;bundle-version="2.2.1";visibility:=reexport,
+ org.eclipse.xtext.xbase;bundle-version="2.2.1";resolution:=optional;visibility:=reexport,
  org.apache.log4j;bundle-version="1.2.15";visibility:=reexport,
  org.apache.commons.logging;bundle-version="1.0.4";resolution:=optional;visibility:=reexport,
- org.eclipse.xtext.generator;bundle-version="2.1.1";resolution:=optional,
+ org.eclipse.xtext.generator;bundle-version="2.2.1";resolution:=optional,
  org.eclipse.emf.codegen.ecore;resolution:=optional,
  org.eclipse.emf.mwe.utils;resolution:=optional,
  org.eclipse.emf.mwe2.launch;resolution:=optional,
- org.eclipse.xtext.util;bundle-version="2.1.1",
+ org.eclipse.xtext.util;bundle-version="2.2.1",
  org.eclipse.emf.ecore,
  org.eclipse.emf.common,
  org.antlr.runtime,
- org.eclipse.xtext.common.types;bundle-version="2.1.1",
+ org.eclipse.xtext.common.types;bundle-version="2.2.1",
  org.vclipse.vcml,
  org.vclipse.configscan
 Import-Package: org.apache.log4j,

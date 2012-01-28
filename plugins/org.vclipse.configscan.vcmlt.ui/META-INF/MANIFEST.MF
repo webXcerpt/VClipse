@@ -7,15 +7,15 @@ Bundle-SymbolicName: org.vclipse.configscan.vcmlt.ui; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.vclipse.configscan,
  org.vclipse.configscan.vcmlt;visibility:=reexport,
- org.eclipse.xtext.ui;bundle-version="2.1.1",
+ org.eclipse.xtext.ui;bundle-version="2.2.1",
  org.eclipse.ui.editors,
  org.eclipse.ui.ide,
- org.eclipse.xtext.ui.shared;bundle-version="2.1.1",
+ org.eclipse.xtext.ui.shared;bundle-version="2.2.1",
  org.eclipse.ui,
- org.eclipse.xtext.builder;bundle-version="2.1.1",
+ org.eclipse.xtext.builder;bundle-version="2.2.1",
  org.antlr.runtime,
- org.eclipse.xtext.common.types.ui;bundle-version="2.1.1",
- org.eclipse.xtext.ui.codetemplates.ui;bundle-version="2.1.1",
+ org.eclipse.xtext.common.types.ui;bundle-version="2.2.1",
+ org.eclipse.xtext.ui.codetemplates.ui;bundle-version="2.2.1",
  org.eclipse.compare
 Import-Package: org.apache.log4j,
  org.apache.commons.logging
