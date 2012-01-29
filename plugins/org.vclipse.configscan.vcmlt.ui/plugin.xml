@@ -245,6 +245,32 @@
             extensions="vcmlt">
     </provider>
   </extension>
+ <extension
+        point="org.eclipse.ui.popupMenus">
+     <objectContribution
+           adaptable="true"
+           id="com.webxcerpt.cm.nsn.cmlt.exportxmlfile"
+           objectClass="org.eclipse.core.resources.IFile">
+        <action
+              class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.vclipse.configscan.vcmlt.ui.ui.action.ConvertCmlt2XmlAction"
+              icon="icons/generate_xml_16x16.gif"
+              id="org.vclipse.configscan.vcmlt.convertVCMLT_XML"
+              label="Convert VCMLT file to ConfigScan XML file"
+              menubarPath="org.vclipse.configscan.popupMenu.resource/content">
+           <enablement>
+              <and>
+                 <objectClass
+                       name="org.eclipse.core.resources.IFile">
+                 </objectClass>
+                 <objectState
+                       name="extension"
+                       value="vcmlt">
+                 </objectState>
+              </and>
+           </enablement>
+        </action>
+     </objectContribution>
+  </extension>
   <extension
         point="org.vclipse.configscan.testLanguageExtension">
      <languageExtension
