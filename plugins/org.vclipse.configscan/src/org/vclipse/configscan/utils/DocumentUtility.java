@@ -57,10 +57,6 @@ public class DocumentUtility {
 	
 	public static final String DATE = "date";
 	
-	// do not use injection for document builder -> there is a NullPointerException
-	// during fetching the deferred nodes in the tree viewer
-	private DocumentBuilder documentBuilder;
-	
 	private DocumentBuilderFactory factory;
 	
 	public DocumentUtility() {
@@ -115,10 +111,12 @@ public class DocumentUtility {
 			return newDocument();
 		}
 		try {
-			return documentBuilder.parse(new org.xml.sax.InputSource(new StringReader(xmlString)));
+			return factory.newDocumentBuilder().parse(new org.xml.sax.InputSource(new StringReader(xmlString)));
 		} catch (SAXException e) {
 			return newDocument();
 		} catch (IOException e) {
+			return newDocument();
+		} catch (ParserConfigurationException e) {
 			return newDocument();
 		}
 	}
