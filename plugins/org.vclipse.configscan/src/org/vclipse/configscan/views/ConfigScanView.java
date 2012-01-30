@@ -83,8 +83,6 @@ public final class ConfigScanView extends ViewPart {
 			Object object = event.getNewValue();
 			if(IConfigScanConfiguration.EXPAND_TREE_ON_INPUT.equals(property)) {
 				viewer.setAutoExpandLevel((Boolean)object ? IConfigScanConfiguration.DEFAULT_EXPAND_LEVEL : 0);
-			} else if(IConfigScanConfiguration.SAVE_HISTORY.equals(property)) {
-				showHistoryAction.setEnabled((Boolean)object);
 			}
 		}
 	}
@@ -156,15 +154,15 @@ public final class ConfigScanView extends ViewPart {
 	@Override
 	public void dispose() {
 		preferenceStore.removePropertyChangeListener(propertyChangeListener);
-		if(preferenceStore.getBoolean(IConfigScanConfiguration.SAVE_HISTORY)) {
-			try {
-				history.save(plugin.getStateLocation().append(IConfigScanConfiguration.HISTORY_FILE_NAME).toString());
-			} catch (IllegalStateException exception) {
-				ConfigScanPlugin.log("Could not save history. " + exception.getMessage(), IStatus.ERROR);
-			} catch (IOException exception) {
-				ConfigScanPlugin.log("Could not save history. " + exception.getMessage(), IStatus.ERROR);
-			}			
-		}
+		
+		try {
+			history.save(plugin.getStateLocation().append(IConfigScanConfiguration.HISTORY_FILE_NAME).toString());
+		} catch (IllegalStateException exception) {
+			ConfigScanPlugin.log("Could not save history. " + exception.getMessage(), IStatus.ERROR);
+		} catch (IOException exception) {
+			ConfigScanPlugin.log("Could not save history. " + exception.getMessage(), IStatus.ERROR);
+		}			
+		
 		viewer.removeTreeViewerLockListener(history);
 		viewer.removeTreeViewerLockListener(treeViewerLockListener);
 		viewer.removeSelectionChangedListener(defaultLabelProvider);
@@ -196,15 +194,15 @@ public final class ConfigScanView extends ViewPart {
 		createContextMenu();
 		hookDoubleClickAction();
 		
-		if(preferenceStore.getBoolean(IConfigScanConfiguration.SAVE_HISTORY)) {
-			try {
-				history.load(plugin.getStateLocation().append(IConfigScanConfiguration.HISTORY_FILE_NAME).toString());
-			} catch (FileNotFoundException exception) {
-				ConfigScanPlugin.log("Could not load history. " + exception.getMessage(), IStatus.ERROR);
-			} catch (IllegalStateException exception) {
-				ConfigScanPlugin.log("Could not load history. " + exception.getMessage(), IStatus.ERROR);
-			}
+		
+		try {
+			history.load(plugin.getStateLocation().append(IConfigScanConfiguration.HISTORY_FILE_NAME).toString());
+		} catch (FileNotFoundException exception) {
+			ConfigScanPlugin.log("Could not load history. " + exception.getMessage(), IStatus.ERROR);
+		} catch (IllegalStateException exception) {
+			ConfigScanPlugin.log("Could not load history. " + exception.getMessage(), IStatus.ERROR);
 		}
+		
 		disableActions();
 		enableOrDisable(ImportExportAction.ID, true);
 		enableOrDisable(ShowHistroyAction.ID, true);

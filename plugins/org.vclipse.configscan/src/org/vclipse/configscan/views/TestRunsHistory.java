@@ -135,7 +135,7 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 	
 	public void save(FileWriter stream) throws IOException {
 		if(!saveHistory) {
-			ConfigScanPlugin.log("History can not be saved. Preference value is disabled.", IStatus.WARNING);
+			ConfigScanPlugin.log("Saving history for test runs is disabled.", IStatus.WARNING);
 			return;
 		} 
 		
