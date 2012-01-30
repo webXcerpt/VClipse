@@ -83,7 +83,7 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 	public void addEntry(ConfigScanViewInput input) {
 		if(!history.contains(input)) {
 			if(history.size() == historyEntriesNumber) {
-				history.removeLast();
+				history.removeFirst();
 			}
 			history.add(input);				
 		}
