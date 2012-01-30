@@ -65,6 +65,7 @@ public final class ShowHistroyAction extends SimpleTreeViewerAction implements I
 			MenuItem item = new MenuItem(menu, SWT.PUSH);
 			item.setText(input.getConfigurationName() + " on " + input.getDate());
 			item.setID(historyEntries.indexOf(input));
+			item.setImage(imageHelper.getImage(IConfigScanImages.TEST));
 			item.addSelectionListener(this);
 		}
 		

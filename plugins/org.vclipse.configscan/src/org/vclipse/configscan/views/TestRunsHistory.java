@@ -39,7 +39,15 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 		@Override
 		public void propertyChange(PropertyChangeEvent event) {
 			if(HISTORY_ENTRIES_NUMBER.equals(event.getProperty())) {
-				historyEntriesNumber = preferenceStore.getInt(HISTORY_ENTRIES_NUMBER);				
+				int newNumber = preferenceStore.getInt(HISTORY_ENTRIES_NUMBER);
+				if(newNumber < historyEntriesNumber) {
+					historyEntriesNumber = newNumber;
+					for(int i=historyEntriesNumber; i>0; i--) {
+						history.removeFirst();
+					}
+				}
+			} else if(SAVE_HISTORY.equals(event.getProperty())) {
+				saveHistory = preferenceStore.getBoolean(SAVE_HISTORY);
 			}
 		}
 	}
@@ -58,6 +66,8 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 	
 	private int historyEntriesNumber;
 	
+	private boolean saveHistory;
+	
 	@Inject
 	public TestRunsHistory(AbstractUIPlugin plugin, DocumentUtility utility, TestCaseFactory testCaseUtility) {
 		history = Lists.newLinkedList();
@@ -65,6 +75,7 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 		this.plugin = plugin;
 		this.preferenceStore = this.plugin.getPreferenceStore();
 		this.historyEntriesNumber = this.preferenceStore.getInt(HISTORY_ENTRIES_NUMBER);
+		this.saveHistory = this.preferenceStore.getBoolean(SAVE_HISTORY);
 		preferenceStoreListener = new PreferenceStoreListener();
 		this.preferenceStore.addPropertyChangeListener(preferenceStoreListener);
 		this.testCaseUtility = testCaseUtility;
@@ -111,17 +122,23 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 	public void save(String path) throws IOException {
 		if(path == null || path.isEmpty()) {
 			ConfigScanPlugin.log("Can not save history, no path is provided.", IStatus.WARNING);
-		} else {
-			File historyFile = new Path(path).toFile();
-			if(!historyFile.exists()) {
-				historyFile.createNewFile();
-			}
-			FileWriter fileWriter = new FileWriter(historyFile);
-			save(fileWriter);
+			return;
 		}
+		
+		File historyFile = new Path(path).toFile();
+		if(!historyFile.exists()) {
+			historyFile.createNewFile();
+		}
+		
+		save(new FileWriter(historyFile));
 	}
 	
 	public void save(FileWriter stream) throws IOException {
+		if(!saveHistory) {
+			ConfigScanPlugin.log("History can not be saved. Preference value is disabled.", IStatus.WARNING);
+			return;
+		} 
+		
 		Document historyDocument = documentUtility.newDocument();
 		Element logResults = historyDocument.createElement(DocumentUtility.LOG_RESULTS);
 		historyDocument.appendChild(logResults);
@@ -148,15 +165,21 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 	public void load(String path) throws FileNotFoundException {
 		if(path == null || path.isEmpty()) {
 			ConfigScanPlugin.log("Can not load history, no path is provided.", IStatus.WARNING);
-		} else {
-			File historyFile = new Path(path).toFile();
-			if(historyFile.exists()) {
-				load(new FileInputStream(historyFile));
-			}
+			return;
+		} 
+		
+		File historyFile = new Path(path).toFile();
+		if(historyFile.exists()) {
+			load(new FileInputStream(historyFile));
 		}
 	}
 	
 	public void load(InputStream stream) {
+		if(!saveHistory) {
+			ConfigScanPlugin.log("Loading history for test runs is disabled.", IStatus.WARNING);
+			return;
+		}
+		
 		Document document = documentUtility.parse(stream);
 		if(document != null) {
 			NodeList childNodes = document.getDocumentElement().getChildNodes();
@@ -187,8 +210,8 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 								}
 							}
 						}
-						history.add(input);
 					}
+					history.add(input);
 				}
 			}
 		}

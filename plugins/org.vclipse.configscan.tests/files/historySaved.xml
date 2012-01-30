@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <log_results>
-<input date="Mon, 30 Jan 2012 09:40:07" name="configuration_one">
+<input date="Mon, 30 Jan 2012 12:36:00" name="configuration_one">
 <log_result>
 		<log_header>
 			<cat_info desc="TestCase Catalog Generic Development" id="ZCAT_CFG" node_path="NetViewer\"/>

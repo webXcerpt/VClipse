@@ -4,12 +4,16 @@ import static org.junit.Assert.assertEquals;
 import static org.vclipse.configscan.TestCaseAssert.testComplete;
 import static org.vclipse.configscan.TestCaseAssert.testValues;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.junit.Before;
 import org.junit.Test;
 import org.vclipse.configscan.ConfigScanPlugin;
@@ -51,6 +55,14 @@ public class TestRunsHistoryTest {
 		testCaseFactory = injector.getInstance(TestCaseFactory.class);
 		
 		testHistory = new TestRunsHistory(plugin, documentUtility, testCaseFactory);
+		
+		clean(filesPath + "/temp.xml");
+	}
+	
+	private void clean(String path) throws IOException {
+		BufferedWriter out = new BufferedWriter(new FileWriter(path));
+		out.write("");
+		out.close();
 	}
 	
 	@Test
@@ -126,5 +138,52 @@ public class TestRunsHistoryTest {
 		testHistory.load(inputStream);
 		testHistory.load(inputStream);
 		assertEquals("History has one entry", 1, testHistory.getHistory().size());
+	}
+
+	@Test
+	public void testPreferencesBehavior() throws IOException {
+		IPreferenceStore store = ConfigScanPlugin.getDefault().getPreferenceStore();
+		
+		// history should not be saved/loaded
+		store.setValue(IConfigScanConfiguration.SAVE_HISTORY, false);
+		
+		TestRunsHistory testHistory = new TestRunsHistory(plugin, documentUtility, testCaseFactory);
+		List<ConfigScanViewInput> inputs = createConfigScanViewInputs("first", "second");
+		for(ConfigScanViewInput input : inputs) {
+			testHistory.addEntry(input);
+		}
+		testHistory.save(filesPath + "/temp.xml");
+		testHistory.clear();
+		testHistory.load(filesPath + "/temp.xml");
+		List<ConfigScanViewInput> history = testHistory.getHistory();
+		assertEquals(0, history.size());
+		
+		// history should be saved/loaded
+		store.setValue(IConfigScanConfiguration.SAVE_HISTORY, true);
+		testHistory = new TestRunsHistory(plugin, documentUtility, testCaseFactory);
+		inputs = createConfigScanViewInputs("first", "second");
+		for(ConfigScanViewInput input : inputs) {
+			testHistory.addEntry(input);
+		}
+		testHistory.save(filesPath + "/temp.xml");
+		
+		testHistory.clear();
+		testHistory.load(filesPath + "/temp.xml");
+		history = testHistory.getHistory();
+		assertEquals(2, history.size());
+		
+		
+	}
+	
+	protected List<ConfigScanViewInput> createConfigScanViewInputs(String ... names) {
+		List<ConfigScanViewInput> inputs = Lists.newArrayList();
+		for(String name : names) {
+			ConfigScanViewInput input = new ConfigScanViewInput();
+			input.setConfigurationName(name);
+			input.setDate(null, IConfigScanConfiguration.DATE_FORMAT_UI_ENTRIES);
+			input.setTestRuns(new ArrayList<TestRun>());
+			inputs.add(input);
+		}
+		return inputs;
 	}
 }

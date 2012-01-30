@@ -46,4 +46,6 @@ public interface IConfigScanImages {
 	public static final String HOURGLASS = "hourglass.png";
 
 	public static final String COMPARE = "compare.gif";
+	
+	public static final String TEST = "test.gif";
 }
