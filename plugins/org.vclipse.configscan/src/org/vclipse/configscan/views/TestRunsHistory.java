@@ -42,8 +42,10 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 				int newNumber = preferenceStore.getInt(HISTORY_ENTRIES_NUMBER);
 				if(newNumber < historyEntriesNumber) {
 					historyEntriesNumber = newNumber;
-					for(int i=historyEntriesNumber; i>0; i--) {
-						history.removeFirst();
+					if(history.size() > newNumber) {
+						for(int i=historyEntriesNumber-1; i>0 && !history.isEmpty(); i--) {
+							history.removeFirst();
+						}
 					}
 				}
 			} else if(SAVE_HISTORY.equals(event.getProperty())) {

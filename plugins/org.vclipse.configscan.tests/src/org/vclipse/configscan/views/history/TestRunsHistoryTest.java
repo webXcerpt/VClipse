@@ -12,6 +12,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.internal.dtree.TestHelper;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.junit.Before;
@@ -40,8 +41,6 @@ public class TestRunsHistoryTest {
 	
 	private String filesPath;
 	
-	private TestRunsHistory testHistory;
-	
 	private Injector injector;
 	
 	@Before
@@ -53,8 +52,6 @@ public class TestRunsHistoryTest {
 		injector = plugin.getInjector();
 		documentUtility = injector.getInstance(DocumentUtility.class);
 		testCaseFactory = injector.getInstance(TestCaseFactory.class);
-		
-		testHistory = new TestRunsHistory(plugin, documentUtility, testCaseFactory);
 		
 		clean(filesPath + "/temp.xml");
 	}
@@ -68,6 +65,7 @@ public class TestRunsHistoryTest {
 	@Test
 	public void testLoadHistory() throws IOException {
 		URL resource = plugin.getBundle().getResource("/files/history.xml");
+		TestRunsHistory testHistory = new TestRunsHistory(plugin, documentUtility, testCaseFactory);
 		testHistory.load(resource.openConnection().getInputStream());
 		List<ConfigScanViewInput> history = testHistory.getHistory();
 		assertEquals("History has one entry", 1, history.size());
@@ -80,7 +78,8 @@ public class TestRunsHistoryTest {
 		assertEquals(1, testRuns.size());
 		TestRun testRun = testRuns.get(0);
 		testComplete(testRun, true, true, TestRun.class);
-		testValues(testRun, "Testrun on Fri, 27 Jan 2012 11:39:46 with New_configuration", 
+		testValues(testRun, 
+				"Testrun on Fri, 27 Jan 2012 11:39:46 with New_configuration", 
 				"Begin session 133-056132.00 version:0.1 build (* ) IPC IPC D75", 
 				1);
 	}
@@ -114,6 +113,8 @@ public class TestRunsHistoryTest {
 		input.setDate(null, IConfigScanConfiguration.DATE_FORMAT_UI_ENTRIES);
 		input.setTestRuns(Lists.newArrayList(testRun));
 		
+		TestRunsHistory testHistory = new TestRunsHistory(plugin, documentUtility, testCaseFactory);
+		
 		testHistory.addEntry(input);
 		testHistory.save(filesPath + "/historySaved.xml");
 		
@@ -132,6 +133,7 @@ public class TestRunsHistoryTest {
 	public void testMultipleLoadHistory() throws IOException {
 		URL resource = plugin.getBundle().getResource("/files/history.xml");
 		InputStream inputStream = resource.openConnection().getInputStream();
+		TestRunsHistory testHistory = new TestRunsHistory(plugin, documentUtility, testCaseFactory);
 		testHistory.load(inputStream);
 		testHistory.load(inputStream);
 		testHistory.load(inputStream);
@@ -146,7 +148,6 @@ public class TestRunsHistoryTest {
 		
 		// history should not be saved/loaded
 		store.setValue(IConfigScanConfiguration.SAVE_HISTORY, false);
-		
 		TestRunsHistory testHistory = new TestRunsHistory(plugin, documentUtility, testCaseFactory);
 		List<ConfigScanViewInput> inputs = createConfigScanViewInputs("first", "second");
 		for(ConfigScanViewInput input : inputs) {
@@ -172,7 +173,28 @@ public class TestRunsHistoryTest {
 		history = testHistory.getHistory();
 		assertEquals(2, history.size());
 		
+		// the amount of entries does not exceed the preset value
+		store.setValue(IConfigScanConfiguration.HISTORY_ENTRIES_NUMBER, 5);
+		testHistory = new TestRunsHistory(plugin, documentUtility, testCaseFactory);
+		inputs = createConfigScanViewInputs("1", "2", "3", "4", "5", "6");
+		for(ConfigScanViewInput input : inputs) {
+			testHistory.addEntry(input);
+		}
+		inputs = testHistory.getHistory();
+		assertEquals(5, testHistory.getHistory().size());
+		assertEquals("2", inputs.get(0).getConfigurationName());
+		assertEquals("3", inputs.get(1).getConfigurationName());
+		assertEquals("4", inputs.get(2).getConfigurationName());
+		assertEquals("5", inputs.get(3).getConfigurationName());
+		assertEquals("6", inputs.get(4).getConfigurationName());
 		
+		// the first 2 values are lost if we set the amount of values to 3
+		store.setValue(IConfigScanConfiguration.HISTORY_ENTRIES_NUMBER, 3);
+		inputs = testHistory.getHistory();
+		assertEquals(3, inputs.size());
+		assertEquals("4", inputs.get(0).getConfigurationName());
+		assertEquals("5", inputs.get(1).getConfigurationName());
+		assertEquals("6", inputs.get(2).getConfigurationName());
 	}
 	
 	protected List<ConfigScanViewInput> createConfigScanViewInputs(String ... names) {
