@@ -6,11 +6,11 @@
 	<parent>
 		<groupId>org.vclipse</groupId>
 		<artifactId>org.vclipse.releng</artifactId>
-		<version>0.4.1-SNAPSHOT</version>
+		<version>0.4.2-SNAPSHOT</version>
 		<relativePath>../org.vclipse.releng/pom.xml</relativePath>
 	</parent>
 
 	<artifactId>org.vclipse.vcml_feature</artifactId>
 	<packaging>eclipse-feature</packaging>
-	<version>0.4.1.qualifier</version>
+	<version>0.4.2.qualifier</version>
 </project>
