@@ -1,14 +1,17 @@
 package org.vclipse.configscan;
 
+import java.util.List;
+
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestGroup;
 import org.vclipse.configscan.impl.model.TestCase.Status;
+import org.vclipse.configscan.impl.model.TestRun;
 
 import junit.framework.Assert;
 
 public class TestCaseAssert extends Assert {
 
-	public static void checkComplete(TestCase testCase, boolean noInputNoUri, boolean root, Class<?> hasType) {
+	public static void testComplete(TestCase testCase, boolean noInputNoUri, boolean root, Class<?> hasType) {
 		assertNotNull(testCase.getTitle());
 		assertNotNull(testCase.getStatus());
 		if(!root) {
@@ -24,9 +27,21 @@ public class TestCaseAssert extends Assert {
 		assertTrue(testCase.getClass() == hasType);
 	}
 	
-	public static void checkValues(TestCase testCase, String title, Status status, TestCase parent) {
+	public static void testValues(TestCase testCase, String title, Status status, TestCase parent) {
 		assertEquals("Names are equal", title, testCase.getTitle());
 		assertEquals("Status is the same", status, testCase.getStatus());
 		assertEquals("Parents are same", parent, testCase.getParent());
 	}
+	
+	public static void testValues(TestRun testRun, String testRunName, String sessionName, int numOfTestGroups) {
+		assertEquals(testRunName, testRun.getTitle());
+		List<TestCase> sessions = testRun.getTestCases();
+		assertEquals(1, sessions.size());
+		TestCase session = sessions.get(0);
+		testComplete(session, true, false, TestGroup.class);
+		assertEquals(sessionName, session.getTitle());
+		List<TestCase> testCases = ((TestGroup)session).getTestCases();
+		assertEquals(testCases.size(), numOfTestGroups);
+	}
+	
 }

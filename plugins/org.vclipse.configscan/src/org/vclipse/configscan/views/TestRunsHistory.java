@@ -169,10 +169,12 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 					String name = attributes.getNamedItem(DocumentUtility.NAME).getNodeValue();
 					TestRun testRun = testCaseUtility.buildTestRun("Testrun on " + date + " with " + name, null, null, null);
 					testRun.setLogElement(document);
+					
 					ConfigScanViewInput input = new ConfigScanViewInput();
 					input.setConfigurationName(name);
 					input.setDate(date, IConfigScanConfiguration.DATE_FORMAT_UI_ENTRIES);
 					input.setTestRuns(Lists.newArrayList(testRun));
+					
 					Node firstChild = item.getFirstChild();
 					if(firstChild != null) {
 						// handle log_result
@@ -180,7 +182,9 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 						for(int k=0; k<childNodes2.getLength(); k++) {
 							Node item2 = childNodes2.item(k);
 							if(Node.ELEMENT_NODE == item2.getNodeType()) {
-								testRun.addTestCase(testCaseUtility.buildTestCase((Element)item2, testRun));										
+								if(DocumentUtility.LOG_SESSION.equals(item2.getNodeName())) {
+									testRun.addTestCase(testCaseUtility.buildTestCase((Element)item2, testRun));										
+								}
 							}
 						}
 						history.add(input);

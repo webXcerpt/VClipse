@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <log_results>
-<input date="Fri, 27 Jan 2012 15:43:34" name="configuration_one"/>
+<input date="Mon, 30 Jan 2012 09:40:07" name="configuration_one">
+<log_result>
+		<log_header>
+			<cat_info desc="TestCase Catalog Generic Development" id="ZCAT_CFG" node_path="NetViewer\"/>
+			<job_info job_date="20110718" job_ownr="GTX22346" job_time="185605"/>
+			<job_param bomappl="SD02" effdate="00000000" plant="B007"/>
+			<job_target desc="IPC D75" logsys="D75CLNT875" rfcdest="D75" type="IPC"/>
+			<doc_info doc_desc="NETVIEWER" doc_id="NETVIEWER" doc_part="000" doc_vers="01" mat_desc="NetViewer" mat_id="133-056132.00"/>
+			<log_info ext_nbr="ZFSB_201107181656049943470_0001" int_nbr="00000000000006496207"/>
+		</log_header>
+		<log_session cid="S1" cmd="START_SESSION (IPC)" kbbuild="31" kbid="733" kbname="133-056132.00" kbprofile="133-056132.00" kbversion="0.1" level="1" no="806" r_name="IPC D75" rfc_dest="D75" status="E" title="Begin session 133-056132.00 version:0.1 build (* ) IPC IPC D75" ttime="2011/07/18 16:56:06.0946160" v1="133-056132.00" v2="version:0.1 build (* ) IPC" v3="IPC D75" v4="" vid="ZFSB_CONFIG_TESTER">
+			<log_testgrp desc="NV10.1Extension" id="NV10.1EXTENSION" level="2" mode="success" no="883" status="E" title="Start Testing [success] NV10.1EXTENSION (NV10.1Extension)" ttime="16.2750270" v1="NV10.1EXTENSION" v2="NV10.1Extension" v3="success" v4="" vid="ZFSB_CONFIG_TESTER">
+				<log_msg bompath="/" cmd="SET CSTIC VALUE" cstic="NETVIEWER_VERSION_E" cval="10.1" level="3" no="819" status="E" title="set_value OK:cstic = NETVIEWER_VERSION_E value = 10.1 on /" ttime="16.3311090" v1="NETVIEWER_VERSION_E" v2="10.1" v3="/" v4="" vid="ZFSB_CONFIG_TESTER"/>
+				<log_msg bompath="/" cmd="SET CSTIC VALUE" cstic="NETVIEWER_VERSION_P" cval="10.1" level="3" no="819" status="S" title="set_value OK:cstic = NETVIEWER_VERSION_P value = 10.1 on /" ttime="16.3688550" v1="NETVIEWER_VERSION_P" v2="10.1" v3="/" v4="" vid="ZFSB_CONFIG_TESTER"/>
+				<log_msg bompath="/" cmd="CHECK ITEM STATUS" i_status="CONSISTENT" level="3" no="869" status="S" test="CONSISTENT" title="check CONSISTENT OK: CONSISTENT instance [/]" ttime="17.1038880" v1="CONSISTENT" v2="OK" v3="CONSISTENT" v4="/" vid="ZFSB_CONFIG_TESTER"/>
+				<log_msg bompath="/" cmd="CHECK ITEM STATUS" i_status="COMPLETE" level="3" no="869" status="S" test="COMPLETE" title="check COMPLETE OK: COMPLETE instance [/]" ttime="17.1059920" v1="COMPLETE" v2="OK" v3="COMPLETE" v4="/" vid="ZFSB_CONFIG_TESTER"/>
+				<log_msg bompath="/ NV10023021011E" cmd="CHECK ITEM QUANTITY" level="3" no="950" quantity="1.0" status="S" test="?? = 1" title="Check Quantity OK :  1.0 = 1 for / NV10023021011E" ttime="17.1087900" v1="1.0" v2="=" v3="1" v4="/ NV10023021011E" vid="ZFSB_CONFIG_TESTER"/>
+				<log_undotg level="3" no="884" status="S" title="(Automated) Leaving Test Group !" v1="" v2="" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+			</log_testgrp>
+		</log_session>
+		<log_msg level="1" no="807" status="S" title="End session" v1="" v2="" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+	</log_result>
+</input>
 </log_results>

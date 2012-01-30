@@ -1,7 +1,8 @@
 package org.vclipse.configscan.views.history;
 
 import static org.junit.Assert.assertEquals;
-import static org.vclipse.configscan.TestCaseAssert.checkComplete;
+import static org.vclipse.configscan.TestCaseAssert.testComplete;
+import static org.vclipse.configscan.TestCaseAssert.testValues;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,17 +57,29 @@ public class TestRunsHistoryTest {
 	public void testLoadHistory() throws IOException {
 		URL resource = plugin.getBundle().getResource("/files/history.xml");
 		testHistory.load(resource.openConnection().getInputStream());
-		assertEquals("History has one entry", 1, testHistory.getHistory().size());
+		List<ConfigScanViewInput> history = testHistory.getHistory();
+		assertEquals("History has one entry", 1, history.size());
 		
+		ConfigScanViewInput input = history.get(0);
+		assertEquals("New_configuration", input.getConfigurationName());
+		assertEquals("Fri, 27 Jan 2012 11:39:46", input.getDate());
 		
+		List<TestRun> testRuns = input.getTestRuns();
+		assertEquals(1, testRuns.size());
+		TestRun testRun = testRuns.get(0);
+		testComplete(testRun, true, true, TestRun.class);
+		testValues(testRun, "Testrun on Fri, 27 Jan 2012 11:39:46 with New_configuration", 
+				"Begin session 133-056132.00 version:0.1 build (* ) IPC IPC D75", 
+				1);
 	}
 	
 	@Test
 	public void testSaveHistory() throws IOException {
-		URL history2xmlUrl = plugin.getBundle().getResource("/files/history2.xml");
+		URL history2xmlUrl = plugin.getBundle().getResource("/files/logResult.xml");
 		Document document = documentUtility.parse(history2xmlUrl.openConnection().getInputStream());
 		
 		TestRun testRun = testCaseFactory.buildTestRun("test_run", null, null, null);
+		testRun.setLogElement(document);
 		TestCase testCase = testCaseFactory.buildTestCase(document, testRun);
 		testRun.addTestCase(testCase);
 		
@@ -74,12 +87,12 @@ public class TestRunsHistoryTest {
 		assertEquals("There is one session element", 1, testCases.size());
 		
 		TestCase sessionTestCase = testCases.get(0);
-		checkComplete(sessionTestCase, true, false, TestGroup.class);
+		testComplete(sessionTestCase, true, false, TestGroup.class);
 		testCases = ((TestGroup)sessionTestCase).getTestCases();
 		assertEquals("There is one test group", 1, testCases.size());
 		
 		TestCase testGroup = testCases.get(0);
-		checkComplete(sessionTestCase, true, false, TestGroup.class);
+		testComplete(sessionTestCase, true, false, TestGroup.class);
 		
 		testCases = ((TestGroup)testGroup).getTestCases();
 		assertEquals("There are 5 tests", 5, testCases.size());
@@ -93,17 +106,22 @@ public class TestRunsHistoryTest {
 		testHistory.save(filesPath + "/historySaved.xml");
 		
 		assertEquals("History not cleared after save", 1, testHistory.getHistory().size());
+		testHistory.clear();
+		assertEquals("History cleared", 0, testHistory.getHistory().size());
 		
 		TestRunsHistory history2 = new TestRunsHistory(plugin, documentUtility, testCaseFactory);
 		history2xmlUrl = plugin.getBundle().getResource("/files/historySaved.xml");
 		history2.load(history2xmlUrl.openConnection().getInputStream());
-		assertEquals(1, testHistory.getHistory().size());
+		List<ConfigScanViewInput> history = history2.getHistory();
+		assertEquals(1, history.size());
 	}
 
 	@Test
-	public void testDoubleLoadHistory() throws IOException {
+	public void testMultipleLoadHistory() throws IOException {
 		URL resource = plugin.getBundle().getResource("/files/history.xml");
 		InputStream inputStream = resource.openConnection().getInputStream();
+		testHistory.load(inputStream);
+		testHistory.load(inputStream);
 		testHistory.load(inputStream);
 		testHistory.load(inputStream);
 		testHistory.load(inputStream);
