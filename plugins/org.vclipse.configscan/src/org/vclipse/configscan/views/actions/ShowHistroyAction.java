@@ -96,6 +96,7 @@ public final class ShowHistroyAction extends SimpleTreeViewerAction implements I
 			history.clear();
 			view.setInput(null);
 		} else if(IMPORT_HISTORY == id) {
+			// TODO what should happen if the history is full ?
 			FileDialog fileDialog = new FileDialog(view.getSite().getShell(), SWT.OPEN);
 			fileDialog.setFilterExtensions(new String[]{"*.xml"});
 			String selectedpath = fileDialog.open();
