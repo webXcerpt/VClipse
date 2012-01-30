@@ -91,7 +91,18 @@ public class DocumentUtility {
 			 if(documentElement != null) {
 				 Node firstChild = documentElement.getFirstChild();
 				 if(firstChild != null) {
-					 return firstChild.getNextSibling();
+					 Node nextSibling = firstChild.getNextSibling();	
+					 // is a simple log xml document
+					 if(LOG_RESULT.equals(nextSibling.getNodeName())) {
+						 return nextSibling;
+					 } else {
+						 // is a history xml document
+						 firstChild = nextSibling.getFirstChild();
+						 nextSibling = firstChild.getNextSibling();
+						 if(LOG_RESULT.equals(nextSibling.getNodeName())) {
+							 return nextSibling;
+						 }
+					 }
 				 }
 			 }
 		}
