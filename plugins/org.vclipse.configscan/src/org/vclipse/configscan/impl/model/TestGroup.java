@@ -20,8 +20,6 @@ public class TestGroup extends TestCase {
 	public void addTestCase(TestCase testCase) {
 		if(testCase != null) {
 			testCases.add(testCase);
-		} else {
-			throw new IllegalArgumentException("Test case can not be null.");
 		}
 	}
 	
