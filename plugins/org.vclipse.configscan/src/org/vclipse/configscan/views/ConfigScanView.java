@@ -79,10 +79,8 @@ public final class ConfigScanView extends ViewPart {
 	class PreferenceStoreListener implements IPropertyChangeListener {
 		@Override
 		public void propertyChange(PropertyChangeEvent event) {
-			String property = event.getProperty();
-			Object object = event.getNewValue();
-			if(IConfigScanConfiguration.EXPAND_TREE_ON_INPUT.equals(property)) {
-				viewer.setAutoExpandLevel((Boolean)object ? IConfigScanConfiguration.DEFAULT_EXPAND_LEVEL : 0);
+			if(IConfigScanConfiguration.EXPAND_TREE_ON_INPUT.equals(event.getProperty())) {
+				viewer.setAutoExpandLevel((Boolean)event.getNewValue() ? IConfigScanConfiguration.DEFAULT_EXPAND_LEVEL : 0);
 			}
 		}
 	}
@@ -152,16 +150,16 @@ public final class ConfigScanView extends ViewPart {
 	}
 	
 	@Override
-	public void dispose() {
-		preferenceStore.removePropertyChangeListener(propertyChangeListener);
-		
+	public void dispose() {		
 		try {
 			history.save(plugin.getStateLocation().append(IConfigScanConfiguration.HISTORY_FILE_NAME).toString());
 		} catch (IllegalStateException exception) {
 			ConfigScanPlugin.log("Could not save history. " + exception.getMessage(), IStatus.ERROR);
 		} catch (IOException exception) {
 			ConfigScanPlugin.log("Could not save history. " + exception.getMessage(), IStatus.ERROR);
-		}			
+		}	
+		preferenceStore.removePropertyChangeListener(history);
+		preferenceStore.removePropertyChangeListener(propertyChangeListener);
 		
 		viewer.removeTreeViewerLockListener(history);
 		viewer.removeTreeViewerLockListener(treeViewerLockListener);
@@ -183,6 +181,8 @@ public final class ConfigScanView extends ViewPart {
 		viewer.addTreeViewerLockListener(history);
 		viewer.addTreeViewerLockListener(treeViewerLockListener = new TreeViewerLockListener());
 		
+		preferenceStore.addPropertyChangeListener(history);
+		
 		preferenceStore.addPropertyChangeListener(propertyChangeListener = new PreferenceStoreListener());
 		if(preferenceStore.getBoolean(IConfigScanConfiguration.EXPAND_TREE_ON_INPUT)) {
 			viewer.setAutoExpandLevel(10);			
@@ -193,7 +193,6 @@ public final class ConfigScanView extends ViewPart {
 		contributeToActionBars();		
 		createContextMenu();
 		hookDoubleClickAction();
-		
 		
 		try {
 			history.load(plugin.getStateLocation().append(IConfigScanConfiguration.HISTORY_FILE_NAME).toString());

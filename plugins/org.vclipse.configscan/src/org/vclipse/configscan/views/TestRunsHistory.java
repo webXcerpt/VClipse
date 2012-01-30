@@ -33,29 +33,8 @@ import org.w3c.dom.NodeList;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
-public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLockListener {
+public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLockListener, IPropertyChangeListener {
 
-	private class PreferenceStoreListener implements IPropertyChangeListener {
-		@Override
-		public void propertyChange(PropertyChangeEvent event) {
-			if(HISTORY_ENTRIES_NUMBER.equals(event.getProperty())) {
-				int newNumber = preferenceStore.getInt(HISTORY_ENTRIES_NUMBER);
-				if(newNumber < historyEntriesNumber) {
-					historyEntriesNumber = newNumber;
-					if(history.size() > newNumber) {
-						for(int i=historyEntriesNumber-1; i>0 && !history.isEmpty(); i--) {
-							history.removeFirst();
-						}
-					}
-				}
-			} else if(SAVE_HISTORY.equals(event.getProperty())) {
-				saveHistory = preferenceStore.getBoolean(SAVE_HISTORY);
-			}
-		}
-	}
-	
-	private PreferenceStoreListener preferenceStoreListener;
-	
 	private final AbstractUIPlugin plugin;
 	
 	private final DocumentUtility documentUtility;
@@ -78,15 +57,22 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 		this.preferenceStore = this.plugin.getPreferenceStore();
 		this.historyEntriesNumber = this.preferenceStore.getInt(HISTORY_ENTRIES_NUMBER);
 		this.saveHistory = this.preferenceStore.getBoolean(SAVE_HISTORY);
-		preferenceStoreListener = new PreferenceStoreListener();
-		this.preferenceStore.addPropertyChangeListener(preferenceStoreListener);
 		this.testCaseUtility = testCaseUtility;
 	}
 	
 	@Override
-	protected void finalize() throws Throwable {
-		preferenceStore.removePropertyChangeListener(preferenceStoreListener);
-		super.finalize();
+	public void propertyChange(PropertyChangeEvent event) {
+		if(HISTORY_ENTRIES_NUMBER.equals(event.getProperty())) {
+			int newNumber = preferenceStore.getInt(HISTORY_ENTRIES_NUMBER);
+			if(newNumber < historyEntriesNumber) {
+				while(historyEntriesNumber != newNumber) {
+					history.removeFirst();
+					historyEntriesNumber--;
+				}
+			}
+		} else if(SAVE_HISTORY.equals(event.getProperty())) {
+			saveHistory = preferenceStore.getBoolean(SAVE_HISTORY);
+		}
 	}
 	
 	public void clear() {
@@ -213,7 +199,7 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 							}
 						}
 					}
-					history.add(input);
+					addEntry(input);
 				}
 			}
 		}

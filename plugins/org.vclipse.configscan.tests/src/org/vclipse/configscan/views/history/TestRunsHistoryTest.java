@@ -176,6 +176,7 @@ public class TestRunsHistoryTest {
 		// the amount of entries does not exceed the preset value
 		store.setValue(IConfigScanConfiguration.HISTORY_ENTRIES_NUMBER, 5);
 		testHistory = new TestRunsHistory(plugin, documentUtility, testCaseFactory);
+		store.addPropertyChangeListener(testHistory);
 		inputs = createConfigScanViewInputs("1", "2", "3", "4", "5", "6");
 		for(ConfigScanViewInput input : inputs) {
 			testHistory.addEntry(input);
