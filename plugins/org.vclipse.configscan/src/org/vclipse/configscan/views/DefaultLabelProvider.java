@@ -153,14 +153,14 @@ public class DefaultLabelProvider extends DelegatingStyledCellLabelProvider impl
 
 	@Override
 	public void selectionChanged(SelectionChangedEvent event) {
-		IStructuredSelection selection = (IStructuredSelection)event.getSelection();
-		Object element = selection.getFirstElement();
-		if(element instanceof TestRun) {
-			selectedTestRun = (TestRun)element;
-			searchHash.clear();
-			searchHash.add(selectedTestRun);
-			fillSearchHash(selectedTestRun.getTestCases());
-			treeViewer.refresh(true);
-		}
+//		IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+//		Object element = selection.getFirstElement();
+//		if(element instanceof TestRun) {
+//			selectedTestRun = (TestRun)element;
+//			searchHash.clear();
+//			searchHash.add(selectedTestRun);
+//			fillSearchHash(selectedTestRun.getTestCases());
+//			treeViewer.refresh(true);
+//		}
 	}
 }

@@ -53,6 +53,7 @@ import org.vclipse.configscan.ConfigScanImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanConfiguration;
 import org.vclipse.configscan.impl.model.TestCase;
+import org.vclipse.configscan.impl.model.TestRun;
 import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.TestCaseFactory;
 import org.vclipse.configscan.views.JobAwareTreeViewer.ITreeViewerLockListener;
@@ -130,7 +131,6 @@ public final class ConfigScanView extends ViewPart {
 	private DefaultLabelProvider defaultLabelProvider;
 	
 	private ToggleLabelProviderAction toggleContent;
-	private ShowHistroyAction showHistoryAction;
 	private ExpandTreeAction expandTreeAction;
 	private CollapseTreeAction collapseTreeAction;
 	private RelaunchAction relaunchAction;
@@ -138,7 +138,6 @@ public final class ConfigScanView extends ViewPart {
 	private ShowFailuresAction showFailuresAction;
 	private NextFailureAction nextFailureAction;
 	private PrevFailureAction prevFailureAction;
-	private ImportExportAction importExportAction;
 	private CompareAction compareAction;
 	
 	private Map<String, Action> id2Action;
@@ -201,15 +200,12 @@ public final class ConfigScanView extends ViewPart {
 		} catch (IllegalStateException exception) {
 			ConfigScanPlugin.log("Could not load history. " + exception.getMessage(), IStatus.ERROR);
 		}
-		
 		disableActions();
-		enableOrDisable(ImportExportAction.ID, true);
-		enableOrDisable(ShowHistroyAction.ID, true);
 	}
 
 	public void setInput(ConfigScanViewInput input) {
 		this.input = input;
-		enableActions();
+		disableActions();
 		viewer.setInput(input);
 	}
 
@@ -221,19 +217,41 @@ public final class ConfigScanView extends ViewPart {
 		return viewer;
 	}
 	
-	public void enableOrDisable(String id, boolean enable) {
+	protected void enableOrDisable(String id, boolean enable) {
 		id2Action.get(id).setEnabled(enable);
 	}
 	
-	public void disableActions() {
+	protected void disableActions() {
 		for(String id : id2Action.keySet()) {
 			enableOrDisable(id, false);
 		}
 	}
 	
-	public void enableActions() {
-		for(String id : id2Action.keySet()) {
-			enableOrDisable(id, true);
+	protected void enableActions() {
+		ConfigScanViewInput input = (ConfigScanViewInput)viewer.getInput();
+		boolean allActionsAvailable = true;
+		for(TestRun testRun : input.getTestRuns()) {
+			EObject testModel = testRun.getTestModel();
+			if(testModel == null) {
+				allActionsAvailable = false;
+				break;
+			}
+		}
+		if(!allActionsAvailable) {
+			enableOrDisable(ToggleLabelProviderAction.ID, false);
+			enableOrDisable(CompareAction.ID, false);
+			enableOrDisable(RelaunchedFailedAction.ID, false);
+			enableOrDisable(RelaunchAction.ID, false);
+			
+			enableOrDisable(CollapseTreeAction.ID, true);
+			enableOrDisable(ExpandTreeAction.ID, true);
+			enableOrDisable(NextFailureAction.ID, true);
+			enableOrDisable(PrevFailureAction.ID, true);
+			enableOrDisable(ShowFailuresAction.ID, true);
+		} else {
+			for(String id : id2Action.keySet()) {
+				enableOrDisable(id, true);
+			}
 		}
 	}
 	
@@ -279,11 +297,8 @@ public final class ConfigScanView extends ViewPart {
 		
 		toolBarManager.add(new Separator());
 		
-		toolBarManager.add(importExportAction = new ImportExportAction(this, imageHelper, documentUtility, testCaseFactoy));
-		id2Action.put(ImportExportAction.ID, importExportAction);
-		
-		toolBarManager.add(showHistoryAction = new ShowHistroyAction(this, imageHelper, history));
-		id2Action.put(ShowHistroyAction.ID, showHistoryAction);
+		toolBarManager.add(new ImportExportAction(this, imageHelper, documentUtility, testCaseFactoy));
+		toolBarManager.add(new ShowHistroyAction(this, imageHelper, history));
 	}
 	
 	private void createContextMenu() {

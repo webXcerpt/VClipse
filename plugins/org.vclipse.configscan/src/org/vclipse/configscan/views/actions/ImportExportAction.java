@@ -126,15 +126,6 @@ public final class ImportExportAction extends SimpleTreeViewerAction implements 
 					testRun.addTestCase(testCaseUtility.buildTestCase(document, testRun));	
 					
 					view.setInput(input);
-					
-					Display.getDefault().timerExec(100, new Runnable() {
-						@Override
-						public void run() {
-							view.enableOrDisable(RelaunchAction.ID, false);
-							view.enableOrDisable(RelaunchedFailedAction.ID, false);
-							view.enableOrDisable(ToggleLabelProviderAction.ID, false);
-						}
-					});
 				}
 			} else if(EXPORT_ITEM_LOG == id) {
 				Object firstElement = ((IStructuredSelection)treeViewer.getSelection()).getFirstElement();
