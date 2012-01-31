@@ -280,9 +280,12 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 							if(enabled) {
 								addSelectedObject(obj);
 							}
-						} 
+						} else {
+							enabled = false;
+						}
+					} else {
+						enabled = false;
 					}
-					enabled = false;
 				} catch (NoSuchMethodException e) {
 					e.printStackTrace();
 					removeSelectedObjects();
