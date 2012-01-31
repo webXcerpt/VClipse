@@ -252,7 +252,7 @@
            id="com.webxcerpt.cm.nsn.cmlt.exportxmlfile"
            objectClass="org.eclipse.core.resources.IFile">
         <action
-              class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.vclipse.configscan.vcmlt.ui.ui.action.ConvertVcmlT2XmlAction"
+              class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.vclipse.configscan.vcmlt.ui.action.ConvertVcmlT2XmlAction"
               icon="icons/generate_xml_16x16.gif"
               id="org.vclipse.configscan.vcmlt.convertVCMLT_XML"
               label="Convert VCMLT file to ConfigScan XML file"
@@ -288,7 +288,7 @@
            </enablement>
         </action>
          <action
-              class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.vclipse.configscan.vcmlt.ui.action.ConvertConfigScanTestLog2VcmlTAction"
+              class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.vclipse.configscan.vcmlt.ui.action.StoreVcmlTTestcaseInConfigScanAction"
               icon="icons/generate_xml_16x16.gif"
               id="org.vclipse.configscan.vcmlt.storeVCMLT"
               label="Store VCMLT test cases in ConfigScan"
