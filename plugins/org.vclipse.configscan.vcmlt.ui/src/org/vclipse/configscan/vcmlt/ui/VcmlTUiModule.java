@@ -4,6 +4,10 @@
 package org.vclipse.configscan.vcmlt.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.vclipse.configscan.IConfigScanXMLProvider;
+import org.vclipse.configscan.vcmlt.builder.VcmlTConfigScanXMLProvider;
+import org.vclipse.connection.IConnectionHandler;
+import org.vclipse.connection.VClipseConnectionPlugin;
 
 /**
  * Use this class to register components to be used within the IDE.
@@ -12,4 +16,13 @@ public class VcmlTUiModule extends org.vclipse.configscan.vcmlt.ui.AbstractVcmlT
 	public VcmlTUiModule(AbstractUIPlugin plugin) {
 		super(plugin);
 	}
+
+	public IConnectionHandler bindConnectionHandler() {
+		return VClipseConnectionPlugin.getDefault().getInjector().getInstance(IConnectionHandler.class);
+	}
+
+	public Class<? extends IConfigScanXMLProvider> bindConfigScanXMLProvider() {
+		return VcmlTConfigScanXMLProvider.class;
+	}
+	
 }

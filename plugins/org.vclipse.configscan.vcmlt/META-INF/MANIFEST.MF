@@ -28,6 +28,7 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.configscan.vcmlt,
  org.vclipse.configscan.vcmlt.builder,
  org.vclipse.configscan.vcmlt.formatting,
+ org.vclipse.configscan.vcmlt.naming,
  org.vclipse.configscan.vcmlt.parser.antlr,
  org.vclipse.configscan.vcmlt.parser.antlr.internal,
  org.vclipse.configscan.vcmlt.scoping,

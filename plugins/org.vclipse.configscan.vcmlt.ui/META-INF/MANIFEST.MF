@@ -18,7 +18,8 @@ Require-Bundle: org.vclipse.configscan,
  org.eclipse.xtext.ui.codetemplates.ui;bundle-version="2.2.1",
  org.eclipse.compare,
  org.vclipse.base,
- org.vclipse.vcml
+ org.vclipse.vcml,
+ org.vclipse.connection
 Import-Package: com.sap.conn.jco,
  org.apache.commons.logging,
  org.apache.log4j

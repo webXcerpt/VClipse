@@ -5,7 +5,9 @@ package org.vclipse.configscan.vcmlt;
 
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
+import org.vclipse.base.INameProvider;
 import org.vclipse.base.NullQualifiedNameConverter;
+import org.vclipse.configscan.vcmlt.naming.SapNameProvider;
 import org.vclipse.vcml.conversion.VCMLValueConverter;
 
 /**
@@ -21,4 +23,9 @@ public class VcmlTRuntimeModule extends org.vclipse.configscan.vcmlt.AbstractVcm
 	public Class<? extends IQualifiedNameConverter> bindIQualifiedNameConverter() {
 		return NullQualifiedNameConverter.class;
 	}
+	
+	public Class<? extends INameProvider> bindINameProvider() {
+		return SapNameProvider.class;
+	}
+
 }
