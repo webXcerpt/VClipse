@@ -34,7 +34,15 @@ abstract class AbstractTreeTraverser<T> {
 		}
 		if(index >= children.size()) {
 			T parentOfParent = getParent(parent);
-			return getNextItem(parentOfParent, getChildren(parentOfParent).indexOf(parent) + 1);
+			if(parentOfParent == null) {
+				return getNextItem(parent, 0);
+			}
+			List<T> parentsChildren = getChildren(parentOfParent);
+			int indexOf = parentsChildren.indexOf(parent);
+			if((indexOf + 1) >= parentsChildren.size()) {
+				getNextItem(parentOfParent, indexOf);
+			}
+			return getNextItem(parentOfParent, indexOf + 1);
 		}
 		T item = children.get(index);
 		if(propertyTest(item)) {
@@ -53,6 +61,10 @@ abstract class AbstractTreeTraverser<T> {
 			if(--indexOf > BAD_INDEX) {
 				return getPreviousItem(parent, indexOf);
 			}
+			T parentOfParent = getParent(parent);
+			if(parentOfParent == null) {
+				return getPreviousItem(item, getChildren(item).size() - 1);
+			}
 			return getPreviousItem(getParent(parent), 
 					getChildren(getParent(parent)).indexOf(parent) - 1);
 		}
@@ -63,18 +75,23 @@ abstract class AbstractTreeTraverser<T> {
 	}
 	
 	public T getPreviousItem(T parent, int index) {
-		if(parent == null || index == BAD_INDEX) {
+		if(parent == null) {
 			return null;
+		}
+		if(index <= BAD_INDEX) {
+			T parentOfParent = getParent(parent);
+			List<T> children = getChildren(parent);
+			if(parentOfParent == null) {
+				return getPreviousItem(parent, children.size() - 1);
+			}
+			return getPreviousItem(parentOfParent, children.indexOf(parent) - 1);
 		}
 		List<T> children = getChildren(parent);
 		if(children.isEmpty()) {
 			T parentOfParent = getParent(parent);
 			return getPreviousItem(parentOfParent, getChildren(parentOfParent).indexOf(parent) - 1);
 		}
-		if(index == BAD_INDEX) {
-			T parentOfParent = getParent(parent);
-			return getPreviousItem(parentOfParent, getChildren(parentOfParent).indexOf(parent) - 1);
-		}
+		
 		T item = children.get(index);
 		if(propertyTest(item)) {
 			return item;

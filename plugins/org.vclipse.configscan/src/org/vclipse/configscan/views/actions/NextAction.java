@@ -14,7 +14,6 @@ import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestGroup;
-import org.vclipse.configscan.impl.model.TestRun;
 import org.vclipse.configscan.utils.FailureTreeTraverser;
 import org.vclipse.configscan.utils.TypeTreeTraverser;
 import org.vclipse.configscan.views.ConfigScanView;
@@ -54,9 +53,9 @@ public final class NextAction extends SimpleTreeViewerAction implements IMenuCre
 					case NEXT_FAILURE:
 						nextNode = new FailureTreeTraverser().getNextItem(testCase);
 						break;
-					case NEXT_TEST_RUN:
-						nextNode = new TypeTreeTraverser(TestRun.class).getNextItem(testCase);
-						break;
+//					case NEXT_TEST_RUN:
+//						nextNode = new TypeTreeTraverser(TestRun.class).getNextItem(testCase);
+//						break;
 					case NEXT_TEST_GROUP:
 						nextNode = new TypeTreeTraverser(TestGroup.class).getNextItem(testCase);
 						break;
