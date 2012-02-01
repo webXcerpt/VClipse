@@ -94,7 +94,7 @@ public final class NextAction extends SimpleTreeViewerAction implements IMenuCre
 
 		menu = new Menu(parent);
 
-		MenuItem item = new MenuItem(menu, SWT.RADIO);
+//		MenuItem item = new MenuItem(menu, SWT.RADIO);
 //		item.setText("Next test run");
 //		item.setID(NEXT_TEST_RUN);
 //		item.addSelectionListener(this);
@@ -102,7 +102,7 @@ public final class NextAction extends SimpleTreeViewerAction implements IMenuCre
 //			item.setSelection(true);
 //		}
 
-		item = new MenuItem(menu, SWT.RADIO);
+		MenuItem item = new MenuItem(menu, SWT.RADIO);
 		item.setText("Next test group");
 		item.setID(NEXT_TEST_GROUP);
 		item.addSelectionListener(this);
