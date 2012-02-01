@@ -62,8 +62,8 @@ import org.vclipse.configscan.views.actions.CollapseTreeAction;
 import org.vclipse.configscan.views.actions.CompareAction;
 import org.vclipse.configscan.views.actions.ExpandTreeAction;
 import org.vclipse.configscan.views.actions.ImportExportAction;
-import org.vclipse.configscan.views.actions.NextFailureAction;
-import org.vclipse.configscan.views.actions.PrevFailureAction;
+import org.vclipse.configscan.views.actions.NextAction;
+import org.vclipse.configscan.views.actions.PreviousAction;
 import org.vclipse.configscan.views.actions.RelaunchAction;
 import org.vclipse.configscan.views.actions.RelaunchedFailedAction;
 import org.vclipse.configscan.views.actions.ShowFailuresAction;
@@ -136,8 +136,8 @@ public final class ConfigScanView extends ViewPart {
 	private RelaunchAction relaunchAction;
 	private RelaunchedFailedAction relaunchFailedAction;
 	private ShowFailuresAction showFailuresAction;
-	private NextFailureAction nextFailureAction;
-	private PrevFailureAction prevFailureAction;
+	private NextAction nextFailureAction;
+	private PreviousAction prevFailureAction;
 	private CompareAction compareAction;
 	
 	private Map<String, Action> id2Action;
@@ -245,8 +245,8 @@ public final class ConfigScanView extends ViewPart {
 			
 			enableOrDisable(CollapseTreeAction.ID, true);
 			enableOrDisable(ExpandTreeAction.ID, true);
-			enableOrDisable(NextFailureAction.ID, true);
-			enableOrDisable(PrevFailureAction.ID, true);
+			enableOrDisable(NextAction.ID, true);
+			enableOrDisable(PreviousAction.ID, true);
 			enableOrDisable(ShowFailuresAction.ID, true);
 		} else {
 			for(String id : id2Action.keySet()) {
@@ -289,11 +289,11 @@ public final class ConfigScanView extends ViewPart {
 		
 		toolBarManager.add(new Separator());
 		
-		toolBarManager.add(nextFailureAction = new NextFailureAction(this, imageHelper));
-		id2Action.put(NextFailureAction.ID, nextFailureAction);
+		toolBarManager.add(nextFailureAction = new NextAction(this, imageHelper));
+		id2Action.put(NextAction.ID, nextFailureAction);
 		
-		toolBarManager.add(prevFailureAction = new PrevFailureAction(this, imageHelper));
-		id2Action.put(PrevFailureAction.ID, prevFailureAction);
+		toolBarManager.add(prevFailureAction = new PreviousAction(this, imageHelper));
+		id2Action.put(PreviousAction.ID, prevFailureAction);
 		
 		toolBarManager.add(new Separator());
 		

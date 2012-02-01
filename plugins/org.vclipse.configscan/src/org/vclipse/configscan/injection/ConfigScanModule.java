@@ -59,13 +59,13 @@ public final class ConfigScanModule extends AbstractGenericModule {
 		return VClipseConnectionPlugin.getDefault().getInjector().getInstance(IConnectionHandler.class);
 	}
 	
-//	public Class<? extends IConfigScanRemoteConnections> bindConfigScanRemoteConnections() {
-//		return MockConfigScanRemoteConnections.class;
-//	}
-//	
-//	public Class<? extends IConfigScanRunner> bindConfigScanRunner() {
-//		return MockConfigScanRunner.class;
-//	}
+	public Class<? extends IConfigScanRemoteConnections> bindConfigScanRemoteConnections() {
+		return MockConfigScanRemoteConnections.class;
+	}
+	
+	public Class<? extends IConfigScanRunner> bindConfigScanRunner() {
+		return MockConfigScanRunner.class;
+	}
 	
 	public Class<? extends IConfigScanXMLProvider> bindConfigScanXmlProvider() {
 		return ConfigScanXmlProvider.class;
