@@ -8,20 +8,11 @@ import org.vclipse.configscan.impl.model.TestCase.Status;
 
 import com.google.common.collect.Lists;
 
-public class FailureTreeTraverser extends AbstractTreeTraverser<TestCase> {
+public final class FailureTreeTraverser extends AbstractTreeTraverser<TestCase> {
 
 	@Override
-	protected boolean propertyHit(TestCase item) {
-		if(Status.FAILURE == item.getStatus()) {
-			atLeastOneHit = true;
-			return true;
-		}
-		return false;
-	}
-	
-	@Override
 	protected TestCase getParent(TestCase item) {
-		return item.getParent();
+		return item == null ? null : item.getParent();
 	}
 	
 	@Override
@@ -30,5 +21,15 @@ public class FailureTreeTraverser extends AbstractTreeTraverser<TestCase> {
 			return ((TestGroup)item).getTestCases();
 		}
 		return Lists.newArrayList();
+	}
+
+	@Override
+	protected boolean propertyTest(TestCase item) {
+		if(getChildren(item).isEmpty()) {
+			if(Status.FAILURE == item.getStatus()) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -101,33 +101,4 @@ public class TestCase {
 		result = prime * result + ((sourceURI == null) ? 0 : sourceURI.hashCode());
 		return result;
 	}
-	
-	@Override
-	public boolean equals(Object object) {
-		if(this == object) {
-			return true;			
-		} else if(object == null) {
-			return false;
-		} else if(getClass() != object.getClass()) {
-			return false;
-		}
-		TestCase other = (TestCase) object;
-		String title = getTitle();
-		if(title == null) {
-			if(other.getTitle() != null) {
-				return false;
-			}
-		} else if(title.equals(other.getTitle())) {
-			if(getStatus().equals(other.getStatus())) {
-				if(sourceURI == null) {
-					if(other.getSourceURI() != null) {
-						return false;
-					}
-				} else if(sourceURI.equals(other.getSourceURI())) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 }

@@ -2,86 +2,92 @@ package org.vclipse.configscan.utils;
 
 import java.util.List;
 
-public abstract class AbstractTreeTraverser<T> {
+abstract class AbstractTreeTraverser<T> {
 
-	protected boolean atLeastOneHit;
+	protected static final int BAD_INDEX = -1;
 	
 	public T getNextItem(T item) {
-		atLeastOneHit = propertyHit(item);
-		return getNextItem(item, getParent(item) == null ? -1 : getChildren(getParent(item)).indexOf(item));
-	}
-	
-	protected T getNextItem(T item, int index) {
-		if(item != null) {
-			List<T> children = getChildren(item);
-			if(!children.isEmpty()) {
-				for(int i=0, last=children.size() - 1; i<children.size(); i++) {
-					T childItem = children.get(i);
-					if(i <= index) {
-						continue;
-					} else if(!getChildren(childItem).isEmpty()) {
-						return getNextItem(childItem, index);
-					} else if(i == last) {
-						T parentItem = getParent(item);
-						List<T> parentsChildren = getChildren(parentItem);
-						int newIndex = parentsChildren.indexOf(item);
-						if(newIndex == parentsChildren.size() - 1) {
-							newIndex = -1;
-							if(!atLeastOneHit || getParent(parentItem) == null) {
-								return null;
-							}
-						}
-						return getNextItem(parentItem, newIndex);
-					} else if(propertyHit(childItem)) {
-						return childItem;
-					}
-				}
-			} else {
-				return getNextItem(getParent(item), index);
+		if(!getChildren(item).isEmpty()) {
+			return getNextItem(item, 0);
+		}
+		
+		T parent = getParent(item);
+		if(parent != null) {
+			List<T> children = getChildren(parent);
+			int indexOf = children.indexOf(item);
+			if(++indexOf <= children.size()) {
+				return getNextItem(parent, children.indexOf(item) + 1);
 			}
+			return getNextItem(parent, children.indexOf(item));
 		}
 		return null;
+	}
+	
+	protected T getNextItem(T parent, int index) {
+		if(parent == null || index == BAD_INDEX) {
+			return null;
+		}
+		List<T> children = getChildren(parent);
+		if(children.isEmpty()) {
+			T parentOfParent = getParent(parent);
+			return getNextItem(parentOfParent, getChildren(parentOfParent).indexOf(parent) + 1);
+		}
+		if(index >= children.size()) {
+			T parentOfParent = getParent(parent);
+			return getNextItem(parentOfParent, getChildren(parentOfParent).indexOf(parent) + 1);
+		}
+		T item = children.get(index);
+		if(propertyTest(item)) {
+			return item;
+		}
+		if(!getChildren(item).isEmpty()) {
+			return getNextItem(item, 0);
+		}
+		return getNextItem(parent, ++index);
 	}
 	
 	public T getPreviousItem(T item) {
-		atLeastOneHit = propertyHit(item);
-		return getPreviousItem(getParent(item), getParent(item) == null ? -1 : getChildren(getParent(item)).indexOf(item));
-	}
-	
-	protected T getPreviousItem(T item, int index) {
-		if(item != null) {
-			List<T> children = getChildren(item);
-			if(!children.isEmpty()) {
-				for(int first=0, i=index; i>=first; i--) {
-					T child = children.get(i);
-					if(!getChildren(child).isEmpty()) {
-						return getPreviousItem(child, getChildren(child).size() - 1);
-					} else if(i >= index) {
-						continue;
-					} else if(propertyHit(child)) {
-						return child;
-					} else if(i == first) {
-						T parentItem = getParent(item);
-						int newIndex = getChildren(parentItem).indexOf(item) - 1;
-						if(newIndex == -1) {
-							newIndex = getChildren(parentItem).size() - 1;
-							if(!atLeastOneHit || getParent(parentItem) == null) {
-								return null;
-							}
-						}
-						return getPreviousItem(parentItem, newIndex);
-					} 
-				}
-			} else {
-				return getPreviousItem(getParent(item), index);
+		T parent = getParent(item);
+		if(parent != null) {
+			int indexOf = getChildren(parent).indexOf(item);
+			if(--indexOf > BAD_INDEX) {
+				return getPreviousItem(parent, indexOf);
 			}
+			return getPreviousItem(getParent(parent), 
+					getChildren(getParent(parent)).indexOf(parent) - 1);
+		}
+		if(!getChildren(item).isEmpty()) {
+			return getPreviousItem(item, 0);
 		}
 		return null;
 	}
 	
+	public T getPreviousItem(T parent, int index) {
+		if(parent == null || index == BAD_INDEX) {
+			return null;
+		}
+		List<T> children = getChildren(parent);
+		if(children.isEmpty()) {
+			T parentOfParent = getParent(parent);
+			return getPreviousItem(parentOfParent, getChildren(parentOfParent).indexOf(parent) - 1);
+		}
+		if(index == BAD_INDEX) {
+			T parentOfParent = getParent(parent);
+			return getPreviousItem(parentOfParent, getChildren(parentOfParent).indexOf(parent) - 1);
+		}
+		T item = children.get(index);
+		if(propertyTest(item)) {
+			return item;
+		}
+		if(!getChildren(item).isEmpty()) {
+			return getPreviousItem(item, getChildren(item).size() - 1);
+		}
+		return getPreviousItem(parent, --index);
+	}
+
 	protected abstract T getParent(T item);
 	
 	protected abstract List<T> getChildren(T item);
 	
-	protected abstract boolean propertyHit(T item);
+	protected abstract boolean propertyTest(T item);
 }
