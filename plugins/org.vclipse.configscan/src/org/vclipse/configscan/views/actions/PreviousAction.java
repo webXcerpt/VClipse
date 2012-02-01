@@ -24,7 +24,7 @@ public final class PreviousAction extends SimpleTreeViewerAction implements IMen
 	
 	private Menu menu;
 	
-	private static final int PREVIOUS_TEST_RUN = 1001;
+	//private static final int PREVIOUS_TEST_RUN = 1001;
 	private static final int PREVIOUS_TEST_GROUP = 1002;
 	private static final int PREVIOUS_TEST_CASE = 1003;
 	private static final int PREVIOUS_FAILURE = 1004;
@@ -95,12 +95,12 @@ public final class PreviousAction extends SimpleTreeViewerAction implements IMen
 		menu = new Menu(parent);
 
 		MenuItem item = new MenuItem(menu, SWT.RADIO);
-		item.setText("Previous test run");
-		item.setID(PREVIOUS_TEST_RUN);
-		item.addSelectionListener(this);
-		if(selected == PREVIOUS_TEST_RUN) {
-			item.setSelection(true);
-		}
+//		item.setText("Previous test run");
+//		item.setID(PREVIOUS_TEST_RUN);
+//		item.addSelectionListener(this);
+//		if(selected == PREVIOUS_TEST_RUN) {
+//			item.setSelection(true);
+//		}
 
 		item = new MenuItem(menu, SWT.RADIO);
 		item.setText("Previous test group");

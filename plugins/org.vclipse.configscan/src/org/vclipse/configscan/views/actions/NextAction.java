@@ -24,7 +24,7 @@ public final class NextAction extends SimpleTreeViewerAction implements IMenuCre
 	
 	private Menu menu;
 	
-	private static final int NEXT_TEST_RUN = 1001;
+	//private static final int NEXT_TEST_RUN = 1001;
 	private static final int NEXT_TEST_GROUP = 1002;
 	private static final int NEXT_TEST_CASE = 1003;
 	private static final int NEXT_FAILURE = 1004;
@@ -95,12 +95,12 @@ public final class NextAction extends SimpleTreeViewerAction implements IMenuCre
 		menu = new Menu(parent);
 
 		MenuItem item = new MenuItem(menu, SWT.RADIO);
-		item.setText("Next test run");
-		item.setID(NEXT_TEST_RUN);
-		item.addSelectionListener(this);
-		if(selected == NEXT_TEST_RUN) {
-			item.setSelection(true);
-		}
+//		item.setText("Next test run");
+//		item.setID(NEXT_TEST_RUN);
+//		item.addSelectionListener(this);
+//		if(selected == NEXT_TEST_RUN) {
+//			item.setSelection(true);
+//		}
 
 		item = new MenuItem(menu, SWT.RADIO);
 		item.setText("Next test group");
