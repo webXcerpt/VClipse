@@ -3,17 +3,12 @@
  */
 package org.vclipse.vcml.diff.ui;
 
-import java.util.Iterator;
-
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -30,14 +25,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.vclipse.vcml.diff.ExportDiffsJob;
 
-public class ExportDiffsDialog extends TitleAreaDialog {
+final class ExportDiffsDialog extends TitleAreaDialog {
 
-	private static IWorkspaceRoot ROOT = ResourcesPlugin.getWorkspace().getRoot();
-	private static FileSelectionDialog FILE_SELECTION_DIALOG;
-
-	private IFile oldFileToCompare;
-	private IFile newFileToCompare;
-	private IFile compareResultsFile;
+	private IFile oldFile;
+	private IFile newFile;
+	
+	private IFile resultFile;
 	
 	private Text oldFileText;
 	private Text newFileText;
@@ -46,39 +39,31 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 	private Button generateExportFileButton;
 	private Button switchPathsButton;
 	
-	/**
-	 *	Resources, being preselected.
-	 *
-	 *	Use case 1 - user preselected a container.
-	 *	Use case 2 - user preselected two source files.
-	 *	Use case 3 - nothing is preselected, array is empty in this case.
-	 */
-	private IResource[] preselectedResources = new IResource[2];
+	private IWorkspaceRoot root;
 	
-	public ExportDiffsDialog(Shell parentShell, IStructuredSelection selection) {
+	public ExportDiffsDialog(Shell parentShell, IWorkspaceRoot root) {
 		super(parentShell);
-		if(!selection.isEmpty()) {
-			Iterator<?> iterator = selection.iterator();
-			for(int i=0; i<2 && iterator.hasNext(); i++) {
-				Object object = iterator.next();
-				if(object instanceof IResource) {
-					preselectedResources[i] = (IResource)object;
-				}
-			}
-		}
-		
-		if(preselectedResources[0] instanceof IContainer) {
-			FILE_SELECTION_DIALOG = new FileSelectionDialog(parentShell, (IContainer)preselectedResources[0]);			
-		} else if(preselectedResources[0] instanceof IFile) {
-			FILE_SELECTION_DIALOG = new FileSelectionDialog(parentShell, ((IFile)preselectedResources[0]).getParent());
-		} else {
-			FILE_SELECTION_DIALOG = new FileSelectionDialog(parentShell, ROOT);
-		}
-		FILE_SELECTION_DIALOG.setExtensions(new String[]{"*.vcml"});
+		this.root = root;
 	}
-
+	
+	public void setOldFile(IFile file) {
+		oldFile = file;
+	}
+	
+	public void setNewFile(IFile file) {
+		newFile = file;
+	}
+	
 	@Override
 	protected Control createDialogArea(Composite parent) {
+		if(oldFile == null) {
+			throw new IllegalArgumentException("oldFile might not be null");
+		}
+		
+		final FileSelectionDialog fileSelectionDialog = 
+				new FileSelectionDialog(parent.getShell(), oldFile.getParent());
+		fileSelectionDialog.setExtensions(new String[]{"*.vcml"});
+		
 		getShell().setText("Compare 2 files with each other");
 		setTitle("Comparison Dialog");
 		setMessage("One can compare 2 files with vcml extension and extract differences to a third file");
@@ -98,20 +83,17 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 		oldFileText = new Text(group, SWT.BORDER | SWT.READ_ONLY);
 		oldFileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		oldFileText.setSize(300, 0);
-	
-		if(preselectedResources[0] instanceof IFile) {
-			oldFileText.setText(((IFile)preselectedResources[0]).getFullPath().toString());
-		}
+		oldFileText.setText(oldFile.getFullPath().toString());
 		
 		Button button = new Button(group, SWT.PUSH);
 		button.setText("Browse...");
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
-				if(Dialog.OK == FILE_SELECTION_DIALOG.open()) {
-					oldFileToCompare = FILE_SELECTION_DIALOG.getSelection();
-					if(oldFileToCompare != null) {
-						oldFileText.setText(oldFileToCompare.getFullPath().toString());
+				if(Dialog.OK == fileSelectionDialog.open()) {
+					oldFile = fileSelectionDialog.getSelection();
+					if(oldFile != null) {
+						oldFileText.setText(oldFile.getFullPath().toString());
 						validateEntries();
 					}
 				}
@@ -126,9 +108,8 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 		
 		newFileText = new Text(group, SWT.BORDER | SWT.READ_ONLY);
 		newFileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		
-		if(preselectedResources[1] instanceof IFile) {
-			newFileText.setText(((IFile)preselectedResources[1]).getFullPath().toString());
+		if(newFile != null) {
+			newFileText.setText(newFile.getFullPath().toString());
 		}
 		
 		button = new Button(group, SWT.PUSH);
@@ -136,10 +117,10 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
-				if(Dialog.OK == FILE_SELECTION_DIALOG.open()) {
-					newFileToCompare = FILE_SELECTION_DIALOG.getSelection();
-					if(newFileToCompare != null) {
-						newFileText.setText(newFileToCompare.getFullPath().toString());
+				if(Dialog.OK == fileSelectionDialog.open()) {
+					newFile = fileSelectionDialog.getSelection();
+					if(newFile != null) {
+						newFileText.setText(newFile.getFullPath().toString());
 						validateEntries();
 					}
 				}
@@ -164,7 +145,7 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 				String text = resultsFileText.getText();
 				try {
 					setErrorMessage(null);
-					compareResultsFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(text));
+					resultFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(text));
 				} catch(IllegalArgumentException exception) {
 					setErrorMessage(exception.getMessage());
 				}
@@ -218,11 +199,11 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 	@Override
 	protected void buttonPressed(int buttonId) {
 		if(Dialog.OK == buttonId) {
-			if(oldFileToCompare != null && newFileToCompare != null) {
+			if(oldFile != null && newFile != null) {
 				ExportDiffsJob job = new ExportDiffsJob();
-				job.setOldFile(oldFileToCompare);
-				job.setNewFile(newFileToCompare);
-				job.setResultsFile(compareResultsFile);
+				job.setOldFile(oldFile);
+				job.setNewFile(newFile);
+				job.setResultsFile(resultFile);
 				job.schedule();
 			}
 		}
@@ -234,33 +215,33 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 		switchPathsButton.setEnabled(true);
 		
 		try {
-			oldFileToCompare = ROOT.getFile(new Path(oldFileText.getText()));
+			oldFile = root.getFile(new Path(oldFileText.getText()));
 		} catch(IllegalArgumentException exception) {
-			oldFileToCompare = null;
+			oldFile = null;
 			switchPathsButton.setEnabled(false);
 			setErrorMessage("Please specify the first file for comparison.");
 			return;
 		}
 		
 		try {
-			newFileToCompare = ROOT.getFile(new Path(newFileText.getText()));
+			newFile = root.getFile(new Path(newFileText.getText()));
 		} catch(IllegalArgumentException exception) {
-			newFileToCompare = null;
+			newFile = null;
 			switchPathsButton.setEnabled(false);
 			setErrorMessage("Please specify the second file for comparison.");
 			return;
 		}
 		
 		// create a name for the result file and provide this value to the text widget
-		if(generateExportFileButton.getSelection() && oldFileToCompare != null) {
-			String newName = newFileToCompare.getName().replaceAll(".vcml", "_diff.vcml");
-			compareResultsFile = newFileToCompare.getParent().getFile(new Path(newName));
-			resultsFileText.setText(compareResultsFile.getFullPath().toString());
+		if(generateExportFileButton.getSelection() && oldFile != null) {
+			String newName = newFile.getName().replaceAll(".vcml", "_diff.vcml");
+			resultFile = newFile.getParent().getFile(new Path(newName));
+			resultsFileText.setText(resultFile.getFullPath().toString());
 		} else {
 			try {
-				compareResultsFile = ROOT.getFile(new Path(resultsFileText.getText()));
+				resultFile = root.getFile(new Path(resultsFileText.getText()));
 			} catch(IllegalArgumentException exception) {
-				compareResultsFile = null;
+				resultFile = null;
 				setErrorMessage("Please specify a file for the differences export");
 			}
 		}
