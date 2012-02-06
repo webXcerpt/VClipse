@@ -207,6 +207,7 @@ public final class ConfigScanView extends ViewPart {
 		this.input = input;
 		disableActions();
 		viewer.setInput(input);
+		enableActions();
 	}
 
 	public ConfigScanViewInput getInput() {
