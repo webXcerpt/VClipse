@@ -80,11 +80,10 @@ abstract class AbstractTreeTraverser<T> {
 		}
 		if(index <= BAD_INDEX) {
 			T parentOfParent = getParent(parent);
-			List<T> children = getChildren(parent);
 			if(parentOfParent == null) {
-				return getPreviousItem(parent, children.size() - 1);
+				return getPreviousItem(parent, getChildren(parent).size() - 1);
 			}
-			return getPreviousItem(parentOfParent, children.indexOf(parent) - 1);
+			return getPreviousItem(parentOfParent, getChildren(parentOfParent).indexOf(parent) - 1);
 		}
 		List<T> children = getChildren(parent);
 		if(children.isEmpty()) {
