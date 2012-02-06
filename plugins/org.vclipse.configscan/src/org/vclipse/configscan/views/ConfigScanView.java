@@ -307,6 +307,11 @@ public final class ConfigScanView extends ViewPart {
 		menuManager.setRemoveAllWhenShown(true);
 		menuManager.addMenuListener(new IMenuListener() {	
 			public void menuAboutToShow(IMenuManager manager) {
+				manager.add(expandTreeAction);
+				manager.add(collapseTreeAction);
+				manager.add(new Separator());
+				manager.add(relaunchAction);
+				manager.add(relaunchFailedAction);
 			}
 		});
 		Control control = viewer.getControl();
