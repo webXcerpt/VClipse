@@ -25,5 +25,6 @@ Import-Package: com.sap.conn.jco,
  org.apache.log4j
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.configscan.vcmlt.ui.contentassist.antlr,
- org.vclipse.configscan.vcmlt.ui.internal
+ org.vclipse.configscan.vcmlt.ui.internal,
+ org.vclipse.configscan.vcmlt.ui.contentassist
 Bundle-Activator: org.vclipse.configscan.vcmlt.ui.internal.VcmlTActivator
