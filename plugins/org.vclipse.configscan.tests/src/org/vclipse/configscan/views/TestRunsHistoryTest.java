@@ -1,4 +1,4 @@
-package org.vclipse.configscan.views.history;
+package org.vclipse.configscan.views;
 
 import static org.junit.Assert.assertEquals;
 import static org.vclipse.configscan.TestCaseAssert.testComplete;
@@ -53,14 +53,14 @@ public class TestRunsHistoryTest {
 		testCaseFactory = injector.getInstance(TestCaseFactory.class);
 		utils = injector.getInstance(JUnitTestUtils.class);
 		
-		utils.clean(filesPath + "/temp.xml");
+		utils.clean(filesPath + "/history/temp.xml");
 	}
 	
 	
 	
 	@Test
 	public void testLoadHistory() throws IOException {
-		URL resource = plugin.getBundle().getResource("/files/history.xml");
+		URL resource = plugin.getBundle().getResource("/files/history/history.xml");
 		TestRunsHistory testHistory = new TestRunsHistory(plugin, documentUtility, testCaseFactory);
 		testHistory.load(resource.openConnection().getInputStream());
 		List<ConfigScanViewInput> history = testHistory.getHistory();
@@ -82,7 +82,7 @@ public class TestRunsHistoryTest {
 	
 	@Test
 	public void testSaveHistory() throws IOException {
-		URL history2xmlUrl = plugin.getBundle().getResource("/files/logResult.xml");
+		URL history2xmlUrl = plugin.getBundle().getResource("/files/history/logResult.xml");
 		Document document = documentUtility.parse(history2xmlUrl.openConnection().getInputStream());
 		
 		TestRun testRun = testCaseFactory.buildTestRun("test_run", null, null, null);
@@ -112,14 +112,14 @@ public class TestRunsHistoryTest {
 		TestRunsHistory testHistory = new TestRunsHistory(plugin, documentUtility, testCaseFactory);
 		
 		testHistory.addEntry(input);
-		testHistory.save(filesPath + "/historySaved.xml");
+		testHistory.save(filesPath + "/history/historySaved.xml");
 		
 		assertEquals("History not cleared after save", 1, testHistory.getHistory().size());
 		testHistory.clear();
 		assertEquals("History cleared", 0, testHistory.getHistory().size());
 		
 		TestRunsHistory history2 = new TestRunsHistory(plugin, documentUtility, testCaseFactory);
-		history2xmlUrl = plugin.getBundle().getResource("/files/historySaved.xml");
+		history2xmlUrl = plugin.getBundle().getResource("/files/history/historySaved.xml");
 		history2.load(history2xmlUrl.openConnection().getInputStream());
 		List<ConfigScanViewInput> history = history2.getHistory();
 		assertEquals(1, history.size());
@@ -127,7 +127,7 @@ public class TestRunsHistoryTest {
 
 	@Test
 	public void testMultipleLoadHistory() throws IOException {
-		URL resource = plugin.getBundle().getResource("/files/history.xml");
+		URL resource = plugin.getBundle().getResource("/files/history/history.xml");
 		InputStream inputStream = resource.openConnection().getInputStream();
 		TestRunsHistory testHistory = new TestRunsHistory(plugin, documentUtility, testCaseFactory);
 		testHistory.load(inputStream);
@@ -149,9 +149,9 @@ public class TestRunsHistoryTest {
 		for(ConfigScanViewInput input : inputs) {
 			testHistory.addEntry(input);
 		}
-		testHistory.save(filesPath + "/temp.xml");
+		testHistory.save(filesPath + "/history/temp.xml");
 		testHistory.clear();
-		testHistory.load(filesPath + "/temp.xml");
+		testHistory.load(filesPath + "/history/temp.xml");
 		List<ConfigScanViewInput> history = testHistory.getHistory();
 		assertEquals(0, history.size());
 		
@@ -162,10 +162,10 @@ public class TestRunsHistoryTest {
 		for(ConfigScanViewInput input : inputs) {
 			testHistory.addEntry(input);
 		}
-		testHistory.save(filesPath + "/temp.xml");
+		testHistory.save(filesPath + "/history/temp.xml");
 		
 		testHistory.clear();
-		testHistory.load(filesPath + "/temp.xml");
+		testHistory.load(filesPath + "/history/temp.xml");
 		history = testHistory.getHistory();
 		assertEquals(2, history.size());
 		

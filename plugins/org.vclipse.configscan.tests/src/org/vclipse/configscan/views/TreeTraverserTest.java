@@ -56,7 +56,7 @@ public class TreeTraverserTest {
 	
 	@Test
 	public void testGetNextFailure() throws IOException {
-		URL resource = plugin.getBundle().getResource("/files/treeTraverserTest.xml");
+		URL resource = plugin.getBundle().getResource("/files//treetraverser/treeTraverserTest.xml");
 		TestRunsHistory history = new TestRunsHistory(plugin, documentUtility, testCaseUtility);
 		history.load(resource.openStream());
 		inputs = history.getHistory();
@@ -84,40 +84,38 @@ public class TreeTraverserTest {
 		TestGroup session = (TestGroup)testCase;
 		treeViewer.setSelection(new StructuredSelection(session));
 
-		TestCase nextNode = new FailureTreeTraverser().getNextItem(session);
+		FailureTreeTraverser failureTreeTraverser = new FailureTreeTraverser();
+		TestCase nextNode = failureTreeTraverser.getNextItem(session);
 		assertTrue(nextNode != null);
 		assertTrue(nextNode instanceof TestCase);
 
 		testCase = (TestCase)nextNode;
 		assertEquals("Test 1", testCase.getTitle());
 
-		nextNode = new FailureTreeTraverser().getNextItem(testCase);
+		nextNode = failureTreeTraverser.getNextItem(testCase);
 		assertTrue(nextNode != null);
 		assertEquals("Test 1", nextNode.getTitle());
 
-		nextNode = new FailureTreeTraverser().getNextItem(nextNode);
+		nextNode = failureTreeTraverser.getNextItem(nextNode);
 		assertTrue(nextNode != null);
 		assertEquals("Test 2", nextNode.getTitle());
 
-		nextNode = new FailureTreeTraverser().getNextItem(nextNode);
+		nextNode = failureTreeTraverser.getNextItem(nextNode);
 		assertTrue(nextNode != null);
 		assertEquals("Test 5", nextNode.getTitle());
 
-		nextNode = new FailureTreeTraverser().getNextItem(nextNode);
+		nextNode = failureTreeTraverser.getNextItem(nextNode);
 		assertTrue(nextNode != null);
 		assertEquals("Test 1", nextNode.getTitle());
 
-		nextNode = new FailureTreeTraverser().getNextItem(nextNode);
+		nextNode = failureTreeTraverser.getNextItem(nextNode);
 		assertTrue(nextNode != null);
 		assertEquals("Test 4", nextNode.getTitle());
-
-		nextNode = new FailureTreeTraverser().getNextItem(nextNode);
-		assertTrue(nextNode == null);
 	}
 
 	@Test
 	public void testGetPreviousFailure() throws IOException {
-		URL resource = plugin.getBundle().getResource("/files/treeTraverserTest.xml");
+		URL resource = plugin.getBundle().getResource("/files//treetraverser/treeTraverserTest.xml");
 		TestRunsHistory history = new TestRunsHistory(plugin, documentUtility, testCaseUtility);
 		history.load(resource.openStream());
 		inputs = history.getHistory();
@@ -139,35 +137,36 @@ public class TreeTraverserTest {
 		assertTrue(testRun.getTitle().equals("Testrun on Tue, 31 Jan 2012 14:21:06 with configuration_one"));
 		treeViewer.setSelection(new StructuredSelection(testRun));
 		
-		TestCase nextNode = new FailureTreeTraverser().getPreviousItem(testRun);
+		FailureTreeTraverser failureTreeTraverser = new FailureTreeTraverser();
+		TestCase nextNode = failureTreeTraverser.getPreviousItem(testRun);
 		assertTrue(nextNode != null);
 		assertTrue(nextNode instanceof TestCase);
 		
 		nextNode = (TestCase)nextNode;
 		assertEquals("Test 4", nextNode.getTitle());
 		
-		nextNode = new FailureTreeTraverser().getPreviousItem(nextNode);
+		nextNode = failureTreeTraverser.getPreviousItem(nextNode);
 		assertEquals("Test 1", nextNode.getTitle());
 		
-		nextNode = new FailureTreeTraverser().getPreviousItem(nextNode);
+		nextNode = failureTreeTraverser.getPreviousItem(nextNode);
 		assertEquals("Test 5", nextNode.getTitle());
 		
-		nextNode = new FailureTreeTraverser().getPreviousItem(nextNode);
+		nextNode = failureTreeTraverser.getPreviousItem(nextNode);
 		assertEquals("Test 2", nextNode.getTitle());
 		
-		nextNode = new FailureTreeTraverser().getPreviousItem(nextNode);
+		nextNode = failureTreeTraverser.getPreviousItem(nextNode);
 		assertEquals("Test 1", nextNode.getTitle());
 		
-		nextNode = new FailureTreeTraverser().getPreviousItem(nextNode);
+		nextNode = failureTreeTraverser.getPreviousItem(nextNode);
 		assertEquals("Test 1", nextNode.getTitle());
 		
-		nextNode = new FailureTreeTraverser().getPreviousItem(nextNode);
-		assertTrue(nextNode == null);
+		nextNode = failureTreeTraverser.getPreviousItem(nextNode);
+		assertEquals("Test 4", nextNode.getTitle());
 	}
 
 	@Test
 	public void testGetNextTestCase() throws IOException {
-		URL resource = plugin.getBundle().getResource("/files/treeTraverserTest.xml");
+		URL resource = plugin.getBundle().getResource("/files//treetraverser/treeTraverserTest.xml");
 		TestRunsHistory history = new TestRunsHistory(plugin, documentUtility, testCaseUtility);
 		history.load(resource.openStream());
 		inputs = history.getHistory();
@@ -195,30 +194,31 @@ public class TreeTraverserTest {
 		TestGroup session = (TestGroup)testCase;
 		treeViewer.setSelection(new StructuredSelection(session));
 
-		TestCase nextNode = new TypeTreeTraverser(TestCase.class).getNextItem(session);
+		TypeTreeTraverser typeTreeTraverser = new TypeTreeTraverser(TestCase.class);
+		TestCase nextNode = typeTreeTraverser.getNextItem(session);
 		assertTrue(nextNode != null);
 		assertTrue(nextNode instanceof TestCase);
 
 		testCase = (TestCase)nextNode;
 		assertEquals("Test 1", testCase.getTitle());
 
-		nextNode = new TypeTreeTraverser(TestCase.class).getNextItem(testCase);
+		nextNode = typeTreeTraverser.getNextItem(testCase);
 		assertTrue(nextNode != null);
 		assertEquals("Test 2", nextNode.getTitle());
 
-		nextNode = new TypeTreeTraverser(TestCase.class).getNextItem(nextNode);
+		nextNode = typeTreeTraverser.getNextItem(nextNode);
 		assertTrue(nextNode != null);
 		assertEquals("Test 3", nextNode.getTitle());
 
-		nextNode = new TypeTreeTraverser(TestCase.class).getNextItem(nextNode);
+		nextNode = typeTreeTraverser.getNextItem(nextNode);
 		assertTrue(nextNode != null);
 		assertEquals("Test 4", nextNode.getTitle());
 
-		nextNode = new TypeTreeTraverser(TestCase.class).getNextItem(nextNode);
+		nextNode = typeTreeTraverser.getNextItem(nextNode);
 		assertTrue(nextNode != null);
 		assertEquals("Test 5", nextNode.getTitle());
 
-		nextNode = new TypeTreeTraverser(TestCase.class).getNextItem(nextNode);
+		nextNode = typeTreeTraverser.getNextItem(nextNode);
 		assertTrue(nextNode != null);
 		assertEquals("Test 1", nextNode.getTitle());
 	}
