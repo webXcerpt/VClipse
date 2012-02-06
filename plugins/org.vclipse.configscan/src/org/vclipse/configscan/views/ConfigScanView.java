@@ -230,28 +230,30 @@ public final class ConfigScanView extends ViewPart {
 	
 	protected void enableActions() {
 		ConfigScanViewInput input = (ConfigScanViewInput)viewer.getInput();
-		boolean allActionsAvailable = true;
-		for(TestRun testRun : input.getTestRuns()) {
-			EObject testModel = testRun.getTestModel();
-			if(testModel == null) {
-				allActionsAvailable = false;
-				break;
+		if(input != null) {
+			boolean allActionsAvailable = true;
+			for(TestRun testRun : input.getTestRuns()) {
+				EObject testModel = testRun.getTestModel();
+				if(testModel == null) {
+					allActionsAvailable = false;
+					break;
+				}
 			}
-		}
-		if(!allActionsAvailable) {
-			enableOrDisable(ToggleLabelProviderAction.ID, false);
-			enableOrDisable(CompareAction.ID, false);
-			enableOrDisable(RelaunchedFailedAction.ID, false);
-			enableOrDisable(RelaunchAction.ID, false);
-			
-			enableOrDisable(CollapseTreeAction.ID, true);
-			enableOrDisable(ExpandTreeAction.ID, true);
-			enableOrDisable(NextAction.ID, true);
-			enableOrDisable(PreviousAction.ID, true);
-			enableOrDisable(ShowFailuresAction.ID, true);
-		} else {
-			for(String id : id2Action.keySet()) {
-				enableOrDisable(id, true);
+			if(!allActionsAvailable) {
+				enableOrDisable(ToggleLabelProviderAction.ID, false);
+				enableOrDisable(CompareAction.ID, false);
+				enableOrDisable(RelaunchedFailedAction.ID, false);
+				enableOrDisable(RelaunchAction.ID, false);
+				
+				enableOrDisable(CollapseTreeAction.ID, true);
+				enableOrDisable(ExpandTreeAction.ID, true);
+				enableOrDisable(NextAction.ID, true);
+				enableOrDisable(PreviousAction.ID, true);
+				enableOrDisable(ShowFailuresAction.ID, true);
+			} else {
+				for(String id : id2Action.keySet()) {
+					enableOrDisable(id, true);
+				}
 			}
 		}
 	}
