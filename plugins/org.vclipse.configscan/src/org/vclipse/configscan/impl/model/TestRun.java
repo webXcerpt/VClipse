@@ -135,7 +135,9 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 	public void fetchDeferredChildren(Object object, IElementCollector collector, IProgressMonitor monitor) {
 		List<TestCase> testCases = getTestCases();
 		if(testCases.isEmpty()) {
-			
+			if(testModel == null) {
+				throw new IllegalArgumentException("Testmodel can not be null.");
+			}
 			monitor.beginTask("Running tests for " + testModel.eResource().getURI().lastSegment() + " and " + connection.getDescription() + " connection", IProgressMonitor.UNKNOWN);
 			
 			Map<Element, URI> input2Uri = Maps.newHashMap();
