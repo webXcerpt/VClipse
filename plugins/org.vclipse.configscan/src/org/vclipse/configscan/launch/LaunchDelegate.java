@@ -32,7 +32,9 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.util.CancelIndicator;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanConfiguration;
 import org.vclipse.configscan.IConfigScanRemoteConnections;
@@ -119,6 +121,7 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 						} else {
 							URI uri = URI.createURI(currentFile.getLocationURI().toString());
 							Resource currentResource = resourceSet.getResource(uri, true);
+							EcoreUtil2.resolveAll(currentResource, CancelIndicator.NullImpl);
 							if(currentResource == null) {
 								ConfigScanPlugin.log("Can not create a resource for the file " + currentFile.getName(), IStatus.WARNING);
 								continue;
