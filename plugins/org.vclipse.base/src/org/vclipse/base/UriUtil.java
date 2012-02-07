@@ -14,8 +14,13 @@ public class UriUtil {
 	public String computeImportUri(Resource importResource, Resource targetResource) {
 		URI importResourceUri = importResource.getURI();
 		URI targetResourceUri = targetResource.getURI();
-		if(!importResourceUri.scheme().equals(targetResourceUri.scheme()) ||
-				!importResourceUri.device().equals(targetResourceUri.device())) {
+		
+		String targetDevice = targetResourceUri.device();
+		String importDevice = importResourceUri.device();
+		
+		if(!importResourceUri.scheme().equals(targetResourceUri.scheme())) {
+			return EMPTY;
+		} else if(importDevice != null && targetDevice != null && importDevice.equals(targetDevice)) {
 			return EMPTY;
 		} else {
 			StringBuffer importUri = new StringBuffer();
