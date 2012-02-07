@@ -57,9 +57,6 @@ public abstract class DiffTest extends XtextTest {
 		String existing_not_bothered = replaceBotheringStrings(existing_result_string, targetReplacements);
 		String target_not_bothered = replaceBotheringStrings(target_result_string, targetReplacements);
 		
-		System.out.println("Existing: " + existing_not_bothered);
-		System.out.println("Target: " + target_not_bothered);
-		
 		assertTrue(existing_not_bothered.equals(target_not_bothered));
 	}
 	
