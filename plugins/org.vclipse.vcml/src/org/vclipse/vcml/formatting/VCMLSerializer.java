@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.formatting.IFormatter;
 import org.eclipse.xtext.parsetree.reconstr.IParseTreeConstructor;
@@ -100,7 +101,11 @@ public class VCMLSerializer extends Serializer {
 */
 
 	private boolean usePrettyPrinter() {
-		return Platform.getPreferencesService().getBoolean(VCMLPlugin.PREFERENCES_ID, ISapConstants.USE_PRETTY_PRINTER, false, null);
+		IPreferencesService preferencesService = Platform.getPreferencesService();
+		if(preferencesService == null) {
+			return false;
+		}
+		return preferencesService.getBoolean(VCMLPlugin.PREFERENCES_ID, ISapConstants.USE_PRETTY_PRINTER, false, null);
 	}
 
 }
