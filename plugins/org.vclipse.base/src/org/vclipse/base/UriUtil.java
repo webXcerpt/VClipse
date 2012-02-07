@@ -20,7 +20,7 @@ public class UriUtil {
 		
 		if(!importResourceUri.scheme().equals(targetResourceUri.scheme())) {
 			return EMPTY;
-		} else if(importDevice != null && targetDevice != null && importDevice.equals(targetDevice)) {
+		} else if(importDevice != null && targetDevice != null && !importDevice.equals(targetDevice)) {
 			return EMPTY;
 		} else {
 			StringBuffer importUri = new StringBuffer();
