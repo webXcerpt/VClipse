@@ -3,10 +3,17 @@
  */
 package org.vclipse.vcml.diff.ui;
 
+import java.io.IOException;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -23,7 +30,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.vclipse.vcml.diff.ExportDiffsJob;
+import org.eclipse.xtext.util.StringInputStream;
+import org.vclipse.vcml.diff.Comparison;
+import org.vclipse.vcml.diff.VcmlDiffPlugin;
 
 final class ExportDiffsDialog extends TitleAreaDialog {
 
@@ -200,11 +209,37 @@ final class ExportDiffsDialog extends TitleAreaDialog {
 	protected void buttonPressed(int buttonId) {
 		if(Dialog.OK == buttonId) {
 			if(oldFile != null && newFile != null) {
-				ExportDiffsJob job = new ExportDiffsJob();
-				job.setOldFile(oldFile);
-				job.setNewFile(newFile);
-				job.setResultsFile(resultFile);
-				job.schedule();
+				Job exportDifferencesJob = new Job("Export job for differences betweeen 2 vcml files.") {
+					@Override
+					protected IStatus run(IProgressMonitor monitor) {
+						monitor.beginTask("Exporting differences...", 35);
+						try  {
+							monitor.subTask("Creating export file...");
+							if(!resultFile.exists()) {
+								resultFile.create(new StringInputStream(""), true, monitor);
+							} else {
+								resultFile.setContents(new StringInputStream(""), true, true, monitor);
+							}
+							monitor.worked(5);
+							
+							Comparison comparison = new Comparison();
+							comparison.compare(oldFile, newFile, resultFile, monitor);
+							return Status.OK_STATUS;
+						} catch(CoreException exception) {
+							VcmlDiffPlugin.log(exception.getMessage(), exception);
+							return Status.CANCEL_STATUS;
+						} catch(IOException exception) {
+							VcmlDiffPlugin.log(exception.getMessage(), exception);
+							return Status.CANCEL_STATUS;
+						} catch(InterruptedException exception) {
+							VcmlDiffPlugin.log(exception.getMessage(), exception);
+							return Status.CANCEL_STATUS;
+						} finally {
+							monitor.done();
+						}
+					}
+				};
+				exportDifferencesJob.schedule();
 			}
 		}
 		super.buttonPressed(buttonId);
