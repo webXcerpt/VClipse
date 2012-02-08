@@ -25,7 +25,7 @@ public class ExecutableExtensionFactory extends AbstractGuiceAwareExecutableExte
 
 	@Override
 	protected Injector getInjector() {
-		return ConfigScanPlugin.getDefault().getInjector();
+		return ConfigScanPlugin.getDefault().getInjector(null);
 	}
 
 }

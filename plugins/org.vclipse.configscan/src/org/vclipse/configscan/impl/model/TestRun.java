@@ -13,7 +13,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.progress.IDeferredWorkbenchAdapter;
 import org.eclipse.ui.progress.IElementCollector;
-import org.eclipse.xtext.ui.util.ResourceUtil;
 import org.vclipse.configscan.ConfigScanImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
@@ -158,7 +157,7 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 					return;
 				}
 				Document logDocument = documentUtility.parse(configScanRunner.execute(parseResult, connection, 
-						materialNumber, ResourceUtil.getFile(testModel.eResource())));
+						materialNumber));
 				setLogElement(logDocument);
 				
 				if(monitor.isCanceled()) {

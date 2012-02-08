@@ -21,6 +21,7 @@ import org.vclipse.configscan.extension.ExtensionPointReader;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestGroup;
 import org.vclipse.configscan.impl.model.TestRun;
+import org.vclipse.configscan.injection.TestConfigScanModule;
 import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.FailureTreeTraverser;
 import org.vclipse.configscan.utils.TestCaseFactory;
@@ -47,7 +48,7 @@ public class TreeTraverserTest {
 	public void setUp() throws IOException {
 		plugin = ConfigScanPlugin.getDefault();
 		
-		Injector injector = plugin.getInjector();
+		Injector injector = plugin.getInjector(new TestConfigScanModule(plugin));
 		documentUtility = injector.getInstance(DocumentUtility.class);
 		testCaseUtility = injector.getInstance(TestCaseFactory.class);
 		utilities = injector.getInstance(JUnitTestUtils.class);

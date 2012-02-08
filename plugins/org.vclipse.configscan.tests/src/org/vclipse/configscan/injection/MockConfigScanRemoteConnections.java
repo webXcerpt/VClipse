@@ -1,6 +1,8 @@
-package org.vclipse.configscan;
+package org.vclipse.configscan.injection;
 
 import java.util.List;
+
+import org.vclipse.configscan.IConfigScanRemoteConnections;
 
 import com.google.common.collect.Lists;
 import com.sap.conn.jco.JCoException;

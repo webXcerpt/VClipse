@@ -1,7 +1,5 @@
 package org.vclipse.configscan.views;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;

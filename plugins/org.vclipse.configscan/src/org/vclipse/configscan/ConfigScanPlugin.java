@@ -14,6 +14,7 @@ package org.vclipse.configscan;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.service.AbstractGenericModule;
 import org.osgi.framework.BundleContext;
 import org.vclipse.configscan.injection.ConfigScanModule;
 
@@ -53,9 +54,13 @@ public class ConfigScanPlugin extends AbstractUIPlugin {
 		super.stop(context);
 	}
 
-	public Injector getInjector() {
+	public Injector getInjector(AbstractGenericModule optionalModule) {
 		if(injector == null) {
-			injector = Guice.createInjector(new ConfigScanModule(this));
+			if(optionalModule != null) {
+				injector = Guice.createInjector(optionalModule);
+			} else {
+				injector = Guice.createInjector(new ConfigScanModule(this));
+			}
 		}
 		return injector;
 	}

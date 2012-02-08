@@ -20,12 +20,8 @@ import org.eclipse.xtext.service.AbstractGenericModule;
 import org.eclipse.xtext.ui.IImageHelper;
 import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
-import org.vclipse.configscan.IConfigScanRemoteConnections;
 import org.vclipse.configscan.IConfigScanReverseXmlTransformation;
-import org.vclipse.configscan.IConfigScanRunner;
 import org.vclipse.configscan.IConfigScanXMLProvider;
-import org.vclipse.configscan.MockConfigScanRemoteConnections;
-import org.vclipse.configscan.MockConfigScanRunner;
 import org.vclipse.configscan.impl.ConfigScanReverseXmlTransformation;
 import org.vclipse.configscan.impl.ConfigScanXmlProvider;
 import org.vclipse.configscan.impl.model.TestRun;
@@ -35,7 +31,7 @@ import org.vclipse.connection.VClipseConnectionPlugin;
 
 import com.google.inject.Provider;
 
-public final class ConfigScanModule extends AbstractGenericModule {
+public class ConfigScanModule extends AbstractGenericModule {
 
 	protected ConfigScanPlugin plugin;
 	
@@ -58,15 +54,7 @@ public final class ConfigScanModule extends AbstractGenericModule {
 	public IConnectionHandler bindConnectionHandler() {
 		return VClipseConnectionPlugin.getDefault().getInjector().getInstance(IConnectionHandler.class);
 	}
-	
-//	public Class<? extends IConfigScanRemoteConnections> bindConfigScanRemoteConnections() {
-//		return MockConfigScanRemoteConnections.class;
-//	}
-//	
-//	public Class<? extends IConfigScanRunner> bindConfigScanRunner() {
-//		return MockConfigScanRunner.class;
-//	}
-	
+
 	public Class<? extends IConfigScanXMLProvider> bindConfigScanXmlProvider() {
 		return ConfigScanXmlProvider.class;
 	}
@@ -87,7 +75,7 @@ public final class ConfigScanModule extends AbstractGenericModule {
 		return new Provider<TestRun>() {
 			@Override
 			public TestRun get() {
-				return plugin.getInjector().getInstance(TestRun.class);
+				return plugin.getInjector(null).getInstance(TestRun.class);
 			} 
 		};
 	}

@@ -19,6 +19,7 @@ import org.vclipse.configscan.JUnitTestUtils;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestGroup;
 import org.vclipse.configscan.impl.model.TestRun;
+import org.vclipse.configscan.injection.TestConfigScanModule;
 import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.TestCaseFactory;
 import org.vclipse.configscan.views.ConfigScanViewInput;
@@ -48,15 +49,13 @@ public class TestRunsHistoryTest {
 		
 		filesPath = FileLocator.getBundleFile(plugin.getBundle()).toString().replace("configscan", "configscan.tests") + "/files";
 		
-		injector = plugin.getInjector();
+		injector = plugin.getInjector(new TestConfigScanModule(plugin));
 		documentUtility = injector.getInstance(DocumentUtility.class);
 		testCaseFactory = injector.getInstance(TestCaseFactory.class);
 		utils = injector.getInstance(JUnitTestUtils.class);
 		
 		utils.clean(filesPath + "/history/temp.xml");
 	}
-	
-	
 	
 	@Test
 	public void testLoadHistory() throws IOException {
@@ -197,6 +196,4 @@ public class TestRunsHistoryTest {
 		assertEquals(1, inputs.size());
 		assertEquals("6", inputs.get(0).getConfigurationName());
 	}
-	
-	
 }
