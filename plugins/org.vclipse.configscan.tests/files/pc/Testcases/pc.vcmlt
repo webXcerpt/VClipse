@@ -1,19 +1,82 @@
 import "../VCML/pc.cml2.vcml"
 
-testcase E8300001000651
+testcase E8300001000651[description "Notebook tests" document "Notebook"]
+
+testgroup NetbookConfiguration1 {
+	NOTEBOOK_TYPE = 'netbook'
+	SCREEN_SIZE = '14'
+	check consistent @ /
+	check complete @ /
+}
+
+testgroup NetbookConfiguration2 failure {
+	NOTEBOOK_TYPE = 'netbook'
+	check SCREEN_SIZE = '14'
+}
+
+testgroup NetbookConfiguration3 failure {
+	NOTEBOOK_TYPE = 'netbook'
+	check SCREEN_SIZE = '17'
+	checkDomainStrict SCREEN_SIZE { 
+		'10.1' '12' '14' '15.4' '17'
+	}
+	checkDomainStrict CORE_AMOUNT {
+		1 2
+	}
+	check quantity = 1 @ /E8300001000658
+	check quantity = 1 @ /E8300001000656
+	check quantity = 1 @ /E8300001000669
+}
 
 testgroup BusinessConfiguration success {
-	
+	check NOTEBOOK_TYPE = 'business'
+	check DISPLAY = 'non-glare'
+	check SCREEN_SIZE = '17'
+	check incomplete @ /
+}
+
+testgroup BusinessConfiguration success {
+	check NOTEBOOK_TYPE = 'business'
+	check WEBCAM = 'F'
 }
 
 testgroup DevelopementConfiguration {
+	check NOTEBOOK_TYPE = 'developement'
+	check SCREEN_SIZE = '14'
+	check CORE_AMOUNT = 2
+	check RAM_MODULES_AMOUNT = 5
+	check WEBCAM = 'T'
+	check UMTS = 'T'
 	
+	check quantity = 1 @ /E8300001000660
+	check quantity = 1 @ /E8300001000666
+	check quantity = 1 @ /E8300001000654
+	check quantity = 1 @ /E8300001000652
+	check quantity = 1 @ /E8300001000670
+	check quantity = 1 @ /E8300001000673
+	check quantity = 0 @ /E8300001000672
+}
+
+testgroup DevelopementConfiguration2 {
+	check NOTEBOOK_TYPE = 'developement'
+	checkDomain SCREEN_SIZE {
+		'12' '14' '15.4' '17' 
+	}
+	check HARD_DISK_SIZE = '120'
+	check RAM_MODULES_AMOUNT = 4
+	check DISPLAY = 'glare'
+	check CORE_AMOUNT = 2
+	check complete
+	check quantity = 1 @ /E8300001000657
+	check quantity = 1 @ /E8300001000660
+	check quantity = 1 @ /E8300001000654
 }
 
 testgroup MultimediaConfiguration {
-	
+	check NOTEBOOK_TYPE = 'multimedia'
+	check SCREEN_SIZE = '17'
+	check CORE_AMOUNT = 1
+	check consistent
+	check incomplete
 }
 
-testgroup NetbookConfiguration {
-	
-}
