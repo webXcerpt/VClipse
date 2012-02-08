@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<log_results>
+<log_result>
+<log_header>
+<job_info job_date="20120208" job_ownr="GTX22346" job_time="153538"/>
+</log_header>
+
+<log_session cid="S1" cmd="START_SESSION (IPC)" kbbuild="1" kbid="645" kbname="E8300001000651" kbprofile="E8300001000651" kbversion="0.1" level="1" no="806" rfc_dest="C75" status="E" title="Begin session E8300001000651 version:0.1 build (1 ) IPC" ttime="2012/02/08 14:35:38.6500000" v1="E8300001000651" v2="version:0.1 build (1 ) IPC" v3="" v4="" vid="ZFSB_CONFIG_TESTER">
+<log_testgrp desc="NETBOOKCONFIGURATION1" id="NETBOOKCONFIGURATION1" level="2" mode="success" no="883" status="E" title="Start Testing [success] NETBOOKCONFIGURATION1 (NETBOOKCONFIGURATION1)" ttime="0.0000000" v1="NETBOOKCONFIGURATION1" v2="NETBOOKCONFIGURATION1" v3="success" v4="" vid="ZFSB_CONFIG_TESTER">
+<log_msg bompath="/" cmd="SET CSTIC VALUE" cstic="NOTEBOOK_TYPE" cval="netbook" level="3" no="820" status="E" title="set_value ERROR:cstic = NOTEBOOK_TYPE value = netbook on /" ttime="0.0000000" v1="NOTEBOOK_TYPE" v2="netbook" v3="/" v4="" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="SET CSTIC VALUE" cstic="SCREEN_SIZE" cval="14" level="3" no="820" status="E" title="set_value ERROR:cstic = SCREEN_SIZE value = 14 on /" ttime="0.0000000" v1="SCREEN_SIZE" v2="14" v3="/" v4="" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK ITEM STATUS" i_status="CONSISTENT" level="3" no="869" status="S" test="CONSISTENT" title="check CONSISTENT OK: CONSISTENT instance [/]" ttime="0.0000000" v1="CONSISTENT" v2="OK" v3="CONSISTENT" v4="/" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK ITEM STATUS" i_status="COMPLETE" level="3" no="869" status="S" test="COMPLETE" title="check COMPLETE OK: COMPLETE instance [/]" ttime="0.0000000" v1="COMPLETE" v2="OK" v3="COMPLETE" v4="/" vid="ZFSB_CONFIG_TESTER"/>
+<log_undotg level="3" no="884" status="S" title="(Automated) Leaving Test Group !" v1="" v2="" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+</log_testgrp>
+<log_testgrp desc="NETBOOKCONFIGURATION2" id="NETBOOKCONFIGURATION2" level="2" mode="failure" no="883" status="S" title="Start Testing [failure] NETBOOKCONFIGURATION2 (NETBOOKCONFIGURATION2)" ttime="0.0160000" v1="NETBOOKCONFIGURATION2" v2="NETBOOKCONFIGURATION2" v3="failure" v4="" vid="ZFSB_CONFIG_TESTER">
+<log_msg bompath="/" cmd="SET CSTIC VALUE" cstic="NOTEBOOK_TYPE" cval="netbook" level="3" no="820" status="S" title="set_value ERROR:cstic = NOTEBOOK_TYPE value = netbook on /" ttime="0.0160000" v1="NOTEBOOK_TYPE" v2="netbook" v3="/" v4="" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg level="3" no="885" status="S" title="&lt;&lt;&lt;&lt;&lt;&lt; Skip TestGroup NETBOOKCONFIGURATION2 (NETBOOKCONFIGURATION2)" v1="NETBOOKCONFIGURATION2" v2="NETBOOKCONFIGURATION2" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+<log_undotg level="3" no="884" status="S" title="(Automated) Leaving Test Group !" v1="" v2="" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+</log_testgrp>
+<log_testgrp desc="NETBOOKCONFIGURATION3" id="NETBOOKCONFIGURATION3" level="2" mode="failure" no="883" status="S" title="Start Testing [failure] NETBOOKCONFIGURATION3 (NETBOOKCONFIGURATION3)" ttime="0.0160000" v1="NETBOOKCONFIGURATION3" v2="NETBOOKCONFIGURATION3" v3="failure" v4="" vid="ZFSB_CONFIG_TESTER">
+<log_msg bompath="/" cmd="SET CSTIC VALUE" cstic="NOTEBOOK_TYPE" cval="netbook" level="3" no="820" status="S" title="set_value ERROR:cstic = NOTEBOOK_TYPE value = netbook on /" ttime="0.0160000" v1="NOTEBOOK_TYPE" v2="netbook" v3="/" v4="" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg level="3" no="885" status="S" title="&lt;&lt;&lt;&lt;&lt;&lt; Skip TestGroup NETBOOKCONFIGURATION3 (NETBOOKCONFIGURATION3)" v1="NETBOOKCONFIGURATION3" v2="NETBOOKCONFIGURATION3" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+<log_undotg level="3" no="884" status="S" title="(Automated) Leaving Test Group !" v1="" v2="" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+</log_testgrp>
+<log_testgrp desc="BUSINESSCONFIGURATION" id="BUSINESSCONFIGURATION" level="2" mode="success" no="883" status="E" title="Start Testing [success] BUSINESSCONFIGURATION (BUSINESSCONFIGURATION)" ttime="0.0160000" v1="BUSINESSCONFIGURATION" v2="BUSINESSCONFIGURATION" v3="success" v4="" vid="ZFSB_CONFIG_TESTER">
+<log_msg bompath="/" cmd="CHECK SINGLE VALUE" cstic="NOTEBOOK_TYPE" level="3" no="818" status="E" title="[ERROR CHECK SINGLE VALUE] cstic NOTEBOOK_TYPE is not present in /" ttime="0.0320000" v1="CHECK SINGLE VALUE" v2="NOTEBOOK_TYPE" v3="/" v4="" value="business" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK SINGLE VALUE" cstic="DISPLAY" level="3" no="818" status="E" title="[ERROR CHECK SINGLE VALUE] cstic DISPLAY is not present in /" ttime="0.0470000" v1="CHECK SINGLE VALUE" v2="DISPLAY" v3="/" v4="" value="non-glare" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK SINGLE VALUE" cstic="SCREEN_SIZE" level="3" no="818" status="E" title="[ERROR CHECK SINGLE VALUE] cstic SCREEN_SIZE is not present in /" ttime="0.0630000" v1="CHECK SINGLE VALUE" v2="SCREEN_SIZE" v3="/" v4="" value="17" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK ITEM STATUS" i_status="COMPLETE" level="3" no="869" status="E" test="NOT COMPLETE" title="check NOT COMPLETE ERROR: COMPLETE instance [/]" ttime="0.0630000" v1="NOT COMPLETE" v2="ERROR" v3="COMPLETE" v4="/" vid="ZFSB_CONFIG_TESTER"/>
+<log_undotg level="3" no="884" status="S" title="(Automated) Leaving Test Group !" v1="" v2="" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+</log_testgrp>
+<log_testgrp desc="BUSINESSCONFIGURATION" id="BUSINESSCONFIGURATION" level="2" mode="success" no="883" status="E" title="Start Testing [success] BUSINESSCONFIGURATION (BUSINESSCONFIGURATION)" ttime="0.0630000" v1="BUSINESSCONFIGURATION" v2="BUSINESSCONFIGURATION" v3="success" v4="" vid="ZFSB_CONFIG_TESTER">
+<log_msg bompath="/" cmd="CHECK SINGLE VALUE" cstic="NOTEBOOK_TYPE" level="3" no="818" status="E" title="[ERROR CHECK SINGLE VALUE] cstic NOTEBOOK_TYPE is not present in /" ttime="0.0790000" v1="CHECK SINGLE VALUE" v2="NOTEBOOK_TYPE" v3="/" v4="" value="business" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK SINGLE VALUE" cstic="WEBCAM" level="3" no="818" status="E" title="[ERROR CHECK SINGLE VALUE] cstic WEBCAM is not present in /" ttime="0.0790000" v1="CHECK SINGLE VALUE" v2="WEBCAM" v3="/" v4="" value="F" vid="ZFSB_CONFIG_TESTER"/>
+<log_undotg level="3" no="884" status="S" title="(Automated) Leaving Test Group !" v1="" v2="" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+</log_testgrp>
+<log_testgrp desc="DEVELOPEMENTCONFIGURATION" id="DEVELOPEMENTCONFIGURATION" level="2" mode="success" no="883" status="E" title="Start Testing [success] DEVELOPEMENTCONFIGURATION (DEVELOPEMENTCONFIGURATION)" ttime="0.0790000" v1="DEVELOPEMENTCONFIGURATION" v2="DEVELOPEMENTCONFIGURATION" v3="success" v4="" vid="ZFSB_CONFIG_TESTER">
+<log_msg bompath="/" cmd="CHECK SINGLE VALUE" cstic="NOTEBOOK_TYPE" level="3" no="818" status="E" title="[ERROR CHECK SINGLE VALUE] cstic NOTEBOOK_TYPE is not present in /" ttime="0.1100000" v1="CHECK SINGLE VALUE" v2="NOTEBOOK_TYPE" v3="/" v4="" value="developement" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK SINGLE VALUE" cstic="SCREEN_SIZE" level="3" no="818" status="E" title="[ERROR CHECK SINGLE VALUE] cstic SCREEN_SIZE is not present in /" ttime="0.1250000" v1="CHECK SINGLE VALUE" v2="SCREEN_SIZE" v3="/" v4="" value="14" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK SINGLE VALUE" cstic="CORE_AMOUNT" level="3" no="818" status="E" title="[ERROR CHECK SINGLE VALUE] cstic CORE_AMOUNT is not present in /" ttime="0.1410000" v1="CHECK SINGLE VALUE" v2="CORE_AMOUNT" v3="/" v4="" value="2" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK SINGLE VALUE" cstic="RAM_MODULES_AMOUNT" level="3" no="818" status="E" title="[ERROR CHECK SINGLE VALUE] cstic RAM_MODULES_AMOUNT is not present in /" ttime="0.1410000" v1="CHECK SINGLE VALUE" v2="RAM_MODULES_AMOUNT" v3="/" v4="" value="5" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK SINGLE VALUE" cstic="WEBCAM" level="3" no="818" status="E" title="[ERROR CHECK SINGLE VALUE] cstic WEBCAM is not present in /" ttime="0.1570000" v1="CHECK SINGLE VALUE" v2="WEBCAM" v3="/" v4="" value="T" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK SINGLE VALUE" cstic="UMTS" level="3" no="818" status="E" title="[ERROR CHECK SINGLE VALUE] cstic UMTS is not present in /" ttime="0.1720000" v1="CHECK SINGLE VALUE" v2="UMTS" v3="/" v4="" value="T" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/ E8300001000660" cmd="CHECK ITEM QUANTITY" level="3" no="007" status="E" title="Instance not found for command CHECK ITEM QUANTITY at / E8300001000660." ttime="0.1720000" v1="CHECK ITEM QUANTITY" v2="/ E8300001000660" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/ E8300001000666" cmd="CHECK ITEM QUANTITY" level="3" no="007" status="E" title="Instance not found for command CHECK ITEM QUANTITY at / E8300001000666." ttime="0.1720000" v1="CHECK ITEM QUANTITY" v2="/ E8300001000666" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/ E8300001000654" cmd="CHECK ITEM QUANTITY" level="3" no="007" status="E" title="Instance not found for command CHECK ITEM QUANTITY at / E8300001000654." ttime="0.1720000" v1="CHECK ITEM QUANTITY" v2="/ E8300001000654" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/ E8300001000652" cmd="CHECK ITEM QUANTITY" level="3" no="007" status="E" title="Instance not found for command CHECK ITEM QUANTITY at / E8300001000652." ttime="0.1720000" v1="CHECK ITEM QUANTITY" v2="/ E8300001000652" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/ E8300001000670" cmd="CHECK ITEM QUANTITY" level="3" no="007" status="E" title="Instance not found for command CHECK ITEM QUANTITY at / E8300001000670." ttime="0.1720000" v1="CHECK ITEM QUANTITY" v2="/ E8300001000670" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/ E8300001000673" cmd="CHECK ITEM QUANTITY" level="3" no="007" status="E" title="Instance not found for command CHECK ITEM QUANTITY at / E8300001000673." ttime="0.1720000" v1="CHECK ITEM QUANTITY" v2="/ E8300001000673" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/ E8300001000672" cmd="CHECK ITEM QUANTITY" level="3" no="007" status="E" title="Instance not found for command CHECK ITEM QUANTITY at / E8300001000672." ttime="0.1880000" v1="CHECK ITEM QUANTITY" v2="/ E8300001000672" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+<log_undotg level="3" no="884" status="S" title="(Automated) Leaving Test Group !" v1="" v2="" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+</log_testgrp>
+<log_testgrp desc="DEVELOPEMENTCONFIGURATION2" id="DEVELOPEMENTCONFIGURATION2" level="2" mode="success" no="883" status="E" title="Start Testing [success] DEVELOPEMENTCONFIGURATION2 (DEVELOPEMENTCONFIGURATION2)" ttime="0.1880000" v1="DEVELOPEMENTCONFIGURATION2" v2="DEVELOPEMENTCONFIGURATION2" v3="success" v4="" vid="ZFSB_CONFIG_TESTER">
+<log_msg bompath="/" cmd="CHECK SINGLE VALUE" cstic="NOTEBOOK_TYPE" level="3" no="818" status="E" title="[ERROR CHECK SINGLE VALUE] cstic NOTEBOOK_TYPE is not present in /" ttime="0.1880000" v1="CHECK SINGLE VALUE" v2="NOTEBOOK_TYPE" v3="/" v4="" value="developement" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK CSTIC DOMAIN" cstic="SCREEN_SIZE" level="3" no="818" status="E" title="[ERROR CHECK CSTIC DOMAIN] cstic SCREEN_SIZE is not present in /" ttime="0.2040000" v1="CHECK CSTIC DOMAIN" v2="SCREEN_SIZE" v3="/" v4="" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK SINGLE VALUE" cstic="HARD_DISK_SIZE" level="3" no="818" status="E" title="[ERROR CHECK SINGLE VALUE] cstic HARD_DISK_SIZE is not present in /" ttime="0.2190000" v1="CHECK SINGLE VALUE" v2="HARD_DISK_SIZE" v3="/" v4="" value="120" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK SINGLE VALUE" cstic="RAM_MODULES_AMOUNT" level="3" no="818" status="E" title="[ERROR CHECK SINGLE VALUE] cstic RAM_MODULES_AMOUNT is not present in /" ttime="0.2350000" v1="CHECK SINGLE VALUE" v2="RAM_MODULES_AMOUNT" v3="/" v4="" value="4" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK SINGLE VALUE" cstic="DISPLAY" level="3" no="818" status="E" title="[ERROR CHECK SINGLE VALUE] cstic DISPLAY is not present in /" ttime="0.2350000" v1="CHECK SINGLE VALUE" v2="DISPLAY" v3="/" v4="" value="glare" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK SINGLE VALUE" cstic="CORE_AMOUNT" level="3" no="818" status="E" title="[ERROR CHECK SINGLE VALUE] cstic CORE_AMOUNT is not present in /" ttime="0.2500000" v1="CHECK SINGLE VALUE" v2="CORE_AMOUNT" v3="/" v4="" value="2" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK ITEM STATUS" i_status="COMPLETE" level="3" no="869" status="S" test="COMPLETE" title="check COMPLETE OK: COMPLETE instance [/]" ttime="0.2500000" v1="COMPLETE" v2="OK" v3="COMPLETE" v4="/" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/ E8300001000657" cmd="CHECK ITEM QUANTITY" level="3" no="007" status="E" title="Instance not found for command CHECK ITEM QUANTITY at / E8300001000657." ttime="0.2500000" v1="CHECK ITEM QUANTITY" v2="/ E8300001000657" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/ E8300001000660" cmd="CHECK ITEM QUANTITY" level="3" no="007" status="E" title="Instance not found for command CHECK ITEM QUANTITY at / E8300001000660." ttime="0.2500000" v1="CHECK ITEM QUANTITY" v2="/ E8300001000660" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/ E8300001000654" cmd="CHECK ITEM QUANTITY" level="3" no="007" status="E" title="Instance not found for command CHECK ITEM QUANTITY at / E8300001000654." ttime="0.2500000" v1="CHECK ITEM QUANTITY" v2="/ E8300001000654" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+<log_undotg level="3" no="884" status="S" title="(Automated) Leaving Test Group !" v1="" v2="" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+</log_testgrp>
+<log_testgrp desc="MULTIMEDIACONFIGURATION" id="MULTIMEDIACONFIGURATION" level="2" mode="success" no="883" status="E" title="Start Testing [success] MULTIMEDIACONFIGURATION (MULTIMEDIACONFIGURATION)" ttime="0.2660000" v1="MULTIMEDIACONFIGURATION" v2="MULTIMEDIACONFIGURATION" v3="success" v4="" vid="ZFSB_CONFIG_TESTER">
+<log_msg bompath="/" cmd="CHECK SINGLE VALUE" cstic="NOTEBOOK_TYPE" level="3" no="818" status="E" title="[ERROR CHECK SINGLE VALUE] cstic NOTEBOOK_TYPE is not present in /" ttime="0.2660000" v1="CHECK SINGLE VALUE" v2="NOTEBOOK_TYPE" v3="/" v4="" value="multimedia" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK SINGLE VALUE" cstic="SCREEN_SIZE" level="3" no="818" status="E" title="[ERROR CHECK SINGLE VALUE] cstic SCREEN_SIZE is not present in /" ttime="0.2820000" v1="CHECK SINGLE VALUE" v2="SCREEN_SIZE" v3="/" v4="" value="17" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK SINGLE VALUE" cstic="CORE_AMOUNT" level="3" no="818" status="E" title="[ERROR CHECK SINGLE VALUE] cstic CORE_AMOUNT is not present in /" ttime="0.2970000" v1="CHECK SINGLE VALUE" v2="CORE_AMOUNT" v3="/" v4="" value="1" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK ITEM STATUS" i_status="CONSISTENT" level="3" no="869" status="S" test="CONSISTENT" title="check CONSISTENT OK: CONSISTENT instance [/]" ttime="0.2970000" v1="CONSISTENT" v2="OK" v3="CONSISTENT" v4="/" vid="ZFSB_CONFIG_TESTER"/>
+<log_msg bompath="/" cmd="CHECK ITEM STATUS" i_status="COMPLETE" level="3" no="869" status="E" test="NOT COMPLETE" title="check NOT COMPLETE ERROR: COMPLETE instance [/]" ttime="0.2970000" v1="NOT COMPLETE" v2="ERROR" v3="COMPLETE" v4="/" vid="ZFSB_CONFIG_TESTER"/>
+<log_undotg level="3" no="884" status="S" title="(Automated) Leaving Test Group !" v1="" v2="" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+</log_testgrp>
+</log_session>
+<log_msg level="1" no="807" status="S" title="End session" v1="" v2="" v3="" v4="" vid="ZFSB_CONFIG_TESTER"/>
+
+</log_result>
+</log_results>
