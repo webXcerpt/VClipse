@@ -1,4 +1,8 @@
-piproduct Notebook [sap E8300001000651 vcoid PT_NB] {
+import "pc.cmlhelp"
+
+options [layout Notebook]
+
+piproduct Notebook [sap E8300001000651 vcoid PT_NB generatehelpfile "pchelp.xml"] {
 	
 	// parameters
 	param Type "Notebook type" [sap NOTEBOOK_TYPE] in {
@@ -42,7 +46,7 @@ piproduct Notebook [sap E8300001000651 vcoid PT_NB] {
 		rule default 4 [5 6 7 8] <- Type in {multimedia}
 	}
 		
-	param Display [sap DISPLAY] in {glare 'non-glare'}
+	param Display [sap DISPLAY help Display] in {glare 'non-glare'}
 		restrictions {
 			rule glare <- Dimensions in {'14' '15.4' '17'}
 			rule default 'non-glare' [glare 'non-glare']<- Dimensions in {'10.1' '12'}

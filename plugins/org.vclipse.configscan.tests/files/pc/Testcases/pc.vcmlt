@@ -1,0 +1,19 @@
+import "../VCML/pc.cml2.vcml"
+
+testcase E8300001000651
+
+testgroup BusinessConfiguration success {
+	
+}
+
+testgroup DevelopementConfiguration {
+	
+}
+
+testgroup MultimediaConfiguration {
+	
+}
+
+testgroup NetbookConfiguration {
+	
+}
