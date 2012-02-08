@@ -39,55 +39,55 @@ public class MockConfigScanRunner implements IConfigScanRunner {
 			try {
 				return Files.readFileIntoString(run.selectedFile.getLocation().toPortableString() + ".ipcd75.xml.log");	
 			} catch(WrappedException exception) {
-				
+				exception.printStackTrace();
 			}
 		} else if(remoteConnection.getDescription().equals("IPC D79")) {
 			try {
 				return Files.readFileIntoString(run.selectedFile.getLocation().toPortableString() + ".ipcd79.xml.log");
 			} catch(WrappedException exception) {
-				
+				exception.printStackTrace();
 			}
 		} else if(remoteConnection.getDescription().equals("IPC P75")) {
 			try {
 				return Files.readFileIntoString(run.selectedFile.getLocation().toPortableString() + ".ipcp75.xml.log");
 			} catch(WrappedException exception) {
-				
+				exception.printStackTrace();
 			}
 		} else if(remoteConnection.getDescription().equals("IPC P79")) {
 			try {
 				return Files.readFileIntoString(run.selectedFile.getLocation().toPortableString() + ".ipcp79.xml.log");
 			} catch(WrappedException exception) {
-				
+				exception.printStackTrace();
 			}
 		} else if(remoteConnection.getDescription().equals("IPC Q75")) {
 			try {
 				return Files.readFileIntoString(run.selectedFile.getLocation().toPortableString() + ".ipcq75.xml.log");
 			} catch(WrappedException exception) {
-				
+				exception.printStackTrace();
 			}
 		} else if(remoteConnection.getDescription().equals("IPC Q79")) {
 			try {
 				return Files.readFileIntoString(run.selectedFile.getLocation().toPortableString() + ".ipcq79.xml.log");
 			} catch(WrappedException exception) {
-				
+				exception.printStackTrace();
 			}
 		} else if(remoteConnection.getDescription().equals("VC D75")) {
 			try {
 				return Files.readFileIntoString(run.selectedFile.getLocation().toPortableString() + ".vcd75.xml.log");
 			} catch(WrappedException exception) {
-				
+				exception.printStackTrace();
 			}
 		} else if(remoteConnection.getDescription().equals("VC P75")) {
 			try {
 				return Files.readFileIntoString(run.selectedFile.getLocation().toPortableString() + ".vcp75.xml.log");
 			} catch(WrappedException exception) {
-				
+				exception.printStackTrace();
 			}
 		} else if(remoteConnection.getDescription().equals("VC Q75")) {
 			try {
 				return Files.readFileIntoString(run.selectedFile.getLocation().toPortableString() + ".vcq75.xml.log");
 			} catch(WrappedException exception) {
-				
+				exception.printStackTrace();
 			}
 		}
 		return Files.readFileIntoString(run.selectedFile.getLocation().toPortableString() + ".xml.log");
