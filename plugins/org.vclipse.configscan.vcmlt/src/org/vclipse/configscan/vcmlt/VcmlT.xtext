@@ -84,12 +84,12 @@ DomainStrictValue
     	
 CheckConflict
     :   {CheckConflict}
-        'check' conflict?=('inconsistent' | 'consistent') ('@' bompath=BomPath)?
+        'check' (conflict?='inconsistent' | 'consistent') ('@' bompath=BomPath)?
     ;
     
 CheckComplete
     :   {CheckComplete}
-        'check' complete?=('complete' | 'incomplete') ('@' bompath=BomPath)?
+        'check' (complete?='complete' | 'incomplete') ('@' bompath=BomPath)?
     ;
 	
 enum CsticState
