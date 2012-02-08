@@ -137,32 +137,34 @@ public final class ImportExportAction extends SimpleTreeViewerAction implements 
 						TestRun testRun = testRuns.get(0);
 						selection = new StructuredSelection(testRun);
 						treeViewer.setSelection(selection);
-						FileDialog fileDialog = new FileDialog(activeShell, SWT.SAVE);
-						if(EXPORT_ITEM_LOG == id) {
-							Document logDocument = (Document)testRun.getLogElement();
-							if(logDocument == null) {
-								ConfigScanPlugin.log("Log document not available for " + testRun.getLabel(null), IStatus.ERROR);
-							} else {
-								fileDialog.setText("File dialog for log file export");
-								String path = fileDialog.open();
-								if(path != null) {
-									Files.writeStringIntoFile(path, documentUtility.serialize(logDocument));
-								}
-							}
-						} else if(EXPORT_ITEM_INPUT == id) {
-							Document inputDocument = (Document)testRun.getInputElement();
-							if(inputDocument == null) {
-								ConfigScanPlugin.log("Input document not available for " + testRun.getLabel(null), IStatus.ERROR);
-							} else {
-								fileDialog.setText("File dialog for input file export");
-								String path = fileDialog.open();
-								if(path != null) {
-									Files.writeStringIntoFile(path, documentUtility.serialize(inputDocument));
-								}
-							}
+					}
+				} 
+				TestRun testRun = (TestRun)selection.getFirstElement();
+				FileDialog fileDialog = new FileDialog(activeShell, SWT.SAVE);
+				if(EXPORT_ITEM_LOG == id) {
+					Document logDocument = (Document)testRun.getLogElement();
+					if(logDocument == null) {
+						ConfigScanPlugin.log("Log document not available for " + testRun.getLabel(null), IStatus.ERROR);
+					} else {
+						fileDialog.setText("File dialog for log file export");
+						String path = fileDialog.open();
+						if(path != null) {
+							Files.writeStringIntoFile(path, documentUtility.serialize(logDocument));
+						}
+					}
+				} else if(EXPORT_ITEM_INPUT == id) {
+					Document inputDocument = (Document)testRun.getInputElement();
+					if(inputDocument == null) {
+						ConfigScanPlugin.log("Input document not available for " + testRun.getLabel(null), IStatus.ERROR);
+					} else {
+						fileDialog.setText("File dialog for input file export");
+						String path = fileDialog.open();
+						if(path != null) {
+							Files.writeStringIntoFile(path, documentUtility.serialize(inputDocument));
 						}
 					}
 				}
+				
 			}
 		}
 	}
