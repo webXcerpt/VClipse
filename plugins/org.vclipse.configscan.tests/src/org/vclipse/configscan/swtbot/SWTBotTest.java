@@ -60,7 +60,7 @@ public class SWTBotTest {
 	
 	@AfterClass
 	public static void sleep() throws Exception {
-		bot.sleep(5000);
+		bot.sleep(1000);
 	}
 	
 	@Test
@@ -86,6 +86,8 @@ public class SWTBotTest {
 		// click the export menu
 		SWTBotToolbarDropDownButton historyButton = configScanView.toolbarDropDownButton("Test run history");
 		historyButton.menuItem("Export ...").click();
+		
+		
 		
 		// save the history content with save as dialog		
 //		SWTBotShell saveDialog = bot.shell("Save As");

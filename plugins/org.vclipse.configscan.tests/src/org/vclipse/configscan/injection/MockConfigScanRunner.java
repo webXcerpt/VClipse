@@ -26,8 +26,8 @@ public class MockConfigScanRunner implements IConfigScanRunner {
 		
 		try {
 			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		} catch (InterruptedException exception) {
+			exception.printStackTrace();
 		}
 
 		if(run.selectedFile == null) {
@@ -90,7 +90,8 @@ public class MockConfigScanRunner implements IConfigScanRunner {
 				exception.printStackTrace();
 			}
 		}
-		return Files.readFileIntoString(run.selectedFile.getLocation().toPortableString() + ".xml.log");
+		// default file is name without cmlt/vcmlt
+		return Files.readFileIntoString(run.selectedFile.getLocation().toPortableString().replace(".cmlt", "").replace(".vcmlt", "") + ".xml.log");
 	}
 }
 
@@ -112,8 +113,8 @@ class GetSelectedFileRunnable implements Runnable {
 					}
 				}
 			}
-		} catch (PartInitException e) {
-			e.printStackTrace();
+		} catch (PartInitException exception) {
+			exception.printStackTrace();
 		}
 	}
 }
