@@ -10,9 +10,12 @@
  ******************************************************************************/
 package org.vclipse.configscan.views.actions;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -124,42 +127,42 @@ public final class ImportExportAction extends SimpleTreeViewerAction implements 
 					input.setDate(null, IConfigScanConfiguration.DATE_FORMAT_UI_ENTRIES);
 					input.setConfigurationName(testRun.getTitle());
 					testRun.addTestCase(testCaseUtility.buildTestCase(document, testRun));	
-					
 					view.setInput(input);
 				}
-			} else if(EXPORT_ITEM_LOG == id) {
-				Object firstElement = ((IStructuredSelection)treeViewer.getSelection()).getFirstElement();
-				if(firstElement instanceof TestRun) {
-					TestRun testRun = (TestRun)firstElement;
-					Document logDocument = (Document)testRun.getLogElement();
-					if(logDocument == null) {
-						ConfigScanPlugin.log("Log document not available for " + testRun.getLabel(null), IStatus.ERROR);
-					} else {
+			} else {
+				IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
+				if(selection.isEmpty()) {
+					List<TestRun> testRuns = ((ConfigScanViewInput)treeViewer.getInput()).getTestRuns();
+					if(!testRuns.isEmpty()) {
+						TestRun testRun = testRuns.get(0);
+						selection = new StructuredSelection(testRun);
+						treeViewer.setSelection(selection);
 						FileDialog fileDialog = new FileDialog(activeShell, SWT.SAVE);
-						fileDialog.setText("File dialog for log file export");
-						String path = fileDialog.open();
-						if(path != null) {
-							Files.writeStringIntoFile(path, documentUtility.serialize(logDocument));
+						if(EXPORT_ITEM_LOG == id) {
+							Document logDocument = (Document)testRun.getLogElement();
+							if(logDocument == null) {
+								ConfigScanPlugin.log("Log document not available for " + testRun.getLabel(null), IStatus.ERROR);
+							} else {
+								fileDialog.setText("File dialog for log file export");
+								String path = fileDialog.open();
+								if(path != null) {
+									Files.writeStringIntoFile(path, documentUtility.serialize(logDocument));
+								}
+							}
+						} else if(EXPORT_ITEM_INPUT == id) {
+							Document inputDocument = (Document)testRun.getInputElement();
+							if(inputDocument == null) {
+								ConfigScanPlugin.log("Input document not available for " + testRun.getLabel(null), IStatus.ERROR);
+							} else {
+								fileDialog.setText("File dialog for input file export");
+								String path = fileDialog.open();
+								if(path != null) {
+									Files.writeStringIntoFile(path, documentUtility.serialize(inputDocument));
+								}
+							}
 						}
 					}
 				}
-			} else if(EXPORT_ITEM_INPUT == id) {
-				Object firstElement = ((IStructuredSelection)treeViewer.getSelection()).getFirstElement();
-				if(firstElement instanceof TestRun) {
-					TestRun testRun = (TestRun)firstElement;
-					Document inputDocument = (Document)testRun.getInputElement();
-					if(inputDocument == null) {
-						ConfigScanPlugin.log("Input document not available for " + testRun.getLabel(null), IStatus.ERROR);
-					} else {
-						FileDialog fileDialog = new FileDialog(activeShell, SWT.SAVE);
-						fileDialog.setText("File dialog for input file export");
-						String path = fileDialog.open();
-						if(path != null) {
-							Files.writeStringIntoFile(path, documentUtility.serialize(inputDocument));
-						}
-					}
-				}
-				
 			}
 		}
 	}
