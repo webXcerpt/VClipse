@@ -1,0 +1,129 @@
+piproduct Notebook [sap E8300001000651 vcoid PT_NB] {
+	
+	// parameters
+	param Type "Notebook type" [sap NOTEBOOK_TYPE] in {
+		business "Business"
+		development "Developement"
+		multimedia "Multimedia"
+		netbook "Netbook"
+	} 
+	
+	param Dimensions "Screen-Size" [sap SCREEN_SIZE]  in {
+		'10.1' "10.1 inches"
+		'12' "12 inches"
+		'14' "14 inches"
+		'15.4' "15.4 inches"
+		'17' "17 inches"
+	} restrictions {
+		rule '10.1' <- Type == netbook
+		rule default '17' ['15.4' '17'] <- Type == multimedia
+		rule default '15.4' ['12' '14' '15.4' '17'] <- Type in {development business}  
+	}
+	
+	param Cores [sap CORE_AMOUNT] in {
+		1 2 4
+	} restrictions {
+		rule default 2 [2 4] <- Type in {development multimedia business}
+		rule default 1 [1 2] <- Type == netbook
+	}
+	
+	param HDD "HardDisc-Drive" [sap HARD_DISK_SIZE] in {
+		'60' "60 GB"
+		'120' "120 GB"
+		'340' "340 GB"
+	} restrictions {
+		rule default '60' ['60' '120'] <- Type == netbook
+		rule default '120' ['120' '340'] <- Type in {development multimedia business} 
+	}
+		
+	param Memory [sap RAM_MODULES_AMOUNT] in 1 .. 8 restrictions {
+		rule default 1 [2 3 4] <- Type in {netbook}
+		rule default 2 [3 4 5 6] <- Type in {business development}
+		rule default 4 [5 6 7 8] <- Type in {multimedia}
+	}
+		
+	param Display [sap DISPLAY] in {glare 'non-glare'}
+		restrictions {
+			rule glare <- Dimensions in {'14' '15.4' '17'}
+			rule default 'non-glare' [glare 'non-glare']<- Dimensions in {'10.1' '12'}
+		}
+	
+	param UMTS [sap UMTS] in {*false true}
+	
+	param Webcam [sap WEBCAM] in {*false true}
+		restrictions {
+			rule invisible false <- Type == business
+		}
+	
+	// materials
+	si RAM1GB "1 GB RAM" [sap E8300001000652 pci HW]
+	#RAM1GB = Memory % 8 % 4 % 2
+	
+	si RAM2GB "2 GB RAM" [sap E8300001000653 pci HW]
+	#RAM2GB = Memory % 8 % 4 div 2
+	
+	si RAM4GB "4 GB RAM" [sap E8300001000654 pci HW]
+	#RAM4GB = Memory % 8 div 4
+	
+	si RAM8GB "8 GB RAM" [sap E8300001000655 pci HW]
+	#RAM8GB = Memory div 8
+	
+	si Windows7Home "Windows 7 Home" [sap E8300001000656 pci SW]
+	#Windows7Home = 1 when Type in {multimedia netbook}
+	
+	si Windows7Professional "Windows 7 Professional" [sap E8300001000657 pci SW]
+	#Windows7Professional = 1 when Type in {business development}
+	
+	si CPU1GHz "CPU 1 GHz" [sap E8300001000658 pci HW]
+	#CPU1GHz = 1 when Type == netbook 
+	
+	si CPU2GHz "CPU 2 GHz" [sap E8300001000659 pci HW]
+	#CPU2GHz = 1 when Type == business
+	
+	si CPU2x2GHz "CPU 2x2 GHz" [sap E8300001000660 pci HW]
+	#CPU2x2GHz = 1 when Type in {business multimedia development} && Cores == 2
+	
+	si CPU4x2GHz "CPU 4x2 GHz" [sap E8300001000661 pci HW]
+	#CPU4x2GHz = 1 when Type in {multimedia development} && Cores == 4
+	
+	si Display101G "Display 10.1 glare" [sap E8300001000662 pci HW]
+	#Display101G = 1 when Dimensions == '10.1' && Display == glare
+	
+	si Display101N "Display 10.1 non-glare" [sap E8300001000663 pci HW]
+	#Display101N = 1 when Dimensions == '10.1' && Display == 'non-glare'
+	
+	si Display12G "Display 12 glare" [sap E8300001000664 pci HW]
+	#Display12G = 1 when Dimensions == '12' && Display == glare
+	
+	si Display12N "Display 12 non-glare" [sap E8300001000665 pci HW]
+	#Display12N = 1 when Dimensions == '12' && Display == 'non-glare'
+	
+	si Display14G "Display 14 glare" [sap E8300001000666 pci HW]
+	#Display14G = 1 when Dimensions == '14' && Display == glare
+	
+	si Display154G "Display 15.4 glare" [sap E8300001000667 pci HW]
+	#Display154G = 1 when Dimensions == '15.4' && Display == glare
+	
+	si Display17G "Display 17 glare" [sap E8300001000668 pci HW]
+	#Display17G = 1 when Dimensions == '17' && Display == glare
+	
+	si HDD60GB "HardDisc 60 GB" [sap E8300001000669 pci HW]
+	#HDD60GB = 1 when HDD == '60'
+	
+	si HDD120GB "HardDisc 120 GB" [sap E8300001000670 pci HW]
+	#HDD120GB = 1 when HDD == '120'
+	
+	si HDD340GB "HardDisc 340 GB" [sap E8300001000671 pci HW]
+	#HDD340GB = 1 when HDD == '340'
+	
+	si UMTSModule "UMTS Module" [sap E8300001000672 pci HW]
+	#UMTSModule = 1 when UMTS
+	
+	si Webcam2M "Webcam 2 Megapixel" [sap E8300001000673 pci HW]
+	#Webcam2M = 1 when Webcam
+	
+	pci SW
+	pci HW
+	
+	
+}
