@@ -1,84 +1,15 @@
-package org.vclipse.configscan.views;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+package org.vclipse.configscan;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class ConfigScanViewTest {
+public class DocumentFactory {
 
-	private ConfigScanView configScanView;
-	
-	
-	@Before
-	public void setUp() throws Exception {
-//		waitForJobs();
-		configScanView = (ConfigScanView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(
-				ConfigScanView.ID);
-//		waitForJobs();
-		assertNotNull("ConfigScanView must not be null", configScanView);
-		delay(3000);
-	}
-
-	/** From eclipse -building commercial-quality plug-ins book
-	 * 
-	 * @param waitTimeMillis
-	 */
-	private void delay(long waitTimeMillis) {
-		// TODO Auto-generated method stub
-		Display display = Display.getCurrent();
-		if(display != null) {
-			long endTimeMillis = System.currentTimeMillis() + waitTimeMillis;
-			while(System.currentTimeMillis() < endTimeMillis) {
-				if(!display.readAndDispatch()) {
-					display.sleep();
-				}
-			}
-			display.update();
-		}
-		else {
-			try {
-				Thread.sleep(waitTimeMillis);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
-	}
-	
-	/** From eclipse -building commercial-quality plug-ins book
-	 * 
-	 */
-	private void waitForJobs() {
-		// TODO Auto-generated method stub
-		while(Platform.getJobManager().currentJob() != null) {
-			delay(1000);
-		}
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(configScanView);
-	}
-
-	@Test
-	public void testCreatePartControlComposite() {
-		fail("Not yet implemented");
-	}
-
-	private Document createDoc() {
+	public Document createDoc() {
 		// TODO Auto-generated method stub
 		Document docLog;
 		Element log_session;
@@ -176,10 +107,4 @@ public class ConfigScanViewTest {
 		
 		return docLog;
 	}
-
-	@Test
-	public void testSetInput() {
-		fail("Not yet implemented");
-	}
-
 }

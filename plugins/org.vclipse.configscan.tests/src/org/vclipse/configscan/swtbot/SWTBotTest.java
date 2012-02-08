@@ -2,13 +2,9 @@ package org.vclipse.configscan.swtbot;
 
 import java.io.InputStream;
 
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
-import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.results.Result;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarDropDownButton;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -21,7 +17,6 @@ import org.vclipse.configscan.utils.TestCaseFactory;
 import org.vclipse.configscan.views.TestRunsHistory;
 
 import com.google.inject.Injector;
-
 
 @RunWith(SWTBotJunit4ClassRunner.class)
 public class SWTBotTest {
@@ -92,25 +87,7 @@ public class SWTBotTest {
 		SWTBotToolbarDropDownButton historyButton = configScanView.toolbarDropDownButton("Test run history");
 		historyButton.menuItem("Export ...").click();
 		
-		// save the history content with save as dialog
-		
-		
-		UIThreadRunnable.syncExec(new Result<Void>() {
-			@Override
-			public Void run() {
-				final Display display = bot.activeView().getWidget().getDisplay();
-				display.syncExec(new Runnable() {
-					@Override
-					public void run() {
-						SWTBotShell saveDialog = bot.shell("Save As");
-						saveDialog.activate();
-						saveDialog.close();
-					}
-				});
-				return null;
-			}
-		});
-		
+		// save the history content with save as dialog		
 //		SWTBotShell saveDialog = bot.shell("Save As");
 //		saveDialog.activate();
 //		saveDialog.close();
