@@ -3,6 +3,8 @@ package org.vclipse.configscan.impl.model;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -27,6 +29,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
 
@@ -38,10 +41,12 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 	// parameter options
 	public static final String KBOBJECT = "IV_IPC_KBID";
 	public static final String STOP_ON_ERROR = "IV_STOP_ON_ERROR";
-	public static final String PERFORMANCE_RUN = "IV_PERFORMANCE_RUN";
+	public static final String PERFORMANCE_RUN = "IV_PERFROMANCE_RUN"; // NOTE: the typo in the string is intentional
 	public static final String BREAKPOINT_ENABLED = "IV_BREAKPOINT_ENABLED";
 	public static final String TEST_DATE = "IV_TEST_DATE";
 	public static final String ROOT_QUANTITY = "IV_ROOT_QTY";
+	
+	public static final Set<String> parameterOptions = Sets.newHashSet(KBOBJECT, STOP_ON_ERROR, PERFORMANCE_RUN, BREAKPOINT_ENABLED, TEST_DATE, ROOT_QUANTITY);
 	
 	@Inject
 	private ConfigScanImageHelper imageHelper;
@@ -162,7 +167,13 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 					monitor.done();
 					return;
 				}
-				Document logDocument = documentUtility.parse(configScanRunner.execute(parseResult, connection, materialNumber, options));
+				Map<String, Object> configScanRunnerOptions = Maps.newHashMap();
+				for (Entry<String, Object> entry : options.entrySet()) {
+					if (parameterOptions.contains(entry.getKey())) {
+						configScanRunnerOptions.put(entry.getKey(), entry.getValue());
+					}
+				}
+				Document logDocument = documentUtility.parse(configScanRunner.execute(parseResult, connection, materialNumber, configScanRunnerOptions));
 				setLogElement(logDocument);
 				
 				if(monitor.isCanceled()) {

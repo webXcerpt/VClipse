@@ -41,7 +41,11 @@ public class ConfigScanRunner implements IConfigScanRunner {
         JCoParameterList importParameterList = function.getImportParameterList();
         
         for(String key : options.keySet()) {
-        	 importParameterList.setValue(key, options.get(key));
+        	Object value = options.get(key);
+        	if (value instanceof Boolean) {
+        		value = ((Boolean)value).booleanValue() ? "X" : "";
+        	}
+			importParameterList.setValue(key, value);
         }
         
         importParameterList.setValue("IV_TRACE_ALL", "X"); // "E" for only error messages
