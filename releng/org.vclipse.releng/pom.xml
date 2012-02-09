@@ -39,13 +39,11 @@
 		<module>../org.vclipse.connection</module>
 		<module>../org.vclipse.console</module>
 		<module>../org.vclipse.idoc</module>
-		<module>../org.vclipse.idoc.tests</module>
 		<module>../org.vclipse.idoc.ui</module>
 		<module>../org.vclipse.idoc2jcoidoc</module>
 		<module>../org.vclipse.jpplib</module>
 		<module>../org.vclipse.vcml</module>
 		<module>../org.vclipse.vcml.diff</module>
-		<module>../org.vclipse.vcml.tests</module>
 		<module>../org.vclipse.vcml.ui</module>
 		<module>../org.vclipse.vcml.ui.actions</module>
 		<module>../org.vclipse.vcml.ui.wizards.imports</module>
@@ -53,6 +51,12 @@
 		<module>../org.vclipse.configscan</module>
 		<module>../org.vclipse.configscan.vcmlt</module>
 		<module>../org.vclipse.configscan.vcmlt.ui</module>
+		
+		<!-- VClipse Test Projects -->
+		<module>../org.vclipse.idoc.tests</module>
+		<module>../org.vclipse.vcml.tests</module>
+		<module>../org.vclipse.configscan.vcmlt.tests</module>
+		<module>../org.vclipse.vcml.diff.tests</module>
 		
 		<!-- VClipse Features -->
 		<module>../org.vclipse.idoc_feature</module>
