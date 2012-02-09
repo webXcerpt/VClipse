@@ -51,7 +51,6 @@ public class ConfigScanRunner implements IConfigScanRunner {
         importParameterList.setValue("IV_TRACE_ALL", "X"); // "E" for only error messages
         importParameterList.setValue("IV_SHOW_LOG", "");
         importParameterList.setValue("IV_MAT_NAME", matNr);
-        importParameterList.setValue("IV_ROOT_QTY", 1);
         importParameterList.setValue("IV_RFC_DEST", rc.getRfcDest());
         importParameterList.setValue("IV_REMOTE_SYSTEM", rc.getXcmScenario());
         importParameterList.setValue("IV_REMOTE_CLIENT", rc.getMandant());
@@ -59,7 +58,6 @@ public class ConfigScanRunner implements IConfigScanRunner {
         importParameterList.setValue("IV_ENGINE_TYPE", rc.getEngine());
         importParameterList.setValue("IV_XML_STRING", output.getBytes());
         importParameterList.setValue("IV_XML_LOG_NEEDED", "X");
-        importParameterList.setValue("IV_BREAKPOINT_ENABLED", "X");
 		function.execute(handler.getJCoDestination());
 		JCoParameterList exportParameterList = function.getExportParameterList();
 		return new String(exportParameterList.getByteArray("EV_XML_LOG"));
