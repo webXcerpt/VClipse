@@ -8,8 +8,6 @@ Workflow {
 	
 	component = @IDoc {}
 	component = @VCML {}
-	component = @GenerateVcmlT {}
-
 }
 	
 

@@ -1,0 +1,10 @@
+module org.vclipse.releng.GenerateVcmlTLanguage
+
+import org.vclipse.configscan.vcmlt.*
+
+Workflow {
+	
+	component = @GenerateVcmlT {}
+}
+	
+
