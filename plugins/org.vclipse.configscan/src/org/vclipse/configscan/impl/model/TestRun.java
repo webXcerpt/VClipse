@@ -34,14 +34,14 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 
 	// names for options
 	public static final String SKIP_MATERIAL_TESTS = "SkipMaterialTests";
-	public static final String KBOBJECT = "kbobject";
 	
-	public static final String STOP_ON_ERROR = "stopOnError";
-	public static final String PERFORMANCE_RUN = "performanceRun";
-	public static final String BREAKPOINT_ENABLED = "breakPointEnabled";
-	public static final String TEST_DATE = "testDate";
-	public static final String ROOT_QUANTITY = "rootQuantity";
-	
+	// parameter options
+	public static final String KBOBJECT = "IV_IPC_KBID";
+	public static final String STOP_ON_ERROR = "IV_STOP_ON_ERROR";
+	public static final String PERFORMANCE_RUN = "IV_PERFORMANCE_RUN";
+	public static final String BREAKPOINT_ENABLED = "IV_BREAKPOINT_ENABLED";
+	public static final String TEST_DATE = "IV_TEST_DATE";
+	public static final String ROOT_QUANTITY = "IV_ROOT_QTY";
 	
 	@Inject
 	private ConfigScanImageHelper imageHelper;

@@ -14,7 +14,6 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
-import org.vclipse.configscan.impl.model.TestRun;
 import org.vclipse.configscan.IConfigScanRunner;
 import org.vclipse.connection.IConnection;
 import org.vclipse.connection.IConnectionHandler;
@@ -40,12 +39,11 @@ public class ConfigScanRunner implements IConfigScanRunner {
 		}
 		JCoFunction function = handler.getJCoFunction("ZFSB_TEST_ENGINE_RFC");
         JCoParameterList importParameterList = function.getImportParameterList();
-        importParameterList.setValue("IV_STOP_ON_ERROR", options.get(TestRun.STOP_ON_ERROR));
-        importParameterList.setValue("IV_PERFORMANCE_RUN", options.get(TestRun.PERFORMANCE_RUN));
-        importParameterList.setValue("IV_BREAKPOINT_ENABLED", options.get(TestRun.BREAKPOINT_ENABLED));
-        importParameterList.setValue("IV_TEST_DATE", options.get(TestRun.TEST_DATE));
-        importParameterList.setValue("IV_ROOT_QTY", options.get(TestRun.ROOT_QUANTITY));
-        importParameterList.setValue("IV_IPC_KBID", options.get(TestRun.KBOBJECT));
+        
+        for(String key : options.keySet()) {
+        	 importParameterList.setValue(key, options.get(key));
+        }
+        
         importParameterList.setValue("IV_TRACE_ALL", "X"); // "E" for only error messages
         importParameterList.setValue("IV_SHOW_LOG", "");
         importParameterList.setValue("IV_MAT_NAME", matNr);
