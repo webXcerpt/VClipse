@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: VClipse Diff Test Fragment
 Bundle-SymbolicName: org.vclipse.vcml.diff.tests
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 0.4.2.qualifier
 Bundle-Vendor: webxcerpt SW GmbH, Munich, Germany
 Fragment-Host: org.vclipse.vcml.diff
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
