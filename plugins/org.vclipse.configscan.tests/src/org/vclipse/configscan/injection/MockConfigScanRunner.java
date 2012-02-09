@@ -1,5 +1,7 @@
 package org.vclipse.configscan.injection;
 
+import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.WrappedException;
@@ -20,7 +22,7 @@ import com.sap.conn.jco.JCoException;
 public class MockConfigScanRunner implements IConfigScanRunner {
 
 	@Override
-	public String execute(String output, RemoteConnection remoteConnection, String materialNumber) throws JCoException, CoreException {
+	public String execute(String output, RemoteConnection remoteConnection, String materialNumber, Map<String, Object> options) throws JCoException, CoreException {
 		GetSelectedFileRunnable run = new GetSelectedFileRunnable();
 		Display.getDefault().asyncExec(run);
 		

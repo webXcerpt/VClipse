@@ -48,7 +48,15 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 	
 	private Text kbObjectText;
 	
-	private Text rtvText;
+	private Button stopOnError;
+	
+	private Button performanceRun;
+	
+	private Button breakPointEnabled;
+	
+	private Text testDate;
+	
+	private Text rootQuantity;
 	
 	@Inject
 	public ManyConnectionsTab(IConfigScanRemoteConnections remoteConnections) {
@@ -91,10 +99,17 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 		
 		Group group = new Group(mainArea, SWT.NONE);
 		group.setText("Options");
-		group.setLayout(new GridLayout(2, false));
+		group.setLayout(new GridLayout(2, true));
 		group.setLayoutData(new GridData(GridData.FILL_BOTH));
 		
-		skipMaterialTestsButton = new Button(group, SWT.CHECK);
+		Composite leftComposite = new Composite(group, SWT.NONE);
+		leftComposite.setLayout(new GridLayout(2, false));
+		leftComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		Composite rightComposite = new Composite(group, SWT.NONE);
+		rightComposite.setLayout(new GridLayout());
+		
+		skipMaterialTestsButton = new Button(rightComposite, SWT.CHECK);
 		skipMaterialTestsButton.setText("Skip material tests");
 		skipMaterialTestsButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -104,12 +119,38 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 			}
 		});
 		
-		GridData layoutData = new GridData();
-		layoutData.horizontalSpan = 2;
-		skipMaterialTestsButton.setLayoutData(layoutData);
+		stopOnError = new Button(rightComposite, SWT.CHECK);
+		stopOnError.setText("Stop on error");
+		stopOnError.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				setDirty(true);
+				updateLaunchConfigurationDialog();
+			}
+		});
 		
-		new Label(group, SWT.NONE).setText("KBOBJECT: ");
-		kbObjectText = new Text(group, SWT.BORDER);
+		performanceRun = new Button(rightComposite, SWT.CHECK);
+		performanceRun.setText("Performance run");
+		performanceRun.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				setDirty(true);
+				updateLaunchConfigurationDialog();
+			}
+		});
+		
+		breakPointEnabled = new Button(rightComposite, SWT.CHECK);
+		breakPointEnabled.setText("Breakpoint enabled");
+		breakPointEnabled.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				setDirty(true);
+				updateLaunchConfigurationDialog();
+			}
+		});
+		
+		new Label(leftComposite, SWT.NONE).setText("KBOBJECT: ");
+		kbObjectText = new Text(leftComposite, SWT.BORDER);
 		kbObjectText.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent event) {
@@ -117,22 +158,29 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 				updateLaunchConfigurationDialog();
 			}
 		});
-		GridData gridData = new GridData();
-		gridData.widthHint = 100;
-		kbObjectText.setLayoutData(gridData);
+		kbObjectText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-		new Label(group, SWT.NONE).setText("RTV: ");
-		rtvText = new Text(group, SWT.BORDER);
-		rtvText.addModifyListener(new ModifyListener() {
+		new Label(leftComposite, SWT.NONE).setText("Test date: ");
+		testDate = new Text(leftComposite, SWT.BORDER);
+		testDate.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(ModifyEvent event) {
 				setDirty(true);
 				updateLaunchConfigurationDialog();
 			}
 		});
-		gridData = new GridData();
-		gridData.widthHint = 100;
-		rtvText.setLayoutData(gridData);
+		testDate.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		
+		new Label(leftComposite, SWT.NONE).setText("Root quantity: ");
+		rootQuantity = new Text(leftComposite, SWT.BORDER);
+		rootQuantity.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent event) {
+				setDirty(true);
+				updateLaunchConfigurationDialog();
+			}
+		});
+		rootQuantity.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		setControl(mainArea);
 	}
@@ -152,9 +200,24 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 				kbObjectText.setText((String)object);
 			}
 			
-			object = attributes.get(TestRun.RTV);
+			object = attributes.get(TestRun.STOP_ON_ERROR);
 			if(object != null) {
-				rtvText.setText((String)object);
+				stopOnError.setSelection((Boolean)object);
+			}
+			
+			object = attributes.get(TestRun.PERFORMANCE_RUN);
+			if(object != null) {
+				performanceRun.setSelection((Boolean)object);
+			}
+			
+			object = attributes.get(TestRun.BREAKPOINT_ENABLED);
+			if(object != null) {
+				breakPointEnabled.setSelection((Boolean)object);
+			}
+			
+			object = attributes.get(TestRun.ROOT_QUANTITY);
+			if(object != null) {
+				rootQuantity.setText((String)object);
 			}
 			
 			for(TableItem item : connectionsTable.getItems()) {
@@ -170,7 +233,15 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 
 	@Override
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
-		// not used
+		Map<String, Object> map = Maps.newHashMap();
+		map.put(TestRun.SKIP_MATERIAL_TESTS, false);
+		map.put(TestRun.KBOBJECT, "");
+		map.put(TestRun.STOP_ON_ERROR, false);
+		map.put(TestRun.PERFORMANCE_RUN, false);
+		map.put(TestRun.BREAKPOINT_ENABLED, true);
+		map.put(TestRun.TEST_DATE, "");
+		map.put(TestRun.ROOT_QUANTITY, "1");
+		configuration.setAttributes(map);
 	}
 
 	@Override
@@ -179,7 +250,11 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 		
 		map.put(TestRun.SKIP_MATERIAL_TESTS, skipMaterialTestsButton.getSelection());
 		map.put(TestRun.KBOBJECT, kbObjectText.getText());
-		map.put(TestRun.RTV, rtvText.getText());
+		map.put(TestRun.STOP_ON_ERROR, stopOnError.getSelection());
+		map.put(TestRun.PERFORMANCE_RUN, performanceRun.getSelection());
+		map.put(TestRun.BREAKPOINT_ENABLED, breakPointEnabled.getSelection());
+		map.put(TestRun.TEST_DATE, testDate.getText());
+		map.put(TestRun.ROOT_QUANTITY, rootQuantity.getText());
 		
 		for(TableItem item : connectionsTable.getItems()) {
 			map.put(item.getText(), item.getChecked());

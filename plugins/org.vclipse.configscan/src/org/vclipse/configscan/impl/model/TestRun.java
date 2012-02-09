@@ -35,7 +35,13 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 	// names for options
 	public static final String SKIP_MATERIAL_TESTS = "SkipMaterialTests";
 	public static final String KBOBJECT = "kbobject";
-	public static final String RTV = "rtv";
+	
+	public static final String STOP_ON_ERROR = "stopOnError";
+	public static final String PERFORMANCE_RUN = "performanceRun";
+	public static final String BREAKPOINT_ENABLED = "breakPointEnabled";
+	public static final String TEST_DATE = "testDate";
+	public static final String ROOT_QUANTITY = "rootQuantity";
+	
 	
 	@Inject
 	private ConfigScanImageHelper imageHelper;
@@ -156,8 +162,7 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 					monitor.done();
 					return;
 				}
-				Document logDocument = documentUtility.parse(configScanRunner.execute(parseResult, connection, 
-						materialNumber));
+				Document logDocument = documentUtility.parse(configScanRunner.execute(parseResult, connection, materialNumber, options));
 				setLogElement(logDocument);
 				
 				if(monitor.isCanceled()) {

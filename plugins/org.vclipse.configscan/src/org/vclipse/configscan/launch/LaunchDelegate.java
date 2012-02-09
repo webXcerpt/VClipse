@@ -130,7 +130,12 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 								Map<String, Object> options = Maps.newHashMap();
 								options.put(TestRun.SKIP_MATERIAL_TESTS, attributes.get(TestRun.SKIP_MATERIAL_TESTS));
 								options.put(TestRun.KBOBJECT, attributes.get(TestRun.KBOBJECT));
-								options.put(TestRun.RTV, attributes.get(TestRun.RTV));
+								options.put(TestRun.STOP_ON_ERROR, attributes.get(TestRun.STOP_ON_ERROR));
+								options.put(TestRun.PERFORMANCE_RUN, attributes.get(TestRun.PERFORMANCE_RUN));
+								options.put(TestRun.BREAKPOINT_ENABLED, attributes.get(TestRun.BREAKPOINT_ENABLED));
+								options.put(TestRun.TEST_DATE, attributes.get(TestRun.TEST_DATE));
+								options.put(TestRun.ROOT_QUANTITY, attributes.get(TestRun.ROOT_QUANTITY));
+								
 								testCaseFactory.setOptions(options);
 								
 								EObject testModel = currentResource.getContents().get(0);

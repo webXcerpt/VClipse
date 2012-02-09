@@ -10,8 +10,11 @@
  ******************************************************************************/
 package org.vclipse.configscan.impl;
 
+import java.util.Map;
+
 import org.eclipse.core.runtime.CoreException;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
+import org.vclipse.configscan.impl.model.TestRun;
 import org.vclipse.configscan.IConfigScanRunner;
 import org.vclipse.connection.IConnection;
 import org.vclipse.connection.IConnectionHandler;
@@ -30,13 +33,19 @@ public class ConfigScanRunner implements IConfigScanRunner {
 		this.handler = handler;
 	}
 	
-	public String execute(String output, RemoteConnection rc, String matNr) throws JCoException, CoreException {
+	public String execute(String output, RemoteConnection rc, String matNr, Map<String, Object> options) throws JCoException, CoreException {
 		IConnection currentConnection = handler.getCurrentConnection();
 		if (currentConnection==null) {
 			throw new IllegalArgumentException("not connected");
 		}
 		JCoFunction function = handler.getJCoFunction("ZFSB_TEST_ENGINE_RFC");
         JCoParameterList importParameterList = function.getImportParameterList();
+        importParameterList.setValue("IV_STOP_ON_ERROR", options.get(TestRun.STOP_ON_ERROR));
+        importParameterList.setValue("IV_PERFORMANCE_RUN", options.get(TestRun.PERFORMANCE_RUN));
+        importParameterList.setValue("IV_BREAKPOINT_ENABLED", options.get(TestRun.BREAKPOINT_ENABLED));
+        importParameterList.setValue("IV_TEST_DATE", options.get(TestRun.TEST_DATE));
+        importParameterList.setValue("IV_ROOT_QTY", options.get(TestRun.ROOT_QUANTITY));
+        importParameterList.setValue("IV_IPC_KBID", options.get(TestRun.KBOBJECT));
         importParameterList.setValue("IV_TRACE_ALL", "X"); // "E" for only error messages
         importParameterList.setValue("IV_SHOW_LOG", "");
         importParameterList.setValue("IV_MAT_NAME", matNr);
