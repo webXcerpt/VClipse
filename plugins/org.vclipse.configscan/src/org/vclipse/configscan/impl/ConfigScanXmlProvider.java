@@ -34,7 +34,7 @@ public class ConfigScanXmlProvider implements IConfigScanXMLProvider {
 	protected DocumentBuilder documentBuilder;
 	
 	@Override
-	public Document transform(EObject model, ITestObjectFilter filter, Map<Element, URI> map) {
+	public Document transform(EObject model, ITestObjectFilter filter, Map<Element, URI> map, Map<Object, Object> options) {
 		try {
 			documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		} catch(ParserConfigurationException exception) {

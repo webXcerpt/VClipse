@@ -72,7 +72,7 @@ public class ConvertVcmlT2XmlAction implements IObjectActionDelegate {
 				URI xmlFileExtension = resource.getURI().appendFileExtension(CONFIGSCAN_EXTENSION);
 				try {
 					OutputStream outputStream = new ExtensibleURIConverterImpl().createOutputStream(xmlFileExtension);
-					Document doc = configScanXMLProvider.transform(model, filter, new HashMap<Element, URI>());
+					Document doc = configScanXMLProvider.transform(model, filter, new HashMap<Element, URI>(), null);
 					String output = documentUtility.serialize(doc);
 					outputStream.write(output.getBytes());
 					outputStream.close();

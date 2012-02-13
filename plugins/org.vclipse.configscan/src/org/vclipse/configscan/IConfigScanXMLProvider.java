@@ -23,7 +23,7 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(ConfigScanXmlProvider.class)
 public interface IConfigScanXMLProvider {
 	
-	public Document transform(EObject model, ITestObjectFilter filter, Map<Element, URI> map);
+	public Document transform(EObject model, ITestObjectFilter filter, Map<Element, URI> map, Map<Object, Object> options);
 	
 	public String getMaterialNumber(EObject model);
 }

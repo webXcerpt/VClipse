@@ -48,7 +48,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 	private ITestObjectFilter filter;
 	
 	@Override
-	public Document transform(EObject model, ITestObjectFilter filter, Map<Element, URI> map) {
+	public Document transform(EObject model, ITestObjectFilter filter, Map<Element, URI> map, Map<Object, Object> options) {
 		try {
 			this.xmlDocBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		} catch (ParserConfigurationException e) {

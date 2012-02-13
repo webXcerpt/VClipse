@@ -56,7 +56,7 @@ public class StoreVcmlTTestcaseInConfigScanAction extends AbstractStoreTestcaseI
 			throw new IllegalArgumentException("Testcase element required in VCMLT test-case file");
 		}
 
-		Document doc = configScanXMLProvider.transform(model, filter, new HashMap<Element, URI>());
+		Document doc = configScanXMLProvider.transform(model, filter, new HashMap<Element, URI>(), null);
 		String xmlString = documentUtility.serialize(doc);
 		String matNr = sapNameProvider.getName(testcase.getItem());
 		String docNumber = testcase.getDocument();

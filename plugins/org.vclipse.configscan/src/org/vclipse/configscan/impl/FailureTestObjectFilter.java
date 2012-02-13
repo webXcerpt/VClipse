@@ -27,6 +27,6 @@ public class FailureTestObjectFilter implements ITestObjectFilter {
 			}
 			return passes;
 		}
-		return false;
+		return true;
 	}
 }

@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
-import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,7 +19,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.xtext.util.Strings;
 import org.vclipse.configscan.ConfigScanPlugin;
-import org.vclipse.configscan.impl.model.TestRun;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -191,19 +189,6 @@ public class DocumentUtility {
 		return true;
 	}
 	
-	public boolean passesOptionsFilter(Element element, Map<Object, Object> options) {
-		Object object = options.get(TestRun.SKIP_MATERIAL_TESTS);
-		if(object instanceof Boolean && (Boolean)object) {
-			String commandAttribute = element.getAttribute("cmd");
-			if(commandAttribute.equals("CHECK ITEM QUANTITY")
-					|| commandAttribute.equals("CHECK ITEM EXIST")
-						|| commandAttribute.equals("CHECK ITEM STATUS")) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	public Document newDocument() {
 		try {
 			return factory.newDocumentBuilder().newDocument();

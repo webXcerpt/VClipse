@@ -186,18 +186,6 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 		});
 		rootQuantity.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
-		new Label(group, SWT.NONE).setText("Location for test/input documents: ");
-		logFilesLocation = new Text(group, SWT.BORDER);
-		logFilesLocation.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(ModifyEvent event) {
-				setDirty(true);
-				updateLaunchConfigurationDialog();
-			}
-		});
-		logFilesLocation.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		logFilesLocation.setEnabled(false);
-		
 		enableFilesLogging = new Button(group, SWT.CHECK);
 		enableFilesLogging.setText("Enable test/input document logging");
 		enableFilesLogging.addSelectionListener(new SelectionAdapter() {
@@ -212,6 +200,21 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 				updateLaunchConfigurationDialog();
 			}
 		});
+		GridData gridData = new GridData();
+		gridData.horizontalSpan = 2;
+		enableFilesLogging.setLayoutData(gridData);
+		
+		new Label(group, SWT.NONE).setText("Location for test/input documents: ");
+		logFilesLocation = new Text(group, SWT.BORDER);
+		logFilesLocation.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent event) {
+				setDirty(true);
+				updateLaunchConfigurationDialog();
+			}
+		});
+		logFilesLocation.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		logFilesLocation.setEnabled(false);
 		setControl(mainArea);
 	}
 	

@@ -81,7 +81,7 @@ public class TestCaseFactory {
 	}
 	
 	public TestCase buildTestCase(Element element, TestCase parent) {
-		if(documentUtility.passesNodeFilter(element) && documentUtility.passesOptionsFilter(element, options)) {
+		if(documentUtility.passesNodeFilter(element)) {
 			NodeList nodeList = element.getChildNodes();
 			// there are no child nodes, create a test case
 			if(nodeList.getLength() == 0 && element.getNodeName().equals(DocumentUtility.NODE_NAME_LOG_MSG)) {

@@ -37,7 +37,7 @@ public class VcmlTConfigScanXMLProviderTest extends XtextTest {
 		testFile("simpleTestFile.vcmlt", "ABC.vcml");
 		EObject root = getModelRoot();
 		HashMap<Element, URI> map = Maps.newHashMap();
-		Document document = csXmlProvider.transform(root, filter, map);
+		Document document = csXmlProvider.transform(root, filter, map, null);
 		System.err.println(documentUtility.serialize(document));
 	}
 }

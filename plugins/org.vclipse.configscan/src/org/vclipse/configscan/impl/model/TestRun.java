@@ -160,7 +160,10 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 			monitor.beginTask("Running tests for " + testModel.eResource().getURI().lastSegment() + " and " + connection.getDescription() + " connection", IProgressMonitor.UNKNOWN);
 			
 			Map<Element, URI> input2Uri = Maps.newHashMap();
-			Document inputDocument = xmlProvider.transform(testModel, filter, input2Uri);
+			Map<Object, Object> transformationOptions = Maps.newHashMap();
+			transformationOptions.put(TestRun.SKIP_MATERIAL_TESTS, options.get(TestRun.SKIP_MATERIAL_TESTS));
+			
+			Document inputDocument = xmlProvider.transform(testModel, filter, input2Uri, transformationOptions);
 			setInputElement(inputDocument);
 			
 			if(monitor.isCanceled()) {
