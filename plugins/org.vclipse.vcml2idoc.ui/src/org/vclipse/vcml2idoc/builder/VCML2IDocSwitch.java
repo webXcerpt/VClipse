@@ -533,7 +533,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 					String docText = text.substring(i, Math.min(text.length(), i+132));
 					final Segment segmentE1TEXTx = addChildSegment(parentSegment, segmentType);
 					setValue(segmentE1TEXTx, "MSGFN", "004");
-					setValue(segmentE1TEXTx, "TDFORMAT", firstLine ? format : "("); // = means to append to the previous line
+					setValue(segmentE1TEXTx, "TDFORMAT", firstLine ? format : "="); // = means to append to the previous line
 					setValue(segmentE1TEXTx, "TDLINE", docText);
 					setValue(segmentE1TEXTx, "LANGUAGE_ISO", language.toString());
 					firstLine = false;
