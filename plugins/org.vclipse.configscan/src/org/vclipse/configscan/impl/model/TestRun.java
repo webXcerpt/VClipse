@@ -6,15 +6,21 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.progress.IDeferredWorkbenchAdapter;
 import org.eclipse.ui.progress.IElementCollector;
+import org.eclipse.xtext.ui.util.ResourceUtil;
+import org.eclipse.xtext.util.Files;
 import org.vclipse.configscan.ConfigScanImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
@@ -46,6 +52,9 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 	public static final String TEST_DATE = "IV_TEST_DATE";
 	public static final String ROOT_QUANTITY = "IV_ROOT_QTY";
 	
+	public static final String LOG_FILES_LOCATION = "LogFiles";
+	public static final String LOGGING_ENABLED = "loggingEnabled";
+	
 	public static final Set<String> parameterOptions = Sets.newHashSet(KBOBJECT, STOP_ON_ERROR, PERFORMANCE_RUN, BREAKPOINT_ENABLED, TEST_DATE, ROOT_QUANTITY);
 	
 	@Inject
@@ -72,7 +81,7 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 	
 	private IConfigScanXMLProvider xmlProvider;
 	
-	private Map<String, Object> options;
+	private Map<Object, Object> options;
 	
 	private String title;
 
@@ -106,11 +115,11 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 		this.filter = filter;
 	}
 	
-	public void setOptions(Map<String, Object> options) {
+	public void setOptions(Map<Object, Object> options) {
 		this.options = options;
 	}
 	
-	public Map<String, Object> getOptions() {
+	public Map<Object, Object> getOptions() {
 		return Collections.unmodifiableMap(options);
 	}
 
@@ -140,7 +149,7 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 	public Object getParent(Object object) {
 		return null;
 	}
-
+	
 	@Override
 	public void fetchDeferredChildren(Object object, IElementCollector collector, IProgressMonitor monitor) {
 		List<TestCase> testCases = getTestCases();
@@ -167,8 +176,8 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 					monitor.done();
 					return;
 				}
-				Map<String, Object> configScanRunnerOptions = Maps.newHashMap();
-				for (Entry<String, Object> entry : options.entrySet()) {
+				Map<Object, Object> configScanRunnerOptions = Maps.newHashMap();
+				for (Entry<Object, Object> entry : options.entrySet()) {
 					if (parameterOptions.contains(entry.getKey())) {
 						configScanRunnerOptions.put(entry.getKey(), entry.getValue());
 					}
@@ -176,6 +185,22 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 				Document logDocument = documentUtility.parse(configScanRunner.execute(parseResult, connection, materialNumber, configScanRunnerOptions));
 				setLogElement(logDocument);
 				
+				String logFilesLocation = (String)options.get(LOG_FILES_LOCATION);
+				if(logFilesLocation != null) {
+					if(logFilesLocation.isEmpty()) {
+						logFilesLocation = LOG_FILES_LOCATION;
+					}
+					IFile file = ResourceUtil.getFile(testModel.eResource());
+					String name = file.getName() + "." + connection.getDescription() + ".";
+					IFolder folder = file.getParent().getFolder(new Path(logFilesLocation));
+					if(!folder.exists()) {
+						folder.create(true, true, monitor);						
+					}
+					Files.writeStringIntoFile(folder.getLocation().toString() + "/" + name + "input.xml", documentUtility.serialize(inputDocument));
+					Files.writeStringIntoFile(folder.getLocation().toString() + "/" + name + "log.xml", documentUtility.serialize(logDocument));
+					folder.refreshLocal(IResource.DEPTH_ONE, monitor);
+				}
+		
 				if(monitor.isCanceled()) {
 					monitor.done();
 					return;

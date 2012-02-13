@@ -65,6 +65,7 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 	@Inject
 	private TestCaseFactory testCaseFactory;
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void launch(final ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor) throws CoreException {
 		monitor.beginTask("Sending test cases to ConfigScan", IProgressMonitor.UNKNOWN);
@@ -126,21 +127,9 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 								ConfigScanPlugin.log("Can not create a resource for the file " + currentFile.getName(), IStatus.WARNING);
 								continue;
 							} else {
-								// collect options
-								Map<String, Object> options = Maps.newHashMap();
-								options.put(TestRun.SKIP_MATERIAL_TESTS, attributes.get(TestRun.SKIP_MATERIAL_TESTS));
-								options.put(TestRun.KBOBJECT, attributes.get(TestRun.KBOBJECT));
-								options.put(TestRun.STOP_ON_ERROR, attributes.get(TestRun.STOP_ON_ERROR));
-								options.put(TestRun.PERFORMANCE_RUN, attributes.get(TestRun.PERFORMANCE_RUN));
-								options.put(TestRun.BREAKPOINT_ENABLED, attributes.get(TestRun.BREAKPOINT_ENABLED));
-								options.put(TestRun.TEST_DATE, attributes.get(TestRun.TEST_DATE));
-								options.put(TestRun.ROOT_QUANTITY, attributes.get(TestRun.ROOT_QUANTITY));
-								
-								testCaseFactory.setOptions(options);
-								
+								testCaseFactory.setOptions((Map<Object, Object>)attributes);
 								EObject testModel = currentResource.getContents().get(0);
 								String fileName = currentFile.getName();
-								
 								for(RemoteConnection connection : selectedConnections.values()) {
 									IConfigScanXMLProvider xmlProvider = extensionPointReader.getXmlProvider(extension);
 									testRuns.add(testCaseFactory.buildTestRun(fileName, connection, xmlProvider, testModel));

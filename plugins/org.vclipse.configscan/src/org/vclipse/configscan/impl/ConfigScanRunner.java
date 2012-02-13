@@ -11,6 +11,7 @@
 package org.vclipse.configscan.impl;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.CoreException;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
@@ -30,9 +31,9 @@ public class ConfigScanRunner implements IConfigScanRunner {
 	@Inject
 	public ConfigScanRunner(IConnectionHandler handler) {
 		this.handler = handler;
-	}
+	} 
 	
-	public String execute(String output, RemoteConnection rc, String matNr, Map<String, Object> options) throws JCoException, CoreException {
+	public String execute(String output, RemoteConnection rc, String matNr, Map<Object, Object> options) throws JCoException, CoreException {
 		IConnection currentConnection = handler.getCurrentConnection();
 		if (currentConnection==null) {
 			throw new IllegalArgumentException("not connected");
@@ -40,13 +41,14 @@ public class ConfigScanRunner implements IConfigScanRunner {
 		JCoFunction function = handler.getJCoFunction("ZFSB_TEST_ENGINE_RFC");
         JCoParameterList importParameterList = function.getImportParameterList();
         
-        for(String key : options.keySet()) {
-        	Object value = options.get(key);
+        for(Entry<Object, Object> entry : options.entrySet()) {
+        	Object value = options.get(entry.getKey());
         	if (value instanceof Boolean) {
         		value = ((Boolean)value).booleanValue() ? "X" : "";
         	}
-			importParameterList.setValue(key, value);
+			importParameterList.setValue((String)entry.getKey(), value);
         }
+ 
         
         importParameterList.setValue("IV_TRACE_ALL", "X"); // "E" for only error messages
         importParameterList.setValue("IV_SHOW_LOG", "");

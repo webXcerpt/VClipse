@@ -23,6 +23,6 @@ import com.sap.conn.jco.JCoException;
 @ImplementedBy(ConfigScanRunner.class)
 public interface IConfigScanRunner {
 
-	public String execute(String output, RemoteConnection remoteConnection, String materialNumber, Map<String, Object> options) throws JCoException, CoreException;
+	public String execute(String output, RemoteConnection remoteConnection, String materialNumber, Map<Object, Object> options) throws JCoException, CoreException;
 
 }

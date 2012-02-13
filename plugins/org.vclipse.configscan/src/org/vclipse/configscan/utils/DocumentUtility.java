@@ -191,7 +191,7 @@ public class DocumentUtility {
 		return true;
 	}
 	
-	public boolean passesOptionsFilter(Element element, Map<String, Object> options) {
+	public boolean passesOptionsFilter(Element element, Map<Object, Object> options) {
 		Object object = options.get(TestRun.SKIP_MATERIAL_TESTS);
 		if(object instanceof Boolean && (Boolean)object) {
 			String commandAttribute = element.getAttribute("cmd");

@@ -58,6 +58,10 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 	
 	private Text rootQuantity;
 	
+	private Text logFilesLocation;
+	
+	private Button enableFilesLogging;
+	
 	@Inject
 	public ManyConnectionsTab(IConfigScanRemoteConnections remoteConnections) {
 		this.remoteConnections = remoteConnections;
@@ -182,6 +186,32 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 		});
 		rootQuantity.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
+		new Label(group, SWT.NONE).setText("Location for test/input documents: ");
+		logFilesLocation = new Text(group, SWT.BORDER);
+		logFilesLocation.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent event) {
+				setDirty(true);
+				updateLaunchConfigurationDialog();
+			}
+		});
+		logFilesLocation.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		logFilesLocation.setEnabled(false);
+		
+		enableFilesLogging = new Button(group, SWT.CHECK);
+		enableFilesLogging.setText("Enable test/input document logging");
+		enableFilesLogging.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				boolean selection = enableFilesLogging.getSelection();
+				if(!selection) {
+					logFilesLocation.setText(TestRun.LOG_FILES_LOCATION);
+				}
+				logFilesLocation.setEnabled(selection);
+				setDirty(true);
+				updateLaunchConfigurationDialog();
+			}
+		});
 		setControl(mainArea);
 	}
 	
@@ -220,6 +250,21 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 				rootQuantity.setText((String)object);
 			}
 			
+			object = attributes.get(TestRun.LOGGING_ENABLED);
+			if(object != null) {
+				boolean loggingEnabled = (Boolean)object;
+				enableFilesLogging.setSelection(loggingEnabled);
+				if(loggingEnabled) {
+					object = attributes.get(TestRun.LOG_FILES_LOCATION);
+					logFilesLocation.setEnabled(true);
+					if(object != null) {
+						logFilesLocation.setText((String)object);
+					}
+				} else {
+					logFilesLocation.setText(TestRun.LOG_FILES_LOCATION);
+				}
+			}
+			
 			for(TableItem item : connectionsTable.getItems()) {
 				object = attributes.get(item.getText());
 				if(object instanceof Boolean) {
@@ -241,6 +286,8 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 		map.put(TestRun.BREAKPOINT_ENABLED, true);
 		map.put(TestRun.TEST_DATE, "");
 		map.put(TestRun.ROOT_QUANTITY, "1");
+		map.put(TestRun.LOG_FILES_LOCATION, "");
+		map.put(TestRun.LOGGING_ENABLED, false);
 		configuration.setAttributes(map);
 	}
 
@@ -255,6 +302,12 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 		map.put(TestRun.BREAKPOINT_ENABLED, breakPointEnabled.getSelection());
 		map.put(TestRun.TEST_DATE, testDate.getText());
 		map.put(TestRun.ROOT_QUANTITY, rootQuantity.getText());
+		
+		boolean selection = enableFilesLogging.getSelection();
+		map.put(TestRun.LOGGING_ENABLED, selection);
+		if(selection) {
+			map.put(TestRun.LOG_FILES_LOCATION, logFilesLocation.getText());			
+		}
 		
 		for(TableItem item : connectionsTable.getItems()) {
 			map.put(item.getText(), item.getChecked());

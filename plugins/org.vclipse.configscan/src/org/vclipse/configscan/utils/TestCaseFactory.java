@@ -34,7 +34,7 @@ public class TestCaseFactory {
 	
 	private Map<Element, Element> log2Input;
 	
-	private Map<String, Object> options;
+	private Map<Object, Object> options;
 	
 	public TestCaseFactory() {
 		options = Maps.newHashMap();
@@ -50,7 +50,7 @@ public class TestCaseFactory {
 		this.log2Input = log2Input;
 	}
 	
-	public void setOptions(Map<String, Object> options) {
+	public void setOptions(Map<Object, Object> options) {
 		this.options = options;
 	}
 	
