@@ -261,6 +261,7 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 						logFilesLocation.setText((String)object);
 					}
 				} else {
+					logFilesLocation.setEnabled(false);
 					logFilesLocation.setText(TestRun.LOG_FILES_LOCATION);
 				}
 			}
