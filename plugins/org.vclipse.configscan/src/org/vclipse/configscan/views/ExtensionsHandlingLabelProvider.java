@@ -19,6 +19,8 @@ import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestCase.Status;
 import org.vclipse.configscan.impl.model.TestGroup;
 import org.vclipse.configscan.impl.model.TestRun;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -57,6 +59,16 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 		}
 	}
 	
+	private String extractText(NamedNodeMap nodes, String textToShow, String attribute) {
+		StringBuffer strBuffer = new StringBuffer();
+		Node namedItem = nodes.getNamedItem(attribute);
+		if(namedItem == null) {
+			return null;
+		}
+		strBuffer.append(textToShow).append(namedItem.getNodeValue());
+		return strBuffer.toString();
+	}
+	
 	protected String toolTip(TestCase testCase) {
 		if(extensionEnabled) {
 			IBaseLabelProvider labelProvider = getLabelProviderExtension(testCase);
@@ -65,25 +77,29 @@ public final class ExtensionsHandlingLabelProvider extends AbstractLabelProvider
 				return (String)result;
 			}
 		} else if(!(testCase instanceof TestGroup)) {
-			String tooltip = "ConfigScan XML LOG: " + testCase.getTitle();
-			tooltip += "\n\nTestrun : " + testCase.getRoot().getTitle();
-			tooltip += "\nTestgroup : " + testCase.getParent().getTitle();
-
-			// TODO which info is interesting for the user ?
-
-			// 	 	 			NamedNodeMap namedNodeMap = inputElement.getAttributes();
-			// 	 	 			for(int i = 0; i < namedNodeMap.getLength(); i++) {
-			// 	 	 				Node node = namedNodeMap.item(i);
-			// 	 	 				tooltip += " " + node.getNodeName() + "=\"" + node.getNodeValue() + "\"";
-			// 	 	 			}
-			// 	 	 			URI uri = testCase.getSourceUri();
-			// 	 	 			TestCase root = testCaseUtility.getRoot(testCase);
-			// 	 	 			EObject testModel = ((TestRunAdapter)root.getAdapter(TestRunAdapter.class)).getTestModel();
-			// 	 	 			EObject eObject = testModel.eResource().getResourceSet().getEObject(uri, true);
-			// 	 	 			if(eObject != null && extensionEnabled && getLabelProviderExtension(testCase) != null) {
-			// 	 	 				//tooltip += "\n" + labelProviderExtension.getText(eObject);
-			// 	 	 			}
-			return tooltip;
+			StringBuffer stringBuffer = new StringBuffer();
+			
+			NamedNodeMap attributes = testCase.getLogElement().getAttributes();
+			for(String current : new String[]{"cstic", "item", "i_status"}) {
+				String text = extractText(attributes, "ConfigScan XML log for " + 
+						(current.equals("i_status") ? " status statement " : ""), current);
+				if(text == null) {
+					continue;
+				} else {
+					stringBuffer.append(text);
+				}
+			}
+			stringBuffer.append("\n");
+			stringBuffer.append("Test run: " + testCase.getRoot().getTitle());
+			stringBuffer.append("\n");
+			stringBuffer.append("Test group: " + testCase.getParent().getTitle());
+			stringBuffer.append("\n");
+			stringBuffer.append(extractText(attributes, "Bompath: ", "bompath"));
+			stringBuffer.append("\n");
+			stringBuffer.append(extractText(attributes, "Command: ", "cmd"));
+			stringBuffer.append("\n");
+			stringBuffer.append(extractText(attributes, "Execution time: ", "ttime"));
+			return stringBuffer.toString();
 
 		}
 		return null;
