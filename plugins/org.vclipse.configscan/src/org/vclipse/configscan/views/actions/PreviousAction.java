@@ -24,7 +24,6 @@ public final class PreviousAction extends SimpleTreeViewerAction implements IMen
 	
 	private Menu menu;
 	
-	//private static final int PREVIOUS_TEST_RUN = 1001;
 	private static final int PREVIOUS_TEST_GROUP = 1002;
 	private static final int PREVIOUS_TEST_CASE = 1003;
 	private static final int PREVIOUS_FAILURE = 1004;
@@ -44,6 +43,9 @@ public final class PreviousAction extends SimpleTreeViewerAction implements IMen
 	@Override
 	public void run() {
 		IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
+		if(selection.isEmpty()) {
+			setSelectionToFirstElement();
+		}
 		if(!selection.isEmpty()) {
 			Object firstSelected = selection.getFirstElement();
 			if(firstSelected instanceof TestCase) {
@@ -53,9 +55,6 @@ public final class PreviousAction extends SimpleTreeViewerAction implements IMen
 				case PREVIOUS_FAILURE:
 					nextNode = new FailureTreeTraverser().getPreviousItem(testCase);
 					break;
-//				case PREVIOUS_TEST_RUN:
-//					nextNode = new TypeTreeTraverser(TestRun.class).getPreviousItem(testCase);
-//					break;
 				case PREVIOUS_TEST_GROUP:
 					nextNode = new TypeTreeTraverser(TestGroup.class).getPreviousItem(testCase);
 					break;
@@ -93,15 +92,7 @@ public final class PreviousAction extends SimpleTreeViewerAction implements IMen
 		}
 
 		menu = new Menu(parent);
-
-//		MenuItem item = new MenuItem(menu, SWT.RADIO);
-//		item.setText("Previous test run");
-//		item.setID(PREVIOUS_TEST_RUN);
-//		item.addSelectionListener(this);
-//		if(selected == PREVIOUS_TEST_RUN) {
-//			item.setSelection(true);
-//		}
-
+		
 		MenuItem item = new MenuItem(menu, SWT.RADIO);
 		item.setText("Previous test group");
 		item.setID(PREVIOUS_TEST_GROUP);

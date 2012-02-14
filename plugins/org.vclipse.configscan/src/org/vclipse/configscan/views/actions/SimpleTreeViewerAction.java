@@ -1,9 +1,14 @@
 package org.vclipse.configscan.views.actions;
 
+import java.util.List;
+
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.configscan.impl.model.TestRun;
 import org.vclipse.configscan.views.ConfigScanView;
+import org.vclipse.configscan.views.ConfigScanViewInput;
 
 public abstract class SimpleTreeViewerAction extends Action {
 
@@ -24,5 +29,15 @@ public abstract class SimpleTreeViewerAction extends Action {
 		this.imageHelper = imageHelper;
 		this.treeViewer = view.getViewer();
 		this.view = view;
+	}
+	
+	protected void setSelectionToFirstElement() {
+		Object input = treeViewer.getInput();
+		if(input instanceof ConfigScanViewInput) {
+			List<TestRun> testRuns = ((ConfigScanViewInput)input).getTestRuns();
+			if(!testRuns.isEmpty()) {
+				treeViewer.setSelection(new StructuredSelection(testRuns.get(0)));
+			}			
+		}
 	}
 }
