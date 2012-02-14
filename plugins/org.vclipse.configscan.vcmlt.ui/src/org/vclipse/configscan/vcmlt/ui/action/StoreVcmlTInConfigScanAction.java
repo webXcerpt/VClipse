@@ -25,7 +25,7 @@ import com.sap.conn.jco.JCoException;
 /**
  *
  */
-public class StoreVcmlTTestcaseInConfigScanAction extends AbstractStoreTestcaseInConfigScanAction {
+public class StoreVcmlTInConfigScanAction extends AbstractStoreTestcaseInConfigScanAction {
 
 	@Inject 
 	private IConfigScanXMLProvider configScanXMLProvider;

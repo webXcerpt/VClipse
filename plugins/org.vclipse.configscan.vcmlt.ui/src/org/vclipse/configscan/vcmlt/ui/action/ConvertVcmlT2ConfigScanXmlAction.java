@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
-public class ConvertVcmlT2XmlAction implements IObjectActionDelegate {
+public class ConvertVcmlT2ConfigScanXmlAction implements IObjectActionDelegate {
 	
 	public static final String CONFIGSCAN_EXTENSION = "xml";
 
