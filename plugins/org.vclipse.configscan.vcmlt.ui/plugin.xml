@@ -286,24 +286,6 @@
               </and>
            </enablement>
         </action>
-        <action
-              class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.vclipse.configscan.vcmlt.ui.action.ConvertConfigScanTestLog2VcmlTAction"
-              icon="icons/generate_xml_16x16.gif"
-              id="org.vclipse.configscan.vcmlt.convertXML_VCMLT"
-              label="Convert ConfigScan XML to VCMLT"
-              menubarPath="org.vclipse.configscan.popupMenu.resource/content">
-           <enablement>
-              <and>
-                 <objectClass
-                       name="org.eclipse.core.resources.IFile">
-                 </objectClass>
-                 <objectState
-                       name="extension"
-                       value="xml">
-                 </objectState>
-              </and>
-           </enablement>
-        </action>
          <action
               class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.vclipse.configscan.vcmlt.ui.action.StoreVcmlTInConfigScanAction"
               icon="icons/generate_xml_16x16.gif"
