@@ -30,6 +30,7 @@ import org.vclipse.configscan.vcmlt.vcmlT.TestCase;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 public class ConvertVcmlT2XmlAction implements IObjectActionDelegate {
@@ -72,7 +73,7 @@ public class ConvertVcmlT2XmlAction implements IObjectActionDelegate {
 				URI xmlFileExtension = resource.getURI().appendFileExtension(CONFIGSCAN_EXTENSION);
 				try {
 					OutputStream outputStream = new ExtensibleURIConverterImpl().createOutputStream(xmlFileExtension);
-					Document doc = configScanXMLProvider.transform(model, filter, new HashMap<Element, URI>(), null);
+					Document doc = configScanXMLProvider.transform(model, filter, new HashMap<Element, URI>(), Maps.newHashMap());
 					String output = documentUtility.serialize(doc);
 					outputStream.write(output.getBytes());
 					outputStream.close();

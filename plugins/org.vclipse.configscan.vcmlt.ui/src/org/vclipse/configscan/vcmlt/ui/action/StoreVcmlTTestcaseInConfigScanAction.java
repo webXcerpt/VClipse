@@ -18,6 +18,7 @@ import org.vclipse.configscan.vcmlt.vcmlT.TestCase;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
 
@@ -56,7 +57,7 @@ public class StoreVcmlTTestcaseInConfigScanAction extends AbstractStoreTestcaseI
 			throw new IllegalArgumentException("Testcase element required in VCMLT test-case file");
 		}
 
-		Document doc = configScanXMLProvider.transform(model, filter, new HashMap<Element, URI>(), null);
+		Document doc = configScanXMLProvider.transform(model, filter, new HashMap<Element, URI>(), Maps.newHashMap());
 		String xmlString = documentUtility.serialize(doc);
 		String matNr = sapNameProvider.getName(testcase.getItem());
 		String docNumber = testcase.getDocument();
