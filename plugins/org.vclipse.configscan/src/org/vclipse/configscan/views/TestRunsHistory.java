@@ -19,6 +19,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanConfiguration;
+import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.impl.model.TestRun;
 import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.TestCaseFactory;
@@ -180,7 +181,7 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 					NamedNodeMap attributes = item.getAttributes();
 					String date = attributes.getNamedItem(DocumentUtility.DATE).getNodeValue();
 					String name = attributes.getNamedItem(DocumentUtility.NAME).getNodeValue();
-					TestRun testRun = testCaseUtility.buildTestRun("Testrun on " + date + " with " + name, null, null, null);
+					TestRun testRun = testCaseUtility.buildTestRun("Testrun on " + date + " with " + name, null, (IConfigScanXMLProvider)null, null);
 					testRun.setLogElement(document);
 					
 					ConfigScanViewInput input = new ConfigScanViewInput();

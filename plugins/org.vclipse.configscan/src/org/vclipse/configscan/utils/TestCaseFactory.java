@@ -65,6 +65,12 @@ public class TestCaseFactory {
 		return testRun;
 	}
 	
+	public TestRun buildTestRun(String fileName, RemoteConnection connection, Document inputDocument, EObject testModel) {
+		TestRun testRun = buildTestRun(fileName, connection, (IConfigScanXMLProvider)null, testModel);
+		testRun.setInputElement(inputDocument);
+		return testRun;
+	}
+	
 	public TestCase buildTestCase(TestRun testRun) {
 		return new TestCase(testRun);
 	}

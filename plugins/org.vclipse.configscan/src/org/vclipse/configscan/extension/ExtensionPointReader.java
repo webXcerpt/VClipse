@@ -70,7 +70,11 @@ public class ExtensionPointReader implements IRegistryChangeListener {
 	
 	public IConfigScanXMLProvider getXmlProvider(String extension) {
 		try {
-			return (IConfigScanXMLProvider)extension2Element.get(extension).createExecutableExtension(ATTRIBUTE_XML_PROVIDER);
+			IConfigurationElement element = extension2Element.get(extension);
+			if(element == null) {
+				return null;
+			}
+			return (IConfigScanXMLProvider)element.createExecutableExtension(ATTRIBUTE_XML_PROVIDER);
 		} catch (CoreException exception) {
 			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 			return null;
@@ -79,7 +83,11 @@ public class ExtensionPointReader implements IRegistryChangeListener {
 	
 	public IBaseLabelProvider getLabelProvider(String extension) {
 		try {
-			return (IBaseLabelProvider)extension2Element.get(extension).createExecutableExtension(ATTRIBUTE_LABEL_PROVIDER);
+			IConfigurationElement element = extension2Element.get(extension);
+			if(element == null) {
+				return null;
+			}
+			return (IBaseLabelProvider)element.createExecutableExtension(ATTRIBUTE_LABEL_PROVIDER);
 		} catch (CoreException exception) {
 			ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 			return null;

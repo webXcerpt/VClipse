@@ -33,6 +33,9 @@ import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.TestCaseFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.ProcessingInstruction;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -163,17 +166,31 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 			Map<Object, Object> transformationOptions = Maps.newHashMap();
 			transformationOptions.put(TestRun.SKIP_MATERIAL_TESTS, options.get(TestRun.SKIP_MATERIAL_TESTS));
 			
-			Document inputDocument = xmlProvider.transform(testModel, filter, input2Uri, transformationOptions);
-			setInputElement(inputDocument);
-			
+			String materialNumber = "";
+			Document inputDocument = null;
+			if(xmlProvider != null) {
+				inputDocument = xmlProvider.transform(testModel, filter, input2Uri, transformationOptions);
+				materialNumber = xmlProvider.getMaterialNumber(testModel);
+				setInputElement(inputDocument);		
+			} else {
+				inputDocument = (Document)getInputElement();
+				NodeList childNodes = inputDocument.getFirstChild().getChildNodes();
+				for(int i=0; i<childNodes.getLength(); i++) {
+					Node item = childNodes.item(i);
+					if(item != null && item.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
+						ProcessingInstruction pi = (ProcessingInstruction)item;
+						String data = pi.getData();
+						if(data.startsWith("materialid")) {
+							materialNumber = data.replace("materialid", "").trim();
+						}
+					}
+				}
+			}
 			if(monitor.isCanceled()) {
 				monitor.done();
 				return;
 			}
-			
 			String parseResult = documentUtility.serialize(inputDocument);
-			String materialNumber = xmlProvider.getMaterialNumber(testModel);
-			
 			try {
 				if(monitor.isCanceled()) {
 					monitor.done();

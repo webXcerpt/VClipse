@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanConfiguration;
+import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.JUnitTestUtils;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestGroup;
@@ -84,7 +85,7 @@ public class TestRunsHistoryTest {
 		URL history2xmlUrl = plugin.getBundle().getResource("/files/history/logResult.xml");
 		Document document = documentUtility.parse(history2xmlUrl.openConnection().getInputStream());
 		
-		TestRun testRun = testCaseFactory.buildTestRun("test_run", null, null, null);
+		TestRun testRun = testCaseFactory.buildTestRun("test_run", null, (IConfigScanXMLProvider)null, null);
 		testRun.setLogElement(document);
 		TestCase testCase = testCaseFactory.buildTestCase(document, testRun);
 		testRun.addTestCase(testCase);

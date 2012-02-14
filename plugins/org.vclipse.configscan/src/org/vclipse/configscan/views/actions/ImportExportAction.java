@@ -30,6 +30,7 @@ import org.vclipse.configscan.ConfigScanImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanConfiguration;
 import org.vclipse.configscan.IConfigScanImages;
+import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.impl.model.TestRun;
 import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.TestCaseFactory;
@@ -120,7 +121,7 @@ public final class ImportExportAction extends SimpleTreeViewerAction implements 
 				if(selectedPath != null) {
 					String content = Files.readFileIntoString(selectedPath);
 					Document document = documentUtility.parse(content);
-					TestRun testRun = testCaseUtility.buildTestRun("Imported Config Scan input file", null, null, null);
+					TestRun testRun = testCaseUtility.buildTestRun("Imported Config Scan input file", null, (IConfigScanXMLProvider)null, null);
 					testRun.setLogElement(document);
 					ConfigScanViewInput input = new ConfigScanViewInput();
 					input.setTestRuns(Lists.newArrayList(testRun));

@@ -42,6 +42,7 @@ import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.extension.ExtensionPointReader;
 import org.vclipse.configscan.impl.model.TestRun;
+import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.TestCaseFactory;
 import org.vclipse.configscan.views.ConfigScanView;
 import org.vclipse.configscan.views.ConfigScanViewInput;
@@ -54,8 +55,6 @@ import com.sap.conn.jco.JCoException;
 
 public class LaunchDelegate extends LaunchConfigurationDelegate {
 
-	private static final String MISSING_EXTENSION_WARNING_MESSAGE = "There is no registered xml provider for files with extension ";
-
 	@Inject
 	private IConfigScanRemoteConnections remoteConnections;
 	
@@ -64,6 +63,9 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 	
 	@Inject
 	private TestCaseFactory testCaseFactory;
+	
+	@Inject
+	private DocumentUtility documentUtility;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -116,23 +118,22 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 					if(nextObject instanceof IFile) {
 						IFile currentFile = (IFile)nextObject;
 						String extension = currentFile.getFileExtension();
+						String fileName = currentFile.getName();
 						
-						if(!extensionPointReader.hasExtensionFor(extension)) {
-							ConfigScanPlugin.log(MISSING_EXTENSION_WARNING_MESSAGE + extension, IStatus.WARNING);
+						Resource currentResource = resourceSet.getResource(URI.createURI(currentFile.getLocationURI().toString()), true);
+						EcoreUtil2.resolveAll(currentResource, CancelIndicator.NullImpl);
+						if(currentResource == null) {
+							ConfigScanPlugin.log("Can not create a resource for the file " + currentFile.getName(), IStatus.WARNING);
+							continue;
 						} else {
-							URI uri = URI.createURI(currentFile.getLocationURI().toString());
-							Resource currentResource = resourceSet.getResource(uri, true);
-							EcoreUtil2.resolveAll(currentResource, CancelIndicator.NullImpl);
-							if(currentResource == null) {
-								ConfigScanPlugin.log("Can not create a resource for the file " + currentFile.getName(), IStatus.WARNING);
-								continue;
-							} else {
-								testCaseFactory.setOptions((Map<Object, Object>)attributes);
-								EObject testModel = currentResource.getContents().get(0);
-								String fileName = currentFile.getName();
-								for(RemoteConnection connection : selectedConnections.values()) {
-									IConfigScanXMLProvider xmlProvider = extensionPointReader.getXmlProvider(extension);
-									testRuns.add(testCaseFactory.buildTestRun(fileName, connection, xmlProvider, testModel));
+							testCaseFactory.setOptions((Map<Object, Object>)attributes);
+							EObject testModel = currentResource.getContents().get(0);
+							for(RemoteConnection connection : selectedConnections.values()) {
+								IConfigScanXMLProvider xmlProvider = extensionPointReader.getXmlProvider(extension);
+								if(xmlProvider == null) {
+									testRuns.add(testCaseFactory.buildTestRun(fileName, connection, documentUtility.parse(currentFile.getContents()), testModel));
+								} else {
+									testRuns.add(testCaseFactory.buildTestRun(fileName, connection, xmlProvider, testModel));									
 								}
 							}
 						}
