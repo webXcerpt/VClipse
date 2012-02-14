@@ -170,7 +170,7 @@ public final class ConfigScanView extends ViewPart {
 		id2Action = Maps.newHashMap();
 		parent.setLayout(new GridLayout());
 		
-		viewer = new JobAwareTreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
+		viewer = new JobAwareTreeViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
 		defaultLabelProvider = new DefaultLabelProvider(labelProvider, viewer);
 		viewer.setLabelProvider(defaultLabelProvider);			
 		viewer.addSelectionChangedListener(defaultLabelProvider);
