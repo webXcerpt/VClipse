@@ -27,5 +27,4 @@ public class VcmlTRuntimeModule extends org.vclipse.configscan.vcmlt.AbstractVcm
 	public Class<? extends INameProvider> bindINameProvider() {
 		return SapNameProvider.class;
 	}
-
 }

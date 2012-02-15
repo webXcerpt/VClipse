@@ -5,18 +5,33 @@ package org.vclipse.configscan.vcmlt.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.vclipse.configscan.IConfigScanXMLProvider;
+import org.vclipse.configscan.imports.IConfigScanImportTransformation;
 import org.vclipse.configscan.vcmlt.builder.VcmlTConfigScanXMLProvider;
+import org.vclipse.configscan.vcmlt.imports.Cfg2VcmlTImport;
+import org.vclipse.configscan.vcmlt.imports.ConfigScanXml2VcmlTImport;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.connection.VClipseConnectionPlugin;
+
+import com.google.inject.Binder;
+import com.google.inject.name.Names;
 
 /**
  * Use this class to register components to be used within the IDE.
  */
 public class VcmlTUiModule extends org.vclipse.configscan.vcmlt.ui.AbstractVcmlTUiModule {
+	
 	public VcmlTUiModule(AbstractUIPlugin plugin) {
 		super(plugin);
 	}
-
+	
+	public void configure(Binder binder) {
+		super.configure(binder);
+		binder.bind(IConfigScanImportTransformation.class).annotatedWith(
+				Names.named("Cfg2VcmlTImport")).to(Cfg2VcmlTImport.class);
+		binder.bind(IConfigScanImportTransformation.class).annotatedWith(
+				Names.named("ConfigScanXml2VcmlTImport")).to(ConfigScanXml2VcmlTImport.class);
+	}
+	
 	public IConnectionHandler bindConnectionHandler() {
 		return VClipseConnectionPlugin.getDefault().getInjector().getInstance(IConnectionHandler.class);
 	}

@@ -1,4 +1,4 @@
-package org.vclipse.configscan.vcmlt.ui.imports;
+package org.vclipse.configscan.imports;
 
 import java.io.File;
 import java.util.List;
@@ -48,7 +48,9 @@ class WizardPage extends org.eclipse.jface.wizard.WizardPage implements IWizardP
 	private boolean opentargetfile = false;
 	
 	private IWorkspaceRoot wroot;
+	
 	private IContainer targetContainer;
+	
 	private IFile targetFile;
 	private IFile modelFile;
 	
@@ -58,13 +60,16 @@ class WizardPage extends org.eclipse.jface.wizard.WizardPage implements IWizardP
 	private Table table;
 	private TableViewer tableViewer;
 	
-	private TableContentProvider contentProvider;
-	private TableLabelProvider labelProvider;
+	private ContentProvider contentProvider;
+	private LabelProvider labelProvider;
 	
-	protected WizardPage(String pageName, IStructuredSelection selection) {
+	private IConfigScanImportTransformation transformation;
+
+	protected WizardPage(String pageName, IStructuredSelection selection, IConfigScanImportTransformation transformation) {
 		super(pageName);
 		wroot = ResourcesPlugin.getWorkspace().getRoot();
 		this.selection = selection;
+		this.transformation = transformation;
 	}
 
 	public void createControl(Composite parent) {
@@ -72,7 +77,7 @@ class WizardPage extends org.eclipse.jface.wizard.WizardPage implements IWizardP
 		mainArea.setLayout(new GridLayout(3, false));
 		
 		Label label = new Label(mainArea, SWT.NONE);
-		label.setText("Source/model file(*.vcml):");
+		label.setText("Source/model file(*." + transformation.getReferencedModelExtension() + "):");
 		
 		modelFileText = new Text(mainArea, SWT.BORDER | SWT.READ_ONLY);
 		modelFileText.addModifyListener(new ModifyListener() {
@@ -113,7 +118,8 @@ class WizardPage extends org.eclipse.jface.wizard.WizardPage implements IWizardP
 							}
 						} 
 						folderText.setText(targetContainer == null ? "" : targetContainer.getFullPath().toString());
-						fileText.setText(modelFile.getName().replace("vcml", "vcmlt"));
+						fileText.setText(modelFile.getName().replace(transformation.getReferencedModelExtension(), 
+								transformation.getTargetModelExtension()));
 					}
 				}
 			}
@@ -138,7 +144,7 @@ class WizardPage extends org.eclipse.jface.wizard.WizardPage implements IWizardP
 			public void widgetSelected(SelectionEvent e) {
 				ContainerSelectionDialog csd = 
 						new ContainerSelectionDialog(getShell(), wroot, 
-								false, "Please specify a container(project or folder) for vcmlt test cases.");
+								false, "Please specify a container(project or folder) for " + transformation.getTargetModelExtension() + " test cases.");
 				csd.showClosedProjects(false);
 				if(Window.OK == csd.open()) {
 					Object[] result = csd.getResult();
@@ -152,7 +158,7 @@ class WizardPage extends org.eclipse.jface.wizard.WizardPage implements IWizardP
 		});
 		
 		label = new Label(mainArea, SWT.NONE);
-		label.setText("Target file name(*.vcmlt):");
+		label.setText("Target file name(*." + transformation.getTargetModelExtension() + "):");
 		
 		fileText = new Text(mainArea, SWT.BORDER);
 		fileText.addModifyListener(new ModifyListener() {
@@ -182,7 +188,7 @@ class WizardPage extends org.eclipse.jface.wizard.WizardPage implements IWizardP
 		button.setLayoutData(gridData);
 		
 		button = new Button(mainArea, SWT.CHECK);
-		button.setText("Open target file (vcmlt) on finish");
+		button.setText("Open target file (" + transformation.getTargetModelExtension() + ") on finish");
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -227,9 +233,9 @@ class WizardPage extends org.eclipse.jface.wizard.WizardPage implements IWizardP
 		gridData.widthHint = 150;
 		table.setLayoutData(gridData);
 		
-		contentProvider = new TableContentProvider();
+		contentProvider = new ContentProvider();
 		tableViewer.setContentProvider(contentProvider);
-		labelProvider = new TableLabelProvider();
+		labelProvider = new LabelProvider();
 		tableViewer.setLabelProvider(labelProvider);
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -313,19 +319,19 @@ class WizardPage extends org.eclipse.jface.wizard.WizardPage implements IWizardP
 		return targetContainer;
 	}
 	
-	public IFile getTargetFile() {
+	public IFile getExportLocation() {
 		return targetFile;
 	}
 	
-	public IFile getModelFile() {
+	public IFile getSourceLocation() {
 		return modelFile;
 	}
 	
 	public List<File> getFilesToTransform() {
 		List<File> files2Transform = Lists.newArrayList();
-		for(TableItem item : tableViewer.getTable().getItems()) {
-			if(item.getChecked()) {
-				files2Transform.add((File)item.getData());
+		for(TableItem tableItem : tableViewer.getTable().getItems()) {
+			if(tableItem.getChecked()) {
+				files2Transform.add((File)tableItem.getData());
 			}
 		}
 		return files2Transform;
@@ -341,8 +347,8 @@ class WizardPage extends org.eclipse.jface.wizard.WizardPage implements IWizardP
 	
 	private boolean isSelectionEmpty() {
 		Table table = tableViewer.getTable();
-		for(TableItem item : table.getItems()) {
-			if(item.getChecked()) {
+		for(TableItem tableItem : table.getItems()) {
+			if(tableItem.getChecked()) {
 				return false;
 			}
 		}
@@ -361,14 +367,14 @@ class WizardPage extends org.eclipse.jface.wizard.WizardPage implements IWizardP
 		if(modelFile == null) {
 			setErrorMessage("Please specify a model file referenced by the tests.");
 		} else if(folderString.isEmpty()) {
-			setErrorMessage("Please select a folder where to place the files containing the cmlt test cases");
+			setErrorMessage("Please select a folder where to place the files containing the " + transformation.getReferencedModelExtension() + " test cases");
 		} else if(fileString.isEmpty()) {
-			setErrorMessage("Please specify a file name for vcmlt test cases");
+			setErrorMessage("Please specify a file name for " + transformation.getTargetModelExtension() + " test cases");
 		} else if(resource instanceof IContainer) {
 			targetContainer = (IContainer)resource;
 			targetFile = targetContainer.getFile(new Path(fileString));
-			if(!isValidCmltFileName(targetFile)) {
-				setErrorMessage("Target file should have \".vcmlt\" file extension");
+			if(!isValidFileName(targetFile)) {
+				setErrorMessage("Target file should have \"" + transformation.getTargetModelExtension() +"\" file extension");
 			} else if(targetFile.exists() && !overwrite) {
 				setErrorMessage("Target file already exists. Please enable the overwrite option.");
 			} else if(isSelectionEmpty()) {
@@ -381,9 +387,8 @@ class WizardPage extends org.eclipse.jface.wizard.WizardPage implements IWizardP
 		}
 	}
 	
-	private boolean isValidCmltFileName(IFile file) {
+	private boolean isValidFileName(IFile file) {
 		String fileExtension = file.getFileExtension();
-		return fileExtension == null ? false : fileExtension.equals("vcmlt");
+		return fileExtension == null ? false : fileExtension.equals(transformation.getTargetModelExtension());
 	}
-
 }

@@ -1,4 +1,4 @@
-package org.vclipse.configscan.vcmlt.ui.imports;
+package org.vclipse.configscan.imports;
 
 import java.io.File;
 
@@ -6,11 +6,17 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.BaseLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 
-class TableLabelProvider extends BaseLabelProvider implements ILabelProvider {
+class LabelProvider extends BaseLabelProvider implements ILabelProvider {
+	
+	private static final ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
 	
 	public Image getImage(Object element) {
-		// TODO return file image -> get it from the IDE or PlatformUI ?
+		if(element instanceof IFile || element instanceof File) {
+			return sharedImages.getImage(ISharedImages.IMG_OBJ_FILE);
+		}
 		return null;
 	}
 
