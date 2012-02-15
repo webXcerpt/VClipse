@@ -3,10 +3,10 @@ package org.vclipse.configscan.vcmlt.imports;
 import java.io.File;
 import java.io.IOException;
 
-import org.vclipse.configscan.imports.DefaultModel2ModelTransformation;
+import org.vclipse.configscan.imports.DefaultConfigScanImportTransformation;
 import org.xml.sax.SAXException;
 
-public class Cfg2VcmlTImport extends DefaultModel2ModelTransformation {
+public class Cfg2VcmlTImport extends DefaultConfigScanImportTransformation {
 	
 	@Override
 	public void init() {

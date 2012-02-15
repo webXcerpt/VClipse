@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.eclipse.emf.ecore.EObject;
 import org.xml.sax.SAXException;
 
-public class DefaultModel2ModelTransformation implements IConfigScanImportTransformation {
+public class DefaultConfigScanImportTransformation implements IConfigScanImportTransformation {
 
 	protected EObject targetModel;
 	

@@ -7,10 +7,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IImportWizard;
@@ -24,7 +26,7 @@ import org.eclipse.xtext.util.StringInputStream;
 
 import com.google.inject.Inject;
 
-public abstract class DefaulModelTransformationWizard extends Wizard implements IImportWizard {
+public abstract class DefaulConfigScanTransformationWizard extends Wizard implements IImportWizard {
 	
 	private IConfigScanImportTransformation transformation;
 	
@@ -33,7 +35,7 @@ public abstract class DefaulModelTransformationWizard extends Wizard implements 
 	private XtextResourceSet resourceSet;
 	
 	@Inject
-	public DefaulModelTransformationWizard(IConfigScanImportTransformation transformation) {
+	public DefaulConfigScanTransformationWizard(IConfigScanImportTransformation transformation) {
 		this.transformation = transformation;
 	}
 	
@@ -96,9 +98,9 @@ public abstract class DefaulModelTransformationWizard extends Wizard implements 
 				}
 			});
 		} catch (InvocationTargetException exception) {
-			exception.printStackTrace();
+			ErrorDialog.openError(getShell(), "Error during ConfigScan import transformation", exception.getMessage(), Status.CANCEL_STATUS);
 		} catch (InterruptedException exception) {
-			exception.printStackTrace();
+			ErrorDialog.openError(getShell(), "Error during ConfigScan import transformation", exception.getMessage(), Status.CANCEL_STATUS);
 		}
 		return true;
 	}
