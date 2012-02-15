@@ -119,23 +119,20 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 						IFile currentFile = (IFile)nextObject;
 						String extension = currentFile.getFileExtension();
 						String fileName = currentFile.getName();
+						testCaseFactory.setOptions((Map<Object, Object>)attributes);
 						
-						Resource currentResource = resourceSet.getResource(URI.createURI(currentFile.getLocationURI().toString()), true);
-						EcoreUtil2.resolveAll(currentResource, CancelIndicator.NullImpl);
-						if(currentResource == null) {
-							ConfigScanPlugin.log("Can not create a resource for the file " + currentFile.getName(), IStatus.WARNING);
-							continue;
+						if(!extensionPointReader.hasExtensionFor(extension)) {
+							for(RemoteConnection connection : selectedConnections.values()) {
+								testRuns.add(testCaseFactory.buildTestRun(fileName, connection, documentUtility.parse(currentFile.getContents()), null));
+							}
 						} else {
-							testCaseFactory.setOptions((Map<Object, Object>)attributes);
+							Resource currentResource = resourceSet.getResource(URI.createURI(currentFile.getLocationURI().toString()), true);
 							EObject testModel = currentResource.getContents().get(0);
+							EcoreUtil2.resolveAll(currentResource, CancelIndicator.NullImpl);
 							for(RemoteConnection connection : selectedConnections.values()) {
 								IConfigScanXMLProvider xmlProvider = extensionPointReader.getXmlProvider(extension);
-								if(xmlProvider == null) {
-									testRuns.add(testCaseFactory.buildTestRun(fileName, connection, documentUtility.parse(currentFile.getContents()), testModel));
-								} else {
-									testRuns.add(testCaseFactory.buildTestRun(fileName, connection, xmlProvider, testModel));									
-								}
-							}
+								testRuns.add(testCaseFactory.buildTestRun(fileName, connection, xmlProvider, testModel));									
+							}							
 						}
 					}
 				}

@@ -157,79 +157,52 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 	public void fetchDeferredChildren(Object object, IElementCollector collector, IProgressMonitor monitor) {
 		List<TestCase> testCases = getTestCases();
 		if(testCases.isEmpty()) {
-			if(testModel == null) {
-				throw new IllegalArgumentException("Testmodel can not be null.");
-			}
-			monitor.beginTask("Running tests for " + testModel.eResource().getURI().lastSegment() + " and " + connection.getDescription() + " connection", IProgressMonitor.UNKNOWN);
-			
-			Map<Element, URI> input2Uri = Maps.newHashMap();
-			Map<Object, Object> transformationOptions = Maps.newHashMap();
-			transformationOptions.put(TestRun.SKIP_MATERIAL_TESTS, options.get(TestRun.SKIP_MATERIAL_TESTS));
-			
 			String materialNumber = "";
-			Document inputDocument = null;
-			if(xmlProvider != null) {
-				inputDocument = xmlProvider.transform(testModel, filter, input2Uri, transformationOptions);
-				materialNumber = xmlProvider.getMaterialNumber(testModel);
-				setInputElement(inputDocument);		
+			Document inputDocument = (Document)getInputElement();
+			Map<Element, URI> input2Uri = Maps.newHashMap();
+			if(testModel == null) {
+				// xml input file or other file
+				if(inputDocument == null) {
+					throw new IllegalArgumentException("Require an input document for ConfigScan transformation");
+				}
+				monitor.beginTask("Running tests for " + inputDocument.getDocumentURI() + " and " + connection.getDescription() + " connection", IProgressMonitor.UNKNOWN);
+				materialNumber = extractMaterialNumber(inputDocument);
 			} else {
-				inputDocument = (Document)getInputElement();
-				NodeList childNodes = inputDocument.getFirstChild().getChildNodes();
-				for(int i=0; i<childNodes.getLength(); i++) {
-					Node item = childNodes.item(i);
-					if(item != null && item.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
-						ProcessingInstruction pi = (ProcessingInstruction)item;
-						String data = pi.getData();
-						if(data.startsWith("materialid")) {
-							materialNumber = data.replace("materialid", "").trim();
-						}
+				monitor.beginTask("Running tests for " + testModel.eResource().getURI().lastSegment() + " and " + connection.getDescription() + " connection", IProgressMonitor.UNKNOWN);
+				Map<Object, Object> transformationOptions = Maps.newHashMap();
+				transformationOptions.put(TestRun.SKIP_MATERIAL_TESTS, options.get(TestRun.SKIP_MATERIAL_TESTS));
+				if(xmlProvider == null) {
+					if(inputDocument == null) {
+						throw new IllegalArgumentException("Require an input document for ConfigScan transformation");
 					}
+					materialNumber = extractMaterialNumber(inputDocument);
+				} else {
+					inputDocument = xmlProvider.transform(testModel, filter, input2Uri, transformationOptions);
+					materialNumber = xmlProvider.getMaterialNumber(testModel);
+					setInputElement(inputDocument);
 				}
 			}
-			if(monitor.isCanceled()) {
-				monitor.done();
-				return;
-			}
+			
+			assert !materialNumber.isEmpty();
+			assert inputDocument != null;
+			
 			String parseResult = documentUtility.serialize(inputDocument);
 			try {
-				if(monitor.isCanceled()) {
-					monitor.done();
-					return;
-				}
 				Map<Object, Object> configScanRunnerOptions = Maps.newHashMap();
 				for (Entry<Object, Object> entry : options.entrySet()) {
 					if (parameterOptions.contains(entry.getKey())) {
 						configScanRunnerOptions.put(entry.getKey(), entry.getValue());
 					}
 				}
-				Document logDocument = documentUtility.parse(configScanRunner.execute(parseResult, connection, materialNumber, configScanRunnerOptions));
-				setLogElement(logDocument);
 				
-				String logFilesLocation = (String)options.get(LOG_FILES_LOCATION);
-				if(logFilesLocation != null) {
-					if(logFilesLocation.isEmpty()) {
-						logFilesLocation = LOG_FILES_LOCATION;
-					}
-					IFile file = ResourceUtil.getFile(testModel.eResource());
-					String name = file.getName() + "." + connection.getDescription() + ".";
-					IFolder folder = file.getParent().getFolder(new Path(logFilesLocation));
-					if(!folder.exists()) {
-						folder.create(true, true, monitor);						
-					}
-					Files.writeStringIntoFile(folder.getLocation().toString() + "/" + name + "input.xml", documentUtility.serialize(inputDocument));
-					Files.writeStringIntoFile(folder.getLocation().toString() + "/" + name + "log.xml", documentUtility.serialize(logDocument));
-					folder.refreshLocal(IResource.DEPTH_ONE, monitor);
-				}
-		
-				if(monitor.isCanceled()) {
-					monitor.done();
-					return;
-				}
+				String result = configScanRunner.execute(parseResult, connection, materialNumber, configScanRunnerOptions);
+				Document logDocument = documentUtility.parse(result);
+				setLogElement(logDocument);
+				storeLogDocuments(monitor, inputDocument, logDocument);
 				
 				testCaseFactory.setOptions(options);
-				Map<Element, Element> log2Input = reverseXmlTransformation.computeConfigScanMap(logDocument, inputDocument);
 				testCaseFactory.setInputUriMap(input2Uri);
-				testCaseFactory.setLogInputMap(log2Input);
+				testCaseFactory.setLogInputMap(reverseXmlTransformation.computeConfigScanMap(logDocument, inputDocument));
 				addTestCase(testCaseFactory.buildTestCase(logDocument, this));					
 			} catch (JCoException exception) {
 				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
@@ -237,16 +210,27 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 			}
 		}
-		if(monitor.isCanceled()) {
-			monitor.done();
-			return;
-		}
+
 		for(TestCase childTestCase : getTestCases()) {
 			collector.add(childTestCase, monitor);
 		}
 		monitor.done();
 	}
-	
+
+	private String extractMaterialNumber(Document inputDocument) {
+		NodeList childNodes = inputDocument.getFirstChild().getChildNodes();
+		for(int i=0; i<childNodes.getLength(); i++) {
+			Node item = childNodes.item(i);
+			if(item != null && item.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
+				String data = ((ProcessingInstruction)item).getData();
+				if(data.startsWith("materialid")) {
+					return data.replace("materialid", "").trim();
+				}
+			}
+		}
+		return "";
+	}
+
 	@Override
 	public boolean isContainer() {
 		return true;
@@ -257,7 +241,6 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 		// not used
 		return null;
 	}
-
 	
 	@Override
 	public int hashCode() {
@@ -267,7 +250,6 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		return result;
 	}
-
 	
 	@Override
 	public boolean equals(Object object) {
@@ -294,5 +276,25 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 			return false;
 		}
 		return true;
+	}
+	
+	private void storeLogDocuments(IProgressMonitor monitor, Document inputDocument, Document logDocument) throws CoreException {
+		if(testModel != null) {
+			String logFilesLocation = (String)options.get(LOG_FILES_LOCATION);
+			if(logFilesLocation != null) {
+				if(logFilesLocation.isEmpty()) {
+					logFilesLocation = LOG_FILES_LOCATION;
+				}
+				IFile file = ResourceUtil.getFile(testModel.eResource());
+				String name = file.getName() + "." + connection.getDescription() + ".";
+				IFolder folder = file.getParent().getFolder(new Path(logFilesLocation));
+				if(!folder.exists()) {
+					folder.create(true, true, monitor);						
+				}
+				Files.writeStringIntoFile(folder.getLocation().toString() + "/" + name + "input.xml", documentUtility.serialize(inputDocument));
+				Files.writeStringIntoFile(folder.getLocation().toString() + "/" + name + "log.xml", documentUtility.serialize(logDocument));
+				folder.refreshLocal(IResource.DEPTH_ONE, monitor);
+			}
+		}
 	}
 }
