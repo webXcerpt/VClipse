@@ -1,17 +1,13 @@
 package org.vclipse.configscan.vcmlt.ui.imports;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
-import org.vclipse.configscan.imports.AbstractConfigScanTransformationWizard;
 import org.vclipse.configscan.imports.IConfigScanImportTransformation;
-import org.vclipse.configscan.vcmlt.vcmlT.Model;
-import org.vclipse.configscan.vcmlt.vcmlT.VcmlTFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class ConfigScanXml2VcmlTImportWizard extends AbstractConfigScanTransformationWizard {
+public class ConfigScanXml2VcmlTImportWizard extends Abstract2VcmlTImportWizard {
 
 	@Inject
 	public ConfigScanXml2VcmlTImportWizard(@Named("ConfigScanXml2VcmlTImportTransformation") IConfigScanImportTransformation transformation) {
@@ -22,14 +18,6 @@ public class ConfigScanXml2VcmlTImportWizard extends AbstractConfigScanTransform
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		super.init(workbench, selection);
 		setWindowTitle("Import wizard for VCMLT test cases from ConfigScan (*.xml) files");
-	}
-
-	@Override
-	protected EObject createTargetModel() {
-		VcmlTFactory vcmltFactory = VcmlTFactory.eINSTANCE;
-		Model vcmltModel = vcmltFactory.createModel();
-		vcmltModel.setTestcase(vcmltFactory.createTestCase());
-		return vcmltModel;
 	}
 
 	@Override
