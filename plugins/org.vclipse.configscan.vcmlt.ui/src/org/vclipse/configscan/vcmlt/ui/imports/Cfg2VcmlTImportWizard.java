@@ -14,7 +14,7 @@ import com.google.inject.name.Named;
 public class Cfg2VcmlTImportWizard extends AbstractConfigScanTransformationWizard {
 
 	@Inject
-	public Cfg2VcmlTImportWizard(@Named("Cfg2VcmlTImport") IConfigScanImportTransformation transformation) {
+	public Cfg2VcmlTImportWizard(@Named("Cfg2VcmlTImportTransformation") IConfigScanImportTransformation transformation) {
 		super(transformation);
 	}
 	
