@@ -26,7 +26,7 @@ import org.eclipse.xtext.util.StringInputStream;
 
 import com.google.inject.Inject;
 
-public abstract class DefaulConfigScanTransformationWizard extends Wizard implements IImportWizard {
+public abstract class AbstractConfigScanTransformationWizard extends Wizard implements IImportWizard {
 	
 	private IConfigScanImportTransformation transformation;
 	
@@ -35,7 +35,7 @@ public abstract class DefaulConfigScanTransformationWizard extends Wizard implem
 	private XtextResourceSet resourceSet;
 	
 	@Inject
-	public DefaulConfigScanTransformationWizard(IConfigScanImportTransformation transformation) {
+	public AbstractConfigScanTransformationWizard(IConfigScanImportTransformation transformation) {
 		this.transformation = transformation;
 	}
 	

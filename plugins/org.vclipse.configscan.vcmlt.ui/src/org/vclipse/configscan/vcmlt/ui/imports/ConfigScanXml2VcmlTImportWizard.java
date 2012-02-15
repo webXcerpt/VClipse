@@ -3,7 +3,7 @@ package org.vclipse.configscan.vcmlt.ui.imports;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
-import org.vclipse.configscan.imports.DefaulConfigScanTransformationWizard;
+import org.vclipse.configscan.imports.AbstractConfigScanTransformationWizard;
 import org.vclipse.configscan.imports.IConfigScanImportTransformation;
 import org.vclipse.configscan.vcmlt.vcmlT.Model;
 import org.vclipse.configscan.vcmlt.vcmlT.VcmlTFactory;
@@ -11,7 +11,7 @@ import org.vclipse.configscan.vcmlt.vcmlT.VcmlTFactory;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class ConfigScanXml2VcmlTImportWizard extends DefaulConfigScanTransformationWizard {
+public class ConfigScanXml2VcmlTImportWizard extends AbstractConfigScanTransformationWizard {
 
 	@Inject
 	public ConfigScanXml2VcmlTImportWizard(@Named("ConfigScanXml2VcmlTImport") IConfigScanImportTransformation transformation) {

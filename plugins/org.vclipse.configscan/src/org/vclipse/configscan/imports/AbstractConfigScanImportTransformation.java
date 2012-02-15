@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.eclipse.emf.ecore.EObject;
 import org.xml.sax.SAXException;
 
-public class DefaultConfigScanImportTransformation implements IConfigScanImportTransformation {
+public abstract class AbstractConfigScanImportTransformation implements IConfigScanImportTransformation {
 
 	protected EObject targetModel;
 	
@@ -20,21 +20,11 @@ public class DefaultConfigScanImportTransformation implements IConfigScanImportT
 		this.referencedModel = referencedModel;
 	}
 	
-	@Override
-	public void doImport(File file2Import) throws SAXException, IOException {
-	}
+	abstract public void doImport(File file2Import) throws SAXException, IOException;
 
-	@Override
-	public void init() {
-	}
+	abstract public void init();
 
-	@Override
-	public String getReferencedModelExtension() {
-		return null;
-	}
+	abstract public String getReferencedModelExtension();
 
-	@Override
-	public String getTargetModelExtension() {
-		return null;
-	}
+	abstract public String getTargetModelExtension();
 }
