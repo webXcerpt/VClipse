@@ -27,13 +27,18 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanConfiguration;
@@ -169,6 +174,17 @@ class GetSelectionRunnable implements Runnable {
 			ISelection selection = activePage.getSelection();
 			if(selection instanceof IStructuredSelection) {
 				strSelection = (IStructuredSelection)selection;
+			}
+			if(selection.isEmpty()) {
+				IEditorPart activeEditor = activePage.getActiveEditor();
+				if(activeEditor instanceof XtextEditor) {
+					XtextEditor editor = (XtextEditor)activeEditor;
+					IEditorInput editorInput = editor.getEditorInput();
+					if(editorInput instanceof IFileEditorInput) {
+						IFile file = ((IFileEditorInput)editorInput).getFile();
+						strSelection = new StructuredSelection(file);
+					}
+				}
 			}
 		}
 	}
