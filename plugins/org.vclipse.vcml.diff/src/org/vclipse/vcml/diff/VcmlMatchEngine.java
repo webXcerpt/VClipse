@@ -7,7 +7,6 @@ public class VcmlMatchEngine extends GenericMatchEngine {
 
 	@Override
 	protected AbstractSimilarityChecker prepareChecker() {
-		AbstractSimilarityChecker delegateSimilarityChecker = super.prepareChecker();
-		return new VcmlSimilarityChecker(filter, delegateSimilarityChecker);
+		return new VcmlSimilarityCheckerId(filter, super.prepareChecker());
 	}
 }
