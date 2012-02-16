@@ -1,6 +1,7 @@
 package org.vclipse.configscan.vcmlt.ui.action;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -85,17 +86,20 @@ public class ConvertConfigScanTestLog2VcmlTAction implements IObjectActionDelega
 
 	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
-		Object element = ((IStructuredSelection)selection).getFirstElement();
-		if(element instanceof IFile) {
-			 try {
-				IFile file = (IFile)element;
-				document = documentUtility.parse(Files.readStreamIntoString(file.getContents()));
-				preselectedContainer = file.getParent();
-			 } catch (CoreException e) {
-				 document = null;
-				 preselectedContainer = null;
-				 e.printStackTrace();
-			 }
+		Iterator<?> iterator = ((IStructuredSelection)selection).iterator();
+		while(iterator.hasNext()) {
+			Object object = iterator.next();
+			if(object instanceof IFile) {
+				try {
+					IFile file = (IFile)object;
+					document = documentUtility.parse(Files.readStreamIntoString(file.getContents()));
+					preselectedContainer = file.getParent();
+				 } catch (CoreException e) {
+					 document = null;
+					 preselectedContainer = null;
+					 e.printStackTrace();
+				 }
+			}
 		}
 	}
 
