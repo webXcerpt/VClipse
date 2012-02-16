@@ -7,6 +7,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -23,6 +24,7 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.StringInputStream;
+import org.vclipse.configscan.ConfigScanPlugin;
 
 import com.google.inject.Inject;
 
@@ -98,9 +100,13 @@ public abstract class AbstractConfigScanTransformationWizard extends Wizard impl
 				}
 			});
 		} catch (InvocationTargetException exception) {
-			ErrorDialog.openError(getShell(), "Error during ConfigScan import transformation", exception.getMessage(), Status.CANCEL_STATUS);
+			ErrorDialog.openError(getShell(), "Error during ConfigScan import transformation", "Can not execute ConfigScan transformation", 
+					new Status(IStatus.ERROR, ConfigScanPlugin.ID, exception.getMessage()));
+			return false;
 		} catch (InterruptedException exception) {
-			ErrorDialog.openError(getShell(), "Error during ConfigScan import transformation", exception.getMessage(), Status.CANCEL_STATUS);
+			ErrorDialog.openError(getShell(), "Error during ConfigScan import transformation", "Can not execute ConfigScan transformation", 
+					new Status(IStatus.ERROR, ConfigScanPlugin.ID, exception.getMessage()));
+			return false;
 		}
 		return true;
 	}
