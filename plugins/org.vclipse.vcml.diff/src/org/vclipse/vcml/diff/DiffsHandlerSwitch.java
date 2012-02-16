@@ -35,16 +35,16 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 	private Boolean NOT_HANDLED = null;
 
 	private Model model2Build;
-	private EList<VCObject> modelElements; 
-	private Set<String> constraintNames;
+	private Model leftModel;
+	private Set<VCObject> modelElements; 
 	private IDiffFilter diffFilter;
 	private IProgressMonitor monitor;
 	
-	public DiffsHandlerSwitch(Model model, IProgressMonitor monitor) {
+	public DiffsHandlerSwitch(Model model, Model leftModel, IProgressMonitor monitor) {
 		model2Build = model;
-		modelElements = model.getObjects();
+		this.leftModel = leftModel;
+		modelElements = Sets.newHashSet();
 		diffFilter = new DefaultDiffFilter();
-		constraintNames = Sets.newHashSet();
 		this.monitor = monitor;
 	}
 
@@ -56,18 +56,28 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 			}
 			doSwitch(diffElement);
 		}
-		for(EObject root : object.getRightRoots()) {
+		for(EObject root : object.getLeftRoots()) {
 			if(root instanceof Model) {
 				List<DependencyNet> dependencyNets = Lists.newArrayList(Iterables.filter(((Model)root).getObjects(), DependencyNet.class)); // to avoid concurrent modification
 				for(DependencyNet dnet : dependencyNets) {
 					depnet:
 					for(Constraint constraint : dnet.getConstraints()) {
-						if(constraintNames.contains(constraint.getName())) {
+						if(modelElements.contains(constraint)) {
 							modelElements.add(dnet);
 							break depnet; // add depnet only once
 						}
 					}
 				}
+			}
+		}
+		// finalize model
+		List<VCObject> objects = model2Build.getObjects();
+		List<VCObject> leftObjects = Lists.newArrayList(leftModel.getObjects());
+		for (VCObject o : leftObjects) {
+			System.err.println("checking " + o);
+			if (modelElements.contains(o)) {
+				System.err.println("  added");
+				objects.add(o);
 			}
 		}
 		return HANDLED;
@@ -164,9 +174,6 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 			if(vcObject != null) {
 				// System.err.println("adding " + vcObject);
 				modelElements.add(vcObject);
-				if(vcObject instanceof Constraint) {
-					constraintNames.add(vcObject.getName());
-				}
 			}
 		}
 		return HANDLED;

@@ -3,6 +3,7 @@ package org.vclipse.vcml.diff;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
@@ -72,11 +73,13 @@ public class Comparison {
 		vcmlModel.getImports().add(imStatement);
 	
 		// get the ups option from the new file and provide it to the results file
-		EList<EObject> contents2 = newResource.getContents();
+		List<EObject> contents2 = newResource.getContents();
+		Model newModel = null;
 		if(!contents2.isEmpty()) {
 			EObject mainObject = contents2.get(0);
 			if(mainObject instanceof Model) {
-				EList<Option> options2 = ((Model)mainObject).getOptions();
+				newModel = (Model)mainObject;
+				List<Option> options2 = newModel.getOptions();
 				if(!options2.isEmpty()) {
 					for(Option option : options2) {
 						if(OptionType.UPS.equals(option.getName())) {
@@ -87,9 +90,9 @@ public class Comparison {
 			}				
 		}
 		
-		EList<EObject> contents = resultResource.getContents();
+		List<EObject> contents = resultResource.getContents();
 		contents.add(vcmlModel);
-		new DiffsHandlerSwitch(vcmlModel, monitor).doSwitch(diffModel);
+		new DiffsHandlerSwitch(vcmlModel, newModel, monitor).doSwitch(diffModel);
 		resultResource.save(Collections.EMPTY_MAP);
 		monitor.worked(10);
 	}
