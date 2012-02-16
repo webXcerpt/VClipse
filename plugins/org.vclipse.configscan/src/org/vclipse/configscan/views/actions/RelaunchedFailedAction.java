@@ -3,7 +3,7 @@ package org.vclipse.configscan.views.actions;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.impl.FailureTestObjectFilter;
@@ -20,7 +20,7 @@ public final class RelaunchedFailedAction extends SimpleTreeViewerAction {
 
 	public static final String ID = ConfigScanPlugin.ID + "." + RelaunchedFailedAction.class.getSimpleName();
 	
-	public RelaunchedFailedAction(ConfigScanView view, ConfigScanImageHelper imageHelper) {
+	public RelaunchedFailedAction(ConfigScanView view, ClasspathAwareImageHelper imageHelper) {
 		super(view, imageHelper);
 		setText("Relaunched failed tests");
 		setToolTipText("Relaunch failed tests");

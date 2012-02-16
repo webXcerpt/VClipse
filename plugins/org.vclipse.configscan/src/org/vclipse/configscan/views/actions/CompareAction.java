@@ -1,7 +1,7 @@
 package org.vclipse.configscan.views.actions;
 
 import org.eclipse.jface.action.Action;
-import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.views.ConfigScanView;
@@ -11,7 +11,7 @@ public class CompareAction extends SimpleTreeViewerAction {
 
 	public static final String ID = ConfigScanPlugin.ID + "." + CompareAction.class.getSimpleName();
 	
-	public CompareAction(ConfigScanView view, ConfigScanImageHelper imageHelper) {
+	public CompareAction(ConfigScanView view, ClasspathAwareImageHelper imageHelper) {
 		super(view, imageHelper, Action.AS_CHECK_BOX);
 		setText("Enable tests comparison");
 		setToolTipText("Enable tests comparison");

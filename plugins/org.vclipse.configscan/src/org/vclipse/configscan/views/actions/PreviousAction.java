@@ -9,7 +9,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.impl.model.TestCase;
@@ -30,7 +30,7 @@ public final class PreviousAction extends SimpleTreeViewerAction implements IMen
 	
 	private int selected;
 	
-	public PreviousAction(ConfigScanView view, ConfigScanImageHelper imageHelper) {
+	public PreviousAction(ConfigScanView view, ClasspathAwareImageHelper imageHelper) {
 		super(view, imageHelper);
 		setMenuCreator(this);
 		selected = PREVIOUS_FAILURE;

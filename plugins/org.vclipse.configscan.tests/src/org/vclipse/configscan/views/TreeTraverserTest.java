@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
 import org.junit.Before;
 import org.junit.Test;
-import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.JUnitTestUtils;
 import org.vclipse.configscan.extension.ExtensionPointReader;
@@ -40,7 +40,7 @@ public class TreeTraverserTest {
 	
 	TestCaseFactory testCaseUtility;
 	
-	ConfigScanImageHelper imageHelper;
+	ClasspathAwareImageHelper imageHelper;
 	
 	List<ConfigScanViewInput> inputs = Lists.newArrayList();
 	
@@ -52,7 +52,7 @@ public class TreeTraverserTest {
 		documentUtility = injector.getInstance(DocumentUtility.class);
 		testCaseUtility = injector.getInstance(TestCaseFactory.class);
 		utilities = injector.getInstance(JUnitTestUtils.class);
-		imageHelper = injector.getInstance(ConfigScanImageHelper.class);
+		imageHelper = injector.getInstance(ClasspathAwareImageHelper.class);
 	}
 	
 	@Test

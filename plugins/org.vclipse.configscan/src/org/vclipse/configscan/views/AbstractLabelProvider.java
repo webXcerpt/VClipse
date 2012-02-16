@@ -15,7 +15,7 @@ import org.eclipse.xtext.ui.editor.utils.TextStyle;
 import org.eclipse.xtext.ui.label.StylerFactory;
 import org.eclipse.xtext.util.PolymorphicDispatcher;
 import org.eclipse.xtext.util.PolymorphicDispatcher.ErrorHandler;
-import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestGroup;
 import org.vclipse.configscan.impl.model.TestCase.Status;
@@ -63,7 +63,7 @@ public abstract class AbstractLabelProvider extends ColumnLabelProvider implemen
 		
 	protected static final String EMPTY = "";
 
-	protected ConfigScanImageHelper imageHelper;
+	protected ClasspathAwareImageHelper imageHelper;
 	
 	protected TextStyle failureStyle;
 	
@@ -78,7 +78,7 @@ public abstract class AbstractLabelProvider extends ColumnLabelProvider implemen
 	}
 	
 	@Inject
-	public void setImageHelper(ConfigScanImageHelper imageHelper) {
+	public void setImageHelper(ClasspathAwareImageHelper imageHelper) {
 		this.imageHelper = imageHelper;
 	}
 	

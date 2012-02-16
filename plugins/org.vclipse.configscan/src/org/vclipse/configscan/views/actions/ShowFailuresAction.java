@@ -3,7 +3,7 @@ package org.vclipse.configscan.views.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.impl.model.TestCase;
@@ -16,7 +16,7 @@ public final class ShowFailuresAction extends SimpleTreeViewerAction {
 	
 	private ViewerFilter failureFilter;
 	
-	public ShowFailuresAction(ConfigScanView view, ConfigScanImageHelper imageHelper) {
+	public ShowFailuresAction(ConfigScanView view, ClasspathAwareImageHelper imageHelper) {
 		super(view, imageHelper, Action.AS_CHECK_BOX);
 		setText("Show only failures");
 		setToolTipText("Show only failures");

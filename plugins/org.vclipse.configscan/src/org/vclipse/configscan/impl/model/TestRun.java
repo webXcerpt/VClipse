@@ -21,7 +21,7 @@ import org.eclipse.ui.progress.IDeferredWorkbenchAdapter;
 import org.eclipse.ui.progress.IElementCollector;
 import org.eclipse.xtext.ui.util.ResourceUtil;
 import org.eclipse.xtext.util.Files;
-import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
@@ -61,7 +61,7 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 	public static final Set<String> parameterOptions = Sets.newHashSet(KBOBJECT, STOP_ON_ERROR, PERFORMANCE_RUN, BREAKPOINT_ENABLED, TEST_DATE, ROOT_QUANTITY);
 	
 	@Inject
-	private ConfigScanImageHelper imageHelper;
+	private ClasspathAwareImageHelper imageHelper;
 	
 	@Inject
 	private DocumentUtility documentUtility;

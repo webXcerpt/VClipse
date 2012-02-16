@@ -1,6 +1,6 @@
 package org.vclipse.configscan.views.actions;
 
-import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.impl.model.TestRun;
@@ -11,7 +11,7 @@ public class RelaunchAction extends SimpleTreeViewerAction {
 
 	public static final String ID = ConfigScanPlugin.ID + "." + RelaunchAction.class.getSimpleName();
 	
-	public RelaunchAction(ConfigScanView view, ConfigScanImageHelper imageHelper) {
+	public RelaunchAction(ConfigScanView view, ClasspathAwareImageHelper imageHelper) {
 		super(view, imageHelper);
 		setText("Rerun tests");
 		setToolTipText("Rerun tests");

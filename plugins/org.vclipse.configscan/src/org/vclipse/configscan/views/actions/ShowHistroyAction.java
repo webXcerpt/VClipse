@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.views.ConfigScanView;
@@ -34,7 +34,7 @@ public final class ShowHistroyAction extends SimpleTreeViewerAction implements I
 
 	private ConfigScanView view;
 	
-	public ShowHistroyAction(ConfigScanView view, ConfigScanImageHelper imageHelper, TestRunsHistory history) {
+	public ShowHistroyAction(ConfigScanView view, ClasspathAwareImageHelper imageHelper, TestRunsHistory history) {
 		super(view, imageHelper);
 		setMenuCreator(this);
 		setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.HISTORY));

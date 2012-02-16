@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.xtext.util.Files;
-import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanConfiguration;
 import org.vclipse.configscan.IConfigScanImages;
@@ -57,7 +57,7 @@ public final class ImportExportAction extends SimpleTreeViewerAction implements 
 	
 	private TestCaseFactory testCaseUtility;
 	
-	public ImportExportAction(ConfigScanView view, ConfigScanImageHelper imageHelper, DocumentUtility documentUtility, TestCaseFactory testCaseFactory) {
+	public ImportExportAction(ConfigScanView view, ClasspathAwareImageHelper imageHelper, DocumentUtility documentUtility, TestCaseFactory testCaseFactory) {
 		super(view, imageHelper);
 		setMenuCreator(this);
 		setText("File");

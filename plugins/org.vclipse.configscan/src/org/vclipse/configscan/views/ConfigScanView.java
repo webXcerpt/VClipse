@@ -49,7 +49,7 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.util.ResourceUtil;
-import org.vclipse.configscan.ConfigScanImageHelper;
+import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanConfiguration;
 import org.vclipse.configscan.impl.model.TestCase;
@@ -110,7 +110,7 @@ public final class ConfigScanView extends ViewPart {
 	private IPreferenceStore preferenceStore;
 	
 	@Inject
-	private ConfigScanImageHelper imageHelper;
+	private ClasspathAwareImageHelper imageHelper;
 	
 	@Inject
 	private DocumentUtility documentUtility;
