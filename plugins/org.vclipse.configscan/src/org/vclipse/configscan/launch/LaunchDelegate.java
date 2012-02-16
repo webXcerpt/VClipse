@@ -25,6 +25,7 @@ import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -174,15 +175,12 @@ class GetSelectionRunnable implements Runnable {
 			ISelection selection = activePage.getSelection();
 			if(selection instanceof IStructuredSelection) {
 				strSelection = (IStructuredSelection)selection;
-			}
-			if(selection.isEmpty()) {
+			} else if(selection instanceof ITextSelection) {
 				IEditorPart activeEditor = activePage.getActiveEditor();
 				if(activeEditor instanceof XtextEditor) {
-					XtextEditor editor = (XtextEditor)activeEditor;
-					IEditorInput editorInput = editor.getEditorInput();
+					IEditorInput editorInput = ((XtextEditor)activeEditor).getEditorInput();
 					if(editorInput instanceof IFileEditorInput) {
-						IFile file = ((IFileEditorInput)editorInput).getFile();
-						strSelection = new StructuredSelection(file);
+						strSelection = new StructuredSelection(((IFileEditorInput)editorInput).getFile());
 					}
 				}
 			}

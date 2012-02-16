@@ -115,6 +115,18 @@ class GetSelectedFileRunnable implements Runnable {
 					}
 				}
 			}
+			/** the implementation above is absolutely sufficien for test purposes !
+			 * 
+			 * else if(selection instanceof ITextSelection) {
+				IEditorPart activeEditor = activePage.getActiveEditor();
+				if(activeEditor instanceof XtextEditor) {
+					IEditorInput editorInput = ((XtextEditor)activeEditor).getEditorInput();
+					if(editorInput instanceof IFileEditorInput) {
+						strSelection = new StructuredSelection(((IFileEditorInput)editorInput).getFile());
+					}
+				}
+			}
+			 */
 		} catch (PartInitException exception) {
 			exception.printStackTrace();
 		}
