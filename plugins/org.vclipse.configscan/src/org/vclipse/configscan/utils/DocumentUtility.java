@@ -111,10 +111,6 @@ public class DocumentUtility {
 		return document.getDocumentElement();
 	}
 	
-	public boolean hasSuccessStatus(Element element) {
-		return STATUS_SUCCESS.equals(element.getAttribute(ATTRIBUTE_STATUS));
-	}
-	
 	public Document parse(String xmlString) {
 		if (Strings.isEmpty(xmlString)) {
 			return newDocument();
@@ -141,38 +137,6 @@ public class DocumentUtility {
 		} catch (TransformerException e) {
 			return null;
 		}
-	}
-
-	public int getNumberOfFailure(Element element) {
-		int failure = 0;
-		NodeList list = element.getElementsByTagName(NODE_NAME_LOG_MSG);
-		for(int i = 0; i<list.getLength(); i++) {
-			Node node = list.item(i);
-			if(node instanceof Element) {
-				if(!hasSuccessStatus((Element)node)) {
-					failure++;
-				}
-			}
-		}
-		return failure;
-	}
-	
-	public int getNumberOfRuns(Element element) {
-		return element.getElementsByTagName(NODE_NAME_LOG_MSG).getLength();
-	}
-	
-	public int getNumberOfSuccess(Element element) {
-		int success = 0;
-		NodeList list = element.getElementsByTagName(NODE_NAME_LOG_MSG);
-		for(int i = 0; i<list.getLength(); i++) {
-			Node node = list.item(i);
-			if(node instanceof Element) {
-				if(hasSuccessStatus((Element) node)) {
-					success++;
-				}
-			}
-		}
-		return success;
 	}
 
 	public boolean passesNodeFilter(Element element) {

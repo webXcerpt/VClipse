@@ -10,7 +10,12 @@
  ******************************************************************************/
 package org.vclipse.configscan.views.actions;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -28,6 +33,7 @@ import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanConfiguration;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.IConfigScanXMLProvider;
+import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestRun;
 import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.TestCaseFactory;
@@ -133,31 +139,48 @@ public final class ImportExportAction extends SimpleTreeViewerAction implements 
 					setSelectionToFirstElement();
 				}
 				if(!selection.isEmpty()) {
-					TestRun testRun = (TestRun)selection.getFirstElement();
-					FileDialog fileDialog = new FileDialog(activeShell, SWT.SAVE);
-					if(EXPORT_ITEM_LOG == id) {
-						Document logDocument = (Document)testRun.getLogElement();
-						if(logDocument == null) {
-							ConfigScanPlugin.log("Log document not available for " + testRun.getLabel(null), IStatus.ERROR);
-						} else {
-							fileDialog.setText("File dialog for log file export");
-							String path = fileDialog.open();
-							if(path != null) {
-								Files.writeStringIntoFile(path, documentUtility.serialize(logDocument));
+					Object firstElement = selection.getFirstElement();
+					TestRun testRun = null;
+					if(firstElement instanceof TestCase) {
+						testRun = (TestRun)((TestCase)firstElement).getRoot();
+						FileDialog fileDialog = new FileDialog(activeShell, SWT.SAVE);
+						if(EXPORT_ITEM_LOG == id) {
+							Document logDocument = (Document)testRun.getLogElement();
+							if(logDocument == null) {
+								ConfigScanPlugin.log("Log document not available for " + testRun.getLabel(null), IStatus.ERROR);
+							} else {
+								fileDialog.setText("File dialog for log file export");
+								String path = fileDialog.open();
+								writeToPath(path, logDocument);
 							}
-						}
-					} else if(EXPORT_ITEM_INPUT == id) {
-						Document inputDocument = (Document)testRun.getInputElement();
-						if(inputDocument == null) {
-							ConfigScanPlugin.log("Input document not available for " + testRun.getLabel(null), IStatus.ERROR);
-						} else {
-							fileDialog.setText("File dialog for input file export");
-							String path = fileDialog.open();
-							if(path != null) {
-								Files.writeStringIntoFile(path, documentUtility.serialize(inputDocument));
+						} else if(EXPORT_ITEM_INPUT == id) {
+							Document inputDocument = (Document)testRun.getInputElement();
+							if(inputDocument == null) {
+								ConfigScanPlugin.log("Input document not available for " + testRun.getLabel(null), IStatus.ERROR);
+							} else {
+								fileDialog.setText("File dialog for input file export");
+								String path = fileDialog.open();
+								writeToPath(path, inputDocument);
 							}
 						}
 					}
+				}
+			}
+		}
+	}
+	
+	private void writeToPath(String path, Document document) {
+		if(path != null) {
+			Files.writeStringIntoFile(path, documentUtility.serialize(document));
+			IResource member = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+			if(member != null) {
+				IContainer container = member.getParent();
+				if(container != null) {
+					try {
+						container.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
+					} catch (CoreException exception) {
+						exception.printStackTrace();
+					}											
 				}
 			}
 		}
