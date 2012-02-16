@@ -51,7 +51,10 @@ public class ClasspathAwareImageHelper extends PluginImageHelper {
 	}
 	
 	public ImageDescriptor getImageDescriptor(String name) {
-		Image image = getImage(name);
+		return getImageDescriptor(getImage(name));
+	}
+	
+	public ImageDescriptor getImageDescriptor(Image image) {
 		return image == null ? null : ImageDescriptor.createFromImage(image);
 	}
 }
