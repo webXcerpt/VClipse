@@ -29,6 +29,7 @@ import org.vclipse.configscan.IConfigScanReverseXmlTransformation;
 import org.vclipse.configscan.IConfigScanRunner;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.ITestObjectFilter;
+import org.vclipse.configscan.actions.ConfigScanUploadProcessingInstructionExtractor;
 import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.TestCaseFactory;
 import org.w3c.dom.Document;
@@ -218,18 +219,22 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 		monitor.done();
 	}
 
-	private String extractMaterialNumber(Document inputDocument) {
-		NodeList childNodes = inputDocument.getFirstChild().getChildNodes();
-		for(int i=0; i<childNodes.getLength(); i++) {
-			Node item = childNodes.item(i);
-			if(item != null && item.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
-				String data = ((ProcessingInstruction)item).getData();
-				if(data.startsWith("materialid")) {
-					return data.replace("materialid", "").trim();
-				}
+	private String extractMaterialNumber(Node node) {
+		if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
+			ProcessingInstruction pi = (ProcessingInstruction)node;
+			if (ConfigScanUploadProcessingInstructionExtractor.CONFIGSCAN_UPLOAD.equals(pi.getTarget())) {
+				return ConfigScanUploadProcessingInstructionExtractor.extract(ConfigScanUploadProcessingInstructionExtractor.MATNR, pi.getData(), null);
 			}
 		}
-		return "";
+		NodeList childNodes = node.getChildNodes();
+		for(int i=0; i<childNodes.getLength(); i++) {
+			Node childNode = childNodes.item(i);
+			String matNr = extractMaterialNumber(childNode);
+			if (matNr!=null) {
+				return matNr;
+			}
+		}
+		return null;
 	}
 
 	@Override
