@@ -96,9 +96,11 @@ public class DocumentUtility {
 					 } else {
 						 // is a history xml document
 						 firstChild = nextSibling.getFirstChild();
-						 nextSibling = firstChild.getNextSibling();
-						 if(LOG_RESULT.equals(nextSibling.getNodeName())) {
-							 return nextSibling;
+						 if(firstChild != null) {
+							 nextSibling = firstChild.getNextSibling();
+							 if(LOG_RESULT.equals(nextSibling.getNodeName())) {
+								 return nextSibling;
+							 }							 
 						 }
 					 }
 				 }

@@ -163,6 +163,7 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 			if(testModel == null) {
 				// xml input file or other file
 				if(inputDocument == null) {
+					// can occur if there is wrong context in the xml file -> load a ConfigScan log file, the content of the file is log-file like 
 					throw new IllegalArgumentException("Require an input document for ConfigScan transformation");
 				}
 				monitor.beginTask("Running tests for " + inputDocument.getDocumentURI() + " and " + connection.getDescription() + " connection", IProgressMonitor.UNKNOWN);
