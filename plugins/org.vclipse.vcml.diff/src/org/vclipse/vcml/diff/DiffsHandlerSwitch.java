@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
@@ -74,9 +73,7 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 		List<VCObject> objects = model2Build.getObjects();
 		List<VCObject> leftObjects = Lists.newArrayList(leftModel.getObjects());
 		for (VCObject o : leftObjects) {
-			System.err.println("checking " + o);
 			if (modelElements.contains(o)) {
-				System.err.println("  added");
 				objects.add(o);
 			}
 		}
@@ -134,8 +131,8 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 
 	@Override
 	public Boolean caseReferenceOrderChange(ReferenceOrderChange object) {
-		EList<EObject> leftTarget = object.getLeftTarget();
-		EList<EObject> rightTarget = object.getRightTarget();
+		List<EObject> leftTarget = object.getLeftTarget();
+		List<EObject> rightTarget = object.getRightTarget();
 		if(leftTarget != null && rightTarget != null) {
 			if(leftTarget.size() == rightTarget.size()) {
 				if(!diffFilter.filter(object.getReference(), object.getKind())) {
