@@ -99,16 +99,7 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 
 	@Override
 	public Boolean caseModelElementChangeRightTarget(ModelElementChangeRightTarget object) {
-//		EObject rightElement = object.getRightElement();
-//		// extract deleted VCObjects
-//		if(rightElement instanceof VCObject) {
-//			return addObject2HandleList(rightElement);
-//		} 
-//		// otherwise extract VCObject from the left model
-//		else {
-//			return addObject2HandleList(object.getLeftParent());
-//		}
-		return NOT_HANDLED;
+		return addObject2HandleList(object.getLeftParent());
 	}
 	
 	@Override
