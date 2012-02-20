@@ -6,14 +6,17 @@ import java.util.Map;
 
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.DelegatingStyledCellLabelProvider;
+import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.xtext.ui.editor.utils.TextStyle;
+import org.eclipse.xtext.ui.label.StylerFactory;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestGroup;
 import org.vclipse.configscan.impl.model.TestRun;
@@ -41,6 +44,8 @@ public class DefaultLabelProvider extends DelegatingStyledCellLabelProvider impl
 	
 	private TreeViewer treeViewer;
 	
+	protected TextStyle amoutStyle;
+	
 	public DefaultLabelProvider(IStyledLabelProvider labelProvider, TreeViewer treeViewer) {
 		super(labelProvider);
 		this.labelProvider = labelProvider;
@@ -55,6 +60,10 @@ public class DefaultLabelProvider extends DelegatingStyledCellLabelProvider impl
 		color = new Color(defaultDisplay, new RGB(174, 161, 244));
 		colorHash.put(COLOR_NOT_EXISTING, color);
 		this.treeViewer = treeViewer;
+		
+		
+		amoutStyle = new TextStyle();
+		amoutStyle.setColor(new RGB(255, 168, 0));
 	}
 	
 	private void fillSearchHash(List<TestCase> testCases) {
@@ -162,5 +171,20 @@ public class DefaultLabelProvider extends DelegatingStyledCellLabelProvider impl
 //			fillSearchHash(selectedTestRun.getTestCases());
 //			treeViewer.refresh(true);
 //		}
+	}
+
+	
+	@Override
+	protected StyledString getStyledText(Object element) {
+		StyledString styledText = labelProvider.getStyledText(element);
+		IContentProvider contentProvider = treeViewer.getContentProvider();
+		if(contentProvider instanceof ErrorBasedContentProvider) {
+			if(!(element instanceof TestRun || element instanceof TestGroup)) {
+				ErrorBasedContentProvider errorBasedContentProvider = (ErrorBasedContentProvider)contentProvider;
+				Object[] children = errorBasedContentProvider.getChildren(new TreePath(new Object[]{(TestCase)element}));
+				styledText.append(new StylerFactory().createFromXtextStyle("   " + children.length + " test groups", amoutStyle));
+			}
+		}
+		return styledText;
 	}
 }

@@ -17,8 +17,8 @@ import org.eclipse.xtext.util.PolymorphicDispatcher;
 import org.eclipse.xtext.util.PolymorphicDispatcher.ErrorHandler;
 import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.impl.model.TestCase;
-import org.vclipse.configscan.impl.model.TestGroup;
 import org.vclipse.configscan.impl.model.TestCase.Status;
+import org.vclipse.configscan.impl.model.TestGroup;
 import org.vclipse.configscan.impl.model.TestRun;
 
 import com.google.inject.Inject;
@@ -111,7 +111,7 @@ public abstract class AbstractLabelProvider extends ColumnLabelProvider implemen
 	public final String getToolTipText(Object element) {
 		return (String)toolTipDispatcher.invoke(element);
 	}
-
+	
 	protected EObject getReferencedEObject(Object element) {
 		if(element instanceof TestCase) {
 			TestCase testCase = (TestCase)element;
