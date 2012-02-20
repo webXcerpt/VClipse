@@ -15,9 +15,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -28,32 +26,18 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xtext.nodemodel.INode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.ui.editor.XtextEditor;
-import org.eclipse.xtext.ui.util.ResourceUtil;
 import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanConfiguration;
-import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestRun;
 import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.TestCaseFactory;
@@ -337,34 +321,6 @@ public final class ConfigScanView extends ViewPart {
 	}
 
 	private void hookDoubleClickAction() {
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				Object selectedObject = ((IStructuredSelection)event.getSelection()).getFirstElement();
-				if(selectedObject instanceof TestCase) {
-					TestCase testCase = (TestCase)selectedObject;
-					URI testStatementUri = testCase.getSourceURI();
-					if(testStatementUri != null) {
-						Resource resource = new XtextResourceSet().getResource(testStatementUri, true);
-						if(resource == null) {
-							ConfigScanPlugin.log("Can not create resource for uri " + testStatementUri.toString(), IStatus.ERROR);
-						}
-						EObject associatedEObject = resource.getResourceSet().getEObject(testStatementUri, true);
-						if(associatedEObject != null) {
-							IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-							try {
-								Resource eResource = associatedEObject.eResource();
-								IEditorPart openEditor = IDE.openEditor(activePage, ResourceUtil.getFile(eResource), true);
-								if(openEditor instanceof XtextEditor) {
-									INode node = NodeModelUtils.getNode(associatedEObject);
-									((XtextEditor)openEditor).selectAndReveal(node.getOffset(), node.getLength());
-								}
-							} catch (PartInitException exception) {
-								ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
-							}
-						}
-					}
-				}
-			}
-		});
+		viewer.addDoubleClickListener(new DoubleClickListener());
 	}
 }
