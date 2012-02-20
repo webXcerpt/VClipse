@@ -6,7 +6,7 @@ import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.views.ConfigScanView;
-import org.vclipse.configscan.views.ExtensionsHandlingLabelProvider;
+import org.vclipse.configscan.views.labeling.ExtensionsHandlingLabelProvider;
 
 public final class ToggleLabelProviderAction extends SimpleTreeViewerAction {
 

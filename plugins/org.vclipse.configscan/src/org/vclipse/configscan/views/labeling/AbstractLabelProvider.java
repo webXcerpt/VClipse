@@ -1,4 +1,4 @@
-package org.vclipse.configscan.views;
+package org.vclipse.configscan.views.labeling;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +20,8 @@ import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestCase.Status;
 import org.vclipse.configscan.impl.model.TestGroup;
 import org.vclipse.configscan.impl.model.TestRun;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
 import com.google.inject.Inject;
 
@@ -60,7 +62,6 @@ public abstract class AbstractLabelProvider extends ColumnLabelProvider implemen
 				}
 			});
 	
-		
 	protected static final String EMPTY = "";
 
 	protected ClasspathAwareImageHelper imageHelper;
@@ -155,4 +156,14 @@ public abstract class AbstractLabelProvider extends ColumnLabelProvider implemen
 		}
 		return new StyledString(EMPTY);
  	}
+
+	protected String extractText(NamedNodeMap nodes, String textToShow, String attribute) {
+		StringBuffer strBuffer = new StringBuffer();
+		Node namedItem = nodes.getNamedItem(attribute);
+		if(namedItem == null) {
+			return null;
+		}
+		strBuffer.append(textToShow).append(namedItem.getNodeValue());
+		return strBuffer.toString();
+	}
 }

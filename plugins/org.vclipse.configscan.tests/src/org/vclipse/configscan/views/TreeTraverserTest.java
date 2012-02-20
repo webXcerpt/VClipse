@@ -26,6 +26,8 @@ import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.FailureTreeTraverser;
 import org.vclipse.configscan.utils.TestCaseFactory;
 import org.vclipse.configscan.utils.TypeTreeTraverser;
+import org.vclipse.configscan.views.labeling.DefaultLabelProvider;
+import org.vclipse.configscan.views.labeling.ExtensionsHandlingLabelProvider;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Injector;

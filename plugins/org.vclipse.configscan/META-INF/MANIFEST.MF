@@ -28,5 +28,6 @@ Export-Package: org.vclipse.configscan,
  org.vclipse.configscan.preferences,
  org.vclipse.configscan.utils,
  org.vclipse.configscan.views,
- org.vclipse.configscan.views.actions
+ org.vclipse.configscan.views.actions,
+ org.vclipse.configscan.views.labeling
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)

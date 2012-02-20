@@ -1,4 +1,4 @@
-package org.vclipse.configscan.views;
+package org.vclipse.configscan.views.labeling;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +20,7 @@ import org.eclipse.xtext.ui.label.StylerFactory;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestGroup;
 import org.vclipse.configscan.impl.model.TestRun;
+import org.vclipse.configscan.views.ErrorBasedContentProvider;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -45,6 +46,7 @@ public class DefaultLabelProvider extends DelegatingStyledCellLabelProvider impl
 	private TreeViewer treeViewer;
 	
 	protected TextStyle amoutStyle;
+	
 	
 	public DefaultLabelProvider(IStyledLabelProvider labelProvider, TreeViewer treeViewer) {
 		super(labelProvider);

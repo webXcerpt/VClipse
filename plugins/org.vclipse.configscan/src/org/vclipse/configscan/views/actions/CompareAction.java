@@ -5,7 +5,7 @@ import org.vclipse.base.ui.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.views.ConfigScanView;
-import org.vclipse.configscan.views.DefaultLabelProvider;
+import org.vclipse.configscan.views.labeling.DefaultLabelProvider;
 
 public class CompareAction extends SimpleTreeViewerAction {
 

@@ -71,6 +71,8 @@ import org.vclipse.configscan.views.actions.ShowErrorBasedTreeAction;
 import org.vclipse.configscan.views.actions.ShowFailuresAction;
 import org.vclipse.configscan.views.actions.ShowHistroyAction;
 import org.vclipse.configscan.views.actions.ToggleLabelProviderAction;
+import org.vclipse.configscan.views.labeling.DefaultLabelProvider;
+import org.vclipse.configscan.views.labeling.LabelProviderDelegate;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -106,7 +108,7 @@ public final class ConfigScanView extends ViewPart {
 	private ContentProvider contentProvider;
 	
 	@Inject
-	private ExtensionsHandlingLabelProvider labelProvider;
+	private LabelProviderDelegate labelProvider;
 	
 	@Inject
 	private IPreferenceStore preferenceStore;
@@ -130,6 +132,7 @@ public final class ConfigScanView extends ViewPart {
 	private TreeViewerLockListener treeViewerLockListener;
 	
 	private JobAwareTreeViewer viewer;
+	
 	private DefaultLabelProvider defaultLabelProvider;
 	
 	private ShowErrorBasedTreeAction showErrorBasedTreeAction;
