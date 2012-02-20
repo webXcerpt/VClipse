@@ -18,19 +18,19 @@ public class ErrorBasedContentProvider implements ITreePathContentProvider {
 
 	private ConfigScanViewInput input;
 	
-	private HashMultimap<TestCase, TreePath> treePath2TestCase;
+	private HashMultimap<TestCase, TreePath> testCase2TreePath;
 	
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if(viewer instanceof JobAwareTreeViewer) {
-			treePath2TestCase = HashMultimap.create();
+			testCase2TreePath = HashMultimap.create();
 			input = (ConfigScanViewInput)newInput;
 		}
 	}
 	
 	@Override
 	public void dispose() {
-		treePath2TestCase.clear();
+		testCase2TreePath.clear();
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class ErrorBasedContentProvider implements ITreePathContentProvider {
 			testCases.add(testRun);
 			visit(testCases);
 		}
-		return treePath2TestCase.keySet().toArray();
+		return testCase2TreePath.keySet().toArray();
 	}
 	
 	@Override
@@ -54,7 +54,7 @@ public class ErrorBasedContentProvider implements ITreePathContentProvider {
 		if(segmentCount == 1) {
 			Object lastSegment = parentPath.getLastSegment();
 			if(lastSegment instanceof TestCase) {
-				Iterator<TreePath> iterator = treePath2TestCase.get((TestCase)lastSegment).iterator();
+				Iterator<TreePath> iterator = testCase2TreePath.get((TestCase)lastSegment).iterator();
 				List<TestCase> testCases = Lists.newArrayList();
 				while(iterator.hasNext()) {
 					testCases.add((TestCase)iterator.next().getFirstSegment());
@@ -86,15 +86,15 @@ public class ErrorBasedContentProvider implements ITreePathContentProvider {
 				visit(((TestGroup)testCase).getTestCases());
 			} else {
 				if(Status.FAILURE == testCase.getStatus()) {
-					if(treePath2TestCase.containsKey(testCase)) {
+					if(testCase2TreePath.containsKey(testCase)) {
 						List<TreePath> paths = Lists.newArrayList();
-						paths.addAll(treePath2TestCase.get(testCase));
+						paths.addAll(testCase2TreePath.get(testCase));
 						paths.add(getNextPath(testCase));
 						for(TreePath path : paths) {
-							treePath2TestCase.put(testCase, path);							
+							testCase2TreePath.put(testCase, path);							
 						}
 					} else {
-						treePath2TestCase.put(testCase, getNextPath(testCase));
+						testCase2TreePath.put(testCase, getNextPath(testCase));
 					}
 				}
 			}
