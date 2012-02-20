@@ -66,6 +66,7 @@ import org.vclipse.configscan.views.actions.NextAction;
 import org.vclipse.configscan.views.actions.PreviousAction;
 import org.vclipse.configscan.views.actions.RelaunchAction;
 import org.vclipse.configscan.views.actions.RelaunchedFailedAction;
+import org.vclipse.configscan.views.actions.ShowErrorBasedTreeAction;
 import org.vclipse.configscan.views.actions.ShowFailuresAction;
 import org.vclipse.configscan.views.actions.ShowHistroyAction;
 import org.vclipse.configscan.views.actions.ToggleLabelProviderAction;
@@ -130,6 +131,7 @@ public final class ConfigScanView extends ViewPart {
 	private JobAwareTreeViewer viewer;
 	private DefaultLabelProvider defaultLabelProvider;
 	
+	private ShowErrorBasedTreeAction showErrorBasedTreeAction;
 	private ToggleLabelProviderAction toggleContent;
 	private ExpandTreeAction expandTreeAction;
 	private CollapseTreeAction collapseTreeAction;
@@ -260,6 +262,9 @@ public final class ConfigScanView extends ViewPart {
 	
 	private void contributeToActionBars() {
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
+		
+		toolBarManager.add(showErrorBasedTreeAction = new ShowErrorBasedTreeAction(this, imageHelper));
+		id2Action.put(ShowErrorBasedTreeAction.ID, showErrorBasedTreeAction);
 		
 		toolBarManager.add(toggleContent = new ToggleLabelProviderAction(this, imageHelper));
 		id2Action.put(ToggleLabelProviderAction.ID, toggleContent);

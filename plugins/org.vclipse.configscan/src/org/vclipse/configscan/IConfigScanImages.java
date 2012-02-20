@@ -48,4 +48,6 @@ public interface IConfigScanImages {
 	public static final String COMPARE = "compare.gif";
 	
 	public static final String TEST = "test.gif";
+	
+	public static final String ERROR_BASED_TREE = "errorBasedTree.gif";
 }

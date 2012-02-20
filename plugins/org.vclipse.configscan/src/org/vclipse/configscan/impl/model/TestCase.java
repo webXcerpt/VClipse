@@ -85,11 +85,16 @@ public class TestCase {
 	
 	@Override
 	public String toString() {
-		return "Title={" + getTitle() + "} " +
-				"Status={" + getStatus() + 
-				"} Source uri={" + sourceURI.toString() + 
-				"}" +  " Parent={" + parent == null 
-				? null : parent.getTitle() + "}";
+		return "Title={" + getTitle() + "} Status={" + getStatus() + "}";
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof TestCase) {
+			TestCase toCompare = (TestCase)obj;
+			return getTitle().equals(toCompare.getTitle()) && getStatus().equals(toCompare.getStatus());
+		}
+		return super.equals(obj);
 	}
 
 	@Override
@@ -98,7 +103,6 @@ public class TestCase {
 		int result = 1;
 		result = prime * result + ((getTitle() == null) ? 0 : getTitle().hashCode());
 		result = prime * result + getStatus().hashCode();
-		result = prime * result + ((sourceURI == null) ? 0 : sourceURI.hashCode());
 		return result;
 	}
 }
