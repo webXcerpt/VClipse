@@ -33,6 +33,5 @@ public final class ToggleLabelProviderAction extends SimpleTreeViewerAction {
 			setToolTipText("Display with labels from test language");
 		}
 		treeViewer.refresh(true);
-		setEnabled(false);
 	}
 }

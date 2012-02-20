@@ -29,6 +29,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -241,22 +242,28 @@ public final class ConfigScanView extends ViewPart {
 					break;
 				}
 			}
+			for(String id : id2Action.keySet()) {
+				enableOrDisable(id, true);
+			}
+			
 			if(!allActionsAvailable) {
 				enableOrDisable(ToggleLabelProviderAction.ID, false);
 				enableOrDisable(CompareAction.ID, false);
 				enableOrDisable(RelaunchedFailedAction.ID, false);
 				enableOrDisable(RelaunchAction.ID, false);
-				
-				enableOrDisable(CollapseTreeAction.ID, true);
-				enableOrDisable(ExpandTreeAction.ID, true);
-				enableOrDisable(NextAction.ID, true);
-				enableOrDisable(PreviousAction.ID, true);
-				enableOrDisable(ShowFailuresAction.ID, true);
-			} else {
-				for(String id : id2Action.keySet()) {
-					enableOrDisable(id, true);
-				}
 			}
+			
+			IContentProvider contentProvider = viewer.getContentProvider();
+			if(contentProvider instanceof ErrorBasedContentProvider) {
+				enableOrDisable(NextAction.ID, false);
+				enableOrDisable(PreviousAction.ID, false);
+				enableOrDisable(RelaunchedFailedAction.ID, false);
+				enableOrDisable(RelaunchAction.ID, false);
+				enableOrDisable(ShowFailuresAction.ID, false);
+			}
+			
+			// TODO currently disabled
+			enableOrDisable(CompareAction.ID, false);
 		}
 	}
 	

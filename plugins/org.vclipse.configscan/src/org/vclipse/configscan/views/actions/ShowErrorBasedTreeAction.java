@@ -33,12 +33,15 @@ public class ShowErrorBasedTreeAction extends SimpleTreeViewerAction {
 			if(contentProvider instanceof ContentProvider) {
 				this.contentProvider = (ContentProvider)contentProvider;
 			}
+			treeViewer.setAutoExpandLevel(0);
 			treeViewer.setContentProvider(errorBasedContentProvider);
 		} else {
 			IContentProvider contentProvider = treeViewer.getContentProvider();
 			if(contentProvider instanceof ErrorBasedContentProvider) {
 				errorBasedContentProvider = (ErrorBasedContentProvider)contentProvider;
 			}
-			treeViewer.setContentProvider(this.contentProvider);		}
+			treeViewer.setAutoExpandLevel(2);			treeViewer.setContentProvider(this.contentProvider);
+		}
+		view.setInput(view.getInput());	
 	}
 }
