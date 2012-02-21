@@ -48,7 +48,7 @@ public class ConfigScanReverseXmlTransformation implements IConfigScanReverseXml
 			ArrayList<Element> nodeListInput = Lists.newArrayList();				// Node-List with nodes with wrong mapping (e.g. checkitemexist)
 
 			Element logSession = findString(rootLog, "log_session");
-			Element inputSession = findString(rootInput, "session");
+			Element inputSession = findString(rootInput, "testCase");
 
 
 			transformNode(logSession, inputSession, configScanMap, nodeListInput, nodeListLog);
@@ -81,56 +81,45 @@ public class ConfigScanReverseXmlTransformation implements IConfigScanReverseXml
 	}
 	
 	private Element processWalker(TreeWalker tw, String search) {
-		   Node n = tw.getCurrentNode();
-		   Element mem = null;
-		   for (Node child = tw.firstChild(); child != null; child = tw.nextSibling()) {
-				   Element el = (Element) child;
-				   if((search.equalsIgnoreCase(el.getTagName()))) {
-					   return el;
-				   }
-				   
-				   mem = processWalker(tw, search);
-				   if(mem != null)
-					   return mem;
-				   
-		   }
-
-		   tw.setCurrentNode(n);
-		   return null;
+		Node n = tw.getCurrentNode();
+		Element mem = null;
+		for(Node child = tw.firstChild(); child != null; child = tw.nextSibling()) {
+			Element el = (Element) child;
+			if((search.equalsIgnoreCase(el.getTagName()))) {
+				return el;
+			}
+			mem = processWalker(tw, search);
+			if(mem != null)
+				return mem;
+		}
+		tw.setCurrentNode(n);
+		return null;
 	}
 	
-	private void processWalkerAssignTree(TreeWalker twInput, TreeWalker twLog, HashMap<Element, Element> configScanMap,
-			ArrayList<Element> nodeListInput, ArrayList<Element> nodeListLog) {
-		   Node n1 = twLog.getCurrentNode();
-		   Node n2 = twInput.getCurrentNode();
-		   for (Node child1 = twLog.firstChild(), child2 = twInput.firstChild(); child1 != null; child1 = twLog.nextSibling(), child2 = twInput.nextSibling()) {
-
-			   if(child1 != null) {
-
-				   
-				   Element el1Log = (Element) child1;
-				   Element el2Input = (Element) child2;
-				   boolean skip = false;
-					   
-				
-				   
-				   if(el2Input != null && "checkitemexist".equalsIgnoreCase(el2Input.getTagName())) {
-						   nodeListInput.add(el2Input);
-						   skip = true;
-				   }
-				   if(el1Log != null && "CHECK ITEM EXIST".equalsIgnoreCase(el1Log.getAttribute("cmd"))) {
-					   nodeListLog.add(el1Log);
-					   skip = true;
-				   }
-				   
-				   if(!skip) {
-					   configScanMap.put(el1Log, el2Input);
-				   }
-			   }   
-			   processWalkerAssignTree(twInput, twLog, configScanMap, nodeListInput, nodeListLog);
-		   }
-		   twLog.setCurrentNode(n1);
-		   twInput.setCurrentNode(n2);
+	private void processWalkerAssignTree(TreeWalker twInput, TreeWalker twLog, HashMap<Element, Element> configScanMap, ArrayList<Element> nodeListInput, ArrayList<Element> nodeListLog) {
+		Node n1 = twLog.getCurrentNode();
+		Node n2 = twInput.getCurrentNode();
+		for(Node child1 = twLog.firstChild(), child2 = twInput.firstChild(); child1 != null; child1 = twLog.nextSibling(), child2 = twInput.nextSibling()) {
+			if(child1 != null) {
+				Element el1Log = (Element) child1;
+				Element el2Input = (Element) child2;
+				boolean skip = false;
+				if(el2Input != null && "checkitemexist".equalsIgnoreCase(el2Input.getTagName())) {
+					nodeListInput.add(el2Input);
+					skip = true;
+				}
+				if(el1Log != null && "CHECK ITEM EXIST".equalsIgnoreCase(el1Log.getAttribute("cmd"))) {
+					nodeListLog.add(el1Log);
+					skip = true;
+				}
+				if(!skip) {
+					configScanMap.put(el1Log, el2Input);
+				}
+			}   
+			processWalkerAssignTree(twInput, twLog, configScanMap, nodeListInput, nodeListLog);
+		}
+		twLog.setCurrentNode(n1);
+		twInput.setCurrentNode(n2);
 	}
 	
 	
@@ -146,33 +135,18 @@ public class ConfigScanReverseXmlTransformation implements IConfigScanReverseXml
 	private void transformNode(Element log, Element input,
 			HashMap<Element, Element> configScanMap,
 			ArrayList<Element> nodeListInput, ArrayList<Element> nodeListLog) {
-		
-		
-		
 		if(log == null || input == null /* || !log.hasChildNodes() || !input.hasChildNodes() */) {
 			return;
 		}
-		
 		configScanMap.put(log, input);
-		
-		System.out.println();
-		
 		Document docInput = input.getOwnerDocument();
 		Document docLog = log.getOwnerDocument();
 		DocumentTraversal traversableInput = (DocumentTraversal) docInput;
 		DocumentTraversal traversableLog = (DocumentTraversal) docLog;
 	    TreeWalker walkerInput = traversableInput.createTreeWalker(input, NodeFilter.SHOW_ELEMENT, null, true);
 	    TreeWalker walkerLog = traversableLog.createTreeWalker(log, NodeFilter.SHOW_ELEMENT, null, true);
-	   
 		processWalkerAssignTree(walkerInput, walkerLog, configScanMap, nodeListInput, nodeListLog);
-		
-		
-		
-		
 	}
-	
-	
-	
 
 	public HashMap<Element, Element> computeConfigScanMap2(Document xmlLog, Document xmlInput) {
 		// TODO: forgotten elements?
