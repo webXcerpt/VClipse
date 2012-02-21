@@ -71,7 +71,9 @@ public class DoubleClickListener implements IDoubleClickListener {
 	
 	protected void select(TestCase testCase) {
 		URI testStatementUri = testCase.getSourceURI();
-		if(testStatementUri != null) {
+		if(testStatementUri == null) {
+			System.err.println("uri is null");
+		} else {
 			Resource resource = new XtextResourceSet().getResource(testStatementUri, true);
 			if(resource == null) {
 				ConfigScanPlugin.log("Can not create resource for uri " + testStatementUri.toString(), IStatus.ERROR);
