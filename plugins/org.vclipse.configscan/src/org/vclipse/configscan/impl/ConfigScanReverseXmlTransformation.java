@@ -48,9 +48,10 @@ public class ConfigScanReverseXmlTransformation implements IConfigScanReverseXml
 			ArrayList<Element> nodeListInput = Lists.newArrayList();				// Node-List with nodes with wrong mapping (e.g. checkitemexist)
 
 			Element logSession = findString(rootLog, "log_session");
-			Element inputSession = findString(rootInput, "testCase");
-
-
+			Element inputSession = findString(rootInput, "session");
+			if(inputSession == null) {
+				inputSession = findString(rootInput, "testCase");
+			}
 			transformNode(logSession, inputSession, configScanMap, nodeListInput, nodeListLog);
 
 			Collections.sort(nodeListLog, new BompathComparator());
