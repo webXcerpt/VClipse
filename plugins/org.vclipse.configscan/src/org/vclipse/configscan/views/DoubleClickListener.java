@@ -72,25 +72,28 @@ public class DoubleClickListener implements IDoubleClickListener {
 	protected void select(TestCase testCase) {
 		URI testStatementUri = testCase.getSourceURI();
 		if(testStatementUri == null) {
-			System.err.println("uri is null");
-		} else {
-			Resource resource = new XtextResourceSet().getResource(testStatementUri, true);
-			if(resource == null) {
-				ConfigScanPlugin.log("Can not create resource for uri " + testStatementUri.toString(), IStatus.ERROR);
+			testStatementUri = testCase.getParent().getSourceURI();
+			if(testStatementUri == null) {
+				System.err.println("uri is null");
+				return;
 			}
-			EObject associatedEObject = resource.getResourceSet().getEObject(testStatementUri, true);
-			if(associatedEObject != null) {
-				IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				try {
-					Resource eResource = associatedEObject.eResource();
-					IEditorPart openEditor = IDE.openEditor(activePage, ResourceUtil.getFile(eResource), true);
-					if(openEditor instanceof XtextEditor) {
-						INode node = NodeModelUtils.getNode(associatedEObject);
-						((XtextEditor)openEditor).selectAndReveal(node.getOffset(), node.getLength());
-					}
-				} catch (PartInitException exception) {
-					ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
+		} 
+		Resource resource = new XtextResourceSet().getResource(testStatementUri, true);
+		if(resource == null) {
+			ConfigScanPlugin.log("Can not create resource for uri " + testStatementUri.toString(), IStatus.ERROR);
+		}
+		EObject associatedEObject = resource.getResourceSet().getEObject(testStatementUri, true);
+		if(associatedEObject != null) {
+			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			try {
+				Resource eResource = associatedEObject.eResource();
+				IEditorPart openEditor = IDE.openEditor(activePage, ResourceUtil.getFile(eResource), true);
+				if(openEditor instanceof XtextEditor) {
+					INode node = NodeModelUtils.getNode(associatedEObject);
+					((XtextEditor)openEditor).selectAndReveal(node.getOffset(), node.getLength());
 				}
+			} catch (PartInitException exception) {
+				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 			}
 		}
 	}
