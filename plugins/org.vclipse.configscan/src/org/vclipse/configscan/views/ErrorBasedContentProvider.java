@@ -86,16 +86,16 @@ public class ErrorBasedContentProvider implements ITreePathContentProvider {
 				visit(((TestGroup)testCase).getTestCases());
 			} else {
 				if(Status.FAILURE == testCase.getStatus()) {
-					if(testCase2TreePath.containsKey(testCase)) {
-						List<TreePath> paths = Lists.newArrayList();
-						paths.addAll(testCase2TreePath.get(testCase));
-						paths.add(getNextPath(testCase));
-						for(TreePath path : paths) {
-							testCase2TreePath.put(testCase, path);							
-						}
-					} else {
+//					if(testCase2TreePath.containsKey(testCase)) {
+//						List<TreePath> paths = Lists.newArrayList();
+//						paths.addAll(testCase2TreePath.get(testCase));
+//						paths.add(getNextPath(testCase));
+//						for(TreePath path : paths) {
+//							testCase2TreePath.put(testCase, path);							
+//						}
+//					} else {
 						testCase2TreePath.put(testCase, getNextPath(testCase));
-					}
+					//}
 				}
 			}
 		}

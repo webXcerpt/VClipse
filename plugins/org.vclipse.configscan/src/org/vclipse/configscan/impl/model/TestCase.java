@@ -74,6 +74,10 @@ public class TestCase {
 		return getRoot(this);
 	}
 	
+	public boolean testsDomain() {
+		return getTitle().startsWith("Check_Domain") && (getTitle().contains("cstic:") || getTitle().contains("not tested value:"));
+	}
+	
 	protected TestCase getRoot(TestCase testCase) {
 		TestCase parent = testCase.getParent();
 		if(parent == null) {

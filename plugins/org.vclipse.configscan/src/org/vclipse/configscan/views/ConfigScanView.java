@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -33,6 +34,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.vclipse.base.ui.ClasspathAwareImageHelper;
@@ -51,6 +53,7 @@ import org.vclipse.configscan.views.actions.NextAction;
 import org.vclipse.configscan.views.actions.PreviousAction;
 import org.vclipse.configscan.views.actions.RelaunchAction;
 import org.vclipse.configscan.views.actions.RelaunchedFailedAction;
+import org.vclipse.configscan.views.actions.SearchContributionItem;
 import org.vclipse.configscan.views.actions.ShowErrorBasedTreeAction;
 import org.vclipse.configscan.views.actions.ShowFailuresAction;
 import org.vclipse.configscan.views.actions.ShowHistroyAction;
@@ -255,7 +258,8 @@ public final class ConfigScanView extends ViewPart {
 	}
 	
 	private void contributeToActionBars() {
-		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
+		IActionBars actionBars = getViewSite().getActionBars();
+		IToolBarManager toolBarManager = actionBars.getToolBarManager();
 		
 		toolBarManager.add(showErrorBasedTreeAction = new ShowErrorBasedTreeAction(this, imageHelper));
 		id2Action.put(ShowErrorBasedTreeAction.ID, showErrorBasedTreeAction);
@@ -301,6 +305,9 @@ public final class ConfigScanView extends ViewPart {
 		
 		toolBarManager.add(new ImportExportAction(this, imageHelper, documentUtility, testCaseFactoy));
 		toolBarManager.add(new ShowHistroyAction(this, imageHelper, history));
+		
+		IStatusLineManager statusLine = actionBars.getStatusLineManager();
+		statusLine.add(new SearchContributionItem(viewer));
 	}
 	
 	private void createContextMenu() {

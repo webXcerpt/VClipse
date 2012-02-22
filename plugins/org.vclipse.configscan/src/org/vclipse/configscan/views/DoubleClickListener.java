@@ -71,6 +71,9 @@ public class DoubleClickListener implements IDoubleClickListener {
 	
 	protected void select(TestCase testCase) {
 		URI testStatementUri = testCase.getSourceURI();
+		if(testCase.testsDomain()) {
+			System.out.println("Testcase " + testCase.getTitle() + " tests domain");
+		}
 		if(testStatementUri == null) {
 			testStatementUri = testCase.getParent().getSourceURI();
 			if(testStatementUri == null) {
