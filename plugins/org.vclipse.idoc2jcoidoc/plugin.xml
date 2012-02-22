@@ -72,6 +72,28 @@
 	         </enablement>
          </action>
       </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="org.vclipse.convertToIDocsAndSend"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.vclipse.idoc2jcoidoc.injection.ExecutableExtensionFactory:org.vclipse.idoc2jcoidoc.actions.ConvertToIDocsAndSendAction"
+               id="org.vclipse.actions.convertToIDocsAndSend"
+               label="Convert to IDocs and send to SAP system"
+               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/content">
+	         <enablement>
+	            <and>
+	               <objectClass
+	                     name="org.eclipse.core.resources.IFile">
+	               </objectClass>
+	               <objectState
+	                     name="extension"
+	                     value="vcml">
+	               </objectState>
+	            </and>
+	         </enablement>
+         </action>
+      </objectContribution>
    </extension>
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
