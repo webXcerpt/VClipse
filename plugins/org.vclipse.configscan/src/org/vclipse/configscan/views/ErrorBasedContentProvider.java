@@ -16,11 +16,10 @@ import com.google.common.collect.Lists;
 
 public class ErrorBasedContentProvider implements ITreePathContentProvider {
 
-	private ConfigScanViewInput input;
+	protected ConfigScanViewInput input;
 	
 	private HashMultimap<TestCase, TreePath> testCase2TreePath;
 	
-	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		if(viewer instanceof JobAwareTreeViewer) {
 			testCase2TreePath = HashMultimap.create();
@@ -28,13 +27,8 @@ public class ErrorBasedContentProvider implements ITreePathContentProvider {
 		}
 	}
 	
-	@Override
-	public void dispose() {
-		testCase2TreePath.clear();
-	}
-
-	@Override
 	public Object[] getElements(Object inputElement) {
+		testCase2TreePath.clear();
 		for(TestRun testRun : input.getTestRuns()) {
 			List<TestCase> testCases = Lists.newArrayList();
 			testCases.add(testRun);
@@ -43,12 +37,10 @@ public class ErrorBasedContentProvider implements ITreePathContentProvider {
 		return testCase2TreePath.keySet().toArray();
 	}
 	
-	@Override
 	public TreePath[] getParents(Object element) {
 		return new TreePath[0];
 	}
 	
-	@Override
 	public Object[] getChildren(TreePath parentPath) {
 		int segmentCount = parentPath.getSegmentCount();
 		if(segmentCount == 1) {
@@ -75,32 +67,35 @@ public class ErrorBasedContentProvider implements ITreePathContentProvider {
 		return new Object[0];
 	}
 	
-	@Override
 	public boolean hasChildren(TreePath path) {
 		return !(path.getLastSegment() instanceof TestRun);
 	}
-
+	
+	public void dispose() {
+		testCase2TreePath.clear();
+	}
+	
 	private void visit(List<TestCase> testCases) {
 		for(TestCase testCase : testCases) {
 			if(testCase instanceof TestGroup) {
 				visit(((TestGroup)testCase).getTestCases());
 			} else {
 				if(Status.FAILURE == testCase.getStatus()) {
-//					if(testCase2TreePath.containsKey(testCase)) {
-//						List<TreePath> paths = Lists.newArrayList();
-//						paths.addAll(testCase2TreePath.get(testCase));
-//						paths.add(getNextPath(testCase));
-//						for(TreePath path : paths) {
-//							testCase2TreePath.put(testCase, path);							
-//						}
-//					} else {
+					if(testCase2TreePath.containsKey(testCase)) {
+						List<TreePath> paths = Lists.newArrayList();
+						paths.addAll(testCase2TreePath.get(testCase));
+						paths.add(getNextPath(testCase));
+						for(TreePath path : paths) {
+							testCase2TreePath.put(testCase, path);							
+						}
+					} else {
 						testCase2TreePath.put(testCase, getNextPath(testCase));
-					//}
+					}
 				}
 			}
 		}
 	}
-	
+
 	private TreePath getNextPath(TestCase testCase) {
 		TestCase parent = testCase.getParent();
 		return parent == null ? null : new TreePath(new Object[]{parent});

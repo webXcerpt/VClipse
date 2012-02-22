@@ -8,6 +8,7 @@ import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.views.ConfigScanView;
 import org.vclipse.configscan.views.ContentProvider;
 import org.vclipse.configscan.views.ErrorBasedContentProvider;
+import org.vclipse.configscan.views.ErrorBasedContentProviderExtension;
 
 public class ShowErrorBasedTreeAction extends SimpleTreeViewerAction {
 
@@ -15,7 +16,7 @@ public class ShowErrorBasedTreeAction extends SimpleTreeViewerAction {
 	
 	private ContentProvider contentProvider;
 	
-	private ErrorBasedContentProvider errorBasedContentProvider;
+	private ErrorBasedContentProviderExtension errorBasedContentProvider;
 	
 	public ShowErrorBasedTreeAction(ConfigScanView view, ClasspathAwareImageHelper imageHelper) {
 		super(view, imageHelper, Action.AS_CHECK_BOX);
@@ -23,7 +24,7 @@ public class ShowErrorBasedTreeAction extends SimpleTreeViewerAction {
 		setToolTipText("Show error based tree");
 		setImageDescriptor(imageHelper.getImageDescriptor(IConfigScanImages.ERROR_BASED_TREE));
 		setId(ID);
-		errorBasedContentProvider = new ErrorBasedContentProvider();
+		errorBasedContentProvider = new ErrorBasedContentProviderExtension();
 	}
 
 	@Override
@@ -38,7 +39,7 @@ public class ShowErrorBasedTreeAction extends SimpleTreeViewerAction {
 		} else {
 			IContentProvider contentProvider = treeViewer.getContentProvider();
 			if(contentProvider instanceof ErrorBasedContentProvider) {
-				errorBasedContentProvider = (ErrorBasedContentProvider)contentProvider;
+				errorBasedContentProvider = (ErrorBasedContentProviderExtension)contentProvider;
 			}
 			treeViewer.setAutoExpandLevel(2);			treeViewer.setContentProvider(this.contentProvider);
 		}
