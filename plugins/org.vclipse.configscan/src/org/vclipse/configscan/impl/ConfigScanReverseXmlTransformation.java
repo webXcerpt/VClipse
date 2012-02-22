@@ -47,11 +47,8 @@ public class ConfigScanReverseXmlTransformation implements IConfigScanReverseXml
 			ArrayList<Element> nodeListLog = Lists.newArrayList();					// Node-List with nodes with wrong mapping (e.g. "CHECK ITEM EXIST")
 			ArrayList<Element> nodeListInput = Lists.newArrayList();				// Node-List with nodes with wrong mapping (e.g. checkitemexist)
 
-			Element logSession = findString(rootLog, "log_session");
-			Element inputSession = findString(rootInput, "session");
-			if(inputSession == null) {
-				inputSession = findString(rootInput, "testCase");
-			}
+			Element logSession = findElement(rootLog, "log_session");
+			Element inputSession = findElement(rootInput, "session");
 			transformNode(logSession, inputSession, configScanMap, nodeListInput, nodeListLog);
 
 			Collections.sort(nodeListLog, new BompathComparator());
@@ -66,30 +63,23 @@ public class ConfigScanReverseXmlTransformation implements IConfigScanReverseXml
 		
 		return configScanMap;
 	}
-
-
-
-
 	
-	private Element findString(Node root, String search) {
+	private Element findElement(Node root, String elementName) {
 	    Document document = root.getOwnerDocument();
 		DocumentTraversal traversable = (DocumentTraversal) document;
 	    TreeWalker walker = traversable.createTreeWalker(document.getDocumentElement(), NodeFilter.SHOW_ELEMENT, null /* new ExampleFilter() */, true);
-	    
-	    Element result = processWalker(walker, search);
-	    
-	    return result;
+	    return processWalker(walker, elementName);
 	}
 	
-	private Element processWalker(TreeWalker tw, String search) {
+	private Element processWalker(TreeWalker tw, String elementName) {
 		Node n = tw.getCurrentNode();
 		Element mem = null;
 		for(Node child = tw.firstChild(); child != null; child = tw.nextSibling()) {
 			Element el = (Element) child;
-			if((search.equalsIgnoreCase(el.getTagName()))) {
+			if((elementName.equalsIgnoreCase(el.getTagName()))) {
 				return el;
 			}
-			mem = processWalker(tw, search);
+			mem = processWalker(tw, elementName);
 			if(mem != null)
 				return mem;
 		}
