@@ -40,7 +40,7 @@ public class SearchContributionItem extends ContributionItem {
 		gridLayout.numColumns = 2;
 		mainComposite.setLayout(gridLayout);
 		
-		new Label(mainComposite, SWT.NONE).setText("Search: ");
+		new Label(mainComposite, SWT.NONE).setText("Filter: ");
 		
 		FontData[]  fdata = parent.getDisplay().getSystemFont().getFontData();
 		searchTextWidget = new Text(mainComposite, SWT.BORDER);
