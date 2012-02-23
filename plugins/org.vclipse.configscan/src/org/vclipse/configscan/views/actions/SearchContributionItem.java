@@ -19,6 +19,8 @@ import org.eclipse.swt.widgets.Text;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestGroup;
 
+import com.google.common.collect.Lists;
+
 public class SearchContributionItem extends ContributionItem {
 	
 	private TreeViewer viewer;
@@ -57,7 +59,8 @@ public class SearchContributionItem extends ContributionItem {
 					viewer.removeFilter(textFilter);
 				} else {
 					textFilter.setSearchText(text);
-					viewer.setFilters(new ViewerFilter[]{textFilter});
+					List<ViewerFilter> list = Lists.asList(textFilter, viewer.getFilters());
+					viewer.setFilters(list.toArray(new ViewerFilter[list.size()]));
 				}
 			}	
 		});
