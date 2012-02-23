@@ -29,10 +29,8 @@ public class ErrorBasedContentProvider implements ITreePathContentProvider {
 	
 	public Object[] getElements(Object inputElement) {
 		testCase2TreePath.clear();
-		for(TestRun testRun : input.getTestRuns()) {
-			List<TestCase> testCases = Lists.newArrayList();
-			testCases.add(testRun);
-			visit(testCases);
+		for(TestCase testCase : input.getTestRuns()) {
+			visit(Lists.newArrayList(testCase));
 		}
 		return testCase2TreePath.keySet().toArray();
 	}

@@ -28,28 +28,20 @@ public class ErrorBasedContentProviderExtension extends ErrorBasedContentProvide
 	@Override
 	public Object[] getElements(Object inputElement) {
 		testGroup2TreePath.clear();
-		for(TestRun testRun : input.getTestRuns()) {
-			List<TestCase> testCases = Lists.newArrayList();
-			testCases.add(testRun);
-			visit(testCases);
-			super.getElements(null);
+		for(TestCase testCase : input.getTestRuns()) {
+			visit(Lists.newArrayList(testCase));
 		}
-		return testGroup2TreePath.keySet().toArray();
-	}
-
-	@Override
-	public TreePath[] getParents(Object element) {
-		return new TreePath[0];
+		List<Object> elements = Lists.newArrayList();
+		elements.addAll(Lists.newArrayList(testGroup2TreePath.keySet()));
+		elements.addAll(Lists.newArrayList(super.getElements(inputElement)));
+		return elements.toArray();
 	}
 
 	@Override
 	public Object[] getChildren(TreePath parentPath) {
 		int segmentCount = parentPath.getSegmentCount();
-		if(segmentCount == 1) {
-			Object lastSegment = parentPath.getLastSegment();
-			if(lastSegment instanceof TestCase && !(lastSegment instanceof TestGroup)) {
-				return super.getChildren(new TreePath(new Object[]{lastSegment}));
-			}
+		Object lastSegment = parentPath.getLastSegment();
+		if(segmentCount < 2) {
 			if(lastSegment instanceof TestGroup) {
 				Iterable<TestCase> filter = Iterables.filter(((TestGroup)lastSegment).getTestCases(), new Predicate<TestCase>() {
 					@Override
@@ -58,20 +50,21 @@ public class ErrorBasedContentProviderExtension extends ErrorBasedContentProvide
 					}
 				});
 				return Lists.newArrayList(filter).toArray();
+			} else if(!(lastSegment instanceof TestRun)) {
+				return super.getChildren(new TreePath(new Object[]{lastSegment}));
 			}
-		} else if(segmentCount == 1 || segmentCount == 2) {
-			return super.getChildren(new TreePath(new Object[]{parentPath.getLastSegment()}));
-		} else if(segmentCount > 2) {
+		} else if(segmentCount == 2) {
+			if(lastSegment instanceof TestGroup) {
+				return super.getChildren(parentPath);
+			} else if(!(lastSegment instanceof TestRun)) {
+				return super.getChildren(new TreePath(new Object[]{lastSegment}));
+			}
+		} else {
 			return super.getChildren(parentPath);
 		}
 		return new Object[0];
 	}
 
-	@Override
-	public boolean hasChildren(TreePath path) {
-		return !(path.getLastSegment() instanceof TestRun);
-	}
-	
 	@Override
 	public void dispose() {
 		testGroup2TreePath.clear();
