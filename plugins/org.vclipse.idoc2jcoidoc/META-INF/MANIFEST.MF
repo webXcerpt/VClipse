@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.xtext;bundle-version="2.2.1",
  org.eclipse.ui.ide,
  org.vclipse.console,
  org.eclipse.ui.console,
- org.vclipse.vcml2idoc.ui;bundle-version="0.4.2"
+ org.vclipse.vcml2idoc.ui,
+ org.vclipse.vcml.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: com.sap.conn.idoc,
