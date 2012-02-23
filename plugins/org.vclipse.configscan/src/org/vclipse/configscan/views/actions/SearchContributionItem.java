@@ -3,11 +3,10 @@ package org.vclipse.configscan.views.actions;
 import java.util.List;
 
 import org.eclipse.jface.action.ContributionItem;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusAdapter;
-import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Font;
@@ -19,14 +18,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestGroup;
-import org.vclipse.configscan.impl.model.TestRun;
-import org.vclipse.configscan.views.ConfigScanViewInput;
 
 public class SearchContributionItem extends ContributionItem {
 	
 	private TreeViewer viewer;
 	
-	private TestCase foundTestCase;
+	private Text searchTextWidget;
+	
+	private TextFilter textFilter = new TextFilter();
 	
 	public SearchContributionItem(TreeViewer viewer) {
 		this.viewer = viewer;
@@ -42,60 +41,59 @@ public class SearchContributionItem extends ContributionItem {
 		new Label(mainComposite, SWT.NONE).setText("Search: ");
 		
 		FontData[]  fdata = parent.getDisplay().getSystemFont().getFontData();
-		final Text searchText = new Text(mainComposite, SWT.BORDER);
-		searchText.setFont(new Font(parent.getDisplay(), new FontData(fdata[0].getName(), 8, SWT.NORMAL)));
+		searchTextWidget = new Text(mainComposite, SWT.BORDER);
+		searchTextWidget.setFont(new Font(parent.getDisplay(), new FontData(fdata[0].getName(), 8, SWT.NORMAL)));
 		
 		GridData gridData = new GridData();
 		gridData.verticalAlignment = GridData.BEGINNING;
 		gridData.heightHint = 10;
 		
-		searchText.setLayoutData(gridData);
-		searchText.setTextLimit(50);
-		searchText.addModifyListener(new ModifyListener() {
+		searchTextWidget.setLayoutData(gridData);
+		searchTextWidget.setTextLimit(50);
+		searchTextWidget.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent event) {
-				String searchForText = searchText.getText();
-				if(!searchForText.isEmpty()) {
-					Object input = viewer.getInput();
-					if(input instanceof ConfigScanViewInput) {
-						for(TestRun testRun : ((ConfigScanViewInput)input).getTestRuns()) {
-							String title = testRun.getTitle();
-							if(title.startsWith(searchForText) || title.contains(searchForText)) {
-								foundTestCase = testRun;
-								break;
-							} 
-							foundTestCase = searchFor(testRun.getTestCases(), searchForText);
-							if(foundTestCase == null) {
-								continue;
-							} else {
-								viewer.setSelection(new StructuredSelection(foundTestCase));
-							}
-						}
-					}
+				String text = searchTextWidget.getText();
+				if(text.isEmpty()) {
+					viewer.removeFilter(textFilter);
+				} else {
+					textFilter.setSearchText(text);
+					viewer.setFilters(new ViewerFilter[]{textFilter});
 				}
 			}	
 		});
-		
-		searchText.addFocusListener(new FocusAdapter() {
-			public void focusGained(FocusEvent event) {
-				searchText.setText("");
-			}
-		});
+	}
+}
+
+class TextFilter extends ViewerFilter {
+
+	private String text;
+
+	public void setSearchText(String text) {
+		this.text = text;
 	}
 	
-	private TestCase searchFor(List<TestCase> testCases, String text) {
+	@Override
+	public boolean select(Viewer viewer, Object parentElement, Object element) {
+		if(element instanceof TestGroup) {
+			return search(((TestGroup)element).getTestCases(), text);
+		} else if(element instanceof TestCase) {
+			String title = ((TestCase)element).getTitle();
+			return title.startsWith(text) || title.contains(text) || title.equals(text);
+		}
+		return true;
+	}
+	
+	private boolean search(List<TestCase> testCases, String text) {
 		for(TestCase testCase : testCases) {
 			String title = testCase.getTitle();
 			if(title.startsWith(text) || title.contains(text)) {
-				return testCase;
+				return true;
 			} else if(testCase instanceof TestGroup) {
-				TestCase foundTestCase = searchFor(((TestGroup)testCase).getTestCases(), text);
-				if(foundTestCase != null) {
-					return foundTestCase;
-				} else {
-					continue;
-				}
+				return search(((TestGroup)testCase).getTestCases(), text);
+			} else {
+				continue;
 			}
 		}
-		return null;
+		return false;
 	}
 }
