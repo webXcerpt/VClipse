@@ -80,8 +80,7 @@ class TextFilter extends ViewerFilter {
 		if(element instanceof TestGroup) {
 			return search(((TestGroup)element).getTestCases(), text);
 		} else if(element instanceof TestCase) {
-			String title = ((TestCase)element).getTitle();
-			return title.startsWith(text) || title.contains(text) || title.equals(text);
+			return ((TestCase)element).getTitle().contains(text);
 		}
 		return true;
 	}
