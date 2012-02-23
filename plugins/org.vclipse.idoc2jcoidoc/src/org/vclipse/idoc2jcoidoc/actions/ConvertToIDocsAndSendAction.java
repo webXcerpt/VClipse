@@ -45,25 +45,30 @@ public class ConvertToIDocsAndSendAction implements IObjectActionDelegate {
 	private IStructuredSelection selection;
 	
 	public void run(IAction action) {
-		Job job = new Job("Convert to IDocs and send.") {
+		Job job = new Job("Convert to IDocs and send to SAP system.") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask("Convert to IDocs and send.", IProgressMonitor.UNKNOWN);
+				monitor.beginTask("Convert to IDocs and send to SAP system.", 4);
 				IFile file = (IFile)selection.getFirstElement();
+				monitor.subTask("Parsing VCML file " + file.getName());
 				XtextResourceSet xtextResourceSet = new XtextResourceSet();
-				Resource resource = xtextResourceSet.getResource(URI.createURI(file.getLocation().toString()), true);
+				Resource resource = xtextResourceSet.getResource(URI.createURI(file.getLocationURI().toString()), true);
+				monitor.worked(1);
 				EList<EObject> contents = resource.getContents();
 				if(!contents.isEmpty()) {
 					EObject object = contents.get(0);
 					if(object instanceof Model) {
 						Model vcmlModel = (Model)object;
 						try {
-							monitor.subTask("Converting to idocs..." + file.getName());
+							monitor.subTask("Converting VCML model to IDoc model...");
 							org.vclipse.idoc.iDoc.Model idocModel = vcml2IDoc.vcml2IDocs(vcmlModel);
-							monitor.subTask("Converting idocs in jco idocs...");
+							monitor.worked(1);
+							monitor.subTask("Converting IDoc model in JCo IDocs...");
 							List<IDocDocument> idocs = idocProcessor.transform(idocModel , monitor);
-							monitor.subTask("Sending to SAP...");
+							monitor.worked(1);
+							monitor.subTask("Sending IDocs to SAP...");
 							IStatus sendStatus = new RFCIDocsSender().send(idocs, connectionHandler, monitor);
+							monitor.worked(1);
 							monitor.done();
 							return sendStatus;
 						} catch (JCoException exception) {
