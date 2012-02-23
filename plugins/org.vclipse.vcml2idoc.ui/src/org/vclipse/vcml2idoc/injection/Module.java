@@ -8,6 +8,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.service.AbstractGenericModule;
 import org.vclipse.vcml.ui.VCMLUiPlugin;
 import org.vclipse.vcml2idoc.IVcml2IDocTransformation;
+import org.vclipse.vcml2idoc.VCML2IDocUIPlugin;
 import org.vclipse.vcml2idoc.builder.VCML2IDocSwitch;
 import org.vclipse.vcml2idoc.builder.VCML2IDocTransformation;
 
@@ -29,6 +30,7 @@ public class Module extends AbstractGenericModule {
 	public void configure(Binder binder) {
 		super.configure(binder);
 		binder.bind(IPreferenceStore.class).annotatedWith(Names.named(VCMLUiPlugin.ID)).toInstance(VCMLUiPlugin.getDefault().getInjector().getInstance(IPreferenceStore.class));
+        binder.bind(IPreferenceStore.class).annotatedWith(Names.named(VCML2IDocUIPlugin.ID)).toInstance(plugin.getPreferenceStore());
 	}
 
 	public IPreferenceStore bindPreferenceStore() {

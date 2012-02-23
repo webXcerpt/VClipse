@@ -36,6 +36,7 @@ public class Module extends AbstractGenericModule {
 	public void configure(Binder binder) {
 		super.configure(binder);
 		binder.bind(IPreferenceStore.class).annotatedWith(Names.named(VCMLUiPlugin.ID)).toInstance(VCMLUiPlugin.getDefault().getInjector().getInstance(IPreferenceStore.class));
+		binder.bind(IPreferenceStore.class).annotatedWith(Names.named(VCML2IDocUIPlugin.ID)).toInstance(VCML2IDocUIPlugin.getDefault().getInjector().getInstance(IPreferenceStore.class));
 	}
 
 	public IConnectionHandler bindConnectionHandler() {

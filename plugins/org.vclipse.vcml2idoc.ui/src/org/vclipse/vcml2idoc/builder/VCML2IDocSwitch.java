@@ -79,6 +79,7 @@ import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
 import org.vclipse.vcml.vcml.util.VcmlSwitch;
 import org.vclipse.vcml2idoc.IVCML2IDocPreferences;
+import org.vclipse.vcml2idoc.VCML2IDocUIPlugin;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
@@ -135,6 +136,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 	private int sublev_BOMMAT;
 
 	@Inject
+	@Named(VCML2IDocUIPlugin.ID)
 	private IPreferenceStore preferenceStore;
 
 	@Inject
