@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	<extension point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="org.vclipse.deployment.vcml2idocSend"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.ConvertToIDocsAndSendAction"
+               id="org.vclipse.actions.convertToIDocsAndSend"
+               label="Convert to IDocs and send to SAP system"
+               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/content">
+	         <enablement>
+	            <and>
+	               <objectClass
+	                     name="org.eclipse.core.resources.IFile">
+	               </objectClass>
+	               <objectState
+	                     name="extension"
+	                     value="vcml">
+	               </objectState>
+	            </and>
+	         </enablement>
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="org.vclipse.deployment.diff"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.DeltaDeploymentAction"
+               id="org.vclipse.deployment.diff"
+               label="Compute and deploy diff to SAP system"
+               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/content">
+            <enablement>
+               <and>
+                  <objectClass
+                        name="org.eclipse.core.resources.IFile">
+                  </objectClass>
+                  <objectState
+                        name="extension"
+                        value="vcml">
+                  </objectState>
+               </and>
+            </enablement>
+         </action>
+      </objectContribution>
+   </extension>
+</plugin>
