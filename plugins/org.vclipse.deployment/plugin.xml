@@ -7,7 +7,7 @@
             id="org.vclipse.deployment.vcml2idocSend"
             objectClass="org.eclipse.core.resources.IFile">
          <action
-               class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.ConvertToIDocsAndSendAction"
+               class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.ConvertSendAction"
                id="org.vclipse.actions.convertToIDocsAndSend"
                label="Convert to IDocs and send to SAP system"
                menubarPath="org.vclipse.vcml.ui.popupMenu.resource/content">
@@ -41,6 +41,28 @@
                   <objectState
                         name="extension"
                         value="vcml">
+                  </objectState>
+               </and>
+            </enablement>
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="org.vclipse.deployment.idocSend"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.ConvertSendAction"
+               id="org.vclipse.deployment.action2"
+               label="Send idocs to SAP system"
+               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/content">
+            <enablement>
+               <and>
+                  <objectClass
+                        name="org.eclipse.core.resources.IFile">
+                  </objectClass>
+                  <objectState
+                        name="extension"
+                        value="idoc">
                   </objectState>
                </and>
             </enablement>

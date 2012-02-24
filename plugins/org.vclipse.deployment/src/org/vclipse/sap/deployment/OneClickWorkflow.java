@@ -10,6 +10,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.connection.IConnectionHandler;
+import org.vclipse.idoc.iDoc.IDocFactory;
 import org.vclipse.idoc2jcoidoc.IIDoc2JCoIDocProcessor;
 import org.vclipse.idoc2jcoidoc.RFCIDocsSender;
 import org.vclipse.vcml.vcml.Model;
@@ -34,19 +35,22 @@ public class OneClickWorkflow {
 		EList<EObject> contents = resource.getContents();
 		if(!contents.isEmpty()) {
 			EObject object = contents.get(0);
+			org.vclipse.idoc.iDoc.Model idocModel = IDocFactory.eINSTANCE.createModel();
 			if(object instanceof Model) {
 				monitor.subTask("Converting VCML model to IDoc model...");
-				org.vclipse.idoc.iDoc.Model idocModel = vcml2IDoc.vcml2IDocs((Model)object);
+				idocModel = vcml2IDoc.vcml2IDocs((Model)object);
 				monitor.worked(1);
-				monitor.subTask("Converting IDoc model in JCo IDocs...");
-				List<IDocDocument> idocs = idocProcessor.transform(idocModel , monitor);
-				monitor.worked(1);
-				monitor.subTask("Sending IDocs to SAP...");
-				IStatus sendStatus = new RFCIDocsSender().send(idocs, connectionHandler, monitor);
-				monitor.worked(1);
-				monitor.done();
-				return sendStatus;
+			} else if(object instanceof org.vclipse.idoc.iDoc.Model) {
+				idocModel = (org.vclipse.idoc.iDoc.Model)object;
 			}
+			monitor.subTask("Converting IDoc model in JCo IDocs...");
+			List<IDocDocument> idocs = idocProcessor.transform(idocModel , monitor);
+			monitor.worked(1);
+			monitor.subTask("Sending IDocs to SAP...");
+			IStatus sendStatus = new RFCIDocsSender().send(idocs, connectionHandler, monitor);
+			monitor.worked(1);
+			monitor.done();
+			return sendStatus;
 		}
 		return Status.OK_STATUS;
 	}

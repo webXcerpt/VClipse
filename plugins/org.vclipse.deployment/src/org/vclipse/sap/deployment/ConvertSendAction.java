@@ -21,7 +21,7 @@ import com.sap.conn.jco.JCoException;
 /**
  *
  */
-public class ConvertToIDocsAndSendAction implements IObjectActionDelegate {
+public class ConvertSendAction implements IObjectActionDelegate {
 	
 	@Inject
 	private OneClickWorkflow workflow;
@@ -32,11 +32,10 @@ public class ConvertToIDocsAndSendAction implements IObjectActionDelegate {
 		Job job = new Job("Convert to IDocs and send to SAP system.") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask("Convert to IDocs and send to SAP system.", 4);
+				monitor.beginTask("Converting and sending to SAP system.", 4);
 				IFile file = (IFile)selection.getFirstElement();
-				monitor.subTask("Parsing VCML file " + file.getName());
-				XtextResourceSet xtextResourceSet = new XtextResourceSet();
-				Resource resource = xtextResourceSet.getResource(URI.createURI(file.getLocationURI().toString()), true);
+				monitor.subTask("Parsing " + file.getFileExtension() + " file " + file.getName());
+				Resource resource = new XtextResourceSet().getResource(URI.createURI(file.getLocationURI().toString()), true);
 				monitor.worked(1);
 				try {
 					return workflow.convertAndSend(resource, monitor);
@@ -57,5 +56,6 @@ public class ConvertToIDocsAndSendAction implements IObjectActionDelegate {
 	}
 
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+		// not used
 	}
 }
