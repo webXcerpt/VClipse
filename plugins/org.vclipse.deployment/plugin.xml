@@ -69,4 +69,19 @@
          </action>
       </objectContribution>
    </extension>
+ <extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.preferences.PreferencesInitializer">
+    </initializer>
+ </extension>
+ <extension
+       point="org.eclipse.ui.preferencePages">
+    <page
+          category="org.vclipse.preferences.page"
+          class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.preferences.SapDeploymentPreferencePage"
+          id="org.vclipse.deployment.preferencePage"
+          name="SAP Deployment">
+    </page>
+ </extension>
 </plugin>

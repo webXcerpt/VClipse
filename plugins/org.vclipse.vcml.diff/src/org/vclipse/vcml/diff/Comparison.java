@@ -1,7 +1,6 @@
 package org.vclipse.vcml.diff;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +21,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.resource.SaveOptions;
 import org.vclipse.base.UriUtil;
 import org.vclipse.vcml.vcml.Import;
 import org.vclipse.vcml.vcml.Model;
@@ -30,6 +30,8 @@ import org.vclipse.vcml.vcml.OptionType;
 import org.vclipse.vcml.vcml.VcmlFactory;
 
 public class Comparison {
+
+	private static final VcmlFactory VCML_FACTORY = VcmlFactory.eINSTANCE;
 
 	public void compare(IFile oldFile, IFile newFile, IFile resultFile, IProgressMonitor monitor) throws CoreException, InterruptedException, IOException {
 		
@@ -51,6 +53,7 @@ public class Comparison {
 		compare(oldResource, newResource, resultResource, monitor);
 		
 		// refresh the result file
+		resultResource.save(SaveOptions.defaultOptions().toOptionsMap());
 		resultFile.refreshLocal(IResource.DEPTH_ONE, monitor);
 	}
 	
@@ -65,35 +68,33 @@ public class Comparison {
 		DiffModel diffModel = DiffService.doDiff(matchModel);
 		monitor.worked(10);
 		
-		Model vcmlModel = VcmlFactory.eINSTANCE.createModel();		
+		Model resultModel = VCML_FACTORY.createModel();		
 		
 		// compute the import uri -> the old file should be imported by the result file
-		Import imStatement = VcmlFactory.eINSTANCE.createImport();
-		imStatement.setImportURI(new UriUtil().computeImportUri(oldResource, resultResource));
-		vcmlModel.getImports().add(imStatement);
+		Import importStatement = VCML_FACTORY.createImport();
+		importStatement.setImportURI(new UriUtil().computeImportUri(oldResource, resultResource));
+		resultModel.getImports().add(importStatement);
 	
 		// get the ups option from the new file and provide it to the results file
-		List<EObject> contents2 = newResource.getContents();
-		Model newModel = null;
-		if(!contents2.isEmpty()) {
-			EObject mainObject = contents2.get(0);
-			if(mainObject instanceof Model) {
-				newModel = (Model)mainObject;
-				List<Option> options2 = newModel.getOptions();
-				if(!options2.isEmpty()) {
-					for(Option option : options2) {
-						if(OptionType.UPS.equals(option.getName())) {
-							vcmlModel.getOptions().add(EcoreUtil2.copy(option));
-						}
+		Model changedModel = VCML_FACTORY.createModel();
+		List<EObject> newModelContent = newResource.getContents();
+		if(!newModelContent.isEmpty()) {
+			EObject object = newModelContent.get(0);
+			if(object instanceof Model) {
+				changedModel = (Model)newModelContent.get(0);
+				for(Option option : changedModel.getOptions()) {
+					if(OptionType.UPS.equals(option.getName())) {
+						resultModel.getOptions().add(EcoreUtil2.copy(option));
 					}
 				}
-			}				
+			}
 		}
 		
 		List<EObject> contents = resultResource.getContents();
-		contents.add(vcmlModel);
-		new DiffsHandlerSwitch(vcmlModel, newModel, monitor).doSwitch(diffModel);
-		resultResource.save(Collections.EMPTY_MAP);
+		contents.add(resultModel);
+		new DiffsHandlerSwitch(resultModel, changedModel, monitor).doSwitch(diffModel);
+		
+		// resources contain same objects
 		monitor.worked(10);
 	}
 }

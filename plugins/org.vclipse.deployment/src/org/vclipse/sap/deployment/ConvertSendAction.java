@@ -1,5 +1,7 @@
 package org.vclipse.sap.deployment;
 
+import java.io.IOException;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -43,6 +45,9 @@ public class ConvertSendAction implements IObjectActionDelegate {
 					exception.printStackTrace();
 					return Status.CANCEL_STATUS;
 				} catch (CoreException exception) {
+					exception.printStackTrace();
+					return Status.CANCEL_STATUS;
+				} catch (IOException exception) {
 					exception.printStackTrace();
 					return Status.CANCEL_STATUS;
 				}

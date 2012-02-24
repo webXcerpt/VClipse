@@ -17,6 +17,7 @@ import org.eclipse.emf.compare.diff.metamodel.ReferenceOrderChange;
 import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.metamodel.util.DiffSwitch;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
@@ -72,9 +73,9 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 		// finalize model
 		List<VCObject> objects = model2Build.getObjects();
 		List<VCObject> leftObjects = Lists.newArrayList(leftModel.getObjects());
-		for (VCObject o : leftObjects) {
-			if (modelElements.contains(o)) {
-				objects.add(o);
+		for(VCObject o : leftObjects) {
+			if(modelElements.contains(o)) {
+				objects.add(EcoreUtil.copy(o));
 			}
 		}
 		return HANDLED;
@@ -160,8 +161,7 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 		} else {
 			VCObject vcObject = EcoreUtil2.getContainerOfType(object, VCObject.class);
 			if(vcObject != null) {
-				// System.err.println("adding " + vcObject);
-				modelElements.add(vcObject);
+				modelElements.add(EcoreUtil.copy(vcObject));
 			}
 		}
 		return HANDLED;

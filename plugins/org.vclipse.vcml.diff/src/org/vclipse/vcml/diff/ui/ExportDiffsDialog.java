@@ -221,9 +221,7 @@ final class ExportDiffsDialog extends TitleAreaDialog {
 								resultFile.setContents(new StringInputStream(""), true, true, monitor);
 							}
 							monitor.worked(5);
-							
-							Comparison comparison = new Comparison();
-							comparison.compare(oldFile, newFile, resultFile, monitor);
+							new Comparison().compare(oldFile, newFile, resultFile, monitor);
 							return Status.OK_STATUS;
 						} catch(CoreException exception) {
 							VcmlDiffPlugin.log(exception.getMessage(), exception);

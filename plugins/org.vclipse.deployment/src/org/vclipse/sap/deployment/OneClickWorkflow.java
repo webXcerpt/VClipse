@@ -1,5 +1,6 @@
 package org.vclipse.sap.deployment;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -7,12 +8,17 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.xtext.resource.SaveOptions;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.idoc.iDoc.IDocFactory;
 import org.vclipse.idoc2jcoidoc.IIDoc2JCoIDocProcessor;
 import org.vclipse.idoc2jcoidoc.RFCIDocsSender;
+import org.vclipse.sap.deployment.preferences.PreferencesInitializer;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml2idoc.builder.VCML2IDocSwitch;
 
@@ -31,7 +37,10 @@ public class OneClickWorkflow {
 	@Inject
 	private IConnectionHandler connectionHandler;
 	
-	public IStatus convertAndSend(Resource resource, IProgressMonitor monitor) throws JCoException, CoreException {
+	@Inject
+	private IPreferenceStore preferenceStore;
+	
+	public IStatus convertAndSend(Resource resource, IProgressMonitor monitor) throws JCoException, CoreException, IOException {
 		EList<EObject> contents = resource.getContents();
 		if(!contents.isEmpty()) {
 			EObject object = contents.get(0);
@@ -45,6 +54,12 @@ public class OneClickWorkflow {
 			}
 			monitor.subTask("Converting IDoc model in JCo IDocs...");
 			List<IDocDocument> idocs = idocProcessor.transform(idocModel , monitor);
+			if(preferenceStore.getBoolean(PreferencesInitializer.SAVE_IDOC_FILES)) {
+				ResourceSet resourceSet = resource.getResourceSet();
+				Resource idocResource = resourceSet.createResource(URI.createURI(resource.getURI().toString().concat(".idoc")));
+				idocResource.getContents().add(idocModel);
+				idocResource.save(SaveOptions.defaultOptions().toOptionsMap());
+			}
 			monitor.worked(1);
 			monitor.subTask("Sending IDocs to SAP...");
 			IStatus sendStatus = new RFCIDocsSender().send(idocs, connectionHandler, monitor);
