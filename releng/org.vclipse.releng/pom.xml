@@ -51,6 +51,7 @@
 		<module>../org.vclipse.configscan</module>
 		<module>../org.vclipse.configscan.vcmlt</module>
 		<module>../org.vclipse.configscan.vcmlt.ui</module>
+		<module>../org.vclipse.deployment</module>
 		
 		<!-- VClipse Test Projects -->
 		<module>../org.vclipse.idoc.tests</module>

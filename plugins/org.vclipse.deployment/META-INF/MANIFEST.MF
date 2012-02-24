@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Vclipse Deployment Plug-in
+Bundle-Name: VClipse Deployment Plug-in
 Bundle-SymbolicName: org.vclipse.deployment;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 0.4.2.qualifier
 Bundle-Activator: org.vclipse.sap.deployment.DeploymentPlugin
 Require-Bundle: org.eclipse.core.runtime,
  org.vclipse.vcml2idoc.ui,
@@ -21,3 +21,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.sap.conn.idoc,
  com.sap.conn.jco
+Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
