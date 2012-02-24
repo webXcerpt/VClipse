@@ -8,7 +8,7 @@
  * Contributors:
  *     webXcerpt Software GmbH - initial creator
  ******************************************************************************/
-package org.vclipse.idoc2jcoidoc.internal;
+package org.vclipse.idoc2jcoidoc;
 
 import java.io.PrintStream;
 import java.math.BigInteger;
@@ -23,8 +23,7 @@ import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.console.CMConsolePlugin;
 import org.vclipse.console.CMConsolePlugin.Kind;
-import org.vclipse.idoc2jcoidoc.Activator;
-import org.vclipse.idoc2jcoidoc.IUiConstants;
+import org.vclipse.idoc2jcoidoc.internal.NumberAssigningJCoIDocPostProcessor;
 import org.vclipse.idoc2jcoidoc.views.IDocsSender;
 
 import com.sap.conn.idoc.IDocDocument;

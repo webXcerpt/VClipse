@@ -18,7 +18,7 @@ import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.connection.IConnectionListener;
 import org.vclipse.idoc2jcoidoc.Activator;
 import org.vclipse.idoc2jcoidoc.IUiConstants;
-import org.vclipse.idoc2jcoidoc.internal.RFCIDocsSender;
+import org.vclipse.idoc2jcoidoc.RFCIDocsSender;
 import org.vclipse.idoc2jcoidoc.internal.UserIDocsSender;
 import org.vclipse.idoc2jcoidoc.views.IDocView.IDocViewInput;
 

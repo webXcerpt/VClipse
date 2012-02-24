@@ -57,4 +57,5 @@ Import-Package: com.sap.conn.idoc,
  com.sap.tc.logging.standard,
  com.sap.tc.logging.tools.lv,
  com.sap.tc.logging.tools.monitor
-Export-Package: org.vclipse.idoc2jcoidoc.actions
+Export-Package: org.vclipse.idoc2jcoidoc,
+ org.vclipse.idoc2jcoidoc.actions

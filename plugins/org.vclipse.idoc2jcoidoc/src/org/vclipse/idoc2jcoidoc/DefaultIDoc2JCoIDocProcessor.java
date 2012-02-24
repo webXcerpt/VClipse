@@ -8,7 +8,7 @@
  * Contributors:
  *     webXcerpt Software GmbH - initial creator
  ******************************************************************************/
-package org.vclipse.idoc2jcoidoc.internal;
+package org.vclipse.idoc2jcoidoc;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -33,9 +33,6 @@ import org.vclipse.idoc.iDoc.NumberField;
 import org.vclipse.idoc.iDoc.Segment;
 import org.vclipse.idoc.iDoc.StringField;
 import org.vclipse.idoc.iDoc.util.IDocSwitch;
-import org.vclipse.idoc2jcoidoc.Activator;
-import org.vclipse.idoc2jcoidoc.IIDoc2JCoIDocProcessor;
-import org.vclipse.idoc2jcoidoc.IUiConstants;
 
 import com.google.inject.Inject;
 import com.sap.conn.idoc.IDocDocument;
