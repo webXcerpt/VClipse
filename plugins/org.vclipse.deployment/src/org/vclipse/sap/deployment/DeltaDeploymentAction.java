@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -65,7 +66,13 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 									Resource fileResource = resource.getResource(URI.createURI(file.getLocationURI().toString()), true);
 									Resource sapStateResource = resource.getResource(URI.createURI(sapStateFile.getLocationURI().toString()), true);
 									
-									// TODO add an option for save
+									// TODO
+									// * copy fileResource to sapStateResource, when action was successful
+									// * preferences for: (default false)
+									//    * checkbox: save diff.vcml file
+									//    * checkbox: save idoc files
+									//    * checkbox: commit SAP state to SVN (commit message should contain the name of the SAP system and the UPS package number)
+									// * if commit checked, the new state should be committed to SVN
 									
 									try {
 										Resource resultResource = resource.createResource(URI.createURI(resultFile.getLocationURI().toString()));
@@ -74,6 +81,7 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 										monitor.subTask("Converting to IDocs and sending to SAP");
 										IStatus status =  workflow.convertAndSend(resultResource, monitor);
 										resultResource.save(SaveOptions.newBuilder().format().getOptions().toOptionsMap());
+										folder.refreshLocal(IResource.DEPTH_ONE, monitor);
 										monitor.done();
 										return status;
 									} catch (InterruptedException exception) {
