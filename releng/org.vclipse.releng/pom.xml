@@ -58,7 +58,9 @@
 		<module>../org.vclipse.vcml.tests</module>
 		<module>../org.vclipse.configscan.vcmlt.tests</module>
 		<module>../org.vclipse.vcml.diff.tests</module>
-		
+
+		<!-- do not add org.vclipse.configscan.tests to the module list -->
+				
 		<!-- VClipse Features -->
 		<module>../org.vclipse.idoc_feature</module>
 		<module>../org.vclipse.pdr_feature</module>
