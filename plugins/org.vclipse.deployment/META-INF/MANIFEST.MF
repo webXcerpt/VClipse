@@ -15,7 +15,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.vclipse.idoc,
  org.vclipse.vcml,
  org.eclipse.xtext.ui,
- com.webxcerpt.cm.nsn.cml,
  org.vclipse.vcml.diff,
  org.tigris.subversion.subclipse.core
 Bundle-ActivationPolicy: lazy
