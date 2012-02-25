@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target name="VClipse" sequenceNumber="8">
+<target name="VClipse" sequenceNumber="9">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.sdk.feature.group" version="2.7.1.v20110913-1526"/>
-<unit id="org.eclipse.emf.compare.feature.group" version="1.2.1.v20110913-0926"/>
-<unit id="org.eclipse.emf.compare.mpatch.feature.group" version="1.2.1.v20110913-0926"/>
-<unit id="org.eclipse.emf.compare.sdk.feature.group" version="1.2.1.v20110913-0926"/>
-<unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="3.3.1.v201108102009-7H7EFZ3DxumTlaI6nheRdHo2p1KaDIL1Uz-S3PL"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.7.2.v20120130-0943"/>
+<unit id="org.eclipse.emf.compare.feature.group" version="1.2.2.v20120214-0915"/>
+<unit id="org.eclipse.emf.compare.mpatch.feature.group" version="1.2.2.v20120214-0915"/>
+<unit id="org.eclipse.emf.compare.sdk.feature.group" version="1.2.2.v20120214-0915"/>
+<unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="3.3.2.v201112072049-7H7EFZ7DxumTmce4khcSkIiqoD8eDMKlT8Oz011P"/>
 <repository location="http://download.eclipse.org/releases/indigo"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -36,7 +36,7 @@
 <repository location="http://xtext-utils.eclipselabs.org.codespot.com/git.distribution/releases/unittesting-0.9.x/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.tigris.subversion.subclipse" version="1.6.18"/>
+<unit id="org.tigris.subversion.subclipse.feature.group" version="1.6.18"/>
 <repository location="http://subclipse.tigris.org/update_1.6.x"/>
 </location>
 </locations>
