@@ -1,6 +1,7 @@
 package org.vclipse.configscan.imports;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.resources.IFile;
@@ -25,6 +26,7 @@ import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.StringInputStream;
 import org.vclipse.configscan.ConfigScanPlugin;
+import org.xml.sax.SAXException;
 
 import com.google.inject.Inject;
 
@@ -94,7 +96,11 @@ public abstract class AbstractConfigScanTransformationWizard extends Wizard impl
 						if(wizardPage.openTargetFile()) {
 							IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), exportLocation);
 						}
-					} catch(Exception exception) {
+					} catch(SAXException exception) {
+						System.err.println(exception.getMessage());
+						throw new InvocationTargetException(exception);
+					} catch(IOException exception) {
+						System.err.println(exception.getMessage());
 						throw new InvocationTargetException(exception);
 					}
 				}
