@@ -60,13 +60,12 @@ public class OneClickWorkflow {
 				idocResource.getContents().add(idocModel);
 				idocResource.save(SaveOptions.defaultOptions().toOptionsMap());
 			}
-			return Status.OK_STATUS;
-//			monitor.worked(1);
-//			monitor.subTask("Sending IDocs to SAP...");
-//			IStatus sendStatus = new RFCIDocsSender().send(idocs, connectionHandler, monitor);
-//			monitor.worked(1);
-//			monitor.done();
-//			return sendStatus;
+			monitor.worked(1);
+			monitor.subTask("Sending IDocs to SAP...");
+			IStatus sendStatus = new RFCIDocsSender().send(idocs, connectionHandler, monitor);
+			monitor.worked(1);
+			monitor.done();
+			return sendStatus;
 		}
 		return Status.OK_STATUS;
 	}
