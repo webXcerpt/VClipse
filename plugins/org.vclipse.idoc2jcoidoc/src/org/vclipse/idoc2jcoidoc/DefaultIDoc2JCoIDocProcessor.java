@@ -130,7 +130,7 @@ public class DefaultIDoc2JCoIDocProcessor extends IDocSwitch<Object> implements 
 		iDocRepository = handler.getIDocRepository();
 		iDocFactory = JCoIDoc.getIDocFactory();
 		if(iDocRepository == null) {
-			throw new CoreException(new Status(IStatus.ERROR, Activator.ID, "Could not retrieve the IDoc repository"));
+			throw new CoreException(new Status(IStatus.ERROR, IDoc2JCoIDocPlugin.ID, "Could not retrieve the IDoc repository"));
 		} else {
 			IDocDocument iDoc = null;
 			try {
@@ -209,11 +209,11 @@ public class DefaultIDoc2JCoIDocProcessor extends IDocSwitch<Object> implements 
 	private void handleException(final EObject sourceObject, final Exception exception) {
 		sourceObject.eResource().getErrors().add(new ExceptionDiagnostic(exception)); // TODO make this appear in editor and error log
 		if(exception instanceof AssertionFailedException) {
-			Activator.log(((AssertionFailedException)exception).getMessage(), exception);
+			IDoc2JCoIDocPlugin.log(((AssertionFailedException)exception).getMessage(), exception);
 		} else if(exception instanceof IDocException) {
-			Activator.log(((IDocException)exception).getMessage(), exception);
+			IDoc2JCoIDocPlugin.log(((IDocException)exception).getMessage(), exception);
 		} else {
-			Activator.log("", exception);
+			IDoc2JCoIDocPlugin.log("", exception);
 		}
 	}
 

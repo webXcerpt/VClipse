@@ -25,6 +25,7 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.ui.util.ResourceUtil;
 import org.eclipse.xtext.util.StringInputStream;
 import org.tigris.subversion.subclipse.core.SVNTeamProvider;
+import org.vclipse.idoc2jcoidoc.IDocSenderStatus;
 import org.vclipse.sap.deployment.preferences.PreferencesInitializer;
 import org.vclipse.vcml.diff.Comparison;
 
@@ -81,14 +82,19 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 						}
 						monitor.done();
 						IStatus status = workflow.convertAndSend(diffResource, monitor);
-						
 						if(status.isOK()) {
 							Files.copy(new File(fileResource.getURI().toFileString()), new File(sapStateResource.getURI().toFileString()));
 							if(preferenceStore.getBoolean(PreferencesInitializer.EXECUTE_SVN_COMMIT)) {
 								sapStateFile = ResourceUtil.getFile(sapStateResource);
 								SVNTeamProvider teamProvider = new SVNTeamProvider();
 								teamProvider.setProject(sapStateFile.getProject());
-								teamProvider.checkin(new IResource[]{sapStateFile}, "Committing new SAP state", false, IResource.DEPTH_INFINITE, monitor);
+								String commitMessage = "Committing new SAP state";
+								if(status instanceof IDocSenderStatus) {
+									IDocSenderStatus senderStatus = (IDocSenderStatus)status;
+									commitMessage = "This code was sended to ";
+									commitMessage += "SAP system: " + senderStatus.getSapSystem() + " with UPS number: " + senderStatus.getUpsNumber();
+								}
+								teamProvider.checkin(new IResource[]{sapStateFile}, commitMessage, false, IResource.DEPTH_INFINITE, monitor);
 							}
 						}
 						folder.refreshLocal(IResource.DEPTH_ONE, monitor);

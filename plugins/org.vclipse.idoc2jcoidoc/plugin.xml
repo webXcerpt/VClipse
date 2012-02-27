@@ -30,7 +30,7 @@
             id="org.vclipse.fileTranformation"
             objectClass="org.eclipse.core.resources.IFile">
          <action
-               class="org.vclipse.idoc2jcoidoc.ShowJCoIDocsAction"
+               class="org.vclipse.idoc2jcoidoc.actions.ShowJCoIDocsAction"
                enablesFor="?"
                icon="icons/cog_edit.png"
                id="org.vclipse.actions.idoc2jcoidoc"

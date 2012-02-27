@@ -10,7 +10,7 @@ package org.vclipse.idoc2jcoidoc.views;
 import org.eclipse.jface.viewers.BaseLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.vclipse.idoc2jcoidoc.Activator;
+import org.vclipse.idoc2jcoidoc.IDoc2JCoIDocPlugin;
 import org.vclipse.idoc2jcoidoc.IUiConstants;
 
 import com.sap.conn.idoc.IDocDocument;
@@ -26,9 +26,9 @@ public class IDocLabelProvider extends BaseLabelProvider implements ILabelProvid
 	 */
 	public Image getImage(final Object object) {
 		if(object instanceof IDocDocument) {
-			return Activator.getImage(IUiConstants.IDOC_DOCUMENT_IMAGE);
+			return IDoc2JCoIDocPlugin.getImage(IUiConstants.IDOC_DOCUMENT_IMAGE);
 		} else if (object instanceof IDocSegment) {
-			return Activator.getImage(IUiConstants.IDOC_SEGMENT_IMAGE);
+			return IDoc2JCoIDocPlugin.getImage(IUiConstants.IDOC_SEGMENT_IMAGE);
 		} else {
 			return null;
 		}

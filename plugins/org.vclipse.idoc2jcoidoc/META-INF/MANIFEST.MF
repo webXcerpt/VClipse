@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: VClipse IDoc to JCo IDoc Transformation UI Plug-in
 Bundle-SymbolicName: org.vclipse.idoc2jcoidoc;singleton:=true
 Bundle-Version: 0.4.2.qualifier
-Bundle-Activator: org.vclipse.idoc2jcoidoc.Activator
+Bundle-Activator: org.vclipse.idoc2jcoidoc.IDoc2JCoIDocPlugin
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Require-Bundle: org.eclipse.xtext;bundle-version="2.2.1",
  org.eclipse.xtext.ui;bundle-version="2.2.1",

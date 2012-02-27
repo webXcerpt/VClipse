@@ -2,7 +2,7 @@
  * Copyright (c) 2009 webXcerpt Software GmbH (http://www.webxcerpt.com).
  * All rights reserved.
  *******************************************************************************/
-package org.vclipse.idoc2jcoidoc;
+package org.vclipse.idoc2jcoidoc.actions;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.IAction;
@@ -12,6 +12,7 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.vclipse.idoc2jcoidoc.IDoc2JCoIDocPlugin;
 import org.vclipse.idoc2jcoidoc.views.IDocView;
 
 /**
@@ -50,7 +51,7 @@ public class ShowJCoIDocsAction implements IObjectActionDelegate {
 				final IDocView idocView = (IDocView)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(IDocView.ID);
 				idocView.setInput((IFile)((IStructuredSelection)selection).getFirstElement());
 			} catch (PartInitException e) {
-				Activator.log(e.getMessage(), e);
+				IDoc2JCoIDocPlugin.log(e.getMessage(), e);
 			}
 		}
 	}

@@ -45,7 +45,7 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.connection.VClipseConnectionPlugin;
 import org.vclipse.idoc.iDoc.Model;
-import org.vclipse.idoc2jcoidoc.Activator;
+import org.vclipse.idoc2jcoidoc.IDoc2JCoIDocPlugin;
 import org.vclipse.idoc2jcoidoc.IIDoc2JCoIDocProcessor;
 
 import com.google.common.collect.Maps;
@@ -61,7 +61,7 @@ public class IDocView extends ViewPart implements IShowInTarget {
 	/**
 	 * 
 	 */
-	public static final String ID = Activator.ID + ".views.idocview";
+	public static final String ID = IDoc2JCoIDocPlugin.ID + ".views.idocview";
 	
 	/**
 	 * 
@@ -267,7 +267,7 @@ public class IDocView extends ViewPart implements IShowInTarget {
 				}
 			}
 		} catch (IOException e) {
-			Activator.log(e.getMessage(), e);
+			IDoc2JCoIDocPlugin.log(e.getMessage(), e);
 		}
 	}
 }

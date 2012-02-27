@@ -25,7 +25,7 @@ import com.google.inject.Injector;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin {
+public class IDoc2JCoIDocPlugin extends AbstractUIPlugin {
 
 	/**
 	 *  The plug-in ID
@@ -35,7 +35,7 @@ public class Activator extends AbstractUIPlugin {
 	/**
 	 * The shared instance
 	 */
-	private static Activator plugin;
+	private static IDoc2JCoIDocPlugin plugin;
 	
 	/**
 	 * 
@@ -75,7 +75,7 @@ public class Activator extends AbstractUIPlugin {
 	 *
 	 * @return the shared instance
 	 */
-	public static Activator getDefault() {
+	public static IDoc2JCoIDocPlugin getDefault() {
 		return plugin;
 	}
 	

@@ -16,16 +16,15 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.xtext.util.Strings;
+import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.console.CMConsolePlugin;
 import org.vclipse.console.CMConsolePlugin.Kind;
-import org.vclipse.idoc2jcoidoc.Activator;
+import org.vclipse.idoc2jcoidoc.IDoc2JCoIDocPlugin;
+import org.vclipse.idoc2jcoidoc.IDocSenderStatus;
 import org.vclipse.idoc2jcoidoc.views.IDocsSender;
-import org.vclipse.connection.IConnectionHandler;
 
 import com.sap.conn.idoc.IDocDocument;
 import com.sap.conn.idoc.IDocException;
@@ -58,7 +57,7 @@ public class UserIDocsSender extends IDocsSender {
 	 * @see org.vclipse.idoc2jcoidoc.IIDocsSender#send(java.util.List, org.vclipse.connection.ISapConnectionHandler, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	public IStatus send(final List<IDocDocument> iDocDocuments, final IConnectionHandler handler, final IProgressMonitor monitor) {
+	public IDocSenderStatus send(final List<IDocDocument> iDocDocuments, final IConnectionHandler handler, final IProgressMonitor monitor) {
 		final NumbersProviderDialog dialog = new NumbersProviderDialog(parentShell);
 		if(Window.OK == dialog.open()) {
 			final String upsNumber = dialog.getUPSNumber();
@@ -66,12 +65,13 @@ public class UserIDocsSender extends IDocsSender {
 			out.println("UPS number: " + upsNumber + ", IDoc number: " + iDocNumber);
 			try {
 				new NumberAssigningJCoIDocPostProcessor(upsNumber, iDocNumber).postprocess(iDocDocuments);
-				if (!reallySendIDocs) return Status.OK_STATUS;
+				if (!reallySendIDocs) return completeStatus;
 				// send IDocs
 				final JCoDestination destination = handler.getJCoDestination();
 				for(IDocDocument iDocDocument : iDocDocuments) {
 					if (monitor.isCanceled()) {
-						return Status.CANCEL_STATUS;
+						cancelStatus.setMessage("Send operation cancelled.");
+						return cancelStatus;
 					}
 					final String tid = destination.createTID();
 					monitor.worked(1);
@@ -87,13 +87,13 @@ public class UserIDocsSender extends IDocsSender {
 				}
 			} catch (IDocException e) {
 				e.printStackTrace();
-				Activator.log(e.getMessage(), e);
+				IDoc2JCoIDocPlugin.log(e.getMessage(), e);
 			} catch (JCoException e) {
 				e.printStackTrace();
-				Activator.log(e.getMessage(), e);
+				IDoc2JCoIDocPlugin.log(e.getMessage(), e);
 			}
 		}		
-		return Status.OK_STATUS;
+		return completeStatus;
 	}
 
 }

@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.vclipse.connection.IConnection;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.connection.IConnectionListener;
-import org.vclipse.idoc2jcoidoc.Activator;
+import org.vclipse.idoc2jcoidoc.IDoc2JCoIDocPlugin;
 import org.vclipse.idoc2jcoidoc.IUiConstants;
 import org.vclipse.idoc2jcoidoc.RFCIDocsSender;
 import org.vclipse.idoc2jcoidoc.internal.UserIDocsSender;
@@ -61,8 +61,8 @@ public class SendIDocsAction extends Action implements IConnectionListener {
 			disconnected();
 		}
 		setText("Send IDocs action");
-		setImageDescriptor(Activator.getImageDescriptor(IUiConstants.SEND_IDOCS_IMAGE));
-		setDisabledImageDescriptor(Activator.getImageDescriptor(IUiConstants.SEND_IDOCS_IMAGE_DISABLED));
+		setImageDescriptor(IDoc2JCoIDocPlugin.getImageDescriptor(IUiConstants.SEND_IDOCS_IMAGE));
+		setDisabledImageDescriptor(IDoc2JCoIDocPlugin.getImageDescriptor(IUiConstants.SEND_IDOCS_IMAGE_DISABLED));
 		connectionHandler.addConnectionListener(this);
 	}
 	

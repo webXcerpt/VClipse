@@ -16,9 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.console.CMConsolePlugin;
@@ -58,28 +56,33 @@ public class RFCIDocsSender extends IDocsSender {
 	}
 
 	@Override
-	public IStatus send(final List<IDocDocument> iDocDocuments, final IConnectionHandler handler, final IProgressMonitor monitor) {
+	public IDocSenderStatus send(final List<IDocDocument> iDocDocuments, final IConnectionHandler handler, final IProgressMonitor monitor) {
 		try {
-			final String value = handler.getCurrentConnection().getSystemName();
-			monitor.beginTask("Sending " + iDocDocuments.size() + " IDoc documents to SAP system " + value, 3 * iDocDocuments.size() + 2 * 2 /* 2x2 transactions for number RFCs */);
-			out.println("sending " + iDocDocuments.size() + " IDoc documents to SAP system " + value + " - started (" + new Date() + ")");
+			final String sapSystem = handler.getCurrentConnection().getSystemName();
+			monitor.beginTask("Sending " + iDocDocuments.size() + " IDoc documents to SAP system " + sapSystem, 3 * iDocDocuments.size() + 2 * 2 /* 2x2 transactions for number RFCs */);
+			out.println("sending " + iDocDocuments.size() + " IDoc documents to SAP system " + sapSystem + " - started (" + new Date() + ")");
+			completeStatus.setSapSystem(sapSystem);
 			final IPreferencesService preferences = Platform.getPreferencesService();
 			String upsNumber = null;
 			if (monitor.isCanceled()) {
-				return Status.CANCEL_STATUS;
+				cancelStatus.setMessage("Send operation cancelled");
+				return cancelStatus;
 			}
 			monitor.subTask("retrieving IDoc numbers");
 			result.println(" retrieving IDoc numbers");
-			final String idocFunctionName = preferences.getString(Activator.ID, IUiConstants.RFC_FOR_IDOC_NUMBERS, "", null);
+			final String idocFunctionName = preferences.getString(IDoc2JCoIDocPlugin.ID, IUiConstants.RFC_FOR_IDOC_NUMBERS, "", null);
 			final JCoFunction functionIDOC = handler.getJCoFunction(idocFunctionName);
 			monitor.worked(1);
 			if (functionIDOC==null) { // TODO use exceptions
-				err.println("Error: Function " + idocFunctionName + " not available on SAP system");
-				return Status.CANCEL_STATUS;
+				String errorMessage = "Error: Function " + idocFunctionName + " not available on SAP system";
+				err.println(errorMessage);
+				cancelStatus.setMessage(errorMessage);
+				return cancelStatus;
 			}
 			functionIDOC.getImportParameterList().setValue("QUANTITY", iDocDocuments.size()); // evtl. als 20-stelligen String codieren
-			if (monitor.isCanceled()) {
-				return Status.CANCEL_STATUS;
+			if(monitor.isCanceled()) {
+				cancelStatus.setMessage("Send operation cancelled");
+				return cancelStatus;
 			}
 			functionIDOC.execute(handler.getJCoDestination());
 			monitor.worked(1);
@@ -95,35 +98,41 @@ public class RFCIDocsSender extends IDocsSender {
 			}
 			if (retrieveUPSNumber) {
 				if (monitor.isCanceled()) {
-					return Status.CANCEL_STATUS;
+					cancelStatus.setMessage("Send operation cancelled");
+					return cancelStatus;
 				}
 				monitor.subTask("retrieving UPS number");
 				result.println(" retrieving UPS number");
-				final String upsFunctionName = preferences.getString(Activator.ID, IUiConstants.RFC_FOR_UPS_NUMBERS, "", null);
+				final String upsFunctionName = preferences.getString(IDoc2JCoIDocPlugin.ID, IUiConstants.RFC_FOR_UPS_NUMBERS, "", null);
 				final JCoFunction functionUPS = handler.getJCoFunction(upsFunctionName);	
 				if (functionUPS==null) { // TODO use exceptions
-					err.println("Error: Function " + upsFunctionName + " not available on SAP system");
-					return Status.CANCEL_STATUS;
+					String errorMessage = "Error: Function " + upsFunctionName + " not available on SAP system";
+					err.println(errorMessage);
+					cancelStatus.setMessage(errorMessage);
+					return cancelStatus;
 				}
 				if (monitor.isCanceled()) {
-					return Status.CANCEL_STATUS;
+					cancelStatus.setMessage("Send operation cancelled");
+					return cancelStatus;
 				}
 				functionUPS.execute(handler.getJCoDestination());
 				monitor.worked(1);
 				upsNumber = functionUPS.getExportParameterList().getString("NUMBER");
-				final String prefix = preferences.getString(Activator.ID, IUiConstants.PARTNER_NUMBER, "", null);
+				final String prefix = preferences.getString(IDoc2JCoIDocPlugin.ID, IUiConstants.PARTNER_NUMBER, "", null);
 				upsNumber = prefix + upsNumber.substring(3);
+				completeStatus.setUpsNumber(upsNumber);
 				result.println(" retrieving UPS number - done: " + upsNumber);
 			}
 
 			final BigInteger iDocNumber = functionIDOC.getExportParameterList().getBigInteger("NUMBER").subtract(BigInteger.valueOf(iDocDocuments.size()));
 			new NumberAssigningJCoIDocPostProcessor(upsNumber, iDocNumber).postprocess(iDocDocuments);
-			if (!reallySendIDocs) return Status.OK_STATUS;
+			if (!reallySendIDocs) return completeStatus;
 			// send IDocs
 			final JCoDestination destination = handler.getJCoDestination();
 			for(IDocDocument iDocDocument : iDocDocuments) {
 				if (monitor.isCanceled()) {
-					return Status.CANCEL_STATUS;
+					cancelStatus.setMessage("Send operation cancelled");
+					return cancelStatus;
 				}
 				final String tid = destination.createTID();
 				monitor.worked(1);
@@ -136,18 +145,18 @@ public class RFCIDocsSender extends IDocsSender {
 			}
 			result.println("sending " + iDocDocuments.size() + " IDoc documents to SAP system - done (" + new Date() + ")");
 			if (retrieveUPSNumber) {
-				info.println("To process the package in SAP, log into " + value + " and \ncall transaction UPS and search for package number " + upsNumber);
+				info.println("To process the package in SAP, log into " + sapSystem + " and \ncall transaction UPS and search for package number " + upsNumber);
 			}
-		} catch (IDocException e) {
-			e.printStackTrace();
-			// TODO some error status
-			return new Status(IStatus.ERROR, Activator.ID, e.getMessage());
-		} catch (JCoException e) {
-			e.printStackTrace();
-			// TODO some error status
-			return new Status(IStatus.ERROR, Activator.ID, e.getMessage());
+		} catch (IDocException exception) {
+			exception.printStackTrace();
+			cancelStatus.setMessage(exception.getMessage());
+			return cancelStatus;
+		} catch (JCoException exception) {
+			exception.printStackTrace();
+			cancelStatus.setMessage(exception.getMessage());
+			return cancelStatus;
 		}
-		return Status.OK_STATUS;
+		return completeStatus;
 	}
 
 }
