@@ -22,7 +22,9 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.ui.util.ResourceUtil;
 import org.eclipse.xtext.util.StringInputStream;
+import org.tigris.subversion.subclipse.core.SVNTeamProvider;
 import org.vclipse.sap.deployment.preferences.PreferencesInitializer;
 import org.vclipse.vcml.diff.Comparison;
 
@@ -83,7 +85,10 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 						if(status.isOK()) {
 							Files.copy(new File(fileResource.getURI().toFileString()), new File(sapStateResource.getURI().toFileString()));
 							if(preferenceStore.getBoolean(PreferencesInitializer.EXECUTE_SVN_COMMIT)) {
-								// TODO commit with svn 
+								sapStateFile = ResourceUtil.getFile(sapStateResource);
+								SVNTeamProvider teamProvider = new SVNTeamProvider();
+								teamProvider.setProject(sapStateFile.getProject());
+								teamProvider.checkin(new IResource[]{sapStateFile}, "Committing new SAP state", false, IResource.DEPTH_INFINITE, monitor);
 							}
 						}
 						folder.refreshLocal(IResource.DEPTH_ONE, monitor);
