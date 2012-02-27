@@ -29,6 +29,8 @@
 <unit id="org.eclipse.xtext.xbase.feature.group" version="2.2.1.v201112130541"/>
 <unit id="org.eclipse.xtext.examples.feature.group" version="2.2.1.v201112130541"/>
 <unit id="org.eclipse.xtext.sdk.feature.group" version="2.2.1.v201112130541"/>
+<unit id="de.itemis.xtext.antlr.feature.feature.group" version="2.0.0.v201108011202"/>
+<unit id="de.itemis.xtext.antlr.sdk.feature.group" version="2.0.0.v201108011202"/>
 <repository location="http://download.itemis.de/updates"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
