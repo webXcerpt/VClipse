@@ -94,7 +94,7 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 									commitMessage = "This code was sended to ";
 									commitMessage += "SAP system: " + senderStatus.getSapSystem() + " with UPS number: " + senderStatus.getUpsNumber();
 								}
-								teamProvider.checkin(new IResource[]{sapStateFile}, commitMessage, false, IResource.DEPTH_INFINITE, monitor);
+								teamProvider.checkin(new IResource[]{sapStateFile}, commitMessage, false, IResource.DEPTH_ONE, monitor);
 							}
 						}
 						folder.refreshLocal(IResource.DEPTH_ONE, monitor);
