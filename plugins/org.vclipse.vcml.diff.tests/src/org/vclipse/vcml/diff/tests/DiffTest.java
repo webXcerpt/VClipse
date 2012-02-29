@@ -28,6 +28,8 @@ public abstract class DiffTest extends XtextTest {
 	
 	private VCMLPrettyPrinter prettyPrinter;
 	
+	private boolean printComparison = false;
+	
 	public DiffTest(String resourceRoot) {
 		super(resourceRoot == null ? DiffTest.class.getSimpleName() : resourceRoot);
 		prettyPrinter = new VCMLPrettyPrinter();
@@ -61,6 +63,10 @@ public abstract class DiffTest extends XtextTest {
 		String diff_existing = replaceStrings(diff_existing_model_serialized, targetReplacements);
 		String diff_created = replaceStrings(diff_created_model_serialized, targetReplacements);
 		
+		if(printComparison) {
+			System.out.println(diff_existing);
+			System.out.println(diff_created);			
+		}
 		assertTrue(diff_existing.equals(diff_created));
 	}
 	
