@@ -161,8 +161,7 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 		} else {
 			VCObject vcObject = EcoreUtil2.getContainerOfType(object, VCObject.class);
 			if(vcObject != null) {
-				modelElements.add(EcoreUtil.copy(vcObject));
-			}
+				modelElements.add(vcObject);			}
 		}
 		return HANDLED;
 	}
