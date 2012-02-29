@@ -42,6 +42,8 @@ public class OneClickWorkflow {
 	private IPreferenceStore preferenceStore;
 	
 	public IStatus convertAndSend(Resource resource, IProgressMonitor monitor) throws JCoException, CoreException, IOException {
+		String dialogTitle = "Error during SAP deployment";
+		String message = "IDoc deployment to SAP system was cancelled.";
 		EList<EObject> contents = resource.getContents();
 		if(!contents.isEmpty()) {
 			EObject object = contents.get(0);
@@ -63,8 +65,8 @@ public class OneClickWorkflow {
 			}
 			if(onlyUpsMas) {
 				DeploymentPlugin.showErrorDialog(
-						"Error during SAP deployment", 
-									"IDoc deployment to SAP system was cancelled.", 
+						dialogTitle, 
+									message, 
 										new Status(IStatus.ERROR, DeploymentPlugin.ID, "No IDocs generated"));
 				monitor.done();
 				return Status.CANCEL_STATUS;
@@ -81,6 +83,9 @@ public class OneClickWorkflow {
 			monitor.worked(1);
 			monitor.subTask("Sending IDocs to SAP...");
 			IStatus sendStatus = new RFCIDocsSender().send(idocs, connectionHandler, monitor);
+			if(IStatus.CANCEL == sendStatus.getSeverity()) {
+				DeploymentPlugin.showErrorDialog(dialogTitle, message, sendStatus);
+			}
 			monitor.worked(1);
 			monitor.done();
 			return sendStatus;
