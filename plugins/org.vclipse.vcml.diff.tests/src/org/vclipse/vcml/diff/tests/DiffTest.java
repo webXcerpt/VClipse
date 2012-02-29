@@ -10,9 +10,9 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipselabs.xtext.utils.unittesting.XtextTest;
 import org.vclipse.vcml.diff.Comparison;
+import org.vclipse.vcml.formatting.VCMLPrettyPrinter;
 
 import com.google.inject.Inject;
 
@@ -26,11 +26,11 @@ public abstract class DiffTest extends XtextTest {
 	@Inject
 	private Comparison comparison;
 	
-	@Inject
-	private ISerializer serializer;
+	private VCMLPrettyPrinter prettyPrinter;
 	
 	public DiffTest(String resourceRoot) {
 		super(resourceRoot == null ? DiffTest.class.getSimpleName() : resourceRoot);
+		prettyPrinter = new VCMLPrettyPrinter();
 	}
 	
 	public void test(String oldState, String newState, String diffExistingState, String targetReplacements) {
@@ -52,11 +52,11 @@ public abstract class DiffTest extends XtextTest {
 		
 		EList<EObject> contents = diffExistingResource.getContents();
 		assertTrue(!contents.isEmpty());
-		String diff_existing_model_serialized = serializer.serialize(contents.get(0));
+		String diff_existing_model_serialized = prettyPrinter.prettyPrint(contents.get(0));
 		
 		contents = diffResource.getContents();
 		assertTrue(!contents.isEmpty());
-		String diff_created_model_serialized = serializer.serialize(contents.get(0));
+		String diff_created_model_serialized = prettyPrinter.prettyPrint(contents.get(0));
 		
 		String diff_existing = replaceStrings(diff_existing_model_serialized, targetReplacements);
 		String diff_created = replaceStrings(diff_created_model_serialized, targetReplacements);
