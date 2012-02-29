@@ -18,7 +18,6 @@ public class DiffTestsCollection extends DiffTest {
 		ignoreSerializationDifferences();
 		testFile("firstversion.vcml");
 		testFile("secondversion.vcml");
-		testFile("secondversion_diff.vcml");
 		
 		test("firstversion.vcml", "secondversion.vcml", "target_result.vcml", "import \"firstversion.vcml\"");
 	}
