@@ -2,6 +2,7 @@ package org.vclipse.sap.deployment;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -12,12 +13,16 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.xtext.resource.SaveOptions;
@@ -28,7 +33,9 @@ import org.tigris.subversion.subclipse.core.SVNTeamProvider;
 import org.vclipse.idoc2jcoidoc.IDocSenderStatus;
 import org.vclipse.sap.deployment.preferences.PreferencesInitializer;
 import org.vclipse.vcml.diff.Comparison;
+import org.vclipse.vcml.vcml.VCObject;
 
+import com.google.common.collect.Iterables;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
@@ -76,6 +83,22 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 						Resource diffResource = resourceSet.createResource(URI.createURI(resultFile.getLocationURI().toString()));
 						monitor.subTask("Comparing models");
 						comparison.compare(sapStateResource, fileResource, diffResource, monitor);
+						
+						EList<EObject> objects = diffResource.getContents();
+						Iterator<VCObject> iterator = Iterables.filter(objects, VCObject.class).iterator();
+						if(!iterator.hasNext()) {
+							final Display display = Display.getDefault();
+							display.syncExec(new Runnable() {
+								@Override
+								public void run() {
+									ErrorDialog.openError(display.getActiveShell(), "Error during deployment to SAP system", 
+											"The \"Deployment to SAP system\" action was cancelled.", new Status(IStatus.ERROR, DeploymentPlugin.ID, "No differing objects found"));									
+								}
+							});
+							monitor.done();
+							return Status.CANCEL_STATUS;
+						}
+						
 						monitor.subTask("Converting to IDocs and sending to SAP");
 						if(preferenceStore.getBoolean(PreferencesInitializer.SAVE_DIFF_FILES)) {
 							diffResource.save(SaveOptions.newBuilder().format().getOptions().toOptionsMap());											
