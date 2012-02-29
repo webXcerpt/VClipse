@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.serializer.ISerializer;
@@ -32,14 +33,17 @@ public abstract class DiffTest extends XtextTest {
 		super(resourceRoot == null ? DiffTest.class.getSimpleName() : resourceRoot);
 	}
 	
-	public void test(String compare_one, String compare_two, String existing_result, String targetResult, String targetReplacements) {
-		resource_compare_one = loadAndSaveModule("", compare_one).getSecond().getResource();
-		resource_compare_two = loadAndSaveModule("", compare_two).getSecond().getResource();
-		resource_existing_result = loadAndSaveModule("", existing_result).getSecond().getResource();
-		resource_target_result = loadAndSaveModule("", targetResult).getSecond().getResource();
+	public void test(String oldState, String newState, String diffExistingState, String targetReplacements) {
+		resource_compare_one = loadAndSaveModule("", oldState).getSecond().getResource();
+		resource_compare_two = loadAndSaveModule("", newState).getSecond().getResource();
+		resource_existing_result = loadAndSaveModule("", diffExistingState).getSecond().getResource();
+		
+		String newStateResourceUri = resource_compare_two.getURI().toString();
+		newStateResourceUri = newStateResourceUri.replace("cml2", "cml2_diff");
+		Resource diffResource = resourceSet.createResource(URI.createURI(newStateResourceUri));
 		
 		try {
-			comparison.compare(resource_compare_one, resource_compare_two, resource_existing_result, new NullProgressMonitor());
+			comparison.compare(resource_compare_one, resource_compare_two, diffResource, new NullProgressMonitor());
 		} catch (InterruptedException e) {
 			fail(e.getMessage());
 		} catch (IOException e) {
@@ -48,22 +52,22 @@ public abstract class DiffTest extends XtextTest {
 		
 		EList<EObject> contents = resource_existing_result.getContents();
 		assertTrue(!contents.isEmpty());
-		String existing_result_string = serializer.serialize(contents.get(0));
+		String diff_existing_model_serialized = serializer.serialize(contents.get(0));
 		
-		contents = resource_target_result.getContents();
+		contents = diffResource.getContents();
 		assertTrue(!contents.isEmpty());
-		String target_result_string = serializer.serialize(contents.get(0));
+		String diff_created_model_serialized = serializer.serialize(contents.get(0));
 		
-		String existing_not_bothered = replaceBotheringStrings(existing_result_string, targetReplacements);
-		String target_not_bothered = replaceBotheringStrings(target_result_string, targetReplacements);
+		String diff_existing = replaceStrings(diff_existing_model_serialized, targetReplacements);
+		String diff_created = replaceStrings(diff_created_model_serialized, targetReplacements);
 		
-		assertTrue(existing_not_bothered.equals(target_not_bothered));
+		assertTrue(diff_existing.equals(diff_created));
 	}
 	
-	public String replaceBotheringStrings(String targetString, String ... additionalReplacements) {
-		for(String part : additionalReplacements) {
-			targetString = targetString.replace(part, "");
+	public String replaceStrings(String string, String ... replacements) {
+		for(String part : replacements) {
+			string = string.replace(part, "");
 		}
-		return targetString.replace("\r", "").replace("\n", "").replace("\t", "").replace(" ", "").trim();
+		return string.replace("\r", "").replace("\n", "").replace("\t", "").replace(" ", "").trim();
 	}
 }

@@ -20,6 +20,6 @@ public class DiffTestsCollection extends DiffTest {
 		testFile("secondversion.vcml");
 		testFile("secondversion_diff.vcml");
 		
-		test("firstversion.vcml", "secondversion.vcml", "secondversion_diff.vcml", "target_result.vcml", "import \"firstversion.vcml\"");
+		test("firstversion.vcml", "secondversion.vcml", "target_result.vcml", "import \"firstversion.vcml\"");
 	}
 }
