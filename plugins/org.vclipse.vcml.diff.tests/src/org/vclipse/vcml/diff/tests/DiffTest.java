@@ -18,9 +18,9 @@ import com.google.inject.Inject;
 
 public abstract class DiffTest extends XtextTest {
 
-	protected Resource resource_compare_one;
-	protected Resource resource_compare_two;
-	protected Resource resource_existing_result;
+	protected Resource oldResource;
+	protected Resource newResource;
+	protected Resource diffExistingResource;
 	protected Resource resource_target_result;
 	
 	@Inject
@@ -34,23 +34,23 @@ public abstract class DiffTest extends XtextTest {
 	}
 	
 	public void test(String oldState, String newState, String diffExistingState, String targetReplacements) {
-		resource_compare_one = loadAndSaveModule("", oldState).getSecond().getResource();
-		resource_compare_two = loadAndSaveModule("", newState).getSecond().getResource();
-		resource_existing_result = loadAndSaveModule("", diffExistingState).getSecond().getResource();
+		oldResource = loadAndSaveModule("", oldState).getSecond().getResource();
+		newResource = loadAndSaveModule("", newState).getSecond().getResource();
+		diffExistingResource = loadAndSaveModule("", diffExistingState).getSecond().getResource();
 		
-		String newStateResourceUri = resource_compare_two.getURI().toString();
-		newStateResourceUri = newStateResourceUri.replace("cml2", "cml2_diff");
+		String newStateResourceUri = newResource.getURI().toString();
+		newStateResourceUri = newStateResourceUri.replace(".vcml", "_diff.vcml");
 		Resource diffResource = resourceSet.createResource(URI.createURI(newStateResourceUri));
 		
 		try {
-			comparison.compare(resource_compare_one, resource_compare_two, diffResource, new NullProgressMonitor());
+			comparison.compare(oldResource, newResource, diffResource, new NullProgressMonitor());
 		} catch (InterruptedException e) {
 			fail(e.getMessage());
 		} catch (IOException e) {
 			fail(e.getMessage());
 		}
 		
-		EList<EObject> contents = resource_existing_result.getContents();
+		EList<EObject> contents = diffExistingResource.getContents();
 		assertTrue(!contents.isEmpty());
 		String diff_existing_model_serialized = serializer.serialize(contents.get(0));
 		
