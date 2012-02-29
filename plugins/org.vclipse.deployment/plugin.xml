@@ -9,17 +9,23 @@
          <action
                class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.ConvertSendAction"
                id="org.vclipse.actions.convertToIDocsAndSend"
-               label="Send as IDocs to SAP system"
+               label="Create and send ALE distribution packet"
                menubarPath="org.vclipse.vcml.ui.popupMenu.resource/deployment">
 	         <enablement>
 	            <and>
 	               <objectClass
 	                     name="org.eclipse.core.resources.IFile">
 	               </objectClass>
+	               <or>
 	               <objectState
 	                     name="extension"
 	                     value="vcml">
 	               </objectState>
+	               <objectState
+	                     name="extension"
+	                     value="idoc">
+	               </objectState>
+				   </or>
 	            </and>
 	         </enablement>
          </action>
@@ -31,7 +37,7 @@
          <action
                class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.DeltaDeploymentAction"
                id="org.vclipse.deployment.diff"
-               label="Deploy differences to SAP system"
+               label="Create and send ALE distribution packet of delta"
                menubarPath="org.vclipse.vcml.ui.popupMenu.resource/deployment">
             <enablement>
                <and>
@@ -41,28 +47,6 @@
                   <objectState
                         name="extension"
                         value="vcml">
-                  </objectState>
-               </and>
-            </enablement>
-         </action>
-      </objectContribution>
-      <objectContribution
-            adaptable="true"
-            id="org.vclipse.deployment.idocSend"
-            objectClass="org.eclipse.core.resources.IFile">
-         <action
-               class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.ConvertSendAction"
-               id="org.vclipse.deployment.sendIdocs"
-               label="Send idocs to SAP system"
-               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/deployment">
-            <enablement>
-               <and>
-                  <objectClass
-                        name="org.eclipse.core.resources.IFile">
-                  </objectClass>
-                  <objectState
-                        name="extension"
-                        value="idoc">
                   </objectState>
                </and>
             </enablement>
