@@ -9,6 +9,7 @@ import org.eclipse.xtext.service.AbstractGenericModule;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.connection.VClipseConnectionPlugin;
 import org.vclipse.idoc2jcoidoc.DefaultIDoc2JCoIDocProcessor;
+import org.vclipse.idoc2jcoidoc.IDoc2JCoIDocPlugin;
 import org.vclipse.idoc2jcoidoc.IIDoc2JCoIDocProcessor;
 import org.vclipse.vcml.ui.VCMLUiPlugin;
 import org.vclipse.vcml2idoc.VCML2IDocUIPlugin;
@@ -37,6 +38,7 @@ public class Module extends AbstractGenericModule {
 		super.configure(binder);
 		binder.bind(IPreferenceStore.class).annotatedWith(Names.named(VCMLUiPlugin.ID)).toInstance(VCMLUiPlugin.getDefault().getInjector().getInstance(IPreferenceStore.class));
 		binder.bind(IPreferenceStore.class).annotatedWith(Names.named(VCML2IDocUIPlugin.ID)).toInstance(VCML2IDocUIPlugin.getDefault().getInjector().getInstance(IPreferenceStore.class));
+		binder.bind(IPreferenceStore.class).annotatedWith(Names.named(IDoc2JCoIDocPlugin.ID)).toInstance(plugin.getPreferenceStore());
 	}
 
 	public IConnectionHandler bindConnectionHandler() {

@@ -13,8 +13,10 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.vclipse.idoc2jcoidoc.IDoc2JCoIDocPlugin;
 import org.vclipse.idoc2jcoidoc.IUiConstants;
+import org.vclipse.vcml2idoc.VCML2IDocUIPlugin;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 /**
  * 
@@ -28,6 +30,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	private static final String DEFAULT_PARTNER_NUMBER = "CML";
 	
 	@Inject
+	@Named(IDoc2JCoIDocPlugin.ID)
 	private IPreferenceStore preferenceStore;
 	
 	private Properties properties;

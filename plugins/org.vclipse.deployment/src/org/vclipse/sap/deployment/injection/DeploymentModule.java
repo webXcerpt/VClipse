@@ -9,6 +9,7 @@ import org.vclipse.base.ui.BaseUiPlugin;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.connection.VClipseConnectionPlugin;
 import org.vclipse.idoc2jcoidoc.DefaultIDoc2JCoIDocProcessor;
+import org.vclipse.idoc2jcoidoc.IDoc2JCoIDocPlugin;
 import org.vclipse.idoc2jcoidoc.IIDoc2JCoIDocProcessor;
 import org.vclipse.sap.deployment.OneClickWorkflow;
 import org.vclipse.vcml.diff.Comparison;
@@ -30,6 +31,7 @@ public class DeploymentModule extends BaseUiModule {
 		super.configure(binder);
 		binder.bind(IPreferenceStore.class).annotatedWith(Names.named(VCMLUiPlugin.ID)).toInstance(VCMLUiPlugin.getDefault().getInjector().getInstance(IPreferenceStore.class));
 		binder.bind(IPreferenceStore.class).annotatedWith(Names.named(VCML2IDocUIPlugin.ID)).toInstance(VCML2IDocUIPlugin.getDefault().getInjector().getInstance(IPreferenceStore.class));
+		binder.bind(IPreferenceStore.class).annotatedWith(Names.named(IDoc2JCoIDocPlugin.ID)).toInstance(IDoc2JCoIDocPlugin.getDefault().getInjector().getInstance(IPreferenceStore.class));
 	}
 
 	public IConnectionHandler bindConnectionHandler() {

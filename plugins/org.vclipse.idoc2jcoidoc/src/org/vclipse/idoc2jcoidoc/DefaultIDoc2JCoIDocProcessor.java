@@ -34,7 +34,9 @@ import org.vclipse.idoc.iDoc.Segment;
 import org.vclipse.idoc.iDoc.StringField;
 import org.vclipse.idoc.iDoc.util.IDocSwitch;
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.sap.conn.idoc.IDocDocument;
 import com.sap.conn.idoc.IDocException;
 import com.sap.conn.idoc.IDocFactory;
@@ -75,7 +77,7 @@ public class DefaultIDoc2JCoIDocProcessor extends IDocSwitch<Object> implements 
 	 * 
 	 */
 	@Inject
-	public DefaultIDoc2JCoIDocProcessor(IPreferenceStore preferenceStore, IConnectionHandler connectionHandler) {
+	public DefaultIDoc2JCoIDocProcessor(@Named(IDoc2JCoIDocPlugin.ID) IPreferenceStore preferenceStore, IConnectionHandler connectionHandler) {
 		super();
 		this.preferenceStore = preferenceStore;
 		this.handler = connectionHandler;
@@ -126,7 +128,9 @@ public class DefaultIDoc2JCoIDocProcessor extends IDocSwitch<Object> implements 
 	 */
 	public IDocDocument transform(final IDoc object, final IProgressMonitor monitor) throws JCoException, CoreException {
 		senderPartnerType = preferenceStore.getString(IUiConstants.PARTNER_TYPE);
+		assert !Strings.isNullOrEmpty(senderPartnerType) : "senderPartnerType is not set"; 
 		senderPartnerNumber = preferenceStore.getString(IUiConstants.PARTNER_NUMBER);		
+		assert !Strings.isNullOrEmpty(senderPartnerNumber) : "senderPartnerNumber is not set"; 
 		iDocRepository = handler.getIDocRepository();
 		iDocFactory = JCoIDoc.getIDocFactory();
 		if(iDocRepository == null) {
