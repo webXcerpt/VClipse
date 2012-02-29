@@ -108,16 +108,15 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 								sapStateFile = ResourceUtil.getFile(sapStateResource);
 								SVNTeamProvider teamProvider = new SVNTeamProvider();
 								teamProvider.setProject(sapStateFile.getProject());
-								String commitMessage = "Committing new SAP state";
+								String commitMessage = "New state of VCML product model.";
 								if(status instanceof IDocSenderStatus) {
 									IDocSenderStatus senderStatus = (IDocSenderStatus)status;
-									commitMessage = "This code was sended to ";
-									commitMessage += "SAP system: " + senderStatus.getSapSystem() + " with UPS number: " + senderStatus.getUpsNumber();
+									commitMessage += " Sent to " + senderStatus.getSapSystem() + " with UPS number " + senderStatus.getUpsNumber();
 								}
 								teamProvider.checkin(new IResource[]{sapStateFile}, commitMessage, false, IResource.DEPTH_ONE, monitor);
 							}
 						}
-						folder.refreshLocal(IResource.DEPTH_ONE, monitor);
+						folder.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 						return status;
 					} catch (InterruptedException exception) {
 						exception.printStackTrace();
