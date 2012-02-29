@@ -82,7 +82,7 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 						monitor.subTask("Comparing models");
 						comparison.compare(sapStateResource, fileResource, diffResource, monitor);
 						
-						Iterator<VCObject> iterator = Iterables.filter(diffResource.getContents(), VCObject.class).iterator();
+						Iterator<VCObject> iterator = Iterables.filter(diffResource.getContents().get(0).eContents(), VCObject.class).iterator();
 						if(!iterator.hasNext()) {
 							final Display display = Display.getDefault();
 							display.syncExec(new Runnable() {
