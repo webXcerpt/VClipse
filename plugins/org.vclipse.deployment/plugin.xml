@@ -10,7 +10,7 @@
                class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.ConvertSendAction"
                id="org.vclipse.actions.convertToIDocsAndSend"
                label="Convert to IDocs and send to SAP system"
-               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/content">
+               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/deployment">
 	         <enablement>
 	            <and>
 	               <objectClass
@@ -32,7 +32,7 @@
                class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.DeltaDeploymentAction"
                id="org.vclipse.deployment.diff"
                label="Compute and deploy diff to SAP system"
-               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/content">
+               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/deployment">
             <enablement>
                <and>
                   <objectClass
@@ -54,7 +54,7 @@
                class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.ConvertSendAction"
                id="org.vclipse.deployment.action2"
                label="Send idocs to SAP system"
-               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/content">
+               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/deployment">
             <enablement>
                <and>
                   <objectClass

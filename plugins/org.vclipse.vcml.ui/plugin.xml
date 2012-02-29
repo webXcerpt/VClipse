@@ -303,8 +303,17 @@
              label="VClipse"
              path="additions">
           <groupMarker
+                name="deployment">
+          </groupMarker>
+          <separator
+                name="org.vclipse.vcml.ui.deploymentSeparator">
+          </separator>
+          <groupMarker
                 name="content">
           </groupMarker>
+          <separator
+                name="org.vclipse.vcml.ui.additionsSeparator">
+          </separator>
           <separator
                 name="additions">
           </separator>
