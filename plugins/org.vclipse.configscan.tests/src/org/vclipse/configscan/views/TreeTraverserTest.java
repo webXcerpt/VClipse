@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
 import org.junit.Before;
 import org.junit.Test;
-import org.vclipse.base.ui.ClasspathAwareImageHelper;
+import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.JUnitTestUtils;
 import org.vclipse.configscan.extension.ExtensionPointReader;

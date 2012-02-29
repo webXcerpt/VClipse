@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.xtext.ui,
  org.vclipse.vcml.diff,
  org.eclipse.team.core,
- org.tigris.subversion.subclipse.core
+ org.tigris.subversion.subclipse.core,
+ org.vclipse.base.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.sap.conn.idoc,

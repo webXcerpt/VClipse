@@ -16,11 +16,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.xtext.resource.SaveOptions;
@@ -58,6 +56,7 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 		Job deltaDeploymentJob = new Job("Delta deployment job") {
 			@Override
 			protected IStatus run(final IProgressMonitor monitor) {
+				String errorMessage = "Error during delta extraction and deployment to SAP system";
 				monitor.beginTask("Extracting delta and deploying to SAP system...", IProgressMonitor.UNKNOWN);
 				Object firstElement = selection.getFirstElement();
 				if(firstElement instanceof IFile) {
@@ -84,14 +83,9 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 						
 						Iterator<VCObject> iterator = Iterables.filter(diffResource.getContents().get(0).eContents(), VCObject.class).iterator();
 						if(!iterator.hasNext()) {
-							final Display display = Display.getDefault();
-							display.syncExec(new Runnable() {
-								@Override
-								public void run() {
-									ErrorDialog.openError(display.getActiveShell(), "Error during deployment to SAP system", 
-											"Delta deployment to SAP system was cancelled.", new Status(IStatus.ERROR, DeploymentPlugin.ID, "No differing objects found"));									
-								}
-							});
+							DeploymentPlugin.showErrorDialog("Error during deployment to SAP system", 
+									"Delta deployment to SAP system was cancelled.", 
+										new Status(IStatus.ERROR, DeploymentPlugin.ID, "No differing objects found"));
 							monitor.done();
 							return Status.CANCEL_STATUS;
 						}
@@ -119,16 +113,16 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 						folder.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 						return status;
 					} catch (InterruptedException exception) {
-						exception.printStackTrace();
+						DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
 						return Status.CANCEL_STATUS;
 					} catch (IOException exception) {
-						exception.printStackTrace();
+						DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
 						return Status.CANCEL_STATUS;
 					} catch (JCoException exception) {
-						exception.printStackTrace();
+						DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
 						return Status.CANCEL_STATUS;
 					} catch (CoreException exception) {
-						exception.printStackTrace();
+						DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
 						return Status.CANCEL_STATUS;
 					}
 				}

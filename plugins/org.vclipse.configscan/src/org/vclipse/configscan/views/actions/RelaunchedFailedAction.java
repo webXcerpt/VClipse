@@ -3,7 +3,7 @@ package org.vclipse.configscan.views.actions;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.vclipse.base.ui.ClasspathAwareImageHelper;
+import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanImages;
 import org.vclipse.configscan.impl.FailureTestObjectFilter;

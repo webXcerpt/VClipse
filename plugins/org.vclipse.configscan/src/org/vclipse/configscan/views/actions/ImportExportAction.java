@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.xtext.util.Files;
-import org.vclipse.base.ui.ClasspathAwareImageHelper;
+import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanConfiguration;
 import org.vclipse.configscan.IConfigScanImages;

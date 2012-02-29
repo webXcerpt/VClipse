@@ -18,7 +18,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.service.AbstractGenericModule;
 import org.eclipse.xtext.ui.IImageHelper;
-import org.vclipse.base.ui.ClasspathAwareImageHelper;
+import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanReverseXmlTransformation;
 import org.vclipse.configscan.IConfigScanXMLProvider;

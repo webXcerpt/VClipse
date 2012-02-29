@@ -8,10 +8,10 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.google.inject.Inject;
 
-public class SapDeploymentPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+public class DeploymentPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
 	@Inject
-	public SapDeploymentPreferencePage(IPreferenceStore preferenceStore) {
+	public DeploymentPreferencePage(IPreferenceStore preferenceStore) {
 		super(GRID);
 		setPreferenceStore(preferenceStore);
 		setTitle("SAP Deployment Settings");

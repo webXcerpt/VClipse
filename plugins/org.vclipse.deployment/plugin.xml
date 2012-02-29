@@ -79,7 +79,7 @@
        point="org.eclipse.ui.preferencePages">
     <page
           category="org.vclipse.preferences.page"
-          class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.preferences.SapDeploymentPreferencePage"
+          class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.preferences.DeploymentPreferencePage"
           id="org.vclipse.deployment.preferencePage"
           name="SAP Deployment">
     </page>

@@ -8,7 +8,7 @@
  * Contributors:
  *    webXcerpt Software GmbH - initial creator
  ******************************************************************************/
-package org.vclipse.base.ui;
+package org.vclipse.base.ui.util;
 
 import java.net.URL;
 
@@ -22,7 +22,7 @@ import org.eclipse.xtext.ui.PluginImageHelper;
  * copied and adapted from Xtext source code
  *
  */
-public class ClasspathAwareImageHelper extends PluginImageHelper {
+public class ClasspathAwareImageHelper extends PluginImageHelper implements IExtendedImageHelper {
 
 	@Override
 	public Image getImage(String imageName) {

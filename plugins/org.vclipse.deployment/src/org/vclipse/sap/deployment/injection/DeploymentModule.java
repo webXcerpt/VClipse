@@ -5,7 +5,7 @@ package org.vclipse.sap.deployment.injection;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xtext.service.AbstractGenericModule;
+import org.vclipse.base.ui.BaseUiModule;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.connection.VClipseConnectionPlugin;
 import org.vclipse.idoc2jcoidoc.DefaultIDoc2JCoIDocProcessor;
@@ -19,21 +19,12 @@ import org.vclipse.vcml2idoc.builder.VCML2IDocSwitch;
 import com.google.inject.Binder;
 import com.google.inject.name.Names;
 
-/**
- *
- */
-public class DeploymentModule extends AbstractGenericModule {
+public class DeploymentModule extends BaseUiModule {
 
-	private AbstractUIPlugin plugin;
-	
-	public DeploymentModule(AbstractUIPlugin activator) {
-		plugin = activator;
+	public DeploymentModule(AbstractUIPlugin plugin) {
+		super(plugin);
 	}
-	
-	public IPreferenceStore bindPreferenceStore() {
-		return plugin.getPreferenceStore();
-	}
-	
+
 	@Override
 	public void configure(Binder binder) {
 		super.configure(binder);

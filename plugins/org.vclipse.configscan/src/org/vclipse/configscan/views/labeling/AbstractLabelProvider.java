@@ -15,7 +15,7 @@ import org.eclipse.xtext.ui.editor.utils.TextStyle;
 import org.eclipse.xtext.ui.label.StylerFactory;
 import org.eclipse.xtext.util.PolymorphicDispatcher;
 import org.eclipse.xtext.util.PolymorphicDispatcher.ErrorHandler;
-import org.vclipse.base.ui.ClasspathAwareImageHelper;
+import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestCase.Status;
 import org.vclipse.configscan.impl.model.TestGroup;

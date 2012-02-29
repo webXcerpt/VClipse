@@ -5,7 +5,7 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.vclipse.base.ui.ClasspathAwareImageHelper;
+import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
 import org.vclipse.configscan.impl.model.TestRun;
 import org.vclipse.configscan.views.ConfigScanView;
 import org.vclipse.configscan.views.ConfigScanViewInput;

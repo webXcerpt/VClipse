@@ -23,7 +23,7 @@ import org.eclipse.xtext.ui.IImageHelper;
 import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider;
 import org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
-import org.vclipse.base.ui.ClasspathAwareImageHelper;
+import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
 import org.vclipse.vcml.ui.editor.hover.VCMLHoverProvider;
 import org.vclipse.vcml.ui.outline.VCMLOutlinePage;
 import org.vclipse.vcml.ui.outline.VCMLOutlineTreeProvider;

@@ -20,9 +20,6 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
 
-/**
- *
- */
 public class ConvertSendAction implements IObjectActionDelegate {
 	
 	@Inject
@@ -34,6 +31,7 @@ public class ConvertSendAction implements IObjectActionDelegate {
 		Job job = new Job("Convert to IDocs and send to SAP system.") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
+				String errorMessage = "Error during idoc deployment to SAP system.";
 				monitor.beginTask("Converting and sending to SAP system.", 4);
 				IFile file = (IFile)selection.getFirstElement();
 				monitor.subTask("Parsing " + file.getFileExtension() + " file " + file.getName());
@@ -42,13 +40,13 @@ public class ConvertSendAction implements IObjectActionDelegate {
 				try {
 					return workflow.convertAndSend(resource, monitor);
 				} catch (JCoException exception) {
-					exception.printStackTrace();
+					DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
 					return Status.CANCEL_STATUS;
 				} catch (CoreException exception) {
-					exception.printStackTrace();
+					DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
 					return Status.CANCEL_STATUS;
 				} catch (IOException exception) {
-					exception.printStackTrace();
+					DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
 					return Status.CANCEL_STATUS;
 				}
 			}

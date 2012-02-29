@@ -12,9 +12,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.idoc.iDoc.IDoc;
@@ -64,15 +62,10 @@ public class OneClickWorkflow {
 				}
 			}
 			if(onlyUpsMas) {
-				final Display display = Display.getDefault();
-				display.syncExec(new Runnable() {
-					@Override
-					public void run() {
-						ErrorDialog.openError(
-								display.getActiveShell(), "Error during SAP deployment", 
-									"IDoc deployment to SAP system was cancelled.", new Status(IStatus.ERROR, DeploymentPlugin.ID, "No IDocs generated"));
-					}
-				});
+				DeploymentPlugin.showErrorDialog(
+						"Error during SAP deployment", 
+									"IDoc deployment to SAP system was cancelled.", 
+										new Status(IStatus.ERROR, DeploymentPlugin.ID, "No IDocs generated"));
 				monitor.done();
 				return Status.CANCEL_STATUS;
 			}
