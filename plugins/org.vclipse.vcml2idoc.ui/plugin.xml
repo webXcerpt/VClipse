@@ -22,9 +22,9 @@
                enablesFor="+"
                icon="icons/run_transformation.png"
                id="org.vclipse.actions.VCML2idoc"
-               label="VClipse: VCML to IDoc"
+               label="Transform VCML file to IDoc file"
                menubarPath="org.vclipse.vcml.ui.popupMenu.resource/content"
-               tooltip="Create IDocs from existing SAP model.">
+               tooltip="Transform VCML file to IDoc file">
             <enablement>
                <and>
                   <objectClass

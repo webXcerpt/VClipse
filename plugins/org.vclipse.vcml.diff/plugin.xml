@@ -12,9 +12,9 @@
                enablesFor="+"
                icon="icons/compare.png"
                id="org.vclipse.actions.VCML2idoc"
-               label="Compare and export diffs"
+               label="Create delta of VCML files"
                menubarPath="org.vclipse.vcml.ui.popupMenu.resource/content"
-               tooltip="Extracts differences from 2 vcml files to a third one">
+               tooltip="Compare 2 VCML files and create a delta VCML file of their differences">
             <enablement>
                <and>
                   <objectClass
