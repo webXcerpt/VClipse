@@ -8,9 +8,9 @@ import org.vclipse.base.ui.util.IExtendedImageHelper;
 
 public class BaseUiModule extends AbstractGenericModule {
 
-	protected AbstractUIPlugin plugin;
+	protected BaseUiPlugin plugin;
 	
-	public BaseUiModule(AbstractUIPlugin plugin) {
+	public BaseUiModule(BaseUiPlugin plugin) {
 		this.plugin = plugin;
 	}
 	

@@ -4,8 +4,8 @@
 package org.vclipse.sap.deployment.injection;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.vclipse.base.ui.BaseUiModule;
+import org.vclipse.base.ui.BaseUiPlugin;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.connection.VClipseConnectionPlugin;
 import org.vclipse.idoc2jcoidoc.DefaultIDoc2JCoIDocProcessor;
@@ -21,7 +21,7 @@ import com.google.inject.name.Names;
 
 public class DeploymentModule extends BaseUiModule {
 
-	public DeploymentModule(AbstractUIPlugin plugin) {
+	public DeploymentModule(BaseUiPlugin plugin) {
 		super(plugin);
 	}
 

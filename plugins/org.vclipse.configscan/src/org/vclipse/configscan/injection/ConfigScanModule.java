@@ -14,12 +14,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xtext.service.AbstractGenericModule;
 import org.eclipse.xtext.ui.IImageHelper;
+import org.vclipse.base.ui.BaseUiModule;
+import org.vclipse.base.ui.BaseUiPlugin;
 import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
-import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanReverseXmlTransformation;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.impl.ConfigScanReverseXmlTransformation;
@@ -31,22 +29,12 @@ import org.vclipse.connection.VClipseConnectionPlugin;
 
 import com.google.inject.Provider;
 
-public class ConfigScanModule extends AbstractGenericModule {
+public class ConfigScanModule extends BaseUiModule {
 
-	protected ConfigScanPlugin plugin;
-	
-	public ConfigScanModule(ConfigScanPlugin plugin) {
-		this.plugin = plugin;
+	public ConfigScanModule(BaseUiPlugin plugin) {
+		super(plugin);
 	}
 
-	public IPreferenceStore bindIPreferenceStore() {
-		return plugin.getPreferenceStore();
-	}
-	
-	public AbstractUIPlugin bindAbstractUIPlugin() {
-		return plugin;
-	}
-	
 	public DocumentBuilder bindDocumentBuilder() throws ParserConfigurationException {
 		return DocumentBuilderFactory.newInstance().newDocumentBuilder();
 	}

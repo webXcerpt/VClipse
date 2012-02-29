@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TreeItem;
 import org.junit.Before;
 import org.junit.Test;
+import org.vclipse.base.ui.BaseUiPlugin;
 import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.JUnitTestUtils;
@@ -36,7 +37,7 @@ public class TreeTraverserTest {
 
 	JUnitTestUtils utilities;
 	
-	ConfigScanPlugin plugin;
+	BaseUiPlugin plugin;
 	
 	DocumentUtility documentUtility;
 	

@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.junit.Before;
 import org.junit.Test;
+import org.vclipse.base.ui.BaseUiPlugin;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanConfiguration;
 import org.vclipse.configscan.IConfigScanXMLProvider;
@@ -33,7 +34,7 @@ import com.google.inject.Injector;
 // JUnit plug-in test
 public class TestRunsHistoryTest {
 
-	private ConfigScanPlugin plugin;
+	private BaseUiPlugin plugin;
 	
 	private DocumentUtility documentUtility;
 	private TestCaseFactory testCaseFactory;

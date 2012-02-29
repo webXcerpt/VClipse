@@ -10,58 +10,20 @@ package org.vclipse.configscan;
  *    webXcerpt Software GmbH - initial creator
  ******************************************************************************/
 
-
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.service.AbstractGenericModule;
-import org.osgi.framework.BundleContext;
+import org.vclipse.base.ui.BaseUiPlugin;
 import org.vclipse.configscan.injection.ConfigScanModule;
 
-import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class ConfigScanPlugin extends AbstractUIPlugin {
+public class ConfigScanPlugin extends BaseUiPlugin {
 
-	public static final String ID = "org.vclipse.configscan";
-
-	private static ConfigScanPlugin plugin;
-	
-	private Injector injector;
-	
-	public static ConfigScanPlugin getDefault() {
-		return plugin;
-	}
-	
-	public static void log(String message, int severity, Throwable throwable) {
-		getDefault().getLog().log(new Status(severity, ID, IStatus.OK, message, throwable));
-	}
-	
-	public static void log(String message, int severity) {
-		getDefault().getLog().log(new Status(severity, ID, message));
-	}
-	
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
+	static {
+		ID = "org.vclipse.configscan";
 	}
 
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
-
+	@Override
 	public Injector getInjector(AbstractGenericModule optionalModule) {
-		if(injector == null) {
-			if(optionalModule != null) {
-				injector = Guice.createInjector(optionalModule);
-			} else {
-				injector = Guice.createInjector(new ConfigScanModule(this));
-			}
-		}
-		return injector;
+		return super.getInjector(optionalModule == null ? new ConfigScanModule(this) : optionalModule);
 	}
 }
