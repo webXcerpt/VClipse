@@ -12,9 +12,12 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.vclipse.connection.IConnectionHandler;
+import org.vclipse.idoc.iDoc.IDoc;
 import org.vclipse.idoc.iDoc.IDocFactory;
 import org.vclipse.idoc2jcoidoc.IIDoc2JCoIDocProcessor;
 import org.vclipse.idoc2jcoidoc.RFCIDocsSender;
@@ -52,6 +55,28 @@ public class OneClickWorkflow {
 			} else if(object instanceof org.vclipse.idoc.iDoc.Model) {
 				idocModel = (org.vclipse.idoc.iDoc.Model)object;
 			}
+			
+			boolean onlyUpsMas = true;
+			for(IDoc currentIDoc : idocModel.getIdocs()) {
+				String messageType = currentIDoc.getMessageType();
+				if(!"UPSMAS".equals(messageType)) {
+					onlyUpsMas = false;
+				}
+			}
+			if(onlyUpsMas) {
+				final Display display = Display.getDefault();
+				display.syncExec(new Runnable() {
+					@Override
+					public void run() {
+						ErrorDialog.openError(
+								display.getActiveShell(), "Error during SAP deployment", 
+									"IDoc deployment to SAP system was cancelled.", new Status(IStatus.ERROR, DeploymentPlugin.ID, "No IDocs generated"));
+					}
+				});
+				monitor.done();
+				return Status.CANCEL_STATUS;
+			}
+			
 			monitor.subTask("Converting IDoc model in JCo IDocs...");
 			List<IDocDocument> idocs = idocProcessor.transform(idocModel , monitor);
 			if(preferenceStore.getBoolean(PreferencesInitializer.SAVE_IDOC_FILES)) {

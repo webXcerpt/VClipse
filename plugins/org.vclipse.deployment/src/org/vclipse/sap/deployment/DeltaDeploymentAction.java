@@ -13,9 +13,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -84,15 +82,14 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 						monitor.subTask("Comparing models");
 						comparison.compare(sapStateResource, fileResource, diffResource, monitor);
 						
-						EList<EObject> objects = diffResource.getContents();
-						Iterator<VCObject> iterator = Iterables.filter(objects, VCObject.class).iterator();
+						Iterator<VCObject> iterator = Iterables.filter(diffResource.getContents(), VCObject.class).iterator();
 						if(!iterator.hasNext()) {
 							final Display display = Display.getDefault();
 							display.syncExec(new Runnable() {
 								@Override
 								public void run() {
 									ErrorDialog.openError(display.getActiveShell(), "Error during deployment to SAP system", 
-											"The \"Deployment to SAP system\" action was cancelled.", new Status(IStatus.ERROR, DeploymentPlugin.ID, "No differing objects found"));									
+											"Delta deployment to SAP system was cancelled.", new Status(IStatus.ERROR, DeploymentPlugin.ID, "No differing objects found"));									
 								}
 							});
 							monitor.done();
