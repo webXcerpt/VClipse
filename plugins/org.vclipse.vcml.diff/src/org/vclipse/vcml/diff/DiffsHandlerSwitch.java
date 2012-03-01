@@ -34,15 +34,15 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 	private Boolean HANDLED = Boolean.TRUE;
 	private Boolean NOT_HANDLED = null;
 
-	private Model model2Build;
-	private Model leftModel;
+	private Model resultModel;
+	private Model newStateModel;
 	private Set<VCObject> modelElements; 
 	private IDiffFilter diffFilter;
 	private IProgressMonitor monitor;
 	
-	public DiffsHandlerSwitch(Model model, Model leftModel, IProgressMonitor monitor) {
-		model2Build = model;
-		this.leftModel = leftModel;
+	public DiffsHandlerSwitch(Model resultModel, Model newStateModel, IProgressMonitor monitor) {
+		this.resultModel = resultModel;
+		this.newStateModel = newStateModel;
 		modelElements = Sets.newHashSet();
 		diffFilter = new DefaultDiffFilter();
 		this.monitor = monitor;
@@ -71,8 +71,8 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 			}
 		}
 		// finalize model
-		List<VCObject> objects = model2Build.getObjects();
-		List<VCObject> leftObjects = Lists.newArrayList(leftModel.getObjects());
+		List<VCObject> objects = resultModel.getObjects();
+		List<VCObject> leftObjects = Lists.newArrayList(newStateModel.getObjects());
 		for(VCObject o : leftObjects) {
 			if(modelElements.contains(o)) {
 				objects.add(EcoreUtil.copy(o));
@@ -157,7 +157,7 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 
 	private boolean addObject2HandleList(EObject object) {
 		if(object instanceof Option) {
-			model2Build.getOptions().add((Option)object);
+			resultModel.getOptions().add((Option)object);
 		} else {
 			VCObject vcObject = EcoreUtil2.getContainerOfType(object, VCObject.class);
 			if(vcObject != null) {
