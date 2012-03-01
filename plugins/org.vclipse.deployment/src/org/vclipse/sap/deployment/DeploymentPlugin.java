@@ -1,10 +1,8 @@
 package org.vclipse.sap.deployment;
 
-import org.eclipse.xtext.service.AbstractGenericModule;
+import org.osgi.framework.BundleContext;
 import org.vclipse.base.ui.BaseUiPlugin;
 import org.vclipse.sap.deployment.injection.DeploymentModule;
-
-import com.google.inject.Injector;
 
 public class DeploymentPlugin extends BaseUiPlugin {
 
@@ -13,7 +11,8 @@ public class DeploymentPlugin extends BaseUiPlugin {
 	}
 
 	@Override
-	public Injector getInjector(AbstractGenericModule optionalModule) {
-		return super.getInjector(optionalModule == null ? new DeploymentModule(this) : optionalModule);
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
+		injectionModule = new DeploymentModule(this);
 	}
 }

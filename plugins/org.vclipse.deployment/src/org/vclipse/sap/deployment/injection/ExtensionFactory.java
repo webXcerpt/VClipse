@@ -21,7 +21,7 @@ public class ExtensionFactory extends AbstractGuiceAwareExecutableExtensionFacto
 
 	@Override
 	protected Injector getInjector() {
-		return DeploymentPlugin.getDefault().getInjector(null);
+		return DeploymentPlugin.getDefault().getInjector();
 	}
 
 }

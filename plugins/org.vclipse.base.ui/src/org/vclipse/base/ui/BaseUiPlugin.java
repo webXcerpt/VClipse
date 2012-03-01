@@ -30,9 +30,12 @@ public class BaseUiPlugin extends AbstractUIPlugin {
 	
 	protected Injector injector;
 	
+	protected BaseUiModule injectionModule;
+	
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		injectionModule = new BaseUiModule(plugin);
 	}
 
 	public void stop(BundleContext context) throws Exception {
@@ -52,11 +55,17 @@ public class BaseUiPlugin extends AbstractUIPlugin {
 		if(injector == null) {
 			if(optionalModule != null) {
 				injector = Guice.createInjector(optionalModule);
+			} else if(injectionModule != null) {
+				injector = Guice.createInjector(injectionModule);
 			} else {
-				injector = Guice.createInjector(new BaseUiModule(this));
+				throw new IllegalArgumentException("Injection module not initialized.");
 			}
 		}
 		return injector;
+	}
+	
+	public Injector getInjector() {
+		return getInjector(injectionModule);
 	}
 	
 	public static void showErrorDialog(String dialogTitle, String message, IStatus status) {
