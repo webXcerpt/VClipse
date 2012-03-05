@@ -14,10 +14,13 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.service.AbstractGenericModule;
 import org.eclipse.xtext.ui.IImageHelper;
-import org.vclipse.base.ui.BaseUiModule;
-import org.vclipse.base.ui.BaseUiPlugin;
 import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
+import org.vclipse.base.ui.util.IExtendedImageHelper;
+import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanReverseXmlTransformation;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.impl.ConfigScanReverseXmlTransformation;
@@ -29,12 +32,26 @@ import org.vclipse.connection.VClipseConnectionPlugin;
 
 import com.google.inject.Provider;
 
-public class ConfigScanModule extends BaseUiModule {
+public class ConfigScanModule extends AbstractGenericModule {
 
-	public ConfigScanModule(BaseUiPlugin plugin) {
-		super(plugin);
+	private ConfigScanPlugin plugin;
+	
+	public ConfigScanModule(ConfigScanPlugin plugin) {
+		this.plugin = plugin;
 	}
 
+	public AbstractUIPlugin bindPlugin() {
+		return plugin;
+	}
+	
+	public IPreferenceStore bindPreferenceStore() {
+		return plugin.getPreferenceStore();
+	}
+	
+	public Class<? extends IExtendedImageHelper> bindImageHelper() {
+		return ClasspathAwareImageHelper.class;
+	}
+	
 	public DocumentBuilder bindDocumentBuilder() throws ParserConfigurationException {
 		return DocumentBuilderFactory.newInstance().newDocumentBuilder();
 	}

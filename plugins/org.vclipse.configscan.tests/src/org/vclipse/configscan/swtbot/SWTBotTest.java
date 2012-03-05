@@ -10,7 +10,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.vclipse.base.ui.BaseUiPlugin;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.injection.TestConfigScanModule;
 import org.vclipse.configscan.utils.DocumentUtility;
@@ -26,7 +25,7 @@ public class SWTBotTest {
 	
 	private static InputStream historyStream;
 	
-	private static BaseUiPlugin plugin;
+	private static ConfigScanPlugin plugin;
 	
 	private static DocumentUtility documentUtility;
 	

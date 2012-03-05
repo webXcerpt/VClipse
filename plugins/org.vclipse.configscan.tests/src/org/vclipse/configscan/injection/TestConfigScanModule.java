@@ -1,12 +1,12 @@
 package org.vclipse.configscan.injection;
 
-import org.vclipse.base.ui.BaseUiPlugin;
+import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanRemoteConnections;
 import org.vclipse.configscan.IConfigScanRunner;
 
 public class TestConfigScanModule extends ConfigScanModule {
 
-	public TestConfigScanModule(BaseUiPlugin plugin) {
+	public TestConfigScanModule(ConfigScanPlugin plugin) {
 		super(plugin);
 	}
 
