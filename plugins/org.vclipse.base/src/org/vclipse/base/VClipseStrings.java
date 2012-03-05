@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.vclipse.base;
 
-public class Strings extends org.eclipse.xtext.util.Strings {
+public class VClipseStrings extends org.eclipse.xtext.util.Strings {
 
 	// copied from org.eclipse.xtext.util.Strings, but removed \\u conversion
 	

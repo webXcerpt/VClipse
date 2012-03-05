@@ -17,8 +17,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.xtext.util.Strings;
 import org.vclipse.vcml.VCMLPlugin;
+import org.vclipse.base.VClipseStrings;
 import org.vclipse.vcml.utils.ISapConstants;
 import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;
@@ -939,7 +939,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	}
 	
 	private String doublequote(final String string) {
-		return "\"" + Strings.convertToJavaString(string) + "\"";
+		return "\"" + VClipseStrings.convertToJavaString(string) + "\"";
 	}
 	
 	/**
