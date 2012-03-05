@@ -162,7 +162,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 				layouter.brk().print("status ");
 				printNullsafe(object.getStatus());
 				if(object.getGroup() != null) {
-					layouter.brk().print("group ").print(object.getGroup());
+					layouter.brk().print("group ").print("\"" + object.getGroup() + "\"");
 				}
 				StringBuffer buffer = new StringBuffer();
 				buffer.append("[ ");
