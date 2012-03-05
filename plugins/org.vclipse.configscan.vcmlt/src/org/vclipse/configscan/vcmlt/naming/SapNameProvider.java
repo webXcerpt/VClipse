@@ -2,7 +2,7 @@ package org.vclipse.configscan.vcmlt.naming;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
-import org.vclipse.base.INameProvider;
+import org.vclipse.base.naming.INameProvider;
 
 import com.google.inject.Inject;
 

@@ -30,7 +30,7 @@ public class BaseUiPlugin extends AbstractUIPlugin {
 	
 	protected Injector injector;
 	
-	protected BaseUiModule injectionModule;
+	protected AbstractGenericModule injectionModule;
 	
 	public void start(BundleContext context) throws Exception {
 		super.start(context);

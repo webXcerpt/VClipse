@@ -8,7 +8,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.vclipse.base.INameProvider;
+import org.vclipse.base.naming.INameProvider;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.ITestObjectFilter;
 import org.vclipse.configscan.actions.AbstractStoreTestcaseInConfigScanAction;

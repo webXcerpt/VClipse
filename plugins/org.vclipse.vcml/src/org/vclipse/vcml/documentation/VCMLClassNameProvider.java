@@ -11,7 +11,7 @@
 package org.vclipse.vcml.documentation;
 
 import org.eclipse.emf.ecore.EClass;
-import org.vclipse.base.DefaultClassNameProvider;
+import org.vclipse.base.naming.DefaultClassNameProvider;
 import org.vclipse.vcml.vcml.VcmlPackage;
 
 public class VCMLClassNameProvider extends DefaultClassNameProvider {

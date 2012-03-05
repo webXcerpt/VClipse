@@ -13,7 +13,7 @@ package org.vclipse.vcml.ui.editor.hover;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.ui.editor.hover.html.DefaultEObjectHoverProvider;
-import org.vclipse.base.IClassNameProvider;
+import org.vclipse.base.naming.IClassNameProvider;
 import org.vclipse.vcml.documentation.VCMLAdditionalInformationProvider;
 import org.vclipse.vcml.documentation.VCMLDescriptionProvider;
 import org.vclipse.vcml.documentation.VCMLDocumentationProvider;

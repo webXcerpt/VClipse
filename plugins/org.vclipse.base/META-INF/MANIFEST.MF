@@ -9,4 +9,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.xtext;bundle-version="2.2.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.vclipse.base
+Export-Package: org.vclipse.base,
+ org.vclipse.base.naming
+Import-Package: org.apache.log4j

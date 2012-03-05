@@ -5,8 +5,8 @@ package org.vclipse.configscan.vcmlt;
 
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
-import org.vclipse.base.INameProvider;
-import org.vclipse.base.NullQualifiedNameConverter;
+import org.vclipse.base.naming.INameProvider;
+import org.vclipse.base.naming.NullQualifiedNameConverter;
 import org.vclipse.configscan.vcmlt.naming.SapNameProvider;
 import org.vclipse.vcml.conversion.VCMLValueConverter;
 

@@ -1,4 +1,4 @@
-package org.vclipse.base;
+package org.vclipse.base.naming;
 
 import org.eclipse.emf.ecore.EObject;
 

@@ -124,5 +124,8 @@ public class VCMLQuickfixProvider extends DefaultQuickfixProvider {
 				new DefaultSemanticModification("variantfunction " + linkText));
 	}
 	
-	
+	@Fix("Compare Issue")
+	public void fixCompareIssue(Issue issue, IssueResolutionAcceptor acceptor) {
+		System.out.println("In this place we could call the compare editor");
+	}
 }

@@ -8,19 +8,23 @@
  * Contributors:
  *    webXcerpt Software GmbH - initial creator
  ******************************************************************************/
-package org.vclipse.base;
+package org.vclipse.base.naming;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
-public class DefaultClassNameProvider implements IClassNameProvider {
+import com.google.inject.ImplementedBy;
 
-	public String getClassName(EClass cls) {
-		return cls.getName();
-	}
+/**
+ * Provides readable class names for EObjects and EClasses. To be used in
+ * generic label and hover providers to avoid the output of Java class names to
+ * the user.
+ */
+@ImplementedBy(DefaultClassNameProvider.class)
+public interface IClassNameProvider {
 
-	public String getClassName(EObject o) {
-		return getClassName(o.eClass());
-	}
+	public String getClassName(EClass cls);
+
+	public String getClassName(EObject cls);
 
 }
