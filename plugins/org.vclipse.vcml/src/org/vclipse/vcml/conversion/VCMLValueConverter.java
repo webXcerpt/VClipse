@@ -20,9 +20,15 @@ import org.eclipse.xtext.conversion.impl.AbstractNullSafeConverter;
 import org.eclipse.xtext.conversion.impl.AbstractToStringConverter;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.util.Strings;
+import org.vclipse.vcml.services.VCMLGrammarAccess;
+
+import com.google.inject.Inject;
 
 public class VCMLValueConverter extends DefaultTerminalConverters {
 
+	@Inject
+	private VCMLGrammarAccess grammarAccess;
+	
 	private static IValueConverter<String> TOUPPER_VALUECONVERTER = new AbstractToStringConverter<String>() {
 		@Override
 		protected String internalToValue(String string, INode node) throws ValueConverterException {
@@ -93,11 +99,18 @@ public class VCMLValueConverter extends DefaultTerminalConverters {
 		return new AbstractNullSafeConverter<String>() {
 			@Override
 			protected String internalToValue(String string, INode node) throws ValueConverterException {
-				return Strings.convertFromJavaString(string.substring(1, string.length() - 1), false);
+				String converted = Strings.convertFromJavaString(string.substring(1, string.length() - 1), false);
+				if(!grammarAccess.findKeywords(converted).isEmpty()) {
+					return string;
+				}
+				return converted;
 			}
 
 			@Override
 			protected String internalToString(String value) {
+				if(!grammarAccess.findKeywords(value).isEmpty()) {
+					return value;
+				}
 				return '"' + Strings.convertToJavaString(value) + '"';
 			}
 		};
@@ -122,6 +135,4 @@ public class VCMLValueConverter extends DefaultTerminalConverters {
 	public IValueConverter<String> EXTENDED_ID() {
 		return symbolOrIdValueConverter;
 	}
-
-
 }
