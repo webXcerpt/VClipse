@@ -17,6 +17,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.xtext.util.Strings;
 import org.vclipse.vcml.VCMLPlugin;
 import org.vclipse.vcml.utils.ISapConstants;
 import org.vclipse.vcml.vcml.BOMItem;
@@ -142,7 +143,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	public DataLayouter<NoExceptions> caseOption(Option object) {
 		layouter.beginI(0);
 		printNullsafe(object.getName());
-		return layouter.brk().print("=").brk().print(object.getValue()).end();
+		return layouter.brk().print("=").brk().print(doublequote(object.getValue())).end();
 	}
 
 	/**
@@ -161,7 +162,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 				layouter.brk().print("status ");
 				printNullsafe(object.getStatus());
 				if(object.getGroup() != null) {
-					layouter.brk().print("group ").print(object.getGroup());
+					layouter.brk().print("group ").print(doublequote(object.getGroup()));
 				}
 				StringBuffer buffer = new StringBuffer();
 				buffer.append("[ ");
@@ -382,9 +383,9 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 			for (FormattedDocumentationBlock formattedBlock : block.getFormattedDocumentationBlocks()) {
 				layouter.brk();
 				layouter.beginI(0);
-				layouter.print(formattedBlock.getValue());
+				layouter.print(doublequote(formattedBlock.getValue()));
 				if (formattedBlock.getFormat() != null) {
-					layouter.brk().print("format").brk().print(formattedBlock.getFormat());
+					layouter.brk().print("format").brk().print(doublequote(formattedBlock.getFormat()));
 				}
 				layouter.end();
 			}
@@ -398,7 +399,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	 */
 	@Override
 	public DataLayouter<NoExceptions> caseSimpleDocumentation(SimpleDocumentation object) {
-		return layouter.brk().print("documentation ").print(object.getValue());
+		return layouter.brk().print("documentation ").print(doublequote(object.getValue()));
 	}
 
 	/**
@@ -681,7 +682,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	 */
 	@Override
 	public DataLayouter<NoExceptions> caseSimpleDescription(SimpleDescription object) {
-		return layouter.brk().beginC().print("description ").print(object.getValue()).end();
+		return layouter.brk().beginC().print("description ").print(doublequote(object.getValue())).end();
 	}
 
 	/**
@@ -694,7 +695,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 			for(MultiLanguageDescription desc : object.getDescriptions()) {
 				layouter.brk();
 				printNullsafe(desc.getLanguage());
-				layouter.print(" ").print(desc.getValue());
+				layouter.print(" ").print(doublequote(desc.getValue()));
 			}
 		}
 		return layouter.brk(1,-INDENTATION).print("}").end();   
@@ -935,6 +936,10 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	
 	private boolean hasBody(InterfaceDesign object) {
 		return !object.getCharacteristicGroups().isEmpty();
+	}
+	
+	private String doublequote(final String string) {
+		return "\"" + Strings.convertToJavaString(string) + "\"";
 	}
 	
 	/**
