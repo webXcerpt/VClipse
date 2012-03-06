@@ -20,12 +20,16 @@ Require-Bundle: org.vclipse.base.ui;visibility:=reexport,
  org.eclipse.ui,
  org.eclipse.compare,
  org.apache.log4j,
- org.eclipse.ui.console
+ org.eclipse.ui.console,
+ org.eclipse.emf.compare;bundle-version="1.2.2",
+ org.eclipse.emf.compare.diff;bundle-version="1.2.2"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.vclipse.vcml.ui.contentassist.antlr,
- org.vclipse.vcml.ui.outline.actions,
- org.vclipse.vcml.ui,
+Export-Package: org.vclipse.vcml.ui,
  org.vclipse.vcml.ui.contentassist,
- org.vclipse.vcml.ui.internal
+ org.vclipse.vcml.ui.contentassist.antlr,
+ org.vclipse.vcml.ui.internal,
+ org.vclipse.vcml.ui.outline.actions,
+ org.vclipse.vcml.ui.quickfix
 Bundle-Activator: org.vclipse.vcml.ui.internal.VCMLActivator
-Import-Package: org.apache.log4j
+Import-Package: org.apache.log4j,
+ org.eclipse.emf.compare.ui.editor

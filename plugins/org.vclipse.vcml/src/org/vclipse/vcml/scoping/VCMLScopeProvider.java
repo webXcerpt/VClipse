@@ -17,7 +17,6 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
 import org.vclipse.vcml.vcml.Characteristic;
-import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.ConstraintObject;
 import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.ShortVarDefinition;

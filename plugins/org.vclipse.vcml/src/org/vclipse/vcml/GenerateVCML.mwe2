@@ -37,12 +37,12 @@ Workflow {
 			fragment = grammarAccess.GrammarAccessFragment {}
 
 			// generates Java API for the generated EPackages 
-			fragment = ecore.EcoreGeneratorFragment {
+			//fragment = ecore.EcoreGeneratorFragment {
 			// referencedGenModels = "
 			// 	platform:/resource/org.eclipse.xtext.xbase/model/Xbase.genmodel,
 			// 	platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.genmodel
 			// "
-			}
+			//}
 
 			// the serialization component
 			fragment = parseTreeConstructor.ParseTreeConstructorFragment {}
@@ -101,8 +101,7 @@ Workflow {
 			fragment = quickfix.QuickfixProviderFragment {}
 
 			// content assist API  
-			fragment = contentAssist.JavaBasedContentAssistFragment {
-			}
+			fragment = contentAssist.JavaBasedContentAssistFragment {}
 
 			// rename refactoring  
 			fragment = refactoring.RefactorElementNameFragment {}

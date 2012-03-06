@@ -12,10 +12,24 @@ package org.vclipse.vcml.ui.quickfix;
 
 import java.util.List;
 
+import org.eclipse.compare.CompareUI;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.DiffFactory;
+import org.eclipse.emf.compare.ui.editor.ModelCompareEditorInput;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.ui.editor.model.edit.IModificationContext;
+import org.eclipse.xtext.ui.editor.model.edit.ISemanticModification;
 import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider;
 import org.eclipse.xtext.ui.editor.quickfix.Fix;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolution;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor;
+import org.eclipse.xtext.ui.util.ResourceUtil;
 import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.collect.Lists;
@@ -110,13 +124,6 @@ public class VCMLQuickfixProvider extends DefaultQuickfixProvider {
 				new DefaultSemanticModification("varianttable " + linkText));
 	}
 	
-	/*@Fix("Unresolved_ConstraintObject")
-	public void fixUnresolved_ConstraintObject(Issue issue, IssueResolutionAcceptor acceptor) {
-		String linkText = issue.getData()[0];
-		acceptor.accept(issue, "Create class " + linkText, "Create rule", null, 
-				new DefaultSemanticModification("class " + linkText));
-	}*/
-	
 	@Fix("Unresolved_VariantFunction")
 	public void fixUnresolved_VariantFunction(Issue issue, IssueResolutionAcceptor acceptor) {
 		String linkText = issue.getData()[0];
@@ -124,8 +131,25 @@ public class VCMLQuickfixProvider extends DefaultQuickfixProvider {
 				new DefaultSemanticModification("variantfunction " + linkText));
 	}
 	
-	@Fix("Compare Issue")
-	public void fixCompareIssue(Issue issue, IssueResolutionAcceptor acceptor) {
-		System.out.println("In this place we could call the compare editor");
+	@Fix("Compare_Issue")
+	public void fixCompareIssue(final Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, "Show change in compare editor", "Opens the compare editor for objects where the change is applied.", 
+				null, new ISemanticModification() {
+			public void apply(EObject element, IModificationContext context) throws Exception {
+				String[] data = issue.getData();
+				XtextResourceSet xtextResourceSet = new XtextResourceSet();
+				Resource resource = xtextResourceSet.getResource(URI.createURI(data[0]), true);
+				Resource resource2 = xtextResourceSet.getResource(URI.createURI(data[1]), true);
+				IFile file = ResourceUtil.getFile(resource);
+				IFile file2 = ResourceUtil.getFile(resource2);
+				ISelection selection = new StructuredSelection(new Object[]{file, file2});
+				
+				ComparisonResourceSnapshot crc = DiffFactory.eINSTANCE.createComparisonResourceSnapshot();
+				ModelCompareEditorInput modelCompareEditorInput = new ModelCompareEditorInput(null);
+				CompareUI.openCompareDialog(modelCompareEditorInput);
+				
+				
+			}
+		});
 	}
 }

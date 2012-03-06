@@ -1,6 +1,6 @@
 grammar org.vclipse.configscan.vcmlt.VcmlT with org.eclipse.xtext.common.Terminals
 
-import "platform:/resource/org.vclipse.vcml/src-gen/org/vclipse/vcml/VCML.ecore" as VCML
+import "platform:/resource/org.vclipse.vcml.mm/src/org/vclipse/vcml/mm/VCML.ecore" as VCML
 
 generate vcmlT "http://www.vclipse.org/configscan/vcmlt/VcmlT"
 
