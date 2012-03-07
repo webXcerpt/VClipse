@@ -2,12 +2,16 @@ module org.vclipse.releng.GenerateVClipseLanguages
 
 import org.vclipse.idoc.*
 import org.vclipse.vcml.*
+import org.vclipse.vcml.mm.*
 import org.vclipse.configscan.vcmlt.*
 
 Workflow {
 	
 	component = @IDoc {}
+	component = @GenerateVcmlMM {}
 	component = @VCML {}
+	component = @GenerateVcmlT {}
+	
 }
 	
 
