@@ -41,7 +41,6 @@
 <unit id="org.tigris.subversion.subclipse.feature.group" version="1.6.18"/>
 <repository location="http://subclipse.tigris.org/update_1.6.x"/>
 </location>
-</location>
 </locations>
 <environment>
 <nl>en</nl>
