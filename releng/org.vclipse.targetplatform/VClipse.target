@@ -41,11 +41,6 @@
 <unit id="org.tigris.subversion.subclipse.feature.group" version="1.6.18"/>
 <repository location="http://subclipse.tigris.org/update_1.6.x"/>
 </location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.compare.feature.group" version="1.2.1.v20110913-0926"/>
-<unit id="org.eclipse.emf.compare.mpatch.feature.group" version="1.2.1.v20110913-0926"/>
-<unit id="org.eclipse.emf.compare.sdk.feature.group" version="1.2.1.v20110913-0926"/>
-<repository location="http://download.eclipse.org/releases/indigo"/>
 </location>
 </locations>
 <environment>
