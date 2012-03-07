@@ -208,7 +208,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 
 		final Segment segmentE1UPSHDR = addChildSegment(segmentRoot, "E1UPSHDR");
 		// UPSNAM // will be filled later
-		setValue(segmentE1UPSHDR, "UPSTYPE", getUPSTYP());
+		setValue(segmentE1UPSHDR, "UPSTYP", getUPSTYP());
 		setValue(segmentE1UPSHDR, "UPSMODE", "O"); // letter O (original packet or correction packet) instead of number 0 !!!
 		containerUPSITM = segmentE1UPSHDR;
 
