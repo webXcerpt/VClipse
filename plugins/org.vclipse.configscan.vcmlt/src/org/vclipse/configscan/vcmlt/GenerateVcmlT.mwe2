@@ -13,7 +13,7 @@ Workflow {
     bean = StandaloneSetup {
         scanClassPath = true
         platformUri = "${runtimeProject}/.."
-        registerGenModelFile = "platform:/resource/org.vclipse.vcml/src-gen/org/vclipse/vcml/VCML.genmodel"
+        registerGenModelFile = "platform:/resource/org.vclipse.vcml.mm/src/org/vclipse/vcml/mm/VCML.genmodel"
    	}
 
     component = DirectoryCleaner {
