@@ -33,6 +33,6 @@ public interface IVCML2IDocPreferences {
 	public static final String VTAMAS = VCML2IDocUIPlugin.ID + ".vtamas";
 	public static final String VTMMAS = VCML2IDocUIPlugin.ID + ".vtmmas";
 	
-	public static final String UPSTYP = "UPS_TYPE_SETTING";
+	public static final String UPSTYPE = "UPS_TYPE_SETTING";
 
 }

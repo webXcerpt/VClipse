@@ -48,7 +48,7 @@ public class VCML2IDocOptionsPreferencePage extends FieldEditorPreferencePage im
 		addField(new BooleanFieldEditor(IVCML2IDocPreferences.VFNMAS, "VFNMAS (Master variant function)", idocGroup));
 		addField(new BooleanFieldEditor(IVCML2IDocPreferences.VTAMAS, "VTAMAS (Master variant table)", idocGroup));
 		addField(new BooleanFieldEditor(IVCML2IDocPreferences.VTMMAS, "VTMMAS (Master maintenance for table contents)", idocGroup));
-		addField(new StringFieldEditor(IVCML2IDocPreferences.UPSTYP, "UPS type:", idocGroup));
+		addField(new StringFieldEditor(IVCML2IDocPreferences.UPSTYPE, "UPS type:", idocGroup));
 	}
 
 	@Override

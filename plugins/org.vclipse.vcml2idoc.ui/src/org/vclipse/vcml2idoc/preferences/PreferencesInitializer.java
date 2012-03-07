@@ -59,6 +59,6 @@ public class PreferencesInitializer extends AbstractPreferenceInitializer {
 		preferenceStore.setDefault(IVCML2IDocPreferences.VFNMAS, false);
 		preferenceStore.setDefault(IVCML2IDocPreferences.VTAMAS, true);
 		preferenceStore.setDefault(IVCML2IDocPreferences.VTMMAS, true);
-		preferenceStore.setDefault(IVCML2IDocPreferences.UPSTYP, properties.getProperty(IVCML2IDocPreferences.UPSTYP));
+		preferenceStore.setDefault(IVCML2IDocPreferences.UPSTYPE, properties.getProperty(IVCML2IDocPreferences.UPSTYPE));
 	}
 }
