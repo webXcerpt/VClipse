@@ -58,6 +58,7 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 	
 	public static final String LOG_FILES_LOCATION = "LogFiles";
 	public static final String LOGGING_ENABLED = "loggingEnabled";
+	public static final String ADD_STYLESHEET = "addStyleSheet";
 	
 	public static final Set<String> parameterOptions = Sets.newHashSet(KBOBJECT, STOP_ON_ERROR, PERFORMANCE_RUN, BREAKPOINT_ENABLED, TEST_DATE, ROOT_QUANTITY);
 	
@@ -173,6 +174,7 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 				monitor.beginTask("Running tests for " + testModel.eResource().getURI().lastSegment() + " and " + connection.getDescription() + " connection", IProgressMonitor.UNKNOWN);
 				Map<Object, Object> transformationOptions = Maps.newHashMap();
 				transformationOptions.put(TestRun.SKIP_MATERIAL_TESTS, options.get(TestRun.SKIP_MATERIAL_TESTS));
+				transformationOptions.put(TestRun.ADD_STYLESHEET, options.get(TestRun.ADD_STYLESHEET));
 				if(xmlProvider == null) {
 					if(inputDocument == null) {
 						throw new IllegalArgumentException("Require an input document for ConfigScan transformation");

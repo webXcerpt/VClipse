@@ -62,6 +62,8 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 	
 	private Button enableFilesLogging;
 	
+	private Button addStyleSheet;
+	
 	@Inject
 	public ManyConnectionsTab(IConfigScanRemoteConnections remoteConnections) {
 		this.remoteConnections = remoteConnections;
@@ -153,6 +155,16 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 			}
 		});
 		
+		addStyleSheet = new Button(rightComposite, SWT.CHECK);
+		addStyleSheet.setText("Add stylesheet processing instruction");
+		addStyleSheet.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				setDirty(true);
+				updateLaunchConfigurationDialog();
+			}
+		});
+		
 		new Label(leftComposite, SWT.NONE).setText("KBOBJECT: ");
 		kbObjectText = new Text(leftComposite, SWT.BORDER);
 		kbObjectText.addModifyListener(new ModifyListener() {
@@ -223,7 +235,12 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 		try {
 			Map<?, ?> attributes = configuration.getAttributes();
 			
-			Object object = attributes.get(TestRun.SKIP_MATERIAL_TESTS);
+			Object object = attributes.get(TestRun.ADD_STYLESHEET);
+			if(object != null) {
+				addStyleSheet.setSelection((Boolean)object);				
+			}
+			
+			object = attributes.get(TestRun.SKIP_MATERIAL_TESTS);
 			if(object != null) {
 				skipMaterialTestsButton.setSelection((Boolean)object);
 			}
@@ -283,6 +300,7 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 	@Override
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 		Map<String, Object> map = Maps.newHashMap();
+		map.put(TestRun.ADD_STYLESHEET, true);
 		map.put(TestRun.SKIP_MATERIAL_TESTS, false);
 		map.put(TestRun.KBOBJECT, "");
 		map.put(TestRun.STOP_ON_ERROR, false);
@@ -299,6 +317,7 @@ public class ManyConnectionsTab extends AbstractLaunchConfigurationTab {
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		Map<String, Object> map = Maps.newHashMap();
 		
+		map.put(TestRun.ADD_STYLESHEET, addStyleSheet.getSelection());
 		map.put(TestRun.SKIP_MATERIAL_TESTS, skipMaterialTestsButton.getSelection());
 		map.put(TestRun.KBOBJECT, kbObjectText.getText());
 		map.put(TestRun.STOP_ON_ERROR, stopOnError.getSelection());
