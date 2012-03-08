@@ -62,6 +62,11 @@ public abstract class AbstractLabelProvider extends ColumnLabelProvider implemen
 				}
 			});
 	
+	private class Statistics {
+		int testCaseAmount = 0;
+		int failuresAmount = 0;
+	}
+	
 	protected static final String EMPTY = "";
 
 	protected ClasspathAwareImageHelper imageHelper;
@@ -130,32 +135,55 @@ public abstract class AbstractLabelProvider extends ColumnLabelProvider implemen
 	protected StyledString getStatistics(TestCase testCase) {
 		if(testCase instanceof TestGroup) {
 			TestGroup testGroup = (TestGroup)testCase;
-			List<TestCase> testCases = testGroup.getTestCases();
-			if(!testCases.isEmpty()) {
-				int numberOfTestCases = testCases.size();
-				int failures = 0;
-				for(TestCase childTestCase : testCases) {
-					if(Status.FAILURE == childTestCase.getStatus()) {
-						failures++;
-					}
-				}
-				StyledString result = new StyledString("  ");
-				StylerFactory stylerFactory = new StylerFactory();
-				int successes = numberOfTestCases - failures;
-				if (successes > 0) {
-					result.append(stylerFactory.createFromXtextStyle(successes + " success" + (successes > 1 ? "es" : ""), successStyle));
-				}
-				if (successes > 0 && failures > 0) {
-					result.append(", ");
-				}
-				if (failures > 0) {
-					result.append(new StylerFactory().createFromXtextStyle(failures + " failure" + (failures > 1 ? "s" : ""), failureStyle));
-				}
-				return result;
+			Statistics statistics = new Statistics();
+			computeStatistics(testGroup, statistics);
+			StyledString result = new StyledString("  ");
+			StylerFactory stylerFactory = new StylerFactory();
+			int successes = statistics.testCaseAmount - statistics.failuresAmount;
+			if(successes > 0) {
+				result.append(stylerFactory.createFromXtextStyle(successes + " success" + (successes > 1 ? "es" : ""), successStyle));
 			}
+			if(successes > 0 && statistics.failuresAmount > 0) {
+				result.append(", ");
+			}
+			if(statistics.failuresAmount > 0) {
+				result.append(new StylerFactory().createFromXtextStyle(statistics.failuresAmount + " failure" + (statistics.failuresAmount > 1 ? "s" : ""), failureStyle));
+			}
+			
+			statistics = new Statistics();
+			getStatisticsFromHierarchy(testGroup, statistics);
+			successes = statistics.testCaseAmount - statistics.failuresAmount;
+			if(successes > 0 && statistics.failuresAmount > 0) {
+				result.append("    ConfigScan : ");
+				result.append(stylerFactory.createFromXtextStyle(successes + " success" + (successes > 1 ? "es" : ""), successStyle));
+				result.append(", ");
+				result.append(stylerFactory.createFromXtextStyle(statistics.failuresAmount + " failure" + (statistics.failuresAmount > 1 ? "s" : ""), failureStyle));
+			}
+			return result;
 		}
 		return new StyledString(EMPTY);
  	}
+	
+	private void computeStatistics(TestGroup testGroup, Statistics statistics) {
+		List<TestCase> testCases = testGroup.getTestCases();
+		statistics.testCaseAmount = testCases.size();
+		for(TestCase childTestCase : testCases) {
+			if(Status.FAILURE == childTestCase.getStatus()) {
+				statistics.failuresAmount++;
+			}
+		}
+	}
+	
+	private void getStatisticsFromHierarchy(TestGroup testGroup, Statistics statistics) {
+		for(TestCase testCase : testGroup.getTestCases()) {
+			if(testCase instanceof TestGroup) {
+				Statistics childStatistics = new Statistics();
+				computeStatistics((TestGroup)testCase, childStatistics);
+				statistics.testCaseAmount += childStatistics.testCaseAmount;
+				statistics.failuresAmount += childStatistics.failuresAmount;
+			}
+		}
+	}
 
 	protected String extractText(NamedNodeMap nodes, String textToShow, String attribute) {
 		StringBuffer strBuffer = new StringBuffer();
