@@ -76,7 +76,7 @@ public class OneClickWorkflow {
 			List<IDocDocument> idocs = idocProcessor.transform(idocModel , monitor);
 			if(preferenceStore.getBoolean(PreferencesInitializer.SAVE_IDOC_FILES)) {
 				ResourceSet resourceSet = resource.getResourceSet();
-				Resource idocResource = resourceSet.createResource(URI.createURI(resource.getURI().toString().concat(".idoc")));
+				Resource idocResource = resourceSet.createResource(URI.createURI(resource.getURI().toString().replace(".vcml", ".idoc")));
 				idocResource.getContents().add(idocModel);
 				idocResource.save(SaveOptions.defaultOptions().toOptionsMap());
 			}
