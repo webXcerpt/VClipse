@@ -192,7 +192,7 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 			
 			String parseResult = documentUtility.serialize(inputDocument);
 			try {
-				storeLogDocuments(monitor, inputDocument, getLogFileNamePrefix() + ".input.xml");
+				storeLogDocument(monitor, inputDocument, getLogFileNamePrefix() + ".input.xml");
 				Map<Object, Object> configScanRunnerOptions = Maps.newHashMap();
 				for (Entry<Object, Object> entry : options.entrySet()) {
 					if (parameterOptions.contains(entry.getKey())) {
@@ -203,7 +203,7 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 				String result = configScanRunner.execute(parseResult, connection, materialNumber, configScanRunnerOptions);
 				Document logDocument = documentUtility.parse(result);
 				setLogElement(logDocument);
-				storeLogDocuments(monitor, logDocument, getLogFileNamePrefix() + ".log.xml");
+				storeLogDocument(monitor, logDocument, getLogFileNamePrefix() + ".log.xml");
 				
 				testCaseFactory.setOptions(options);
 				testCaseFactory.setInputUriMap(input2Uri);
@@ -291,7 +291,7 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 		return ResourceUtil.getFile(testModel.eResource()).getName() + "." + connection.getDescription();
 	}
 	
-	private void storeLogDocuments(IProgressMonitor monitor, Document document, String fileName) throws CoreException {
+	private void storeLogDocument(IProgressMonitor monitor, Document document, String fileName) throws CoreException {
 		if(testModel != null) {
 			String logFilesLocation = (String)options.get(LOG_FILES_LOCATION);
 			if(logFilesLocation != null) {
@@ -304,7 +304,6 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 					folder.create(true, true, monitor);						
 				}
 				Files.writeStringIntoFile(folder.getLocation().toString() + "/" + fileName, documentUtility.serialize(document));
-				//Files.writeStringIntoFile(folder.getLocation().toString() + "/" + name + "log.xml", documentUtility.serialize(logDocument));
 				folder.refreshLocal(IResource.DEPTH_ONE, monitor);
 			}
 		}
