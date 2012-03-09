@@ -192,6 +192,7 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 			
 			String parseResult = documentUtility.serialize(inputDocument);
 			try {
+				storeLogDocuments(monitor, inputDocument, getLogFileNamePrefix() + ".input.xml");
 				Map<Object, Object> configScanRunnerOptions = Maps.newHashMap();
 				for (Entry<Object, Object> entry : options.entrySet()) {
 					if (parameterOptions.contains(entry.getKey())) {
@@ -202,7 +203,7 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 				String result = configScanRunner.execute(parseResult, connection, materialNumber, configScanRunnerOptions);
 				Document logDocument = documentUtility.parse(result);
 				setLogElement(logDocument);
-				storeLogDocuments(monitor, inputDocument, logDocument);
+				storeLogDocuments(monitor, logDocument, getLogFileNamePrefix() + ".log.xml");
 				
 				testCaseFactory.setOptions(options);
 				testCaseFactory.setInputUriMap(input2Uri);
@@ -286,7 +287,11 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 		return true;
 	}
 	
-	private void storeLogDocuments(IProgressMonitor monitor, Document inputDocument, Document logDocument) throws CoreException {
+	private String getLogFileNamePrefix() {
+		return ResourceUtil.getFile(testModel.eResource()).getName() + "." + connection.getDescription();
+	}
+	
+	private void storeLogDocuments(IProgressMonitor monitor, Document document, String fileName) throws CoreException {
 		if(testModel != null) {
 			String logFilesLocation = (String)options.get(LOG_FILES_LOCATION);
 			if(logFilesLocation != null) {
@@ -294,13 +299,12 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 					logFilesLocation = LOG_FILES_LOCATION;
 				}
 				IFile file = ResourceUtil.getFile(testModel.eResource());
-				String name = file.getName() + "." + connection.getDescription() + ".";
 				IFolder folder = file.getParent().getFolder(new Path(logFilesLocation));
 				if(!folder.exists()) {
 					folder.create(true, true, monitor);						
 				}
-				Files.writeStringIntoFile(folder.getLocation().toString() + "/" + name + "input.xml", documentUtility.serialize(inputDocument));
-				Files.writeStringIntoFile(folder.getLocation().toString() + "/" + name + "log.xml", documentUtility.serialize(logDocument));
+				Files.writeStringIntoFile(folder.getLocation().toString() + "/" + fileName, documentUtility.serialize(document));
+				//Files.writeStringIntoFile(folder.getLocation().toString() + "/" + name + "log.xml", documentUtility.serialize(logDocument));
 				folder.refreshLocal(IResource.DEPTH_ONE, monitor);
 			}
 		}
