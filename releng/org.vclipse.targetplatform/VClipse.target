@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target name="VClipse" sequenceNumber="16">
+<target name="VClipse" sequenceNumber="17">
 <locations>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipselabs.xtext.utils.unittesting" version="0.9.2"/>
@@ -38,15 +38,15 @@
 <repository location="http://download.eclipse.org/eclipse/updates/3.7"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="com.collabnet.subversion.merge.feature.feature.group" version="3.0.7"/>
-<unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.6"/>
-<unit id="org.tigris.subversion.subclipse.mylyn.feature.group" version="3.0.0"/>
-<unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.1"/>
-<unit id="org.tigris.subversion.clientadapter.javahl.feature.feature.group" version="1.7.4"/>
 <unit id="org.tigris.subversion.subclipse.graph.feature.feature.group" version="1.1.1"/>
+<unit id="org.tigris.subversion.subclipse.mylyn.feature.group" version="3.0.0"/>
+<unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.6"/>
+<unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.1"/>
+<unit id="com.collabnet.subversion.merge.feature.feature.group" version="3.0.7"/>
+<unit id="org.tigris.subversion.clientadapter.javahl.feature.feature.group" version="1.7.4"/>
 <unit id="net.java.dev.jna.feature.group" version="3.4.0.t20120117_1605"/>
-<unit id="org.tigris.subversion.clientadapter.svnkit.feature.feature.group" version="1.7.0"/>
 <unit id="org.tmatesoft.svnkit.feature.group" version="1.7.0.beta3_t20120306_2144"/>
+<unit id="org.tigris.subversion.clientadapter.svnkit.feature.feature.group" version="1.7.0"/>
 <repository location="http://subclipse.tigris.org/update_1.8.x"/>
 </location>
 </locations>
