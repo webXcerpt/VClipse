@@ -9,6 +9,7 @@ Require-Bundle: org.eclipse.emf.mwe2.launch;bundle-version="2.1.0",
  org.vclipse.idoc,
  org.eclipse.ui,
  org.eclipse.core.runtime,
- org.vclipse.configscan.vcmlt;bundle-version="0.4.1"
+ org.vclipse.configscan.vcmlt;bundle-version="0.4.2",
+ org.vclipse.vcml.mm;bundle-version="0.4.2"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
