@@ -10,7 +10,7 @@
 		<relativePath>../org.vclipse.releng/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>org.vclipse.deployment</artifactId>
+	<artifactId>org.vclipse.sap.deployment</artifactId>
 	<packaging>eclipse-plugin</packaging>
 	<version>0.4.2.qualifier</version>
 </project>
