@@ -1,6 +1,7 @@
 package org.vclipse.sap.deployment;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -33,22 +34,30 @@ public class ConvertSendAction implements IObjectActionDelegate {
 			protected IStatus run(IProgressMonitor monitor) {
 				String errorMessage = "Error during idoc deployment to SAP system.";
 				monitor.beginTask("Converting and sending to SAP system.", 4);
-				IFile file = (IFile)selection.getFirstElement();
-				monitor.subTask("Parsing " + file.getFileExtension() + " file " + file.getName());
-				Resource resource = new XtextResourceSet().getResource(URI.createURI(file.getLocationURI().toString()), true);
-				monitor.worked(1);
-				try {
-					return workflow.convertAndSend(resource, monitor);
-				} catch (JCoException exception) {
-					DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
-					return Status.CANCEL_STATUS;
-				} catch (CoreException exception) {
-					DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
-					return Status.CANCEL_STATUS;
-				} catch (IOException exception) {
-					DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
-					return Status.CANCEL_STATUS;
+				Iterator<?> iterator = selection.iterator();
+				while(iterator.hasNext()) {
+					Object next = iterator.next();
+					if(next instanceof IFile) {
+						IFile file = (IFile)next;
+						monitor.subTask("Parsing " + file.getFileExtension() + " file " + file.getName());
+						Resource resource = new XtextResourceSet().getResource(URI.createURI(file.getLocationURI().toString()), true);
+						monitor.worked(1);
+						try {
+							return workflow.convertAndSend(resource, monitor);
+						} catch (JCoException exception) {
+							DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
+							continue;
+						} catch (CoreException exception) {
+							DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
+							continue;
+						} catch (IOException exception) {
+							DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
+							continue;
+						}
+					}
 				}
+				monitor.done();
+				return Status.OK_STATUS;
 			}
 		};
 		job.schedule();
@@ -59,6 +68,5 @@ public class ConvertSendAction implements IObjectActionDelegate {
 	}
 
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		// not used
 	}
 }

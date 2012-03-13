@@ -1,24 +1,19 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: VClipse Deployment Plug-in
-Bundle-SymbolicName: org.vclipse.deployment;singleton:=true
+Bundle-SymbolicName: org.vclipse.sap.deployment;singleton:=true
 Bundle-Version: 0.4.2.qualifier
 Bundle-Activator: org.vclipse.sap.deployment.DeploymentPlugin
-Require-Bundle: org.eclipse.core.runtime,
- org.vclipse.vcml2idoc.ui,
- org.eclipse.xtext;bundle-version="2.2.1",
- org.eclipse.ui,
- org.eclipse.core.resources,
+Require-Bundle: org.vclipse.vcml2idoc.ui,
  org.vclipse.vcml.ui,
  org.vclipse.connection,
  org.vclipse.idoc2jcoidoc,
  org.vclipse.idoc,
- org.vclipse.vcml,
  org.eclipse.xtext.ui,
  org.vclipse.vcml.diff,
- org.eclipse.team.core,
  org.tigris.subversion.subclipse.core,
- org.vclipse.base.ui
+ org.eclipse.ui.ide,
+ org.eclipse.team.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.sap.conn.idoc,
