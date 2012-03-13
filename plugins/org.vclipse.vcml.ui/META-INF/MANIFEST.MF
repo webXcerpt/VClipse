@@ -10,17 +10,15 @@ Require-Bundle: org.vclipse.base.ui;visibility:=reexport,
  org.vclipse.vcml;visibility:=reexport,
  org.eclipse.xtext.ui;bundle-version="2.2.1",
  org.eclipse.xtext.ui.shared;bundle-version="2.2.1",
- org.eclipse.xtext.common.types.ui;bundle-version="2.2.1",
  org.eclipse.xtext.builder;bundle-version="2.2.1",
  org.eclipse.xtext.ui.codetemplates.ui;bundle-version="2.2.1",
- org.antlr.runtime;bundle-version="3.2.0",
  org.vclipse.console,
- org.eclipse.ui.editors,
  org.eclipse.ui.ide,
- org.eclipse.ui,
  org.eclipse.compare,
  org.apache.log4j,
- org.eclipse.ui.console
+ org.eclipse.ui.console,
+ org.vclipse.vcml.diff,
+ org.eclipse.team.ui;bundle-version="3.6.100"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.vcml.ui,
  org.vclipse.vcml.ui.contentassist,
@@ -29,5 +27,4 @@ Export-Package: org.vclipse.vcml.ui,
  org.vclipse.vcml.ui.outline.actions,
  org.vclipse.vcml.ui.quickfix
 Bundle-Activator: org.vclipse.vcml.ui.internal.VCMLActivator
-Import-Package: org.apache.log4j,
- org.eclipse.emf.compare.ui.editor
+Import-Package: org.apache.log4j

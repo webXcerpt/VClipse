@@ -15,6 +15,8 @@ package org.vclipse.vcml.ui;
 
 import java.io.PrintStream;
 
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.xtext.documentation.IEObjectDocumentationProvider;
@@ -52,6 +54,10 @@ public class VCMLUiModule extends org.vclipse.vcml.ui.AbstractVCMLUiModule {
 	
 	public PrintStream bindPrintStream() {
 		return System.out;
+	}
+	
+	public IWorkspaceRoot bindWorkspaceRoot() {
+		return ResourcesPlugin.getWorkspace().getRoot();
 	}
 	
 	public Class<? extends AbstractAntlrTokenToAttributeIdMapper> bindAbstractAntlrTokenToAttributeIdMapper() {
