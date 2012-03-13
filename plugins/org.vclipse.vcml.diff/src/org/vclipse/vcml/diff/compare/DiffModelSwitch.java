@@ -1,4 +1,4 @@
-package org.vclipse.vcml.diff;
+package org.vclipse.vcml.diff.compare;
 
 import java.util.List;
 import java.util.Set;
@@ -19,6 +19,7 @@ import org.eclipse.emf.compare.diff.metamodel.util.DiffSwitch;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
+import org.vclipse.vcml.diff.IVcmlDiffFilter;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Model;
@@ -28,26 +29,36 @@ import org.vclipse.vcml.vcml.VCObject;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.inject.Inject;
 
-public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
+public class DiffModelSwitch extends DiffSwitch<Boolean> {
 
 	private Boolean HANDLED = Boolean.TRUE;
 	private Boolean NOT_HANDLED = null;
 
 	private Model resultModel;
 	private Model newStateModel;
-	private Set<VCObject> modelElements; 
-	private IDiffFilter diffFilter;
+	private Set<VCObject> modelElements;
 	private IProgressMonitor monitor;
+
+	private IVcmlDiffFilter vcmlDiffFilter;
+	private DiffValidationMessageAcceptor messageAcceptor;
 	
-	public DiffsHandlerSwitch(Model resultModel, Model newStateModel, IProgressMonitor monitor) {
+	@Inject
+	public DiffModelSwitch(IVcmlDiffFilter vcmlDiffFilter) {
+		modelElements = Sets.newHashSet();
+		this.vcmlDiffFilter = vcmlDiffFilter;
+	}
+	
+	public void handleDiffModel(DiffModel diffModel, Model resultModel, Model newStateModel, DiffValidationMessageAcceptor messageAcceptor, IProgressMonitor monitor) {
+		modelElements.clear();
 		this.resultModel = resultModel;
 		this.newStateModel = newStateModel;
-		modelElements = Sets.newHashSet();
-		diffFilter = new DefaultDiffFilter();
+		this.messageAcceptor = messageAcceptor;
 		this.monitor = monitor;
+		doSwitch(diffModel);
 	}
-
+	
 	@Override
 	public Boolean caseDiffModel(DiffModel object) {
 		for(DiffElement diffElement : object.getOwnedElements()) {
@@ -73,9 +84,9 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 		// finalize model
 		List<VCObject> objects = resultModel.getObjects();
 		List<VCObject> leftObjects = Lists.newArrayList(newStateModel.getObjects());
-		for(VCObject o : leftObjects) {
-			if(modelElements.contains(o)) {
-				objects.add(EcoreUtil.copy(o));
+		for(final VCObject vcobject : leftObjects) {
+			if(modelElements.contains(vcobject)) {
+				objects.add(EcoreUtil.copy(vcobject));
 			}
 		}
 		return HANDLED;
@@ -95,6 +106,20 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 
 	@Override
 	public Boolean caseModelElementChangeLeftTarget(ModelElementChangeLeftTarget object) {
+		EObject newStateObject = object.getLeftElement();
+		EObject oldStateParent = object.getRightParent();
+		Object containment = oldStateParent.eGet(newStateObject.eContainmentFeature());
+		if(containment instanceof EObject) {
+			final EObject oldStateObject = (EObject)containment;
+			boolean allowed = vcmlDiffFilter.changeAllowed(newStateObject.eContainer(), oldStateParent, newStateObject, oldStateObject, object.getKind());
+			if(!allowed) {
+				messageAcceptor.acceptError("", newStateObject.eContainer(), 
+						newStateObject.eContainmentFeature(), 1, 
+							"Compare_Issue", new String[]{
+								EcoreUtil.getURI(oldStateObject.eContainer()).toString(), 
+									EcoreUtil.getURI(newStateObject.eContainer()).toString()});
+			}
+		}
 		return addObject2HandleList(object.getLeftElement());
 	}
 
@@ -115,7 +140,7 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 
 	@Override
 	public Boolean caseReferenceChange(ReferenceChange object) {
-		if(!diffFilter.filter(object.getReference(), object.getKind())) {
+		if(!vcmlDiffFilter.filter(object.getReference(), object.getKind())) {
 			return addObject2HandleList(object.getLeftElement());
 		}
 		return HANDLED;
@@ -127,7 +152,7 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 		List<EObject> rightTarget = object.getRightTarget();
 		if(leftTarget != null && rightTarget != null) {
 			if(leftTarget.size() == rightTarget.size()) {
-				if(!diffFilter.filter(object.getReference(), object.getKind())) {
+				if(!vcmlDiffFilter.filter(object.getReference(), object.getKind())) {
 					return addObject2HandleList(object.getLeftElement());
 				}
 			}
@@ -149,7 +174,11 @@ public class DiffsHandlerSwitch extends DiffSwitch<Boolean> {
 
 	@Override
 	public Boolean caseUpdateAttribute(UpdateAttribute object) {
-		if(!diffFilter.filter(object.getAttribute(), object.getKind())) {
+		if(!vcmlDiffFilter.filter(object.getAttribute(), object.getKind())) {
+//			EObject changedEObject = object.getLeftElement();
+//			EReference containmentReference = object.getAttribute().eContainmentFeature();
+//			EObject parentObject = changedEObject.eContainer();
+//			references.put(nameProvider.apply(parentObject).getLastSegment(), containmentReference);	
 			return addObject2HandleList(object.getLeftElement());
 		}
 		return NOT_HANDLED;

@@ -8,10 +8,10 @@
             id="org.vclipse.actions.diff"
             objectClass="org.eclipse.core.resources.IFile">
          <action
-               class="org.vclipse.vcml.diff.ui.ExportDiffsAction"
+               class="org.vclipse.vcml.diff.injection.ExtensionFactory:org.vclipse.vcml.diff.ui.ExportDiffsAction"
                enablesFor="+"
                icon="icons/compare.png"
-               id="org.vclipse.actions.VCML2idoc"
+               id="org.vclipse.actions.exportDiffsAction"
                label="Create delta of VCML files"
                menubarPath="org.vclipse.vcml.ui.popupMenu.resource/content"
                tooltip="Compare 2 VCML files and create a delta VCML file of their differences">
@@ -32,14 +32,14 @@
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
-            class="org.vclipse.vcml.diff.ui.PreferenceInitializer">
+            class="org.vclipse.vcml.diff.injection.ExtensionFactory:org.vclipse.vcml.diff.ui.PreferenceInitializer">
       </initializer>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
             category="org.vclipse.preferences.page"
-            class="org.vclipse.vcml.diff.ui.DiffPreferencePage"
+            class="org.vclipse.vcml.diff.injection.ExtensionFactory:org.vclipse.vcml.diff.ui.DiffPreferencePage"
             id="org.vclipse.vcml.preferencesPages.diff"
             name="VCML Diff">
       </page>
@@ -47,7 +47,7 @@
    <extension
          point="org.eclipse.emf.compare.match.engine">
       <matchengine
-            engineClass="org.vclipse.vcml.diff.VcmlMatchEngine"
+            engineClass="org.vclipse.vcml.diff.engines.VcmlMatchEngine"
             fileExtension="vcml"
             label="VCML Match Engine"
             priority="highest">

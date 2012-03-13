@@ -1,4 +1,4 @@
-package org.vclipse.vcml.diff;
+package org.vclipse.vcml.diff.engines;
 
 import org.eclipse.emf.compare.match.engine.AbstractSimilarityChecker;
 import org.eclipse.emf.compare.match.engine.GenericMatchEngine;

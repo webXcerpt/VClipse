@@ -3,17 +3,10 @@
  */
 package org.vclipse.vcml.diff.ui;
 
-import java.io.IOException;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
@@ -26,15 +19,15 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.xtext.util.StringInputStream;
-import org.vclipse.vcml.diff.Comparison;
-import org.vclipse.vcml.diff.VcmlDiffPlugin;
+import org.vclipse.vcml.diff.compare.ExtractDifferencesJob;
 
-final class ExportDiffsDialog extends TitleAreaDialog {
+import com.google.inject.Inject;
+
+public class ExportDiffsDialog extends TitleAreaDialog {
 
 	private IFile oldFile;
 	private IFile newFile;
@@ -50,9 +43,12 @@ final class ExportDiffsDialog extends TitleAreaDialog {
 	
 	private IWorkspaceRoot root;
 	
-	public ExportDiffsDialog(Shell parentShell, IWorkspaceRoot root) {
-		super(parentShell);
-		this.root = root;
+	@Inject
+	private ExtractDifferencesJob job;
+	
+	public ExportDiffsDialog() {
+		super(Display.getCurrent().getActiveShell());
+		this.root = ResourcesPlugin.getWorkspace().getRoot();
 	}
 	
 	public void setOldFile(IFile file) {
@@ -74,7 +70,7 @@ final class ExportDiffsDialog extends TitleAreaDialog {
 		fileSelectionDialog.setExtensions(new String[]{"*.vcml"});
 		
 		getShell().setText("Compare 2 files with each other");
-		setTitle("Comparison Dialog");
+		setTitle("VcmlCompare Dialog");
 		setMessage("One can compare 2 files with vcml extension and extract differences to a third file");
 		
 		Composite mainArea = new Composite(parent, SWT.NONE);
@@ -83,7 +79,7 @@ final class ExportDiffsDialog extends TitleAreaDialog {
 		
 		Group group = new Group(mainArea, SWT.NONE);
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		group.setText("Comparison sources");
+		group.setText("VcmlCompare sources");
 		group.setLayout(new GridLayout(3, false));
 		
 		Label label = new Label(group, SWT.NONE);
@@ -209,35 +205,10 @@ final class ExportDiffsDialog extends TitleAreaDialog {
 	protected void buttonPressed(int buttonId) {
 		if(Dialog.OK == buttonId) {
 			if(oldFile != null && newFile != null) {
-				Job exportDifferencesJob = new Job("Export job for differences betweeen 2 vcml files.") {
-					@Override
-					protected IStatus run(IProgressMonitor monitor) {
-						monitor.beginTask("Exporting differences...", 35);
-						try  {
-							monitor.subTask("Creating export file...");
-							if(!resultFile.exists()) {
-								resultFile.create(new StringInputStream(""), true, monitor);
-							} else {
-								resultFile.setContents(new StringInputStream(""), true, true, monitor);
-							}
-							monitor.worked(5);
-							new Comparison().compare(oldFile, newFile, resultFile, monitor);
-							return Status.OK_STATUS;
-						} catch(CoreException exception) {
-							VcmlDiffPlugin.log(exception.getMessage(), exception);
-							return Status.CANCEL_STATUS;
-						} catch(IOException exception) {
-							VcmlDiffPlugin.log(exception.getMessage(), exception);
-							return Status.CANCEL_STATUS;
-						} catch(InterruptedException exception) {
-							VcmlDiffPlugin.log(exception.getMessage(), exception);
-							return Status.CANCEL_STATUS;
-						} finally {
-							monitor.done();
-						}
-					}
-				};
-				exportDifferencesJob.schedule();
+				job.setNewFile(newFile);
+				job.setOldFile(oldFile);
+				job.setResultFile(resultFile);
+				job.schedule();
 			}
 		}
 		super.buttonPressed(buttonId);

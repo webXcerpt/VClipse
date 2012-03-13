@@ -1,4 +1,4 @@
-package org.vclipse.vcml.diff;
+package org.vclipse.vcml.diff.engines;
 
 import org.eclipse.emf.compare.match.engine.AbstractSimilarityChecker;
 import org.eclipse.emf.compare.match.engine.internal.EcoreIDSimilarityChecker;
@@ -9,8 +9,8 @@ import org.vclipse.vcml.vcml.VCObject;
 @SuppressWarnings("restriction")
 public class VcmlSimilarityCheckerId extends EcoreIDSimilarityChecker {
 
-	public VcmlSimilarityCheckerId(MetamodelFilter filter, AbstractSimilarityChecker fallback) {
-		super(filter, fallback);
+	public VcmlSimilarityCheckerId(MetamodelFilter filter, AbstractSimilarityChecker checker) {
+		super(filter, checker);
 	}
 
 	@Override
