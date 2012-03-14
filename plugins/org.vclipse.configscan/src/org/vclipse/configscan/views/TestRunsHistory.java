@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,7 +20,6 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanConfiguration;
-import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.impl.model.TestRun;
 import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.TestCaseFactory;
@@ -32,6 +32,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLockListener, IPropertyChangeListener {
@@ -181,7 +182,10 @@ public class TestRunsHistory implements IConfigScanConfiguration, ITreeViewerLoc
 					NamedNodeMap attributes = item.getAttributes();
 					String date = attributes.getNamedItem(DocumentUtility.DATE).getNodeValue();
 					String name = attributes.getNamedItem(DocumentUtility.NAME).getNodeValue();
-					TestRun testRun = testCaseUtility.buildTestRun("Testrun on " + date + " with " + name, null, (IConfigScanXMLProvider)null, null);
+					HashMap<Object,Object> options = Maps.newHashMap();
+					options.put("name", "Testrun on " + date + " with " + name);
+					testCaseUtility.setOptions(options);
+					TestRun testRun = testCaseUtility.buildTestRun();
 					testRun.setLogElement(document);
 					
 					ConfigScanViewInput input = new ConfigScanViewInput();

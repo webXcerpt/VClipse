@@ -124,12 +124,10 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 					if(nextObject instanceof IFile) {
 						IFile currentFile = (IFile)nextObject;
 						String extension = currentFile.getFileExtension();
-						String fileName = currentFile.getName();
 						testCaseFactory.setOptions((Map<Object, Object>)attributes);
-						
 						if(!extensionPointReader.hasExtensionFor(extension)) {
 							for(RemoteConnection connection : selectedConnections.values()) {
-								testRuns.add(testCaseFactory.buildTestRun(fileName, connection, documentUtility.parse(currentFile.getContents()), null));
+								testRuns.add(testCaseFactory.buildTestRun(currentFile, connection, documentUtility.parse(currentFile.getContents()), null));
 							}
 						} else {
 							Resource currentResource = resourceSet.getResource(URI.createURI(currentFile.getLocationURI().toString()), true);
@@ -137,7 +135,7 @@ public class LaunchDelegate extends LaunchConfigurationDelegate {
 							EcoreUtil2.resolveAll(currentResource, CancelIndicator.NullImpl);
 							for(RemoteConnection connection : selectedConnections.values()) {
 								IConfigScanXMLProvider xmlProvider = extensionPointReader.getXmlProvider(extension);
-								testRuns.add(testCaseFactory.buildTestRun(fileName, connection, xmlProvider, testModel));									
+								testRuns.add(testCaseFactory.buildTestRun(currentFile, connection, xmlProvider, testModel));									
 							}							
 						}
 					}

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.vclipse.configscan.views.actions;
 
+import java.util.HashMap;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -32,7 +34,6 @@ import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.IConfigScanConfiguration;
 import org.vclipse.configscan.IConfigScanImages;
-import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.impl.model.TestCase;
 import org.vclipse.configscan.impl.model.TestRun;
 import org.vclipse.configscan.utils.DocumentUtility;
@@ -42,6 +43,7 @@ import org.vclipse.configscan.views.ConfigScanViewInput;
 import org.w3c.dom.Document;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 public final class ImportExportAction extends SimpleTreeViewerAction implements IMenuCreator, SelectionListener {
 	
@@ -124,7 +126,10 @@ public final class ImportExportAction extends SimpleTreeViewerAction implements 
 				if(selectedPath != null) {
 					String content = Files.readFileIntoString(selectedPath);
 					Document document = documentUtility.parse(content);
-					TestRun testRun = testCaseUtility.buildTestRun("Imported Config Scan input file", null, (IConfigScanXMLProvider)null, null);
+					HashMap<Object,Object> options = Maps.newHashMap();
+					options.put("name", "Imported ConfigScan log file");
+					testCaseUtility.setOptions(options);
+					TestRun testRun = testCaseUtility.buildTestRun();
 					testRun.setLogElement(document);
 					ConfigScanViewInput input = new ConfigScanViewInput();
 					input.setTestRuns(Lists.newArrayList(testRun));

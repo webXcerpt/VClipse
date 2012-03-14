@@ -88,20 +88,31 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 	
 	private Map<Object, Object> options;
 	
-	private String title;
+	private IFile file;
 
 	public TestRun() {
 		super(null);
 		options = Maps.newHashMap();
 	}
 	
-	public void setTitle(String title) {
-		this.title = title;
+	public void setFile(IFile file) {
+		this.file = file;
 	}
 	
 	@Override
 	public String getTitle() {
-		return title;
+		if(file == null) {
+			Object object = options.get("name");
+			if(object instanceof String) {
+				return (String)object;
+			} else {
+				return "Log results";
+			}
+		} else if(connection == null) {
+			return file.getName();
+		} else {
+			return file.getName() + " on " + connection.getDescription();
+		}
 	}
 
 	public void setTestModel(EObject testModel) {
@@ -147,7 +158,7 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 
 	@Override
 	public String getLabel(Object object) {
-		return title;
+		return getTitle();
 	}
 
 	@Override
@@ -192,7 +203,10 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 			
 			String parseResult = documentUtility.serialize(inputDocument);
 			try {
-				storeLogDocument(monitor, inputDocument, getLogFileNamePrefix() + ".input.xml");
+				String logFileNamePrefix = getLogFileNamePrefix();
+				if(!logFileNamePrefix.isEmpty()) {
+					storeLogDocument(monitor, inputDocument, logFileNamePrefix + ".input.xml");					
+				}
 				Map<Object, Object> configScanRunnerOptions = Maps.newHashMap();
 				for (Entry<Object, Object> entry : options.entrySet()) {
 					if (parameterOptions.contains(entry.getKey())) {
@@ -203,7 +217,9 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 				String result = configScanRunner.execute(parseResult, connection, materialNumber, configScanRunnerOptions);
 				Document logDocument = documentUtility.parse(result);
 				setLogElement(logDocument);
-				storeLogDocument(monitor, logDocument, getLogFileNamePrefix() + ".log.xml");
+				if(!logFileNamePrefix.isEmpty()) {
+					storeLogDocument(monitor, logDocument, getLogFileNamePrefix() + ".log.xml");				
+				}
 				
 				testCaseFactory.setOptions(options);
 				testCaseFactory.setInputUriMap(input2Uri);
@@ -256,7 +272,7 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((testModel == null) ? 0 : testModel.hashCode());
-		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + ((getTitle() == null) ? 0 : getTitle().hashCode());
 		return result;
 	}
 	
@@ -277,18 +293,24 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 		} else if(!testModel.equals(other.testModel)) {
 			return false;
 		}
-		if(title == null) {
-			if(other.title != null) {
+		if(getTitle() == null) {
+			if(other.getTitle() != null) {
 				return false;
 			}
-		} else if(!title.equals(other.title)) {
+		} else if(!getTitle().equals(other.getTitle())) {
 			return false;
 		}
 		return true;
 	}
 	
 	private String getLogFileNamePrefix() {
-		return ResourceUtil.getFile(testModel.eResource()).getName() + "." + connection.getDescription();
+		if(testModel != null) {
+			return ResourceUtil.getFile(testModel.eResource()).getName() + "." + connection.getDescription();
+		} else if(file != null) {
+			return file.getName() + "." + connection.getDescription();
+		} else {
+			return "";
+		}
 	}
 	
 	private void storeLogDocument(IProgressMonitor monitor, Document document, String fileName) throws CoreException {

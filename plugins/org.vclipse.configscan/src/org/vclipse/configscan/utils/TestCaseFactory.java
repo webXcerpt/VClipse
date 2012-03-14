@@ -2,6 +2,7 @@ package org.vclipse.configscan.utils;
 
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.vclipse.configscan.IConfigScanRemoteConnections.RemoteConnection;
@@ -54,9 +55,16 @@ public class TestCaseFactory {
 		this.options = options;
 	}
 	
-	public TestRun buildTestRun(String fileName, RemoteConnection connection, IConfigScanXMLProvider xmlProvider, EObject testModel) {
+	public TestRun buildTestRun() {
 		TestRun testRun = testRunProvider.get();
-		testRun.setTitle(connection == null ? fileName : fileName + " on " + connection.getDescription());
+		testRun.setFilter(objectFilter);
+		testRun.setOptions(options);
+		return testRun;
+	}
+	
+	public TestRun buildTestRun(IFile file, RemoteConnection connection, IConfigScanXMLProvider xmlProvider, EObject testModel) {
+		TestRun testRun = testRunProvider.get();
+		testRun.setFile(file);
 		testRun.setRemoteConnection(connection);
 		testRun.setXmlProvider(xmlProvider);
 		testRun.setTestModel(testModel);
@@ -65,8 +73,8 @@ public class TestCaseFactory {
 		return testRun;
 	}
 	
-	public TestRun buildTestRun(String fileName, RemoteConnection connection, Document inputDocument, EObject testModel) {
-		TestRun testRun = buildTestRun(fileName, connection, (IConfigScanXMLProvider)null, testModel);
+	public TestRun buildTestRun(IFile file, RemoteConnection connection, Document inputDocument, EObject testModel) {
+		TestRun testRun = buildTestRun(file, connection, (IConfigScanXMLProvider)null, testModel);
 		testRun.setInputElement(inputDocument);
 		return testRun;
 	}
