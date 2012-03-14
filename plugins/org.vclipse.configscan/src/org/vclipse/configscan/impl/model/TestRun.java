@@ -315,12 +315,14 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 	
 	private void storeLogDocument(IProgressMonitor monitor, Document document, String fileName) throws CoreException {
 		if(testModel != null) {
+			file = ResourceUtil.getFile(testModel.eResource());
+		}
+		if(file != null) {
 			String logFilesLocation = (String)options.get(LOG_FILES_LOCATION);
 			if(logFilesLocation != null) {
 				if(logFilesLocation.isEmpty()) {
 					logFilesLocation = LOG_FILES_LOCATION;
 				}
-				IFile file = ResourceUtil.getFile(testModel.eResource());
 				IFolder folder = file.getParent().getFolder(new Path(logFilesLocation));
 				if(!folder.exists()) {
 					folder.create(true, true, monitor);						
