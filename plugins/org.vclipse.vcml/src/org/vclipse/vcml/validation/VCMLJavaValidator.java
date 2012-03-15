@@ -19,6 +19,7 @@ import java.util.Set;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
+import org.eclipse.xtext.validation.ComposedChecks;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.vclipse.vcml.documentation.VCMLDescriptionProvider;
 import org.vclipse.vcml.utils.ConstraintRestrictionExtensions;
@@ -69,6 +70,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
+@ComposedChecks(validators= {VCMLJavaValidatorIssues.class})
 public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 
 	private static final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;

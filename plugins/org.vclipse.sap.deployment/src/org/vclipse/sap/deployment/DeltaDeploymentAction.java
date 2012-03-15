@@ -21,14 +21,18 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.ResourceUtil;
 import org.eclipse.xtext.resource.SaveOptions;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.util.StringInputStream;
+import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.tigris.subversion.subclipse.core.SVNTeamProvider;
 import org.vclipse.base.ui.util.VClipseResourceUtil;
 import org.vclipse.idoc2jcoidoc.IDocSenderStatus;
@@ -96,9 +100,9 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 						monitor.subTask("Comparing existing vcml resources.");
 						vcmlCompare.compare(sapStateResource, newStateResource, diffResource, monitor);
 						
-						// the diff resource is empty -> can not go on
+						// the diff resource is empty
 						EList<EObject> contents = diffResource.getContents();
-						if(!contents.isEmpty()) {
+						if(contents.isEmpty()) {
 							Iterator<VCObject> iterator = Iterables.filter(contents.get(0).eContents(), VCObject.class).iterator();
 							if(!iterator.hasNext()) {
 								DeploymentPlugin.showErrorDialog("Error during deployment to SAP system", 
@@ -114,11 +118,21 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 							diffResource.save(SaveOptions.newBuilder().format().getOptions().toOptionsMap());	
 							if(vcmlCompare.reportedProblems()) {
 								vcmlCompare.createMarkers(resultFile, diffResource);
-								Display.getDefault().syncExec(new Runnable() {
+								Display.getDefault().asyncExec(new Runnable() {
 									@Override
 									public void run() {
 										try {
-											IDE.openEditor(activePart.getSite().getPage(), resultFile);
+											IEditorPart editorPart = IDE.openEditor(activePart.getSite().getPage(), resultFile);
+											if(editorPart instanceof XtextEditor) {
+												((XtextEditor)editorPart).getDocument().modify(new IUnitOfWork<XtextResource, XtextResource>() {
+													@Override
+													public XtextResource exec(XtextResource state)throws Exception {
+														state.setModified(true);
+														state.save(SaveOptions.defaultOptions().toOptionsMap());
+														return state;
+													}
+												});
+											}
 										} catch (PartInitException exception) {
 											DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
 										}									

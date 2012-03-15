@@ -22,13 +22,10 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.ui.MarkerTypes;
-import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
-import org.eclipse.xtext.validation.CheckType;
-import org.eclipse.xtext.validation.Issue.IssueImpl;
 import org.vclipse.base.UriUtil;
 import org.vclipse.base.ui.util.VClipseResourceUtil;
 import org.vclipse.vcml.parser.antlr.VCMLParser;
+import org.vclipse.vcml.validation.VCMLJavaValidatorIssues;
 import org.vclipse.vcml.vcml.Import;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
@@ -36,31 +33,18 @@ import org.vclipse.vcml.vcml.OptionType;
 import org.vclipse.vcml.vcml.VcmlFactory;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 public class VcmlCompare {
 
 	private static final VcmlFactory VCML_FACTORY = VcmlFactory.eINSTANCE;
 	
-	@Inject
-	private DiffModelSwitch diffModelSwitch;
+	private @Inject DiffModelSwitch diffModelSwitch;
 	
-	@Inject
-	private MarkerCreator markerCreator;
+	private @Inject VCMLParser vcmlParser;
 	
-	@Inject
-	private VCMLParser vcmlParser;
+	private @Inject VClipseResourceUtil resourceUtils;
 	
-	@Inject
-	private IssueUtility issueUtility;
-	
-	@Inject
-	private VClipseResourceUtil resourceUtils;
-	
-	@Inject
-	private Provider<DiffValidationMessageAcceptor> messageAcceptorProvider;
-	
-	private DiffValidationMessageAcceptor currentMessageAcceptor;
+	private @Inject VCMLJavaValidatorIssues issuesValidator;
 	
 	public void compare(IFile oldFile, IFile newFile, IFile resultFile, IProgressMonitor monitor) throws CoreException, InterruptedException, IOException {
 		monitor.subTask("Initialising models for comparison...");
@@ -86,7 +70,7 @@ public class VcmlCompare {
 		// refresh the result file
 		resultFile.refreshLocal(IResource.DEPTH_ONE, monitor);
 	}
-
+	
 	public void createMarkers(IFile resultFile, Resource resultResource) throws CoreException, IOException {
 		EList<EObject> contents = resultResource.getContents();
 		IParseResult parse = vcmlParser.parse(new FileReader(resultFile.getLocation().toFile()));
@@ -96,32 +80,10 @@ public class VcmlCompare {
 			contents.add(rootASTElement);
 		}
 		
-		resultFile.deleteMarkers(MarkerTypes.forCheckType(CheckType.NORMAL), true, IResource.DEPTH_ONE);
-		for(EObject object : contents.get(0).eContents()) {
-			IssueImpl issue = currentMessageAcceptor.getIssue(object);
-			if(issue != null) {
-				issueUtility.associate(issue, object);
-				markerCreator.createMarker(issue, resultFile, MarkerTypes.forCheckType(issue.getType()));
-			}
-		}
+		issuesValidator.setIssues(diffModelSwitch.getIssues());
 	}
 	
 	public void compare(Resource oldResource, Resource newResource, Resource resultResource, IProgressMonitor monitor) throws InterruptedException, IOException {
-		Model resultModel = compare(oldResource, newResource, monitor);
-		
-		// compute the import uri -> the old file should be imported by the result file
-		Import importStatement = VCML_FACTORY.createImport();
-		importStatement.setImportURI(new UriUtil().computeImportUri(oldResource, resultResource));
-		resultModel.getImports().add(importStatement);
-	
-		EList<EObject> contents = resultResource.getContents();
-		if(!contents.isEmpty()) {
-			contents.clear();
-		}
-		contents.add(resultModel);
-	}
-	
-	public Model compare(Resource oldResource, Resource newResource, IProgressMonitor monitor) throws InterruptedException {
 		monitor.subTask("Comparing models...");
 		Map<String, Object> options = new HashMap<String, Object>();   
 		options.put(MatchOptions.OPTION_DISTINCT_METAMODELS, false);
@@ -132,7 +94,12 @@ public class VcmlCompare {
 		DiffModel diffModel = DiffService.doDiff(matchModel);
 		monitor.worked(10);
 		
-		Model resultModel = VCML_FACTORY.createModel();		
+		Model resultModel = VCML_FACTORY.createModel();	
+		EList<EObject> contents = resultResource.getContents();
+		if(!contents.isEmpty()) {
+			contents.clear();
+		}
+		contents.add(resultModel);
 		
 		// get the ups option from the new file and provide it to the results file
 		Model changedModel = VCML_FACTORY.createModel();
@@ -148,14 +115,16 @@ public class VcmlCompare {
 				}
 			}
 		}
+	
+		diffModelSwitch.extractDifferences(diffModel, resultModel, changedModel, monitor);
 		
-		currentMessageAcceptor = messageAcceptorProvider.get();
-		diffModelSwitch.handleDiffModel(diffModel, resultModel, changedModel, currentMessageAcceptor, monitor);
-		
-		return resultModel;
+		// compute the import uri -> the old file should be imported by the result file
+		Import importStatement = VCML_FACTORY.createImport();
+		importStatement.setImportURI(new UriUtil().computeImportUri(oldResource, resultResource));
+		resultModel.getImports().add(importStatement);
 	}
 	
 	public boolean reportedProblems() {
-		return currentMessageAcceptor != null && currentMessageAcceptor.hasIssues();
+		return !diffModelSwitch.getIssues().isEmpty();
 	}
 }

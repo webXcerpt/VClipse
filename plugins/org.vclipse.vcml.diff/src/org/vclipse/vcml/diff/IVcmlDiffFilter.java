@@ -28,7 +28,8 @@ public interface IVcmlDiffFilter {
 	
 	public static final String VARIANT_TABLE_IGNORE_ARGUMENTS_ORDER = VcmlDiffPlugin.ID + ".variantTableIgnoreArgumentsOrder";
 
-	public boolean filter(EObject object, DifferenceKind kind);
+	public boolean canHandle(EObject object, DifferenceKind kind);
 	
 	public boolean changeAllowed(EObject newParent, EObject oldParent, EObject newChild, EObject oldChild, DifferenceKind changeKind);
+	
 }
