@@ -150,6 +150,21 @@ public class DiffModelSwitch extends DiffSwitch<Boolean> {
 
 	@Override
 	public Boolean caseModelElementChangeRightTarget(ModelElementChangeRightTarget object) {
+		EObject oldStateObject = object.getRightElement();
+		EObject oldStateContainer = oldStateObject.eContainer();
+		if(oldStateContainer instanceof VCObject) {
+			EObject newStateContainer = object.getLeftParent();
+			EReference feature = oldStateObject.eContainmentFeature();
+			EObject newStateObject = (EObject)newStateContainer.eGet(feature);
+			if(!diffFilter.changeAllowed(newStateObject.eContainer(), oldStateContainer, newStateObject, oldStateObject, object.getKind())) {
+				String[] data = new String[]{EcoreUtil.getURI(oldStateContainer).toString(), EcoreUtil.getURI(newStateContainer).toString(), feature.getName()};
+				String createMessage = createMessage(oldStateObject, data);
+				IssueImpl issue = createIssue(createMessage, COMPARE_ISSUE_CODE, CheckType.FAST, Severity.ERROR);
+				setProperties(newStateObject.eContainer(), issue, data);
+				memorize(issue, (VCObject)newStateObject.eContainer());
+			}
+			
+		}
 		return addObject2HandleList(object.getLeftParent());
 	}
 	
