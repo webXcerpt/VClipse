@@ -141,7 +141,7 @@ public class DiffModelSwitch extends DiffSwitch<Boolean> {
 				String createMessage = createMessage(oldStateObject, data);
 				IssueImpl issue = createIssue(createMessage, COMPARE_ISSUE_CODE, CheckType.FAST, Severity.ERROR);
 				setProperties(newStateObject.eContainer(), issue, data);
-				memorize(issue, (VCObject)newStateObject.eContainer());
+				name2Issue.put(((VCObject)newStateObject.eContainer()).getName(), issue);
 			}
 			
 		}
@@ -161,7 +161,7 @@ public class DiffModelSwitch extends DiffSwitch<Boolean> {
 				String createMessage = createMessage(oldStateObject, data);
 				IssueImpl issue = createIssue(createMessage, COMPARE_ISSUE_CODE, CheckType.FAST, Severity.ERROR);
 				setProperties(newStateObject.eContainer(), issue, data);
-				memorize(issue, (VCObject)newStateObject.eContainer());
+				name2Issue.put(((VCObject)newStateObject.eContainer()).getName(), issue);
 			}
 			
 		}
@@ -275,27 +275,7 @@ public class DiffModelSwitch extends DiffSwitch<Boolean> {
 		}
 		return entry;
 	}
-	
-	protected void memorize(IssueImpl issue, VCObject object) {
-		name2Issue.put(object.getName(), issue);						
-	}
-	
-//	protected void error(String message, EObject object, EAttribute attribute) {
-//		ICompositeNode node = NodeModelUtils.getNode(object);
-//		if(node != null) {
-//			Object attributeValue = object.eGet(attribute);
-//			for(INode textNode : node.getChildren()) {
-//				if(attributeValue instanceof Integer) {
-//					String text = textNode.getText();
-//					if(text.equals(((Integer)attributeValue).toString())) {
-//						//messageAcceptor.acceptError("", object, textNode.getOffset(), 
-//						//		textNode.getLength(), "Compare_Issue", new String[]{EcoreUtil.getURI(object).toString()});
-//					}
-//				}
-//			}
-//		}
-//	}
-	
+
 	protected void setProperties(EObject entry, IssueImpl issue, String... issueData) {
 		List<String> stringData = Lists.newArrayList(issueData == null ? new String[0] : issueData);
 		ICompositeNode node = NodeModelUtils.getNode(entry);
