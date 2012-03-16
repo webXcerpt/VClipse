@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.ResourceUtil;
@@ -122,16 +123,19 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 									@Override
 									public void run() {
 										try {
-											IEditorPart editorPart = IDE.openEditor(activePart.getSite().getPage(), resultFile);
-											if(editorPart instanceof XtextEditor) {
-												((XtextEditor)editorPart).getDocument().modify(new IUnitOfWork<XtextResource, XtextResource>() {
-													@Override
-													public XtextResource exec(XtextResource state)throws Exception {
-														state.setModified(true);
-														state.save(SaveOptions.defaultOptions().toOptionsMap());
-														return state;
-													}
-												});
+											IWorkbenchPartSite site = activePart.getSite();
+											if(site != null) {
+												IEditorPart editorPart = IDE.openEditor(site.getPage(), resultFile);
+												if(editorPart instanceof XtextEditor) {
+													((XtextEditor)editorPart).getDocument().modify(new IUnitOfWork<XtextResource, XtextResource>() {
+														@Override
+														public XtextResource exec(XtextResource state)throws Exception {
+															state.setModified(true);
+															state.save(SaveOptions.defaultOptions().toOptionsMap());
+															return state;
+														}
+													});
+												}												
 											}
 										} catch (PartInitException exception) {
 											DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
