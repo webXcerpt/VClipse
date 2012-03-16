@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeLeftTarget;
 import org.eclipse.emf.compare.diff.metamodel.AttributeChangeRightTarget;
@@ -30,7 +29,6 @@ import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.Issue.IssueImpl;
-import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.vclipse.vcml.diff.IVcmlDiffFilter;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
@@ -91,6 +89,7 @@ public class DiffModelSwitch extends DiffSwitch<Boolean> {
 			}
 			doSwitch(diffElement);
 		}
+		
 		for(EObject root : object.getLeftRoots()) {
 			if(root instanceof Model) {
 				List<DependencyNet> dependencyNets = Lists.newArrayList(Iterables.filter(((Model)root).getObjects(), DependencyNet.class)); // to avoid concurrent modification
@@ -107,27 +106,26 @@ public class DiffModelSwitch extends DiffSwitch<Boolean> {
 		}
 		// finalize model
 		List<VCObject> objects = resultModel.getObjects();
-		List<VCObject> leftObjects = Lists.newArrayList(newStateModel.getObjects());
-		for(final VCObject vcobject : leftObjects) {
+		for(VCObject vcobject : Lists.newArrayList(newStateModel.getObjects())) {
 			if(modelElements.contains(vcobject)) {
 				objects.add(EcoreUtil.copy(vcobject));
 			}
 		}
 		return HANDLED;
 	}
-
+	
 	@Override
 	public Boolean caseDiffElement(DiffElement object) {
 		for(DiffElement element : object.getSubDiffElements()) {
 			if(monitor.isCanceled()) {
 				return HANDLED;
 			}
-			System.err.println("doSwitch " + element + " " + element.getClass().getSimpleName());
+			//System.err.println("doSwitch " + element + " " + element.getClass().getSimpleName());
 			doSwitch(element);
 		}
 		return NOT_HANDLED;
 	}
-
+	
 	@Override
 	public Boolean caseModelElementChangeLeftTarget(ModelElementChangeLeftTarget object) {
 		EObject newStateObject = object.getLeftElement();
@@ -137,17 +135,19 @@ public class DiffModelSwitch extends DiffSwitch<Boolean> {
 			EObject oldStateContainer = object.getRightParent();
 			EObject oldStateObject = (EObject)oldStateContainer.eGet(feature);
 			if(!diffFilter.changeAllowed(newStateObject.eContainer(), oldStateContainer, newStateObject, oldStateObject, object.getKind())) {
-				String[] data = new String[]{EcoreUtil.getURI(oldStateContainer).toString(), EcoreUtil.getURI(newStateContainer).toString(), feature.getName()};
-				String createMessage = createMessage(oldStateObject, data);
-				IssueImpl issue = createIssue(createMessage, COMPARE_ISSUE_CODE, CheckType.FAST, Severity.ERROR);
+				String[] data = new String[] {
+						EcoreUtil.getURI(oldStateContainer).toString(), 
+							EcoreUtil.getURI(newStateContainer).toString(), 
+								feature.getName()
+								};
+				IssueImpl issue = createIssue(createMessage(oldStateObject, data), COMPARE_ISSUE_CODE, CheckType.FAST, Severity.ERROR);
 				setProperties(newStateObject.eContainer(), issue, data);
 				name2Issue.put(((VCObject)newStateObject.eContainer()).getName(), issue);
 			}
-			
 		}
 		return addObject2HandleList(object.getLeftElement());
 	}
-
+	
 	@Override
 	public Boolean caseModelElementChangeRightTarget(ModelElementChangeRightTarget object) {
 		EObject oldStateObject = object.getRightElement();
@@ -157,13 +157,15 @@ public class DiffModelSwitch extends DiffSwitch<Boolean> {
 			EReference feature = oldStateObject.eContainmentFeature();
 			EObject newStateObject = (EObject)newStateContainer.eGet(feature);
 			if(!diffFilter.changeAllowed(newStateObject.eContainer(), oldStateContainer, newStateObject, oldStateObject, object.getKind())) {
-				String[] data = new String[]{EcoreUtil.getURI(oldStateContainer).toString(), EcoreUtil.getURI(newStateContainer).toString(), feature.getName()};
-				String createMessage = createMessage(oldStateObject, data);
-				IssueImpl issue = createIssue(createMessage, COMPARE_ISSUE_CODE, CheckType.FAST, Severity.ERROR);
+				String[] data = new String[] {
+						EcoreUtil.getURI(oldStateContainer).toString(), 
+							EcoreUtil.getURI(newStateContainer).toString(), 
+								feature.getName()
+								};
+				IssueImpl issue = createIssue(createMessage(oldStateObject, data), COMPARE_ISSUE_CODE, CheckType.FAST, Severity.ERROR);
 				setProperties(newStateObject.eContainer(), issue, data);
 				name2Issue.put(((VCObject)newStateObject.eContainer()).getName(), issue);
 			}
-			
 		}
 		return addObject2HandleList(object.getLeftParent());
 	}
@@ -172,17 +174,17 @@ public class DiffModelSwitch extends DiffSwitch<Boolean> {
 	public Boolean caseReferenceChangeLeftTarget(ReferenceChangeLeftTarget object) {
 		return addObject2HandleList(object.getLeftElement());
 	}
-
+	
 	@Override
 	public Boolean caseReferenceChangeRightTarget(ReferenceChangeRightTarget object) {
 		return addObject2HandleList(object.getLeftElement());
 	}
-
+	
 	@Override
 	public Boolean caseReferenceChange(ReferenceChange object) {
 		return diffFilter.canHandle(object.getReference(), object.getKind()) ? HANDLED : addObject2HandleList(object.getLeftElement());
 	}
-
+	
 	@Override
 	public Boolean caseReferenceOrderChange(ReferenceOrderChange object) {
 		if(!diffFilter.canHandle(object.getReference(), object.getKind())) {
@@ -195,32 +197,33 @@ public class DiffModelSwitch extends DiffSwitch<Boolean> {
 	public Boolean caseAttributeChangeLeftTarget(AttributeChangeLeftTarget object) {
 		return addObject2HandleList(object.getLeftElement());
 	}
-
+	
 	@Override
 	public Boolean caseAttributeChangeRightTarget(AttributeChangeRightTarget object) {
 		return addObject2HandleList(object.getLeftElement());
 	}
-
+	
 	@Override
 	public Boolean caseUpdateAttribute(UpdateAttribute object) {
 		if(!diffFilter.canHandle(object.getAttribute(), object.getKind())) {
-			EObject leftElement = object.getLeftElement();
-			if(!diffFilter.changeAllowed(leftElement, null, object.getAttribute(), null, object.getKind())) {
-//				EAttribute attribute = object.getAttribute();
-//				
-//				EStructuralFeature eStructuralFeature = leftElement.eClass().getEStructuralFeature(attribute.getName());
-//				Object eGet = leftElement.eGet(eStructuralFeature);
-//				
-//				EStructuralFeature eContainingFeature = attribute.eContainingFeature();
-//				
-//				
-//				error("", object.getLeftElement(), object.getAttribute());
+			EObject newStateObject = object.getLeftElement();
+			EObject oldStateObject = object.getRightElement();
+			if(!diffFilter.changeAllowed(newStateObject, null, object.getAttribute(), null, object.getKind())) {
+				String[] data = new String[] {
+						EcoreUtil.getURI(oldStateObject.eContainer()).toString(), 
+							EcoreUtil.getURI(newStateObject.eContainer()).toString(), 
+								object.getAttribute().getName(),
+									EcoreUtil.getURI(newStateObject).toString()
+									};
+				IssueImpl issue = createIssue(createMessage(oldStateObject, data), COMPARE_ISSUE_CODE, CheckType.FAST, Severity.ERROR);
+				setProperties(newStateObject.eContainer(), issue, data);
+				name2Issue.put(((VCObject)newStateObject.eContainer()).getName(), issue);
 			}
 			return addObject2HandleList(object.getLeftElement());
 		}
 		return NOT_HANDLED;
 	}
-
+	
 	private IssueImpl createIssue(String message, String code, CheckType type, Severity severity) {
 		IssueImpl issue = new IssueImpl();
 		issue.setType(type);
@@ -240,42 +243,31 @@ public class DiffModelSwitch extends DiffSwitch<Boolean> {
 			EObject newStateObject = resourceSet.getEObject(URI.createURI(uriNewStateObject), true);
 			EStructuralFeature feature = newStateObject.eClass().getEStructuralFeature(featureName);
 			
-			EObject containedOldState = (EObject)oldStateObject.eGet(feature);
-			EObject containedNewState = (EObject)newStateObject.eGet(feature);
-			
-			Object containedObject = newStateObject.eGet(feature);
-			if(containedObject instanceof EObject) {
-				StringBuffer messageBuffer = new StringBuffer();
-				messageBuffer.append("The change of " + featureName + " from ");
-				messageBuffer.append("" + containedOldState.eClass().getName());
-				messageBuffer.append(" to " + containedNewState.eClass().getName());
-				messageBuffer.append(" for a " + oldStateObject.eClass().getName());
-				messageBuffer.append(" is not allowed in SAP system.");	
-				return messageBuffer.toString();
+			if(feature == null && data.length == 4) {
+				EObject containedObject = resourceSet.getEObject(URI.createURI(data[3]), true);
+				EReference containment = containedObject.eContainmentFeature();
+				feature = containedObject.eClass().getEStructuralFeature(featureName);
+				oldStateObject = (EObject)oldStateObject.eGet(containment);
+				newStateObject = (EObject)newStateObject.eGet(containment);
 			}
+			if(feature != null) {
+				if(newStateObject instanceof VCObject && oldStateObject instanceof VCObject) {
+					oldStateObject = (EObject)oldStateObject.eGet(feature);
+					newStateObject = (EObject)newStateObject.eGet(feature);
+				}
+			}
+			
+			StringBuffer messageBuffer = new StringBuffer();
+			messageBuffer.append("The change of " + featureName + " from ");
+			messageBuffer.append("" + oldStateObject.eClass().getName());
+			messageBuffer.append(" to " + newStateObject.eClass().getName());
+			messageBuffer.append(" for a " + oldStateObject.eClass().getName());
+			messageBuffer.append(" is not allowed in SAP system.");	
+			return messageBuffer.toString();
 		}
 		return "";
 	}
 	
-	protected EObject getEntry(EObject object, EStructuralFeature feature, int index) {
-		EObject entry = object;
-		if(feature != null) {
-			Object childObject = object.eGet(feature);
-			if(childObject instanceof EObject) {
-				entry = (EObject)childObject;
-			} else if(childObject instanceof EList<?>) {
-				EList<?> listFeature = (EList<?>)childObject;
-				if(index > ValidationMessageAcceptor.INSIGNIFICANT_INDEX && index < listFeature.size()) { 
-					Object objectFromTheList = listFeature.get(index);
-					if(objectFromTheList instanceof EObject) {
-						entry = ((EObject)objectFromTheList);
-					}
-				}
-			}
-		}
-		return entry;
-	}
-
 	protected void setProperties(EObject entry, IssueImpl issue, String... issueData) {
 		List<String> stringData = Lists.newArrayList(issueData == null ? new String[0] : issueData);
 		ICompositeNode node = NodeModelUtils.getNode(entry);

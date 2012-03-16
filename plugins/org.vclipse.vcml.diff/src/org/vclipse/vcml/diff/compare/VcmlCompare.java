@@ -81,6 +81,7 @@ public class VcmlCompare {
 		}
 		
 		issuesValidator.setIssues(diffModelSwitch.getIssues());
+		issuesValidator.setResource(resultResource);
 	}
 	
 	public void compare(Resource oldResource, Resource newResource, Resource resultResource, IProgressMonitor monitor) throws InterruptedException, IOException {
