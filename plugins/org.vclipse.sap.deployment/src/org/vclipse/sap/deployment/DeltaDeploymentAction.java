@@ -1,15 +1,16 @@
 package org.vclipse.sap.deployment;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
@@ -42,7 +43,6 @@ import org.vclipse.vcml.diff.compare.VcmlCompare;
 import org.vclipse.vcml.vcml.VCObject;
 
 import com.google.common.collect.Iterables;
-import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
 
@@ -152,17 +152,20 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 						monitor.subTask("Converting to IDocs and sending to SAP");
 						IStatus status = workflow.convertAndSend(diffResource, monitor);
 						if(status.isOK()) {
-							Files.copy(new File(newStateResource.getURI().toFileString()), new File(sapStateResource.getURI().toFileString()));
+							sapStateFile.delete(true, monitor);
+							currentFile.copy(sapStateFile.getFullPath(), true, monitor);
 							if(preferenceStore.getBoolean(PreferencesInitializer.EXECUTE_SVN_COMMIT)) {
-								sapStateFile = ResourceUtil.getFile(sapStateResource);
+								// sapStateFile = ResourceUtil.getFile(sapStateResource);
 								SVNTeamProvider teamProvider = new SVNTeamProvider();
-								teamProvider.setProject(sapStateFile.getProject());
+								IProject project = sapStateFile.getProject();
+								teamProvider.setProject(project);
 								String commitMessage = "New state of VCML product model.";
 								if(status instanceof IDocSenderStatus) {
 									IDocSenderStatus senderStatus = (IDocSenderStatus)status;
 									commitMessage += " Sent to " + senderStatus.getSapSystem() + " with UPS number " + senderStatus.getUpsNumber();
 								}
-								teamProvider.checkin(new IResource[]{sapStateFile}, commitMessage, false, IResource.DEPTH_ONE, monitor);
+								teamProvider.add(new IResource[]{folder, sapStateFile}, IResource.DEPTH_ONE, monitor);
+								teamProvider.checkin(new IResource[]{folder, sapStateFile}, commitMessage, false, IResource.DEPTH_ONE, monitor);
 							}
 						}
 						if(!preferenceStore.getBoolean(PreferencesInitializer.SAVE_DIFF_FILES)) {
