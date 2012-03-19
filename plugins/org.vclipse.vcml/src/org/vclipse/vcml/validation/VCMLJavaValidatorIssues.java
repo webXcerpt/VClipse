@@ -47,7 +47,7 @@ public class VCMLJavaValidatorIssues extends AbstractVCMLJavaValidator {
 	@Check(CheckType.FAST)
 	public void checkIssues(VCObject object) {
 		String name = object.getName();
-		if(name2Issue.containsKey(name) && resource != null) {
+		if(name2Issue.containsKey(name) && resource != null && object.eResource().getURI().equals(resource.getURI())) {
 			IssueImpl issue = name2Issue.get(name);
 			if(Severity.ERROR == issue.getSeverity()) {
 				String[] data = issue.getData();
