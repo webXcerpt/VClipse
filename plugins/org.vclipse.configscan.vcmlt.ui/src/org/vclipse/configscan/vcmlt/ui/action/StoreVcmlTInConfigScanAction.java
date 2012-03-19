@@ -64,7 +64,8 @@ public class StoreVcmlTInConfigScanAction extends AbstractStoreTestcaseInConfigS
 		if (docNumber == null) {
 			docNumber = testcase.getItem().getName();
 		}
-		storeTestcaseInConfigScan(xmlString, matNr, docNumber, testcase.getDescription(), testcase.getVersion(), testcase.getPart());
+		String part = testcase.getPart();
+		storeTestcaseInConfigScan(xmlString, matNr, docNumber, testcase.getDescription(), testcase.getVersion(), part==null ? "VCM" : part);
 	}
 
 }

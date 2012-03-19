@@ -65,7 +65,7 @@ public class StoreXmlTestcaseInConfigScanAction extends
 			}
 			storeTestcaseInConfigScan(
 					Files.readStreamIntoString(file.getContents(true)), matNr,
-					docNumber, docDescr, docVersion, docPart);
+					docNumber, docDescr, docVersion, docPart==null ? "XML" : docPart);
 		} catch (SAXException e) {
 			throw new WrappedException(e);
 		} catch (CoreException e) {
