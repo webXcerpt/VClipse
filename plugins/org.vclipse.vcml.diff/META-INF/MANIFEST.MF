@@ -23,3 +23,4 @@ Export-Package: org.vclipse.vcml.diff,
  org.vclipse.vcml.diff.engines,
  org.vclipse.vcml.diff.storage,
  org.vclipse.vcml.diff.ui
+Import-Package: org.apache.log4j

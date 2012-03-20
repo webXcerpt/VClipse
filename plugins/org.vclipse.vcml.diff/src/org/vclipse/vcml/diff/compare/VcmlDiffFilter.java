@@ -22,31 +22,6 @@ public class VcmlDiffFilter extends EcoreSwitch<Boolean> implements IVcmlDiffFil
 		this.preferenceStore = preferenceStore;
 	}
 	
-	public boolean changeAllowed(EObject newStateContainer, EObject oldStateContainer, EObject newStateObject, EObject oldStateObject, DifferenceKind changeKind) {
-		if(oldStateContainer == null && oldStateObject == null) {
-			return false;
-//			newStateContainer = newStateObject.eContainer();
-//			EStructuralFeature containingFeature = newStateObject.eContainmentFeature();
-//			Object eGet = newStateContainer.eGet(containingFeature);
-//			if(eGet instanceof EObject) {
-//				EObject eo = ((EObject)eGet);
-//				System.out.println(eo);
-//			}
-//			//attribute update
-//			return !(VcmlPackage.eINSTANCE.getCharacteristicType_NumberOfChars() == newStateObject);
-		} else {
-			// type change of a property
-			if(newStateContainer.eClass() == oldStateContainer.eClass()) {
-				if(newStateObject.eClass() == oldStateObject.eClass()) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-		}
-		return false;
-	}
-	
 	@Override
 	public boolean canHandle(EObject object, DifferenceKind kind) {
 		return DifferenceKind.CHANGE == kind ? doSwitch(object) : false;

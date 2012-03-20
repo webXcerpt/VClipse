@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.vclipse.vcml.validation;
 
-import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -25,18 +25,19 @@ import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.Issue.IssueImpl;
 import org.vclipse.vcml.vcml.VCObject;
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 
 public class VCMLJavaValidatorIssues extends AbstractVCMLJavaValidator {
 
-	private Map<String, IssueImpl> name2Issue;
+	private Multimap<String, IssueImpl> name2Issue;
 	private Resource resource;
 	
 	public VCMLJavaValidatorIssues() {
-		name2Issue = Maps.newHashMap();
+		name2Issue = HashMultimap.create();
 	}
 	
-	public void setIssues(Map<String, IssueImpl> issues) {
+	public void setIssues(Multimap<String, IssueImpl> issues) {
 		name2Issue = issues;
 	}
 	
@@ -48,21 +49,32 @@ public class VCMLJavaValidatorIssues extends AbstractVCMLJavaValidator {
 	public void checkIssues(VCObject object) {
 		String name = object.getName();
 		if(name2Issue.containsKey(name) && resource != null && object.eResource().getURI().equals(resource.getURI())) {
-			IssueImpl issue = name2Issue.get(name);
-			if(Severity.ERROR == issue.getSeverity()) {
-				String[] data = issue.getData();
-				if(data.length == 3) {
-					error(issue.getMessage(), object, object.eClass().getEStructuralFeature(data[2]), issue.getCode(), data);										
-				} else if(data.length == 4) {
-					EObject contained = resource.getResourceSet().getEObject(URI.createURI(data[3]), true);
-					EStructuralFeature feature = contained.eClass().getEStructuralFeature(data[2]);
-					String value = feature.getName() + " " + contained.eGet(feature).toString();
-					for(INode currentNode : NodeModelUtils.getNode(object).getChildren()) {
-						String text = currentNode.getText();
-						if(text.contains(value)) {
-							int indexOf = text.indexOf(value);
-							getMessageAcceptor().acceptError(issue.getMessage(), object, 
-									(currentNode.getOffset() + indexOf) - (Strings.countLines(text.substring(0, indexOf)) + 1) , value.length(), issue.getCode(), data);							
+			for(Entry<String, IssueImpl> entry : name2Issue.entries()) {
+				IssueImpl issue = entry.getValue();
+				if(Severity.ERROR == issue.getSeverity()) {
+					String[] data = issue.getData();
+					if(data.length == 3) {
+						error(issue.getMessage(), object, object.eClass().getEStructuralFeature(data[2]), issue.getCode(), data);										
+					} else if(data.length == 4) {
+						EObject newStateObject = resource.getResourceSet().getEObject(URI.createURI(data[1]), true);
+						try {
+							int index = Integer.parseInt(data[3]);
+							getMessageAcceptor().acceptError(issue.getMessage(), object,
+									newStateObject.eClass().getEStructuralFeature(data[2]),
+										index, issue.getCode(), issue.getData());
+						} catch(Exception exception) {
+							URI createURI = URI.createURI(data[1]);
+							EObject contained = resource.getResourceSet().getEObject(createURI, true);
+							EStructuralFeature feature = contained.eClass().getEStructuralFeature(data[2]);
+							String value = feature.getName();
+							for(INode currentNode : NodeModelUtils.getNode(object).getChildren()) {
+								String text = currentNode.getText();
+								if(text.contains(value)) {
+									int indexOf = text.indexOf(value);
+									getMessageAcceptor().acceptError(issue.getMessage(), object, 
+											(currentNode.getOffset() + indexOf) - (Strings.countLines(text.substring(0, indexOf)) + 1) , value.length(), issue.getCode(), data);							
+								}
+							}
 						}
 					}
 				}
