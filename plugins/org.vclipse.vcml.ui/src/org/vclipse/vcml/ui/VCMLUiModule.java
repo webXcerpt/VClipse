@@ -25,11 +25,13 @@ import org.eclipse.xtext.ui.IImageHelper;
 import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider;
 import org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
+import org.eclipse.xtext.ui.editor.templates.XtextTemplateContextType;
 import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
 import org.vclipse.vcml.ui.editor.hover.VCMLHoverProvider;
 import org.vclipse.vcml.ui.outline.VCMLOutlinePage;
 import org.vclipse.vcml.ui.outline.VCMLOutlineTreeProvider;
 import org.vclipse.vcml.ui.syntaxcoloring.VCMLAntlrTokenToAttributeIdMapper;
+import org.vclipse.vcml.ui.templates.VcmlTemplateContextType;
 
 /**
  * Use this class to register components to be used within the IDE.
@@ -78,4 +80,7 @@ public class VCMLUiModule extends org.vclipse.vcml.ui.AbstractVCMLUiModule {
 		return VCMLOutlineTreeProvider.class;
 	}
 	
+	public Class<? extends XtextTemplateContextType> bindXtextTemplateContextType() {
+		return VcmlTemplateContextType.class;
+	}
 }
