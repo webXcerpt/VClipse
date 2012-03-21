@@ -63,7 +63,7 @@ public class VCMLJavaValidatorIssues extends AbstractVCMLJavaValidator {
 									newStateObject.eClass().getEStructuralFeature(data[2]),
 										index, issue.getCode(), issue.getData());
 						} catch(Exception exception) {
-							URI createURI = URI.createURI(data[1]);
+							URI createURI = URI.createURI(data[3]);
 							EObject contained = resource.getResourceSet().getEObject(createURI, true);
 							EStructuralFeature feature = contained.eClass().getEStructuralFeature(data[2]);
 							String value = feature.getName();
