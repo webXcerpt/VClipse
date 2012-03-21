@@ -10,4 +10,9 @@ public class VcmlTemplateContextType extends XtextTemplateContextType {
 	public void setDomainValuesResolver(ChoiceVariableResolver resolver) {
 		addResolver(resolver);
 	}
+	
+	@Inject
+	public void setFilteredCrossReferenceResolver(FilteringCrossReferenceResolver resolver) {
+		addResolver(resolver);
+	}
 }
