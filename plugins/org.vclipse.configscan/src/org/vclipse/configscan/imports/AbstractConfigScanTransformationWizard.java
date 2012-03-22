@@ -1,7 +1,6 @@
 package org.vclipse.configscan.imports;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.resources.IFile;
@@ -26,7 +25,6 @@ import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.StringInputStream;
 import org.vclipse.configscan.ConfigScanPlugin;
-import org.xml.sax.SAXException;
 
 import com.google.inject.Inject;
 
@@ -74,8 +72,8 @@ public abstract class AbstractConfigScanTransformationWizard extends Wizard impl
 						export2Resource.getContents().add(targetModel);
 						
 						EObject referencedModel = null;
-						EList<EObject> contents = resourceSet.getResource(
-								URI.createURI(wizardPage.getSourceLocation().getLocationURI().toString()), true).getContents();
+						String string = wizardPage.getSourceLocation().getLocationURI().toString();
+						EList<EObject> contents = resourceSet.getResource(URI.createURI(string), true).getContents();
 						if(!contents.isEmpty()) {
 							referencedModel = contents.get(0);
 						}
@@ -96,22 +94,18 @@ public abstract class AbstractConfigScanTransformationWizard extends Wizard impl
 						if(wizardPage.openTargetFile()) {
 							IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), exportLocation);
 						}
-					} catch(SAXException exception) {
-						System.err.println(exception.getMessage());
-						throw new InvocationTargetException(exception);
-					} catch(IOException exception) {
-						System.err.println(exception.getMessage());
+					} catch(Exception exception) {
 						throw new InvocationTargetException(exception);
 					}
 				}
 			});
 		} catch (InvocationTargetException exception) {
 			ErrorDialog.openError(getShell(), "Error during ConfigScan import transformation", "Can not execute ConfigScan transformation", 
-					new Status(IStatus.ERROR, ConfigScanPlugin.ID, exception.getMessage()));
+					new Status(IStatus.ERROR, ConfigScanPlugin.ID, exception.getTargetException().getMessage()));
 			return false;
 		} catch (InterruptedException exception) {
 			ErrorDialog.openError(getShell(), "Error during ConfigScan import transformation", "Can not execute ConfigScan transformation", 
-					new Status(IStatus.ERROR, ConfigScanPlugin.ID, exception.getMessage()));
+					new Status(IStatus.ERROR, ConfigScanPlugin.ID, exception.getCause().getMessage()));
 			return false;
 		}
 		return true;
