@@ -150,8 +150,7 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 						monitor.subTask("Converting to IDocs and sending to SAP");
 						IStatus status = workflow.convertAndSend(diffResource, monitor);
 						if(status.isOK()) {
-							sapStateFile.delete(true, monitor);
-							currentFile.copy(sapStateFile.getFullPath(), true, monitor);
+							sapStateFile.setContents(currentFile.getContents(), true, true, monitor);
 							if(preferenceStore.getBoolean(PreferencesInitializer.EXECUTE_SVN_COMMIT)) {
 								// sapStateFile = ResourceUtil.getFile(sapStateResource);
 								SVNTeamProvider teamProvider = new SVNTeamProvider();
