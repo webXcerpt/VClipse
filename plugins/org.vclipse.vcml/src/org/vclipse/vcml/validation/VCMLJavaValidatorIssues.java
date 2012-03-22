@@ -23,6 +23,7 @@ import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.Issue.IssueImpl;
+import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.VCObject;
 
 import com.google.common.collect.HashMultimap;
@@ -83,7 +84,9 @@ public class VCMLJavaValidatorIssues extends AbstractVCMLJavaValidator {
 										}
 									}
 								}
-								break;
+								if(!(object instanceof DependencyNet)) {
+									break;									
+								}
 							}
 						}
 					}
