@@ -965,7 +965,9 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	public static Pattern idPattern = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9]*");
 	
 	public static String asSymbol(String theString) {
-		if (idPattern.matcher(theString).matches()) {
+		if(theString == null) {
+			return null;
+		} else if (idPattern.matcher(theString).matches()) {
 			return theString;
 		} else {
 			return symbolName(theString);
