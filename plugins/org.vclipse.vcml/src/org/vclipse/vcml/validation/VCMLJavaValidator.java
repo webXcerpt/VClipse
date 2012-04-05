@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.ComposedChecks;
@@ -47,6 +48,7 @@ import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.MDataCharacteristic_C;
 import org.vclipse.vcml.vcml.MDataCharacteristic_P;
 import org.vclipse.vcml.vcml.Material;
+import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.NumberListEntry;
 import org.vclipse.vcml.vcml.NumericCharacteristicValue;
 import org.vclipse.vcml.vcml.NumericLiteral;
@@ -61,6 +63,7 @@ import org.vclipse.vcml.vcml.SimpleDescription;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
 import org.vclipse.vcml.vcml.SymbolicType;
 import org.vclipse.vcml.vcml.UnaryExpression;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
 import org.vclipse.vcml.vcml.VcmlPackage;
@@ -95,6 +98,22 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	 */
 	
 	@Check(CheckType.FAST)
+	public void checkObjects(Model vcmlModel) {
+		Map<EClass, String> type2Name = Maps.newHashMap();
+		for(VCObject vcobject : vcmlModel.getObjects()) {
+			EClass eClass = vcobject.eClass();
+			String name = vcobject.getName();
+			if(type2Name.containsKey(eClass)) {
+				if(type2Name.containsValue(name)) {
+					
+				}
+			} else {
+				type2Name.put(eClass, name);
+			}
+		}
+	}
+	
+	@Check(CheckType.FAST)
 	public void checkCharacteristic(final Characteristic object) {
 		if (object.getName().length() > MAXLENGTH_NAME) {
 			error("Name of characteristic is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
@@ -112,12 +131,26 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	}
 
 	@Check(CheckType.FAST)
-	public void checkDependencyNet(final DependencyNet object) {
-		if (object.getName().length() > MAXLENGTH_NAME) {
+	public void checkDependencyNet(DependencyNet dependencyNet) {
+		String depdencnyNetName = dependencyNet.getName();
+		EList<Constraint> constraints = dependencyNet.getConstraints();
+		if(depdencnyNetName.length() > MAXLENGTH_NAME) {
 			error("Name of dependency net is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
-		if (object.getConstraints().size() > MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS) {
-			warning("Dependency net " + object.getName() + " too large, should have for efficiency at most " + MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS + " constraints", VcmlPackage.Literals.VC_OBJECT__NAME);
+		if(constraints.size() > MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS) {
+			warning("Dependency net " + dependencyNet.getName() + " too large, should have for efficiency at most " + MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS + " constraints", VcmlPackage.Literals.VC_OBJECT__NAME);
+		}
+		
+		Set<String> constraintNames = Sets.newHashSet();
+		for(int index=0; index<constraints.size(); index++) {
+			String constraintName = constraints.get(index).getName();
+			if(constraintNames.contains(constraintName)) {
+				error("Constraint with name " + constraintName + " already used in the depedency net " + 
+						depdencnyNetName, dependencyNet, VcmlPackage.Literals.DEPENDENCY_NET__CONSTRAINTS, 
+							index, "MultipleUsage_Constraint", new String[]{depdencnyNetName, constraintName, "" + index});
+			} else {
+				constraintNames.add(constraintName);
+			}
 		}
 	}
 
