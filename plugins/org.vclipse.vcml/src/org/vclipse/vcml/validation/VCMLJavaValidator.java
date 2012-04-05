@@ -17,7 +17,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.ComposedChecks;
@@ -27,6 +26,7 @@ import org.vclipse.vcml.utils.ConstraintRestrictionExtensions;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.BinaryExpression;
 import org.vclipse.vcml.vcml.Characteristic;
+import org.vclipse.vcml.vcml.CharacteristicGroup;
 import org.vclipse.vcml.vcml.CharacteristicReference_C;
 import org.vclipse.vcml.vcml.CharacteristicReference_P;
 import org.vclipse.vcml.vcml.CharacteristicType;
@@ -44,11 +44,11 @@ import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Expression;
 import org.vclipse.vcml.vcml.InCondition_C;
 import org.vclipse.vcml.vcml.InCondition_P;
+import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.MDataCharacteristic_C;
 import org.vclipse.vcml.vcml.MDataCharacteristic_P;
 import org.vclipse.vcml.vcml.Material;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.NumberListEntry;
 import org.vclipse.vcml.vcml.NumericCharacteristicValue;
 import org.vclipse.vcml.vcml.NumericLiteral;
@@ -63,7 +63,6 @@ import org.vclipse.vcml.vcml.SimpleDescription;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
 import org.vclipse.vcml.vcml.SymbolicType;
 import org.vclipse.vcml.vcml.UnaryExpression;
-import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
 import org.vclipse.vcml.vcml.VcmlPackage;
@@ -98,22 +97,6 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	 */
 	
 	@Check(CheckType.FAST)
-	public void checkObjects(Model vcmlModel) {
-		Map<EClass, String> type2Name = Maps.newHashMap();
-		for(VCObject vcobject : vcmlModel.getObjects()) {
-			EClass eClass = vcobject.eClass();
-			String name = vcobject.getName();
-			if(type2Name.containsKey(eClass)) {
-				if(type2Name.containsValue(name)) {
-					
-				}
-			} else {
-				type2Name.put(eClass, name);
-			}
-		}
-	}
-	
-	@Check(CheckType.FAST)
 	public void checkCharacteristic(final Characteristic object) {
 		if (object.getName().length() > MAXLENGTH_NAME) {
 			error("Name of characteristic is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
@@ -130,26 +113,59 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 		}
 	}
 
-	@Check(CheckType.FAST)
-	public void checkDependencyNet(DependencyNet dependencyNet) {
+	@Check
+	public void checkDependencyNet(final DependencyNet dependencyNet) {
 		String dependencyNetName = dependencyNet.getName();
-		EList<Constraint> constraints = dependencyNet.getConstraints();
 		if(dependencyNetName.length() > MAXLENGTH_NAME) {
 			error("Name of dependency net is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
-		if(constraints.size() > MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS) {
+		if(dependencyNet.getConstraints().size() > MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS) {
 			warning("Dependency net " + dependencyNet.getName() + " too large, should have for efficiency at most " + MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS + " constraints", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 		
+		EList<Constraint> constraints = dependencyNet.getConstraints();
 		Set<String> constraintNames = Sets.newHashSet();
-		for(int index=0; index<constraints.size(); index++) {
+		for(int index=0; index<dependencyNet.getConstraints().size(); index++) {
 			String constraintName = constraints.get(index).getName();
 			if(constraintNames.contains(constraintName)) {
 				error("Constraint with name " + constraintName + " already used in the depedency net " + 
 						dependencyNetName, dependencyNet, VcmlPackage.Literals.DEPENDENCY_NET__CONSTRAINTS, 
-							index, "MultipleUsage_Constraint", new String[]{dependencyNetName, constraintName, "" + index});
+							index, "MultipleUsage_DependencyNet_Constraint", new String[]{dependencyNetName, constraintName, "" + index});
 			} else {
 				constraintNames.add(constraintName);
+			}
+		}
+	}
+	
+	@Check
+	public void checkInterfaceDesign(InterfaceDesign interfaceDesign) {
+		String interfaceDesignName = interfaceDesign.getName();
+		EList<CharacteristicGroup> csticGroups = interfaceDesign.getCharacteristicGroups();
+		Set<String> csticGroupNames = Sets.newHashSet();
+		for(int csticGroupIndex=0; csticGroupIndex<csticGroups.size(); csticGroupIndex++) {
+			CharacteristicGroup csticGroup = csticGroups.get(csticGroupIndex);
+			String csticGroupName = csticGroup.getName();
+			if(csticGroupNames.contains(csticGroupName)) {
+				error("Characteristic group with name " + csticGroupName + "already used in the interface design " +
+						interfaceDesignName, interfaceDesign, VcmlPackage.Literals.INTERFACE_DESIGN__CHARACTERISTIC_GROUPS,
+							csticGroupIndex, "MultipleUsage_InterfaceDesign_CharacteristicGroup",
+								new String[]{interfaceDesignName, csticGroupName, "" + csticGroupIndex});
+			} else {
+				csticGroupNames.add(csticGroupName);
+			}
+			
+			Set<String> csticNames = Sets.newHashSet();
+			EList<Characteristic> characteristics = csticGroup.getCharacteristics();
+			for(int csticIndex=0; csticIndex<characteristics.size(); csticIndex++) {
+				String csticName = characteristics.get(csticIndex).getName();
+				if(csticNames.contains(csticName)) {
+					error("Characteristic with name " + csticName + " already used in the characteristic group " + 
+						csticGroupName, csticGroup, VcmlPackage.Literals.CHARACTERISTIC_GROUP__CHARACTERISTICS, 
+							csticIndex, "MultipleUsage_CharacteristicGroup_Characteristic", 
+								new String[]{csticGroupName, csticName, "" + csticIndex});
+				} else {
+					csticNames.add(csticName);
+				}
 			}
 		}
 	}

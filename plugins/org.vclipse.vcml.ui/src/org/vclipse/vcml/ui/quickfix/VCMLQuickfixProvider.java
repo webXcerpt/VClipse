@@ -32,7 +32,9 @@ import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor;
 import org.eclipse.xtext.validation.Issue;
 import org.vclipse.vcml.diff.storage.EObjectTypedElement;
 import org.vclipse.vcml.formatting.VCMLPrettyPrinter;
+import org.vclipse.vcml.vcml.CharacteristicGroup;
 import org.vclipse.vcml.vcml.DependencyNet;
+import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.google.common.collect.Lists;
@@ -159,12 +161,13 @@ public class VCMLQuickfixProvider extends DefaultQuickfixProvider {
 		});
 	}
 	
-	@Fix("MultipleUsage_Constraint")
-	public void fixRemoveConstraint(final Issue issue, IssueResolutionAcceptor acceptor) {
+	@Fix("MultipleUsage_DependencyNet_Constraint")
+	public void fixMultipleUsage_DependencyNet_Constraint(Issue issue, IssueResolutionAcceptor acceptor) {
 		String[] data = issue.getData();
 		final String dependencyNetName = data[0];
 		final String constraintName = data[1];
 		final int replacementIndex = Integer.parseInt(data[2]);
+		
 		acceptor.accept(issue, "Delete constraint " + constraintName, 
 				"Delete a duplicate entry for a constraint from dependency net " + dependencyNetName, null, new ISemanticModification() {
 			public void apply(EObject element, IModificationContext context) throws Exception {
@@ -175,6 +178,61 @@ public class VCMLQuickfixProvider extends DefaultQuickfixProvider {
 						if(nodeIndex == replacementIndex) {
 							INode node = constraintNodes.get(nodeIndex);
 							if(node.getText().contains(constraintName)) {
+								xtextDocument.replace(node.getTotalOffset(), node.getTotalLength(), "");
+							}
+						}
+					}							
+				}
+			}
+		});
+	}
+	
+	@Fix("MultipleUsage_InterfaceDesign_CharacteristicGroup")
+	public void fixMultipleUsage_InterfaceDesign_CharacteristicGroup(Issue issue, IssueResolutionAcceptor acceptor) {
+		String[] data = issue.getData();
+		final String interfaceDesignName = data[0];
+		final String characteristicGroupName = data[1].toLowerCase();
+		final int replacementIndex = Integer.parseInt(data[2]);
+		
+		acceptor.accept(issue, "Delete characteristic group " + characteristicGroupName, 
+				"Delete a duplicate entry for a characteristic group from interface design " + interfaceDesignName, null, new ISemanticModification() {
+			public void apply(EObject element, IModificationContext context) throws Exception {
+				if(element instanceof InterfaceDesign) {
+					InterfaceDesign interfaceDesign = (InterfaceDesign)element;
+					IXtextDocument xtextDocument = context.getXtextDocument();
+					List<INode> constraintNodes = NodeModelUtils.findNodesForFeature(interfaceDesign, VcmlPackage.Literals.INTERFACE_DESIGN__CHARACTERISTIC_GROUPS);
+					for(int nodeIndex=0; nodeIndex<constraintNodes.size(); nodeIndex++) {
+						if(nodeIndex == replacementIndex) {
+							INode node = constraintNodes.get(nodeIndex);
+							String text = node.getText();
+							if(text.contains(characteristicGroupName)) {
+								xtextDocument.replace(node.getTotalOffset(), node.getTotalLength(), "");
+							}
+						}
+					}							
+				}
+			}
+		});
+	}
+	
+	@Fix("MultipleUsage_CharacteristicGroup_Characteristic")
+	public void fixMultipleUsage_CharacteristicGroup_Characteristic(Issue issue, IssueResolutionAcceptor acceptor) {
+		String[] data = issue.getData();
+		final String csticGroupName = data[0];
+		final String csticName = data[1];
+		final int replacementIndex = Integer.parseInt(data[2]);
+		
+		acceptor.accept(issue, "Delete characteristic " + csticName, 
+				"Delete a duplicate entry for a characteristic from characteristic group " + csticGroupName, null, new ISemanticModification() {
+			public void apply(EObject element, IModificationContext context) throws Exception {
+				if(element instanceof CharacteristicGroup) {
+					IXtextDocument xtextDocument = context.getXtextDocument();
+					CharacteristicGroup csticGroup = (CharacteristicGroup)element;
+					List<INode> constraintNodes = NodeModelUtils.findNodesForFeature(csticGroup, VcmlPackage.Literals.CHARACTERISTIC_GROUP__CHARACTERISTICS);
+					for(int nodeIndex=0; nodeIndex<constraintNodes.size(); nodeIndex++) {
+						if(nodeIndex == replacementIndex) {
+							INode node = constraintNodes.get(nodeIndex);
+							if(node.getText().contains(csticName)) {
 								xtextDocument.replace(node.getTotalOffset(), node.getTotalLength(), "");
 							}
 						}
