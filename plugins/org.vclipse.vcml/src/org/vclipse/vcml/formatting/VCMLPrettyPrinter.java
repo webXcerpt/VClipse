@@ -415,7 +415,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 				doSwitch(object.getDescription());
 				layouter.brk().print("status ").print(object.getStatus());
 				if(object.getGroup() != null) {
-					layouter.brk().print("group ").print(object.getGroup());
+					layouter.brk().print("group ").print(doublequote(object.getGroup()));
 				}
 				layouter.brk().beginC().print("characteristics {");
 				{
@@ -481,7 +481,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 				doSwitch(object.getDocumentation());
 				layouter.brk().print("status ").print(object.getStatus().getName());
 				if(object.getGroup() != null) {
-					layouter.brk().print("group ").print(object.getGroup());
+					layouter.brk().print("group ").print(doublequote(object.getGroup()));
 				}
 				for (Constraint constraint : object.getConstraints()) {
 					layouter.brk();
@@ -740,7 +740,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 				doSwitch(object.getDocumentation());
 				layouter.brk().print("status ").print(object.getStatus());
 				if(object.getGroup() != null) {
-					layouter.brk().print("group ").print(object.getGroup());
+					layouter.brk().print("group ").print(doublequote(object.getGroup()));
 				}
 				if(object.getSource() != null) {
 					layouter.brk().beginC().print("source {");
@@ -767,7 +767,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 				doSwitch(object.getDescription());
 				layouter.brk().print("status ").print(object.getStatus());
 				if(object.getGroup() != null) {
-					layouter.brk().print("group ").print(object.getGroup());
+					layouter.brk().print("group ").print(doublequote(object.getGroup()));
 				}
 				layouter.brk().beginC().print("arguments {");
 				{
@@ -799,7 +799,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 				doSwitch(object.getDescription());
 				layouter.brk().print("status ").print(object.getStatus());
 				if(object.getGroup() != null) {
-					layouter.brk().print("group ").print(object.getGroup());
+					layouter.brk().print("group ").print(doublequote(object.getGroup()));
 				}
 				layouter.brk().beginC().print("arguments {");
 				{
