@@ -228,11 +228,26 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkClass(final Class object) {
-		if (VcmlUtils.getClassName(object.getName()).length() > MAXLENGTH_CLASS_NAME) {
+		String className = object.getName();
+		if (VcmlUtils.getClassName(className).length() > MAXLENGTH_CLASS_NAME) {
 			error("Name of class is limited to " + MAXLENGTH_CLASS_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 		if (object.getCharacteristics().size() > MAXLENGTH_CLASS_CHARACTERISTICS) {
 			error("Number of characteristics of a class is limited to " + MAXLENGTH_CLASS_CHARACTERISTICS, VcmlPackage.Literals.VC_OBJECT__NAME);
+		}
+		
+		Set<String> csticNames = Sets.newHashSet();
+		EList<Characteristic> characteristics = object.getCharacteristics();
+		for(int csticIndex=0; csticIndex<characteristics.size(); csticIndex++) {
+			String csticName = characteristics.get(csticIndex).getName();
+			if(csticNames.contains(csticName)) {
+				error("Characteristic with name " + csticName + " already used in the class " + 
+					className, object, VcmlPackage.Literals.CLASS__CHARACTERISTICS, 
+						csticIndex, "MultipleUsage_Class_Characteristic", 
+							new String[]{className, csticName, "" + csticIndex});
+			} else {
+				csticNames.add(csticName);
+			}
 		}
 	}
 

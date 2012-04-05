@@ -215,6 +215,34 @@ public class VCMLQuickfixProvider extends DefaultQuickfixProvider {
 		});
 	}
 	
+	@Fix("MultipleUsage_Class_Characteristic")
+	public void fixMultipleUsage_Class_Characteristic(Issue issue, IssueResolutionAcceptor acceptor) {
+		String[] data = issue.getData();
+		final String className = data[0];
+		final String characteristicName = data[1].toLowerCase();
+		final int replacementIndex = Integer.parseInt(data[2]);
+		
+		acceptor.accept(issue, "Delete characteristic " + characteristicName, 
+				"Delete a duplicate entry for a characteristic from class " + className, null, new ISemanticModification() {
+			public void apply(EObject element, IModificationContext context) throws Exception {
+				if(element instanceof org.vclipse.vcml.vcml.Class) {
+					org.vclipse.vcml.vcml.Class currentClass = (org.vclipse.vcml.vcml.Class)element;
+					IXtextDocument xtextDocument = context.getXtextDocument();
+					List<INode> characteristicsNodes = NodeModelUtils.findNodesForFeature(currentClass, VcmlPackage.Literals.CLASS__CHARACTERISTICS);
+					for(int nodeIndex=0; nodeIndex<characteristicsNodes.size(); nodeIndex++) {
+						if(nodeIndex == replacementIndex) {
+							INode node = characteristicsNodes.get(nodeIndex);
+							String text = node.getText().toLowerCase();
+							if(text.contains(characteristicName)) {
+								xtextDocument.replace(node.getTotalOffset(), node.getTotalLength(), "");
+							}
+						}
+					}							
+				}
+			}
+		});
+	}
+	
 	@Fix("MultipleUsage_CharacteristicGroup_Characteristic")
 	public void fixMultipleUsage_CharacteristicGroup_Characteristic(Issue issue, IssueResolutionAcceptor acceptor) {
 		String[] data = issue.getData();
