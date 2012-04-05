@@ -132,9 +132,9 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkDependencyNet(DependencyNet dependencyNet) {
-		String depdencnyNetName = dependencyNet.getName();
+		String dependencyNetName = dependencyNet.getName();
 		EList<Constraint> constraints = dependencyNet.getConstraints();
-		if(depdencnyNetName.length() > MAXLENGTH_NAME) {
+		if(dependencyNetName.length() > MAXLENGTH_NAME) {
 			error("Name of dependency net is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 		if(constraints.size() > MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS) {
@@ -146,8 +146,8 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 			String constraintName = constraints.get(index).getName();
 			if(constraintNames.contains(constraintName)) {
 				error("Constraint with name " + constraintName + " already used in the depedency net " + 
-						depdencnyNetName, dependencyNet, VcmlPackage.Literals.DEPENDENCY_NET__CONSTRAINTS, 
-							index, "MultipleUsage_Constraint", new String[]{depdencnyNetName, constraintName, "" + index});
+						dependencyNetName, dependencyNet, VcmlPackage.Literals.DEPENDENCY_NET__CONSTRAINTS, 
+							index, "MultipleUsage_Constraint", new String[]{dependencyNetName, constraintName, "" + index});
 			} else {
 				constraintNames.add(constraintName);
 			}
