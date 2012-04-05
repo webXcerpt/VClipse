@@ -208,7 +208,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 			layouter.brk().print("numberOfChars ").print(object.getNumberOfChars());
 			layouter.brk().print("decimalPlaces ").print(object.getDecimalPlaces());
 			if(object.getUnit() != null) {
-				layouter.brk().print("unit ").print(object.getUnit());
+				layouter.brk().print("unit ").print(doublequote(object.getUnit()));
 			}
 			StringBuffer buffer = new StringBuffer();
 			buffer.append("[ ");
@@ -663,7 +663,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 				doSwitch(object.getDocumentation());
 				layouter.brk().print("status ").print(object.getStatus());
 				if(object.getGroup() != null) {
-					layouter.brk().print("group ").print(object.getGroup());
+					layouter.brk().print("group ").print(doublequote(object.getGroup()));
 				}
 				if(object.getSource() != null) {
 					layouter.brk().beginC().print("source {").brk();
