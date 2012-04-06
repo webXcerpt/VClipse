@@ -75,6 +75,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 		String documentname = (document != null) ? document : materialid;
 		String documentdescription = model.getTestcase().getDescription();
 		String documentdescr = (documentdescription != null) ? documentdescription : documentname;
+	// ToDo: append material description to comment
 		Comment comment = doc.createComment(" " + materialid + " ");
 		root.appendChild(doc.appendChild(comment));
 		ProcessingInstruction pi1 = doc.createProcessingInstruction("configscan-upload", "materialid " + materialid);
