@@ -32,11 +32,15 @@ import org.vclipse.configscan.vcmlt.vcmlT.SetValue;
 import org.vclipse.configscan.vcmlt.vcmlT.TestCase;
 import org.vclipse.configscan.vcmlt.vcmlT.TestGroup;
 import org.vclipse.configscan.vcmlt.vcmlT.util.VcmlTSwitch;
+import org.vclipse.vcml.vcml.Description;
 import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
+import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.ProcessingInstruction;
 
 public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements IConfigScanXMLProvider {
 
@@ -66,11 +70,32 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 	@Override
 	public Object caseModel(Model model) {
 		Element root = doc.createElement("configtest");
+		String materialid = model.getTestcase().getItem().getName();
+		String document = model.getTestcase().getDocument();
+		String documentname = (document != null) ? document : materialid;
+		String documentdescription = model.getTestcase().getDescription();
+		String documentdescr = (documentdescription != null) ? documentdescription : documentname;
+		Comment comment = doc.createComment(" " + materialid + " ");
+		root.appendChild(doc.appendChild(comment));
+		ProcessingInstruction pi1 = doc.createProcessingInstruction("configscan-upload", "materialid " + materialid);
+		ProcessingInstruction pi2 = doc.createProcessingInstruction("configscan-upload", "documentname " + documentname);
+		ProcessingInstruction pi3 = doc.createProcessingInstruction("configscan-upload", "documentdescription " + documentdescr);
+		root.appendChild(doc.appendChild(pi1));
+		root.appendChild(doc.appendChild(pi2));
+		root.appendChild(doc.appendChild(pi3));
+//		Node docElement = doc.getDocumentElement();
+//		System.out.print(doc.getFirstChild().toString());
+//		System.out.print(docElement);
+//		System.out.print(root.getParentNode());  // null
+//		element.insertBefore(pi, element);  // null
+//		root.getParentNode().insertBefore(pi, root);
+//		root.insertBefore(pi, node1);
+//		root.insertBefore(node1, root);
 		map.put(root, EcoreUtil.getURI(model));
 		root.setAttribute("version", "1.0");
 		Element session = doc.createElement("session");
 		
-		root.appendChild(session);
+		root.appendChild(session);		
 		doc.appendChild(root);
 		current = session;
 		
