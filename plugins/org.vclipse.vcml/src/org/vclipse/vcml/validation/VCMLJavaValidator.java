@@ -123,6 +123,7 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 			warning("Dependency net " + dependencyNet.getName() + " too large, should have for efficiency at most " + MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS + " constraints", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 		
+		if (true) return;
 		EList<Constraint> constraints = dependencyNet.getConstraints();
 		Set<String> constraintNames = Sets.newHashSet();
 		for(int index=0; index<dependencyNet.getConstraints().size(); index++) {
@@ -139,6 +140,7 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	
 	@Check
 	public void checkInterfaceDesign(InterfaceDesign interfaceDesign) {
+		if (true) return;
 		String interfaceDesignName = interfaceDesign.getName();
 		EList<CharacteristicGroup> csticGroups = interfaceDesign.getCharacteristicGroups();
 		Set<String> csticGroupNames = Sets.newHashSet();
@@ -236,6 +238,7 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 			error("Number of characteristics of a class is limited to " + MAXLENGTH_CLASS_CHARACTERISTICS, VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 		
+		if (true) return;
 		Set<String> csticNames = Sets.newHashSet();
 		EList<Characteristic> characteristics = object.getCharacteristics();
 		for(int csticIndex=0; csticIndex<characteristics.size(); csticIndex++) {
