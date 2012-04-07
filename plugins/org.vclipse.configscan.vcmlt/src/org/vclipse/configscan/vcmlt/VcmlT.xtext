@@ -44,7 +44,6 @@ Action
     :   SetValue
     |   CheckSingleValue
     |   CheckDomain
-    |   CheckDomainStrict
     |   CheckConflict
     |   CheckComplete
     |   CheckBomItemQty
@@ -63,23 +62,13 @@ CheckSingleValue
 	;
 	
 CheckDomain
-    :   'checkDomain' cstic=[VCML::Characteristic] '{'
+    :   'checkDomain' strict?='strict'? cstic=[VCML::Characteristic] '{'
             values+=DomainValue*
-        '}' ('@' bompath=BomPath)?
-    ;
-    
-CheckDomainStrict
-    :   'checkDomainStrict' cstic=[VCML::Characteristic] '{'
-            values+=DomainStrictValue*
         '}' ('@' bompath=BomPath)?
     ;
 
 DomainValue
-    :   not?='not'? literal=Literal
-    ;
-
-DomainStrictValue
-    :   literal=Literal
+    :   no?='no'? literal=Literal
     ;
     	
 CheckConflict

@@ -21,10 +21,8 @@ import org.vclipse.configscan.vcmlt.vcmlT.CheckBomItemQty;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckComplete;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckConflict;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckDomain;
-import org.vclipse.configscan.vcmlt.vcmlT.CheckDomainStrict;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckSingleValue;
 import org.vclipse.configscan.vcmlt.vcmlT.CsticState;
-import org.vclipse.configscan.vcmlt.vcmlT.DomainStrictValue;
 import org.vclipse.configscan.vcmlt.vcmlT.DomainValue;
 import org.vclipse.configscan.vcmlt.vcmlT.Model;
 import org.vclipse.configscan.vcmlt.vcmlT.NumericInterval;
@@ -32,14 +30,12 @@ import org.vclipse.configscan.vcmlt.vcmlT.SetValue;
 import org.vclipse.configscan.vcmlt.vcmlT.TestCase;
 import org.vclipse.configscan.vcmlt.vcmlT.TestGroup;
 import org.vclipse.configscan.vcmlt.vcmlT.util.VcmlTSwitch;
-import org.vclipse.vcml.vcml.Description;
 import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.ProcessingInstruction;
 
 public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements IConfigScanXMLProvider {
@@ -231,6 +227,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 		Element e = doc.createElement("checkdomain");
 		e.setAttribute("name", object.getCstic().getName());
 		e.setAttribute("bompath", getChildPath(object.getBompath()));
+		e.setAttribute("strict", object.isStrict() ? "TRUE" : "FALSE");
 		EList<DomainValue> vs = object.getValues();
 		if (vs != null) {
 			Iterator<DomainValue> vsi = vs.iterator();
@@ -238,31 +235,10 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 				Element ev = doc.createElement("values");
 				DomainValue val = vsi.next();
 				ev.setAttribute("value", getValue(val.getLiteral()));
-				if (val.isNot())
+				if (val.isNo())
 					ev.setAttribute("mode", "out");
 				else
 					ev.setAttribute("mode", "in");
-				map.put(ev, EcoreUtil.getURI(object));
-				e.appendChild(ev);			
-			}
-		}
-		
-		map.put(e, EcoreUtil.getURI(object));
-		current.appendChild(e);
-		return this;
-	}
-
-	@Override
-	public Object caseCheckDomainStrict (final CheckDomainStrict object) {
-		Element e = doc.createElement("checkdomainstrict");
-		e.setAttribute("name", object.getCstic().getName());
-		e.setAttribute("bompath", getChildPath(object.getBompath()));
-		EList<DomainStrictValue> vs = object.getValues();
-		if (vs != null) {
-			Iterator<DomainStrictValue> vsi = vs.iterator();
-			while (vsi.hasNext()) {
-				Element ev = doc.createElement("values");
-				ev.setAttribute("value", getValue(vsi.next().getLiteral()));
 				map.put(ev, EcoreUtil.getURI(object));
 				e.appendChild(ev);			
 			}
