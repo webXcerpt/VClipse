@@ -222,6 +222,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 		return this;
 	}
 
+	// ToDo: "mode" "out" must not be applied with CheckDomain strict (applies also to cmlt)
 	@Override
 	public Object caseCheckDomain (final CheckDomain object) {
 		Element e = doc.createElement("checkdomain");
