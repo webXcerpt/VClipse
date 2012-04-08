@@ -24,9 +24,11 @@ import org.vclipse.configscan.vcmlt.vcmlT.CheckDomain;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckSingleValue;
 import org.vclipse.configscan.vcmlt.vcmlT.CsticState;
 import org.vclipse.configscan.vcmlt.vcmlT.DomainValue;
+import org.vclipse.configscan.vcmlt.vcmlT.Mode;
 import org.vclipse.configscan.vcmlt.vcmlT.Model;
 import org.vclipse.configscan.vcmlt.vcmlT.NumericInterval;
 import org.vclipse.configscan.vcmlt.vcmlT.SetValue;
+import org.vclipse.configscan.vcmlt.vcmlT.Status;
 import org.vclipse.configscan.vcmlt.vcmlT.TestCase;
 import org.vclipse.configscan.vcmlt.vcmlT.TestGroup;
 import org.vclipse.configscan.vcmlt.vcmlT.util.VcmlTSwitch;
@@ -112,8 +114,8 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 		tg.setAttribute("id", name);
 		final String description = testGroup.getDescription();
 		tg.setAttribute("desc", description!=null ? description : name);
-		tg.setAttribute("testmode", testGroup.getTestmode().toString()); // evtl mit geigneter Methode in Attributwert abbilden
-		tg.setAttribute("status", "1");
+		tg.setAttribute("status", toXML(testGroup.getStatus()));
+		tg.setAttribute("testmode", toXML(testGroup.getMode()));
 		
 		map.put(tg, EcoreUtil.getURI(testGroup));
 		current.appendChild(tg);
@@ -325,5 +327,28 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 			throw new IllegalArgumentException("no testcase element found");
 		}
 		return testcase.getItem().getName();
+	}
+
+	// ToDo: common toXML methods for cmlt and vcmlt
+	private String toXML(final Mode mode) {
+		switch (mode) {
+		case SUCCESS:
+			return "success";
+		case FAILURE:
+			return "failure";
+		}
+		return null;
+	}
+	
+	private String toXML(final Status status) {
+		switch (status) {
+		case IN_PREPARATION:
+			return "0";
+		case RELEASED:
+			return "1";
+		case LOCKED:
+			return "2";
+		}
+		return null;
 	}
 }

@@ -30,13 +30,25 @@ TestCase
 	;
 
 TestGroup
-	:	'testgroup' name=EXTENDED_ID description=STRING? testmode=TestMode? '{'
+	:	'testgroup' name=EXTENDED_ID (description=STRING)?
+        ('['    (   ('status' status=Status)?
+                &   ('mode' mode=Mode)?
+                )
+         ']')?
+		
+		'{'
 			actions+=Action*
 		'}'
 	;
-	
-enum TestMode
-	:   success
+
+enum Status
+    :   released // default value - must be first element
+    |   inPreparation
+    |   locked
+    ;
+    	
+enum Mode
+	:   success // default value - must be first element
 	|	failure
 	;	
 	
