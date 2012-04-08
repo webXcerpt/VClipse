@@ -62,8 +62,9 @@ Action
     |   CheckBomItemQty
     |   CheckBomItemExists
     |   CheckBomCountItems
+    |   TestGroup
 	;
-	
+
 SetValue
 	:	cstic=[VCML::Characteristic] '=' value=Literal ('@' bompath=BomPath)?
 	;

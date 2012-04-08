@@ -126,6 +126,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 		
 	    for (final Action action : testGroup.getActions()) {
 			doSwitch(action);
+			current = tg;
 		}
 		return this;
 	}
