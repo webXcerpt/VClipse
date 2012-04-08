@@ -55,6 +55,7 @@ enum Mode
 Action
     :   SetValue
     |   CheckSingleValue
+    |   CheckStatus
     |   CheckDomain
     |   CheckConflict
     |   CheckComplete
@@ -66,12 +67,17 @@ Action
 SetValue
 	:	cstic=[VCML::Characteristic] '=' value=Literal ('@' bompath=BomPath)?
 	;
-	
+
+// ToDo: include setting for author if reasonable as in cmlt	
 CheckSingleValue
-	:	'check' cstic=[VCML::Characteristic] status+=(CsticState)* ('=' value=SymbolicLiteral)? ('@' bompath=BomPath)?
+	:	'check' cstic=[VCML::Characteristic] ('=' value=SymbolicLiteral)? ('@' bompath=BomPath)?
 	|	'check' cstic=[VCML::Characteristic] operator=Operator value=NumericLiteral ('@' bompath=BomPath)?
 	|	'check' cstic=[VCML::Characteristic] 'in' value=NumericInterval ('@' bompath=BomPath)?
 	;
+
+CheckStatus
+    :   'check' cstic=[VCML::Characteristic] status+=CsticState+ ('@' bompath=BomPath)?
+    ;
 	
 CheckDomain
     :   'checkDomain' strict?='strict'? cstic=[VCML::Characteristic] '{'

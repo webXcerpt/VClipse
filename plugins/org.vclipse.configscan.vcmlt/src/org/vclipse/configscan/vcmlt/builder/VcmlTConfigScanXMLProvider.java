@@ -22,6 +22,7 @@ import org.vclipse.configscan.vcmlt.vcmlT.CheckComplete;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckConflict;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckDomain;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckSingleValue;
+import org.vclipse.configscan.vcmlt.vcmlT.CheckStatus;
 import org.vclipse.configscan.vcmlt.vcmlT.CsticState;
 import org.vclipse.configscan.vcmlt.vcmlT.DomainValue;
 import org.vclipse.configscan.vcmlt.vcmlT.Mode;
@@ -146,27 +147,6 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 	// ToDo: NumericInterval (less important, rarely used)
 	// ToDo: operator 'NE'
 	public Object caseCheckSingleValue (final CheckSingleValue object) {
-		EList<CsticState> sts = object.getStatus();
-		if (sts != null) {
-			Iterator<CsticState> sti = sts.iterator();
-			if (sti.hasNext()) {
-				Element es = doc.createElement("checkstatus");
-				es.setAttribute("name", (object.getCstic()).getName());
-				es.setAttribute("bompath", getChildPath(object.getBompath()));
-				map.put(es, EcoreUtil.getURI(object));
-				current.appendChild(es);			
-				while (sti.hasNext()) {
-					String s = sti.next().getName();
-					if (s.equals("invisible"))
-						s = "hidden";
-					Element estat = doc.createElement("status");
-					estat.setTextContent(s);
-					map.put(estat, EcoreUtil.getURI(object));
-					es.appendChild(estat);			
-				}
-			}			
-		}
-
 		if (object.getValue() != null) {
 			Element ec = doc.createElement("checksinglevalue");
 			ec.setAttribute("name", (object.getCstic()).getName());
@@ -196,7 +176,27 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 		}
 		return this;
 	}
+	
+	@Override
+	public Object caseCheckStatus(final CheckStatus object) {
+		Element ec = doc.createElement("checkstatus");
+		ec.setAttribute("name", (object.getCstic()).getName());
+		ec.setAttribute("bompath", getChildPath(object.getBompath()));
+		
+		map.put(ec, EcoreUtil.getURI(object));
+		current.appendChild(ec);
+		
+		for (final CsticState status : object.getStatus()) {
+			Element cs = doc.createElement("status");
+			cs.appendChild(doc.createTextNode(toXML(status)));
+			map.put(cs, EcoreUtil.getURI(object));
+			ec.appendChild(cs);
+		}
+		
+		return this;
+	}
 
+	
 	@Override
 	// ToDo: doublecheck operator correctness
 	public Object caseCheckBomItemQty (final CheckBomItemQty object) {
@@ -350,5 +350,12 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 			return "2";
 		}
 		return null;
+	}
+
+	private String toXML(final CsticState status) {
+		if (status.equals(CsticState.INVISIBLE)) {
+			return "HIDDEN";
+		}
+		return status.toString();
 	}
 }
