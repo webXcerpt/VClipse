@@ -239,10 +239,12 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 				Element ev = doc.createElement("values");
 				DomainValue val = vsi.next();
 				ev.setAttribute("value", getValue(val.getLiteral()));
-				if (val.isNo())
-					ev.setAttribute("mode", "out");
-				else
-					ev.setAttribute("mode", "in");
+				if (!object.isStrict()) {
+					if (val.isNo())
+						ev.setAttribute("mode", "out");
+					else
+						ev.setAttribute("mode", "in");
+				}
 				map.put(ev, EcoreUtil.getURI(object));
 				e.appendChild(ev);			
 			}
