@@ -22,6 +22,7 @@ import com.google.inject.Inject;
 @InjectWith(VcmlTInjectorProviderWithVCML.class)
 public class VcmlTConfigScanXMLProviderTest extends XtextTest {
 
+
 	@Inject
 	VcmlTConfigScanXMLProvider csXmlProvider;
 	

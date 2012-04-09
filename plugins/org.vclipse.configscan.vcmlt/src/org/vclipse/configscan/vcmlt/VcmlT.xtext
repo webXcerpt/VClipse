@@ -37,7 +37,7 @@ TestGroup
          ']')?
 		
 		'{'
-			actions+=Action*
+            items+=ItemContainer*
 		'}'
 	;
 
@@ -51,6 +51,16 @@ enum Mode
 	:   success // default value - must be first element
 	|	failure
 	;	
+
+ItemContainer
+    :   type=ItemType item=[VCML::Material|EXTENDED_ID] '{'
+            actions+=Action*
+        '}'
+    ;
+
+enum ItemType
+    :   context  // or kmat?? or material??
+    ;    
 	
 Action
     :   SetValue
@@ -59,45 +69,46 @@ Action
     |   CheckDomain
     |   CheckConflict
     |   CheckComplete
-    |   CheckBomItemQty
     |   CheckBomItemExists
     |   CheckBomCountItems
+    |   BOM
+    |   ItemContainer
     |   TestGroup
 	;
 
 SetValue
-	:	cstic=[VCML::Characteristic] '=' value=Literal ('@' bompath=BomPath)?
+	:	cstic=[VCML::Characteristic] '=' value=Literal
 	;
 
 // ToDo: include setting for author if reasonable as in cmlt	
 CheckSingleValue
-	:	'check' cstic=[VCML::Characteristic] ('=' value=SymbolicLiteral)? ('@' bompath=BomPath)?
-	|	'check' cstic=[VCML::Characteristic] operator=Operator value=NumericLiteral ('@' bompath=BomPath)?
-	|	'check' cstic=[VCML::Characteristic] 'in' value=NumericInterval ('@' bompath=BomPath)?
+	:	'check' cstic=[VCML::Characteristic] ('=' value=SymbolicLiteral)?
+	|	'check' cstic=[VCML::Characteristic] operator=Operator value=NumericLiteral
+	|	'check' cstic=[VCML::Characteristic] 'in' value=NumericInterval
 	;
 
 CheckStatus
-    :   'check' cstic=[VCML::Characteristic] status+=CsticState+ ('@' bompath=BomPath)?
+    :   'check' cstic=[VCML::Characteristic] status+=CsticState+
     ;
 	
 CheckDomain
     :   'checkDomain' strict?='strict'? cstic=[VCML::Characteristic] '{'
             values+=DomainValue*
-        '}' ('@' bompath=BomPath)?
+        '}'
     ;
 
 DomainValue
     :   no?='no'? literal=Literal
     ;
-    	
+
 CheckConflict
     :   {CheckConflict}
-        'check' (conflict?='inconsistent' | 'consistent') ('@' bompath=BomPath)?
+        (conflict?='conflict' | 'consistent')
     ;
     
 CheckComplete
     :   {CheckComplete}
-        'check' (complete?='complete' | 'incomplete') ('@' bompath=BomPath)?
+        (complete?='complete' | 'incomplete')
     ;
 	
 enum CsticState
@@ -108,6 +119,18 @@ enum CsticState
     |   set
     |   unset
     ;
+
+BOM
+    :   {BOM}
+    	'bom' '{'
+            equations+=Equation*
+        '}'
+    ;
+    
+Equation
+    :   material=MaterialLiteral operator=Operator amount=NumericLiteral
+    ;
+
 	
 enum Operator
     :   LT='<'
@@ -143,6 +166,10 @@ NumericLiteral returns VCML::NumericLiteral
 SymbolicLiteral returns VCML::SymbolicLiteral
     :   value=SYMBOL
 	;
+
+MaterialLiteral  // no VCML::MaterialLiteral ??
+    :   '#' material=[VCML::Material|EXTENDED_ID]
+    ;   
     
 terminal STRING // Xtext standard, but only enclosed in double quotes
     :   '"' ( '\\' ('b'|'t'|'n'|'f'|'r'|'"'|'\\') | !('\\'|'"') )* '"'
@@ -150,13 +177,7 @@ terminal STRING // Xtext standard, but only enclosed in double quotes
 
 terminal SYMBOL // enclosed in single quotes, no escapes, no line breaks, no tabs
     :   "'" ( !("'"|'\t'|'\n'|'\r') )* "'"
-    ; 
-
-// ToDo: apply also to other bom item types	
-CheckBomItemQty
-    :    'check' 'quantity' operator=Operator amount=INT ('@' bompath=BomPath)?
-    ;        
-		
+    ; 		
 
 // ToDo: should only apply to materials with bom
 CheckBomCountItems

@@ -1,6 +1,8 @@
 package org.vclipse.configscan.vcmlt.builder;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -11,13 +13,14 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtext.EcoreUtil2;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.ITestObjectFilter;
 import org.vclipse.configscan.vcmlt.vcmlT.Action;
+import org.vclipse.configscan.vcmlt.vcmlT.BOM;
 import org.vclipse.configscan.vcmlt.vcmlT.BomPath;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckBomCountItems;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckBomItemExists;
-import org.vclipse.configscan.vcmlt.vcmlT.CheckBomItemQty;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckComplete;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckConflict;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckDomain;
@@ -25,21 +28,28 @@ import org.vclipse.configscan.vcmlt.vcmlT.CheckSingleValue;
 import org.vclipse.configscan.vcmlt.vcmlT.CheckStatus;
 import org.vclipse.configscan.vcmlt.vcmlT.CsticState;
 import org.vclipse.configscan.vcmlt.vcmlT.DomainValue;
+import org.vclipse.configscan.vcmlt.vcmlT.Equation;
+import org.vclipse.configscan.vcmlt.vcmlT.ItemContainer;
 import org.vclipse.configscan.vcmlt.vcmlT.Mode;
 import org.vclipse.configscan.vcmlt.vcmlT.Model;
 import org.vclipse.configscan.vcmlt.vcmlT.NumericInterval;
+import org.vclipse.configscan.vcmlt.vcmlT.Operator;
 import org.vclipse.configscan.vcmlt.vcmlT.SetValue;
 import org.vclipse.configscan.vcmlt.vcmlT.Status;
 import org.vclipse.configscan.vcmlt.vcmlT.TestCase;
 import org.vclipse.configscan.vcmlt.vcmlT.TestGroup;
 import org.vclipse.configscan.vcmlt.vcmlT.util.VcmlTSwitch;
 import org.vclipse.vcml.vcml.Literal;
+import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.ProcessingInstruction;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements IConfigScanXMLProvider {
 
@@ -124,10 +134,19 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 
 		// ...
 		
-	    for (final Action action : testGroup.getActions()) {
-			doSwitch(action);
+		for (final ItemContainer item : testGroup.getItems()) {
+			doSwitch(item);
 			current = tg;
 		}
+		return this;
+	}
+	
+	@Override
+	public Object caseItemContainer(final ItemContainer object) {
+		for (final Action action : object.getActions()) {
+			doSwitch(action);
+		}
+			
 		return this;
 	}
 
@@ -137,7 +156,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 		e.setAttribute("action", "setvalue");
 		e.setAttribute("name", (object.getCstic()).getName());
 		e.setAttribute("value", getValue(object.getValue()));
-		e.setAttribute("bompath", getChildPath(object.getBompath()));
+		e.setAttribute("bompath", bompath(object));
 		
 		map.put(e, EcoreUtil.getURI(object));
 		current.appendChild(e);
@@ -171,7 +190,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 				return this;
 			}
 			ec.setAttribute("value", prefix + getValue((Literal)object.getValue()));
-			ec.setAttribute("bompath", getChildPath(object.getBompath()));
+			ec.setAttribute("bompath", bompath(object));
 			map.put(ec, EcoreUtil.getURI(object));
 			current.appendChild(ec);
 		}
@@ -182,7 +201,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 	public Object caseCheckStatus(final CheckStatus object) {
 		Element ec = doc.createElement("checkstatus");
 		ec.setAttribute("name", (object.getCstic()).getName());
-		ec.setAttribute("bompath", getChildPath(object.getBompath()));
+		ec.setAttribute("bompath", bompath(object));
 		
 		map.put(ec, EcoreUtil.getURI(object));
 		current.appendChild(ec);
@@ -194,20 +213,6 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 			ec.appendChild(cs);
 		}
 		
-		return this;
-	}
-
-	
-	@Override
-	// ToDo: doublecheck operator correctness
-	public Object caseCheckBomItemQty (final CheckBomItemQty object) {
-		Element e = doc.createElement("checkbomquantity");
-		e.setAttribute("quantity", Integer.toString(object.getAmount()));
-		e.setAttribute("operator", object.getOperator().getName());
-		e.setAttribute("bompath", getChildPath(object.getBompath()));
-		
-		map.put(e, EcoreUtil.getURI(object));
-		current.appendChild(e);
 		return this;
 	}
 
@@ -230,7 +235,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 	public Object caseCheckDomain (final CheckDomain object) {
 		Element e = doc.createElement("checkdomain");
 		e.setAttribute("name", object.getCstic().getName());
-		e.setAttribute("bompath", getChildPath(object.getBompath()));
+		e.setAttribute("bompath", bompath(object));
 		e.setAttribute("strict", object.isStrict() ? "TRUE" : "FALSE");
 		EList<DomainValue> vs = object.getValues();
 		if (vs != null) {
@@ -273,7 +278,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 			e.setAttribute("iscomplete", "TRUE");
 		else
 			e.setAttribute("iscomplete", "FALSE");
-		e.setAttribute("bompath", getChildPath(object.getBompath()));
+		e.setAttribute("bompath", bompath(object));
 		
 		map.put(e, EcoreUtil.getURI(object));
 		current.appendChild(e);
@@ -287,11 +292,34 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 			e.setAttribute("isconsistent", "FALSE");
 		else
 			e.setAttribute("isconsistent", "TRUE");
-		e.setAttribute("bompath", getChildPath(object.getBompath()));
+		e.setAttribute("bompath", bompath(object));
 		
 		map.put(e, EcoreUtil.getURI(object));
 		current.appendChild(e);
 		return this;
+	}
+
+	// ToDo: derive bompath like in cmlt
+	@Override
+	public Object caseEquation(final Equation object) {
+		Element check = doc.createElement("checkbomquantity");
+		check.setAttribute("quantity", object.getAmount().getValue());
+		check.setAttribute("operator", toXML(object.getOperator()));
+		check.setAttribute("bompath", bompath(object.getMaterial()) + " " + object.getMaterial().getMaterial().getName());
+//		check.setAttribute("bompath", bompath(object.getMaterial().getItem()));
+		
+		map.put(check, EcoreUtil.getURI(object));
+		current.appendChild(check);
+		return this;
+	}
+
+	// ToDo: checkitem non existence, countitems
+	@Override
+	public Object caseBOM(final BOM object) {
+		for (final Equation eq : object.getEquations()) {
+			doSwitch(eq);		
+		}		
+		return super.caseBOM(object);
 	}
 
 	private String getValue(Literal lit) {
@@ -360,5 +388,40 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 			return "HIDDEN";
 		}
 		return status.toString();
+	}
+	
+	private String toXML(final Operator operator) {
+		return operator.getName();
+	}
+	
+	public Material getItem(final EObject obj) {
+		final ItemContainer itemContainer = EcoreUtil2.getContainerOfType(obj, ItemContainer.class);
+		return itemContainer.getItem();
+	}
+	
+	private String bompath(final EObject obj) {
+		return bompath(getItem(obj));
+	}
+	
+	private String bompath(final Material item) {
+		final List<String> itemsToRoot = Lists.newArrayList();
+		EObject parent = item;
+		while (parent!=null) {
+//			if (parent instanceof Item || parent instanceof Instance) {
+			if (parent instanceof Material) {		// ??
+				final String name = ((Material) parent).getName();
+				itemsToRoot.add(name);
+			}
+			parent = parent.eContainer();
+		}
+		final StringBuffer path = new StringBuffer();
+		path.append("/ ");
+		for (int i = itemsToRoot.size()-2; i>=0; i--) { // -2: ignore root item, since bompath is relative to root item
+			path.append(itemsToRoot.get(i));
+			if (i>0) {
+				path.append(" / ");
+			}
+		}
+		return path.toString().trim();
 	}
 }
