@@ -71,6 +71,7 @@ Action
     |   CheckComplete
     |   CheckBomItemExists
     |   CheckBomCountItems
+    |   Equation
     |   BOM
     |   ItemContainer
     |   TestGroup
@@ -181,13 +182,14 @@ terminal SYMBOL // enclosed in single quotes, no escapes, no line breaks, no tab
 
 // ToDo: should only apply to materials with bom
 CheckBomCountItems
-	:	'check' 'countitems' '=' value=INT ('@' bompath=BomPath)?		
+	:	'check' 'countitems' '=' value=INT		
 	;
 	
 CheckBomItemExists
-	:	'check' (exists?='exists' | 'notexists') ('@' bompath=BomPath)?		
+	:	'check' material=[VCML::Material|EXTENDED_ID] (exists?='exists' | 'notexists')		
 	;
 
+// ToDo: remove, has become obsolete ??
 BomPath
 	:	{BomPath}
 		'/' ('(' position=INT ')')? material=[VCML::Material|EXTENDED_ID]? child=BomPath?

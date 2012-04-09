@@ -1,6 +1,5 @@
 package org.vclipse.configscan.vcmlt.builder;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +48,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.ProcessingInstruction;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements IConfigScanXMLProvider {
 
@@ -93,14 +91,6 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 		root.appendChild(doc.appendChild(pi1));
 		root.appendChild(doc.appendChild(pi2));
 		root.appendChild(doc.appendChild(pi3));
-//		Node docElement = doc.getDocumentElement();
-//		System.out.print(doc.getFirstChild().toString());
-//		System.out.print(docElement);
-//		System.out.print(root.getParentNode());  // null
-//		element.insertBefore(pi, element);  // null
-//		root.getParentNode().insertBefore(pi, root);
-//		root.insertBefore(pi, node1);
-//		root.insertBefore(node1, root);
 		map.put(root, EcoreUtil.getURI(model));
 		root.setAttribute("version", "1.0");
 		Element session = doc.createElement("session");
@@ -223,8 +213,8 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 			e.setAttribute("value", "TRUE");
 		else
 			e.setAttribute("value", "FALSE");
-		e.setAttribute("bompath", getChildPath(object.getBompath()));
-		
+		e.setAttribute("bompath", bompath(object.getMaterial()) + " " + object.getMaterial().getName());
+
 		map.put(e, EcoreUtil.getURI(object));
 		current.appendChild(e);
 		return this;
@@ -264,7 +254,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 	public Object caseCheckBomCountItems (final CheckBomCountItems object) {
 		Element e = doc.createElement("countitems");
 		e.setAttribute("quantity", Integer.toString(object.getValue()));
-		e.setAttribute("bompath", getChildPath(object.getBompath()));
+		e.setAttribute("bompath", bompath(object));
 		
 		map.put(e, EcoreUtil.getURI(object));
 		current.appendChild(e);
@@ -299,7 +289,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 		return this;
 	}
 
-	// ToDo: derive bompath like in cmlt
+	// ToDo: derive bompath like in cmlt with getItem()
 	@Override
 	public Object caseEquation(final Equation object) {
 		Element check = doc.createElement("checkbomquantity");
@@ -334,6 +324,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 		}
 	}
 
+	// ToDo: perhaps obsolete now?
 	private String getChildPath(BomPath bompath) {
 		String ret = "/ ";
 		if (bompath != null && bompath.getMaterial() != null) {
