@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.ComposedChecks;
@@ -63,6 +64,7 @@ import org.vclipse.vcml.vcml.SimpleDescription;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
 import org.vclipse.vcml.vcml.SymbolicType;
 import org.vclipse.vcml.vcml.UnaryExpression;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
 import org.vclipse.vcml.vcml.VcmlPackage;
@@ -256,9 +258,14 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 
 	@Check(CheckType.FAST)
 	public void checkDescription(final SimpleDescription desc) {
-		if (desc.eContainer() instanceof Material) {
+		VCObject vcObject = EcoreUtil2.getContainerOfType(desc, VCObject.class);
+		if (vcObject instanceof Material) {
 			if (desc.getValue().length() > 40) {
 				warning("Material descriptions are limited to 40 characters", VcmlPackage.Literals.SIMPLE_DESCRIPTION__VALUE);
+			}
+		} else if (vcObject instanceof Class) {
+			if (desc.getValue().length() > 40) {
+				warning("Class descriptions are limited to 40 characters", VcmlPackage.Literals.SIMPLE_DESCRIPTION__VALUE);
 			}
 		} else {
 			if (desc.getValue().length() > MAXLENGTH_DESCRIPTION) {
