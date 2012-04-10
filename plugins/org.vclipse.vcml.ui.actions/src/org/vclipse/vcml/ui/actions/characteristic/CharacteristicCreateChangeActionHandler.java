@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.characteristic;
 
+import java.text.ParseException;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -17,6 +19,8 @@ import org.vclipse.vcml.ui.actions.BAPIUtils;
 import org.vclipse.vcml.ui.outline.actions.IVCMLOutlineActionHandler;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicValue;
+import org.vclipse.vcml.vcml.DateCharacteristicValue;
+import org.vclipse.vcml.vcml.DateType;
 import org.vclipse.vcml.vcml.Documentation;
 import org.vclipse.vcml.vcml.FormattedDocumentationBlock;
 import org.vclipse.vcml.vcml.Language;
@@ -113,6 +117,42 @@ public class CharacteristicCreateChangeActionHandler extends BAPIUtils implement
 							charactValuesDescr.setValue("LANGUAGE_ISO", language.toString());
 						}
 					}.handleDescription(value.getDescription());
+				}
+				return this;
+			}
+			@Override
+			public Object caseDateType(DateType ty) {
+				charactDetail.setValue("DATA_TYPE", "DATE");
+				if (ty.isIntervalValuesAllowed()) {
+					charactDetail.setValue("INTERVAL_ALLOWED", "X");
+				}
+				JCoTable charactValuesNum = tpl.getTable("CHARACTVALUESNUMNEW");
+				charactValuesNum.appendRows(ty.getValues().size());
+				for (DateCharacteristicValue value : ty.getValues()) {
+					String flv, relation;
+					String from = value.getFrom();
+					String to = value.getTo();
+					try {
+						flv = CharacteristicReader.DATEFORMAT_SAP.format(CharacteristicReader.DATEFORMAT_VCML.parse(from));
+					} catch (ParseException e) {
+						flv = "00.00.0000";
+					}
+					charactValuesNum.setValue("VALUE_FROM", flv);
+					if (to==null) {
+						charactValuesNum.setValue("VALUE_TO", 0);
+						relation = "1"; // means EQ
+					} else {
+						String flb;
+						try {
+							flb = CharacteristicReader.DATEFORMAT_SAP.format(CharacteristicReader.DATEFORMAT_VCML.parse(to));
+						} catch (ParseException e) {
+							flb = "00.00.0000";
+						}
+						charactValuesNum.setValue("VALUE_TO", flb);
+						relation = "3"; // means GE LE
+					}
+					charactValuesNum.setValue("VALUE_RELATION", relation);
+					charactValuesNum.nextRow();
 				}
 				return this;
 			}

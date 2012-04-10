@@ -14,6 +14,7 @@ import org.vclipse.base.DeclarativeEObjectDocumentationProvider;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicType;
 import org.vclipse.vcml.vcml.ConstraintClass;
+import org.vclipse.vcml.vcml.DateType;
 import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.ShortVarDefinition;
 import org.vclipse.vcml.vcml.SymbolicType;
@@ -45,6 +46,12 @@ public class VCMLAdditionalInformationProvider extends
 				+ object.getDecimalPlaces()
 				+ (object.isIntervalValuesAllowed() ? " intervals " : "")
 				+ (object.isNegativeValuesAllowed() ? " negative " : "");
+		// TODO print values
+	}
+
+	String documentation(DateType object) {
+		return "DATE " + 
+				(object.isIntervalValuesAllowed() ? " intervals " : "");
 		// TODO print values
 	}
 

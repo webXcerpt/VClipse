@@ -35,6 +35,7 @@ import org.vclipse.vcml.vcml.ConfigurationProfile;
 import org.vclipse.vcml.vcml.ConfigurationProfileEntry;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.ConstraintSource;
+import org.vclipse.vcml.vcml.DateType;
 import org.vclipse.vcml.vcml.DelDefault;
 import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Description;
@@ -394,6 +395,10 @@ public class VCMLLabelProvider extends DefaultEObjectLabelProvider {
 
 	public String text(SymbolicType element) {
 		return "CHAR " + element.getNumberOfChars();
+	}
+
+	public String text(DateType element) {
+		return "DATE";
 	}
 
 	public String text(Table element) {

@@ -11,6 +11,7 @@
 package org.vclipse.vcml2idoc.builder;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,6 +47,8 @@ import org.vclipse.vcml.vcml.Classification;
 import org.vclipse.vcml.vcml.ConfigurationProfile;
 import org.vclipse.vcml.vcml.ConfigurationProfileEntry;
 import org.vclipse.vcml.vcml.Constraint;
+import org.vclipse.vcml.vcml.DateCharacteristicValue;
+import org.vclipse.vcml.vcml.DateType;
 import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Description;
 import org.vclipse.vcml.vcml.Documentation;
@@ -94,6 +97,9 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 
 	private static final IDocFactory IDOC = IDocFactory.eINSTANCE;
 
+	private static final SimpleDateFormat DATEFORMAT_SAP = new SimpleDateFormat("yyyyMMdd");
+	private static final SimpleDateFormat DATEFORMAT_VCML = new SimpleDateFormat("dd.MM.yyyy");
+	
 	// hierarchy levels for different IDoc types
 	private static final int HIELEV_MATMAS = 2;
 	private static final int HIELEV_CHRMAS = 3;
@@ -363,6 +369,18 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 				}
 				return this;
 			}
+			@Override
+			public Object caseDateType(final DateType dateType) {
+				setValue(segmentE1CABNM, "ATFOR", "DATE");
+				setValue(segmentE1CABNM, "ATINT", dateType.isIntervalValuesAllowed() ? "X" : null);
+				// Master characteristic value
+				int counter = 0;
+				for(final DateCharacteristicValue value : dateType.getValues()) {
+					counter++;
+					addSegmentE1CAWNM(segmentE1CABNM, counter, value);
+				}
+				return this;
+			}
 		}.doSwitch(object.getType());
 
 		setValue(segmentE1CABNM, "ATMST", VcmlUtils.createIntFromStatus(object.getStatus()));
@@ -515,6 +533,43 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		setValue(segmentE1CAWNM, "ATCOD", atcod);
 		setValue(segmentE1CAWNM, "ATAW1", unit);
 		setValue(segmentE1CAWNM, "ATAWE", unit);
+		setValue(segmentE1CAWNM, "TXTNR", "0000");
+		setValue(segmentE1CAWNM, "DATUV", "00000000");
+		setValue(segmentE1CAWNM, "ATZHH", "0000"); // internal counter for value hierarchy
+	}
+
+	private void addSegmentE1CAWNM(final Segment parentSegment, final int counter, final DateCharacteristicValue value) {
+		final Segment segmentE1CAWNM = addChildSegment(parentSegment, "E1CAWNM");
+		setValue(segmentE1CAWNM, "MSGFN", "004");
+		setValue(segmentE1CAWNM, "ATZHL", String.format("%1$04d", counter)); // internal counter
+		// NUM objects use ATFLV. Some other attributes have to be set.
+		String flv;
+		String atcod;
+		String from = value.getFrom();
+		String to = value.getTo();
+		try {
+			flv = DATEFORMAT_SAP.format(DATEFORMAT_VCML.parse(from));
+		} catch (ParseException e) {
+			flv = "00.00.0000";
+		}
+		setValue(segmentE1CAWNM, "ATFLV", flv);
+		if (to==null) {
+			setValue(segmentE1CAWNM, "ATFLB", 0);
+			atcod = "1"; // means EQ
+		} else {
+			String flb;
+			try {
+				flb = DATEFORMAT_SAP.format(DATEFORMAT_VCML.parse(to));
+			} catch (ParseException e) {
+				flb = "0";
+			}
+			setValue(segmentE1CAWNM, "ATFLB", flb);
+			atcod = "3"; // means GE LE
+		}
+		setValue(segmentE1CAWNM, "ATTLV", 0); // ToLeranz Von
+		setValue(segmentE1CAWNM, "ATTLB", 0); // ToLeranz Bis
+		setValue(segmentE1CAWNM, "ATINC", 0);
+		setValue(segmentE1CAWNM, "ATCOD", atcod);
 		setValue(segmentE1CAWNM, "TXTNR", "0000");
 		setValue(segmentE1CAWNM, "DATUV", "00000000");
 		setValue(segmentE1CAWNM, "ATZHH", "0000"); // internal counter for value hierarchy
