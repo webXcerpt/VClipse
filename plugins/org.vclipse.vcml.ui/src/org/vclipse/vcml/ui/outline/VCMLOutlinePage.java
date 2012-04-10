@@ -34,9 +34,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xtext.IGrammarAccess;
-import org.eclipse.xtext.linking.ILinker;
-import org.eclipse.xtext.linking.ILinkingService;
 import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.ui.IImageHelper;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
@@ -48,52 +45,21 @@ import org.vclipse.vcml.utils.ISapConstants;
 
 import com.google.inject.Inject;
 
-/**
- * 
- */
 public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListener {
 
 	@Inject
 	private IResourceFactory resourceFactory;
 	
 	@Inject
-	private ILinker linker;
-	
-	@Inject
-	private ILinkingService linkingService;
-	
-	@Inject
-	private IGrammarAccess grammarAccess;
-	
-	@Inject
 	private IImageHelper imageHelper;
 	
-	// injected over constructor injection
 	private final IPreferenceStore preferenceStore;
 	
-	/**
-	 * 
-	 */
-	private static final String extensionPointID = VCMLUiPlugin.ID + ".outlinePageActions";
-	
-	/**
-	 * 
-	 */
+	private static final String EXTENSION_POINT_ID = VCMLUiPlugin.ID + ".outlinePageActions";
 	private static final String POPUP_MENU_ID = VCMLUiPlugin.ID + ".outlinePopupMenu";
-	
-	/**
-	 * 
-	 */
 	private static final String ELEMENT_ACTION = "action";
-	
-	/**
-	 * 
-	 */
 	private static final String ELEMENT_HANDLER = "handler";
 	
-	/**
-	 * Action element attributes
-	 */
 	private static final String ATTRIBUTE_ID = "id";
 	private static final String ATTRIBUTE_LABEL = "label";
 	private static final String ATTRIBUTE_TOOTLTIP = "tooltip";
@@ -103,27 +69,13 @@ public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListe
 	private static final String ATTRIBUTE_TOOLBAR_PATH = "toolbarPath";
 	private static final String ATTRIBUTE_MENUBAR_PATH = "menubarPath";
 	
-	
-	/**
-	 * Handler element attributes
-	 */
 	private static final String ATTRIBUTE_TYPE = "type";
 	private static final String ATTRIBUTE_HANDLER = "handler";
 	private static final String ATTRIBUTE_ACTION = "action";
 	
-	/**
-	 * 
-	 */
 	private final Map<String, VCMLOutlineAction> id2Action;
-	
-	/**
-	 * is used to add actions to the menu
-	 */
 	private final Map<VCMLOutlineAction, String> action2Path;
 	
-	/**
-	 * 
-	 */
 	private Menu menu;
 	
 	@Inject
@@ -151,20 +103,20 @@ public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListe
 	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
-		final TreeViewer treeViewer = getTreeViewer();
-		final IToolBarManager toolBarManager = getSite().getActionBars().getToolBarManager();
+		TreeViewer treeViewer = getTreeViewer();
+		IToolBarManager toolBarManager = getSite().getActionBars().getToolBarManager();
 		
 		createHierarchySwitchAction(toolBarManager);
 		
 		// Add contributing actions
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint point = registry.getExtensionPoint(extensionPointID);
+		IExtensionPoint point = registry.getExtensionPoint(EXTENSION_POINT_ID);
 		for(IExtension extension : point.getExtensions()) {
 			String contributingPluginID = extension.getNamespaceIdentifier();
 			for(IConfigurationElement element : extension.getConfigurationElements()) {
 				String name = element.getName();
 				if(ELEMENT_ACTION.equals(name)) {
-					VCMLOutlineAction action = new VCMLOutlineAction(resourceFactory, this, linker, linkingService, grammarAccess);
+					VCMLOutlineAction action = new VCMLOutlineAction(resourceFactory, this);
 					String id = element.getAttribute(ATTRIBUTE_ID);
 					if(id != null) {
 						action.setId(id);

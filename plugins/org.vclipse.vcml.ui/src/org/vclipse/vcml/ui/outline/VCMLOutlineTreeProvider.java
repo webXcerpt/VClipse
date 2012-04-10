@@ -43,10 +43,6 @@ import org.vclipse.vcml.vcml.SymbolicType;
 
 import com.google.inject.Inject;
 
-/**
- * customization of the default outline structure
- * 
- */
 public class VCMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	
 	private boolean hierarchical;
@@ -177,14 +173,6 @@ public class VCMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		}
 	}
 
-//	protected void _createChildren(IOutlineNode parentNode, LocalSelectionCondition modelElement) {
-//		if(!hierarchical) {
-//			super._createChildren(parentNode, modelElement);
-//		} else {
-//			createNode(parentNode, modelElement);
-//		}
-//	}
-
 	protected void _createChildren(IOutlineNode parentNode, org.vclipse.vcml.vcml.Class modelElement) {
 		if(!hierarchical) {
 			super._createChildren(parentNode, modelElement);
@@ -235,5 +223,4 @@ public class VCMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		}			
 		return super._text(modelElement);
 	}
-	
 }

@@ -39,12 +39,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.xtext.IGrammarAccess;
-import org.eclipse.xtext.diagnostics.Diagnostic;
-import org.eclipse.xtext.diagnostics.IDiagnosticConsumer;
-import org.eclipse.xtext.diagnostics.Severity;
-import org.eclipse.xtext.linking.ILinker;
-import org.eclipse.xtext.linking.ILinkingService;
 import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -75,14 +69,12 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 	protected PrintStream result; 
 	protected PrintStream err;
 	
-	private ILinker linker;
-
-	public VCMLOutlineAction(IResourceFactory resourceFactory, VCMLOutlinePage vCMLOutlinePage, ILinker linker, ILinkingService linkingService, IGrammarAccess grammarAccess) {
+	public VCMLOutlineAction(IResourceFactory resourceFactory, VCMLOutlinePage vcmlOutlinePage) {
 		this.resourceFactory = resourceFactory;
-		this.linker = linker;
 		actionHandlers = new HashMap<String,IVCMLOutlineActionHandler<?>>();
 		selectedObjects = new ArrayList<EObject>();
-		page = vCMLOutlinePage;
+		page = vcmlOutlinePage;
+		
 		out = new PrintStream(CMConsolePlugin.getDefault().getConsole(Kind.Task));
 		result = new PrintStream(CMConsolePlugin.getDefault().getConsole(Kind.Result));
 		err = new PrintStream(CMConsolePlugin.getDefault().getConsole(Kind.Error));
@@ -160,19 +152,6 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 								e.printStackTrace(err); // this can be a JCoException or an AbapExeption
 							}
 						}
-					}
-					if (linker!=null) {
-						linker.linkModel(resultModel, new IDiagnosticConsumer() {
-							public void consume(Diagnostic diagnostic, Severity severity) {
-								// TODO Auto-generated method stub
-								
-							}
-
-							public boolean hasConsumedDiagnostics(Severity severity) {
-								// TODO Auto-generated method stub
-								return false;
-							}
-						});
 					}
 
 					try {

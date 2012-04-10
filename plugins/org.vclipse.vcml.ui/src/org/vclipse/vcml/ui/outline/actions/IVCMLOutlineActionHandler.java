@@ -13,21 +13,9 @@ package org.vclipse.vcml.ui.outline.actions;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 
-/**
- * @param <T>
- */
 public interface IVCMLOutlineActionHandler<T> {
 	
-	/**
-	 * @param object
-	 * @param monitor
-	 */
 	public void run(T object, Resource resource, IProgressMonitor monitor) throws Exception;
-	
-	/**
-	 * @param object
-	 * @return
-	 */
+
 	public boolean isEnabled(T object);
-	
 }
