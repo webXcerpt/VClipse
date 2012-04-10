@@ -34,6 +34,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.linking.ILinker;
 import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.ui.IImageHelper;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
@@ -78,11 +79,14 @@ public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListe
 	
 	private Menu menu;
 	
+	private ILinker linker;
+	
 	@Inject
-	public VCMLOutlinePage(final IPreferenceStore preferenceStore) {
+	public VCMLOutlinePage(final IPreferenceStore preferenceStore, ILinker linker) {
 		id2Action = new HashMap<String, VCMLOutlineAction>();
 		action2Path = new LinkedHashMap<VCMLOutlineAction, String>(); // LinkedHashMap to guarantee order in menu
 		this.preferenceStore = preferenceStore;
+		this.linker = linker;
 		this.preferenceStore.addPropertyChangeListener(this);
 	}
 
@@ -116,7 +120,7 @@ public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListe
 			for(IConfigurationElement element : extension.getConfigurationElements()) {
 				String name = element.getName();
 				if(ELEMENT_ACTION.equals(name)) {
-					VCMLOutlineAction action = new VCMLOutlineAction(resourceFactory, this);
+					VCMLOutlineAction action = new VCMLOutlineAction(resourceFactory, this, linker);
 					String id = element.getAttribute(ATTRIBUTE_ID);
 					if(id != null) {
 						action.setId(id);
