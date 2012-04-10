@@ -40,7 +40,7 @@ public class MaterialReader extends BAPIUtils {
 	private static final BillOfMaterialReader BILLOFMATERIAL_READER = new BillOfMaterialReader();
 
 	public Material read(String materialName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
-		if (!seenObjects.add(materialName)) {
+		if (!seenObjects.add("Material/" + materialName)) {
 			return null;
 		}
 		Material object = VCML.createMaterial();

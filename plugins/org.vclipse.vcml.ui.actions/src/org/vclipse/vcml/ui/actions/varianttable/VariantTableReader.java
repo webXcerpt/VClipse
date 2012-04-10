@@ -35,7 +35,7 @@ public class VariantTableReader extends BAPIUtils {
 	private static final CharacteristicReader CHARACTERISTIC_READER = new CharacteristicReader(); // must not be abstract
 	
 	public VariantTable read(String variantTableName, Model vcmlModel, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
-		if (!seenObjects.add(variantTableName))
+		if (!seenObjects.add("VariantTable/" + variantTableName))
 			return null;
 		VariantTable object = VCML.createVariantTable();
 		object.setName(variantTableName);

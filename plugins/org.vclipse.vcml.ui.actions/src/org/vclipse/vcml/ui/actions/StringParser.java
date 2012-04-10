@@ -248,7 +248,7 @@ public class StringParser {
 	protected VariantTable createVariantTable(String text, Model vcmlModel, Set<String> seenObjects) {
 		try {
 			VariantTable variantTable = variantTableReader.read(text, vcmlModel, new NullProgressMonitor(), seenObjects, true);
-			seenObjects.add(variantTable.getName());
+			seenObjects.add("VariantTable/" + variantTable.getName());
 			return variantTable;
 		} catch(JCoException exception) {
 			exception.printStackTrace();
@@ -259,7 +259,7 @@ public class StringParser {
 	protected VariantFunction createVariantFunction(String text, Model vcmlModel, Set<String> seenObjects) {
 		try {
 			VariantFunction variantFunction = variantFunctionReader.read(text, vcmlModel, new NullProgressMonitor(), seenObjects, true);
-			seenObjects.add(variantFunction.getName());
+			seenObjects.add("VariantFunction/" + variantFunction.getName());
 			return variantFunction;
 		} catch (JCoException e) {
 			e.printStackTrace();
@@ -271,7 +271,7 @@ public class StringParser {
 		try {
 			Characteristic characteristic = csticReader.read(text, vcmlModel, new NullProgressMonitor(), seenObjects, true);
 			if(characteristic != null) {
-				seenObjects.add(characteristic.getName());								
+				seenObjects.add("Characteristic/" + characteristic.getName());								
 			}
 			return characteristic;
 		} catch (JCoException e) {

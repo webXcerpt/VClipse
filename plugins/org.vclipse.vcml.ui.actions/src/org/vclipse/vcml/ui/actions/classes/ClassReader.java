@@ -33,7 +33,7 @@ public class ClassReader extends BAPIUtils {
 	private static final CharacteristicReader CHARACTERISTIC_READER = new CharacteristicReader(); // must not be abstract
 
 	public Class read(String classSpec, Model model, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
-		if (!seenObjects.add(classSpec)) {
+		if (!seenObjects.add("Class/" + classSpec)) {
 			return null;
 		}
 		Class object = VCML.createClass();

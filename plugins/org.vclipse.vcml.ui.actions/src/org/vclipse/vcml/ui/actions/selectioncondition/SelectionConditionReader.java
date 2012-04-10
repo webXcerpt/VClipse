@@ -28,7 +28,7 @@ import com.sap.conn.jco.JCoStructure;
 public class SelectionConditionReader extends BAPIUtils {
 
 	public SelectionCondition read(String selectionConditionName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
-		if (!seenObjects.add(selectionConditionName))
+		if (!seenObjects.add("SelectionCondition/" + selectionConditionName))
 			return null;
 		SelectionCondition object = VCML.createSelectionCondition();
 		object.setName(selectionConditionName);

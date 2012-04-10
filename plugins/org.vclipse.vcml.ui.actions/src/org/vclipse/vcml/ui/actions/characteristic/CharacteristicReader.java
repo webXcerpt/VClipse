@@ -52,7 +52,7 @@ public class CharacteristicReader extends BAPIUtils {
 
 	
 	public Characteristic read(String csticName, Model vcmlModel, final IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
-		if(!seenObjects.add(csticName)) {
+		if(!seenObjects.add("Characteristic/" + csticName)) {
 			return null;			
 		}
 		final Characteristic object = VCML.createCharacteristic();

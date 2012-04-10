@@ -40,7 +40,7 @@ public class BillOfMaterialReader extends BAPIUtils {
 	
 	public void read(Material containerMaterial, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
 		String materialNumber = containerMaterial.getName();
-		if (!seenObjects.add(materialNumber)) {
+		if (!seenObjects.add("BillOfMaterial/" + materialNumber)) {
 			return;
 		}
 		JCoFunction function = getJCoFunction("CSAP_MAT_BOM_READ", monitor);

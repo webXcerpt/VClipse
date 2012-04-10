@@ -50,7 +50,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 	
 	public void read(Material containerMaterial, String profileName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
 		String materialName = containerMaterial.getName();
-		if (!seenObjects.add(materialName)) {
+		if (!seenObjects.add("ConfigurationProfile/" + materialName)) {
 			return;
 		}
 		JCoFunction function = getJCoFunction("CARD_CON_PROFILE_READ", monitor);

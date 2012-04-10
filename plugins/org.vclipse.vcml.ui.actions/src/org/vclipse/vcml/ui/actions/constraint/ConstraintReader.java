@@ -28,7 +28,7 @@ import com.sap.conn.jco.JCoStructure;
 public class ConstraintReader extends BAPIUtils {
 
 	public Constraint read(String constraintName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
-		if (!seenObjects.add(constraintName)) {
+		if (!seenObjects.add("Constraint/" + constraintName)) {
 			return null;
 		}
 		Constraint object = VCML.createConstraint();

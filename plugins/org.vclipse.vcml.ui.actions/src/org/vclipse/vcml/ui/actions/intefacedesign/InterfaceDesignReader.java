@@ -39,7 +39,7 @@ public class InterfaceDesignReader extends BAPIUtils {
 	private static final CharacteristicReader CHARACTERISTIC_READER = new CharacteristicReader(); // must not be abstract
 	
 	public InterfaceDesign read(String interfaceDesignName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
-		if (!seenObjects.add(interfaceDesignName)) {
+		if (!seenObjects.add("InterfaceDesign/" + interfaceDesignName)) {
 			return null;
 		}
 		InterfaceDesign object = VCML.createInterfaceDesign();

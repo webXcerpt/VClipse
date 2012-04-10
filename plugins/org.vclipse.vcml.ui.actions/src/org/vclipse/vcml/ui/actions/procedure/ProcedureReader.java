@@ -28,7 +28,7 @@ import com.sap.conn.jco.JCoStructure;
 public class ProcedureReader extends BAPIUtils {
 
 	public Procedure read(String procedureName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
-		if (!seenObjects.add(procedureName))
+		if (!seenObjects.add("Procedure/" + procedureName))
 			return null;
 		Procedure object = VCML.createProcedure();
 		object.setName(procedureName);
