@@ -169,7 +169,7 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 						e.printStackTrace(err);
 					}
 					IFile file = ResourceUtil.getFile(res);
-					if(file.isAccessible()) {
+					if(file != null && file.isAccessible()) {
 						try {
 							file.refreshLocal(IResource.DEPTH_ONE, monitor);
 						} catch (CoreException e) {
