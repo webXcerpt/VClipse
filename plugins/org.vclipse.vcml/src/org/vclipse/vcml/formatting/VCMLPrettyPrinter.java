@@ -34,6 +34,7 @@ import org.vclipse.vcml.vcml.ConfigurationProfile;
 import org.vclipse.vcml.vcml.ConfigurationProfileEntry;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
+import org.vclipse.vcml.vcml.Description;
 import org.vclipse.vcml.vcml.FormattedDocumentationBlock;
 import org.vclipse.vcml.vcml.GlobalDependency;
 import org.vclipse.vcml.vcml.Import;
@@ -70,6 +71,7 @@ import org.vclipse.vcml.vcml.VariantFunctionArgument;
 import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
+import org.vclipse.vcml.vcml.VcmlFactory;
 import org.vclipse.vcml.vcml.VcmlPackage;
 import org.vclipse.vcml.vcml.util.VcmlSwitch;
 
@@ -87,6 +89,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	private DataLayouter<NoExceptions> layouter;
 	
 	private static VcmlPackage VCMLPACKAGE = VcmlPackage.eINSTANCE;
+	private static VcmlFactory VCML = VcmlFactory.eINSTANCE;
 	
 	private int lineLength = 70;
 
@@ -582,10 +585,20 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		if(hasBody(object)) {
 			layouter.print(" {");
 			{
-				doSwitch(object.getDescription());
-				if(object.getType() != null) {
-					layouter.brk().print("type ").print(object.getType());
+				Description description = object.getDescription();
+				if(description == null) {
+					description = VCML.createSimpleDescription();
+					((SimpleDescription)description).setValue("");
 				}
+				doSwitch(description);
+				
+				EList<ConfigurationProfile> configurationprofiles = object.getConfigurationprofiles();
+				String type = object.getType();
+				if(type == null) {
+					type = configurationprofiles.isEmpty() ? "ZHAW" : "ZKMT";
+				}
+				layouter.brk().print("type ").print(type);
+				
 				for(BillOfMaterial bom : object.getBillofmaterials()) {
 					doSwitch(bom);
 				}
@@ -618,7 +631,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 					}
 					layouter.brk(1, -INDENTATION).print("}").end();
 				}
-				for(ConfigurationProfile profile : object.getConfigurationprofiles()) {
+				for(ConfigurationProfile profile : configurationprofiles) {
 					layouter.brk().beginC().print("configurationprofile '");
 					printNullsafe(profile.getName());
 					layouter.print("' {");
