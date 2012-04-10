@@ -45,7 +45,7 @@
 <unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.7"/>
 <unit id="org.tigris.subversion.clientadapter.javahl.feature.feature.group" version="1.7.4"/>
 <unit id="net.java.dev.jna.feature.group" version="3.4.0.t20120117_1605"/>
-<unit id="org.tmatesoft.svnkit.feature.group" version="1.7.0.beta3_t20120306_2144"/>
+<unit id="org.tmatesoft.svnkit.feature.group" version="1.7.4.rc5_t20120405_1702"/>
 <unit id="org.tigris.subversion.clientadapter.svnkit.feature.feature.group" version="1.7.0"/>
 <repository location="http://subclipse.tigris.org/update_1.8.x"/>
 </location>
