@@ -107,7 +107,7 @@ public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListe
 		IToolBarManager toolBarManager = getSite().getActionBars().getToolBarManager();
 		
 		createHierarchySwitchAction(toolBarManager);
-		
+		 
 		// Add contributing actions
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IExtensionPoint point = registry.getExtensionPoint(EXTENSION_POINT_ID);
