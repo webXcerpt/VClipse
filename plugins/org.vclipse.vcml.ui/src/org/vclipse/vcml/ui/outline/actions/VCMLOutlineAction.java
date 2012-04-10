@@ -49,6 +49,7 @@ import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
+import org.eclipse.xtext.ui.util.ResourceUtil;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.vclipse.console.CMConsolePlugin;
 import org.vclipse.console.CMConsolePlugin.Kind;
@@ -58,24 +59,12 @@ import org.vclipse.vcml.ui.outline.VCMLOutlinePage;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.VcmlFactory;
 
-
-/**
- * 
- */
 public class VCMLOutlineAction extends Action implements ISelectionChangedListener {
 	
 	private IResourceFactory resourceFactory;
 	
+	private final Map<String, IVCMLOutlineActionHandler<?>> actionHandlers;
 	
-
-	/**
-	 * 
-	 */
-	private final Map<String,IVCMLOutlineActionHandler<?>> actionHandlers;
-	
-	/**
-	 * 
-	 */
 	private final List<EObject> selectedObjects;
 	
 	protected static final VcmlFactory VCML = VcmlFactory.eINSTANCE;
@@ -88,15 +77,7 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 	
 	private ILinker linker;
 
-	/**
-	 * @param resourceFactory 
-	 * @param vCMLOutlinePage 
-	 * @param linkingService TODO
-	 * @param linker2 
-	 * 
-	 */
-	public VCMLOutlineAction(IResourceFactory resourceFactory, VCMLOutlinePage vCMLOutlinePage, ILinker linker, 
-			ILinkingService linkingService, IGrammarAccess grammarAccess) {
+	public VCMLOutlineAction(IResourceFactory resourceFactory, VCMLOutlinePage vCMLOutlinePage, ILinker linker, ILinkingService linkingService, IGrammarAccess grammarAccess) {
 		this.resourceFactory = resourceFactory;
 		this.linker = linker;
 		actionHandlers = new HashMap<String,IVCMLOutlineActionHandler<?>>();
@@ -107,9 +88,6 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 		err = new PrintStream(CMConsolePlugin.getDefault().getConsole(Kind.Error));
 	}
 
-	/**
-	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-	 */
 	@Override
 	public void run() {
 		final IPreferenceStore preferenceStore = VCMLUiPlugin.getInstance().getPreferenceStore();
@@ -211,6 +189,14 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 						// or IOExceptions
 						e.printStackTrace(err);
 					}
+					IFile file = ResourceUtil.getFile(res);
+					if(file.isAccessible()) {
+						try {
+							file.refreshLocal(IResource.DEPTH_ONE, monitor);
+						} catch (CoreException e) {
+							e.printStackTrace();
+						}
+					}
 					return Status.OK_STATUS;
 				}
 			};
@@ -219,9 +205,6 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 		}
 	}
 
-	/**
-	 * @param cls 
-	 */
 	public synchronized void addHandler(String cls, IVCMLOutlineActionHandler<?> handler) {
 		if(handler != null) {
 			actionHandlers.put(cls, handler);
@@ -232,30 +215,18 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 		actionHandlers.remove(cls);
 	}
 
-	/**
-	 * @return
-	 */
 	private synchronized EObject[] getSelectedObjects() {
 		return selectedObjects.toArray(new EObject[selectedObjects.size()]);
 	}
-	
-	/**
-	 * @param obj
-	 */
+
 	private synchronized void addSelectedObject(EObject obj) {
 		selectedObjects.add(obj);
 	}
-	
-	/**
-	 * 
-	 */
+
 	private synchronized void removeSelectedObjects() {
 		selectedObjects.clear();
 	}
-	
-	/**
-	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-	 */
+
 	@SuppressWarnings("unchecked")
 	public void selectionChanged(final SelectionChangedEvent event) {
 		ISelection selection = event.getSelection();
