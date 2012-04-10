@@ -52,335 +52,335 @@
       
       <handler
             action="org.vclipse.vcml.ui.actions.create"
-            handler="org.vclipse.vcml.ui.actions.BillOfMaterialCreateActionHandler"
+            handler="org.vclipse.vcml.ui.actions.billofmaterial.BillOfMaterialCreateActionHandler"
             type="org.vclipse.vcml.vcml.BillOfMaterial">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.change"
-            handler="org.vclipse.vcml.ui.actions.BillOfMaterialChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.billofmaterial.BillOfMaterialChangeActionHandler"
             type="org.vclipse.vcml.vcml.BillOfMaterial">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.display"
-            handler="org.vclipse.vcml.ui.actions.BillOfMaterialDisplayActionHandler"
+            handler="org.vclipse.vcml.ui.actions.billofmaterial.BillOfMaterialDisplayActionHandler"
             type="org.vclipse.vcml.vcml.BillOfMaterial">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.extract"
-            handler="org.vclipse.vcml.ui.actions.BillOfMaterialExtractActionHandler"
+            handler="org.vclipse.vcml.ui.actions.billofmaterial.BillOfMaterialExtractActionHandler"
             type="org.vclipse.vcml.vcml.BillOfMaterial">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.delete"
-            handler="org.vclipse.vcml.ui.actions.BillOfMaterialDeleteActionHandler"
+            handler="org.vclipse.vcml.ui.actions.billofmaterial.BillOfMaterialDeleteActionHandler"
             type="org.vclipse.vcml.vcml.BillOfMaterial">
       </handler>
       
       
       <handler
             action="org.vclipse.vcml.ui.actions.create"
-            handler="org.vclipse.vcml.ui.actions.CharacteristicCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.characteristic.CharacteristicCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.Characteristic">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.change"
-            handler="org.vclipse.vcml.ui.actions.CharacteristicCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.characteristic.CharacteristicCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.Characteristic">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.display"
-            handler="org.vclipse.vcml.ui.actions.CharacteristicDisplayActionHandler"
+            handler="org.vclipse.vcml.ui.actions.characteristic.CharacteristicDisplayActionHandler"
             type="org.vclipse.vcml.vcml.Characteristic">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.extract"
-            handler="org.vclipse.vcml.ui.actions.CharacteristicDisplayActionHandler"
+            handler="org.vclipse.vcml.ui.actions.characteristic.CharacteristicDisplayActionHandler"
             type="org.vclipse.vcml.vcml.Characteristic">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.delete"
-            handler="org.vclipse.vcml.ui.actions.CharacteristicDeleteActionHandler"
+            handler="org.vclipse.vcml.ui.actions.characteristic.CharacteristicDeleteActionHandler"
             type="org.vclipse.vcml.vcml.Characteristic">
       </handler>
       
       <handler
             action="org.vclipse.vcml.ui.actions.create"
-            handler="org.vclipse.vcml.ui.actions.ClassCreateActionHandler"
+            handler="org.vclipse.vcml.ui.actions.classes.ClassCreateActionHandler"
             type="org.vclipse.vcml.vcml.Class">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.change"
-            handler="org.vclipse.vcml.ui.actions.ClassChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.classes.ClassChangeActionHandler"
             type="org.vclipse.vcml.vcml.Class">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.display"
-            handler="org.vclipse.vcml.ui.actions.ClassDisplayActionHandler"
+            handler="org.vclipse.vcml.ui.actions.classes.ClassDisplayActionHandler"
             type="org.vclipse.vcml.vcml.Class">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.extract"
-            handler="org.vclipse.vcml.ui.actions.ClassExtractActionHandler"
+            handler="org.vclipse.vcml.ui.actions.classes.ClassExtractActionHandler"
             type="org.vclipse.vcml.vcml.Class">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.delete"
-            handler="org.vclipse.vcml.ui.actions.ClassDeleteActionHandler"
+            handler="org.vclipse.vcml.ui.actions.classes.ClassDeleteActionHandler"
             type="org.vclipse.vcml.vcml.Class">
       </handler>
       
       <handler
             action="org.vclipse.vcml.ui.actions.create"
-            handler="org.vclipse.vcml.ui.actions.ConfigurationProfileCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.configurationprofile.ConfigurationProfileCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.ConfigurationProfile">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.change"
-            handler="org.vclipse.vcml.ui.actions.ConfigurationProfileCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.configurationprofile.ConfigurationProfileCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.ConfigurationProfile">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.display"
-            handler="org.vclipse.vcml.ui.actions.ConfigurationProfileDisplayActionHandler"
+            handler="org.vclipse.vcml.ui.actions.configurationprofile.ConfigurationProfileDisplayActionHandler"
             type="org.vclipse.vcml.vcml.ConfigurationProfile">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.extract"
-            handler="org.vclipse.vcml.ui.actions.ConfigurationProfileExtractActionHandler"
+            handler="org.vclipse.vcml.ui.actions.configurationprofile.ConfigurationProfileExtractActionHandler"
             type="org.vclipse.vcml.vcml.ConfigurationProfile">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.delete"
-            handler="org.vclipse.vcml.ui.actions.ConfigurationProfileDeleteActionHandler"
+            handler="org.vclipse.vcml.ui.actions.configurationprofile.ConfigurationProfileDeleteActionHandler"
             type="org.vclipse.vcml.vcml.ConfigurationProfile">
       </handler>
       
       <handler
             action="org.vclipse.vcml.ui.actions.create"
-            handler="org.vclipse.vcml.ui.actions.ConstraintCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.constraint.ConstraintCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.Constraint">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.change"
-            handler="org.vclipse.vcml.ui.actions.ConstraintCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.constraint.ConstraintCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.Constraint">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.display"
-            handler="org.vclipse.vcml.ui.actions.ConstraintDisplayActionHandler"
+            handler="org.vclipse.vcml.ui.actions.constraint.ConstraintDisplayActionHandler"
             type="org.vclipse.vcml.vcml.Constraint">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.extract"
-            handler="org.vclipse.vcml.ui.actions.ConstraintExtractActionHandler"
+            handler="org.vclipse.vcml.ui.actions.constraint.ConstraintExtractActionHandler"
             type="org.vclipse.vcml.vcml.Constraint">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.delete"
-            handler="org.vclipse.vcml.ui.actions.ConstraintDeleteActionHandler"
+            handler="org.vclipse.vcml.ui.actions.constraint.ConstraintDeleteActionHandler"
             type="org.vclipse.vcml.vcml.Constraint">
       </handler>
       
       <handler
             action="org.vclipse.vcml.ui.actions.create"
-            handler="org.vclipse.vcml.ui.actions.DependencyNetCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.dependencynet.DependencyNetCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.DependencyNet">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.change"
-            handler="org.vclipse.vcml.ui.actions.DependencyNetCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.dependencynet.DependencyNetCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.DependencyNet">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.display"
-            handler="org.vclipse.vcml.ui.actions.DependencyNetDisplayActionHandler"
+            handler="org.vclipse.vcml.ui.actions.dependencynet.DependencyNetDisplayActionHandler"
             type="org.vclipse.vcml.vcml.DependencyNet">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.extract"
-            handler="org.vclipse.vcml.ui.actions.DependencyNetExtractActionHandler"
+            handler="org.vclipse.vcml.ui.actions.dependencynet.DependencyNetExtractActionHandler"
             type="org.vclipse.vcml.vcml.DependencyNet">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.delete"
-            handler="org.vclipse.vcml.ui.actions.DependencyNetDeleteActionHandler"
+            handler="org.vclipse.vcml.ui.actions.dependencynet.DependencyNetDeleteActionHandler"
             type="org.vclipse.vcml.vcml.DependencyNet">
       </handler>
       
       <handler
             action="org.vclipse.vcml.ui.actions.create"
-            handler="org.vclipse.vcml.ui.actions.InterfaceDesignCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.intefacedesign.InterfaceDesignCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.InterfaceDesign">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.change"
-            handler="org.vclipse.vcml.ui.actions.InterfaceDesignCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.intefacedesign.InterfaceDesignCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.InterfaceDesign">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.display"
-            handler="org.vclipse.vcml.ui.actions.InterfaceDesignDisplayActionHandler"
+            handler="org.vclipse.vcml.ui.actions.intefacedesign.InterfaceDesignDisplayActionHandler"
             type="org.vclipse.vcml.vcml.InterfaceDesign">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.extract"
-            handler="org.vclipse.vcml.ui.actions.InterfaceDesignExtractActionHandler"
+            handler="org.vclipse.vcml.ui.actions.intefacedesign.InterfaceDesignExtractActionHandler"
             type="org.vclipse.vcml.vcml.InterfaceDesign">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.delete"
-            handler="org.vclipse.vcml.ui.actions.InterfaceDesignDeleteActionHandler"
+            handler="org.vclipse.vcml.ui.actions.intefacedesign.InterfaceDesignDeleteActionHandler"
             type="org.vclipse.vcml.vcml.InterfaceDesign">
       </handler>
        
       <handler
             action="org.vclipse.vcml.ui.actions.create"
-            handler="org.vclipse.vcml.ui.actions.MaterialCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.material.MaterialCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.Material">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.change"
-            handler="org.vclipse.vcml.ui.actions.MaterialCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.material.MaterialCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.Material">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.display"
-            handler="org.vclipse.vcml.ui.actions.MaterialDisplayActionHandler"
+            handler="org.vclipse.vcml.ui.actions.material.MaterialDisplayActionHandler"
             type="org.vclipse.vcml.vcml.Material">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.extract"
-            handler="org.vclipse.vcml.ui.actions.MaterialExtractActionHandler"
+            handler="org.vclipse.vcml.ui.actions.material.MaterialExtractActionHandler"
             type="org.vclipse.vcml.vcml.Material">
       </handler>
       
       <handler
             action="org.vclipse.vcml.ui.actions.create"
-            handler="org.vclipse.vcml.ui.actions.PreconditionCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.precondition.PreconditionCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.Precondition">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.change"
-            handler="org.vclipse.vcml.ui.actions.PreconditionCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.precondition.PreconditionCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.Precondition">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.display"
-            handler="org.vclipse.vcml.ui.actions.PreconditionDisplayActionHandler"
+            handler="org.vclipse.vcml.ui.actions.precondition.PreconditionDisplayActionHandler"
             type="org.vclipse.vcml.vcml.Precondition">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.extract"
-            handler="org.vclipse.vcml.ui.actions.PreconditionExtractActionHandler"
+            handler="org.vclipse.vcml.ui.actions.precondition.PreconditionExtractActionHandler"
             type="org.vclipse.vcml.vcml.Precondition">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.delete"
-            handler="org.vclipse.vcml.ui.actions.PreconditionDeleteActionHandler"
+            handler="org.vclipse.vcml.ui.actions.precondition.PreconditionDeleteActionHandler"
             type="org.vclipse.vcml.vcml.Precondition">
       </handler>
  
       <handler
             action="org.vclipse.vcml.ui.actions.create"
-            handler="org.vclipse.vcml.ui.actions.ProcedureCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.procedure.ProcedureCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.Procedure">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.change"
-            handler="org.vclipse.vcml.ui.actions.ProcedureCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.procedure.ProcedureCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.Procedure">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.display"
-            handler="org.vclipse.vcml.ui.actions.ProcedureDisplayActionHandler"
+            handler="org.vclipse.vcml.ui.actions.procedure.ProcedureDisplayActionHandler"
             type="org.vclipse.vcml.vcml.Procedure">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.extract"
-            handler="org.vclipse.vcml.ui.actions.ProcedureExtractActionHandler"
+            handler="org.vclipse.vcml.ui.actions.procedure.ProcedureExtractActionHandler"
             type="org.vclipse.vcml.vcml.Procedure">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.delete"
-            handler="org.vclipse.vcml.ui.actions.ProcedureDeleteActionHandler"
+            handler="org.vclipse.vcml.ui.actions.procedure.ProcedureDeleteActionHandler"
             type="org.vclipse.vcml.vcml.Procedure">
       </handler>
       
       <handler
             action="org.vclipse.vcml.ui.actions.create"
-            handler="org.vclipse.vcml.ui.actions.SelectionConditionCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.selectioncondition.SelectionConditionCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.SelectionCondition">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.change"
-            handler="org.vclipse.vcml.ui.actions.SelectionConditionCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.selectioncondition.SelectionConditionCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.SelectionCondition">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.display"
-            handler="org.vclipse.vcml.ui.actions.SelectionConditionDisplayActionHandler"
+            handler="org.vclipse.vcml.ui.actions.selectioncondition.SelectionConditionDisplayActionHandler"
             type="org.vclipse.vcml.vcml.SelectionCondition">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.extract"
-            handler="org.vclipse.vcml.ui.actions.SelectionConditionExtractActionHandler"
+            handler="org.vclipse.vcml.ui.actions.selectioncondition.SelectionConditionExtractActionHandler"
             type="org.vclipse.vcml.vcml.SelectionCondition">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.delete"
-            handler="org.vclipse.vcml.ui.actions.SelectionConditionDeleteActionHandler"
+            handler="org.vclipse.vcml.ui.actions.selectioncondition.SelectionConditionDeleteActionHandler"
             type="org.vclipse.vcml.vcml.SelectionCondition">
       </handler>
 
       <handler
             action="org.vclipse.vcml.ui.actions.create"
-            handler="org.vclipse.vcml.ui.actions.VariantFunctionCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.variantfunction.VariantFunctionCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.VariantFunction">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.change"
-            handler="org.vclipse.vcml.ui.actions.VariantFunctionCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.variantfunction.VariantFunctionCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.VariantFunction">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.display"
-            handler="org.vclipse.vcml.ui.actions.VariantFunctionDisplayActionHandler"
+            handler="org.vclipse.vcml.ui.actions.variantfunction.VariantFunctionDisplayActionHandler"
             type="org.vclipse.vcml.vcml.VariantFunction">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.extract"
-            handler="org.vclipse.vcml.ui.actions.VariantFunctionExtractActionHandler"
+            handler="org.vclipse.vcml.ui.actions.variantfunction.VariantFunctionExtractActionHandler"
             type="org.vclipse.vcml.vcml.VariantFunction">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.delete"
-            handler="org.vclipse.vcml.ui.actions.VariantFunctionDeleteActionHandler"
+            handler="org.vclipse.vcml.ui.actions.variantfunction.VariantFunctionDeleteActionHandler"
             type="org.vclipse.vcml.vcml.VariantFunction">
       </handler>
 
       <handler
             action="org.vclipse.vcml.ui.actions.create"
-            handler="org.vclipse.vcml.ui.actions.VariantTableCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.varianttable.VariantTableCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.VariantTable">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.change"
-            handler="org.vclipse.vcml.ui.actions.VariantTableCreateChangeActionHandler"
+            handler="org.vclipse.vcml.ui.actions.varianttable.VariantTableCreateChangeActionHandler"
             type="org.vclipse.vcml.vcml.VariantTable">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.display"
-            handler="org.vclipse.vcml.ui.actions.VariantTableDisplayActionHandler"
+            handler="org.vclipse.vcml.ui.actions.varianttable.VariantTableDisplayActionHandler"
             type="org.vclipse.vcml.vcml.VariantTable">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.extract"
-            handler="org.vclipse.vcml.ui.actions.VariantTableExtractActionHandler"
+            handler="org.vclipse.vcml.ui.actions.varianttable.VariantTableExtractActionHandler"
             type="org.vclipse.vcml.vcml.VariantTable">
       </handler>
       <handler
             action="org.vclipse.vcml.ui.actions.delete"
-            handler="org.vclipse.vcml.ui.actions.VariantTableDeleteActionHandler"
+            handler="org.vclipse.vcml.ui.actions.varianttable.VariantTableDeleteActionHandler"
             type="org.vclipse.vcml.vcml.VariantTable">
       </handler>
 
