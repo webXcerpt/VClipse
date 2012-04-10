@@ -33,6 +33,8 @@ import org.vclipse.vcml.vcml.Classification;
 import org.vclipse.vcml.vcml.ConfigurationProfile;
 import org.vclipse.vcml.vcml.ConfigurationProfileEntry;
 import org.vclipse.vcml.vcml.Constraint;
+import org.vclipse.vcml.vcml.DateCharacteristicValue;
+import org.vclipse.vcml.vcml.DateType;
 import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Description;
 import org.vclipse.vcml.vcml.FormattedDocumentationBlock;
@@ -238,10 +240,11 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 					} else {
 						doSwitch(entry);
 					}
-					CharacteristicOrValueDependencies dependencies = value.getDependencies();
-					if (dependencies!=null) {
-						layouter.brk();
-						doSwitch(dependencies);
+					if(hasBody(value)) {
+						layouter.print(" {");
+						doSwitch(value.getDocumentation());
+						doSwitch(value.getDependencies());
+						layouter.brk(1, -INDENTATION).print("}");
 					}
 				}
 				layouter.brk(1, -INDENTATION).print("}").end();
@@ -297,6 +300,42 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.brk(1, -INDENTATION).print("}").end();
 	}
 	
+	@Override
+	public DataLayouter<NoExceptions> caseDateType(DateType object) {
+		layouter.brk().beginC().print("date {");
+		{
+			StringBuffer buffer = new StringBuffer();
+			buffer.append("[ ");
+			if(object.isIntervalValuesAllowed()) {
+				buffer.append("intervalValuesAllowed ");
+			}
+			buffer.append("]");
+			if(buffer.length() > 2) {
+				layouter.brk().print(buffer.toString().trim());
+			}
+			EList<DateCharacteristicValue> values = object.getValues();
+			if(!values.isEmpty()) {
+				layouter.brk().beginC().print("values {").brk();
+				for(DateCharacteristicValue value : object.getValues()) {
+					layouter.brk();
+					layouter.beginC().print(value.getFrom());
+					if (value.getTo()!=null) {
+						layouter.brk().print("-").brk().print(value.getTo());
+					}
+					layouter.end();
+					if(hasBody(value)) {
+						layouter.print(" {");
+						doSwitch(value.getDocumentation());
+						doSwitch(value.getDependencies());
+						layouter.brk(1, -INDENTATION).print("}");
+					}
+				}
+				layouter.brk(1, -INDENTATION).print("}").end();
+			}
+		}		
+		return layouter.brk(1, -INDENTATION).print("}").end();
+	}
+
 	/**
 	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseLocalPrecondition(org.vclipse.vcml.vcml.LocalPrecondition)
 	 */
@@ -896,6 +935,16 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	private boolean hasBody(CharacteristicValue object) {
 		return object.getDescription() != null 
 		|| object.getDocumentation() != null
+		|| object.getDependencies() != null;
+	}
+
+	private boolean hasBody(NumericCharacteristicValue object) {
+		return object.getDocumentation() != null
+		|| object.getDependencies() != null;
+	}
+
+	private boolean hasBody(DateCharacteristicValue object) {
+		return object.getDocumentation() != null
 		|| object.getDependencies() != null;
 	}
 

@@ -86,6 +86,7 @@ Characteristic :
 CharacteristicType :
 		NumericType
 	|	SymbolicType
+	|	DateType
 	;
 
 NumericType : 
@@ -123,8 +124,34 @@ CharacteristicValue :
 
 NumericCharacteristicValue :
 	entry=NumberListEntryForValues
-    dependencies=CharacteristicOrValueDependencies?
+	('{'
+	  (	documentation=Documentation?
+	  &	dependencies=CharacteristicOrValueDependencies?
+	  )
+	'}')?
 	;
+
+DateType : 
+	{DateType}
+	'date' '{'
+	(	('[' (	intervalValuesAllowed?='intervalValuesAllowed'?
+	     	 )
+	 	']')?
+	&	('values' '{' values+=DateCharacteristicValue* '}')?
+	)
+	'}'
+	;
+	
+DateCharacteristicValue :
+	from=DATE ('-' to=DATE)?
+	('{'
+	  (	documentation=Documentation?
+	  &	dependencies=CharacteristicOrValueDependencies?
+	  )
+	'}')?
+	;
+
+DATE : INT '.' INT '.' INT;
 
 CharacteristicOrValueDependencies :
 	{CharacteristicOrValueDependencies}

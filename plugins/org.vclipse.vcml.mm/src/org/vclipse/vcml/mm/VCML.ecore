@@ -73,6 +73,12 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="values" upperBound="-1"
         eType="#//CharacteristicValue" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DateType" eSuperTypes="#//CharacteristicType">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="intervalValuesAllowed"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="values" upperBound="-1"
+        eType="#//DateCharacteristicValue" containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CharacteristicValue">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="description" eType="#//Description"
@@ -84,6 +90,16 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NumericCharacteristicValue">
     <eStructuralFeatures xsi:type="ecore:EReference" name="entry" eType="#//NumberListEntry"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="documentation" eType="#//Documentation"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dependencies" eType="#//CharacteristicOrValueDependencies"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DateCharacteristicValue">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="from" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="to" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="documentation" eType="#//Documentation"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="dependencies" eType="#//CharacteristicOrValueDependencies"
         containment="true"/>

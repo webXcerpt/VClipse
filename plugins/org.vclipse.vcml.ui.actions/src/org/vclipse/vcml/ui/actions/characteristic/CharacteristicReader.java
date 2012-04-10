@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.characteristic;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -21,6 +23,8 @@ import org.vclipse.vcml.utils.DescriptionHandler;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicValue;
+import org.vclipse.vcml.vcml.DateCharacteristicValue;
+import org.vclipse.vcml.vcml.DateType;
 import org.vclipse.vcml.vcml.Description;
 import org.vclipse.vcml.vcml.FormattedDocumentationBlock;
 import org.vclipse.vcml.vcml.Language;
@@ -43,6 +47,10 @@ import com.sap.conn.jco.JCoTable;
 
 public class CharacteristicReader extends BAPIUtils {
 
+	private static final SimpleDateFormat DATEFORMAT_SAP = new SimpleDateFormat("yyyyMMdd");
+	private static final SimpleDateFormat DATEFORMAT_VCML = new SimpleDateFormat("dd.MM.yyyy");
+
+	
 	public Characteristic read(String csticName, Model vcmlModel, final IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
 		if(!seenObjects.add(csticName)) {
 			return null;			
@@ -74,6 +82,7 @@ public class CharacteristicReader extends BAPIUtils {
 						NumericCharacteristicValue value = VCML.createNumericCharacteristicValue();
 						String from = charactValuesNum.getString("VALUE_FROM");
 						String to = charactValuesNum.getString("VALUE_TO");
+						// FIXME: the following decision is not correct. There is a flag. 
 						if (from.equals(to)) {
 							NumericLiteral literal = VCML.createNumericLiteral();
 							literal.setValue(from);
@@ -141,6 +150,25 @@ public class CharacteristicReader extends BAPIUtils {
 					}
 				}
 
+			} else if ("DATE".equals(dataType)) {
+				DateType type = VCML.createDateType();
+				object.setType(type);
+				type.setIntervalValuesAllowed("X".equals(charactDetail.getString("INTERVAL_ALLOWED")));
+				EList<DateCharacteristicValue> values = type.getValues();
+				JCoTable charactValuesNum = tpl.getTable("CHARACTVALUESNUM");
+				if (charactValuesNum!=null) {
+					for (int i = 0; i < charactValuesNum.getNumRows(); i++) {
+						charactValuesNum.setRow(i);
+						DateCharacteristicValue value = VCML.createDateCharacteristicValue();
+						try {
+							// TODO handle intervals
+							value.setFrom(DATEFORMAT_VCML.format(DATEFORMAT_SAP.parse(new Long(charactValuesNum.getLong("VALUE_FROM")).toString())));
+						} catch (ParseException e) {
+							value.setFrom("00.00.0000");
+						}
+						values.add(value);
+					}
+				}
 			} else {
 				err.println("error: illegal/unknown data type " + dataType);
 			}

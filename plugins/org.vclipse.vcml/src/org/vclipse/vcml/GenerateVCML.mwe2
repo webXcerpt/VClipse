@@ -110,6 +110,7 @@ Workflow {
 					backtrack = true
 					memoize = true
 					ignoreCase = true
+					classSplitting = true
 				}
 			}
 
