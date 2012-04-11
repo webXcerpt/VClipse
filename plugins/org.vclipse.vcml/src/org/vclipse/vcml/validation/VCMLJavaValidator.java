@@ -124,56 +124,8 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 		if(dependencyNet.getConstraints().size() > MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS) {
 			warning("Dependency net " + dependencyNet.getName() + " too large, should have for efficiency at most " + MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS + " constraints", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
-		
-		if (true) return;
-		EList<Constraint> constraints = dependencyNet.getConstraints();
-		Set<String> constraintNames = Sets.newHashSet();
-		for(int index=0; index<dependencyNet.getConstraints().size(); index++) {
-			String constraintName = constraints.get(index).getName();
-			if(constraintNames.contains(constraintName)) {
-				error("Constraint with name " + constraintName + " already used in the depedency net " + 
-						dependencyNetName, dependencyNet, VcmlPackage.Literals.DEPENDENCY_NET__CONSTRAINTS, 
-							index, "MultipleUsage_DependencyNet_Constraint", new String[]{dependencyNetName, constraintName, "" + index});
-			} else {
-				constraintNames.add(constraintName);
-			}
-		}
 	}
 	
-	@Check
-	public void checkInterfaceDesign(InterfaceDesign interfaceDesign) {
-		if (true) return;
-		String interfaceDesignName = interfaceDesign.getName();
-		EList<CharacteristicGroup> csticGroups = interfaceDesign.getCharacteristicGroups();
-		Set<String> csticGroupNames = Sets.newHashSet();
-		for(int csticGroupIndex=0; csticGroupIndex<csticGroups.size(); csticGroupIndex++) {
-			CharacteristicGroup csticGroup = csticGroups.get(csticGroupIndex);
-			String csticGroupName = csticGroup.getName();
-			if(csticGroupNames.contains(csticGroupName)) {
-				error("Characteristic group with name " + csticGroupName + "already used in the interface design " +
-						interfaceDesignName, interfaceDesign, VcmlPackage.Literals.INTERFACE_DESIGN__CHARACTERISTIC_GROUPS,
-							csticGroupIndex, "MultipleUsage_InterfaceDesign_CharacteristicGroup",
-								new String[]{interfaceDesignName, csticGroupName, "" + csticGroupIndex});
-			} else {
-				csticGroupNames.add(csticGroupName);
-			}
-			
-			Set<String> csticNames = Sets.newHashSet();
-			EList<Characteristic> characteristics = csticGroup.getCharacteristics();
-			for(int csticIndex=0; csticIndex<characteristics.size(); csticIndex++) {
-				String csticName = characteristics.get(csticIndex).getName();
-				if(csticNames.contains(csticName)) {
-					error("Characteristic with name " + csticName + " already used in the characteristic group " + 
-						csticGroupName, csticGroup, VcmlPackage.Literals.CHARACTERISTIC_GROUP__CHARACTERISTICS, 
-							csticIndex, "MultipleUsage_CharacteristicGroup_Characteristic", 
-								new String[]{csticGroupName, csticName, "" + csticIndex});
-				} else {
-					csticNames.add(csticName);
-				}
-			}
-		}
-	}
-
 	@Check(CheckType.FAST)
 	public void checkConstraint(final Constraint object) {
 		if(object.getName().length() > MAXLENGTH_NAME) {
@@ -238,21 +190,6 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 		}
 		if (object.getCharacteristics().size() > MAXLENGTH_CLASS_CHARACTERISTICS) {
 			error("Number of characteristics of a class is limited to " + MAXLENGTH_CLASS_CHARACTERISTICS, VcmlPackage.Literals.VC_OBJECT__NAME);
-		}
-		
-		if (true) return;
-		Set<String> csticNames = Sets.newHashSet();
-		EList<Characteristic> characteristics = object.getCharacteristics();
-		for(int csticIndex=0; csticIndex<characteristics.size(); csticIndex++) {
-			String csticName = characteristics.get(csticIndex).getName();
-			if(csticNames.contains(csticName)) {
-				error("Characteristic with name " + csticName + " already used in the class " + 
-					className, object, VcmlPackage.Literals.CLASS__CHARACTERISTICS, 
-						csticIndex, "MultipleUsage_Class_Characteristic", 
-							new String[]{className, csticName, "" + csticIndex});
-			} else {
-				csticNames.add(csticName);
-			}
 		}
 	}
 
@@ -422,4 +359,75 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 		}
 	}
 	
+	/*****
+	 *****	Multiple usage checks 
+	 *****/
+	
+//	@Check
+//	public void checkMultipleUsage_DependencyNet(DependencyNet dependencyNet) {
+//		String dependencyNetName = dependencyNet.getName();
+//		EList<Constraint> constraints = dependencyNet.getConstraints();
+//		Set<String> constraintNames = Sets.newHashSet();
+//		for(int index=0; index<dependencyNet.getConstraints().size(); index++) {
+//			String constraintName = constraints.get(index).getName();
+//			if(constraintNames.contains(constraintName)) {
+//				error("Constraint with name " + constraintName + " already used in the depedency net " + 
+//						dependencyNetName, dependencyNet, VcmlPackage.Literals.DEPENDENCY_NET__CONSTRAINTS, 
+//							index, "MultipleUsage_DependencyNet_Constraint", new String[]{dependencyNetName, constraintName, "" + index});
+//			} else {
+//				constraintNames.add(constraintName);
+//			}
+//		}
+//	}
+//	
+//	@Check
+//	public void checkMultipleUsage_InterfaceDesign(InterfaceDesign interfaceDesign) {
+//		String interfaceDesignName = interfaceDesign.getName();
+//		EList<CharacteristicGroup> csticGroups = interfaceDesign.getCharacteristicGroups();
+//		Set<String> csticGroupNames = Sets.newHashSet();
+//		for(int csticGroupIndex=0; csticGroupIndex<csticGroups.size(); csticGroupIndex++) {
+//			CharacteristicGroup csticGroup = csticGroups.get(csticGroupIndex);
+//			String csticGroupName = csticGroup.getName();
+//			if(csticGroupNames.contains(csticGroupName)) {
+//				error("Characteristic group with name " + csticGroupName + "already used in the interface design " +
+//						interfaceDesignName, interfaceDesign, VcmlPackage.Literals.INTERFACE_DESIGN__CHARACTERISTIC_GROUPS,
+//							csticGroupIndex, "MultipleUsage_InterfaceDesign_CharacteristicGroup",
+//								new String[]{interfaceDesignName, csticGroupName, "" + csticGroupIndex});
+//			} else {
+//				csticGroupNames.add(csticGroupName);
+//			}
+//			
+//			Set<String> csticNames = Sets.newHashSet();
+//			EList<Characteristic> characteristics = csticGroup.getCharacteristics();
+//			for(int csticIndex=0; csticIndex<characteristics.size(); csticIndex++) {
+//				String csticName = characteristics.get(csticIndex).getName();
+//				if(csticNames.contains(csticName)) {
+//					error("Characteristic with name " + csticName + " already used in the characteristic group " + 
+//						csticGroupName, csticGroup, VcmlPackage.Literals.CHARACTERISTIC_GROUP__CHARACTERISTICS, 
+//							csticIndex, "MultipleUsage_CharacteristicGroup_Characteristic", 
+//								new String[]{csticGroupName, csticName, "" + csticIndex});
+//				} else {
+//					csticNames.add(csticName);
+//				}
+//			}
+//		}
+//	}
+//	
+//	@Check
+//	public void checkMultipleUsage_Class(Class object) {
+//		String className = object.getName();
+//		Set<String> csticNames = Sets.newHashSet();
+//		EList<Characteristic> characteristics = object.getCharacteristics();
+//		for(int csticIndex=0; csticIndex<characteristics.size(); csticIndex++) {
+//			String csticName = characteristics.get(csticIndex).getName();
+//			if(csticNames.contains(csticName)) {
+//				error("Characteristic with name " + csticName + " already used in the class " + 
+//					className, object, VcmlPackage.Literals.CLASS__CHARACTERISTICS, 
+//						csticIndex, "MultipleUsage_Class_Characteristic", 
+//							new String[]{className, csticName, "" + csticIndex});
+//			} else {
+//				csticNames.add(csticName);
+//			}
+//		}
+//	}
 }
