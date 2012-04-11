@@ -419,13 +419,9 @@ public class BAPIUtils {
 	}
 	
 	protected ProcedureSource readProcedureSource(JCoTable table, Procedure procedure, Model vcmlModel) {
-		StringParser stringParser = new StringParser();
 		StringBuffer source = readSourceLines(table);
 		ProcedureSourceElements elements = ((org.vclipse.vcml.services.VCMLGrammarAccess)grammarAccess).getProcedureSourceAccess();
     	IParseResult result = parser.parse(elements.getRule(), new StringReader(source.toString()));
-    	if(result.getRootASTElement() instanceof ProcedureSource) {
-    		stringParser.parse(procedure, source.toString(), vcmlModel);
-    	}
     	Iterator<INode> iterator = result.getSyntaxErrors().iterator();
     	if(iterator.hasNext()) {
     		printParseErrors(iterator, source);
@@ -437,13 +433,9 @@ public class BAPIUtils {
 	}
 	
 	protected ConditionSource readConditionSource(JCoTable table, GlobalDependency condition, Model vcmlModel) {
-		StringParser stringParser = new StringParser();
 		StringBuffer source = readSourceLines(table);
 		ConditionSourceElements elements = ((org.vclipse.vcml.services.VCMLGrammarAccess)grammarAccess).getConditionSourceAccess();
     	IParseResult result = parser.parse(elements.getRule(), new StringReader(source.toString()));
-    	if(result.getRootASTElement() instanceof ConditionSource) {
-    		stringParser.parse(condition, source.toString(), vcmlModel);
-    	}
     	Iterator<INode> iterator = result.getSyntaxErrors().iterator();
     	if(iterator.hasNext()) {
     		printParseErrors(iterator, source);
@@ -454,13 +446,9 @@ public class BAPIUtils {
 	}
 	
 	protected ConstraintSource readConstraintSource(JCoTable table, Constraint constraint, Model vcmlModel) {
-		StringParser stringParser = new StringParser();
 		StringBuffer source = readSourceLines(table);
 		ConstraintSourceElements elements = ((org.vclipse.vcml.services.VCMLGrammarAccess)grammarAccess).getConstraintSourceAccess();
     	IParseResult result = parser.parse(elements.getRule(), new StringReader(source.toString()));
-    	if(result.getRootASTElement() instanceof ConstraintSource) {
-    		stringParser.parse(constraint, source.toString(), vcmlModel);
-    	}
     	Iterator<INode> it = result.getSyntaxErrors().iterator();
     	if(it.hasNext()) {
     		printParseErrors(it, source);
