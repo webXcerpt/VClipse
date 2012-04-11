@@ -45,19 +45,15 @@ import org.vclipse.vcml.utils.DocumentationHandler;
 import org.vclipse.vcml.utils.ISapConstants;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.ConditionSource;
-import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.Description;
 import org.vclipse.vcml.vcml.Documentation;
 import org.vclipse.vcml.vcml.FormattedDocumentationBlock;
-import org.vclipse.vcml.vcml.GlobalDependency;
 import org.vclipse.vcml.vcml.Language;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.MultiLanguageDescription;
 import org.vclipse.vcml.vcml.MultiLanguageDescriptions;
 import org.vclipse.vcml.vcml.MultipleLanguageDocumentation;
 import org.vclipse.vcml.vcml.MultipleLanguageDocumentation_LanguageBlock;
-import org.vclipse.vcml.vcml.Procedure;
 import org.vclipse.vcml.vcml.ProcedureSource;
 import org.vclipse.vcml.vcml.SimpleDescription;
 import org.vclipse.vcml.vcml.VcmlFactory;
@@ -418,7 +414,7 @@ public class BAPIUtils {
 		}
 	}
 	
-	protected ProcedureSource readProcedureSource(JCoTable table, Procedure procedure, Model vcmlModel) {
+	protected ProcedureSource readProcedureSource(JCoTable table) {
 		StringBuffer source = readSourceLines(table);
 		ProcedureSourceElements elements = ((org.vclipse.vcml.services.VCMLGrammarAccess)grammarAccess).getProcedureSourceAccess();
     	IParseResult result = parser.parse(elements.getRule(), new StringReader(source.toString()));
@@ -432,7 +428,7 @@ public class BAPIUtils {
     	}
 	}
 	
-	protected ConditionSource readConditionSource(JCoTable table, GlobalDependency condition, Model vcmlModel) {
+	protected ConditionSource readConditionSource(JCoTable table) {
 		StringBuffer source = readSourceLines(table);
 		ConditionSourceElements elements = ((org.vclipse.vcml.services.VCMLGrammarAccess)grammarAccess).getConditionSourceAccess();
     	IParseResult result = parser.parse(elements.getRule(), new StringReader(source.toString()));
@@ -445,7 +441,7 @@ public class BAPIUtils {
     	}
 	}
 	
-	protected ConstraintSource readConstraintSource(JCoTable table, Constraint constraint, Model vcmlModel) {
+	protected ConstraintSource readConstraintSource(JCoTable table) {
 		StringBuffer source = readSourceLines(table);
 		ConstraintSourceElements elements = ((org.vclipse.vcml.services.VCMLGrammarAccess)grammarAccess).getConstraintSourceAccess();
     	IParseResult result = parser.parse(elements.getRule(), new StringReader(source.toString()));

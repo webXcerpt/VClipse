@@ -53,7 +53,7 @@ public class ProcedureReader extends BAPIUtils {
 			JCoParameterList tpl = function.getTableParameterList();
 			object.setDescription(readDescription(tpl.getTable("DESCRIPTION"), "LANGUAGE_ISO", "LANGUAGE", "DESCRIPT"));
 			object.setDocumentation(readMultiLanguageDocumentations(tpl.getTable("DOCUMENTATION")));
-			object.setSource(readProcedureSource(tpl.getTable("SOURCE"), object,vcmlModel));
+			object.setSource(readProcedureSource(tpl.getTable("SOURCE")));
 		} catch (AbapException e) {
 			handleAbapException(e);
 		}
