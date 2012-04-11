@@ -10,16 +10,9 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.outline;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
@@ -33,14 +26,11 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xtext.linking.ILinker;
-import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.ui.IImageHelper;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
+import org.vclipse.base.ui.util.IExtendedImageHelper;
 import org.vclipse.vcml.ui.IUiConstants;
-import org.vclipse.vcml.ui.VCMLUiPlugin;
-import org.vclipse.vcml.ui.outline.actions.IVCMLOutlineActionHandler;
+import org.vclipse.vcml.ui.extension.IExtensionPointUtilities;
 import org.vclipse.vcml.ui.outline.actions.VCMLOutlineAction;
 import org.vclipse.vcml.utils.ISapConstants;
 
@@ -48,45 +38,21 @@ import com.google.inject.Inject;
 
 public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListener {
 
-	@Inject
-	private IResourceFactory resourceFactory;
-	
-	@Inject
-	private IImageHelper imageHelper;
+	private static final String POPUP_MENU_ID = VCMLOutlinePage.class.getSimpleName() + ".popup";
+
+	private final IExtendedImageHelper imageHelper;
 	
 	private final IPreferenceStore preferenceStore;
 	
-	private static final String EXTENSION_POINT_ID = VCMLUiPlugin.ID + ".outlinePageActions";
-	private static final String POPUP_MENU_ID = VCMLUiPlugin.ID + ".outlinePopupMenu";
-	private static final String ELEMENT_ACTION = "action";
-	private static final String ELEMENT_HANDLER = "handler";
-	
-	private static final String ATTRIBUTE_ID = "id";
-	private static final String ATTRIBUTE_LABEL = "label";
-	private static final String ATTRIBUTE_TOOTLTIP = "tooltip";
-	private static final String ATTRIBUTE_ICON = "icon";
-	private static final String ATTRIBUTE_DISABLED_ICON = "disabledIcon";
-	private static final String ATTRIBUTE_STATE = "state";
-	private static final String ATTRIBUTE_TOOLBAR_PATH = "toolbarPath";
-	private static final String ATTRIBUTE_MENUBAR_PATH = "menubarPath";
-	
-	private static final String ATTRIBUTE_TYPE = "type";
-	private static final String ATTRIBUTE_HANDLER = "handler";
-	private static final String ATTRIBUTE_ACTION = "action";
-	
-	private final Map<String, VCMLOutlineAction> id2Action;
-	private final Map<VCMLOutlineAction, String> action2Path;
-	
+	private final IExtensionPointUtilities extensionPointUtilities;
+
 	private Menu menu;
 	
-	private ILinker linker;
-	
 	@Inject
-	public VCMLOutlinePage(final IPreferenceStore preferenceStore, ILinker linker) {
-		id2Action = new HashMap<String, VCMLOutlineAction>();
-		action2Path = new LinkedHashMap<VCMLOutlineAction, String>(); // LinkedHashMap to guarantee order in menu
+	public VCMLOutlinePage(IImageHelper imageHelper, IPreferenceStore preferenceStore, IExtensionPointUtilities extensionPointUtilities) {
 		this.preferenceStore = preferenceStore;
-		this.linker = linker;
+		this.imageHelper = (IExtendedImageHelper)imageHelper;
+		this.extensionPointUtilities = extensionPointUtilities;
 		this.preferenceStore.addPropertyChangeListener(this);
 	}
 
@@ -97,9 +63,8 @@ public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListe
 	}
 	
 	public void propertyChange(final PropertyChangeEvent event) {
-		final String property = event.getProperty();
-		if(IUiConstants.SAP_HIERARCHY_ACTIVATED.equals(property) ||
-				ISapConstants.DEFAULT_LANGUAGE.equals(property)) {
+		String property = event.getProperty();
+		if(IUiConstants.SAP_HIERARCHY_ACTIVATED.equals(property) || ISapConstants.DEFAULT_LANGUAGE.equals(property)) {
 			getRefreshJob().schedule();
 		}
 	}
@@ -111,93 +76,30 @@ public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListe
 		IToolBarManager toolBarManager = getSite().getActionBars().getToolBarManager();
 		
 		createHierarchySwitchAction(toolBarManager);
-		 
+		createPopupMenuAction(treeViewer, toolBarManager);
+		createMenu(treeViewer);
+	}
+
+	private void createPopupMenuAction(TreeViewer treeViewer, IToolBarManager toolBarManager) {
+		
+		// selection listener for all actions
+		// treeViewer.addSelectionChangedListener(action);
+		
+		// add actions to the toolbar
+		// toolBarManager.add(action);
+		
 		// Add contributing actions
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint point = registry.getExtensionPoint(EXTENSION_POINT_ID);
-		for(IExtension extension : point.getExtensions()) {
-			String contributingPluginID = extension.getNamespaceIdentifier();
-			for(IConfigurationElement element : extension.getConfigurationElements()) {
-				String name = element.getName();
-				if(ELEMENT_ACTION.equals(name)) {
-					VCMLOutlineAction action = new VCMLOutlineAction(resourceFactory, this, linker);
-					String id = element.getAttribute(ATTRIBUTE_ID);
-					if(id != null) {
-						action.setId(id);
-						id2Action.put(id, action);
-					}
-					String label = element.getAttribute(ATTRIBUTE_LABEL);
-					if(label != null) {
-						action.setText(label);
-					}
-					String tooltip = element.getAttribute(ATTRIBUTE_TOOTLTIP);
-					if(tooltip != null) {
-						action.setToolTipText(tooltip);
-					}
-					String icon = element.getAttribute(ATTRIBUTE_ICON);
-					if(icon != null) {
-						ImageDescriptor image = AbstractUIPlugin.imageDescriptorFromPlugin(contributingPluginID, icon);
-						if(image != null) {
-							action.setImageDescriptor(image);
-						}
-					}
-					String disabledIcon = element.getAttribute(ATTRIBUTE_DISABLED_ICON);
-					if(disabledIcon != null) {
-						ImageDescriptor image = AbstractUIPlugin.imageDescriptorFromPlugin(contributingPluginID, disabledIcon);
-						if(image != null) {
-							action.setDisabledImageDescriptor(image);
-						}
-					}
-					String state = element.getAttribute(ATTRIBUTE_STATE);
-					if(state != null) {
-						action.setEnabled(Boolean.parseBoolean(state));
-					}
-					treeViewer.addSelectionChangedListener(action);
-					
-					String menubarPath = element.getAttribute(ATTRIBUTE_MENUBAR_PATH);
-					if(menubarPath != null) {
-						if(menu == null) {
-							createMenu(treeViewer);
-						}
-						action2Path.put(action, menubarPath);
-					}
-					
-					String toolbarPath = element.getAttribute(ATTRIBUTE_TOOLBAR_PATH);
-					if(toolbarPath != null) {
-						toolBarManager.add(action);
-					}
-				}
-				if(ELEMENT_HANDLER.equals(name)) {
-					String actionId = element.getAttribute(ATTRIBUTE_ACTION);
-					if(actionId != null) {
-						VCMLOutlineAction starter = id2Action.get(actionId);
-						if(starter != null) {
-							try {
-								Object handler = element.createExecutableExtension(ATTRIBUTE_HANDLER);
-								if(handler instanceof IVCMLOutlineActionHandler<?>) {
-									IVCMLOutlineActionHandler<?> actionHandler = (IVCMLOutlineActionHandler<?>)handler;
-									String type = element.getAttribute(ATTRIBUTE_TYPE);
-									if(type != null) {			
-										starter.addHandler(type, actionHandler);
-									}
-								}
-							} catch(CoreException e) {
-								System.out.println(e.getMessage());
-								e.printStackTrace();
-							}
-						}
-					}
-				}
-			}
+		
+		List<VCMLOutlineAction> actions = extensionPointUtilities.getActions();
+		for(VCMLOutlineAction action : actions) {
+			treeViewer.addSelectionChangedListener(action);
 		}
 	}
 
-	/*
-	 * Create the hierarchy switch action for the outline view
-	 */
-	private void createHierarchySwitchAction(final IToolBarManager toolBarManager) {
-		final ImageDescriptor sapImageDescriptor = ImageDescriptor.createFromImage(imageHelper.getImage(IUiConstants.SAP_HIERARCHY_IMAGE));
-		final ImageDescriptor docImageDescriptior = ImageDescriptor.createFromImage(imageHelper.getImage(IUiConstants.DOC_HIERARCHY_IMAGE));
+	private void createHierarchySwitchAction(IToolBarManager toolBarManager) {
+		final ImageDescriptor sapImageDescriptor = imageHelper.getImageDescriptor(IUiConstants.SAP_HIERARCHY_IMAGE);
+		final ImageDescriptor docImageDescriptior = imageHelper.getImageDescriptor(IUiConstants.DOC_HIERARCHY_IMAGE);
+		
 		// create an action for hierarchy switching
 		final Action action = new Action() {
 			@Override
@@ -224,16 +126,13 @@ public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListe
 		toolBarManager.add(action);
 	}
 	
-	/*
-	 * Create a menu for the outline view
-	 */
 	private void createMenu(final TreeViewer treeViewer) {
 		final MenuManager menuManager = new MenuManager(POPUP_MENU_ID);
 		menuManager.setRemoveAllWhenShown(true);
 		menuManager.addMenuListener(new IMenuListener() {	
 			public void menuAboutToShow(final IMenuManager manager) {
-				for(Map.Entry<VCMLOutlineAction,String> entry : action2Path.entrySet()) {
-					final GroupMarker groupMarker = new GroupMarker(entry.getValue());
+				for(Map.Entry<VCMLOutlineAction, String> entry : extensionPointUtilities.getPathes().entrySet()) {
+					GroupMarker groupMarker = new GroupMarker(entry.getValue());
 					manager.add(groupMarker);
 					manager.appendToGroup(groupMarker.getGroupName(), entry.getKey());
 				}
@@ -241,6 +140,5 @@ public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListe
 		});
 		menu = menuManager.createContextMenu(treeViewer.getControl());
 		treeViewer.getControl().setMenu(menu);
-		getSite().registerContextMenu(POPUP_MENU_ID, menuManager, treeViewer);
 	}
 }

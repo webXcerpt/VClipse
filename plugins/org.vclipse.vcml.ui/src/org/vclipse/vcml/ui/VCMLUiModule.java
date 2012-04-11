@@ -28,6 +28,8 @@ import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeI
 import org.eclipse.xtext.ui.editor.templates.XtextTemplateContextType;
 import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
 import org.vclipse.vcml.ui.editor.hover.VCMLHoverProvider;
+import org.vclipse.vcml.ui.extension.ExtensionPointUtilities;
+import org.vclipse.vcml.ui.extension.IExtensionPointUtilities;
 import org.vclipse.vcml.ui.outline.VCMLOutlinePage;
 import org.vclipse.vcml.ui.outline.VCMLOutlineTreeProvider;
 import org.vclipse.vcml.ui.syntaxcoloring.VCMLAntlrTokenToAttributeIdMapper;
@@ -37,6 +39,7 @@ import org.vclipse.vcml.ui.templates.VcmlTemplateContextType;
  * Use this class to register components to be used within the IDE.
  */
 public class VCMLUiModule extends org.vclipse.vcml.ui.AbstractVCMLUiModule {
+	
 	public VCMLUiModule(AbstractUIPlugin plugin) {
 		super(plugin);
 	}
@@ -60,6 +63,10 @@ public class VCMLUiModule extends org.vclipse.vcml.ui.AbstractVCMLUiModule {
 	
 	public IWorkspaceRoot bindWorkspaceRoot() {
 		return ResourcesPlugin.getWorkspace().getRoot();
+	}
+	
+	public Class<? extends IExtensionPointUtilities> bindExtensionPointReader() {
+		return ExtensionPointUtilities.class;
 	}
 	
 	public Class<? extends AbstractAntlrTokenToAttributeIdMapper> bindAbstractAntlrTokenToAttributeIdMapper() {
