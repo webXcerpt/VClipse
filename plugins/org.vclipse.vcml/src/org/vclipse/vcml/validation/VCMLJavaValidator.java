@@ -27,7 +27,6 @@ import org.vclipse.vcml.utils.ConstraintRestrictionExtensions;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.BinaryExpression;
 import org.vclipse.vcml.vcml.Characteristic;
-import org.vclipse.vcml.vcml.CharacteristicGroup;
 import org.vclipse.vcml.vcml.CharacteristicReference_C;
 import org.vclipse.vcml.vcml.CharacteristicReference_P;
 import org.vclipse.vcml.vcml.CharacteristicType;
@@ -45,7 +44,6 @@ import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Expression;
 import org.vclipse.vcml.vcml.InCondition_C;
 import org.vclipse.vcml.vcml.InCondition_P;
-import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.MDataCharacteristic_C;
 import org.vclipse.vcml.vcml.MDataCharacteristic_P;
@@ -55,10 +53,7 @@ import org.vclipse.vcml.vcml.NumericCharacteristicValue;
 import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.ObjectCharacteristicReference;
-import org.vclipse.vcml.vcml.Precondition;
-import org.vclipse.vcml.vcml.Procedure;
 import org.vclipse.vcml.vcml.Row;
-import org.vclipse.vcml.vcml.SelectionCondition;
 import org.vclipse.vcml.vcml.ShortVarReference;
 import org.vclipse.vcml.vcml.SimpleDescription;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
@@ -98,39 +93,37 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
      * @Check(CheckType.FAST) //while editig 
 	 */
 	
-	@Check(CheckType.FAST)
-	public void checkCharacteristic(final Characteristic object) {
-		if (object.getName().length() > MAXLENGTH_NAME) {
-			error("Name of characteristic is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
+	/***
+	 ***	Name checks 
+	 ***/
+	@Check
+	public void checkNameLength(VCObject object) {
+		String name = object.getName();
+		if(object instanceof Class) {
+			if(VcmlUtils.getClassName(name).length() > MAXLENGTH_CLASS_NAME) {
+				error("Name of class is limited to " + MAXLENGTH_CLASS_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
+			}
+		} else if(name.length() > MAXLENGTH_NAME) {
+			error("Name of " + object.getClass().getSimpleName() + " is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
+	}
+	
+	@Check(CheckType.FAST)
+	public void checkCharacteristic(Characteristic object) {
 //		if (object.isMultiValue() && object.isRestrictable()) {
 //			error("Multivalued characteristic " + object.getName() + " must not be restrictable", VcmlPackage.Literals.CHARACTERISTIC__RESTRICTABLE);
 //		}
 	}
-
-	@Check(CheckType.FAST)
-	public void checkProcedure(final Procedure object) {
-		if (object.getName().length() > MAXLENGTH_NAME) {
-			error("Name of procedure is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
-		}
-	}
-
+	
 	@Check
-	public void checkDependencyNet(final DependencyNet dependencyNet) {
-		String dependencyNetName = dependencyNet.getName();
-		if(dependencyNetName.length() > MAXLENGTH_NAME) {
-			error("Name of dependency net is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
-		}
+	public void checkDependencyNet(DependencyNet dependencyNet) {
 		if(dependencyNet.getConstraints().size() > MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS) {
 			warning("Dependency net " + dependencyNet.getName() + " too large, should have for efficiency at most " + MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS + " constraints", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 	}
 	
 	@Check(CheckType.FAST)
-	public void checkConstraint(final Constraint object) {
-		if(object.getName().length() > MAXLENGTH_NAME) {
-			error("Name of constraint is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
-		}
+	public void checkConstraint(Constraint object) {
 		ConstraintSource source = object.getSource();
 		if(source!=null) {
 			List<ConstraintRestriction> restrictions = source.getRestrictions();
@@ -169,32 +162,14 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	}
 
 	@Check(CheckType.FAST)
-	public void checkSelectionCondition(final SelectionCondition object) {
-		if (object.getName().length() > MAXLENGTH_NAME) {
-			error("Name of selection condition is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
-		}
-	}
-
-	@Check(CheckType.FAST)
-	public void checkPrecondition(final Precondition object) {
-		if (object.getName().length() > MAXLENGTH_NAME) {
-			error("Name of precondition is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
-		}
-	}
-
-	@Check(CheckType.FAST)
-	public void checkClass(final Class object) {
-		String className = object.getName();
-		if (VcmlUtils.getClassName(className).length() > MAXLENGTH_CLASS_NAME) {
-			error("Name of class is limited to " + MAXLENGTH_CLASS_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
-		}
-		if (object.getCharacteristics().size() > MAXLENGTH_CLASS_CHARACTERISTICS) {
+	public void checkClass(Class object) {
+		if(object.getCharacteristics().size() > MAXLENGTH_CLASS_CHARACTERISTICS) {
 			error("Number of characteristics of a class is limited to " + MAXLENGTH_CLASS_CHARACTERISTICS, VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 	}
 
 	@Check(CheckType.FAST)
-	public void checkDescription(final SimpleDescription desc) {
+	public void checkDescription(SimpleDescription desc) {
 		VCObject vcObject = EcoreUtil2.getContainerOfType(desc, VCObject.class);
 		if (vcObject instanceof Material) {
 			if (desc.getValue().length() > 40) {
@@ -362,7 +337,6 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	/*****
 	 *****	Multiple usage checks 
 	 *****/
-	
 //	@Check
 //	public void checkMultipleUsage_DependencyNet(DependencyNet dependencyNet) {
 //		String dependencyNetName = dependencyNet.getName();
