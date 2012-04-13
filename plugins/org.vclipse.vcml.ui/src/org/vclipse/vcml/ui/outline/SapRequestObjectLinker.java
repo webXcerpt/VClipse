@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.diagnostics.IDiagnosticConsumer;
 import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.vclipse.vcml.linking.VCMLLinker;
 import org.vclipse.vcml.ui.extension.IExtensionPointUtilities;
 import org.vclipse.vcml.ui.outline.actions.IVCMLOutlineActionHandler;
@@ -29,7 +30,8 @@ public class SapRequestObjectLinker extends VCMLLinker {
 	protected EObject createProxy(EObject object, INode node, EReference reference) {
 		EObject proxyObject = super.createProxy(object, node, reference);
 		if(proxyObject instanceof VCObject) {
-			((VCObject)proxyObject).setName(node.getText());
+			String text = NodeModelUtils.getTokenText(node);
+			((VCObject)proxyObject).setName(text);
 		}
 		return proxyObject;
 	}
