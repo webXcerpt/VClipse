@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.outline.actions;
 
-import java.io.ByteArrayInputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -23,17 +22,17 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
@@ -51,11 +50,13 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.eclipse.xtext.ui.util.ResourceUtil;
+import org.eclipse.xtext.util.StringInputStream;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.vclipse.console.CMConsolePlugin;
 import org.vclipse.console.CMConsolePlugin.Kind;
 import org.vclipse.vcml.ui.IUiConstants;
 import org.vclipse.vcml.ui.outline.SapRequestObjectLinker;
+import org.vclipse.vcml.vcml.Import;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlFactory;
@@ -81,6 +82,8 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 	private final SapRequestObjectLinker linker;
 	private final IPreferenceStore preferenceStore;
 	
+	private XtextResourceSet resourceSet;
+	
 	@Inject
 	public VCMLOutlineAction(IPreferenceStore preferenceStore, IResourceFactory resourceFactory, IContentOutlinePage outlinePage, SapRequestObjectLinker linker) {
 		actionHandlers = new HashMap<String, IVCMLOutlineActionHandler<?>>();
@@ -99,13 +102,15 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 
 	@Override
 	public void run() {
-		XtextResourceSet set = new XtextResourceSet();
-		Resource usedResource = null;
+		resourceSet = new XtextResourceSet();
+		
+		Resource resultResource = null;
+		Resource sourceResource = null;
+		IXtextDocument document = null;
+		
 		final boolean outputToFile = preferenceStore.getBoolean(IUiConstants.OUTPUT_TO_FILE);
 		
-		IXtextDocument document = null;
-		Resource resource = null;
-		
+		final Set<String> seenObjects = Sets.newHashSet();
 		if(outputToFile) {
 			selectedObjects.clear();
 			ISelection selection = page.getSelection();
@@ -118,48 +123,37 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 						if(document == null) {
 							document = objectNode.getDocument();
 						}
-						if(resource == null) {
+						if(sourceResource == null) {
 							EObject root = document.readOnly(new IUnitOfWork<EObject, XtextResource>() {
 								public EObject exec(XtextResource resource) throws Exception {
 									return resource.getParseResult().getRootASTElement();
 								}
 							});
-							resource = root.eResource();
+							sourceResource = root.eResource();
 						}
-						selectedObjects.add(objectNode.getEObject(resource));
+						selectedObjects.add(objectNode.getEObject(sourceResource));
 					}
 				}
 			}
 		
-			URI uri = resource.getURI();
-			String platformString = uri.toPlatformString(true);
-			String extension = "." + uri.fileExtension();
-			String results = platformString.substring(0, platformString.lastIndexOf(extension)) + "_results_" + extension;
-			IResource re = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(results));
-			if(re instanceof IFile) {
-				IFile file = (IFile)re; 
-				if(!file.exists()) {
-					try {
-						file.create(new ByteArrayInputStream("".getBytes()), true, new NullProgressMonitor());
-					} catch (CoreException e) {
-						e.printStackTrace();
-					}
-				}
-				usedResource = set.createResource(URI.createURI(file.getLocationURI().toString()));
-			}
+			URI sourceUri = sourceResource.getURI();
+			String platformString = sourceUri.toPlatformString(true);
+			String extension = "." + sourceUri.fileExtension();
+			URI resultsUri = URI.createURI(platformString.substring(0, platformString.lastIndexOf(extension)) + "_results_" + extension);
+			resultResource = resourceFactory.createResource(resultsUri);
+			resultResource.getContents().add(VCML.createModel());
+			collectImportedObjects(seenObjects, sourceResource, resultResource);
+			createResultFile(sourceResource);
 		} else {
-			usedResource = resourceFactory.createResource(URI.createURI("results"));
-			set.getResources().add(usedResource);
+			resultResource = resourceFactory.createResource(URI.createURI("results"));
+			resourceSet.getResources().add(resultResource);
 		}
-		if(usedResource != null) {
-			final Resource res = usedResource;
-			final Model vcmlModel = VCML.createModel();
-			res.getContents().add(vcmlModel);
-			
+		if(resultResource != null) {
+			final Resource finalSourceResource = resultResource;
+			final Model vcmlModel = (Model)finalSourceResource.getContents().get(0);
 			Job job = new Job(getDescription()) {
 				protected IStatus run(IProgressMonitor monitor) {
 					monitor.beginTask("Extracting objects from SAP system", IProgressMonitor.UNKNOWN);
-					Set<String> seenObjects = Sets.newHashSet();
 					linker.setSeenObjects(seenObjects);
 					for(EObject obj : getSelectedObjects()) {
 						if(obj instanceof VCObject) {
@@ -170,7 +164,7 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 							try {
 								Method method = actionHandler.getClass().getMethod("run", 
 										new Class[]{getInstanceType(obj), Resource.class, IProgressMonitor.class, Set.class});
-								method.invoke(actionHandler, new Object[]{obj, res, monitor, seenObjects});
+								method.invoke(actionHandler, new Object[]{obj, finalSourceResource, monitor, seenObjects});
 							} catch (NoSuchMethodException e) {
 								e.printStackTrace();
 								// ignore 
@@ -209,12 +203,12 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 
 					try {
 						if(outputToFile) {
-							res.save(null);
+							finalSourceResource.save(null);
 						} else {
 							if (!vcmlModel.getObjects().isEmpty()) {
-								result.println(((XtextResource)res).getSerializer().serialize(vcmlModel));
+								result.println(((XtextResource)finalSourceResource).getSerializer().serialize(vcmlModel));
 							}
-							res.delete(null);
+							finalSourceResource.delete(null);
 						}
 					} catch (Exception e) {
 						// currently, there can be exceptions if objects are not completeley initialized or linking fails
@@ -222,7 +216,7 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 						e.printStackTrace(err);
 					}
 					
-					IFile file = ResourceUtil.getFile(res);
+					IFile file = ResourceUtil.getFile(finalSourceResource);
 					if(file != null && file.isAccessible()) {
 						try {
 							file.refreshLocal(IResource.DEPTH_ONE, monitor);
@@ -290,6 +284,50 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 					}
 					setEnabled(visitedSomeAction && enabled);
 				}
+			}
+		}
+	}
+	
+	private void collectImportedObjects(Set<String> seenObjects, Resource sourceResource, Resource targetResource) {
+		Model targetModel = null;
+		EList<EObject> targetContents = targetResource.getContents();
+		if(!targetContents.isEmpty()) {
+			targetModel = (Model)targetContents.get(0);
+		}
+		
+		URI uri = sourceResource.getURI();
+		String platformString = uri.toPlatformString(true);
+		String lastSegment = uri.lastSegment();
+		EList<EObject> contents = sourceResource.getContents();
+		if(!contents.isEmpty()) {
+			for(Import importStatement : ((Model)contents.get(0)).getImports()) {
+				String importURI = importStatement.getImportURI();
+				String importResourcePath = platformString.replace(lastSegment, importURI);
+				Resource loadedResource = resourceSet.getResource(URI.createURI(importResourcePath), true);
+				EList<EObject> loadedContents = loadedResource.getContents();
+				if(!loadedContents.isEmpty()) {
+					if(targetModel != null) {
+						targetModel.getImports().add(EcoreUtil.copy(importStatement));
+					}
+					EObject topLevelObject = loadedContents.get(0);
+					if(topLevelObject instanceof Model) {
+						Model model = (Model)topLevelObject;
+						for(VCObject vcobject : model.getObjects()) {
+							seenObjects.add(vcobject.eClass().getName() + "/" +vcobject.getName());
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	private void createResultFile(Resource resource) {
+		IFile resultfile = ResourceUtil.getFile(resource);
+		if(!resultfile.exists()) {
+			try {
+				resultfile.create(new StringInputStream(""), true, new NullProgressMonitor());
+			} catch(CoreException exception) {
+				exception.printStackTrace();
 			}
 		}
 	}
