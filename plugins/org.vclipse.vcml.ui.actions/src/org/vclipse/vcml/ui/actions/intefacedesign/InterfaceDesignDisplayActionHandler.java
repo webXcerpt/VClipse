@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.intefacedesign;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -25,8 +25,8 @@ public class InterfaceDesignDisplayActionHandler extends InterfaceDesignReader i
 		return isConnected();
 	}
 
-	public void run(InterfaceDesign interfaceDesign, Resource resource, IProgressMonitor monitor) throws JCoException {
-		read(interfaceDesign.getName(), resource, monitor, new HashSet<String>(), false);
+	public void run(InterfaceDesign interfaceDesign, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
+		read(interfaceDesign.getName(), resource, monitor, seenObjects, false);
 	}
 
 }

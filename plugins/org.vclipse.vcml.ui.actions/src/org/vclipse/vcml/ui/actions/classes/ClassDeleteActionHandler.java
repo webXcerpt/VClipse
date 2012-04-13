@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.classes;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.vcml.ui.actions.BAPIUtils;
@@ -27,7 +29,7 @@ public class ClassDeleteActionHandler extends BAPIUtils implements IVCMLOutlineA
 		return isConnected();
 	}
 
-	public void run(Class object, Resource resource, IProgressMonitor monitor) throws JCoException {
+	public void run(Class object, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
 		beginTransaction();
 		JCoFunction function = getJCoFunction("BAPI_CLASS_DELETE", monitor);	
 		JCoParameterList ipl = function.getImportParameterList();

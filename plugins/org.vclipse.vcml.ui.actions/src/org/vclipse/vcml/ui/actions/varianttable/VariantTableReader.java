@@ -23,6 +23,7 @@ import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VariantTableArgument;
 
+import com.google.inject.Inject;
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
@@ -32,7 +33,8 @@ import com.sap.conn.jco.JCoTable;
 
 public class VariantTableReader extends BAPIUtils {
 
-	private static final CharacteristicReader CHARACTERISTIC_READER = new CharacteristicReader(); // must not be abstract
+	@Inject
+	private CharacteristicReader csicReader;
 	
 	public VariantTable read(String variantTableName, Model vcmlModel, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
 		if (!seenObjects.add("VariantTable/" + variantTableName))
@@ -60,7 +62,7 @@ public class VariantTableReader extends BAPIUtils {
 				// TODO move this read / proxy mechanism to CharacteristicReader
 				Characteristic cstic = null;
 				if (recurse) {
-					cstic = CHARACTERISTIC_READER.read(csticName, vcmlModel, monitor, seenObjects, recurse);
+					cstic = csicReader.read(csticName, vcmlModel, monitor, seenObjects, recurse);
 				}
 				if (cstic==null) {
 					cstic = VCMLProxyFactory.createCharacteristicProxy(vcmlModel.eResource(), csticName);

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.procedure;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.vcml.ui.actions.AbstractDependencyDeleteActionHandler;
@@ -24,7 +26,7 @@ public class ProcedureDeleteActionHandler extends AbstractDependencyDeleteAction
 		return isConnected();
 	}
 
-	public void run(Procedure object, Resource resource, IProgressMonitor monitor) throws JCoException {
+	public void run(Procedure object, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
 		super.run(object, resource, monitor);
 	}
 

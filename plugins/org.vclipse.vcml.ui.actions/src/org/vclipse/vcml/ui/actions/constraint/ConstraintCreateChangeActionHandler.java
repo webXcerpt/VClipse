@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.constraint;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -33,7 +35,7 @@ public class ConstraintCreateChangeActionHandler extends BAPIUtils implements IV
 		return isConnected();
 	}
 
-	public void run(Constraint object, Resource resource, IProgressMonitor monitor) throws JCoException {
+	public void run(Constraint object, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
 		
 		// determine name of containing dependencyNet
 		// TODO implement finding containing dependency net with ECoreUtils

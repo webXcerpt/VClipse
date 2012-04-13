@@ -29,6 +29,7 @@ import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.MultiLanguageDescription;
 import org.vclipse.vcml.vcml.MultiLanguageDescriptions;
 
+import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoParameterList;
@@ -36,7 +37,8 @@ import com.sap.conn.jco.JCoTable;
 
 public class InterfaceDesignReader extends BAPIUtils {
 
-	private static final CharacteristicReader CHARACTERISTIC_READER = new CharacteristicReader(); // must not be abstract
+	@Inject
+	private CharacteristicReader csticReader;
 	
 	public InterfaceDesign read(String interfaceDesignName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
 		if (!seenObjects.add("InterfaceDesign/" + interfaceDesignName)) {
@@ -204,7 +206,7 @@ FRAME_TEXT
 							String csticName = chars.getString("NAME_CHAR");
 							Characteristic cstic = null;
 							if (recurse) {
-								cstic = CHARACTERISTIC_READER.read(csticName, (Model)resource.getContents().get(0), monitor, seenObjects, recurse);
+								cstic = csticReader.read(csticName, (Model)resource.getContents().get(0), monitor, seenObjects, recurse);
 							}
 							if (cstic==null) {
 								cstic = VCMLProxyFactory.createCharacteristicProxy(resource, csticName);

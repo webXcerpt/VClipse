@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.billofmaterial;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.vcml.ui.actions.BAPIUtils;
@@ -30,7 +32,7 @@ public class BillOfMaterialCreateActionHandler extends BAPIUtils implements IVCM
 		return isConnected();
 	}
 
-	public void run(BillOfMaterial billOfMaterial, Resource resource, IProgressMonitor monitor) throws JCoException {
+	public void run(BillOfMaterial billOfMaterial, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
 		JCoFunction function = getJCoFunction("CSAP_MAT_BOM_CREATE", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		String materialNumber = ((Material)billOfMaterial.eContainer()).getName();

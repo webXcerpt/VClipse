@@ -21,6 +21,7 @@ import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Model;
 
+import com.google.inject.Inject;
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
@@ -30,7 +31,8 @@ import com.sap.conn.jco.JCoTable;
 
 public class DependencyNetReader extends BAPIUtils {
 
-	private static final ConstraintReader CONSTRAINT_READER = new ConstraintReader();
+	@Inject
+	private ConstraintReader constraintReader;
 
 	public DependencyNet read(String depNetName, Model vcmlModel, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
 		if(!seenObjects.add("DependencyNet/" + depNetName)) {
@@ -59,7 +61,7 @@ public class DependencyNetReader extends BAPIUtils {
 					String constraintName = constraints.getString("DEPENDENCY");
 					Constraint constraint = null;
 					if (recurse) {
-						constraint = CONSTRAINT_READER.read(constraintName, vcmlModel.eResource(), monitor, seenObjects, recurse);
+						constraint = constraintReader.read(constraintName, vcmlModel.eResource(), monitor, seenObjects, recurse);
 					}
 					if (constraint==null) {
 						constraint = VCMLProxyFactory.createConstraintProxy(vcmlModel.eResource(), constraintName);

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.varianttable;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.vcml.ui.actions.BAPIUtils;
@@ -34,7 +36,7 @@ public class VariantTableCreateChangeActionHandler extends BAPIUtils implements 
 	}
 
 	@Override
-	public void run(VariantTable object, Resource resource, IProgressMonitor monitor) throws JCoException {
+	public void run(VariantTable object, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
 		final String name = object.getName();
 		beginTransaction();
 		JCoFunction function = getJCoFunction("CAMA_TABLE_MAINTAIN_STRUCTURE", monitor);

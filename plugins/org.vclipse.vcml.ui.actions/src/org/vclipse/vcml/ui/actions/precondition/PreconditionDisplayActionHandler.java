@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.precondition;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -25,8 +25,8 @@ public class PreconditionDisplayActionHandler extends PreconditionReader impleme
 		return isConnected();
 	}
 
-	public void run(Precondition precondition, Resource resource, IProgressMonitor monitor) throws JCoException {
-		read(precondition.getName(), resource, monitor, new HashSet<String>(), false);
+	public void run(Precondition precondition, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
+		read(precondition.getName(), resource, monitor, seenObjects, false);
 	}
 
 }

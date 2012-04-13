@@ -22,6 +22,7 @@ import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.Model;
 
+import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoParameterList;
@@ -30,8 +31,9 @@ import com.sap.conn.jco.JCoTable;
 
 public class ClassReader extends BAPIUtils {
 
-	private static final CharacteristicReader CHARACTERISTIC_READER = new CharacteristicReader(); // must not be abstract
-
+	@Inject
+	private CharacteristicReader csticReader;
+	
 	public Class read(String classSpec, Model model, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
 		if (!seenObjects.add("Class/" + classSpec)) {
 			return null;
@@ -57,8 +59,8 @@ public class ClassReader extends BAPIUtils {
 					String csticName = classCharacteristics.getString("NAME_CHAR");
 					// TODO move this read / proxy mechanism to CharacteristicReader
 					Characteristic cstic = null;
-					if (recurse) {
-						cstic = CHARACTERISTIC_READER.read(csticName, model, monitor, seenObjects, recurse);
+					if(recurse) {
+						cstic = csticReader.read(csticName, model, monitor, seenObjects, recurse);
 					}
 					if (cstic==null) {
 						cstic = VCMLProxyFactory.createCharacteristicProxy(model.eResource(), csticName);

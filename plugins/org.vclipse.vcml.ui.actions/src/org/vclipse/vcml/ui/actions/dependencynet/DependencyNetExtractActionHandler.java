@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.dependencynet;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -26,8 +26,8 @@ public class DependencyNetExtractActionHandler extends DependencyNetReader imple
 		return isConnected();
 	}
 
-	public void run(DependencyNet depnet, Resource resource, IProgressMonitor monitor) throws JCoException {
-		read(depnet.getName(), (Model)resource.getContents().get(0), monitor, new HashSet<String>(), true);
+	public void run(DependencyNet depnet, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
+		read(depnet.getName(), (Model)resource.getContents().get(0), monitor, seenObjects, true);
 	}
 
 }

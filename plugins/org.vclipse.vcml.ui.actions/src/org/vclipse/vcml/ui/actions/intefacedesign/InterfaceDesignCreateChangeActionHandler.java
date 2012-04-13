@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.intefacedesign;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.vcml.ui.actions.BAPIUtils;
@@ -32,7 +34,7 @@ public class InterfaceDesignCreateChangeActionHandler extends BAPIUtils implemen
 		return isConnected();
 	}
 
-	public void run(InterfaceDesign object, Resource resource, IProgressMonitor monitor) throws JCoException {
+	public void run(InterfaceDesign object, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
 		JCoFunction function = getJCoFunction("BAPI_UI_SAVEM", monitor);
 		function.getImportParameterList().setValue("DESIGNNAME", object.getName());
 		JCoParameterList tpl = function.getTableParameterList();

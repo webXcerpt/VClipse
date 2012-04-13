@@ -11,6 +11,7 @@
 package org.vclipse.vcml.ui.actions;
 
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -41,7 +42,7 @@ public abstract class AbstractClassCreateChangeActionHandler extends BAPIUtils i
 		return isConnected();
 	}
 
-	public void run(Class object, Resource resource, IProgressMonitor monitor) throws JCoException {
+	public void run(Class object, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
 		beginTransaction();
 		JCoFunction function = getJCoFunction(getBAPI(), monitor);	
 		JCoParameterList ipl = function.getImportParameterList();

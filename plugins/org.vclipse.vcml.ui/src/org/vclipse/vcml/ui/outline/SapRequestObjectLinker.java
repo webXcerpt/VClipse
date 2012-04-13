@@ -3,6 +3,7 @@ package org.vclipse.vcml.ui.outline;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -19,12 +20,23 @@ import org.vclipse.vcml.ui.outline.actions.IVCMLOutlineActionHandler;
 import org.vclipse.vcml.ui.outline.actions.OutlineActionCanceledException;
 import org.vclipse.vcml.vcml.VCObject;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 public class SapRequestObjectLinker extends VCMLLinker {
 
 	@Inject
 	private IExtensionPointUtilities extensionPointReader;
+	
+	private Set<String> seenObjects;
+	
+	public SapRequestObjectLinker() {
+		seenObjects = Sets.newHashSet();
+	}
+	
+	public void setSeenObjects(Set<String> seenObjects) {
+		this.seenObjects = seenObjects;
+	}
 	
 	@Override
 	protected EObject createProxy(EObject object, INode node, EReference reference) {
@@ -53,8 +65,8 @@ public class SapRequestObjectLinker extends VCMLLinker {
 					for(IVCMLOutlineActionHandler<?> handler : handlers) {
 						if(handler.getClass().getSimpleName().contains("Extract")) {
 							try {
-								Method method = handler.getClass().getMethod("run", new Class[]{getInstanceType(crossReference), Resource.class, IProgressMonitor.class});
-								method.invoke(handler, new Object[]{crossReference, object.eResource(), new NullProgressMonitor()});
+								Method method = handler.getClass().getMethod("run", new Class[]{getInstanceType(crossReference), Resource.class, IProgressMonitor.class, Set.class});
+								method.invoke(handler, new Object[]{crossReference, object.eResource(), new NullProgressMonitor(), seenObjects});
 							} catch (NoSuchMethodException e) {
 								e.printStackTrace();
 								// ignore 

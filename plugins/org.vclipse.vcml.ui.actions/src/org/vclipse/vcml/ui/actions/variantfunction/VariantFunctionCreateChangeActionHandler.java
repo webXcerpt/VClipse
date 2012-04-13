@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.variantfunction;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.vcml.ui.actions.BAPIUtils;
@@ -34,7 +36,7 @@ public class VariantFunctionCreateChangeActionHandler extends BAPIUtils implemen
 	}
 
 	@Override
-	public void run(VariantFunction object, Resource resource, IProgressMonitor monitor) throws JCoException {
+	public void run(VariantFunction object, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
 		final String name = object.getName();
 		beginTransaction();
 		JCoFunction function = getJCoFunction("CAMA_FUNCTION_MAINTAIN", monitor);

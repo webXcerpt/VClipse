@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.billofmaterial;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -26,8 +26,8 @@ public class BillOfMaterialDisplayActionHandler extends BillOfMaterialReader imp
 		return isConnected();
 	}
 
-	public void run(BillOfMaterial billOfMaterial, Resource resource, IProgressMonitor monitor) throws JCoException {
-		read((Material)billOfMaterial.eContainer(), resource, monitor, new HashSet<String>(), false);
+	public void run(BillOfMaterial billOfMaterial, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
+		read((Material)billOfMaterial.eContainer(), resource, monitor, seenObjects, false);
 	}
 
 }

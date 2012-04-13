@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.procedure;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -25,8 +25,8 @@ public class ProcedureExtractActionHandler extends ProcedureReader implements IV
 		return isConnected();
 	}
 
-	public void run(Procedure procedure, Resource resource, IProgressMonitor monitor) throws JCoException {
-		read(procedure.getName(), resource, monitor, new HashSet<String>(), true);
+	public void run(Procedure procedure, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
+		read(procedure.getName(), resource, monitor, seenObjects, true);
 	}
 
 }

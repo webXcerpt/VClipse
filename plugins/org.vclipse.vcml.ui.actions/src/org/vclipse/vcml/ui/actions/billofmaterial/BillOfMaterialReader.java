@@ -26,6 +26,7 @@ import org.vclipse.vcml.ui.actions.BAPIUtils;
 import org.vclipse.vcml.ui.actions.material.MaterialReader;
 import org.vclipse.vcml.utils.VCMLProxyFactory;
 
+import com.google.inject.Inject;
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
@@ -36,7 +37,8 @@ public class BillOfMaterialReader extends BAPIUtils {
 
 	private final Logger log = Logger.getLogger(BillOfMaterialReader.class);
 
-	private static final MaterialReader MATERIAL_READER = new MaterialReader();
+	@Inject
+	private MaterialReader materialReader;
 	
 	public void read(Material containerMaterial, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
 		String materialNumber = containerMaterial.getName();
@@ -80,7 +82,7 @@ public class BillOfMaterialReader extends BAPIUtils {
 				if (!Strings.isEmpty(component)) {
 					Material bomMaterial = null;
 					if (recurse) {
-						bomMaterial = MATERIAL_READER.read(component, resource, monitor, seenObjects, recurse);
+						bomMaterial = materialReader.read(component, resource, monitor, seenObjects, recurse);
 					}
 					if (bomMaterial==null) {
 						bomMaterial = VCMLProxyFactory.createMaterialProxy(resource, component);

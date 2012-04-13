@@ -32,6 +32,7 @@ import org.vclipse.vcml.ui.actions.procedure.ProcedureReader;
 import org.vclipse.vcml.utils.VCMLProxyFactory;
 import org.vclipse.vcml.utils.VcmlUtils;
 
+import com.google.inject.Inject;
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
@@ -40,9 +41,14 @@ import com.sap.conn.jco.JCoTable;
 
 public class ConfigurationProfileReader extends BAPIUtils {
 
-	private static final DependencyNetReader DEPENDENCYNET_READER = new DependencyNetReader();
-	private static final ProcedureReader PROCEDURE_READER = new ProcedureReader();
-	private static final InterfaceDesignReader INTERFACEDESIGN_READER = new InterfaceDesignReader();
+	@Inject
+	private DependencyNetReader dependencyNetReader;
+	
+	@Inject
+	private ProcedureReader procedureReader;
+	
+	@Inject
+	private InterfaceDesignReader interfaceDesignReader;
 
 	public void readAll(Material containerMaterial, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
 		read(containerMaterial, null, resource, monitor, seenObjects, recurse);
@@ -83,7 +89,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 				if (!Strings.isEmpty(design)) {
 					InterfaceDesign interfaceDesign = null;
 					if (recurse) {
-						interfaceDesign = INTERFACEDESIGN_READER.read(design, resource, monitor, seenObjects, recurse);
+						interfaceDesign = interfaceDesignReader.read(design, resource, monitor, seenObjects, recurse);
 					}
 					if (interfaceDesign==null) {
 						interfaceDesign = VCMLProxyFactory.createInterfaceDesignProxy(resource, design);
@@ -111,7 +117,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 					entriesByName.put(depName, entry);
 					Procedure procedure = null;
 					if (recurse) {
-						procedure = PROCEDURE_READER.read(depName, resource, monitor, seenObjects, recurse);
+						procedure = procedureReader.read(depName, resource, monitor, seenObjects, recurse);
 					}
 					if (procedure==null) {
 						procedure = VCMLProxyFactory.createProcedureProxy(resource, depName);
@@ -120,7 +126,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 				} else if ("CNET".equals(depType)) {
 					DependencyNet dependencyNet = null;
 					if (recurse) {
-						dependencyNet = DEPENDENCYNET_READER.read(depName, (Model)resource.getContents().get(0), monitor, seenObjects, recurse);
+						dependencyNet = dependencyNetReader.read(depName, (Model)resource.getContents().get(0), monitor, seenObjects, recurse);
 					}
 					if (dependencyNet==null) {
 						dependencyNet = VCMLProxyFactory.createDependencyNetProxy(resource, depName);

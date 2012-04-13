@@ -10,12 +10,14 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.outline.actions;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 
 public interface IVCMLOutlineActionHandler<T> {
 	
-	public void run(T object, Resource resource, IProgressMonitor monitor) throws Exception;
+	public void run(T object, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws Exception;
 
 	public boolean isEnabled(T object);
 }

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.configurationprofile;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.vcml.ui.actions.BAPIUtils;
@@ -26,7 +28,7 @@ public class ConfigurationProfileDeleteActionHandler extends BAPIUtils implement
 	}
 
 	@Override
-	public void run(ConfigurationProfile object, Resource resource,	IProgressMonitor monitor) throws JCoException {
+	public void run(ConfigurationProfile object, Resource resource,	IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
 		err.println("// " + this.getClass().getSimpleName() + " not yet implemented");
 	}
 

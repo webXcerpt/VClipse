@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.material;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.vcml.ui.actions.BAPIUtils;
@@ -26,7 +28,7 @@ import com.sap.conn.jco.JCoTable;
 
 public class MaterialCreateChangeActionHandler extends BAPIUtils implements IVCMLOutlineActionHandler<Material> {
 	
-	public void run(Material object, Resource resource, IProgressMonitor monitor) throws JCoException {
+	public void run(Material object, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
 		beginTransaction();
 		JCoFunction function = getJCoFunction("BAPI_MATERIAL_SAVEDATA", monitor);
 		JCoParameterList ipl = function.getImportParameterList();

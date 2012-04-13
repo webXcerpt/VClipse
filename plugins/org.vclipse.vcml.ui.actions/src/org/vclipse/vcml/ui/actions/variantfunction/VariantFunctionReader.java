@@ -23,6 +23,7 @@ import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.VariantFunction;
 import org.vclipse.vcml.vcml.VariantFunctionArgument;
 
+import com.google.inject.Inject;
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
@@ -32,7 +33,8 @@ import com.sap.conn.jco.JCoTable;
 
 public class VariantFunctionReader extends BAPIUtils {
 
-	private static final CharacteristicReader CHARACTERISTIC_READER = new CharacteristicReader(); // must not be abstract
+	@Inject
+	private CharacteristicReader csticReader;
 	
 	public VariantFunction read(String variantFunctionName, Model vcmlModel, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
 		if (!seenObjects.add(variantFunctionName))
@@ -60,7 +62,7 @@ public class VariantFunctionReader extends BAPIUtils {
 				// TODO move this read / proxy mechanism to CharacteristicReader
 				Characteristic cstic = null;
 				if (recurse) {
-					cstic = CHARACTERISTIC_READER.read(csticName, vcmlModel, monitor, seenObjects, recurse);
+					cstic = csticReader.read(csticName, vcmlModel, monitor, seenObjects, recurse);
 				}
 				if (cstic==null) {
 					cstic = VCMLProxyFactory.createCharacteristicProxy(vcmlModel.eResource(), csticName);

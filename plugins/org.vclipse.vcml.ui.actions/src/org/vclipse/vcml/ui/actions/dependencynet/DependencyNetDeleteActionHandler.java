@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.dependencynet;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.vcml.ui.actions.BAPIUtils;
@@ -27,7 +29,7 @@ public class DependencyNetDeleteActionHandler extends BAPIUtils implements IVCML
 		return isConnected();
 	}
 
-	public void run(DependencyNet object, Resource resource, IProgressMonitor monitor) throws JCoException {
+	public void run(DependencyNet object, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
 		JCoFunction function = getJCoFunction("CAMA_CONSTRAINT_NET_MAINTAIN", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue("CONSTRAINT_NET", object.getName());

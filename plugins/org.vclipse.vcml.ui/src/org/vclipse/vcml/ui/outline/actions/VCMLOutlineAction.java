@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -56,8 +57,10 @@ import org.vclipse.console.CMConsolePlugin.Kind;
 import org.vclipse.vcml.ui.IUiConstants;
 import org.vclipse.vcml.ui.outline.SapRequestObjectLinker;
 import org.vclipse.vcml.vcml.Model;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlFactory;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 public class VCMLOutlineAction extends Action implements ISelectionChangedListener {
@@ -156,13 +159,18 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 			Job job = new Job(getDescription()) {
 				protected IStatus run(IProgressMonitor monitor) {
 					monitor.beginTask("Extracting objects from SAP system", IProgressMonitor.UNKNOWN);
-					
-					for(EObject obj : selectedObjects) {
+					Set<String> seenObjects = Sets.newHashSet();
+					linker.setSeenObjects(seenObjects);
+					for(EObject obj : getSelectedObjects()) {
+						if(obj instanceof VCObject) {
+							seenObjects.add(((VCObject)obj).getName());
+						}
 						IVCMLOutlineActionHandler<?> actionHandler = actionHandlers.get(getInstanceTypeName(obj));
 						if (actionHandler != null) {
 							try {
-								Method method = actionHandler.getClass().getMethod("run", new Class[]{getInstanceType(obj), Resource.class, IProgressMonitor.class});
-								method.invoke(actionHandler, new Object[]{obj, res, monitor});
+								Method method = actionHandler.getClass().getMethod("run", 
+										new Class[]{getInstanceType(obj), Resource.class, IProgressMonitor.class, Set.class});
+								method.invoke(actionHandler, new Object[]{obj, res, monitor, seenObjects});
 							} catch (NoSuchMethodException e) {
 								e.printStackTrace();
 								// ignore 
@@ -230,10 +238,14 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 		}
 	}
 
-	public void addHandler(String type, IVCMLOutlineActionHandler<?> handler) {
+	public synchronized void addHandler(String type, IVCMLOutlineActionHandler<?> handler) {
 		if(handler != null) {
 			actionHandlers.put(type, handler);
 		}
+	}
+	
+	private synchronized EObject[] getSelectedObjects() {
+		return selectedObjects.toArray(new EObject[selectedObjects.size()]);
 	}
 
 	public void selectionChanged(SelectionChangedEvent event) {

@@ -11,6 +11,7 @@
 package org.vclipse.vcml.ui.actions.characteristic;
 
 import java.text.ParseException;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.WrappedException;
@@ -44,7 +45,7 @@ import com.sap.conn.jco.JCoTable;
 
 public class CharacteristicCreateChangeActionHandler extends BAPIUtils implements IVCMLOutlineActionHandler<Characteristic> {
 	
-	public void run(final Characteristic object, Resource resource, final IProgressMonitor monitor) throws JCoException {
+	public void run(final Characteristic object, Resource resource, final IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
 		final DocumentationHandler documentationHandler = new DocumentationHandler(monitor);
 		beginTransaction();
 		final JCoFunction function = getJCoFunction("BAPI_CHARACT_CHANGE", monitor);

@@ -27,6 +27,7 @@ import org.vclipse.vcml.ui.actions.classes.ClassReader;
 import org.vclipse.vcml.ui.actions.configurationprofile.ConfigurationProfileReader;
 import org.vclipse.vcml.utils.VCMLProxyFactory;
 
+import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoParameterList;
@@ -35,10 +36,15 @@ import com.sap.conn.jco.JCoTable;
 
 public class MaterialReader extends BAPIUtils {
 
-	private static final ConfigurationProfileReader CONFIGURATIONPROFILE_READER = new ConfigurationProfileReader();
-	private static final ClassReader CLASS_READER = new ClassReader();
-	private static final BillOfMaterialReader BILLOFMATERIAL_READER = new BillOfMaterialReader();
-
+	@Inject
+	private ConfigurationProfileReader configurationProfileReader;
+	
+	@Inject
+	private ClassReader classReader;
+	
+	@Inject
+	private BillOfMaterialReader bomReader;
+	
 	public Material read(String materialName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
 		if (!seenObjects.add("Material/" + materialName)) {
 			return null;
@@ -63,10 +69,10 @@ public class MaterialReader extends BAPIUtils {
 			object.setDescription(description);
 			object.setType(materialGeneralData.getString("MATL_TYPE"));
 		}
-		CONFIGURATIONPROFILE_READER.readAll(object, resource, monitor, seenObjects, recurse);
+		configurationProfileReader.readAll(object, resource, monitor, seenObjects, recurse);
 
 		// BAPI_MAT_BOM_EXISTENCE_CHECK
-		BILLOFMATERIAL_READER.read(object, resource, monitor, seenObjects, recurse);
+		bomReader.read(object, resource, monitor, seenObjects, recurse);
 
 		JCoFunction functionGetClasses = getJCoFunction("BAPI_OBJCL_GETCLASSES", monitor); // BAPI_OBJCL_GET_KEY_OF_OBJECT
 		JCoParameterList iplGetClasses = functionGetClasses.getImportParameterList();
@@ -83,7 +89,7 @@ public class MaterialReader extends BAPIUtils {
 					String className = "(" + allocList.getInt("CLASSTYPE") + ")" + allocList.getString("CLASSNUM");
 					Class cls = null;
 					if (recurse) {
-						cls = CLASS_READER.read(className, model, monitor, seenObjects, recurse);
+						cls = classReader.read(className, model, monitor, seenObjects, recurse);
 					}
 					if (cls==null) {
 						cls = VCMLProxyFactory.createClassProxy(resource, className);

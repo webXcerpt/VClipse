@@ -12,51 +12,40 @@ package org.vclipse.vcml.ui.actions;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.vclipse.vcml.ui.actions.injection.ActionModule;
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class Activator extends AbstractUIPlugin {
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
-	// The plug-in ID
+public class VcmlUiActionPlugin extends AbstractUIPlugin {
+
 	public static final String ID = "org.vclipse.vcml.ui.actions";
 
-	// The shared instance
-	private static Activator plugin;
-	
-	/**
-	 * The constructor
-	 */
-	public Activator() {
-	}
+	private static VcmlUiActionPlugin plugin;
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
-	 */
+	private Injector injector;
+	
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		getInjector();
 		plugin = this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
-	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
 	}
 
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
+	public static VcmlUiActionPlugin getDefault() {
 		return plugin;
 	}
-
+	
+	public Injector getInjector() {
+		if(injector == null) {
+			injector = Guice.createInjector(new ActionModule());
+		}
+		return injector;
+	}
 }

@@ -61,7 +61,6 @@ import org.vclipse.vcml.vcml.VcmlFactory;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Guice;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoContext;
@@ -85,10 +84,10 @@ public class BAPIUtils {
 	 */
 	protected static final VcmlFactory VCML = VcmlFactory.eINSTANCE;
 
-	@Inject
+
 	private VCMLParser parser;
 	
-	@Inject
+
 	private IGrammarAccess grammarAccess;
 
 	private JCoFunction currentFunction;

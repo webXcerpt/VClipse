@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.material;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -26,8 +26,8 @@ public class MaterialDisplayActionHandler extends MaterialReader implements IVCM
 	}
 
 	@Override
-	public void run(Material material, Resource resource, IProgressMonitor monitor) throws JCoException {
-		read(material.getName(), resource, monitor, new HashSet<String>(), false);
+	public void run(Material material, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
+		read(material.getName(), resource, monitor, seenObjects, false);
 	}
 
 }

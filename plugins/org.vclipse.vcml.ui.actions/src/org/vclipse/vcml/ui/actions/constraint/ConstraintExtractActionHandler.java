@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.constraint;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -25,8 +25,8 @@ public class ConstraintExtractActionHandler extends ConstraintReader implements 
 		return isConnected();
 	}
 
-	public void run(Constraint constraint, Resource resource, IProgressMonitor monitor) throws JCoException {
-		read(constraint.getName(), resource, monitor, new HashSet<String>(), true);
+	public void run(Constraint constraint, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
+		read(constraint.getName(), resource, monitor, seenObjects, true);
 	}
 
 }

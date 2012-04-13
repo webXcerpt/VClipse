@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.precondition;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.vcml.ui.actions.BAPIUtils;
@@ -29,7 +31,7 @@ public class PreconditionCreateChangeActionHandler extends BAPIUtils implements 
 		return isConnected();
 	}
 
-	public void run(Precondition object, Resource resource, IProgressMonitor monitor) throws JCoException {
+	public void run(Precondition object, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
 		beginTransaction();
 		JCoFunction function = getJCoFunction("CAMA_DEPENDENCY_MAINTAIN", monitor);
 		JCoParameterList ipl = function.getImportParameterList();

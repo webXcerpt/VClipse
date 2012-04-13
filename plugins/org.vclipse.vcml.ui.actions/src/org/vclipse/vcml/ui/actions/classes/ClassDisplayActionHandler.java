@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.classes;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -26,8 +26,8 @@ public class ClassDisplayActionHandler extends ClassReader implements IVCMLOutli
 		return isConnected();
 	}
 
-	public void run(Class cls, Resource resource, IProgressMonitor monitor) throws JCoException {
-		read(cls.getName(), (Model)resource.getContents().get(0), monitor, new HashSet<String>(), false);
+	public void run(Class cls, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
+		read(cls.getName(), (Model)resource.getContents().get(0), monitor, seenObjects, false);
 	}
 
 }

@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.configurationprofile;
 
-import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -26,8 +26,8 @@ public class ConfigurationProfileDisplayActionHandler extends ConfigurationProfi
 		return isConnected();
 	}
 
-	public void run(ConfigurationProfile configurationProfile, Resource resource, IProgressMonitor monitor) throws JCoException {
-		read((Material)configurationProfile.eContainer(), configurationProfile.getName(), resource, monitor, new HashSet<String>(), false);
+	public void run(ConfigurationProfile configurationProfile, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
+		read((Material)configurationProfile.eContainer(), configurationProfile.getName(), resource, monitor, seenObjects, false);
 	}
 
 }
