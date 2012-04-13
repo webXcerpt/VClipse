@@ -67,13 +67,13 @@ Workflow {
 				inheritImplementation = true
 				ignoreCase = true
 			}
-			fragment = exporting.SimpleNamesFragment {}
+			//fragment = exporting.SimpleNamesFragment {}
 
 			// scoping and exporting API 
 			//fragment = scoping.ImportNamespacesScopingFragment {
 			//	ignoreCase = true
 			//}
-			// fragment = exporting.QualifiedNamesFragment {}
+			fragment = exporting.QualifiedNamesFragment {}
 			fragment = builder.BuilderIntegrationFragment {}
 
 			// generator API
