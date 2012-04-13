@@ -50,10 +50,7 @@ public class SapRequestObjectLinker extends VCMLLinker {
 	
 	@Override
 	protected void afterModelLinked(EObject model, IDiagnosticConsumer diagnosticsConsumer) {
-		TreeIterator<EObject> contents = model.eAllContents();
-		while(contents.hasNext()) {
-			resolveProxies(contents.next());
-		}
+		resolveProxies(model);
 	}
 	
 	private void resolveProxies(EObject object) {
