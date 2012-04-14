@@ -44,6 +44,7 @@ import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Expression;
 import org.vclipse.vcml.vcml.InCondition_C;
 import org.vclipse.vcml.vcml.InCondition_P;
+import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.MDataCharacteristic_C;
 import org.vclipse.vcml.vcml.MDataCharacteristic_P;
@@ -60,6 +61,8 @@ import org.vclipse.vcml.vcml.SymbolicLiteral;
 import org.vclipse.vcml.vcml.SymbolicType;
 import org.vclipse.vcml.vcml.UnaryExpression;
 import org.vclipse.vcml.vcml.VCObject;
+import org.vclipse.vcml.vcml.VariantFunction;
+import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
 import org.vclipse.vcml.vcml.VcmlPackage;
@@ -82,6 +85,7 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	 
 	private static final int MAXLENGTH_CLASS_CHARACTERISTICS = 999; // SAP limit because cstic index in class table has size 3
 	private static final int MAXLENGTH_CLASS_NAME = 18;
+	private static final int MAXLENGTH_INTERFACEDESIGN_NAME = 18;
 	private static final int MAXLENGTH_NAME = 30;
 	private static final int MAXLENGTH_DESCRIPTION = 30;
 	private static final int MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS = 50; // soft limit of size of dependency net (should not be larger because compilation has a O(n^2) algorithm)
@@ -103,6 +107,10 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 			if(VcmlUtils.getClassName(name).length() > MAXLENGTH_CLASS_NAME) {
 				error("Name of class is limited to " + MAXLENGTH_CLASS_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
 			}
+		} else if(object instanceof InterfaceDesign) {
+				if(name.length() > MAXLENGTH_INTERFACEDESIGN_NAME) {
+					error("Name of interface design is limited to " + MAXLENGTH_INTERFACEDESIGN_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
+				}
 		} else if(name.length() > MAXLENGTH_NAME) {
 			error("Name of " + object.getClass().getSimpleName() + " is limited to " + MAXLENGTH_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
@@ -118,7 +126,7 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	@Check
 	public void checkDependencyNet(DependencyNet dependencyNet) {
 		if(dependencyNet.getConstraints().size() > MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS) {
-			warning("Dependency net " + dependencyNet.getName() + " too large, should have for efficiency at most " + MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS + " constraints", VcmlPackage.Literals.VC_OBJECT__NAME);
+			warning("Dependency net " + dependencyNet.getName() + " too large ("+ dependencyNet.getConstraints().size() +" constraints), should have for efficiency at most " + MAXLENGTH_DEPENDENCYNET_CHARACTERISTICS + " constraints", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 	}
 	
@@ -164,7 +172,7 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	@Check(CheckType.FAST)
 	public void checkClass(Class object) {
 		if(object.getCharacteristics().size() > MAXLENGTH_CLASS_CHARACTERISTICS) {
-			error("Number of characteristics of a class is limited to " + MAXLENGTH_CLASS_CHARACTERISTICS, VcmlPackage.Literals.VC_OBJECT__NAME);
+			error("Number of characteristics of a class is limited to " + MAXLENGTH_CLASS_CHARACTERISTICS + "(" + object.getCharacteristics().size() + ")", VcmlPackage.Literals.VC_OBJECT__NAME);
 		}
 	}
 
@@ -178,6 +186,14 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 		} else if (vcObject instanceof Class) {
 			if (desc.getValue().length() > 40) {
 				warning("Class descriptions are limited to 40 characters", VcmlPackage.Literals.SIMPLE_DESCRIPTION__VALUE);
+			}
+		} else if (vcObject instanceof VariantFunction) {
+			if (desc.getValue().length() > 40) {
+				warning("Variant function descriptions are limited to 40 characters", VcmlPackage.Literals.SIMPLE_DESCRIPTION__VALUE);
+			}
+		} else if (vcObject instanceof VariantTable) {
+			if (desc.getValue().length() > 40) {
+				warning("Variant table descriptions are limited to 40 characters", VcmlPackage.Literals.SIMPLE_DESCRIPTION__VALUE);
 			}
 		} else {
 			if (desc.getValue().length() > MAXLENGTH_DESCRIPTION) {
