@@ -34,7 +34,7 @@
 <repository location="http://xtext-utils.eclipselabs.org.codespot.com/git.distribution/releases/unittesting-0.9.x/"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.platform.ide" version="3.7.1.M20110909-1335"/>
+<unit id="org.eclipse.platform.ide" version="3.7.2.M20120208-0800"/>
 <repository location="http://download.eclipse.org/eclipse/updates/3.7"/>
 </location>
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -45,7 +45,7 @@
 <unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.7"/>
 <unit id="org.tigris.subversion.clientadapter.javahl.feature.feature.group" version="1.7.4"/>
 <unit id="net.java.dev.jna.feature.group" version="3.4.0.t20120117_1605"/>
-<unit id="org.tmatesoft.svnkit.feature.group" version="1.7.4.rc5_t20120405_1702"/>
+<unit id="org.tmatesoft.svnkit.feature.group" version="1.7.4.t20120412_2022"/>
 <unit id="org.tigris.subversion.clientadapter.svnkit.feature.feature.group" version="1.7.0"/>
 <repository location="http://subclipse.tigris.org/update_1.8.x"/>
 </location>
