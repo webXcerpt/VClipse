@@ -49,7 +49,11 @@ public class VcmlNamesAreUniqueValidationHelper extends NamesAreUniqueValidation
 	
 	@Override
 	protected EClass getAssociatedClusterType(EClass eClass) {
-		if(eClass == VCML_PACKAGE.getCharacteristicValue() || eClass == VCML_PACKAGE.getConstraintClass()) {
+		if(eClass == VCML_PACKAGE.getCharacteristicValue() || 
+				   eClass == VCML_PACKAGE.getConstraintClass() || 
+						   eClass == VCML_PACKAGE.getConstraintMaterial() || 
+								   eClass == VCML_PACKAGE.getPartialKey() || 
+										   eClass == VCML_PACKAGE.getShortVarDefinition()) {
 			// do not handle names for this types
 			return null;
 		}
