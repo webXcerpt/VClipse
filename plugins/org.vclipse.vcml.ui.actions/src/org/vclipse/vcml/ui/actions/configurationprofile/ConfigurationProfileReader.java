@@ -89,7 +89,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 				if (!Strings.isEmpty(design)) {
 					InterfaceDesign interfaceDesign = null;
 					if (recurse) {
-						interfaceDesign = interfaceDesignReader.read(design, resource, monitor, seenObjects, recurse);
+						interfaceDesign = interfaceDesignReader.read(design, (Model)resource.getContents().get(0), monitor, seenObjects, recurse);
 					}
 					if (interfaceDesign==null) {
 						interfaceDesign = VCMLProxyFactory.createInterfaceDesignProxy(resource, design);

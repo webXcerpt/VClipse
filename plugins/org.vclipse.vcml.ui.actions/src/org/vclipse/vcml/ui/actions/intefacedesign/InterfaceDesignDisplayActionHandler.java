@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.vcml.ui.outline.actions.IVCMLOutlineActionHandler;
 import org.vclipse.vcml.vcml.InterfaceDesign;
+import org.vclipse.vcml.vcml.Model;
 
 import com.sap.conn.jco.JCoException;
 
@@ -26,7 +27,7 @@ public class InterfaceDesignDisplayActionHandler extends InterfaceDesignReader i
 	}
 
 	public void run(InterfaceDesign interfaceDesign, Resource resource, IProgressMonitor monitor, Set<String> seenObjects) throws JCoException {
-		read(interfaceDesign.getName(), resource, monitor, seenObjects, false);
+		read(interfaceDesign.getName(), (Model)resource.getContents().get(0), monitor, seenObjects, false);
 	}
 
 }

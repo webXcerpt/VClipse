@@ -15,7 +15,6 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.util.Strings;
 import org.vclipse.vcml.ui.actions.BAPIUtils;
 import org.vclipse.vcml.ui.actions.characteristic.CharacteristicReader;
@@ -40,12 +39,13 @@ public class InterfaceDesignReader extends BAPIUtils {
 	@Inject
 	private CharacteristicReader csticReader;
 	
-	public InterfaceDesign read(String interfaceDesignName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
+	public InterfaceDesign read(String interfaceDesignName, Model model, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
 		if (!seenObjects.add("InterfaceDesign/" + interfaceDesignName)) {
 			return null;
 		}
 		InterfaceDesign object = VCML.createInterfaceDesign();
 		object.setName(interfaceDesignName);
+		model.getObjects().add(object);
 
 			/** 
 	 * documentation of BAPI: http://abap.wikiprog.com/wiki/BAPI_UI_GETDETAIL
@@ -174,6 +174,7 @@ FRAME_TEXT
 					// TODO sort groups by groupName
 					String groupName = charGroups.getString("GROUP_NAME");
 					CharacteristicGroup group = VCML.createCharacteristicGroup();
+					group.setName(groupName);
 					characteristicGroups.add(group);
 					
 					// read description
@@ -206,10 +207,10 @@ FRAME_TEXT
 							String csticName = chars.getString("NAME_CHAR");
 							Characteristic cstic = null;
 							if (recurse) {
-								cstic = csticReader.read(csticName, (Model)resource.getContents().get(0), monitor, seenObjects, recurse);
+								cstic = csticReader.read(csticName, model, monitor, seenObjects, recurse);
 							}
 							if (cstic==null) {
-								cstic = VCMLProxyFactory.createCharacteristicProxy(resource, csticName);
+								cstic = VCMLProxyFactory.createCharacteristicProxy(model.eResource(), csticName);
 							}
 							characteristics.add(cstic);
 						}
