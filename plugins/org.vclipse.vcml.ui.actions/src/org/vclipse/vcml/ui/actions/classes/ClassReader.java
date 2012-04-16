@@ -39,12 +39,14 @@ public class ClassReader extends BAPIUtils {
 			return null;
 		}
 		Class object = VCML.createClass();
-		object.setName(classSpec);
+		int classType = VcmlUtils.getClassType(classSpec);
+		String className = VcmlUtils.getClassName(classSpec);
+		object.setName("(" + classType + ")" + classSpec);
 		model.getObjects().add(object);
 		JCoFunction function = getJCoFunction("BAPI_CLASS_GETDETAIL", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
-		ipl.setValue("CLASSNUM", VcmlUtils.getClassName(classSpec));
-		ipl.setValue("CLASSTYPE", VcmlUtils.getClassType(classSpec));
+		ipl.setValue("CLASSTYPE", classType);
+		ipl.setValue("CLASSNUM", className);
 		execute(function, monitor, classSpec);
 		if (processReturnStructure(function)) {
 			JCoStructure classBasicData = function.getExportParameterList().getStructure("CLASSBASICDATA");
