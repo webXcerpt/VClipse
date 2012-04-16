@@ -57,7 +57,7 @@ BOMItem :
 	itemnumber=INT
 	material=[Material | EXTENDED_ID]
 	('dependencies' '{'
-	  (selectionCondition=[SelectionCondition | XID])?
+	  (selectionCondition=[SelectionCondition | EXTENDED_ID])?
 	  (entries+=ConfigurationProfileEntry)*
 	 '}')?
 	;
@@ -158,7 +158,7 @@ CharacteristicOrValueDependencies :
 	'dependencies' '{'
 		localPrecondition=LocalPrecondition?
 		localSelectionCondition=LocalSelectionCondition?
-		dependencies+=[GlobalDependency | XID]*
+		dependencies+=[GlobalDependency | EXTENDED_ID]*
 	'}'
 	;
 
@@ -187,7 +187,7 @@ ConfigurationProfile :
 	   &	('bomapplication' bomapplication=XID)
 	   &	('uidesign' uidesign=[InterfaceDesign | EXTENDED_ID])?
 	   )
-       (dependencyNets+=[DependencyNet|XID])*
+       (dependencyNets+=[DependencyNet|EXTENDED_ID])*
        (entries+=ConfigurationProfileEntry)*
     '}'
     ;
@@ -210,7 +210,7 @@ LocalDependency
 	;
 
 Procedure :
-    'procedure' name=XID ('{'
+    'procedure' name=EXTENDED_ID ('{'
 		(	description=Description
 		&	documentation=Documentation?
 		&	('status' status=Status)?
@@ -223,7 +223,7 @@ Procedure :
     ;
 
 SelectionCondition :
-    'selectioncondition' name=XID ('{'
+    'selectioncondition' name=EXTENDED_ID ('{'
 		(	description=Description
 		&	documentation=Documentation?
 		&	('status' status=Status)?
@@ -255,7 +255,7 @@ GeneralSelectionCondition
 	;
 
 Precondition :
-    'precondition' name=XID ('{'
+    'precondition' name=EXTENDED_ID ('{'
 		(	description=Description
 		&	documentation=Documentation?
 		&	('status' status=Status)?
@@ -291,18 +291,18 @@ ConditionSource hidden (WS, DEPENDENCY_COMMENT):
 	;
 
 DependencyNet :
-	'dependencynet' name=XID ('{'
+	'dependencynet' name=EXTENDED_ID ('{'
 		(	description=Description
 		&	documentation=Documentation?
 		&	('status' status=Status)?
  		&	('group' group=STRING)?
  		)
-		(constraints+=[Constraint | XID])*
+		(constraints+=[Constraint | EXTENDED_ID])*
 	'}')?
 	;
 
 Constraint :
-    'constraint' name=XID ('{'
+    'constraint' name=EXTENDED_ID ('{'
 		(	description=Description
 		&	documentation=Documentation?
 		&	('status' status=Status)?
@@ -315,7 +315,7 @@ Constraint :
     ;
 
 ConfigurationProfileEntry :
-    sequence=INT dependency=[Procedure|XID]
+    sequence=INT dependency=[Procedure|EXTENDED_ID]
     ;
 
 InterfaceDesign :
@@ -334,7 +334,7 @@ CharacteristicGroup :
 Material : 
 	'material' name=EXTENDED_ID ('{'
 		(	description=Description
-		&	('type' type=XID)
+		&	('type' type=EXTENDED_ID)
 		)
 		billofmaterials+=BillOfMaterial*
 		('classes' '{' classifications+=Classification* '}')?
