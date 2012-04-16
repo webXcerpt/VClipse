@@ -154,7 +154,6 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 			Job job = new Job(getDescription()) {
 				protected IStatus run(IProgressMonitor monitor) {
 					monitor.beginTask("Extracting objects from SAP system", IProgressMonitor.UNKNOWN);
-					linker.setSeenObjects(seenObjects);
 					for(EObject obj : getSelectedObjects()) {
 						IVCMLOutlineActionHandler<?> actionHandler = actionHandlers.get(getInstanceTypeName(obj));
 						if (actionHandler != null) {
@@ -188,6 +187,7 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 							}
 						}
 					}
+					linker.setSeenObjects(seenObjects);
 					if(linker != null) {
 						linker.linkModel(vcmlModel, new IDiagnosticConsumer() {
 							public void consume(Diagnostic diagnostic, Severity severity) {
