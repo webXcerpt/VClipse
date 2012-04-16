@@ -156,9 +156,6 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 					monitor.beginTask("Extracting objects from SAP system", IProgressMonitor.UNKNOWN);
 					linker.setSeenObjects(seenObjects);
 					for(EObject obj : getSelectedObjects()) {
-						if(obj instanceof VCObject) {
-							seenObjects.add(((VCObject)obj).getName());
-						}
 						IVCMLOutlineActionHandler<?> actionHandler = actionHandlers.get(getInstanceTypeName(obj));
 						if (actionHandler != null) {
 							try {
