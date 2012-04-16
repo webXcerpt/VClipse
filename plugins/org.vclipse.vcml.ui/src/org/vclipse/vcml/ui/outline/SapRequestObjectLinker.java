@@ -19,6 +19,7 @@ import org.vclipse.vcml.ui.extension.IExtensionPointUtilities;
 import org.vclipse.vcml.ui.outline.actions.IVCMLOutlineActionHandler;
 import org.vclipse.vcml.ui.outline.actions.OutlineActionCanceledException;
 import org.vclipse.vcml.vcml.VCObject;
+import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
@@ -41,9 +42,9 @@ public class SapRequestObjectLinker extends VCMLLinker {
 	@Override
 	protected EObject createProxy(EObject object, INode node, EReference reference) {
 		EObject proxyObject = super.createProxy(object, node, reference);
-		if(proxyObject instanceof VCObject) {
-			String text = NodeModelUtils.getTokenText(node);
-			((VCObject)proxyObject).setName(text);
+		String text = NodeModelUtils.getTokenText(node);
+		if(text != null) {
+			proxyObject.eSet(VcmlPackage.eINSTANCE.getVCObject_Name(), text);
 		}
 		return proxyObject;
 	}
