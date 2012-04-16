@@ -81,15 +81,6 @@ public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListe
 	}
 
 	private void createPopupMenuAction(TreeViewer treeViewer, IToolBarManager toolBarManager) {
-		
-		// selection listener for all actions
-		// treeViewer.addSelectionChangedListener(action);
-		
-		// add actions to the toolbar
-		// toolBarManager.add(action);
-		
-		// Add contributing actions
-		
 		List<VCMLOutlineAction> actions = extensionPointUtilities.getActions();
 		for(VCMLOutlineAction action : actions) {
 			treeViewer.addSelectionChangedListener(action);
