@@ -37,7 +37,7 @@ public class VariantFunctionReader extends BAPIUtils {
 	private CharacteristicReader csticReader;
 	
 	public VariantFunction read(String variantFunctionName, Model vcmlModel, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
-		if (!seenObjects.add(variantFunctionName))
+		if (!seenObjects.add("VariantFunction/" + variantFunctionName))
 			return null;
 		VariantFunction object = VCML.createVariantFunction();
 		object.setName(variantFunctionName);
