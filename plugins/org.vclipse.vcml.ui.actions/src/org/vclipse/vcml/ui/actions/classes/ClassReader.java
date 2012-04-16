@@ -35,19 +35,21 @@ public class ClassReader extends BAPIUtils {
 	private CharacteristicReader csticReader;
 	
 	public Class read(String classSpec, Model model, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
-		if (!seenObjects.add("Class/" + classSpec)) {
+		int classType = VcmlUtils.getClassType(classSpec);
+		String className = VcmlUtils.getClassName(classSpec);
+		String newClassSpec = "(" + classType + ")" + className;
+		if (!seenObjects.add("Class/" + newClassSpec)) {
 			return null;
 		}
 		Class object = VCML.createClass();
-		int classType = VcmlUtils.getClassType(classSpec);
-		String className = VcmlUtils.getClassName(classSpec);
-		object.setName("(" + classType + ")" + classSpec);
+		object.setName(newClassSpec);
 		model.getObjects().add(object);
 		JCoFunction function = getJCoFunction("BAPI_CLASS_GETDETAIL", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue("CLASSTYPE", classType);
 		ipl.setValue("CLASSNUM", className);
-		execute(function, monitor, classSpec);
+		System.err.println("newClassSpec: " + newClassSpec);
+		execute(function, monitor, newClassSpec);
 		if (processReturnStructure(function)) {
 			JCoStructure classBasicData = function.getExportParameterList().getStructure("CLASSBASICDATA");
 			object.setStatus(VcmlUtils.createStatusFromInt(classBasicData.getInt("STATUS")));
