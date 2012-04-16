@@ -238,7 +238,7 @@ public class VcmlUtils {
 		}
 	}
 	
-	static private Pattern CLASSSPEC_PATTERN = Pattern.compile("\\((\\d+)\\)\\s*(\\S+)"); // (INT)ID, capturing group 1 is INT, capturing group 2 is ID
+	static private Pattern CLASSSPEC_PATTERN = Pattern.compile("\\(\\s*(\\d+)\\s*\\)\\s*(\\S+)"); // (INT)ID, capturing group 1 is INT, capturing group 2 is ID
 	
 	public static int getClassType(String classSpec) {
 		 Matcher m = CLASSSPEC_PATTERN.matcher(classSpec);
