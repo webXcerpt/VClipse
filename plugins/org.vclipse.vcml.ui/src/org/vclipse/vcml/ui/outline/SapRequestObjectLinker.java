@@ -58,6 +58,12 @@ public class SapRequestObjectLinker extends VCMLLinker {
 		while(treeIterator.hasNext()) {
 			for(EObject crossReference : treeIterator.next().eCrossReferences()) {
 				if(crossReference.eIsProxy()) {
+					if(crossReference instanceof VCObject) {
+						VCObject vcobject = (VCObject)crossReference;
+						if(seenObjects.contains(vcobject.eClass().getName() + "/" + vcobject.getName().toUpperCase())) {
+							continue;
+						}
+					}
 					Collection<IVCMLOutlineActionHandler<?>> handlers = extensionPointReader.getHandler(crossReference.eClass().getInstanceClassName());
 					for(IVCMLOutlineActionHandler<?> handler : handlers) {
 						if(handler.getClass().getSimpleName().contains("Extract")) {
