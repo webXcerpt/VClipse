@@ -321,9 +321,11 @@ public abstract class CodePrettyPrinter extends VcmlSwitch<DataLayouter<NoExcept
 	public DataLayouter<NoExceptions> caseComparison(Comparison object) {
 		int parentPrec = precedenceLevel;
 		precedenceLevel = PREC_COMPARISON;
+		layouter.beginC();
 		doSwitch(object.getLeft());
 		layouter.brk().print(object.getOperator()).brk();
 		doSwitch(object.getRight());
+		layouter.end();
 		precedenceLevel = parentPrec;
 		return layouter;
 	}
