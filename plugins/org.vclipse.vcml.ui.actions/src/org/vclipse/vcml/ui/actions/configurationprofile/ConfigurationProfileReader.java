@@ -89,6 +89,9 @@ public class ConfigurationProfileReader extends BAPIUtils {
 				if (!Strings.isEmpty(design)) {
 					InterfaceDesign interfaceDesign = null;
 					if (recurse) {
+						if(monitor.isCanceled()) {
+							return;
+						}
 						interfaceDesign = interfaceDesignReader.read(design, (Model)resource.getContents().get(0), monitor, seenObjects, recurse);
 					}
 					if (interfaceDesign==null) {
@@ -117,6 +120,9 @@ public class ConfigurationProfileReader extends BAPIUtils {
 					entriesByName.put(depName, entry);
 					Procedure procedure = null;
 					if (recurse) {
+						if(monitor.isCanceled()) {
+							return;
+						}
 						procedure = procedureReader.read(depName, resource, monitor, seenObjects, recurse);
 					}
 					if (procedure==null) {
@@ -126,6 +132,9 @@ public class ConfigurationProfileReader extends BAPIUtils {
 				} else if ("CNET".equals(depType)) {
 					DependencyNet dependencyNet = null;
 					if (recurse) {
+						if(monitor.isCanceled()) {
+							return;
+						}
 						dependencyNet = dependencyNetReader.read(depName, (Model)resource.getContents().get(0), monitor, seenObjects, recurse);
 					}
 					if (dependencyNet==null) {

@@ -28,8 +28,12 @@ import com.sap.conn.jco.JCoStructure;
 public class PreconditionReader extends BAPIUtils {
 
 	public Precondition read(String preconditionName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
-		if (!seenObjects.add("Precondition/" + preconditionName))
+		if(!seenObjects.add("Precondition/" + preconditionName)) {
 			return null;
+		}
+		if(monitor.isCanceled()) {
+			return null;
+		}
 		Precondition object = VCML.createPrecondition();
 		object.setName(preconditionName);
 		Model model = (Model)resource.getContents().get(0);

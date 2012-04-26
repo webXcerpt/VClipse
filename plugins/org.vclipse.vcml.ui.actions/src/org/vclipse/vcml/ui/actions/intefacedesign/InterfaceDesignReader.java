@@ -43,6 +43,9 @@ public class InterfaceDesignReader extends BAPIUtils {
 		if (!seenObjects.add("InterfaceDesign/" + interfaceDesignName)) {
 			return null;
 		}
+		if(monitor.isCanceled()) {
+			return null;
+		}
 		InterfaceDesign object = VCML.createInterfaceDesign();
 		object.setName(interfaceDesignName);
 		model.getObjects().add(object);
@@ -207,6 +210,9 @@ FRAME_TEXT
 							String csticName = chars.getString("NAME_CHAR");
 							Characteristic cstic = null;
 							if (recurse) {
+								if(monitor.isCanceled()) {
+									return null;
+								}
 								cstic = csticReader.read(csticName, model, monitor, seenObjects, recurse);
 							}
 							if (cstic==null) {

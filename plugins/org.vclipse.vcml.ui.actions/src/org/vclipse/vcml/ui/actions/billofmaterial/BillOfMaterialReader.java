@@ -41,6 +41,9 @@ public class BillOfMaterialReader extends BAPIUtils {
 	private MaterialReader materialReader;
 	
 	public void read(Material containerMaterial, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
+		if(monitor.isCanceled()) {
+			return;
+		}
 		String materialNumber = containerMaterial.getName();
 		if (!seenObjects.add("BillOfMaterial/" + materialNumber)) {
 			return;
@@ -82,6 +85,9 @@ public class BillOfMaterialReader extends BAPIUtils {
 				if (!Strings.isEmpty(component)) {
 					Material bomMaterial = null;
 					if (recurse) {
+						if(monitor.isCanceled()) {
+							return;
+						}
 						bomMaterial = materialReader.read(component, resource, monitor, seenObjects, recurse);
 					}
 					if (bomMaterial==null) {

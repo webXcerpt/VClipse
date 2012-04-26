@@ -64,6 +64,9 @@ public class ClassReader extends BAPIUtils {
 					// TODO move this read / proxy mechanism to CharacteristicReader
 					Characteristic cstic = null;
 					if(recurse) {
+						if(monitor.isCanceled()) {
+							return null;
+						}
 						cstic = csticReader.read(csticName, model, monitor, seenObjects, recurse);
 					}
 					if (cstic==null) {

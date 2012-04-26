@@ -49,6 +49,9 @@ public class MaterialReader extends BAPIUtils {
 		if (!seenObjects.add("Material/" + materialName)) {
 			return null;
 		}
+		if(monitor.isCanceled()) {
+			return null;
+		}
 		Material object = VCML.createMaterial();
 		object.setName(materialName);
 		Model model = (Model)resource.getContents().get(0);
@@ -69,8 +72,14 @@ public class MaterialReader extends BAPIUtils {
 			object.setDescription(description);
 			object.setType(materialGeneralData.getString("MATL_TYPE"));
 		}
+		if(monitor.isCanceled()) {
+			return null;
+		}
 		configurationProfileReader.readAll(object, resource, monitor, seenObjects, recurse);
 
+		if(monitor.isCanceled()) {
+			return null;
+		}
 		// BAPI_MAT_BOM_EXISTENCE_CHECK
 		bomReader.read(object, resource, monitor, seenObjects, recurse);
 
@@ -89,6 +98,9 @@ public class MaterialReader extends BAPIUtils {
 					String className = "(" + allocList.getInt("CLASSTYPE") + ")" + allocList.getString("CLASSNUM");
 					Class cls = null;
 					if (recurse) {
+						if(monitor.isCanceled()) {
+							return null;
+						}
 						cls = classReader.read(className, model, monitor, seenObjects, recurse);
 					}
 					if (cls==null) {

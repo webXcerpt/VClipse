@@ -61,6 +61,9 @@ public class DependencyNetReader extends BAPIUtils {
 					String constraintName = constraints.getString("DEPENDENCY");
 					Constraint constraint = null;
 					if (recurse) {
+						if(monitor.isCanceled()) {
+							return null;
+						}
 						constraint = constraintReader.read(constraintName, vcmlModel.eResource(), monitor, seenObjects, recurse);
 					}
 					if (constraint==null) {

@@ -20,7 +20,6 @@ import org.vclipse.vcml.ui.extension.IExtensionPointUtilities;
 import org.vclipse.vcml.ui.outline.actions.IVCMLOutlineActionHandler;
 import org.vclipse.vcml.ui.outline.actions.OutlineActionCanceledException;
 import org.vclipse.vcml.vcml.VCObject;
-import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;

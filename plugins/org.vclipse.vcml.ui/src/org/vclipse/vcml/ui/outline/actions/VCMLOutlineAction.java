@@ -155,11 +155,13 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 				protected IStatus run(IProgressMonitor monitor) {
 					monitor.beginTask("Extracting objects from SAP system", IProgressMonitor.UNKNOWN);
 					for(EObject obj : getSelectedObjects()) {
+						if(monitor.isCanceled()) {
+							break;
+						}
 						IVCMLOutlineActionHandler<?> actionHandler = actionHandlers.get(getInstanceTypeName(obj));
 						if (actionHandler != null) {
 							try {
-								Method method = actionHandler.getClass().getMethod("run", 
-										new Class[]{getInstanceType(obj), Resource.class, IProgressMonitor.class, Set.class});
+								Method method = actionHandler.getClass().getMethod("run", new Class[]{getInstanceType(obj), Resource.class, IProgressMonitor.class, Set.class});
 								method.invoke(actionHandler, new Object[]{obj, finalSourceResource, monitor, seenObjects});
 							} catch (NoSuchMethodException e) {
 								e.printStackTrace();
@@ -221,6 +223,7 @@ public class VCMLOutlineAction extends Action implements ISelectionChangedListen
 							exception.printStackTrace();
 						}
 					}
+					result.println("Extraction finished.");
 					return Status.OK_STATUS;
 				}
 			};

@@ -37,8 +37,9 @@ public class VariantTableReader extends BAPIUtils {
 	private CharacteristicReader csicReader;
 	
 	public VariantTable read(String variantTableName, Model vcmlModel, IProgressMonitor monitor, Set<String> seenObjects, boolean recurse) throws JCoException {
-		if (!seenObjects.add("VariantTable/" + variantTableName))
+		if (!seenObjects.add("VariantTable/" + variantTableName)) {
 			return null;
+		}
 		VariantTable object = VCML.createVariantTable();
 		object.setName(variantTableName);
 		vcmlModel.getObjects().add(object);
@@ -62,6 +63,9 @@ public class VariantTableReader extends BAPIUtils {
 				// TODO move this read / proxy mechanism to CharacteristicReader
 				Characteristic cstic = null;
 				if (recurse) {
+					if(monitor.isCanceled()) {
+						return null;
+					}
 					cstic = csicReader.read(csticName, vcmlModel, monitor, seenObjects, recurse);
 				}
 				if (cstic==null) {

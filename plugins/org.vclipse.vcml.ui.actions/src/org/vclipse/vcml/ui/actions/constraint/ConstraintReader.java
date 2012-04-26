@@ -31,6 +31,9 @@ public class ConstraintReader extends BAPIUtils {
 		if (!seenObjects.add("Constraint/" + constraintName)) {
 			return null;
 		}
+		if(monitor.isCanceled()) {
+			return null;
+		}
 		Constraint object = VCML.createConstraint();
 		object.setName(constraintName);
 		Model model = (Model)resource.getContents().get(0);
