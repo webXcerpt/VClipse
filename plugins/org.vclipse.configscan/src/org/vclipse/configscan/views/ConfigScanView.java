@@ -29,6 +29,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -47,6 +48,7 @@ import org.vclipse.configscan.views.JobAwareTreeViewer.ITreeViewerLockListener;
 import org.vclipse.configscan.views.JobAwareTreeViewer.TreeViewerLockEvent;
 import org.vclipse.configscan.views.actions.CollapseTreeAction;
 import org.vclipse.configscan.views.actions.CompareAction;
+import org.vclipse.configscan.views.actions.CopyStringAction;
 import org.vclipse.configscan.views.actions.ExpandTreeAction;
 import org.vclipse.configscan.views.actions.ImportExportAction;
 import org.vclipse.configscan.views.actions.NextAction;
@@ -132,10 +134,12 @@ public final class ConfigScanView extends ViewPart {
 	private NextAction nextFailureAction;
 	private PreviousAction prevFailureAction;
 	private CompareAction compareAction;
-	
+
 	private Map<String, Action> id2Action;
  
 	private ConfigScanViewInput input;
+	
+	private Clipboard clipboard;
 	
 	public void setFocus() {
 		viewer.getControl().setFocus();
@@ -158,12 +162,19 @@ public final class ConfigScanView extends ViewPart {
 		viewer.removeSelectionChangedListener(defaultLabelProvider);
 		super.dispose();
 	}
+	
+	public Clipboard getClipboard() {
+		if(clipboard == null) {
+			clipboard = new Clipboard(getSite().getShell().getDisplay());
+		}
+		return clipboard;
+	}
 
 	public void createPartControl(Composite parent) {
 		id2Action = Maps.newHashMap();
 		parent.setLayout(new GridLayout());
 		
-		viewer = new JobAwareTreeViewer(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
+		viewer = new JobAwareTreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
 		defaultLabelProvider = new DefaultLabelProvider(labelProvider, viewer);
 		viewer.setLabelProvider(defaultLabelProvider);			
 		viewer.addSelectionChangedListener(defaultLabelProvider);
@@ -317,6 +328,8 @@ public final class ConfigScanView extends ViewPart {
 			public void menuAboutToShow(IMenuManager manager) {
 				manager.add(expandTreeAction);
 				manager.add(collapseTreeAction);
+				manager.add(new Separator());
+				manager.add(new CopyStringAction(ConfigScanView.this, imageHelper));
 				manager.add(new Separator());
 				manager.add(relaunchAction);
 				manager.add(relaunchFailedAction);

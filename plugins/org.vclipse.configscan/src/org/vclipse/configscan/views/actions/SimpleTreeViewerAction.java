@@ -3,6 +3,8 @@ package org.vclipse.configscan.views.actions;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
@@ -40,4 +42,14 @@ public abstract class SimpleTreeViewerAction extends Action {
 			}			
 		}
 	}
+	
+	protected boolean singleSelection() {
+		ISelection selection = treeViewer.getSelection();
+		if(selection instanceof IStructuredSelection) {
+			return ((IStructuredSelection)selection).toArray().length > 1;
+		}
+		return false;
+	}
+	
+	
 }
