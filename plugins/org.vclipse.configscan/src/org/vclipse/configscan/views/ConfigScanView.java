@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
@@ -134,6 +135,8 @@ public final class ConfigScanView extends ViewPart {
 	private NextAction nextFailureAction;
 	private PreviousAction prevFailureAction;
 	private CompareAction compareAction;
+	
+	private CopyStringAction copyStringAction;
 
 	private Map<String, Action> id2Action;
  
@@ -175,6 +178,7 @@ public final class ConfigScanView extends ViewPart {
 		parent.setLayout(new GridLayout());
 		
 		viewer = new JobAwareTreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
+
 		defaultLabelProvider = new DefaultLabelProvider(labelProvider, viewer);
 		viewer.setLabelProvider(defaultLabelProvider);			
 		viewer.addSelectionChangedListener(defaultLabelProvider);
@@ -195,6 +199,7 @@ public final class ConfigScanView extends ViewPart {
 		
 		contributeToActionBars();		
 		createContextMenu();
+		registerGlobalActions();
 		hookDoubleClickAction();
 		
 		try {
@@ -268,6 +273,11 @@ public final class ConfigScanView extends ViewPart {
 		}
 	}
 	
+	private void registerGlobalActions() {
+		IActionBars actionBars = getViewSite().getActionBars();
+		actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copyStringAction = new CopyStringAction(this, imageHelper));
+	}
+	
 	private void contributeToActionBars() {
 		IActionBars actionBars = getViewSite().getActionBars();
 		IToolBarManager toolBarManager = actionBars.getToolBarManager();
@@ -329,7 +339,7 @@ public final class ConfigScanView extends ViewPart {
 				manager.add(expandTreeAction);
 				manager.add(collapseTreeAction);
 				manager.add(new Separator());
-				manager.add(new CopyStringAction(ConfigScanView.this, imageHelper));
+				manager.add(copyStringAction);
 				manager.add(new Separator());
 				manager.add(relaunchAction);
 				manager.add(relaunchFailedAction);

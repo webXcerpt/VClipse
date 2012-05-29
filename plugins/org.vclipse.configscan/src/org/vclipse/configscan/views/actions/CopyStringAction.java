@@ -5,7 +5,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.IWorkbenchCommandConstants;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
 import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.configscan.impl.model.TestCase;
@@ -13,13 +14,18 @@ import org.vclipse.configscan.views.ConfigScanView;
 
 public class CopyStringAction extends SimpleTreeViewerAction {
 
-	public static final String ID = ConfigScanPlugin.ID + "." + CopyStringAction.class.getSimpleName();
+	public static final String ID =  ConfigScanPlugin.ID + "." + CopyStringAction.class.getSimpleName();
 	
 	public CopyStringAction(ConfigScanView view, ClasspathAwareImageHelper imageHelper) {
 		super(view, imageHelper);
-		ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
-		setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+		setToolTipText("Copy");
 		setText("Copy");
+        setActionDefinitionId(IWorkbenchCommandConstants.EDIT_COPY);
+        setId(ID);
+        IWorkbenchWindow workbenchWindow = view.getSite().getWorkbenchWindow();
+		ISharedImages sharedImages = workbenchWindow.getWorkbench().getSharedImages();
+        setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
+        setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_COPY_DISABLED));
 	}
 
 	@Override
