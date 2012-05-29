@@ -1,4 +1,4 @@
-package org.vclipse.configscan.views;
+package org.vclipse.configscan.tests.junit.plugin;
 
 import java.io.File;
 import java.util.HashMap;
@@ -15,6 +15,7 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.vclipse.configscan.views.ConfigScanView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

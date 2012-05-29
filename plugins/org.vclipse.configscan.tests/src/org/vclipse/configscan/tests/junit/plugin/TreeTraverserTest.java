@@ -1,4 +1,4 @@
-package org.vclipse.configscan.views;
+package org.vclipse.configscan.tests.junit.plugin;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -26,12 +26,17 @@ import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.FailureTreeTraverser;
 import org.vclipse.configscan.utils.TestCaseFactory;
 import org.vclipse.configscan.utils.TypeTreeTraverser;
+import org.vclipse.configscan.views.ConfigScanViewInput;
+import org.vclipse.configscan.views.ContentProvider;
+import org.vclipse.configscan.views.JobAwareTreeViewer;
+import org.vclipse.configscan.views.TestRunsHistory;
 import org.vclipse.configscan.views.labeling.DefaultLabelProvider;
 import org.vclipse.configscan.views.labeling.ExtensionsHandlingLabelProvider;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Injector;
 
+//JUnit plug-in test
 public class TreeTraverserTest {
 
 	JUnitTestUtils utilities;

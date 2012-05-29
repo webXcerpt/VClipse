@@ -1,4 +1,4 @@
-package org.vclipse.configscan.views;
+package org.vclipse.configscan.tests.junit.plugin;
 
 import static org.junit.Assert.assertEquals;
 import static org.vclipse.configscan.TestCaseAssert.testComplete;
@@ -22,6 +22,8 @@ import org.vclipse.configscan.impl.model.TestRun;
 import org.vclipse.configscan.injection.TestConfigScanModule;
 import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.utils.TestCaseFactory;
+import org.vclipse.configscan.views.ConfigScanViewInput;
+import org.vclipse.configscan.views.TestRunsHistory;
 import org.w3c.dom.Document;
 
 import com.google.common.collect.Lists;
