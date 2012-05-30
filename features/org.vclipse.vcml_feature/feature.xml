@@ -178,44 +178,6 @@ No party to this Agreement will bring a legal action under this Agreement more t
 waives its rights to a jury trial in any resulting litigation.
    </license>
 
-   <requires>
-      <import plugin="org.eclipse.emf.codegen.ecore"/>
-      <import plugin="com.ibm.icu"/>
-      <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.emf.common"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.antlr.runtime" version="3.2.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.jface"/>
-      <import plugin="org.apache.commons.logging"/>
-      <import plugin="org.apache.log4j"/>
-      <import plugin="org.vclipse.console" version="0.4.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.editors"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.compare"/>
-      <import plugin="org.eclipse.ui.console"/>
-      <import plugin="org.eclipse.xtext.generator" version="2.2.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.util" version="2.2.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext" version="2.2.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.common.types" version="2.2.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.mwe2.launch" version="2.2.0" match="greaterOrEqual"/>
-      <import plugin="org.vclipse.vcml.mm" version="0.4.2" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.xbase.lib"/>
-      <import plugin="org.eclipse.xtext.xtend2.lib"/>
-      <import plugin="org.eclipse.xtext.ui" version="2.2.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.ui.shared" version="2.2.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.common.types.ui" version="2.2.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.builder" version="2.2.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.ui.codetemplates.ui" version="2.2.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.compare.ui"/>
-      <import plugin="org.eclipse.emf.compare" version="1.2.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.compare.diff.edit" version="1.2.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.compare.match" version="1.2.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.emf.mwe.core" version="1.2.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.mwe2.lib" version="2.2.0" match="greaterOrEqual"/>
-   </requires>
-
    <plugin
          id="org.vclipse.vcml"
          download-size="0"

@@ -4,6 +4,7 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	
 	<modelVersion>4.0.0</modelVersion>
+	
 	<parent>
 		<groupId>org.vclipse</groupId>
 		<artifactId>org.vclipse.releng</artifactId>
@@ -13,8 +14,8 @@
 
 	<artifactId>org.vclipse.idoc</artifactId>
 	<packaging>eclipse-plugin</packaging>
-
 	<version>0.4.2.qualifier</version>
+	
 	<build>
 		<resources>
 			<resource>
@@ -53,7 +54,7 @@
 				<artifactId>fornax-oaw-m2-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>xtext</id>
+						<id>generate_model_code</id>
 						<phase>generate-sources</phase>
 						<goals>
 							<goal>run-workflow</goal>

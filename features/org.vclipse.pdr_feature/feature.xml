@@ -17,25 +17,6 @@
       [Enter License Description here.]
    </license>
 
-   <requires>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.equinox.security" version="1.0.100" match="greaterOrEqual"/>
-      <import plugin="org.apache.commons.lang"/>
-      <import plugin="org.apache.log4j"/>
-      <import plugin="org.apache.commons.logging"/>
-      <import plugin="org.eclipse.ui.console" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.vclipse.vcml" version="0.1.0" match="greaterOrEqual"/>
-      <import plugin="org.vclipse.idoc" version="0.1.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.resources" version="3.5.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.views" version="3.4.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.ide" version="3.5.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.ui" version="2.2.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext" version="2.2.1" match="greaterOrEqual"/>
-      <import plugin="org.vclipse.vcml2idoc.ui"/>
-      <import plugin="org.vclipse.vcml.ui"/>
-   </requires>
-
    <plugin
          id="org.vclipse.connection"
          download-size="0"
