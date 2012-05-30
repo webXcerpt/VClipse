@@ -40,13 +40,13 @@
 <location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.tigris.subversion.subclipse.graph.feature.feature.group" version="1.1.1"/>
 <unit id="org.tigris.subversion.subclipse.mylyn.feature.group" version="3.0.0"/>
-<unit id="org.tigris.subversion.clientadapter.javahl.feature.feature.group" version="1.7.4.1"/>
+<unit id="org.tigris.subversion.clientadapter.javahl.feature.feature.group" version="1.7.5"/>
 <unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.2"/>
-<unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.9"/>
+<unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.10"/>
 <unit id="com.collabnet.subversion.merge.feature.feature.group" version="3.0.8"/>
 <unit id="net.java.dev.jna.feature.group" version="3.4.0.t20120117_1605"/>
 <unit id="org.tigris.subversion.clientadapter.svnkit.feature.feature.group" version="1.7.4"/>
-<unit id="org.tmatesoft.svnkit.feature.group" version="1.7.4.t20120412_2022"/>
+<unit id="org.tmatesoft.svnkit.feature.group" version="1.7.4.v1_r9190_v20120510_1337"/>
 <repository location="http://subclipse.tigris.org/update_1.8.x"/>
 </location>
 </locations>
