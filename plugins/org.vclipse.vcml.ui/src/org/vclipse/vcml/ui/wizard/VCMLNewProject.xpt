@@ -1,0 +1,28 @@
+«IMPORT org::vclipse::vcml::ui::wizard»
+
+«DEFINE main FOR VCMLProjectInfo»
+«EXPAND model FOR this»
+«EXPAND workflow FOR this»
+«ENDDEFINE»
+
+«DEFINE model FOR VCMLProjectInfo»
+«FILE "src/model/Model.vcml"-»
+/*
+ * This is an example model
+ */
+Hello Xtext!
+«ENDFILE»
+«ENDDEFINE»
+
+«DEFINE workflow FOR VCMLProjectInfo»
+«FILE "src/Generator.mwe2"-»
+module Generator
+
+var targetDir = "src-gen"
+var modelPath = "src/model"
+
+Workflow {
+	component = @workflow.VCMLGenerator auto-inject {}
+}
+«ENDFILE»
+«ENDDEFINE»

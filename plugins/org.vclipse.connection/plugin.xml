@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	<extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            category="org.vclipse.vcml.ui.wizards.imports"
+            class="org.vclipse.connection.injection.ConnectionsExecutableExtensionFactory:org.vclipse.connection.wizards.imports.ConnectionsImportWizard"
+            icon="icons/connection_import.png"
+            id="org.vclipse.wizards.imports.connection"
+            name="SAP systems from INI file import wizard">
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.vclipse.preferences.page.sap"
+            class="org.vclipse.connection.injection.ConnectionsExecutableExtensionFactory:org.vclipse.connection.dialogs.PreferencePage"
+            id="org.vclipse.preferences.pages.connections"
+            name="Connection">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <category
+            id="org.vclipse.wizards.exports.category"
+            name="VClipse">
+      </category>
+      <wizard
+            category="org.vclipse.wizards.exports.category"
+            class="org.vclipse.connection.injection.ConnectionsExecutableExtensionFactory:org.vclipse.connection.wizards.exports.ConnectionsExportWizard"
+            icon="icons/connection_export.png"
+            id="org.vclipse.wizards.exports.connection"
+            name="SAP systems to INI file export wizard">
+      </wizard>
+   </extension>
+
+</plugin>

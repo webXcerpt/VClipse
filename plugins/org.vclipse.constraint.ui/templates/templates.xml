@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="org.vclipse.constraint.Constraint.kw_objects" deleted="false" description="Template for a constraint source body" enabled="true" name="Constraint Source Body">objects:&#13;
+	${cursor}&#13;
+condition:&#13;
+restrictions:&#13;
+inferences:</template></templates>

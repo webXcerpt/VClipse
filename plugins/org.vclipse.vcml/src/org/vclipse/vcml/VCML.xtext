@@ -1,0 +1,507 @@
+grammar org.vclipse.vcml.VCML with org.eclipse.xtext.common.Terminals
+
+import "platform:/resource/org.vclipse.vcml.mm/src/org/vclipse/vcml/mm/VCML.ecore"
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+Model 
+	:	{Model}
+		imports+=Import*
+	    ('options' '{' (options+=Option)* '}')?
+    	(objects+=VCObject)*
+    ;
+
+Import
+    :   'import' importURI=STRING
+    ;
+
+Option
+	: name=OptionType '=' value=STRING
+	;
+	
+enum OptionType
+	: ECM // engineering change master
+	| UPS // set to ID of header material, if UPS IDocs and segments should be generated
+	| KeyDate
+	;
+
+// this enforces that all VCObjects have a name attribute
+DummyRule returns VCObject
+	:	name=STRING
+	;
+	
+VCObject :
+	  Characteristic
+	| Class
+	| Constraint 
+	| SelectionCondition 
+	| Precondition 
+	| Procedure 
+	| DependencyNet
+	| Material
+	| InterfaceDesign
+	| VariantFunction
+	| VariantTable
+	| VariantTableContent
+	;
+
+// concrete classes
+
+BillOfMaterial :
+	{BillOfMaterial}
+	'billofmaterial' '{'
+		('items' '{' items+=BOMItem* '}')?
+	//	('classitems' '{' classitems+=BOMItem* '}')? // currently deactivated
+	'}'
+	;
+
+BOMItem :
+	itemnumber=INT
+	material=[Material | EXTENDED_ID]
+	('dependencies' '{'
+	  (selectionCondition=[SelectionCondition | EXTENDED_ID])?
+	  (entries+=ConfigurationProfileEntry)*
+	 '}')?
+	;
+
+Characteristic :
+	'characteristic' name=XID ('{'
+	(	description=Description
+	&	documentation=Documentation?
+	&	type=CharacteristicType
+	&	('status' status=Status)?
+	&	('group' group=STRING)?
+	&	('[' (  additionalValues?='additionalValues'?
+	     	  & required?='required'?
+	     	  & restrictable?='restrictable'?
+	     	  & noDisplay?='noDisplay'?
+	    	  & notReadyForInput?='notReadyForInput'?
+	   	      & multiValue?='multiValue'?
+	    	  & displayAllowedValues?='displayAllowedValues'?
+	    	  & ('table' table=XID 'field' field=XID)?
+	     	 )
+		']')?
+    &	dependencies=CharacteristicOrValueDependencies?
+    )
+	'}')?
+	;
+
+CharacteristicType :
+		NumericType
+	|	SymbolicType
+	|	DateType
+	;
+
+NumericType : 
+	'numeric' '{'
+	(	('numberOfChars' numberOfChars=INT)
+	&	('decimalPlaces' decimalPlaces=INT)
+	&	('unit' unit=STRING)?
+	&	('[' (	negativeValuesAllowed?='negativeValuesAllowed'?
+	     	 &	intervalValuesAllowed?='intervalValuesAllowed'?
+	     	 )
+	 	']')?
+	&	('values' '{' values+=NumericCharacteristicValue* '}')?
+	)
+	'}'
+	;
+	
+SymbolicType :
+	'symbolic' '{'
+	(	('numberOfChars' numberOfChars=INT)
+	&	('[' caseSensitive?='caseSensitive'? ']')?
+	&	('values' '{' values+=CharacteristicValue* '}')?
+	)
+	'}'
+	;
+
+CharacteristicValue :
+	name=EXTENDED_ID
+	('{'
+	  (	description=Description?
+	  &	documentation=Documentation?
+	  &	dependencies=CharacteristicOrValueDependencies?
+	  )
+	'}')?
+	;
+
+NumericCharacteristicValue :
+	entry=NumberListEntryForValues
+	('{'
+	  (	documentation=Documentation?
+	  &	dependencies=CharacteristicOrValueDependencies?
+	  )
+	'}')?
+	;
+
+DateType : 
+	{DateType}
+	'date' '{'
+	(	('[' (	intervalValuesAllowed?='intervalValuesAllowed'?
+	     	 )
+	 	']')?
+	&	('values' '{' values+=DateCharacteristicValue* '}')?
+	)
+	'}'
+	;
+	
+DateCharacteristicValue :
+	from=DATE ('-' to=DATE)?
+	('{'
+	  (	documentation=Documentation?
+	  &	dependencies=CharacteristicOrValueDependencies?
+	  )
+	'}')?
+	;
+
+DATE : INT '.' INT '.' INT;
+
+CharacteristicOrValueDependencies :
+	{CharacteristicOrValueDependencies}
+	'dependencies' '{'
+		dependencies+=[Dependency | EXTENDED_ID]*
+	'}'
+	;
+
+Class :
+	'class' name=CLASSNAME ('{'
+		(	description=Description
+		&	('status' status=Status)?
+		&	('group' group=STRING)?
+		&	('characteristics' '{' 
+				characteristics+=[Characteristic|XID]* 
+			'}')
+		&	('superclasses' '{' 
+				superClasses+=[Class | CLASSNAME]*
+			'}')?
+		)
+	'}')?
+	;
+
+CLASSNAME
+	:	'(' INT ')' XID
+	;
+
+ConfigurationProfile :
+    'configurationprofile' name=EXTENDED_ID '{'
+	   (	('status' status=Status)?
+	   &	('bomapplication' bomapplication=XID)?
+	   &	('uidesign' uidesign=[InterfaceDesign | EXTENDED_ID])?
+	   )
+       (dependencyNets+=[DependencyNet|EXTENDED_ID])*
+       (entries+=ConfigurationProfileEntry)*
+    '}'
+    ;
+
+Procedure :
+    'procedure' name=EXTENDED_ID ('{'
+		(	description=Description
+		&	documentation=Documentation?
+		&	('status' status=Status)?
+		&	('group' group=STRING)?
+    	)
+    '}')?
+    ;
+
+SelectionCondition :
+    'selectioncondition' name=EXTENDED_ID ('{'
+		(	description=Description
+		&	documentation=Documentation?
+		&	('status' status=Status)?
+		&	('group' group=STRING)?
+    	)
+    '}')?
+    ;
+
+Precondition :
+    'precondition' name=EXTENDED_ID ('{'
+		(	description=Description
+		&	documentation=Documentation?
+		&	('status' status=Status)?
+ 		&	('group' group=STRING)?
+   	)
+    '}')?
+    ;
+
+DependencyNet :
+	'dependencynet' name=EXTENDED_ID ('{'
+		(	description=Description
+		&	documentation=Documentation?
+		&	('status' status=Status)?
+ 		&	('group' group=STRING)?
+ 		)
+		(constraints+=[Constraint | EXTENDED_ID])*
+	'}')?
+	;
+
+Constraint :
+    'constraint' name=EXTENDED_ID ('{'
+		(	description=Description
+		&	documentation=Documentation?
+		&	('status' status=Status)?
+ 		&	('group' group=STRING)?
+    	)
+    '}')?
+    ;
+
+ConfigurationProfileEntry :
+    sequence=INT dependency=[Procedure|EXTENDED_ID]
+    ;
+
+InterfaceDesign :
+	'interfacedesign' name=EXTENDED_ID ('{'
+		(characteristicGroups+=CharacteristicGroup)*
+	'}')?
+	;
+
+CharacteristicGroup :
+	'characteristicgroup' name=EXTENDED_ID '{'
+		description=Description?
+		(characteristics+=[Characteristic | XID])*
+	'}'
+	;    
+
+Material : 
+	'material' name=EXTENDED_ID ('{'
+		(	description=Description
+		&	('type' type=EXTENDED_ID)
+		)
+		billofmaterials+=BillOfMaterial*
+		('classes' '{' classifications+=Classification* '}')?
+		configurationprofiles+=ConfigurationProfile*
+	'}')?
+	;
+
+Classification :
+	cls=[Class|CLASSNAME] ('{' valueAssignments+=ValueAssignment* '}')?
+	;
+
+ValueAssignment :
+	characteristic=[Characteristic | XID]
+	'='
+	values+=(NumericLiteral | SymbolicLiteral)+
+	;
+	
+VariantFunction :
+	'variantfunction' name=XID ('{'
+		(	description=Description
+		&	('status' status=Status)?
+		&	('group' group=STRING)?
+		&	('arguments' '{' (arguments+=VariantFunctionArgument)* '}')
+		)
+		'}')?
+	; 
+	
+VariantFunctionArgument
+	:	(in?='in')? characteristic=[Characteristic|XID]
+	;
+	
+VariantTable
+	:	'varianttable' name=XID ('{'
+			(	description=Description
+			&	('status' status=Status)?
+			&	('group' group=STRING)?
+			&	('arguments' '{' (arguments+=VariantTableArgument)* '}')
+			)
+		'}')?
+	; 
+	
+VariantTableArgument
+	:	(key?='key')? characteristic=[Characteristic|XID]
+	;
+
+VariantTableContent
+	:	'varianttablecontent' table=[VariantTable | XID] '{'
+			rows += Row*
+		'}'
+	;
+
+Row 
+	:	{Row}
+		'row' values+=(SymbolicLiteral | NumericLiteral)*
+	;
+
+// auxiliary grammar rules
+enum Status : Released = 'released' | InPreparation = 'inPreparation' | Locked = 'locked';
+
+Description : 
+	  SimpleDescription
+	| MultiLanguageDescriptions
+	;
+	
+SimpleDescription :
+    'description' value=STRING
+    ;
+
+MultiLanguageDescriptions : 
+	{MultiLanguageDescriptions}
+	'description' '{' (descriptions+=MultiLanguageDescription)* '}'
+	;
+
+MultiLanguageDescription :
+	language=Language value=STRING
+	;
+	
+enum Language
+	:	AF // Afrikaans       
+	|	AR // Arabic          
+	|	BG // Bulgarian       
+	|	CA // Catalan         
+	|	CS // Czech           
+	|	DA // Danish          
+	|	DE // German          
+	|	EL // Greek           
+	|	EN // English         
+	|	ES // Spanish         
+	|	ET // Estonian        
+	|	FI // Finnish         
+	|	FR // French          
+	|	HE // Hebrew          
+	|	HR // Croatian        
+	|	HU // Hungarian       
+	|	ID // Indonesian      
+	|	IS // Icelandic       
+	|	IT // Italian         
+	|	JA // Japanese        
+	|	KO // Korean          
+	|	LT // Lithuanian      
+	|	LV // Latvian         
+	|	MS // Malaysian       
+	|	NL // Dutch           
+	|	NO // Norwegian       
+	|	PL // Polish          
+	|	PT // Portuguese      
+	|	RO // Romanian        
+	|	RU // Russian         
+	|	SH // Serbian (Latin) 
+	|	SK // Slovakian       
+	|	SL // Slovenian       
+	|	SR // Serbian         
+	|	SV // Swedish         
+	|	TH // Thai            
+	|	TR // Turkish         
+	|	UK // Ukrainian       
+	|	Z1 // Customer reserve
+	|	ZF // Chinese trad.   
+	|	ZH // Chinese         
+	;
+
+Documentation :
+	  SimpleDocumentation
+	| MultipleLanguageDocumentation
+	;
+	
+SimpleDocumentation :
+	'documentation' value=STRING
+	;
+	
+MultipleLanguageDocumentation :
+	{MultipleLanguageDocumentation}
+	'documentation' '{' (languageblocks+=MultipleLanguageDocumentation_LanguageBlock)* '}'
+	;
+
+MultipleLanguageDocumentation_LanguageBlock :
+	language=Language (formattedDocumentationBlocks+=FormattedDocumentationBlock)*
+	;
+
+FormattedDocumentationBlock :
+	value=STRING ('format' format=STRING)?
+	; 
+
+
+terminal ID	// Xtext standard without ^ 
+	:	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*
+	;
+
+terminal STRING	// Xtext standard, but only enclosed in double quotes
+	:	'"' ( '\\' ('b'|'t'|'n'|'f'|'r'|'"'|'\\') | !('\\'|'"') )* '"'
+	;
+
+terminal SYMBOL // enclosed in single quotes, no escapes, no line breaks, no tabs
+	:	"'" ( !("'"|'\t'|'\n'|'\r') )* "'"
+	; 
+
+XID
+	:	ID
+	|	'AF'
+	|	'AR'
+	|	'BG'
+	|	'CA'
+	|	'CS'
+	|	'DA'
+	|	'DE'
+	|	'EL'
+	|	'EN'
+	|	'ES'
+	|	'ET'
+	|	'FI'
+	|	'FR'
+	|	'HE'
+	|	'HR'
+	|	'HU'
+	|	'ID'
+	|	'IS'
+	|	'IT'
+	|	'JA'
+	|	'KO'
+	|	'LT'
+	|	'LV'
+	|	'MS'
+	|	'NL'
+	|	'NO'
+	|	'PL'
+	|	'PT'
+	|	'RO' 
+	|	'RU'
+	|	'SH'
+	|	'SK'
+	|	'SL'
+	|	'SR'
+	|	'SV'
+	|	'TH'
+	|	'TR'
+	|	'UK'
+	|	'Z1'
+	|	'ZF'
+	|	'ZH'
+	|	'e'
+	;
+
+EXTENDED_ID
+	: XID
+	| SYMBOL
+	;
+//EXTENDED_ID hidden () // no whitespace might be used inside extended ids
+//	:	(INT | ID | '/' | ':' | '-' | '.')+ 
+//	;	
+
+
+/*
+TODO:
+ * handle characteristics with hyphens in their name. Use in dependencies code as: skey 'cstic-name-with-hyphens'
+ * handle keywords 'INVISIBILITY', 'INV', 'SKEY'
+ * handle intervals with "bound operators", e.g., >1 - <5
+*/
+
+NumericLiteral :
+	value=NUMBER
+	;
+
+SymbolicLiteral :
+	value=SYMBOL
+	;
+
+// TODO implement size restrictions for a number: e.g., the exponent's maximum value is 99
+// TODO use value converter
+NUMBER hidden ()
+	:	('-'|'+')? INT ('.' INT)? ('e' ('-'|'+') INT)?
+	;
+
+NumberListEntryForValues returns NumberListEntry :
+	  NumericLiteral
+	| '(' NumericInterval ')'
+	;
+	
+NumericInterval :
+	lowerBound=NUMBER '-' upperBound=NUMBER
+	;
+

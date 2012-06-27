@@ -1,0 +1,33 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: VClipse SAP Connection Plug-in
+Bundle-SymbolicName: org.vclipse.connection;singleton:=true
+Bundle-Version: 0.4.2.qualifier
+Bundle-Activator: org.vclipse.connection.VClipseConnectionPlugin
+Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
+Require-Bundle: org.eclipse.xtext.ui;bundle-version="2.2.1",
+ org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.equinox.security,
+ org.apache.commons.lang
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: org.vclipse.connection,
+ org.vclipse.connection.injection
+Bundle-ClassPath: .,
+ libs/commons-collections-3.2.1.jar,
+ libs/commons-configuration-1.6.jar
+Import-Package: org.apache.log4j,
+ org.apache.commons.logging,
+ com.sap.conn.idoc,
+ com.sap.conn.idoc.jco,
+ com.sap.conn.idoc.rt.cp,
+ com.sap.conn.idoc.rt.record,
+ com.sap.conn.idoc.rt.record.impl,
+ com.sap.conn.idoc.rt.trace,
+ com.sap.conn.idoc.rt.util,
+ com.sap.conn.idoc.rt.xml,
+ com.sap.conn.jco,
+ com.sap.conn.jco.ext,
+ com.sap.conn.jco.monitor,
+ com.sap.conn.jco.server

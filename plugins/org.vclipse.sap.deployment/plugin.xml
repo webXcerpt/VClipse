@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	<extension point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="org.vclipse.deployment.vcml2idocSend"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.ConvertSendAction"
+               icon="icons/package_go.png"
+               id="org.vclipse.actions.convertToIDocsAndSend"
+               label="Create and send ALE distribution packet"
+               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/deployment">
+	         <enablement>
+	            <and>
+	               <objectClass
+	                     name="org.eclipse.core.resources.IFile">
+	               </objectClass>
+	               <or>
+	               <objectState
+	                     name="extension"
+	                     value="vcml">
+	               </objectState>
+	               <objectState
+	                     name="extension"
+	                     value="idoc">
+	               </objectState>
+				   </or>
+	            </and>
+	         </enablement>
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="org.vclipse.deployment.diff"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.DeltaDeploymentAction"
+               enablesFor="1"
+               icon="icons/delta_package_go.png"
+               id="org.vclipse.deployment.diff"
+               label="Create and send ALE distribution packet of delta"
+               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/deployment">
+            <enablement>
+               <and>
+                  <objectClass
+                        name="org.eclipse.core.resources.IFile">
+                  </objectClass>
+                  <objectState
+                        name="extension"
+                        value="vcml">
+                  </objectState>
+               </and>
+            </enablement>
+         </action>
+      </objectContribution>
+   </extension>
+ <extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.preferences.PreferencesInitializer">
+    </initializer>
+ </extension>
+ <extension
+       point="org.eclipse.ui.preferencePages">
+    <page
+          category="org.vclipse.preferences.page"
+          class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.preferences.DeploymentPreferencePage"
+          id="org.vclipse.deployment.preferencePage"
+          name="SAP Deployment">
+    </page>
+ </extension>
+</plugin>

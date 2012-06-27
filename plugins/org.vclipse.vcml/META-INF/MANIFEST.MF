@@ -1,0 +1,33 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: VClipse VCML Plug-in
+Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
+Bundle-Version: 0.4.2.qualifier
+Bundle-SymbolicName: org.vclipse.vcml; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext.generator;bundle-version="2.2.1",
+ org.vclipse.base;visibility:=reexport,
+ org.vclipse.jpplib,
+ org.vclipse.vcml.mm;bundle-version="0.4.2";visibility:=reexport,
+ org.eclipse.xtext,
+ org.eclipse.xtext.util,
+ org.antlr.runtime
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.vclipse.vcml,
+ org.vclipse.vcml.conversion,
+ org.vclipse.vcml.documentation,
+ org.vclipse.vcml.formatting,
+ org.vclipse.vcml.linking,
+ org.vclipse.vcml.naming,
+ org.vclipse.vcml.parseTreeConstruction,
+ org.vclipse.vcml.parser.antlr,
+ org.vclipse.vcml.parser.antlr.internal,
+ org.vclipse.vcml.parser.antlr.lexer,
+ org.vclipse.vcml.resource,
+ org.vclipse.vcml.services,
+ org.vclipse.vcml.utils,
+ org.vclipse.vcml.validation,
+ org.vclipse.vcml.scoping
+Bundle-Activator: org.vclipse.vcml.VCMLPlugin
+Bundle-ClassPath: .
+Import-Package: org.apache.log4j

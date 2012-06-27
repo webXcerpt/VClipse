@@ -1,0 +1,130 @@
+module org.vclipse.condition.GenerateCondition
+
+import org.eclipse.emf.mwe.utils.*
+import org.eclipse.xtext.generator.*
+import org.eclipse.xtext.ui.generator.*
+
+var grammarURI = "classpath:/org/vclipse/condition/Condition.xtext"
+var file.extensions = "pre,sel"
+var projectName = "org.vclipse.condition"
+var runtimeProject = "../${projectName}"
+
+Workflow {
+    bean = StandaloneSetup {
+	    scanClassPath = true
+		platformUri = "${runtimeProject}/.."
+	}
+
+	component = DirectoryCleaner {
+		directory = "${runtimeProject}/src-gen"
+	}
+	
+	component = DirectoryCleaner {
+		directory = "${runtimeProject}.tests/src-gen"
+	}
+	
+	component = DirectoryCleaner {
+		directory = "${runtimeProject}.ui/src-gen"
+	}
+
+	component = Generator {
+		pathRtProject = runtimeProject
+		pathUiProject = "${runtimeProject}.ui"
+		pathTestProject = "${runtimeProject}.tests"
+		projectNameRt = projectName
+		projectNameUi = "${projectName}.ui"
+		language = {
+			uri = grammarURI
+			fileExtensions = file.extensions
+
+			// Java API to access grammar elements (required by several other fragments)
+			fragment = grammarAccess.GrammarAccessFragment {}
+
+			// the serialization component
+			fragment = parseTreeConstructor.ParseTreeConstructorFragment {}
+
+			// a custom ResourceFactory for use with EMF 
+			fragment = resourceFactory.ResourceFactoryFragment {
+				fileExtensions = file.extensions
+			}
+
+			// The antlr parser generator fragment.
+			fragment = parser.antlr.ex.rt.AntlrGeneratorFragment {
+              antlrParam = "-Xconversiontimeout" antlrParam = "10000"
+			  options = {
+					backtrack = true
+					memoize = true
+					ignoreCase = true
+				}
+			}
+
+			fragment = parser.antlr.DebugAntlrGeneratorFragment {
+			}
+
+			fragment = parser.antlr.ex.ExternalAntlrLexerFragment {
+				lexerGrammar = "org.vclipse.condition.lexer.ConditionLexer"
+				runtime = true
+				antlrParam = "-lib"
+				antlrParam = "${runtimeProject}/src/org/vclipse/condition/lexer"
+			}
+
+			// java-based API for validation 
+			fragment = validation.JavaValidatorFragment {
+				composedCheck = "org.eclipse.xtext.validation.ImportUriValidator"
+				composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
+				// registerForImportedPackages = true
+			}
+
+			// scoping and exporting API 
+			fragment = scoping.ImportNamespacesScopingFragment {
+				ignoreCase = true
+			}
+			fragment = exporting.QualifiedNamesFragment {}
+			fragment = builder.BuilderIntegrationFragment {}
+
+			// generator API
+			// fragment = generator.GeneratorFragment {}
+			
+			// formatter API 
+			fragment = formatting.FormatterFragment {}
+
+			// labeling API 
+			fragment = labeling.LabelProviderFragment {}
+
+			// outline API 
+			fragment = outline.OutlineTreeProviderFragment {}
+			fragment = outline.QuickOutlineFragment {}
+
+			// quickfix API 
+			fragment = quickfix.QuickfixProviderFragment {}
+
+			// content assist API  
+			fragment = contentAssist.JavaBasedContentAssistFragment {}
+
+			// rename refactoring  
+			fragment = refactoring.RefactorElementNameFragment {}
+			
+			// provides a compare view
+			fragment = compare.CompareFragment {
+				fileExtensions = file.extensions
+			}
+
+			// generates a more lightweight Antlr parser and lexer tailored for content assist  
+			fragment = parser.antlr.ex.ca.ContentAssistParserGeneratorFragment {
+              antlrParam = "-Xconversiontimeout" antlrParam = "10000"
+			  options = {
+					backtrack = true
+					memoize = true
+					ignoreCase = true
+					classSplitting = true
+				}
+			}
+
+			// generates junit test support classes into Generator#pathTestProject
+			fragment = junit.Junit4Fragment {}
+
+			// provides a preference page for template proposals 
+			fragment = templates.CodetemplatesGeneratorFragment {}
+		}
+	}
+}

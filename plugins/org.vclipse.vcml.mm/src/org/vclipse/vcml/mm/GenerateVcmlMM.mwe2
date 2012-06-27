@@ -1,0 +1,33 @@
+module org.vclipse.vcml.mm.GenerateVcmlMM
+
+import org.eclipse.emf.mwe.utils.*
+import org.eclipse.xtext.generator.*
+import org.eclipse.xtext.ui.generator.*
+
+Workflow {
+	bean = StandaloneSetup {
+		scanClassPath = true
+		platformUri = ".."
+	
+		uriMap = {
+			from = "platform:/plugin/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore"
+			to = "platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore"
+		}
+		
+		uriMap = {
+			from = "platform:/plugin/org.eclipse.xtext.common.types/model/JavaVMTypes.genmodel"
+			to = "platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.genmodel"
+		}
+		
+		registerGenModelFile = "platform:/resource/org.vclipse.vcml.mm/src/org/vclipse/vcml/mm/VCML.genmodel"
+	}
+
+	component = DirectoryCleaner {
+		directory="emf-gen"
+	}
+	
+	component = org.eclipse.emf.mwe2.ecore.EcoreGenerator {
+		genModel = "platform:/resource/org.vclipse.vcml.mm/src/org/vclipse/vcml/mm/VCML.genmodel"
+		srcPath = "platform:/resource/org.vclipse.vcml.mm/src"
+	}
+}

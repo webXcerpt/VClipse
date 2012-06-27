@@ -1,0 +1,649 @@
+options { UPS = "E8300001000651" }
+
+class (300)PT_NB {
+  description "class for Notebook"
+  status released
+  characteristics {
+    NOTEBOOK_TYPE
+    SCREEN_SIZE
+    CORE_AMOUNT
+    HARD_DISK_SIZE
+    RAM_MODULES_AMOUNT
+    DISPLAY
+    UMTS
+    WEBCAM
+    RC_SCREEN_DEP_NO_INPUT
+    RC_SCREEN_DEP_INVISIBLE
+    GEN_CML_STATEMENT_LOG
+    GEN_AUX_NUM_01
+    GEN_AUX_NUM_02
+    GEN_AUX_NUM_03
+  }
+}
+
+characteristic NOTEBOOK_TYPE {
+  description "Notebook type"
+  symbolic {
+    numberOfChars 30
+    [ caseSensitive ]
+    values {
+      'business' { description "Business" }
+      'development' { description "Developement" }
+      'multimedia' { description "Multimedia" }
+      'netbook' { description "Netbook" }
+    }
+  }
+  status released
+  [ restrictable ]
+}
+
+characteristic SCREEN_SIZE {
+  description "Screen-Size"
+  symbolic {
+    numberOfChars 30
+    [ caseSensitive ]
+    values {
+      '10.1' { description "10.1 inches" }
+      '12' { description "12 inches" }
+      '14' { description "14 inches" }
+      '15.4' { description "15.4 inches" }
+      '17' { description "17 inches" }
+    }
+  }
+  status released
+  [ restrictable ]
+}
+
+characteristic CORE_AMOUNT {
+  description "Cores"
+  numeric { numberOfChars 1 decimalPlaces 0 [ ] values {  1 2 4 } }
+  status released
+  [ restrictable ]
+}
+
+characteristic HARD_DISK_SIZE {
+  description "HardDisc-Drive"
+  symbolic {
+    numberOfChars 30
+    [ caseSensitive ]
+    values {
+      '60' { description "60 GB" }
+      '120' { description "120 GB" }
+      '340' { description "340 GB" }
+    }
+  }
+  status released
+  [ restrictable ]
+}
+
+characteristic RAM_MODULES_AMOUNT {
+  description "Memory"
+  numeric { numberOfChars 1 decimalPlaces 0 [ ] values {  (1 - 8) } }
+  status released
+  [ restrictable ]
+}
+
+characteristic DISPLAY {
+  description "Display"
+  symbolic {
+    numberOfChars 30
+    [ caseSensitive ]
+    values {
+      'glare' { description "glare" }
+      'non-glare' { description "non-glare" }
+    }
+  }
+  status released
+  [ restrictable ]
+}
+
+characteristic UMTS {
+  description "UMTS"
+  symbolic {
+    numberOfChars 1
+    [ caseSensitive ]
+    values { 'F' { description "no" } 'T' { description "yes" } }
+  }
+  status released
+  [ restrictable ]
+}
+
+characteristic WEBCAM {
+  description "Webcam"
+  symbolic {
+    numberOfChars 1
+    [ caseSensitive ]
+    values { 'F' { description "no" } 'T' { description "yes" } }
+  }
+  status released
+  [ restrictable ]
+}
+
+material E8300001000652 { description "1 GB RAM" type ZHAW }
+
+material E8300001000653 { description "2 GB RAM" type ZHAW }
+
+material E8300001000654 { description "4 GB RAM" type ZHAW }
+
+material E8300001000655 { description "8 GB RAM" type ZHAW }
+
+material E8300001000656 { description "Windows 7 Home" type ZHAW }
+
+material E8300001000657 {
+  description "Windows 7 Professional"
+  type ZHAW
+}
+
+material E8300001000658 { description "CPU 1 GHz" type ZHAW }
+
+material E8300001000659 { description "CPU 2 GHz" type ZHAW }
+
+material E8300001000660 { description "CPU 2x2 GHz" type ZHAW }
+
+material E8300001000661 { description "CPU 4x2 GHz" type ZHAW }
+
+material E8300001000662 { description "Display 10.1 glare" type ZHAW }
+
+material E8300001000663 {
+  description "Display 10.1 non-glare"
+  type ZHAW
+}
+
+material E8300001000664 { description "Display 12 glare" type ZHAW }
+
+material E8300001000665 {
+  description "Display 12 non-glare"
+  type ZHAW
+}
+
+material E8300001000666 { description "Display 14 glare" type ZHAW }
+
+material E8300001000667 { description "Display 15.4 glare" type ZHAW }
+
+material E8300001000668 { description "Display 17 glare" type ZHAW }
+
+material E8300001000669 { description "HardDisc 60 GB" type ZHAW }
+
+material E8300001000670 { description "HardDisc 120 GB" type ZHAW }
+
+material E8300001000671 { description "HardDisc 340 GB" type ZHAW }
+
+material E8300001000672 { description "UMTS Module" type ZHAW }
+
+material E8300001000673 { description "Webcam 2 Megapixel" type ZHAW }
+
+material E8300001000651 {
+  description "Notebook"
+  type ZKMT
+  billofmaterial {
+    items {
+      10 E8300001000652
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      20 E8300001000653
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      30 E8300001000654
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      40 E8300001000655
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      50 E8300001000656
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      60 E8300001000657
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      70 E8300001000658
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      80 E8300001000659
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      90 E8300001000660
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      100 E8300001000661
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      110 E8300001000662
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      120 E8300001000663
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      130 E8300001000664
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      140 E8300001000665
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      150 E8300001000666
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      160 E8300001000667
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      170 E8300001000668
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      180 E8300001000669
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      190 E8300001000670
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      200 E8300001000671
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      210 E8300001000672
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+      220 E8300001000673
+      dependencies {SB_GEN_VBOM_MU_SEL_01 10 PB_GEN_VBOM_MU_QTY_01 }
+    }
+  }
+  classes {
+    (300)PT_NB
+    (300)GEN_TOP_01
+    (300)GEN_PRD_ALL_01
+    (300)GEN_AH_MSD_10
+    (300)GEN_CTR_01
+    (300)GEN_DOC_INFO
+  }
+  configurationprofile 'E8300001000651' {
+    bomapplication SD02
+    NP_GEN_ROOT
+    NP_PT_NB
+    10 PP_GEN_ROOT_01
+    9000 PP_GEN_VBOM_EXIST_POINT_01
+    9010 PP_GEN_VBOM_PLAN_POINT_01
+    9020 PP_GEN_CALC_VBOM_DELTA_01
+    1000 PP_PT_NB
+    2000 PP_PT_NB_PCI
+    3000 PP_PT_NB_HLP
+  }
+}
+
+characteristic GEN_AUX_NUM_01
+
+characteristic GEN_AUX_NUM_02
+
+characteristic GEN_AUX_NUM_03
+
+procedure PP_PT_NB {
+  description "procedure for Notebook"
+  status Released
+  source {
+    $self.GEN_UI_LAYOUT_NAME = 'Notebook',
+    $self.UMTS ?= 'F',
+    $del_default($self, SCREEN_SIZE, $self.SCREEN_SIZE) if
+      specified $self.SCREEN_SIZE,
+    $self.SCREEN_SIZE ?= '17' if $self.NOTEBOOK_TYPE = 'multimedia',
+    $self.SCREEN_SIZE ?= '15.4' if
+      $self.NOTEBOOK_TYPE in ('development', 'business'),
+    $del_default($self, CORE_AMOUNT, $self.CORE_AMOUNT) if
+      specified $self.CORE_AMOUNT,
+    $self.CORE_AMOUNT ?= 2 if
+      $self.NOTEBOOK_TYPE in ('development', 'multimedia', 'business'),
+    $self.CORE_AMOUNT ?= 1 if $self.NOTEBOOK_TYPE = 'netbook',
+    $del_default($self, HARD_DISK_SIZE, $self.HARD_DISK_SIZE) if
+      specified $self.HARD_DISK_SIZE,
+    $self.HARD_DISK_SIZE ?= '60' if $self.NOTEBOOK_TYPE = 'netbook',
+    $self.HARD_DISK_SIZE ?= '120' if
+      $self.NOTEBOOK_TYPE in ('development', 'multimedia', 'business'),
+    $del_default($self, RAM_MODULES_AMOUNT, $self.RAM_MODULES_AMOUNT) if
+      specified $self.RAM_MODULES_AMOUNT,
+    $self.RAM_MODULES_AMOUNT ?= 1 if $self.NOTEBOOK_TYPE in ('netbook'),
+    $self.RAM_MODULES_AMOUNT ?= 2 if
+      $self.NOTEBOOK_TYPE in ('business', 'development'),
+    $self.RAM_MODULES_AMOUNT ?= 4 if $self.NOTEBOOK_TYPE in ('multimedia'),
+    $self.WEBCAM ?= 'F',
+    $self.GEN_AUX_NUM_01 = 0,
+    $self.GEN_AUX_NUM_01 = 1 if
+      $self.NOTEBOOK_TYPE in ('multimedia', 'netbook'),
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000656',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0,
+    $self.GEN_AUX_NUM_01 = 0,
+    $self.GEN_AUX_NUM_01 = 1 if
+      $self.NOTEBOOK_TYPE in ('business', 'development'),
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000657',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0,
+    $self.GEN_AUX_NUM_01 = 0,
+    $self.GEN_AUX_NUM_01 = 1 if $self.NOTEBOOK_TYPE = 'netbook',
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000658',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0,
+    $self.GEN_AUX_NUM_01 = 0,
+    $self.GEN_AUX_NUM_01 = 1 if $self.NOTEBOOK_TYPE = 'business',
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000659',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0,
+    $self.GEN_AUX_NUM_01 = 0,
+    $self.GEN_AUX_NUM_01 = 1 if $self.UMTS = 'T',
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000672',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0,
+    $del_default($self, DISPLAY, $self.DISPLAY) if specified $self.DISPLAY,
+    $self.DISPLAY ?= 'non-glare' if $self.SCREEN_SIZE in ('10.1', '12'),
+    $self.GEN_AUX_NUM_01 = 0,
+    $self.GEN_AUX_NUM_01 = 1 if
+      $self.NOTEBOOK_TYPE in ('business', 'multimedia', 'development') and
+      $self.CORE_AMOUNT = 2,
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000660',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0,
+    $self.GEN_AUX_NUM_01 = 0,
+    $self.GEN_AUX_NUM_01 = 1 if
+      $self.NOTEBOOK_TYPE in ('multimedia', 'development') and
+      $self.CORE_AMOUNT = 4,
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000661',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0,
+    $self.GEN_AUX_NUM_01 = 0,
+    $self.GEN_AUX_NUM_01 = 1 if $self.HARD_DISK_SIZE = '60',
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000669',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0,
+    $self.GEN_AUX_NUM_01 = 0,
+    $self.GEN_AUX_NUM_01 = 1 if $self.HARD_DISK_SIZE = '120',
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000670',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0,
+    $self.GEN_AUX_NUM_01 = 0,
+    $self.GEN_AUX_NUM_01 = 1 if $self.HARD_DISK_SIZE = '340',
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000671',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0,
+    $self.GEN_AUX_NUM_01 =
+    $self.RAM_MODULES_AMOUNT  - 8  * FLOOR($self.RAM_MODULES_AMOUNT  / 8),
+    $self.GEN_AUX_NUM_02 =
+    $self.GEN_AUX_NUM_01  - 4  * FLOOR($self.GEN_AUX_NUM_01  / 4),
+    $self.GEN_AUX_NUM_03 =
+    $self.GEN_AUX_NUM_02  - 2  * FLOOR($self.GEN_AUX_NUM_02  / 2),
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000652',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_03,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_03 > 0,
+    $self.GEN_AUX_NUM_01 =
+    $self.RAM_MODULES_AMOUNT  - 8  * FLOOR($self.RAM_MODULES_AMOUNT  / 8),
+    $self.GEN_AUX_NUM_02 =
+    FLOOR(($self.GEN_AUX_NUM_01  - 4  * FLOOR($self.GEN_AUX_NUM_01  / 4))
+           / 2),
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000653',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_02,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_02 > 0,
+    $self.GEN_AUX_NUM_01 =
+    FLOOR(($self.RAM_MODULES_AMOUNT  -
+           8  * FLOOR($self.RAM_MODULES_AMOUNT  / 8))  / 4),
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000654',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0,
+    $self.GEN_AUX_NUM_01 = FLOOR($self.RAM_MODULES_AMOUNT  / 8),
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000655',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0,
+    $self.GEN_AUX_NUM_01 = 0,
+    $self.GEN_AUX_NUM_01 = 1 if $self.WEBCAM = 'T',
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000673',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0,
+    $self.GEN_AUX_NUM_01 = 0,
+    $self.GEN_AUX_NUM_01 = 1 if
+      $self.SCREEN_SIZE = '10.1' and $self.DISPLAY = 'glare',
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000662',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0,
+    $self.GEN_AUX_NUM_01 = 0,
+    $self.GEN_AUX_NUM_01 = 1 if
+      $self.SCREEN_SIZE = '10.1' and $self.DISPLAY = 'non-glare',
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000663',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0,
+    $self.GEN_AUX_NUM_01 = 0,
+    $self.GEN_AUX_NUM_01 = 1 if
+      $self.SCREEN_SIZE = '12' and $self.DISPLAY = 'glare',
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000664',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0,
+    $self.GEN_AUX_NUM_01 = 0,
+    $self.GEN_AUX_NUM_01 = 1 if
+      $self.SCREEN_SIZE = '12' and $self.DISPLAY = 'non-glare',
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000665',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0,
+    $self.GEN_AUX_NUM_01 = 0,
+    $self.GEN_AUX_NUM_01 = 1 if
+      $self.SCREEN_SIZE = '14' and $self.DISPLAY = 'glare',
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000666',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0,
+    $self.GEN_AUX_NUM_01 = 0,
+    $self.GEN_AUX_NUM_01 = 1 if
+      $self.SCREEN_SIZE = '15.4' and $self.DISPLAY = 'glare',
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000667',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0,
+    $self.GEN_AUX_NUM_01 = 0,
+    $self.GEN_AUX_NUM_01 = 1 if
+      $self.SCREEN_SIZE = '17' and $self.DISPLAY = 'glare',
+    pfunction Z_VC_GEN_SET_VBOM_MU (
+      GEN_MU_ID = 'E8300001000668',
+      GEN_MU_QTY = $self.GEN_AUX_NUM_01,
+      GEN_VBOM_CSTIC = 'GEN_VBOM_CURR'
+    ) if $self.GEN_AUX_NUM_01 > 0.
+  }
+}
+
+procedure PP_PT_NB_PCI {
+  description "PCI determination for Notebook"
+  status Released
+  source {
+    $self.GEN_CTR_CONTROL = 'SKIP',
+    $self.GEN_CTR_PCI_GROUPS = '1|P|1|HW',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000658',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000659',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000660',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000661',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000662',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000663',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000664',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000665',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000666',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000667',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000668',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000670',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000671',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000669',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000652',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000653',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000654',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000655',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000672',
+    $self.GEN_CTR_PCI_GROUPS = '1|S|E8300001000673',
+    $self.GEN_CTR_PCI_GROUPS = '2|P|1|SW',
+    $self.GEN_CTR_PCI_GROUPS = '2|S|E8300001000656',
+    $self.GEN_CTR_PCI_GROUPS = '2|S|E8300001000657'.
+  }
+}
+
+procedure PP_PT_NB_HLP {
+  description "help texts for Notebook"
+  status Released
+  source {
+    $self.GEN_DOC_COMPONENT = 'pchelp.xml',
+    $self.GEN_DOC_CSTIC_TAGS = 'DISPLAY'.
+  }
+}
+
+constraint CN_PT_NB_1YWAXGZ_C {
+  description "Restrictions for Dimensions"
+  status Released
+  source {
+    objects: NOTEBOOK is_a (300)PT_NB . 
+    restrictions:
+      NOTEBOOK.SCREEN_SIZE = '10.1' if NOTEBOOK.NOTEBOOK_TYPE = 'netbook',
+      NOTEBOOK.SCREEN_SIZE in ('15.4', '17') if NOTEBOOK.NOTEBOOK_TYPE =
+        'multimedia',
+      NOTEBOOK.SCREEN_SIZE in ('12', '14', '15.4', '17') if
+        NOTEBOOK.NOTEBOOK_TYPE in ('development', 'business'). 
+    inferences: NOTEBOOK.SCREEN_SIZE. 
+  }
+}
+
+constraint CN_PT_NB_U7GTMF_C {
+  description "Restrictions for Cores"
+  status Released
+  source {
+    objects: NOTEBOOK is_a (300)PT_NB . 
+    restrictions:
+      NOTEBOOK.CORE_AMOUNT in (2,  4) if
+        NOTEBOOK.NOTEBOOK_TYPE in ('development', 'multimedia', 'business'),
+      NOTEBOOK.CORE_AMOUNT in (1,  2) if NOTEBOOK.NOTEBOOK_TYPE =
+        'netbook'. 
+    inferences: NOTEBOOK.CORE_AMOUNT. 
+  }
+}
+
+constraint CN_PT_NB_1U0S4R2_C {
+  description "Restrictions for HDD"
+  status Released
+  source {
+    objects: NOTEBOOK is_a (300)PT_NB . 
+    restrictions:
+      NOTEBOOK.HARD_DISK_SIZE in ('60', '120') if NOTEBOOK.NOTEBOOK_TYPE =
+        'netbook',
+      NOTEBOOK.HARD_DISK_SIZE in ('120', '340') if
+        NOTEBOOK.NOTEBOOK_TYPE in ('development', 'multimedia', 'business').
+    
+    inferences: NOTEBOOK.HARD_DISK_SIZE. 
+  }
+}
+
+constraint CN_PT_NB_SOZCLS_C {
+  description "Restrictions for Memory"
+  status Released
+  source {
+    objects: NOTEBOOK is_a (300)PT_NB . 
+    restrictions:
+      NOTEBOOK.RAM_MODULES_AMOUNT in (2,  3,  4) if
+        NOTEBOOK.NOTEBOOK_TYPE in ('netbook'),
+      NOTEBOOK.RAM_MODULES_AMOUNT in (3,  4,  5,  6) if
+        NOTEBOOK.NOTEBOOK_TYPE in ('business', 'development'),
+      NOTEBOOK.RAM_MODULES_AMOUNT in (5,  6,  7,  8) if
+        NOTEBOOK.NOTEBOOK_TYPE in ('multimedia'). 
+    inferences: NOTEBOOK.RAM_MODULES_AMOUNT. 
+  }
+}
+
+constraint CN_PT_NB_408JHD_C {
+  description "Restrictions for Display"
+  status Released
+  source {
+    objects: NOTEBOOK is_a (300)PT_NB . 
+    restrictions:
+      NOTEBOOK.DISPLAY = 'glare' if
+        NOTEBOOK.SCREEN_SIZE in ('14', '15.4', '17'),
+      NOTEBOOK.DISPLAY in ('glare', 'non-glare') if
+        NOTEBOOK.SCREEN_SIZE in ('10.1', '12'). 
+    inferences: NOTEBOOK.DISPLAY. 
+  }
+}
+
+constraint CN_PT_NB_6RIGOQ_C {
+  description "Restrictions for Webcam"
+  status Released
+  source {
+    objects: NOTEBOOK is_a (300)PT_NB . 
+    restrictions:
+      NOTEBOOK.WEBCAM = 'F' if NOTEBOOK.NOTEBOOK_TYPE = 'business',
+      NOTEBOOK.RC_SCREEN_DEP_INVISIBLE = 'WEBCAM' if
+        NOTEBOOK.NOTEBOOK_TYPE = 'business'. 
+    inferences: NOTEBOOK.WEBCAM, NOTEBOOK.RC_SCREEN_DEP_INVISIBLE. 
+  }
+}
+
+dependencynet NP_PT_NB {
+  description "dependency net for Notebook"
+  status Released
+  CN_PT_NB_1YWAXGZ_C
+  CN_PT_NB_U7GTMF_C
+  CN_PT_NB_1U0S4R2_C
+  CN_PT_NB_SOZCLS_C
+  CN_PT_NB_408JHD_C
+  CN_PT_NB_6RIGOQ_C
+}
+
+characteristic GEN_CTR_CONTROL
+
+characteristic GEN_CML_STATEMENT_LOG
+
+characteristic RC_SCREEN_DEP_NO_INPUT
+
+characteristic GEN_DOC_CSTIC_TAGS
+
+characteristic GEN_VBOM_CSTIC
+
+characteristic GEN_MU_QTY
+
+characteristic GEN_UI_LAYOUT_NAME
+
+characteristic GEN_MU_ID
+
+characteristic RC_SCREEN_DEP_INVISIBLE
+
+characteristic GEN_DOC_COMPONENT
+
+characteristic GEN_CTR_EXCLUDE_SI
+
+characteristic GEN_CTR_PCI_GROUPS
+
+class (300)GEN_AH_MSD_10
+
+class (300)GEN_TOP_01
+
+class (300)GEN_DOC_INFO
+
+class (300)GEN_CTR_01
+
+class (300)GEN_PRD_ALL_01
+
+procedure PP_GEN_ROOT_01
+
+procedure PP_GEN_VBOM_EXIST_POINT_01
+
+procedure PP_GEN_CALC_VBOM_DELTA_01
+
+procedure PB_GEN_VBOM_MU_QTY_01
+
+procedure PP_GEN_VBOM_PLAN_POINT_01
+
+selectioncondition SB_GEN_VBOM_MU_SEL_01
+
+dependencynet NP_GEN_ROOT
+
+variantfunction Z_VC_GEN_SET_VBOM_MU
+

@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: VClipse Vcml Meta Model
+Bundle-SymbolicName: org.vclipse.vcml.mm;singleton:=true
+Bundle-Version: 0.4.2.qualifier
+Bundle-Activator: org.vclipse.vcml.mm.VcmlMetaModelPlugin
+Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
+ org.eclipse.emf.ecore;visibility:=reexport,
+ org.eclipse.emf.mwe.core;bundle-version="1.2.1",
+ org.eclipse.xtext.common.types;bundle-version="2.2.1";visibility:=reexport,
+ org.eclipse.emf.mwe2.launch;bundle-version="2.2.0";visibility:=reexport,
+ org.eclipse.emf.mwe2.lib;bundle-version="2.2.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
+Import-Package: org.apache.commons.logging,
+ org.apache.log4j
+Export-Package: org.vclipse.vcml.mm,
+ org.vclipse.vcml.vcml,
+ org.vclipse.vcml.vcml.impl,
+ org.vclipse.vcml.vcml.util

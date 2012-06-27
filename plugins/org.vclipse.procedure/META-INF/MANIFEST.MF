@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: VClipse Procedure Language Plug-in
+Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
+Bundle-Version: 0.4.2.qualifier
+Bundle-SymbolicName: org.vclipse.procedure;singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext;bundle-version="2.1.0";visibility:=reexport,
+ org.eclipse.xtext.xbase;bundle-version="2.1.0";resolution:=optional;visibility:=reexport,
+ org.apache.log4j;bundle-version="1.2.15";visibility:=reexport,
+ org.apache.commons.logging;bundle-version="1.0.4";resolution:=optional;visibility:=reexport,
+ org.eclipse.xtext.generator;resolution:=optional,
+ org.eclipse.emf.codegen.ecore;resolution:=optional,
+ org.eclipse.emf.mwe.utils;resolution:=optional,
+ org.eclipse.emf.mwe2.launch;resolution:=optional,
+ org.vclipse.dependency,
+ org.eclipse.xtext.util,
+ org.antlr.runtime
+Import-Package: org.apache.log4j,
+ org.apache.commons.logging
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.vclipse.procedure,
+ org.vclipse.procedure.formatting,
+ org.vclipse.procedure.scoping,
+ org.vclipse.procedure.validation,
+ org.vclipse.procedure.services,
+ org.vclipse.procedure.parseTreeConstruction,
+ org.vclipse.procedure.parser.antlr,
+ org.vclipse.procedure.parser.antlr.internal,
+ org.vclipse.procedure.parser.antlr.lexer

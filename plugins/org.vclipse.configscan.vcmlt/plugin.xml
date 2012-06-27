@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package 
+       uri = "http://www.vclipse.org/configscan/vcmlt/VcmlT" 
+       class = "org.vclipse.configscan.vcmlt.vcmlT.VcmlTPackage"
+       genModel = "org/vclipse/configscan/vcmlt/VcmlT.genmodel" /> 
+	
+  </extension>
+
+
+
+
+
+</plugin>

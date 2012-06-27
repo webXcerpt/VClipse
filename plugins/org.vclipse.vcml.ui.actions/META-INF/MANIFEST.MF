@@ -1,0 +1,31 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: VClipse VCML UI RFC Actions Plug-in
+Bundle-SymbolicName: org.vclipse.vcml.ui.actions;singleton:=true
+Bundle-Version: 0.4.2.qualifier
+Bundle-Activator: org.vclipse.vcml.ui.actions.VcmlUiActionPlugin
+Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
+Require-Bundle: org.eclipse.xtext.ui;bundle-version="2.2.1",
+ org.vclipse.connection,
+ org.vclipse.vcml.ui,
+ org.vclipse.console,
+ org.vclipse.vcml
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: org.vclipse.vcml.ui.actions,
+ org.vclipse.vcml.ui.actions.billofmaterial,
+ org.vclipse.vcml.ui.actions.characteristic,
+ org.vclipse.vcml.ui.actions.classes,
+ org.vclipse.vcml.ui.actions.configurationprofile,
+ org.vclipse.vcml.ui.actions.constraint,
+ org.vclipse.vcml.ui.actions.dependencynet,
+ org.vclipse.vcml.ui.actions.injection,
+ org.vclipse.vcml.ui.actions.intefacedesign,
+ org.vclipse.vcml.ui.actions.material,
+ org.vclipse.vcml.ui.actions.precondition,
+ org.vclipse.vcml.ui.actions.procedure,
+ org.vclipse.vcml.ui.actions.selectioncondition,
+ org.vclipse.vcml.ui.actions.variantfunction,
+ org.vclipse.vcml.ui.actions.varianttable
+Import-Package: com.sap.conn.jco,
+ org.apache.log4j

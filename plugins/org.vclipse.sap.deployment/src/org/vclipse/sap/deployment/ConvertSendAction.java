@@ -1,0 +1,72 @@
+package org.vclipse.sap.deployment;
+
+import java.io.IOException;
+import java.util.Iterator;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IObjectActionDelegate;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.xtext.resource.XtextResourceSet;
+
+import com.google.inject.Inject;
+import com.sap.conn.jco.JCoException;
+
+public class ConvertSendAction implements IObjectActionDelegate {
+	
+	@Inject
+	private OneClickWorkflow workflow;
+	
+	private IStructuredSelection selection;
+	
+	public void run(IAction action) {
+		Job job = new Job("Convert to IDocs and send to SAP system.") {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				String errorMessage = "Error during idoc deployment to SAP system.";
+				monitor.beginTask("Converting and sending to SAP system.", 4);
+				Iterator<?> iterator = selection.iterator();
+				while(iterator.hasNext()) {
+					Object next = iterator.next();
+					if(next instanceof IFile) {
+						IFile file = (IFile)next;
+						monitor.subTask("Parsing " + file.getFileExtension() + " file " + file.getName());
+						Resource resource = new XtextResourceSet().getResource(URI.createURI(file.getLocationURI().toString()), true);
+						monitor.worked(1);
+						try {
+							return workflow.convertAndSend(resource, monitor);
+						} catch (JCoException exception) {
+							DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
+							continue;
+						} catch (CoreException exception) {
+							DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
+							continue;
+						} catch (IOException exception) {
+							DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
+							continue;
+						}
+					}
+				}
+				monitor.done();
+				return Status.OK_STATUS;
+			}
+		};
+		job.schedule();
+	}
+
+	public void selectionChanged(IAction action, ISelection selection) {
+		this.selection = (IStructuredSelection)selection;
+	}
+
+	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+	}
+}

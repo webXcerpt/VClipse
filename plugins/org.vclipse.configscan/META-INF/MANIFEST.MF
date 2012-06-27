@@ -1,0 +1,33 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: VClipse ConfigScan Integration Plug-in
+Bundle-SymbolicName: org.vclipse.configscan;singleton:=true
+Bundle-Version: 0.4.2.qualifier
+Bundle-Activator: org.vclipse.configscan.ConfigScanPlugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.ui.ide,
+ org.eclipse.core.runtime,
+ org.eclipse.debug.core,
+ org.eclipse.debug.ui,
+ org.vclipse.connection,
+ org.eclipse.xtext,
+ org.eclipse.xtext.ui,
+ org.vclipse.base.ui
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: com.google.inject,
+ com.sap.conn.jco
+Export-Package: org.vclipse.configscan,
+ org.vclipse.configscan.actions,
+ org.vclipse.configscan.extension,
+ org.vclipse.configscan.impl,
+ org.vclipse.configscan.impl.model,
+ org.vclipse.configscan.imports,
+ org.vclipse.configscan.injection,
+ org.vclipse.configscan.launch,
+ org.vclipse.configscan.preferences,
+ org.vclipse.configscan.utils,
+ org.vclipse.configscan.views,
+ org.vclipse.configscan.views.actions,
+ org.vclipse.configscan.views.labeling
+Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)

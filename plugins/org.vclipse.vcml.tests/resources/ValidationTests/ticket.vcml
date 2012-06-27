@@ -1,0 +1,139 @@
+constraint TEST_CASE_1 {
+  description "validator test"
+  status Released
+  source {
+    objects: OBJECT is_a (300)TEST_CLASS . 
+    restrictions:
+    	OBJECT.TEST_CHARACTERISTIC_ONE
+        =
+        OBJECT.TEST_CHARACTERISTIC_TWO
+         if 
+        OBJECT.TEST_CHARACTERISTIC_FOUR
+        =
+        'TEST_STRING_TWO'.
+    inferences:
+    	OBJECT.TEST_CHARACTERISTIC_ONE, 
+    	OBJECT.TEST_CHARACTERISTIC_THREE, 
+    	OBJECT.TEST_CHARACTERISTIC_TWO. 
+  }
+}  
+
+constraint TEST_CASE2 {
+  description "validator test"
+  status Released
+  source { 
+    objects: OBJECT is_a (300)TEST_CLASS . 
+    restrictions:
+    	OBJECT.TEST_CHARACTERISTIC_ONE
+        =
+   			'TEST_STRING'
+         if 
+        OBJECT.TEST_CHARACTERISTIC_FOUR
+        =
+        'TEST_STRING_TWO'.
+    
+    inferences: 
+    	OBJECT.TEST_CHARACTERISTIC_ONE, 
+    	OBJECT.TEST_CHARACTERISTIC_THREE, 
+    	OBJECT.TEST_CHARACTERISTIC_TWO. 
+  }
+}
+
+constraint TEST_CASE_3 {
+  description "validator test"
+  status Released
+  source { 
+    objects: OBJECT is_a (300)TEST_CLASS . 
+    restrictions:
+    	OBJECT.TEST_CHARACTERISTIC_ONE in (1)
+         if 
+        OBJECT.TEST_CHARACTERISTIC_FOUR
+        =
+        'TEST_STRING_TWO'.
+    
+    inferences:
+    	OBJECT.TEST_CHARACTERISTIC_ONE, 
+    	OBJECT.TEST_CHARACTERISTIC_THREE, 
+    	OBJECT.TEST_CHARACTERISTIC_TWO. 
+  }
+}
+
+constraint TEST_CONSTRAINT3 {
+  description "validator test"
+  status Released
+  source { 
+    objects: OBJECT is_a (300)TEST_CLASS . 
+    restrictions:
+    	OBJECT.TEST_CHARACTERISTIC_ONE specified
+         if 
+        OBJECT.TEST_CHARACTERISTIC_FOUR
+        =
+        'TEST_STRING_TWO'.
+    
+    inferences:
+    	OBJECT.TEST_CHARACTERISTIC_ONE, 
+    	OBJECT.TEST_CHARACTERISTIC_THREE, 
+    	OBJECT.TEST_CHARACTERISTIC_TWO. 
+  }
+}
+
+constraint TEST_CR_FALSE {
+  description "validator test"
+  status Released
+  source { 
+    objects: OBJECT is_a (300)TEST_CLASS . 
+    restrictions:
+    	false.
+    inferences:
+    	OBJECT.TEST_CHARACTERISTIC_ONE, 
+    	OBJECT.TEST_CHARACTERISTIC_THREE, 
+    	OBJECT.TEST_CHARACTERISTIC_TWO. 
+  }
+}
+
+constraint TEST_NCRLHS_TABLEFUNCTION {
+  description "validator test"
+  status Released
+  source { 
+    objects: OBJECT is_a (300)TEST_CLASS . 
+    restrictions:
+    	not table TEST_TABLE(TEST_CHARACTERISTIC_ONE = OBJECT.TEST_CHARACTERISTIC_TWO),
+    	not function TEST_FUNCTION(TEST_CHARACTERISTIC_FIVE = OBJECT.TEST_CHARACTERISTIC_FOUR)
+    inferences: 
+    	OBJECT.TEST_CHARACTERISTIC_ONE, 
+    	OBJECT.TEST_CHARACTERISTIC_TWO,
+    	OBJECT.TEST_CHARACTERISTIC_THREE, 
+    	OBJECT.TEST_CHARACTERISTIC_FOUR,
+    	OBJECT.TEST_CHARACTERISTIC_FIVE, 
+		OBJECT.TEST_CHARACTERISTIC_SIX. 
+  } 
+} 
+ 
+varianttable TEST_TABLE {
+	description "description"
+	status released
+	group "group"
+	arguments {
+		key TEST_CHARACTERISTIC_ONE
+		key TEST_CHARACTERISTIC_TWO
+	}
+}
+
+variantfunction TEST_FUNCTION {
+	description "description"
+	status released
+	group "group"
+	arguments {
+		in TEST_CHARACTERISTIC_FIVE
+	}
+}
+
+characteristic TEST_CHARACTERISTIC_ONE
+characteristic TEST_CHARACTERISTIC_TWO
+characteristic TEST_CHARACTERISTIC_THREE 
+characteristic TEST_CHARACTERISTIC_FOUR
+characteristic TEST_CHARACTERISTIC_FIVE
+characteristic TEST_CHARACTERISTIC_SIX
+class (300)TEST_CLASS
+
+

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<templates>
+<template 
+	autoinsert="true" context="org.vclipse.condition.Condition.IsSpecified" deleted="false" 
+	description="Template for the condition proving if a characteristic is specified" enabled="true" 
+	name="Characteristic specified template">${characteristic:CrossReference(CharacteristicReference_P.characteristic)} specified
+</template>
+<template 
+	autoinsert="true" context="org.vclipse.condition.Condition.InCondition" deleted="false" 
+	description="Template for the condition proving if a characteristic value is in the list" enabled="true" 
+	name="In Condition Template">${characteristic:CrossReference(CharacteristicReference_P.characteristic)} in ( ${value}, ${value2} )
+</template>
+<template 
+	autoinsert="true" context="org.vclipse.condition.Condition.IsSpecified" deleted="false" 
+	description="Template for the condition proving if a characteristic is specified" enabled="true" 
+	name="Specified characteristic template">specified ${characteristic:CrossReference(CharacteristicReference_P.characteristic)}
+</template>
+</templates>

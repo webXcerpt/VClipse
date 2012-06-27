@@ -1,0 +1,26 @@
+characteristic CSTIC1 {
+			description "test"
+			documentation "test-documentation"
+			date {
+				[intervalValuesAllowed]
+				values {
+					01.01.2012-02.01.2012 {
+						documentation "Date Documentation"
+						dependencies {
+							dependency3
+						}
+					}
+				}
+			}
+			status Locked
+			group "Group1"
+			[
+				additionalValues
+				noDisplay
+				multiValue
+			]
+			dependencies {
+				dependency1
+				dependency2
+			}
+		}

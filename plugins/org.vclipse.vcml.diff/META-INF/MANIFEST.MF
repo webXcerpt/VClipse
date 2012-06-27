@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: VClipse VCML Diff Plug-in
+Bundle-SymbolicName: org.vclipse.vcml.diff;singleton:=true
+Bundle-Version: 0.4.2.qualifier
+Bundle-Activator: org.vclipse.vcml.diff.VcmlDiffPlugin
+Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
+Require-Bundle: org.eclipse.xtext.ui;bundle-version="2.2.1";visibility:=reexport,
+ org.eclipse.emf.compare;bundle-version="1.2.1",
+ org.eclipse.emf.compare.diff.edit;bundle-version="1.2.1",
+ org.eclipse.emf.compare.match;bundle-version="1.2.1",
+ org.eclipse.ui.ide;visibility:=reexport,
+ org.vclipse.base.ui;visibility:=reexport,
+ org.vclipse.vcml;visibility:=reexport,
+ org.eclipse.compare;visibility:=reexport,
+ org.eclipse.team.ui;visibility:=reexport
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: org.vclipse.vcml.diff,
+ org.vclipse.vcml.diff.compare,
+ org.vclipse.vcml.diff.engines,
+ org.vclipse.vcml.diff.storage,
+ org.vclipse.vcml.diff.ui
+Import-Package: org.apache.log4j
