@@ -142,6 +142,11 @@ public class DependencySourceUtils {
 		return URI.createURI(folderName); // TODO currently not clear what to do in this situation
 	}
 	
+	public URI sourceUri(Dependency object, String vcmluri) {
+		URI baseUri = URI.createURI(vcmluri).trimFileExtension();
+		return baseUri.trimSegments(1).appendSegment(baseUri.lastSegment() + SUFFIX_SOURCEFOLDER).appendSegment(getFilename(object));
+	}
+	
 	public VCObject getDependency(EObject object) {
 		if(object instanceof ConditionSource || object instanceof ConstraintSource || object instanceof ProcedureSource) {
 			return getDependency(EcoreUtil.getURI(object));

@@ -10,15 +10,22 @@
  ******************************************************************************/
 package org.vclipse.vcml.formatting;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.xtext.resource.SaveOptions;
 import org.vclipse.base.VClipseStrings;
 import org.vclipse.vcml.VCMLPlugin;
+import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.utils.ISapConstants;
 import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;
@@ -75,6 +82,8 @@ import org.vclipse.vcml.vcml.VcmlFactory;
 import org.vclipse.vcml.vcml.VcmlPackage;
 import org.vclipse.vcml.vcml.util.VcmlSwitch;
 
+import com.google.inject.Inject;
+
 import de.uka.ilkd.pp.DataLayouter;
 import de.uka.ilkd.pp.NoExceptions;
 import de.uka.ilkd.pp.StringBackend;
@@ -92,7 +101,17 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	private static VcmlFactory VCML = VcmlFactory.eINSTANCE;
 	
 	private int lineLength = 70;
-
+	
+	@Inject(optional=true)
+	private DependencySourceUtils sourceUtils;
+	
+	@Inject(optional=true)
+	private OptionsProvider optionsProvider;
+	
+	public OptionsProvider getOptionsProvider() {
+		return optionsProvider;
+	}
+	
 	public String prettyPrint(final EObject o) {
 		final StringBuilder sb = new StringBuilder();
 		if(Platform.getPreferencesService() != null) {
@@ -451,6 +470,15 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 				printGroup(object.getGroup());
 			}
 			layouter.brk(1,-INDENTATION).print("}");
+			
+			try {
+				ConstraintPrettyPrinter printer = new ConstraintPrettyPrinter();
+				String prettyPrint = printer.prettyPrint(object.getSource());
+				OutputStream outputStream = sourceUtils.getOutputStream(object);
+				outputStream.write(prettyPrint.getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		return layouter.end();
 	}
@@ -709,6 +737,19 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 				printGroup(object.getGroup());
 			}
 			layouter.brk(1, -INDENTATION).print("}"); 
+			
+			String vcmluri = optionsProvider.get().get(OptionsProvider.VCML_FILE_URI);
+			if(sourceUtils != null && vcmluri != null) {
+				try {
+					URI sourceUri = sourceUtils.sourceUri(object, vcmluri);
+					Resource resource = new ResourceSetImpl().createResource(sourceUri);
+					EList<EObject> contents = resource.getContents();
+					contents.add(object.getSource());
+					resource.save(SaveOptions.defaultOptions().toOptionsMap());
+				} catch(IOException exception) {
+					exception.printStackTrace();
+				}
+			}
 		}
 		return layouter.end();
 	}
@@ -983,5 +1024,4 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 			printNullsafe(asSymbol(linkText));
 		}
 	}
-	
 }
