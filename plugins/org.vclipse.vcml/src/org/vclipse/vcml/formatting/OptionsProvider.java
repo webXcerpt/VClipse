@@ -11,8 +11,6 @@ public class OptionsProvider implements Provider<Map<String, String>>{
 	
 	public static final String VCML_FILE_URI = "vcml_file_uri";
 	
-	public static final String SOURCE_PRINTER = "source_printer";
-	
 	private Map<String, String> options;
 	
 	public OptionsProvider() {
