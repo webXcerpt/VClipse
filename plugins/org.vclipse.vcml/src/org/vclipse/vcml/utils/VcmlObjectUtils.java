@@ -110,6 +110,7 @@ public class VcmlObjectUtils {
 		final Constraint object = VCML.createConstraint();
 		object.setName(name);
 		object.setDescription(description);
+		object.setSource(mkConstraintSource());
 		return object;
 	}
 
@@ -175,6 +176,7 @@ public class VcmlObjectUtils {
 		final Procedure object = VCML.createProcedure();
 		object.setName(name);
 		object.setDescription(description);
+		object.setSource(mkProcedureSource());
 		return object;
 	}
 
@@ -186,6 +188,7 @@ public class VcmlObjectUtils {
 		final SelectionCondition object = VCML.createSelectionCondition();
 		object.setName(name);
 		object.setDescription(description);
+		object.setSource(mkConditionSource());
 		return object;
 	}
 
