@@ -135,18 +135,21 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//Status"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="group" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//ProcedureSource"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectionCondition" eSuperTypes="#//VCObject #//Dependency">
     <eStructuralFeatures xsi:type="ecore:EReference" name="documentation" eType="#//Documentation"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//Status"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="group" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//ConditionSource"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Precondition" eSuperTypes="#//VCObject #//Dependency">
     <eStructuralFeatures xsi:type="ecore:EReference" name="documentation" eType="#//Documentation"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//Status"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="group" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//ConditionSource"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ConditionSource">
     <eStructuralFeatures xsi:type="ecore:EReference" name="condition" eType="#//Condition"
@@ -165,6 +168,7 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//Status"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="group" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//ConstraintSource"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ConfigurationProfileEntry">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="sequence" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
