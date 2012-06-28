@@ -4,6 +4,10 @@ import org.vclipse.idoc.*
 import org.vclipse.vcml.*
 import org.vclipse.vcml.mm.*
 import org.vclipse.configscan.vcmlt.*
+import org.vclipse.dependency.*
+import org.vclipse.constraint.*
+import org.vclipse.condition.*
+import org.vclipse.procedure.*
 
 Workflow {
 	
@@ -11,6 +15,10 @@ Workflow {
 	component = @GenerateVcmlMM {}
 	component = @VCML {}
 	component = @GenerateVcmlT {}
+	component = @GenerateDependency {}
+	component = @GenerateConstraint {}
+	component = @GenerateCondition {}
+	component = @GenerateProcedure {}
 	
 }
 	

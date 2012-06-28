@@ -36,32 +36,52 @@
 		<!-- VClipse Plug-ins -->
 		<module>../org.vclipse.base</module>
 		<module>../org.vclipse.base.ui</module>
-		<module>../org.vclipse.connection</module>
-		<module>../org.vclipse.console</module>
+		
 		<module>../org.vclipse.idoc</module>
+		<!-- <module>../org.vclipse.idoc.tests</module> -->
 		<module>../org.vclipse.idoc.ui</module>
-		<module>../org.vclipse.idoc2jcoidoc</module>
-		<module>../org.vclipse.jpplib</module>
+		
 		<module>../org.vclipse.vcml</module>
 		<module>../org.vclipse.vcml.mm</module>
-		<module>../org.vclipse.vcml.diff</module>
+		<!-- <module>../org.vclipse.vcml.tests</module>  -->
 		<module>../org.vclipse.vcml.ui</module>
+		
+		<module>../org.vclipse.configscan.vcmlt</module>
+		<!-- <module>../org.vclipse.configscan.vcmlt.tests</module> -->
+		<module>../org.vclipse.configscan.vcmlt.ui</module>
+		
+		<module>../org.vclipse.condition</module>
+		<!-- <module>../org.vclipse.condition.tests</module>  -->
+		<module>../org.vclipse.condition.ui</module>
+		
+		<module>../org.vclipse.constraint</module>
+		<!-- <module>../org.vclipse.constraint.tests</module>  -->
+		<module>../org.vclipse.constraint.ui</module>
+		
+		<module>../org.vclipse.dependency</module>
+		<!-- <module>../org.vclipse.dependency.tests</module>  -->
+		<module>../org.vclipse.dependency.ui</module>
+		
+		<module>../org.vclipse.procedure</module>
+		<!-- <module>../org.vclipse.procedure.tests</module>  -->
+		<module>../org.vclipse.procedure.ui</module>
+		
+		<module>../org.vclipse.connection</module>
+		<module>../org.vclipse.console</module>
+		
+		<module>../org.vclipse.idoc2jcoidoc</module>
+		<module>../org.vclipse.jpplib</module>
+		
+		<module>../org.vclipse.vcml.diff</module>
+		<!--  <module>../org.vclipse.vcml.diff.tests</module> --> 
 		<module>../org.vclipse.vcml.ui.actions</module>
 		<module>../org.vclipse.vcml.ui.wizards.imports</module>
 		<module>../org.vclipse.vcml2idoc.ui</module>
-		<module>../org.vclipse.configscan</module>
-		<module>../org.vclipse.configscan.vcmlt</module>
-		<module>../org.vclipse.configscan.vcmlt.ui</module>
 		<module>../org.vclipse.sap.deployment</module>
 		
-		<!-- VClipse Test Projects -->
-		<module>../org.vclipse.idoc.tests</module>
-		<module>../org.vclipse.vcml.tests</module>
-		<module>../org.vclipse.configscan.vcmlt.tests</module>
-		<!--  <module>../org.vclipse.vcml.diff.tests</module> -> 
-
-		<!-- do not add org.vclipse.configscan.tests to the module list -->
-				
+		<module>../org.vclipse.configscan</module>
+		<!-- org.vclipse.configscan.tests -->
+		
 		<!-- VClipse Features -->
 		<module>../org.vclipse.idoc_feature</module>
 		<module>../org.vclipse.pdr_feature</module>
