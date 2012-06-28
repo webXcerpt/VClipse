@@ -254,10 +254,21 @@ public class VcmlObjectUtils {
 		entries.addAll(arrayList);
 	}
 	
-	static public void sortVCObjects(List<VCObject> entries) {
-		ArrayList<VCObject> arrayList = Lists.newArrayList(entries);
-		Collections.sort(arrayList, new Comparator<VCObject>() {
-			public int compare(VCObject object_one, VCObject object_two) {
+	// TODO replace these two methods by a method sortVCObjects(List<? extends VCObject> entries)
+	static public void sortDependencyNets(List<DependencyNet> entries) {
+		ArrayList<DependencyNet> arrayList = Lists.newArrayList(entries);
+		Collections.sort(arrayList, new Comparator<DependencyNet>() {
+			public int compare(DependencyNet object_one, DependencyNet object_two) {
+				return object_one.getName().compareTo(object_two.getName());
+			}});
+		entries.clear();
+		entries.addAll(arrayList);
+	}
+	
+	static public void sortConstraints(List<Constraint> entries) {
+		ArrayList<Constraint> arrayList = Lists.newArrayList(entries);
+		Collections.sort(arrayList, new Comparator<Constraint>() {
+			public int compare(Constraint object_one, Constraint object_two) {
 				return object_one.getName().compareTo(object_two.getName());
 			}});
 		entries.clear();

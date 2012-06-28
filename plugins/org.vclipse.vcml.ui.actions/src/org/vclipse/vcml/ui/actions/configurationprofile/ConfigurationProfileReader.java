@@ -10,8 +10,6 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.actions.configurationprofile;
 
-import static org.vclipse.vcml.utils.VcmlObjectUtils.sortEntries;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +19,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.util.Strings;
+import org.vclipse.vcml.ui.actions.BAPIUtils;
+import org.vclipse.vcml.ui.actions.dependencynet.DependencyNetReader;
+import org.vclipse.vcml.ui.actions.intefacedesign.InterfaceDesignReader;
+import org.vclipse.vcml.ui.actions.procedure.ProcedureReader;
+import org.vclipse.vcml.utils.VCMLProxyFactory;
+import org.vclipse.vcml.utils.VcmlObjectUtils;
+import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.ConfigurationProfile;
 import org.vclipse.vcml.vcml.ConfigurationProfileEntry;
 import org.vclipse.vcml.vcml.DependencyNet;
@@ -29,12 +34,6 @@ import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Procedure;
-import org.vclipse.vcml.ui.actions.BAPIUtils;
-import org.vclipse.vcml.ui.actions.dependencynet.DependencyNetReader;
-import org.vclipse.vcml.ui.actions.intefacedesign.InterfaceDesignReader;
-import org.vclipse.vcml.ui.actions.procedure.ProcedureReader;
-import org.vclipse.vcml.utils.VCMLProxyFactory;
-import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.google.inject.Inject;
 import com.sap.conn.jco.AbapException;
@@ -155,8 +154,8 @@ public class ConfigurationProfileReader extends BAPIUtils {
 				} else {
 					throw new IllegalArgumentException("unknown dependency type in configuration profile: " + depName + " of type " + depType);
 				}
-
-				sortEntries(profile.getEntries());
+				VcmlObjectUtils.sortDependencyNets(profile.getDependencyNets());
+				VcmlObjectUtils.sortEntries(profile.getEntries());
 			}
 			
 
