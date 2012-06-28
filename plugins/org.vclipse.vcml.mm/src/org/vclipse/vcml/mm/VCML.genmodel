@@ -114,6 +114,7 @@
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//VCObject">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//VCObject/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//VCObject/description"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//BillOfMaterial">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//BillOfMaterial/items"/>
@@ -125,7 +126,6 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//BOMItem/entries"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//Characteristic">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Characteristic/description"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Characteristic/documentation"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Characteristic/type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//Characteristic/status"/>
@@ -180,7 +180,6 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference VCML.ecore#//CharacteristicOrValueDependencies/dependencies"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//Class">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Class/description"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//Class/status"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//Class/group"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference VCML.ecore#//Class/characteristics"/>
@@ -196,38 +195,37 @@
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//Dependency"/>
     <genClasses ecoreClass="VCML.ecore#//Procedure">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Procedure/description"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Procedure/documentation"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//Procedure/status"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//Procedure/group"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Procedure/source"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//SelectionCondition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//SelectionCondition/description"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//SelectionCondition/documentation"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//SelectionCondition/status"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//SelectionCondition/group"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//SelectionCondition/source"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//Precondition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Precondition/description"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Precondition/documentation"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//Precondition/status"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//Precondition/group"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Precondition/source"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//ConditionSource">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//ConditionSource/condition"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//DependencyNet">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//DependencyNet/description"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//DependencyNet/documentation"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//DependencyNet/status"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//DependencyNet/group"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference VCML.ecore#//DependencyNet/constraints"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//Constraint">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Constraint/description"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Constraint/documentation"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//Constraint/status"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//Constraint/group"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Constraint/source"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//ConfigurationProfileEntry">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//ConfigurationProfileEntry/sequence"/>
@@ -242,7 +240,6 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference VCML.ecore#//CharacteristicGroup/characteristics"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//Material">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Material/description"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//Material/type"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Material/billofmaterials"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Material/classifications"/>
@@ -257,7 +254,6 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//ValueAssignment/values"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//VariantFunction">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//VariantFunction/description"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//VariantFunction/status"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//VariantFunction/group"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//VariantFunction/arguments"/>
@@ -267,7 +263,6 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference VCML.ecore#//VariantFunctionArgument/characteristic"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//VariantTable">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//VariantTable/description"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//VariantTable/status"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//VariantTable/group"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//VariantTable/arguments"/>
