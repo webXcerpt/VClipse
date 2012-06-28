@@ -23,12 +23,11 @@ import com.google.common.collect.Iterables;
  */
 public class ConstraintScopeProvider extends DependencyScopeProvider {
 
-	// TODO write with declarative calls
-	
 	IScope scope_ConstraintObject(ConstraintSource context, EReference ref) {
 		return Scopes.scopeFor(context.getObjects());
 	}
 	
+	// TODO verify this
 	IScope scope_ShortVarDefinition_ref(ConstraintSource context, EReference ref) {
 		return Scopes.scopeFor(Iterables.concat(
 				Iterables.transform(
