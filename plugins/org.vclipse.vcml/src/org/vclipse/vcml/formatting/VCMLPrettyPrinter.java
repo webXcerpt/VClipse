@@ -470,16 +470,18 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 			}
 			layouter.brk(1,-INDENTATION).print("}");
 			
-			String vcmluri = optionsProvider.get().get(OptionsProvider.VCML_FILE_URI);
-			if(sourceUtils != null && vcmluri != null) {
-				try {
-					URI sourceUri = sourceUtils.sourceUri(object, vcmluri);
-					Resource resource = new ResourceSetImpl().createResource(sourceUri);
-					EList<EObject> contents = resource.getContents();
-					contents.add(object.getSource());
-					resource.save(SaveOptions.defaultOptions().toOptionsMap());
-				} catch(IOException exception) {
-					exception.printStackTrace();
+			if(optionsProvider != null) {
+				String vcmluri = optionsProvider.get().get(OptionsProvider.VCML_FILE_URI);
+				if(vcmluri != null && sourceUtils != null) {
+					try {
+						URI sourceUri = sourceUtils.sourceUri(object, vcmluri);
+						Resource resource = new ResourceSetImpl().createResource(sourceUri);
+						EList<EObject> contents = resource.getContents();
+						contents.add(object.getSource());
+						resource.save(SaveOptions.defaultOptions().toOptionsMap());
+					} catch(IOException exception) {
+						exception.printStackTrace();
+					}
 				}
 			}
 		}
@@ -741,16 +743,18 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 			}
 			layouter.brk(1, -INDENTATION).print("}"); 
 			
-			String vcmluri = optionsProvider.get().get(OptionsProvider.VCML_FILE_URI);
-			if(sourceUtils != null && vcmluri != null) {
-				try {
-					URI sourceUri = sourceUtils.sourceUri(object, vcmluri);
-					Resource resource = new ResourceSetImpl().createResource(sourceUri);
-					EList<EObject> contents = resource.getContents();
-					contents.add(object.getSource());
-					resource.save(SaveOptions.defaultOptions().toOptionsMap());
-				} catch(IOException exception) {
-					exception.printStackTrace();
+			if(optionsProvider != null) {
+				String vcmluri = optionsProvider.get().get(OptionsProvider.VCML_FILE_URI);
+				if(vcmluri != null && sourceUtils != null) {
+					try {
+						URI sourceUri = sourceUtils.sourceUri(object, vcmluri);
+						Resource resource = new ResourceSetImpl().createResource(sourceUri);
+						EList<EObject> contents = resource.getContents();
+						contents.add(object.getSource());
+						resource.save(SaveOptions.defaultOptions().toOptionsMap());
+					} catch(IOException exception) {
+						exception.printStackTrace();
+					}
 				}
 			}
 		}
