@@ -29,6 +29,7 @@ import org.vclipse.vcml.vcml.CharacteristicType;
 import org.vclipse.vcml.vcml.CharacteristicValue;
 import org.vclipse.vcml.vcml.Dependency;
 import org.vclipse.vcml.vcml.SymbolicType;
+import org.vclipse.vcml.vcml.VCObject;
 
 import com.google.inject.Inject;
 
@@ -68,72 +69,74 @@ public class VCMLHoverProvider extends DefaultEObjectHoverProvider {
 		return classNameProvider;
 	}
 
-	protected String getHoverInfoAsHtml(EObject object) {
-		if(!hasHover(object))
+	protected String getHoverInfoAsHtml(EObject eObject) {
+		if(!(eObject instanceof VCObject) || !hasHover(eObject))
 			return null;
-		
+		VCObject vcObject = (VCObject)eObject;
 		StringBuffer buffer = new StringBuffer();
-		buffer.append(getFirstLine(object));
-		String description = descriptionProvider.getDocumentation(object);
+		buffer.append(getFirstLine(vcObject));
+		String description = descriptionProvider.getDocumentation(vcObject);
 		if (description!=null && description.length()>0) {
 			buffer.append("<br/>");
 			buffer.append(description);
 		}
-		String documentation = documentationProvider.getDocumentation(object);
+		String documentation = documentationProvider.getDocumentation(vcObject);
 		if (documentation!=null && documentation.length()>0) {
 			buffer.append("<br/>");
 			buffer.append(documentation);
 		}
-		String additionalInformation = additionalInformationProvider.getDocumentation(object);
+		String additionalInformation = additionalInformationProvider.getDocumentation(vcObject);
 		if (additionalInformation!=null && additionalInformation.length()>0) {
 			buffer.append("<br/>");
 			buffer.append(additionalInformation);
 		}
-		String multilineCommentDocumentation = getDocumentation(object);
+		String multilineCommentDocumentation = getDocumentation(vcObject);
 		if (multilineCommentDocumentation!=null && multilineCommentDocumentation.length()>0) {
 			buffer.append("<p>");
 			buffer.append(multilineCommentDocumentation);
 			buffer.append("</p>");
 		}
-		if(object instanceof Characteristic) {
-			Characteristic characteristic = (Characteristic)object;
-			CharacteristicType type = characteristic.getType();
-			if(type instanceof SymbolicType) {
-				SymbolicType symbolicType = (SymbolicType)type;
-				if(!symbolicType.getValues().isEmpty()) {
-					buffer.append("<br/><br/>Values:<ul>");
-					for(CharacteristicValue value : symbolicType.getValues()) {
-						buffer.append("<li><b>" + value.getName() + "</b>" 
-								/*+ (value.getDescription()==null ? "" : ": <em>" + value.getDescription() + "</em>")*/ + "</li>");
+		if (vcObject.getDescription()!=null) { // if there is a body
+			if(vcObject instanceof Characteristic) {
+				Characteristic characteristic = (Characteristic)vcObject;
+				CharacteristicType type = characteristic.getType();
+				if(type instanceof SymbolicType) {
+					SymbolicType symbolicType = (SymbolicType)type;
+					if(!symbolicType.getValues().isEmpty()) {
+						buffer.append("<br/><br/>Values:<ul>");
+						for(CharacteristicValue value : symbolicType.getValues()) {
+							buffer.append("<li><b>" + value.getName() + "</b>" 
+									/*+ (value.getDescription()==null ? "" : ": <em>" + value.getDescription() + "</em>")*/ + "</li>");
+						}
+						buffer.append("</ul>");					
 					}
-					buffer.append("</ul>");					
 				}
 			}
-		}
-		
-		if(object instanceof Dependency) {
-			try {
-				InputStream is = sourceUtils.getInputStream((Dependency)object);
-				if (is!=null) {
-					buffer.append("<p><pre>");
-					BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-					String line;
-					while ((line = br.readLine()) != null) {
-						boolean isCommentLine = line.startsWith("*");
-						if (isCommentLine) {
-							buffer.append("<span style='color: #008000'>");
+
+			if(vcObject instanceof Dependency) {
+				try {
+					InputStream is = sourceUtils.getInputStream((Dependency)vcObject);
+					if (is!=null) {
+						buffer.append("<p><pre>");
+						BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+						String line;
+						while ((line = br.readLine()) != null) {
+							boolean isCommentLine = line.startsWith("*");
+							if (isCommentLine) {
+								buffer.append("<span style='color: #008000'>");
+							}
+							buffer.append(line);
+							if (isCommentLine) {
+								buffer.append("</span>");
+							}
+							buffer.append("<br/>");
 						}
-						buffer.append(line);
-						if (isCommentLine) {
-							buffer.append("</span>");
-						}
-						buffer.append("<br/>");
+						buffer.append("</pre></p>");
 					}
-					buffer.append("</pre></p>");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		}
 		
