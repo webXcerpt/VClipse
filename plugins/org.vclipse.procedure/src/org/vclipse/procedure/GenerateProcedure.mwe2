@@ -12,7 +12,7 @@ var runtimeProject = "../${projectName}"
 Workflow {
     bean = StandaloneSetup {
 	    scanClassPath = true
-		platformUri = "${runtimeProject}/.."    
+		platformUri = "${runtimeProject}/.."
 	}
 
 	component = DirectoryCleaner {
@@ -26,6 +26,7 @@ Workflow {
 	component = DirectoryCleaner {
 		directory = "${runtimeProject}.ui/src-gen"
 	}
+
 	component = Generator {
 		pathRtProject = runtimeProject
 		pathUiProject = "${runtimeProject}.ui"
@@ -70,14 +71,12 @@ Workflow {
 			// java-based API for validation 
 			fragment = validation.JavaValidatorFragment {
 				composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
-				// registerForImportedPackages = true
 			}
 
 			// scoping and exporting API 
 			fragment = scoping.ImportNamespacesScopingFragment {
 				ignoreCase = true
 			}
-			fragment = exporting.QualifiedNamesFragment {}
 			fragment = builder.BuilderIntegrationFragment {}
 
 			// generator API
