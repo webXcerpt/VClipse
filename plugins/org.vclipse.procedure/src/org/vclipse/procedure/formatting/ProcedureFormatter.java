@@ -3,8 +3,16 @@
  */
 package org.vclipse.procedure.formatting;
 
+import org.eclipse.xtext.GrammarUtil;
+import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.formatting.impl.AbstractDeclarativeFormatter;
 import org.eclipse.xtext.formatting.impl.FormattingConfig;
+import org.vclipse.dependency.services.DependencyGrammarAccess.ConditionElements;
+import org.vclipse.dependency.services.DependencyGrammarAccess.ConjunctionElements;
+import org.vclipse.dependency.services.DependencyGrammarAccess.PFunctionElements;
+import org.vclipse.procedure.services.ProcedureGrammarAccess;
+import org.vclipse.procedure.services.ProcedureGrammarAccess.ProcedureSourceElements;
+import org.vclipse.procedure.services.ProcedureGrammarAccess.StatementElements;
 
 /**
  * This class contains custom formatting description.
@@ -16,6 +24,8 @@ import org.eclipse.xtext.formatting.impl.FormattingConfig;
  */
 public class ProcedureFormatter extends AbstractDeclarativeFormatter {
 	
+	
+
 	@Override
 	protected void configureFormatting(FormattingConfig c) {
 // It's usually a good idea to activate the following three statements.
@@ -23,5 +33,49 @@ public class ProcedureFormatter extends AbstractDeclarativeFormatter {
 //		c.setLinewrap(0, 1, 2).before(getGrammarAccess().getSL_COMMENTRule());
 //		c.setLinewrap(0, 1, 2).before(getGrammarAccess().getML_COMMENTRule());
 //		c.setLinewrap(0, 1, 1).after(getGrammarAccess().getML_COMMENTRule());
+		
+		
+		// procedure source (linewrap after ,)
+		
+		
+		ProcedureGrammarAccess pga = (ProcedureGrammarAccess) getGrammarAccess();
+				
+		ProcedureSourceElements proceduresources = pga.getProcedureSourceAccess();
+		StatementElements statements = pga.getStatementAccess();
+		PFunctionElements pfunction = pga.getPFunctionAccess();
+		ConjunctionElements conjunctions = pga.getConjunctionAccess();
+		ConditionElements conditions = pga.getConditionAccess();
+		
+		c.setAutoLinewrap(72);
+
+		Iterable<Keyword> keywords = GrammarUtil.containedKeywords(pga.getGrammar());
+		
+		// dots
+	    for (Keyword currentKeyword : keywords) {
+	    	if (".".equals(currentKeyword.getValue())) {
+	    		c.setNoSpace().around(currentKeyword);
+	    	}
+	    }
+		
+	    
+//	    c.setNoSpace().before(pga.getSL_COMMENTRule());
+	    c.setLinewrap(0, 1, 2).before(pga.getSL_COMMENTRule());
+	    c.setLinewrap(0, 1, 1).after(pga.getSL_COMMENTRule());
+	    
+		c.setIndentationIncrement().after(pfunction.getLeftParenthesisKeyword_2());
+		c.setIndentationDecrement().after(pfunction.getRightParenthesisKeyword_4());
+		
+    	c.setLinewrap().after(proceduresources.getCommaKeyword_1_0());
+    	
+    	c.setLinewrap(2).before(pfunction.getPfunctionKeyword_0());
+//    	c.setLinewrap(2).before(statements.getIfKeyword_1_1());
+    	c.setLinewrap().after(conjunctions.getOperatorAndKeyword_1_1_0());	// 'and' keyword is in dependency
+    	c.setLinewrap().after(conditions.getOperatorOrKeyword_1_1_0());	// 'or' keyword is in dependency
+    	
+    	c.setLinewrap().after(pfunction.getFunctionAssignment_1());
+    	c.setLinewrap().after(pfunction.getCommaKeyword_3_3_0());
+    	c.setLinewrap(2).after(pfunction.getRightParenthesisKeyword_4());		// does not work if comment follows!
+    	
+    	
 	}
 }

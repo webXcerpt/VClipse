@@ -3,8 +3,15 @@
  */
 package org.vclipse.constraint.formatting;
 
+import org.eclipse.xtext.GrammarUtil;
+import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.formatting.impl.AbstractDeclarativeFormatter;
 import org.eclipse.xtext.formatting.impl.FormattingConfig;
+import org.vclipse.constraint.services.ConstraintGrammarAccess;
+import org.vclipse.constraint.services.ConstraintGrammarAccess.ConstraintSourceElements;
+import org.vclipse.dependency.formatting.DependencyFormatter;
+
+import com.google.inject.Inject;
 
 /**
  * This class contains custom formatting description.
@@ -16,6 +23,9 @@ import org.eclipse.xtext.formatting.impl.FormattingConfig;
  */
 public class ConstraintFormatter extends AbstractDeclarativeFormatter {
 	
+//	@Inject
+//	DependencyFormatter base;
+	
 	@Override
 	protected void configureFormatting(FormattingConfig c) {
 // It's usually a good idea to activate the following three statements.
@@ -23,5 +33,96 @@ public class ConstraintFormatter extends AbstractDeclarativeFormatter {
 //		c.setLinewrap(0, 1, 2).before(getGrammarAccess().getSL_COMMENTRule());
 //		c.setLinewrap(0, 1, 2).before(getGrammarAccess().getML_COMMENTRule());
 //		c.setLinewrap(0, 1, 1).after(getGrammarAccess().getML_COMMENTRule());
+		
+		// super.configureFormatting(c);
+		
+		
+		ConstraintGrammarAccess cga = (ConstraintGrammarAccess) getGrammarAccess();
+		
+		c.setAutoLinewrap(72);
+		
+		Iterable<Keyword> keywords = GrammarUtil.containedKeywords(cga.getGrammar());
+		
+		ConstraintSourceElements elements = cga.getConstraintSourceAccess();
+		{	// comment
+//			c.setNoSpace().around(cga.getSL_COMMENTRule());
+			c.setLinewrap(0, 1, 2).before(cga.getSL_COMMENTRule());
+			c.setLinewrap(0, 1, 1).after(cga.getSL_COMMENTRule());
+		}
+		
+		// dots
+	    for (Keyword currentKeyword : keywords) {
+	    	if (".".equals(currentKeyword.getValue())) {
+	    		c.setNoSpace().around(currentKeyword);
+	    	}
+	    }
+		
+		{	// SAPObject definitions on toplevel
+//			c.setLinewrap(2).before(elements.getObjectsKeyword_0());
+			c.setLinewrap(2).before(elements.getConditionKeyword_5_0());
+			c.setLinewrap(2).before(elements.getRestrictionKeyword_6_0());
+			c.setLinewrap(2).before(elements.getRestrictionsKeyword_6_1());
+			c.setLinewrap(2).before(elements.getInferencesKeyword_11_0());
+		}
+		
+		{	// constraint source (linewrap after . : ,)
+	    	c.setLinewrap().after(elements.getColonKeyword_1());
+	    	c.setLinewrap().after(elements.getColonKeyword_5_1());
+	    	c.setLinewrap().after(elements.getColonKeyword_7());
+	    	c.setLinewrap().after(elements.getColonKeyword_11_1());
+	    	c.setLinewrap().after(elements.getCommaKeyword_3_0());
+	    	c.setLinewrap().after(elements.getCommaKeyword_9_0());
+	    	c.setLinewrap().after(elements.getCommaKeyword_11_3_0());
+	    	c.setLinewrap().after(elements.getFullStopKeyword_4());
+	    	c.setLinewrap().after(elements.getFullStopKeyword_5_3());
+	    	c.setLinewrap().after(elements.getFullStopKeyword_10());
+	    	c.setLinewrap().after(elements.getFullStopKeyword_11_4());
+	    	
+	    	
+		}
+		
+		{	// indendation after toplevel objects and additional line wraps
+			c.setLinewrap().after(elements.getCommaKeyword_3_0());
+			
+			c.setLinewrap().after(elements.getFullStopKeyword_5_3());
+			c.setLinewrap().after(elements.getFullStopKeyword_4());
+
+			c.setIndentationDecrement().before(elements.getConditionKeyword_5_0());
+			c.setIndentationDecrement().before(elements.getRestrictionKeyword_6_0());
+			c.setIndentationDecrement().before(elements.getRestrictionsKeyword_6_1());
+			c.setIndentationDecrement().before(elements.getInferencesKeyword_11_0());
+			
+			c.setIndentationIncrement().after(elements.getColonKeyword_1());
+			c.setIndentationIncrement().after(elements.getColonKeyword_5_1());
+			c.setIndentationIncrement().after(elements.getColonKeyword_7());
+			c.setIndentationIncrement().after(elements.getColonKeyword_11_1());
+			
+			c.setLinewrap().after(elements.getCommaKeyword_3_0());
+			c.setLinewrap().after(elements.getFullStopKeyword_4());
+			c.setLinewrap().after(elements.getCommaKeyword_9_0());
+			c.setLinewrap().after(elements.getFullStopKeyword_10());
+			
+			c.setLinewrap().after(elements.getCommaKeyword_11_3_0());
+			c.setLinewrap().after(elements.getFullStopKeyword_11_4());
+		}
+		
+		{	// function
+			c.setLinewrap(2).before(cga.getFunctionAccess().getFunctionKeyword_0());
+			c.setLinewrap(2).after(cga.getFunctionAccess().getLeftParenthesisKeyword_2());
+			c.setLinewrap().before(cga.getFunctionAccess().getRightParenthesisKeyword_7());
+			c.setLinewrap().after(cga.getFunctionAccess().getCommaKeyword_6_0());
+		}
+		{	// pfunction
+			c.setLinewrap(2).before(cga.getPFunctionAccess().getPfunctionKeyword_0());
+			c.setLinewrap(2).after(cga.getPFunctionAccess().getLeftParenthesisKeyword_2());
+			c.setLinewrap().before(cga.getPFunctionAccess().getRightParenthesisKeyword_4());
+			c.setLinewrap().after(cga.getPFunctionAccess().getCommaKeyword_3_3_0());
+		}
+		{	// table
+			c.setLinewrap(2).before(cga.getTableAccess().getTableKeyword_0());
+			c.setLinewrap(2).after(cga.getTableAccess().getLeftParenthesisKeyword_2());
+			c.setLinewrap().before(cga.getTableAccess().getRightParenthesisKeyword_7());
+			c.setLinewrap().after(cga.getTableAccess().getCommaKeyword_6_0());
+		}
 	}
 }
