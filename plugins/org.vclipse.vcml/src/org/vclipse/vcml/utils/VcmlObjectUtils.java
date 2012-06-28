@@ -36,6 +36,7 @@ import org.vclipse.vcml.vcml.SelectionCondition;
 import org.vclipse.vcml.vcml.SimpleDescription;
 import org.vclipse.vcml.vcml.SimpleDocumentation;
 import org.vclipse.vcml.vcml.SymbolicType;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.ValueAssignment;
 import org.vclipse.vcml.vcml.VariantFunction;
 import org.vclipse.vcml.vcml.VariantTable;
@@ -248,6 +249,16 @@ public class VcmlObjectUtils {
 		Collections.sort(arrayList, new Comparator<ConfigurationProfileEntry>() {
 			public int compare(ConfigurationProfileEntry arg0, ConfigurationProfileEntry arg1) {
 				return new Integer(arg0.getSequence()).compareTo(new Integer(arg1.getSequence()));
+			}});
+		entries.clear();
+		entries.addAll(arrayList);
+	}
+	
+	static public void sortVCObjects(List<VCObject> entries) {
+		ArrayList<VCObject> arrayList = Lists.newArrayList(entries);
+		Collections.sort(arrayList, new Comparator<VCObject>() {
+			public int compare(VCObject object_one, VCObject object_two) {
+				return object_one.getName().compareTo(object_two.getName());
 			}});
 		entries.clear();
 		entries.addAll(arrayList);
