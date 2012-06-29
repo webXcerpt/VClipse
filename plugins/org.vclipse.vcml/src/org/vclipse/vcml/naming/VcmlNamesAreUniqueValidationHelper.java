@@ -16,11 +16,9 @@ public class VcmlNamesAreUniqueValidationHelper extends NamesAreUniqueValidation
 
 	private static final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
 
+	// reported a bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=383863
 	@Override
-	protected void checkDescriptionForDuplicatedName(
-			IEObjectDescription description,
-			Map<EClass, Map<QualifiedName, IEObjectDescription>> clusterTypeToName,
-			ValidationMessageAcceptor acceptor) {
+	protected void checkDescriptionForDuplicatedName(IEObjectDescription description, Map<EClass, Map<QualifiedName, IEObjectDescription>> clusterTypeToName, ValidationMessageAcceptor acceptor) {
 		EObject object = description.getEObjectOrProxy();
 		EClass eClass = object.eClass();
 		QualifiedName qualifiedName = description.getName();
