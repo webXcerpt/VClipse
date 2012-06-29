@@ -108,19 +108,25 @@ public class ConstraintFormatter extends AbstractDeclarativeFormatter {
 		
 		{	// function
 			c.setLinewrap(2).before(cga.getFunctionAccess().getFunctionKeyword_0());
-			c.setLinewrap(2).after(cga.getFunctionAccess().getLeftParenthesisKeyword_2());
+			c.setLinewrap().after(cga.getFunctionAccess().getLeftParenthesisKeyword_2());
+			c.setIndentationIncrement().after(cga.getFunctionAccess().getLeftParenthesisKeyword_2());
+			c.setIndentationDecrement().before(cga.getFunctionAccess().getRightParenthesisKeyword_7());
 			c.setLinewrap().before(cga.getFunctionAccess().getRightParenthesisKeyword_7());
 			c.setLinewrap().after(cga.getFunctionAccess().getCommaKeyword_6_0());
 		}
 		{	// pfunction
 			c.setLinewrap(2).before(cga.getPFunctionAccess().getPfunctionKeyword_0());
-			c.setLinewrap(2).after(cga.getPFunctionAccess().getLeftParenthesisKeyword_2());
+			c.setLinewrap().after(cga.getPFunctionAccess().getLeftParenthesisKeyword_2());
+			c.setIndentationIncrement().after(cga.getPFunctionAccess().getLeftParenthesisKeyword_2());
+			c.setIndentationDecrement().before(cga.getPFunctionAccess().getRightParenthesisKeyword_4());
 			c.setLinewrap().before(cga.getPFunctionAccess().getRightParenthesisKeyword_4());
 			c.setLinewrap().after(cga.getPFunctionAccess().getCommaKeyword_3_3_0());
 		}
 		{	// table
 			c.setLinewrap(2).before(cga.getTableAccess().getTableKeyword_0());
-			c.setLinewrap(2).after(cga.getTableAccess().getLeftParenthesisKeyword_2());
+			c.setLinewrap().after(cga.getTableAccess().getLeftParenthesisKeyword_2());
+			c.setIndentationIncrement().after(cga.getTableAccess().getLeftParenthesisKeyword_2());
+			c.setIndentationDecrement().before(cga.getTableAccess().getRightParenthesisKeyword_7());
 			c.setLinewrap().before(cga.getTableAccess().getRightParenthesisKeyword_7());
 			c.setLinewrap().after(cga.getTableAccess().getCommaKeyword_6_0());
 		}
