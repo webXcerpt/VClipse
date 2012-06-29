@@ -4,7 +4,7 @@ Bundle-Name: VClipse Releng Project
 Bundle-SymbolicName: org.vclipse.releng222
 Bundle-Version: 0.4.1.qualifier
 Bundle-Activator: org.vclipse.releng.Activator
-Require-Bundle: org.eclipse.emf.mwe2.launch;bundle-version="2.1.0",
+Require-Bundle: org.eclipse.emf.mwe2.launch,
  org.vclipse.vcml,
  org.vclipse.idoc,
  org.eclipse.ui,
@@ -14,6 +14,7 @@ Require-Bundle: org.eclipse.emf.mwe2.launch;bundle-version="2.1.0",
  org.vclipse.dependency,
  org.vclipse.procedure,
  org.vclipse.condition,
- org.vclipse.constraint
+ org.vclipse.constraint,
+ org.slf4j.api;bundle-version="1.6.4"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
