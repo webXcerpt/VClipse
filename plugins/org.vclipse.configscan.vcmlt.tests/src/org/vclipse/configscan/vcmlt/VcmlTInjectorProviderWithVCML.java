@@ -15,10 +15,6 @@ public class VcmlTInjectorProviderWithVCML extends VcmlTInjectorProvider {
 		return super.getInjector();
 	}
 	
-	public void restoreRegistry() {
-		globalStateMemento.restoreGlobalState();
-	}
-
 	public void setupRegistry() {
 		super.setupRegistry();
 		if (injectorVCML != null)
