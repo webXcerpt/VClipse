@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
+import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.Classification;
 
 /**
@@ -26,7 +27,14 @@ import org.vclipse.vcml.vcml.Classification;
 public class VCMLScopeProvider extends AbstractDeclarativeScopeProvider {
 	
 	IScope scope_ValueAssignment_characteristic(Classification context, EReference ref) {
-		return Scopes.scopeFor(context.getCls().getCharacteristics());
+		Class cls = context.getCls();
+		if (cls.getDescription()!=null) {
+			// class has a body
+			return Scopes.scopeFor(cls.getCharacteristics());
+		} else {
+			// class has no body - we do not handle this case, but allow all cstics from delegate/global scope
+			return null;
+		}
 	}
 	
 }
