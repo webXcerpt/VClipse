@@ -13,7 +13,8 @@ Require-Bundle: org.eclipse.xtext.generator;bundle-version="2.2.1",
  org.eclipse.xtext.util,
  org.eclipse.emf.ecore,
  org.eclipse.emf.common,
- org.antlr.runtime
+ org.antlr.runtime,
+ org.slf4j.api
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.idoc,
  org.vclipse.idoc.services,
