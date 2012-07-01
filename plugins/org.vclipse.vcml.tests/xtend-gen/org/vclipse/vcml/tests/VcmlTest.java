@@ -8,9 +8,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.vclipse.vcml.VCMLInjectorProvider;
 
+@RunWith(value = XtextRunner2.class)
+@InjectWith(value = VCMLInjectorProvider.class)
 @SuppressWarnings("all")
-@RunWith(XtextRunner2.class)
-@InjectWith(VCMLInjectorProvider.class)
 public class VcmlTest extends XtextTest {
   public void testParserRule(final CharSequence textToParse, final String ruleName) {
     String _string = textToParse.toString();
@@ -19,14 +19,14 @@ public class VcmlTest extends XtextTest {
   
   @Test
   public void fileTest() {
-      this.setResourceRoot("file:C:/eclipse/workspace-splitting/org.vclipse.vcml.tests/resources");
-      this.testFile("VcmlTest/characteristictest.vcml");
+    this.setResourceRoot("file:C:/eclipse/workspace-splitting/org.vclipse.vcml.tests/resources");
+    this.testFile("VcmlTest/characteristictest.vcml");
   }
   
   @Test
   public void fileTest2() {
-      this.setResourceRoot("classpath:/resources");
-      this.testFile("characteristictest.vcml");
+    this.setResourceRoot("classpath:/resources");
+    this.testFile("characteristictest.vcml");
   }
   
   @Test
@@ -681,33 +681,33 @@ public class VcmlTest extends XtextTest {
   
   @Test
   public void idTest() {
-      this.testTerminal("abc", "ID");
-      this.testTerminal("abc4", "ID");
-      this.testTerminal("_abc", "ID");
-      this.testNotTerminal("1abc", "ID");
-      this.testNotTerminal("#abc", "ID");
+    this.testTerminal("abc", "ID");
+    this.testTerminal("abc4", "ID");
+    this.testTerminal("_abc", "ID");
+    this.testNotTerminal("1abc", "ID");
+    this.testNotTerminal("#abc", "ID");
   }
   
   @Test
   public void stringTest() {
-      StringConcatenation _builder = new StringConcatenation();
-      _builder.append("\"\\\\t\"");
-      String _string = _builder.toString();
-      this.testTerminal(_string, "STRING");
-      StringConcatenation _builder_1 = new StringConcatenation();
-      _builder_1.append("\"foo\"");
-      String _string_1 = _builder_1.toString();
-      this.testTerminal(_string_1, "STRING");
-      StringConcatenation _builder_2 = new StringConcatenation();
-      _builder_2.append("\"\\\\tbar\"");
-      String _string_2 = _builder_2.toString();
-      this.testTerminal(_string_2, "STRING");
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("\"\\\\t\"");
+    String _string = _builder.toString();
+    this.testTerminal(_string, "STRING");
+    StringConcatenation _builder_1 = new StringConcatenation();
+    _builder_1.append("\"foo\"");
+    String _string_1 = _builder_1.toString();
+    this.testTerminal(_string_1, "STRING");
+    StringConcatenation _builder_2 = new StringConcatenation();
+    _builder_2.append("\"\\\\tbar\"");
+    String _string_2 = _builder_2.toString();
+    this.testTerminal(_string_2, "STRING");
   }
   
   @Test
   public void symbolTest() {
-      this.testTerminal("\'a\'", "SYMBOL");
-      this.testTerminal("\'\b\'", "SYMBOL");
-      this.testNotTerminal("\'\t\'", "SYMBOL");
+    this.testTerminal("\'a\'", "SYMBOL");
+    this.testTerminal("\'\b\'", "SYMBOL");
+    this.testNotTerminal("\'\t\'", "SYMBOL");
   }
 }

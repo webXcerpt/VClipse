@@ -8,9 +8,9 @@ import org.junit.runner.RunWith;
 import org.vclipse.constraint.ConstraintInjectorProvider;
 import org.vclipse.vcml.tests.DependencyTest;
 
+@InjectWith(value = ConstraintInjectorProvider.class)
+@RunWith(value = XtextRunner2.class)
 @SuppressWarnings("all")
-@InjectWith(ConstraintInjectorProvider.class)
-@RunWith(XtextRunner2.class)
 public class ConstraintTest extends DependencyTest {
   @Test
   public void shortVarTest1() {

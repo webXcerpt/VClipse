@@ -20,8 +20,14 @@ Require-Bundle: org.eclipse.core.runtime,
  org.vclipse.dependency.tests,
  org.vclipse.procedure.tests
 Import-Package: org.apache.log4j,
- org.apache.commons.logging
+ org.apache.commons.logging,
+ org.junit.runner;version="4.5.0",
+ org.junit.runner.manipulation;version="4.5.0",
+ org.junit.runner.notification;version="4.5.0",
+ org.junit.runners;version="4.5.0",
+ org.junit.runners.model;version="4.5.0",
+ org.hamcrest.core
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.vclipse.vcml.tests
-Bundle-ClassPath: .,
- resources/
+Export-Package: org.vclipse.vcml.tests,
+ org.vclipse.vcml
+Bundle-ClassPath: .,resources/

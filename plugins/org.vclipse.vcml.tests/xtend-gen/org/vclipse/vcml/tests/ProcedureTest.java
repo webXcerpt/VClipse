@@ -8,9 +8,9 @@ import org.junit.runner.RunWith;
 import org.vclipse.procedure.ProcedureInjectorProvider;
 import org.vclipse.vcml.tests.DependencyTest;
 
+@InjectWith(value = ProcedureInjectorProvider.class)
+@RunWith(value = XtextRunner2.class)
 @SuppressWarnings("all")
-@InjectWith(ProcedureInjectorProvider.class)
-@RunWith(XtextRunner2.class)
 public class ProcedureTest extends DependencyTest {
   @Test
   public void sumPartsTest1() {
