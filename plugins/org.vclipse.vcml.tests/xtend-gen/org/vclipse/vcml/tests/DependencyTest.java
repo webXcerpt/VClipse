@@ -135,37 +135,37 @@ public class DependencyTest extends XtextTest {
   
   @Test
   public void idTest() {
-      this.testTerminal("abc", "ID");
-      this.testTerminal("abc4", "ID");
-      this.testTerminal("_abc", "ID");
-      this.testNotTerminal("1abc", "ID");
-      this.testNotTerminal("#abc", "ID");
+    this.testTerminal("abc", "ID");
+    this.testTerminal("abc4", "ID");
+    this.testTerminal("_abc", "ID");
+    this.testNotTerminal("1abc", "ID");
+    this.testNotTerminal("#abc", "ID");
   }
   
   @Test
   public void dependencyCommentTest() {
-      this.testTerminal("\n*asdf", "SL_COMMENT");
-      StringConcatenation _builder = new StringConcatenation();
-      _builder.append("foo");
-      String _string = _builder.toString();
-      this.testNotTerminal(_string, "SL_COMMENT");
-      StringConcatenation _builder_1 = new StringConcatenation();
-      _builder_1.append("\\\\tbar");
-      String _string_1 = _builder_1.toString();
-      this.testNotTerminal(_string_1, "SL_COMMENT");
+    this.testTerminal("\n*asdf", "SL_COMMENT");
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("foo");
+    String _string = _builder.toString();
+    this.testNotTerminal(_string, "SL_COMMENT");
+    StringConcatenation _builder_1 = new StringConcatenation();
+    _builder_1.append("\\\\tbar");
+    String _string_1 = _builder_1.toString();
+    this.testNotTerminal(_string_1, "SL_COMMENT");
   }
   
   @Test
   public void symbolTest() {
-      this.testTerminal("\'a\'", "SYMBOL");
-      this.testTerminal("\'\b\'", "SYMBOL");
-      this.testNotTerminal("\'\t\'", "SYMBOL");
+    this.testTerminal("\'a\'", "SYMBOL");
+    this.testTerminal("\'\b\'", "SYMBOL");
+    this.testNotTerminal("\'\t\'", "SYMBOL");
   }
   
   @Test
   public void intTest() {
-      this.testTerminal("0123456789", "INT");
-      this.testNotTerminal("0.123456789", "INT");
+    this.testTerminal("0123456789", "INT");
+    this.testNotTerminal("0.123456789", "INT");
   }
   
   @Test
