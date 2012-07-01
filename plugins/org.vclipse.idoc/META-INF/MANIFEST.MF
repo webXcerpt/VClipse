@@ -5,7 +5,7 @@ Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Bundle-Version: 0.4.2.qualifier
 Bundle-SymbolicName: org.vclipse.idoc;singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.xtext.generator;bundle-version="2.2.1",
+Require-Bundle: org.eclipse.xtext.generator;bundle-version="2.3.0",
  org.eclipse.emf.mwe2.launch;bundle-version="2.2.0",
  org.vclipse.jpplib,
  org.vclipse.base,

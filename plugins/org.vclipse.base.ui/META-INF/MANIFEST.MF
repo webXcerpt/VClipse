@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.vclipse.base.ui
 Bundle-Version: 0.4.2.qualifier
 Bundle-Activator: org.vclipse.base.ui.BaseUiPlugin
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
-Require-Bundle: org.eclipse.xtext.ui;bundle-version="2.2.1",
+Require-Bundle: org.eclipse.xtext.ui;bundle-version="2.3.0",
  org.vclipse.base;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

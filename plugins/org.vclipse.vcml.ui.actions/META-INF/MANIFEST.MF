@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.vclipse.vcml.ui.actions;singleton:=true
 Bundle-Version: 0.4.2.qualifier
 Bundle-Activator: org.vclipse.vcml.ui.actions.VcmlUiActionPlugin
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
-Require-Bundle: org.eclipse.xtext.ui;bundle-version="2.2.1",
+Require-Bundle: org.eclipse.xtext.ui;bundle-version="2.3.0",
  org.vclipse.connection,
  org.vclipse.vcml.ui,
  org.vclipse.console,

@@ -5,7 +5,7 @@ Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Bundle-Version: 0.4.2.qualifier
 Bundle-SymbolicName: org.vclipse.vcml; singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.xtext.generator;bundle-version="2.2.1",
+Require-Bundle: org.eclipse.xtext.generator;bundle-version="2.3.0",
  org.vclipse.base;visibility:=reexport,
  org.vclipse.jpplib,
  org.vclipse.vcml.mm;bundle-version="0.4.2";visibility:=reexport,
