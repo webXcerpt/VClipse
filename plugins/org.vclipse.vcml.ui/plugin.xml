@@ -120,7 +120,7 @@
               category="org.vclipse.preferences.page"
               class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
               id="org.vclipse.preferences.page.vcmlTextEditor"
-              name="VCML Text Editor">
+              name="VCML Editor">
         </page>
         <page
             category="org.vclipse.preferences.page.vcmlTextEditor"
@@ -166,7 +166,7 @@
     </extension>
     <extension
             point="org.eclipse.ui.propertyPages">
-         <page
+        <page
             class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
             id="org.vclipse.properties.page"
             name="VClipse">
