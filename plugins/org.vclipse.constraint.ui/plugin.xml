@@ -9,7 +9,7 @@
             class="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
-            extensions="cons"
+            extensions="cons,sapconstraint"
             id="org.vclipse.constraint.Constraint"
             name="Constraint Editor">
         </editor>
@@ -74,6 +74,7 @@
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
+            category="org.vclipse.properties.page"
             class="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
             id="org.vclipse.constraint.Constraint"
             name="Constraint">
@@ -152,6 +153,28 @@
     </extension>
 
 
+    <!-- marker definitions for org.vclipse.constraint.Constraint -->
+    <extension
+            id="constraint.check.fast"
+            name="Constraint Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.fast"/>
+        <persistent value="true"/>
+    </extension>
+    <extension
+            id="constraint.check.normal"
+            name="Constraint Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.normal"/>
+        <persistent value="true"/>
+    </extension>
+    <extension
+            id="constraint.check.expensive"
+            name="Constraint Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.expensive"/>
+        <persistent value="true"/>
+    </extension>
 
 	<!-- Quick Outline -->
 	<extension
@@ -186,13 +209,34 @@
 			</command>
 		</menuContribution>
 	</extension>
-   <!-- quickfix marker resolution generator -->
-   <extension
-         point="org.eclipse.ui.ide.markerResolution">
-      <markerResolutionGenerator
-            class="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator">
-      </markerResolutionGenerator>
-   </extension>
+    <!-- quickfix marker resolution generator for org.vclipse.constraint.Constraint -->
+    <extension
+            point="org.eclipse.ui.ide.markerResolution">
+        <markerResolutionGenerator
+            class="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.vclipse.constraint.ui.constraint.check.fast">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+        <markerResolutionGenerator
+            class="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.vclipse.constraint.ui.constraint.check.normal">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+        <markerResolutionGenerator
+            class="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.vclipse.constraint.ui.constraint.check.expensive">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+    </extension>
    	<!-- Rename Refactoring -->
 	<extension point="org.eclipse.ui.handlers">
 		<handler 
@@ -231,19 +275,19 @@
   <extension point="org.eclipse.compare.contentViewers">
     <viewer id="org.vclipse.constraint.Constraint.compare.contentViewers"
             class="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="cons">
+            extensions="cons,sapconstraint">
     </viewer>
   </extension>
   <extension point="org.eclipse.compare.contentMergeViewers">
     <viewer id="org.vclipse.constraint.Constraint.compare.contentMergeViewers"
             class="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="cons" label="Constraint Compare">
+            extensions="cons,sapconstraint" label="Constraint Compare">
      </viewer>
   </extension>
   <extension point="org.eclipse.ui.editors.documentProviders">
     <provider id="org.vclipse.constraint.Constraint.editors.documentProviders"
             class="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
-            extensions="cons">
+            extensions="cons,sapconstraint">
     </provider>
   </extension>
 

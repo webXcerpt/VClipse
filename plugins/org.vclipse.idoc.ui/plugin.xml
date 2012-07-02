@@ -63,7 +63,7 @@
         <page
             class="org.vclipse.idoc.ui.IDocExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
             id="org.vclipse.idoc.IDoc"
-            name="IDoc Text Editor"
+            name="IDoc Editor"
             category="org.vclipse.preferences.page">
             <keywordReference id="org.vclipse.idoc.ui.keyword_IDoc"/>
         </page>
@@ -80,6 +80,20 @@
             id="org.vclipse.idoc.IDoc.templates"
             name="Templates">
             <keywordReference id="org.vclipse.idoc.ui.keyword_IDoc"/>
+        </page>
+    </extension>
+    <extension
+            point="org.eclipse.ui.propertyPages">
+        <page
+            category="org.vclipse.properties.page"
+            class="org.vclipse.idoc.ui.IDocExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+            id="org.vclipse.idoc.IDoc"
+            name="IDoc">
+            <keywordReference id="org.vclipse.idoc.ui.keyword_IDoc"/>
+            <enabledWhen>
+	            <adapt type="org.eclipse.core.resources.IProject"/>
+			</enabledWhen>
+	        <filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
         </page>
     </extension>
     <extension
@@ -150,7 +164,28 @@
     </extension>
 
 
-
+    <!-- marker definitions for org.vclipse.idoc.IDoc -->
+    <extension
+            id="idoc.check.fast"
+            name="IDoc Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.fast"/>
+        <persistent value="true"/>
+    </extension>
+    <extension
+            id="idoc.check.normal"
+            name="IDoc Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.normal"/>
+        <persistent value="true"/>
+    </extension>
+    <extension
+            id="idoc.check.expensive"
+            name="IDoc Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.expensive"/>
+        <persistent value="true"/>
+    </extension>
 
 	<!-- Quick Outline -->
 	<extension
@@ -185,13 +220,34 @@
 			</command>
 		</menuContribution>
 	</extension>
-   <!-- quickfix marker resolution generator -->
-   <extension
-         point="org.eclipse.ui.ide.markerResolution">
-      <markerResolutionGenerator
-            class="org.vclipse.idoc.ui.IDocExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator">
-      </markerResolutionGenerator>
-   </extension>
+    <!-- quickfix marker resolution generator for org.vclipse.idoc.IDoc -->
+    <extension
+            point="org.eclipse.ui.ide.markerResolution">
+        <markerResolutionGenerator
+            class="org.vclipse.idoc.ui.IDocExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.vclipse.idoc.ui.idoc.check.fast">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+        <markerResolutionGenerator
+            class="org.vclipse.idoc.ui.IDocExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.vclipse.idoc.ui.idoc.check.normal">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+        <markerResolutionGenerator
+            class="org.vclipse.idoc.ui.IDocExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.vclipse.idoc.ui.idoc.check.expensive">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+    </extension>
 
   <extension point="org.eclipse.compare.contentViewers">
     <viewer id="org.vclipse.idoc.IDoc.compare.contentViewers"
@@ -211,6 +267,5 @@
             extensions="idoc">
     </provider>
   </extension>
-
 
 </plugin>

@@ -74,6 +74,7 @@
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
+            category="org.vclipse.properties.page"
             class="org.vclipse.procedure.ui.ProcedureExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
             id="org.vclipse.procedure.Procedure"
             name="Procedure">
@@ -151,21 +152,29 @@
         </resourceServiceProvider>
     </extension>
 
-	<extension
-		point="org.eclipse.emf.ecore.extension_parser">
-		<parser
-			class="org.vclipse.procedure.ui.ProcedureExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
-			type="sapprocedure">
-		</parser>
-	</extension>
-	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
-        <resourceServiceProvider
-            class="org.vclipse.procedure.ui.ProcedureExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
-            uriExtension="sapprocedure">
-        </resourceServiceProvider>
+
+    <!-- marker definitions for org.vclipse.procedure.Procedure -->
+    <extension
+            id="procedure.check.fast"
+            name="Procedure Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.fast"/>
+        <persistent value="true"/>
     </extension>
-
-
+    <extension
+            id="procedure.check.normal"
+            name="Procedure Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.normal"/>
+        <persistent value="true"/>
+    </extension>
+    <extension
+            id="procedure.check.expensive"
+            name="Procedure Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.expensive"/>
+        <persistent value="true"/>
+    </extension>
 
 	<!-- Quick Outline -->
 	<extension
@@ -200,13 +209,34 @@
 			</command>
 		</menuContribution>
 	</extension>
-   <!-- quickfix marker resolution generator -->
-   <extension
-         point="org.eclipse.ui.ide.markerResolution">
-      <markerResolutionGenerator
-            class="org.vclipse.procedure.ui.ProcedureExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator">
-      </markerResolutionGenerator>
-   </extension>
+    <!-- quickfix marker resolution generator for org.vclipse.procedure.Procedure -->
+    <extension
+            point="org.eclipse.ui.ide.markerResolution">
+        <markerResolutionGenerator
+            class="org.vclipse.procedure.ui.ProcedureExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.vclipse.procedure.ui.procedure.check.fast">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+        <markerResolutionGenerator
+            class="org.vclipse.procedure.ui.ProcedureExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.vclipse.procedure.ui.procedure.check.normal">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+        <markerResolutionGenerator
+            class="org.vclipse.procedure.ui.ProcedureExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.vclipse.procedure.ui.procedure.check.expensive">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+    </extension>
    	<!-- Rename Refactoring -->
 	<extension point="org.eclipse.ui.handlers">
 		<handler 

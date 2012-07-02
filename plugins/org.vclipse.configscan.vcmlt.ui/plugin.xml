@@ -74,6 +74,7 @@
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
+            category="org.vclipse.properties.page"
             class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
             id="org.vclipse.configscan.vcmlt.VcmlT"
             name="VcmlT">
@@ -152,6 +153,28 @@
     </extension>
 
 
+    <!-- marker definitions for org.vclipse.configscan.vcmlt.VcmlT -->
+    <extension
+            id="vcmlt.check.fast"
+            name="VcmlT Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.fast"/>
+        <persistent value="true"/>
+    </extension>
+    <extension
+            id="vcmlt.check.normal"
+            name="VcmlT Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.normal"/>
+        <persistent value="true"/>
+    </extension>
+    <extension
+            id="vcmlt.check.expensive"
+            name="VcmlT Problem"
+            point="org.eclipse.core.resources.markers">
+        <super type="org.eclipse.xtext.ui.check.expensive"/>
+        <persistent value="true"/>
+    </extension>
 
 	<!-- Quick Outline -->
 	<extension
@@ -186,13 +209,34 @@
 			</command>
 		</menuContribution>
 	</extension>
-   <!-- quickfix marker resolution generator -->
-   <extension
-         point="org.eclipse.ui.ide.markerResolution">
-      <markerResolutionGenerator
-            class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator">
-      </markerResolutionGenerator>
-   </extension>
+    <!-- quickfix marker resolution generator for org.vclipse.configscan.vcmlt.VcmlT -->
+    <extension
+            point="org.eclipse.ui.ide.markerResolution">
+        <markerResolutionGenerator
+            class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.vclipse.configscan.vcmlt.ui.vcmlt.check.fast">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+        <markerResolutionGenerator
+            class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.vclipse.configscan.vcmlt.ui.vcmlt.check.normal">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+        <markerResolutionGenerator
+            class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+            markerType="org.vclipse.configscan.vcmlt.ui.vcmlt.check.expensive">
+            <attribute
+                name="FIXABLE_KEY"
+                value="true">
+            </attribute>
+        </markerResolutionGenerator>
+    </extension>
    	<!-- Rename Refactoring -->
 	<extension point="org.eclipse.ui.handlers">
 		<handler 
@@ -263,7 +307,7 @@
            name="VClipse test case files (VCMLT) from ConfigScan (*.xml) files">
      </wizard>
   </extension>
- <extension
+  <extension
         point="org.eclipse.ui.popupMenus">
      <objectContribution
            adaptable="true"
@@ -316,4 +360,5 @@
            xmlProvider="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.vclipse.configscan.vcmlt.builder.VcmlTConfigScanXMLProvider">
      </languageExtension>
   </extension>
+
 </plugin>
