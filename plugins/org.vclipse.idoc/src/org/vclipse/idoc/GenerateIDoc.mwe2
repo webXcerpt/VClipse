@@ -81,13 +81,13 @@ Workflow {
 			}
 
 			// scoping and exporting API
-			fragment = scoping.ImportURIScopingFragment {}
-			fragment = exporting.SimpleNamesFragment {}
+			// fragment = scoping.ImportURIScopingFragment {}
+			// fragment = exporting.SimpleNamesFragment {}
 
 			// scoping and exporting API 
 			// fragment = scoping.ImportNamespacesScopingFragment {}
 			// fragment = exporting.QualifiedNamesFragment {}
-			fragment = builder.BuilderIntegrationFragment {}
+			// fragment = builder.BuilderIntegrationFragment {}
 
 			// generator API
 			// fragment = generator.GeneratorFragment {}
