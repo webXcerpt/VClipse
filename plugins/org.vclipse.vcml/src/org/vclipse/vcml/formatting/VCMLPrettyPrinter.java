@@ -470,24 +470,11 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 			}
 			layouter.brk(1,-INDENTATION).print("}");
 			
-			if(optionsProvider != null) {
-				String vcmluri = optionsProvider.get().get(OptionsProvider.VCML_FILE_URI);
-				if(vcmluri != null && sourceUtils != null) {
-					try {
-						URI sourceUri = sourceUtils.sourceUri(object, vcmluri);
-						Resource resource = new ResourceSetImpl().createResource(sourceUri);
-						EList<EObject> contents = resource.getContents();
-						contents.add(object.getSource());
-						resource.save(SaveOptions.defaultOptions().toOptionsMap());
-					} catch(IOException exception) {
-						exception.printStackTrace();
-					}
-				}
-			}
+			writeSourceCode(object, object.getSource());
 		}
 		return layouter.end();
 	}
-	
+
 	/**
 	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseDependencyNet(org.vclipse.vcml.vcml.DependencyNet)
 	 */
@@ -743,20 +730,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 			}
 			layouter.brk(1, -INDENTATION).print("}"); 
 			
-			if(optionsProvider != null) {
-				String vcmluri = optionsProvider.get().get(OptionsProvider.VCML_FILE_URI);
-				if(vcmluri != null && sourceUtils != null) {
-					try {
-						URI sourceUri = sourceUtils.sourceUri(object, vcmluri);
-						Resource resource = new ResourceSetImpl().createResource(sourceUri);
-						EList<EObject> contents = resource.getContents();
-						contents.add(object.getSource());
-						resource.save(SaveOptions.defaultOptions().toOptionsMap());
-					} catch(IOException exception) {
-						exception.printStackTrace();
-					}
-				}
-			}
+			writeSourceCode(object, object.getSource());
 		}
 		return layouter.end();
 	}
@@ -1031,4 +1005,23 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 			printNullsafe(asSymbol(linkText));
 		}
 	}
+
+	private void writeSourceCode(Dependency object, EObject sourceCode) {
+		if(optionsProvider != null) {
+			String vcmluri = optionsProvider.get().get(OptionsProvider.VCML_FILE_URI);
+			if(vcmluri != null && sourceUtils != null) {
+				try {
+					URI sourceUri = sourceUtils.sourceUri(object, vcmluri);
+					Resource resource = new ResourceSetImpl().createResource(sourceUri);
+					EList<EObject> contents = resource.getContents();
+					contents.add(sourceCode);
+					resource.save(SaveOptions.newBuilder().noValidation().getOptions().toOptionsMap());
+				} catch(IOException exception) {
+					exception.printStackTrace();
+				}
+			}
+		}
+	}
+	
+
 }
