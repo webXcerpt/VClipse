@@ -3,6 +3,7 @@ package org.vclipse.vcml.ui.editor;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
@@ -23,6 +24,7 @@ import org.vclipse.vcml.vcml.Import;
 import org.vclipse.vcml.vcml.Model;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 public class VcmlResourceContainerState extends AbstractAllContainersState {
@@ -40,7 +42,10 @@ public class VcmlResourceContainerState extends AbstractAllContainersState {
 	@Inject
 	private VClipseResourceUtil resourceUtil;
 	
-	public List<String> getVisibleContainerHandles(String handle) {
+	private Map<String, List<String>> cache_visibleContainerHandles;
+	
+	private List<String> getVisibleContainerHandles_Raw(String handle) {
+		System.err.print("getVisibleContainerHandles " + handle);
 		List<String> visibleContainerHandles = Lists.newArrayList(handle);
 		if(handle.endsWith(VCML_EXTENSION)) {
 			URI createURI = URI.createURI(handle);
@@ -68,7 +73,23 @@ public class VcmlResourceContainerState extends AbstractAllContainersState {
 				}
 			}
 		}
+		System.err.println(" -> " + visibleContainerHandles);
 		return visibleContainerHandles;
+	}
+	
+	public List<String> getVisibleContainerHandles(String handle) {
+		List<String> visibleContainerHandles = cache_visibleContainerHandles.get(handle);
+		if (visibleContainerHandles == null) {
+			visibleContainerHandles = getVisibleContainerHandles_Raw(handle);
+			cache_visibleContainerHandles.put(handle, visibleContainerHandles);
+		}
+		return visibleContainerHandles;
+	}
+
+	@Override
+	protected void initialize() {
+		super.initialize();
+		cache_visibleContainerHandles = Maps.newHashMap();
 	}
 
 	public Collection<URI> getContainedURIs(String containerHandle) {
