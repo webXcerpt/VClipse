@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -25,6 +26,8 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 public class VcmlResourceContainerState extends AbstractAllContainersState {
+	
+	private static Logger LOGGER = Logger.getLogger(VcmlResourceContainerState.class);
 	
 	public static final String VCML_EXTENSION = "." + DependencySourceUtils.EXTENSION_VCML;
 	
@@ -94,20 +97,24 @@ public class VcmlResourceContainerState extends AbstractAllContainersState {
 		}
 		final List<URI> containedUris = Lists.newArrayList();
 		String stringHandle = URI.createURI(containerHandle).toPlatformString(true);
-		IResource findMember = workspace.getRoot().findMember(stringHandle);
-		if(findMember instanceof IContainer) {
-			try {
-				((IContainer)findMember).accept(new IResourceVisitor() {
-					public boolean visit(IResource resource) throws CoreException {
-						if(resource instanceof IFile) {
-							containedUris.add(resourceUtil.getResource(((IFile)resource)).getURI());
+		if(stringHandle != null) {
+			IResource findMember = workspace.getRoot().findMember(stringHandle);
+			if(findMember instanceof IContainer) {
+				try {
+					((IContainer)findMember).accept(new IResourceVisitor() {
+						public boolean visit(IResource resource) throws CoreException {
+							if(resource instanceof IFile) {
+								containedUris.add(resourceUtil.getResource(((IFile)resource)).getURI());
+							}
+							return true;
 						}
-						return true;
-					}
-				});
-			} catch (CoreException e) {
-				e.printStackTrace();
+					});
+				} catch (CoreException e) {
+					e.printStackTrace();
+				}
 			}
+		} else {
+			LOGGER.warn("stringHandle was null, doInitContainedURIs for container " + containerHandle);
 		}
 		return containedUris;
 	}
