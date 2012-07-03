@@ -14,7 +14,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            category="org.vclipse.preferences.page.sap"
+            category="org.vclipse.preference.pages.sap"
             class="org.vclipse.connection.injection.ConnectionsExecutableExtensionFactory:org.vclipse.connection.dialogs.PreferencePage"
             id="org.vclipse.preferences.pages.connections"
             name="Connection">
