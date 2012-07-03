@@ -31,12 +31,9 @@ public class ConfigScanPlugin extends AbstractUIPlugin {
 	
 	protected Injector injector;
 	
-	protected ConfigScanModule injectionModule;
-	
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		injectionModule = new ConfigScanModule(this);
 	}
 
 	public void stop(BundleContext context) throws Exception {
@@ -54,21 +51,11 @@ public class ConfigScanPlugin extends AbstractUIPlugin {
 	
 	public Injector getInjector(AbstractGenericModule optionalModule) {
 		if(injector == null) {
-			if(optionalModule != null) {
-				injector = Guice.createInjector(optionalModule);
-			} else if(injectionModule != null) {
-				injector = Guice.createInjector(injectionModule);
-			} else {
-				throw new IllegalArgumentException("Injection module not initialized.");
-			}
+			injector = optionalModule == null ? Guice.createInjector(new ConfigScanModule(this)) : Guice.createInjector(optionalModule);
 		}
 		return injector;
 	}
-	
-	public Injector getInjector() {
-		return getInjector(injectionModule);
-	}
-	
+
 	public static void showErrorDialog(String dialogTitle, String message, IStatus status) {
 		showErrorDialog(null, dialogTitle, message, status);
 	}
