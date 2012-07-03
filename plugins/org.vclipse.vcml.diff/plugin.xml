@@ -38,7 +38,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            category="org.vclipse.preferences.page"
+            category="org.vclipse.preferences.pages.vclipse"
             class="org.vclipse.vcml.diff.injection.ExtensionFactory:org.vclipse.vcml.diff.ui.DiffPreferencePage"
             id="org.vclipse.vcml.preferencesPages.diff"
             name="VCML Diff">

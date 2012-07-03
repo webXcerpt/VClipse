@@ -50,7 +50,7 @@
     <extension
             point="org.eclipse.ui.preferencePages">
         <page
-              category="org.vclipse.preferences.page"
+              category="org.vclipse.preferences.pages.vclipse.languages"
               class="org.vclipse.procedure.ui.ProcedureExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
               id="org.vclipse.procedure.Procedure"
               name="Procedure">
@@ -74,7 +74,6 @@
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
-            category="org.vclipse.properties.page"
             class="org.vclipse.procedure.ui.ProcedureExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
             id="org.vclipse.procedure.Procedure"
             name="Procedure">

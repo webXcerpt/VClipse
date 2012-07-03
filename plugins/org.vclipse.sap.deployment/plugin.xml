@@ -65,10 +65,10 @@
  <extension
        point="org.eclipse.ui.preferencePages">
     <page
-          category="org.vclipse.preferences.page"
+          category="org.vclipse.preference.pages.sap"
           class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.preferences.DeploymentPreferencePage"
           id="org.vclipse.deployment.preferencePage"
-          name="SAP Deployment">
+          name="Deployment">
     </page>
  </extension>
 </plugin>

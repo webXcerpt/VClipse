@@ -63,8 +63,8 @@
         <page
             class="org.vclipse.idoc.ui.IDocExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
             id="org.vclipse.idoc.IDoc"
-            name="IDoc Editor"
-            category="org.vclipse.preferences.page">
+            name="IDoc"
+            category="org.vclipse.preferences.pages.vclipse.languages">
             <keywordReference id="org.vclipse.idoc.ui.keyword_IDoc"/>
         </page>
         <page
@@ -85,7 +85,6 @@
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
-            category="org.vclipse.properties.page"
             class="org.vclipse.idoc.ui.IDocExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
             id="org.vclipse.idoc.IDoc"
             name="IDoc">

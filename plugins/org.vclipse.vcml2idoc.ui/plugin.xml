@@ -62,7 +62,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            category="org.vclipse.preferences.page"
+            category="org.vclipse.preferences.pages.vclipse"
             class="org.vclipse.vcml2idoc.injection.ExecutableExtensionFactory:org.vclipse.vcml2idoc.preferences.VCML2IDocOptionsPreferencePage"
             id="org.vclipse.vcml2idoc.preferences.pages.vcml2IDocOptions"
             name="IDoc Generation">

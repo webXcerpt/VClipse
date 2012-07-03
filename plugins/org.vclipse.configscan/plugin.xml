@@ -67,7 +67,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            category="org.vclipse.preferences.page"
+            category="org.vclipse.preferences.pages.vclipse"
             class="org.vclipse.configscan.injection.ExecutableExtensionFactory:org.vclipse.configscan.preferences.ConfigScanOptionsPage"
             id="org.vclipse.configscan.preferences.page.options"
             name="ConfigScan Options">

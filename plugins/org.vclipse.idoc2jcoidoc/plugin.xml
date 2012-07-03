@@ -86,7 +86,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            category="org.vclipse.preferences.page"
+            category="org.vclipse.preferences.pages.vclipse"
             class="org.vclipse.idoc2jcoidoc.injection.ExecutableExtensionFactory:org.vclipse.idoc2jcoidoc.internal.IDoc2JCoIDocPreferencePage"
             id="org.vclipse.preferences.pages.idoc2jcoidoc"
             name="IDoc to JCo IDoc">
