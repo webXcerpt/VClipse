@@ -3,14 +3,26 @@
  */
 package org.vclipse.constraint.formatting;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.xtext.Grammar;
 import org.eclipse.xtext.GrammarUtil;
+import org.eclipse.xtext.IGrammarAccess;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.formatting.impl.AbstractDeclarativeFormatter;
 import org.eclipse.xtext.formatting.impl.FormattingConfig;
+import org.eclipse.xtext.service.AbstractElementFinder;
+import org.eclipse.xtext.service.AbstractElementFinder.AbstractGrammarElementFinder;
+import org.eclipse.xtext.service.AbstractElementFinder.AbstractParserRuleElementFinder;
 import org.vclipse.constraint.services.ConstraintGrammarAccess;
+import org.vclipse.constraint.services.ConstraintGrammarAccess.ConstraintClassElements;
 import org.vclipse.constraint.services.ConstraintGrammarAccess.ConstraintSourceElements;
 import org.vclipse.dependency.formatting.DependencyFormatter;
+import org.vclipse.vcml.services.VCMLGrammarAccess.ConstraintElements;
+import org.vclipse.vcml.vcml.ConstraintClass;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
@@ -41,7 +53,7 @@ public class ConstraintFormatter extends AbstractDeclarativeFormatter {
 		
 		c.setAutoLinewrap(72);
 		
-		Iterable<Keyword> keywords = GrammarUtil.containedKeywords(cga.getGrammar());
+//		Iterable<Keyword> keywords = GrammarUtil.containedKeywords(cga.getGrammar());
 		
 		ConstraintSourceElements elements = cga.getConstraintSourceAccess();
 		{	// comment
@@ -50,18 +62,70 @@ public class ConstraintFormatter extends AbstractDeclarativeFormatter {
 			c.setLinewrap(0, 1, 1).after(cga.getSL_COMMENTRule());
 		}
 		
+		List<IGrammarAccess> grammarList = Lists.newArrayList();
+		
+		grammarList.add(cga);
+//		grammarList.add((IGrammarAccess)cga.getConstraintClassAccess());
+//		grammarList.add((IGrammarAccess)cga.getConstraintMaterialAccess());
+//		grammarList.add((IGrammarAccess)cga.getShortVarDefinitionAccess());
+//		grammarList.add((IGrammarAccess)cga.getConstraintClassAccess());
+//		grammarList.add((IGrammarAccess)cga.getPartOfConditionAccess());
+//		grammarList.add((IGrammarAccess)cga.getSubpartOfConditionAccess());
+//		grammarList.add((IGrammarAccess)cga.getConditionalConstraintRestrictionAccess());
+//		grammarList.add((IGrammarAccess)cga.getConstraintRestrictionFalseAccess());
+//		grammarList.add((IGrammarAccess)cga.getConstraintRestrictionLHSAccess());
+//		grammarList.add((IGrammarAccess)cga.getNegatedConstraintRestrictionLHSAccess());
+//		grammarList.add((IGrammarAccess)cga.getCharacteristicReferenceAccess());
+//		grammarList.add((IGrammarAccess)cga.getObjectCharacteristicReferenceAccess());
+//		grammarList.add((IGrammarAccess)cga.getShortVarReferenceAccess());
+//		grammarList.add((IGrammarAccess)cga.getLiteralAccess());
+//		grammarList.add((IGrammarAccess)cga.getMDataCharacteristicAccess());
+//		grammarList.add((IGrammarAccess)cga.getUnaryConditionAccess());
+//		grammarList.add((IGrammarAccess)cga.getPrimaryConditionAccess());
+//		grammarList.add((IGrammarAccess)cga.getIsSpecifiedAccess());
+//		grammarList.add((IGrammarAccess)cga.getInConditionAccess());
+		
+		
+//		final List<Keyword> cgaKeywords = ConstraintFormatter.findKeywords(grammarList, ".");
+		final List<Keyword> cgaKeywords = ConstraintFormatter.findAllKeywords(grammarList);
+		
 		// dots
-	    for (Keyword currentKeyword : keywords) {
-	    	if (".".equals(currentKeyword.getValue())) {
-	    		c.setNoSpace().around(currentKeyword);
-	    	}
+	    for (Keyword currentKeyword : cgaKeywords) {
+//	    	if (currentKeyword == elements.getFullStopKeyword_10()) {
+				String value = currentKeyword.getValue();
+				if (".".equals(value)) {
+					c.setNoSpace().around(currentKeyword);
+//					System.err.println(value);
+				}
+				else if(",".equals(value)) {
+					c.setNoSpace().before(currentKeyword);
+//					System.err.println(value);
+				}
+				else if("(".equals(value)) {
+					c.setNoSpace().after(currentKeyword);
+//					System.err.println(value);
+				}
+				else if(")".equals(value)) {
+					c.setNoSpace().before(currentKeyword);
+//					System.err.println(value);
+				}
+//			}
 	    }
 		
 		{	// SAPObject definitions on toplevel
+			c.setNoSpace().before(elements.getColonKeyword_1());
 //			c.setLinewrap(2).before(elements.getObjectsKeyword_0());
+			
+			c.setNoSpace().before(elements.getColonKeyword_5_1());
 			c.setLinewrap(2).before(elements.getConditionKeyword_5_0());
+			
+			c.setNoSpace().before(elements.getColonKeyword_7());
 			c.setLinewrap(2).before(elements.getRestrictionKeyword_6_0());
+			
+//			c.setNoSpace().before(elements.getColonKeyword_7());
 			c.setLinewrap(2).before(elements.getRestrictionsKeyword_6_1());
+			
+			c.setNoSpace().before(elements.getColonKeyword_11_1());
 			c.setLinewrap(2).before(elements.getInferencesKeyword_11_0());
 		}
 		
@@ -78,10 +142,11 @@ public class ConstraintFormatter extends AbstractDeclarativeFormatter {
 	    	c.setLinewrap().after(elements.getFullStopKeyword_10());
 	    	c.setLinewrap().after(elements.getFullStopKeyword_11_4());
 	    	
-	    	
 		}
 		
 		{	// indendation after toplevel objects and additional line wraps
+			
+			
 			c.setLinewrap().after(elements.getCommaKeyword_3_0());
 			
 			c.setLinewrap().after(elements.getFullStopKeyword_5_3());
@@ -90,12 +155,27 @@ public class ConstraintFormatter extends AbstractDeclarativeFormatter {
 			c.setIndentationDecrement().before(elements.getConditionKeyword_5_0());
 			c.setIndentationDecrement().before(elements.getRestrictionKeyword_6_0());
 			c.setIndentationDecrement().before(elements.getRestrictionsKeyword_6_1());
-			c.setIndentationDecrement().before(elements.getInferencesKeyword_11_0());
+			c.setIndentationDecrement().before(elements.getInferencesKeyword_11_0());	// 2x ?
+//			c.setIndentationDecrement().before(elements.getInferencesKeyword_11_0());
+			
 			
 			c.setIndentationIncrement().after(elements.getColonKeyword_1());
 			c.setIndentationIncrement().after(elements.getColonKeyword_5_1());
 			c.setIndentationIncrement().after(elements.getColonKeyword_7());
 			c.setIndentationIncrement().after(elements.getColonKeyword_11_1());
+			
+			c.setLinewrap().after(cga.getConstraintClassAccess().getWhereKeyword_2_0());
+			c.setIndentation(cga.getConstraintClassAccess().getWhereKeyword_2_0()/* getShortVarsAssignment_2_1() */, cga.getConstraintClassAccess().getShortVarsAssignment_2_2_1());
+			
+			c.setLinewrap().after(cga.getConditionalConstraintRestrictionAccess().getIfKeyword_1_1());
+			c.setIndentation(cga.getConditionalConstraintRestrictionAccess().getIfKeyword_1_1(), elements.getCommaKeyword_9_0());
+			
+			
+//			c.setIndentationIncrement().after(cga.getConstraintClassAccess().getWhereKeyword_2_0());				// commented
+//			c.setIndentationDecrement().after(elements.getCommaKeyword_9_0());										// commented
+			
+//			c.setIndentationIncrement().after(cga.getConditionalConstraintRestrictionAccess().getIfKeyword_1_1());	// commented
+//			c.setIndentationDecrement().after(elements.getCommaKeyword_9_0());										// commented
 			
 			c.setLinewrap().after(elements.getCommaKeyword_3_0());
 			c.setLinewrap().after(elements.getFullStopKeyword_4());
@@ -130,5 +210,22 @@ public class ConstraintFormatter extends AbstractDeclarativeFormatter {
 			c.setLinewrap().before(cga.getTableAccess().getRightParenthesisKeyword_7());
 			c.setLinewrap().after(cga.getTableAccess().getCommaKeyword_6_0());
 		}
+	}
+	
+	public static List<Keyword> findKeywords(List<IGrammarAccess> gas, String... keywords) {
+		List<Keyword> results = Lists.newArrayList();
+		for (IGrammarAccess ga : gas) {
+			results.addAll(ga.findKeywords(keywords));
+		}
+		return results;
+	}
+	
+	public static List<Keyword> findAllKeywords(List<IGrammarAccess> gas) {
+		List<String> results = Lists.newArrayList();
+		for (IGrammarAccess ga : gas) {
+			results.addAll(Lists.newArrayList(GrammarUtil.getAllKeywords(ga.getGrammar())));		// returns a String
+		}
+		
+		return findKeywords(gas, results.toArray(new String[0]));									// convert String to Keyword and return
 	}
 }
