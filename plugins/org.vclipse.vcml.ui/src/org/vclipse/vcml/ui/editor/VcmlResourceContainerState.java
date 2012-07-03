@@ -45,7 +45,6 @@ public class VcmlResourceContainerState extends AbstractAllContainersState {
 	private Map<String, List<String>> cache_visibleContainerHandles;
 	
 	private List<String> getVisibleContainerHandles_Raw(String handle) {
-		System.err.print("getVisibleContainerHandles " + handle);
 		List<String> visibleContainerHandles = Lists.newArrayList(handle);
 		if(handle.endsWith(VCML_EXTENSION)) {
 			URI createURI = URI.createURI(handle);
@@ -73,7 +72,6 @@ public class VcmlResourceContainerState extends AbstractAllContainersState {
 				}
 			}
 		}
-		System.err.println(" -> " + visibleContainerHandles);
 		return visibleContainerHandles;
 	}
 	
