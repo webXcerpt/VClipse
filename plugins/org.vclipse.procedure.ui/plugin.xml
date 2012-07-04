@@ -74,9 +74,10 @@
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
-            class="org.vclipse.procedure.ui.ProcedureExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
-            id="org.vclipse.procedure.Procedure"
-            name="Procedure">
+              category="org.vclipse.properties.pages.vclipse"
+              class="org.vclipse.procedure.ui.ProcedureExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+              id="org.vclipse.procedure.Procedure"
+              name="Procedure">
             <keywordReference id="org.vclipse.procedure.ui.keyword_Procedure"/>
             <enabledWhen>
 	            <adapt type="org.eclipse.core.resources.IProject"/>

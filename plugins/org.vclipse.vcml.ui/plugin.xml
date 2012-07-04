@@ -138,6 +138,20 @@
          </page>
 	</extension>
 	
+	 <extension
+            point="org.eclipse.ui.propertyPages">
+        <page
+            class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+            id="org.vclipse.properties.pages.vclipse"
+            name="VClipse">
+            <keywordReference id="org.vclipse.vcml.ui.keyword_VCML"/>
+            <enabledWhen>
+	            <adapt type="org.eclipse.core.resources.IProject"/>
+			</enabledWhen>
+	        <filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
+        </page>
+    </extension>
+	
 	<!-- VClipse commands category -->
 	<extension
 		point="org.eclipse.ui.commands">
@@ -312,9 +326,10 @@
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
-            class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
-            id="org.vclipse.vcml.VCML"
-            name="VCML">
+              category="org.vclipse.properties.pages.vclipse"
+              class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+              id="org.vclipse.vcml.VCML"
+              name="VCML">
             <keywordReference id="org.vclipse.vcml.ui.keyword_VCML"/>
             <enabledWhen>
 	            <adapt type="org.eclipse.core.resources.IProject"/>

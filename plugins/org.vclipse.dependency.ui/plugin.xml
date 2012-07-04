@@ -74,9 +74,10 @@
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
-            class="org.vclipse.dependency.ui.DependencyExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
-            id="org.vclipse.dependency.Dependency"
-            name="Dependency">
+              category="org.vclipse.properties.pages.vclipse"
+              class="org.vclipse.dependency.ui.DependencyExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+              id="org.vclipse.dependency.Dependency"
+              name="Dependency">
             <keywordReference id="org.vclipse.dependency.ui.keyword_Dependency"/>
             <enabledWhen>
 	            <adapt type="org.eclipse.core.resources.IProject"/>

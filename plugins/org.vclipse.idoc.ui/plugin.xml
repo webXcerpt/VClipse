@@ -85,9 +85,10 @@
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
-            class="org.vclipse.idoc.ui.IDocExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
-            id="org.vclipse.idoc.IDoc"
-            name="IDoc">
+              category="org.vclipse.properties.pages.vclipse"
+              class="org.vclipse.idoc.ui.IDocExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+              id="org.vclipse.idoc.IDoc"
+              name="IDoc">
             <keywordReference id="org.vclipse.idoc.ui.keyword_IDoc"/>
             <enabledWhen>
 	            <adapt type="org.eclipse.core.resources.IProject"/>

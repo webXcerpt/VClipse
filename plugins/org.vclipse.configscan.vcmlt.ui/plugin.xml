@@ -74,9 +74,10 @@
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
-            class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
-            id="org.vclipse.configscan.vcmlt.VcmlT"
-            name="VcmlT">
+              category="org.vclipse.properties.pages.vclipse"
+              class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+              id="org.vclipse.configscan.vcmlt.VcmlT"
+              name="VcmlT">
             <keywordReference id="org.vclipse.configscan.vcmlt.ui.keyword_VcmlT"/>
             <enabledWhen>
 	            <adapt type="org.eclipse.core.resources.IProject"/>

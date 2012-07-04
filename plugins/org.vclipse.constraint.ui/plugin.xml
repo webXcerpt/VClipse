@@ -74,9 +74,10 @@
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
-            class="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
-            id="org.vclipse.constraint.Constraint"
-            name="Constraint">
+              category="org.vclipse.properties.pages.vclipse"
+              class="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+              id="org.vclipse.constraint.Constraint"
+              name="Constraint">
             <keywordReference id="org.vclipse.constraint.ui.keyword_Constraint"/>
             <enabledWhen>
 	            <adapt type="org.eclipse.core.resources.IProject"/>

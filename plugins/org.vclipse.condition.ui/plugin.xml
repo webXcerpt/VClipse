@@ -74,9 +74,10 @@
     <extension
             point="org.eclipse.ui.propertyPages">
         <page
-            class="org.vclipse.condition.ui.ConditionExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
-            id="org.vclipse.condition.Condition"
-            name="Condition">
+              category="org.vclipse.properties.pages.vclipse"
+              class="org.vclipse.condition.ui.ConditionExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+              id="org.vclipse.condition.Condition"
+              name="Condition">
             <keywordReference id="org.vclipse.condition.ui.keyword_Condition"/>
             <enabledWhen>
 	            <adapt type="org.eclipse.core.resources.IProject"/>
