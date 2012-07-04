@@ -3,36 +3,38 @@
 */
 package org.vclipse.constraint.ui.outline;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
+import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
 import org.eclipse.xtext.ui.editor.outline.impl.DocumentRootNode;
-import org.vclipse.vcml.ui.outline.VCMLOutlineTreeProvider;
+import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
+import org.eclipse.xtext.ui.editor.outline.impl.EStructuralFeatureNode;
 import org.vclipse.vcml.vcml.BinaryCondition;
 import org.vclipse.vcml.vcml.CharacteristicReference_C;
 import org.vclipse.vcml.vcml.Comparison;
 import org.vclipse.vcml.vcml.Condition;
 import org.vclipse.vcml.vcml.ConditionalConstraintRestriction;
+import org.vclipse.vcml.vcml.ConstraintClass;
+import org.vclipse.vcml.vcml.ConstraintMaterial;
 import org.vclipse.vcml.vcml.ConstraintObject;
 import org.vclipse.vcml.vcml.ConstraintRestriction;
 import org.vclipse.vcml.vcml.ConstraintRestrictionFalse;
 import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.PartOfCondition;
-
-import com.google.inject.Inject;
+import org.vclipse.vcml.vcml.VcmlPackage;
 
 /**
  * customization of the default outline structure
  * 
  */
-public class ConstraintOutlineTreeProvider extends VCMLOutlineTreeProvider {
+public class ConstraintOutlineTreeProvider extends DefaultOutlineTreeProvider {
 
-	@Inject
-	public ConstraintOutlineTreeProvider(IPreferenceStore preferenceStore) {
-		super(preferenceStore);
-	}
-	
+	private static final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
+
 	String text(EObject object) {
 		Object returnedText = textDispatcher.invoke(object);
 		if(returnedText instanceof String) {
@@ -43,19 +45,50 @@ public class ConstraintOutlineTreeProvider extends VCMLOutlineTreeProvider {
 	}
 	
 	void _createChildren(DocumentRootNode parentNode, ConstraintSource constraintSource) {
-		for(ConstraintObject constraintObject : constraintSource.getObjects()) {
-			createNode(parentNode, constraintObject);
+		EList<ConstraintObject> objects = constraintSource.getObjects();
+		if(!objects.isEmpty()) {
+			EStructuralFeatureNode objectsNode = createEStructuralFeatureNode(parentNode, constraintSource, 
+					VCML_PACKAGE.getConstraintSource_Objects(), _image(constraintSource), "objects", false);
+			for(ConstraintObject constraintObject : objects) {
+				createNode(objectsNode, constraintObject);
+			}			
 		}
+		
 		Condition condition = constraintSource.getCondition();
 		if(condition != null) {
 			createNode(parentNode, constraintSource.getCondition());			
 		}
-		for(ConstraintRestriction constraintRestriction : constraintSource.getRestrictions()) {
-			createNode(parentNode, constraintRestriction);
+		
+		EList<ConstraintRestriction> restrictions = constraintSource.getRestrictions();
+		if(!restrictions.isEmpty()) {
+			EStructuralFeatureNode restrictionsNode = createEStructuralFeatureNode(parentNode, constraintSource, 
+					VCML_PACKAGE.getConstraintSource_Restrictions(), _image(constraintSource), "restrictions", false);
+			
+			for(ConstraintRestriction constraintRestriction : restrictions) {
+				createNode(restrictionsNode, constraintRestriction);
+			}			
 		}
-		for(CharacteristicReference_C reference : constraintSource.getInferences()) {
-			createNode(parentNode, reference);
+		
+		EList<CharacteristicReference_C> inferences = constraintSource.getInferences();
+		if(!inferences.isEmpty()) {
+			EStructuralFeatureNode inferencesNode = createEStructuralFeatureNode(parentNode, constraintSource, 
+					VCML_PACKAGE.getConstraintSource_Inferences(), _image(constraintSource), "inferences", false);
+			for(CharacteristicReference_C reference : inferences) {
+				createNode(inferencesNode, reference);
+			}
 		}
+	}
+	
+	Object _text(ConstraintClass klass) {
+		return super._text(klass);
+	}
+	
+	Object _text(ConstraintMaterial material) {
+		return super._text(material);
+	}
+	
+	Object _text(ConditionalConstraintRestriction restriction) {
+		return super._text(restriction);
 	}
 	
 	void _createNode(IOutlineNode parentNode, ConditionalConstraintRestriction restriction) {
@@ -63,15 +96,9 @@ public class ConstraintOutlineTreeProvider extends VCMLOutlineTreeProvider {
 		createNode(parentNode, restriction.getCondition());
 	}
 	
-	
 	boolean _isLeaf(ConditionalConstraintRestriction restriction) {
 		return restriction.eContainer() instanceof Condition;
 	}
-	
-	String _text(ConditionalConstraintRestriction conditionalConstraintRestriction) {
-		return "Restriction";
-	}
-	
 	
 	boolean _isLeaf(Comparison comparison) {
 		return true;
@@ -81,7 +108,6 @@ public class ConstraintOutlineTreeProvider extends VCMLOutlineTreeProvider {
 		return text(comparison.getLeft()) + " " + comparison.getOperator().getLiteral() + " " + text(comparison.getRight());
 	}
 	
-	
 	boolean _isLeaf(BinaryCondition condition) {
 		return true;
 	}
@@ -90,12 +116,25 @@ public class ConstraintOutlineTreeProvider extends VCMLOutlineTreeProvider {
 		return text(condition.getLeft()) + " " + condition.getOperator() + " " + text(condition.getRight()); 
 	}
 	
-	
 	String _text(ConstraintRestrictionFalse restriction) {
 		return "false";
 	}
 	
 	String _text(PartOfCondition partOfCondition) {
 		return "part_of(" + partOfCondition.getChild().getName() + ", " + partOfCondition.getParent().getName() + ")";
+	}
+	
+	@Override
+	protected EObjectNode createEObjectNode(IOutlineNode parentNode, EObject modelElement, Image image, Object text, boolean isLeaf) {
+		EObjectNode node = super.createEObjectNode(parentNode, modelElement, image, text, isLeaf);
+		node.setShortTextRegion(locationInFileProvider.getFullTextRegion(modelElement));
+		return node;
+	}
+
+	@Override
+	protected EStructuralFeatureNode createEStructuralFeatureNode(IOutlineNode parentNode, EObject owner, EStructuralFeature feature, Image image, Object text, boolean isLeaf) {
+		EStructuralFeatureNode node = super.createEStructuralFeatureNode(parentNode, owner, feature, image, text, isLeaf);
+		node.setTextRegion(locationInFileProvider.getFullTextRegion(owner, feature, 0));
+		return node;
 	}
 }
