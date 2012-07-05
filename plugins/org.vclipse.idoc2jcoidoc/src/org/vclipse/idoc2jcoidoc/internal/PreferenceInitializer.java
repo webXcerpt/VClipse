@@ -38,11 +38,11 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		try {
 			properties.load(
 					classLoader.getResourceAsStream(
-							"src/org/vclipse/idoc2jcoidoc/internal/rfc_overridden_settings.properties"));
+							"org/vclipse/idoc2jcoidoc/internal/rfc_overridden_settings.properties"));
 		} catch(Exception exception) {
 			properties.load(
 					classLoader.getResourceAsStream(
-							"src/org/vclipse/idoc2jcoidoc/internal/rfc_default_settings.properties"));		
+							"org/vclipse/idoc2jcoidoc/internal/rfc_default_settings.properties"));		
 		}
 	}
 	
