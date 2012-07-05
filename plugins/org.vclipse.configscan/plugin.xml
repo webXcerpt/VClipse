@@ -112,15 +112,6 @@
       </command>
    </extension>
    <extension
-         point="org.eclipse.ui.bindings">
-      <key
-            commandId="org.vclipse.commands.configscan.storeXmlInConfigScan"
-            contextId="org.eclipse.ui.contexts.window"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="Ctrl+Shift+S">
-      </key>
-   </extension>
-   <extension
          point="org.eclipse.core.expressions.definitions">
       <definition
             id="org.vclipse.configscan.resources.files.xml">

@@ -73,19 +73,4 @@
           name="Create and send ALE distribution packet of delta">
     </command>
  </extension>
- <extension
-       point="org.eclipse.ui.bindings">
-    <key
-          commandId="org.vclipse.commands.vcml2idoc.convertAndSend"
-          contextId="org.eclipse.ui.contexts.window"
-          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="Ctrl+Shift+O">
-    </key>
-    <key
-          commandId="org.vclipse.commands.computeDeltaAndSend"
-          contextId="org.eclipse.ui.contexts.window"
-          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-          sequence="Ctrl+Shift+P">
-    </key>
- </extension>
 </plugin>

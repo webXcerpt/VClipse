@@ -120,19 +120,4 @@
             name="Transform IDoc file to ALE distribution packet">
       </command>
    </extension>
-   <extension
-         point="org.eclipse.ui.bindings">
-      <key
-            commandId="org.vclipse.commands.transformation.idoc2sapxml"
-            contextId="org.eclipse.ui.contexts.window"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="Ctrl+Shift+I">
-      </key>
-      <key
-            commandId="org.vclipse.commands.transformation.idoc2alepackage"
-            contextId="org.eclipse.ui.contexts.window"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="org.vclipse.idoc2jcoidoc.key2">
-      </key>
-   </extension>
 </plugin>

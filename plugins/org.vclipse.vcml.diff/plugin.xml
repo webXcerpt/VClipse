@@ -68,14 +68,5 @@
             name="Create delta of VCML files">
       </command>
    </extension>
-   <extension
-         point="org.eclipse.ui.bindings">
-      <key
-            commandId="org.vclipse.commands.exportDiffs"
-            contextId="org.eclipse.ui.contexts.window"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="Ctrl+Shift+T">
-      </key>
-   </extension>
 
 </plugin>

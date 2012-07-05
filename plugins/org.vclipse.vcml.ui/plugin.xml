@@ -12,15 +12,6 @@
 	/>
 
 	<!-- Extensions for cleaning up the dependency code -->
-	<extension
-         point="org.eclipse.ui.bindings">
-      <key
-            commandId="org.vclipse.ui.commands.cleanUpDepedencyCode"
-            contextId="org.eclipse.ui.contexts.window"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="Ctrl+Shift+D">
-      </key>
-   </extension>
    
    <extension
         point="org.eclipse.ui.handlers">
