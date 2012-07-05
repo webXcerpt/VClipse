@@ -12,54 +12,6 @@
 
 <plugin>
    <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="true"
-            id="org.vclipse.fileTranformation"
-            objectClass="org.eclipse.core.resources.IFile">
-         <action
-               class="org.vclipse.vcml2idoc.injection.ExecutableExtensionFactory:org.vclipse.vcml2idoc.actions.VCML2IDocsAction"
-               enablesFor="+"
-               icon="icons/run_transformation.png"
-               id="org.vclipse.actions.VCML2idoc"
-               label="Transform VCML file to IDoc file"
-               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/content"
-               tooltip="Transform VCML file to IDoc file">
-            <enablement>
-               <and>
-                  <objectClass
-                        name="org.eclipse.core.resources.IFile">
-                  </objectClass>
-                  <objectState
-                        name="extension"
-                        value="vcml">
-                  </objectState>
-               </and>
-            </enablement>
-         </action>
-      </objectContribution>
-   </extension>
-   <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="false"
-            id="org.vclipse.popup.VCMLnature"
-            objectClass="org.eclipse.core.resources.IProject">
-         <action
-               class="org.vclipse.vcml2idoc.actions.AddRemoveNatureAction"
-               enablesFor="+"
-               id="org.vclipse.actions.addvcmlnature"
-               label="Add/Remove VCML nature"
-               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/content">
-            <enablement>
-               <objectClass
-                     name="org.eclipse.core.resources.IProject">
-               </objectClass>
-            </enablement>
-         </action>
-      </objectContribution>
-   </extension>
-   <extension
          point="org.eclipse.ui.preferencePages">
       <page
             category="org.vclipse.preferences.pages.vclipse"
@@ -98,6 +50,86 @@
       <initializer
             class="org.vclipse.vcml2idoc.injection.ExecutableExtensionFactory:org.vclipse.vcml2idoc.preferences.PreferencesInitializer">
       </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.vclipse.ui.menus.popup?after=additions">
+         <command
+               commandId="org.vclipse.commands.transformation.vcml2idoc"
+               icon="icons/run_transformation.png"
+               label="Transform VCML files to IDoc files"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <reference
+                     definitionId="org.vclipse.vcml.resources.files.vcml">
+               </reference>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.vclipse.commands.addVcmlNature"
+               label="Add /Remove Vcml Nature"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <adapt
+                        type="org.eclipse.core.resources.IProject">
+                     <test
+                           property="org.eclipse.core.resources.open"
+                           value="true">
+                     </test>
+                  </adapt>
+               </iterate>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.vclipse.vcml2idoc.injection.ExecutableExtensionFactory:org.vclipse.vcml2idoc.actions.TransformantionHandler"
+            commandId="org.vclipse.commands.transformation.vcml2idoc">
+      </handler>
+      <handler
+            class="org.vclipse.vcml2idoc.actions.AddRemoveVcmlNatureHandler"
+            commandId="org.vclipse.commands.addVcmlNature">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="org.vclipse.ui.commands"
+            defaultHandler="org.vclipse.vcml2idoc.injection.ExecutableExtensionFactory:org.vclipse.vcml2idoc.actions.TransformantionHandler"
+            description="Transforms selected vcml files to idoc files."
+            id="org.vclipse.commands.transformation.vcml2idoc"
+            name="Transform VCML file to IDoc file">
+      </command>
+      <command
+            categoryId="org.vclipse.ui.commands"
+            defaultHandler="org.vclipse.vcml2idoc.actions.AddRemoveVcmlNatureHandler"
+            description="Adds a VCML nature to a project or removes it from it."
+            id="org.vclipse.commands.addVcmlNature"
+            name="Add /Remove Vcml Nature">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.vclipse.commands.transformation.vcml2idoc"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="Ctrl+Shift+C">
+      </key>
+      <key
+            commandId="org.vclipse.commands.addVcmlNature"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="Ctrl+Shift+A">
+      </key>
    </extension>
    
 </plugin>

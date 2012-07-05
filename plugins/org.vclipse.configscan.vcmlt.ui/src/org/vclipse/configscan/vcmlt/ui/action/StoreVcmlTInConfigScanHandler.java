@@ -11,7 +11,7 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.vclipse.base.naming.INameProvider;
 import org.vclipse.configscan.IConfigScanXMLProvider;
 import org.vclipse.configscan.ITestObjectFilter;
-import org.vclipse.configscan.actions.AbstractStoreTestcaseInConfigScanAction;
+import org.vclipse.configscan.actions.AbstractStoreTestCaseHandler;
 import org.vclipse.configscan.utils.DocumentUtility;
 import org.vclipse.configscan.vcmlt.vcmlT.Model;
 import org.vclipse.configscan.vcmlt.vcmlT.TestCase;
@@ -22,10 +22,7 @@ import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
 
-/**
- *
- */
-public class StoreVcmlTInConfigScanAction extends AbstractStoreTestcaseInConfigScanAction {
+public class StoreVcmlTInConfigScanHandler extends AbstractStoreTestCaseHandler {
 
 	@Inject 
 	private IConfigScanXMLProvider configScanXMLProvider;
@@ -39,6 +36,7 @@ public class StoreVcmlTInConfigScanAction extends AbstractStoreTestcaseInConfigS
 	@Inject
 	private ITestObjectFilter filter;
 	
+	@Override
 	protected void storeTestcaseFileInConfigScan(IFile file) throws JCoException {
 		Resource resource = new XtextResourceSet().getResource(URI.createURI(file.getLocationURI().toString()), true);
 		if (resource == null) {
@@ -67,5 +65,4 @@ public class StoreVcmlTInConfigScanAction extends AbstractStoreTestcaseInConfigS
 		String part = testcase.getPart();
 		storeTestcaseInConfigScan(xmlString, matNr, docNumber, testcase.getDescription(), testcase.getVersion(), part==null ? "VCM" : part);
 	}
-
 }

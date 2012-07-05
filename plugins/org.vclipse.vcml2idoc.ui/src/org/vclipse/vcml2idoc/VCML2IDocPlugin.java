@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.vclipse.vcml2idoc.injection.Module;
+import org.vclipse.vcml2idoc.injection.VCML2IDocModule;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -22,7 +22,7 @@ import com.google.inject.Injector;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class VCML2IDocUIPlugin extends AbstractUIPlugin {
+public class VCML2IDocPlugin extends AbstractUIPlugin {
 
 	/**
 	 * The plug-in ID
@@ -32,7 +32,7 @@ public class VCML2IDocUIPlugin extends AbstractUIPlugin {
 	/**
 	 *  The shared instance
 	 */
-	private static VCML2IDocUIPlugin plugin;
+	private static VCML2IDocPlugin plugin;
 	
 	/**
 	 * 
@@ -60,7 +60,7 @@ public class VCML2IDocUIPlugin extends AbstractUIPlugin {
 	 *
 	 * @return the shared instance
 	 */
-	public static VCML2IDocUIPlugin getDefault() {
+	public static VCML2IDocPlugin getDefault() {
 		return plugin;
 	}
 	
@@ -69,7 +69,7 @@ public class VCML2IDocUIPlugin extends AbstractUIPlugin {
 	 */
 	public Injector getInjector() {
 		if(injector == null) {
-			injector = Guice.createInjector(new Module(this));
+			injector = Guice.createInjector(new VCML2IDocModule(this));
 		}
 		return injector;
 	}

@@ -21,7 +21,7 @@ import org.vclipse.idoc2jcoidoc.IIDoc2JCoIDocProcessor;
 import org.vclipse.idoc2jcoidoc.RFCIDocsSender;
 import org.vclipse.sap.deployment.preferences.PreferencesInitializer;
 import org.vclipse.vcml.vcml.Model;
-import org.vclipse.vcml2idoc.builder.VCML2IDocSwitch;
+import org.vclipse.vcml2idoc.transformation.VCML2IDocSwitch;
 
 import com.google.inject.Inject;
 import com.sap.conn.idoc.IDocDocument;

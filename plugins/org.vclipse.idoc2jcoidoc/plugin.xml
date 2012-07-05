@@ -24,57 +24,6 @@
       </factory>
    </extension>
    <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="true"
-            id="org.vclipse.fileTranformation"
-            objectClass="org.eclipse.core.resources.IFile">
-         <action
-               class="org.vclipse.idoc2jcoidoc.actions.ShowJCoIDocsAction"
-               enablesFor="?"
-               icon="icons/package.png"
-               id="org.vclipse.actions.idoc2jcoidoc"
-               label="Transform IDoc file to ALE distribution packet"
-               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/content"
-               >
-            <enablement>
-               <and>
-                  <objectClass
-                        name="org.eclipse.core.resources.IFile">
-                  </objectClass>
-                  <objectState
-                        name="extension"
-                        value="idoc">
-                  </objectState>
-               </and>
-            </enablement>
-         </action>
-      </objectContribution>
-      <objectContribution
-            adaptable="true"
-            id="org.vclipse.exportinsapxml"
-            objectClass="org.eclipse.core.resources.IFile">
-         <action
-               class="org.vclipse.idoc2jcoidoc.injection.ExecutableExtensionFactory:org.vclipse.idoc2jcoidoc.actions.ExportInSapXmlAction"
-               icon="icons/application-xml.png"
-               id="org.vclipse.actions.exportassapxml"
-               label="Transform IDoc file to SAP XML format for IDocs"
-               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/content">
-	         <enablement>
-	            <and>
-	               <objectClass
-	                     name="org.eclipse.core.resources.IFile">
-	               </objectClass>
-	               <objectState
-	                     name="extension"
-	                     value="idoc">
-	               </objectState>
-	            </and>
-	         </enablement>
-         </action>
-      </objectContribution>
-   </extension>
-   <extension
          point="org.eclipse.ui.perspectiveExtensions">
       <perspectiveExtension
             targetID="org.vclipse.perspective">
@@ -114,5 +63,76 @@
                visible="true">
          </view>
       </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.vclipse.ui.menus.popup?after=additions">
+         <command
+               commandId="org.vclipse.commands.transformation.idoc2sapxml"
+               icon="icons/application-xml.png"
+               label="Transform IDoc file to SAP XML format for IDocs"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <reference
+                     definitionId="org.vclipse.idoc.resources.files.idocs">
+               </reference>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.vclipse.commands.transformation.idoc2alepackage"
+               icon="icons/package.png"
+               label="Transform IDoc file to ALE distribution packet"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <reference
+                     definitionId="org.vclipse.idoc.resources.files.idocs">
+               </reference>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.vclipse.idoc2jcoidoc.injection.ExecutableExtensionFactory:org.vclipse.idoc2jcoidoc.actions.TransformIDoc2SapXmlHandler"
+            commandId="org.vclipse.commands.transformation.idoc2sapxml">
+      </handler>
+      <handler
+            commandId="org.vclipse.commands.transformation.idoc2alepackage">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="org.vclipse.ui.commands"
+            defaultHandler="org.vclipse.idoc2jcoidoc.injection.ExecutableExtensionFactory:org.vclipse.idoc2jcoidoc.actions.TransformIDoc2SapXmlHandler"
+            id="org.vclipse.commands.transformation.idoc2sapxml"
+            name="Transform IDoc file to SAP XML format for IDocs">
+      </command>
+      <command
+            categoryId="org.vclipse.ui.commands"
+            defaultHandler="org.vclipse.idoc2jcoidoc.actions.TransformIDoc2AlePackage"
+            id="org.vclipse.commands.transformation.idoc2alepackage"
+            name="Transform IDoc file to ALE distribution packet">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.vclipse.commands.transformation.idoc2sapxml"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="Ctrl+Shift+I">
+      </key>
+      <key
+            commandId="org.vclipse.commands.transformation.idoc2alepackage"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="org.vclipse.idoc2jcoidoc.key2">
+      </key>
    </extension>
 </plugin>

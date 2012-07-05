@@ -9,10 +9,10 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.e4.ui.workbench.modeling.ExpressionContext;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -35,7 +35,7 @@ import com.google.inject.Inject;
 
 public class CleanUpDependenciesHandler extends AbstractHandler {
 
-	private Logger logger = Logger.getLogger(CleanUpDependenciesHandler.class);
+	private static final Logger LOGGER = Logger.getLogger(CleanUpDependenciesHandler.class);
 	
 	@Inject
 	private VClipseResourceUtil resourceUtil;
@@ -51,8 +51,8 @@ public class CleanUpDependenciesHandler extends AbstractHandler {
 	
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Object appContext = event.getApplicationContext();
-		if(appContext instanceof EvaluationContext) {
-			Object defVariable = ((EvaluationContext)appContext).getDefaultVariable();
+		if(appContext instanceof ExpressionContext) {
+			Object defVariable = ((ExpressionContext)appContext).getDefaultVariable();
 			if(defVariable instanceof List<?>) {
 				for(Object entry : (List<?>)defVariable) {
 					if(entry instanceof IContainer) {
@@ -114,7 +114,7 @@ public class CleanUpDependenciesHandler extends AbstractHandler {
 							try {
 								resourceToDelete.delete(SaveOptions.defaultOptions().toOptionsMap());
 							} catch(IOException exception) {
-								logger.error(exception.getMessage());
+								LOGGER.error(exception.getMessage());
 								BaseUiPlugin.log(exception.getMessage(), exception);
 							}
 						}
@@ -131,7 +131,7 @@ public class CleanUpDependenciesHandler extends AbstractHandler {
 					Resource resource = resourceUtil.getResourceSet().getResource(uri, true);
 					resource.delete(SaveOptions.defaultOptions().toOptionsMap());
 				} catch(IOException exception) {
-					logger.error(exception.getMessage());
+					LOGGER.error(exception.getMessage());
 					BaseUiPlugin.log(exception.getMessage(), exception);
 				}
 			}

@@ -8,15 +8,13 @@
  * Contributors:
  *    webXcerpt Software GmbH - initial creator
  *******************************************************************************/
-package org.vclipse.vcml2idoc.builder;
+package org.vclipse.vcml2idoc.transformation;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -87,14 +85,12 @@ import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
 import org.vclipse.vcml.vcml.util.VcmlSwitch;
-import org.vclipse.vcml2idoc.IVCML2IDocPreferences;
-import org.vclipse.vcml2idoc.VCML2IDocUIPlugin;
+import org.vclipse.vcml2idoc.VCML2IDocPlugin;
+import org.vclipse.vcml2idoc.preferences.IVCML2IDocPreferences;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import com.google.common.io.Files;
-import com.google.common.io.LineProcessor;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -150,7 +146,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 	private int sublev_BOMMAT;
 
 	@Inject
-	@Named(VCML2IDocUIPlugin.ID)
+	@Named(VCML2IDocPlugin.ID)
 	private IPreferenceStore preferenceStore;
 
 	@Inject

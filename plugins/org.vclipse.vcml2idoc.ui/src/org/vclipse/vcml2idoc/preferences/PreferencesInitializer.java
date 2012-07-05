@@ -16,18 +16,11 @@ package org.vclipse.vcml2idoc.preferences;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.vclipse.vcml2idoc.IVCML2IDocPreferences;
-import org.vclipse.vcml2idoc.VCML2IDocUIPlugin;
 
 import com.google.inject.Inject;
 
-/**
- *
- */
 public class PreferencesInitializer extends AbstractPreferenceInitializer {
 
 	@Inject
@@ -37,10 +30,11 @@ public class PreferencesInitializer extends AbstractPreferenceInitializer {
 	
 	public PreferencesInitializer() throws IOException {
 		properties = new Properties();
+		ClassLoader classLoader = getClass().getClassLoader();
 		try {
-			properties.load(FileLocator.openStream(VCML2IDocUIPlugin.getDefault().getBundle(), new Path("src/org/vclipse/vcml2idoc/preferences/vcml2idoc_settings_overriden.properties"), false));
+			properties.load(classLoader.getResourceAsStream("org/vclipse/vcml2idoc/preferences/vcml2idoc_settings_overriden.properties"));
 		} catch(Exception exception) {
-			properties.load(FileLocator.openStream(VCML2IDocUIPlugin.getDefault().getBundle(), new Path("src/org/vclipse/vcml2idoc/preferences/vcml2idoc_settings_default.properties"), false));			
+			properties.load(classLoader.getResourceAsStream("org/vclipse/vcml2idoc/preferences/vcml2idoc_settings_default.properties"));			
 		}
 	}
 	

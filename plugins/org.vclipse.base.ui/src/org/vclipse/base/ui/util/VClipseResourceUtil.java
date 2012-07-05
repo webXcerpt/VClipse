@@ -9,7 +9,7 @@ import org.eclipse.xtext.ui.util.ResourceUtil;
 
 public class VClipseResourceUtil extends ResourceUtil {
 
-	private XtextResourceSet defaultResourceSet;
+	private ResourceSet defaultResourceSet;
 	
 	public ResourceSet getResourceSet() {
 		if(defaultResourceSet == null) {
@@ -18,7 +18,7 @@ public class VClipseResourceUtil extends ResourceUtil {
 		return defaultResourceSet;
 	}
 	
-	public Resource getResource(XtextResourceSet resourceSet, IFile file) {
+	public Resource getResource(ResourceSet resourceSet, IFile file) {
 		if(resourceSet == null) {
 			if(defaultResourceSet == null) {
 				defaultResourceSet = new XtextResourceSet();

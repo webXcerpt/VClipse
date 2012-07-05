@@ -11,16 +11,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.vclipse.connection.IConnectionHandler;
 import com.sap.conn.idoc.IDocDocument;
 
-/**
- * 
- */
 public interface IIDocsSender {
 
-	/**
-	 * @param idocs
-	 * @param handler
-	 * @param monitor
-	 * @return
-	 */
 	public IStatus send(List<IDocDocument> idocs, IConnectionHandler handler, IProgressMonitor monitor);
 }

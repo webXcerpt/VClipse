@@ -22,7 +22,7 @@ import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.idoc2jcoidoc.IIDoc2JCoIDocProcessor;
 import org.vclipse.idoc2jcoidoc.RFCIDocsSender;
 import org.vclipse.vcml.vcml.Model;
-import org.vclipse.vcml2idoc.builder.VCML2IDocSwitch;
+import org.vclipse.vcml2idoc.transformation.VCML2IDocSwitch;
 
 import com.google.inject.Inject;
 import com.sap.conn.idoc.IDocDocument;
@@ -52,7 +52,8 @@ public class ConvertToIDocsAndSendAction implements IObjectActionDelegate {
 				IFile file = (IFile)selection.getFirstElement();
 				monitor.subTask("Parsing VCML file " + file.getName());
 				XtextResourceSet xtextResourceSet = new XtextResourceSet();
-				Resource resource = xtextResourceSet.getResource(URI.createURI(file.getLocationURI().toString()), true);
+				URI uri = URI.createURI(file.getFullPath().toString());
+				Resource resource = xtextResourceSet.getResource(uri, true);
 				monitor.worked(1);
 				EList<EObject> contents = resource.getContents();
 				if(!contents.isEmpty()) {

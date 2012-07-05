@@ -1,13 +1,12 @@
 package org.vclipse.configscan.vcmlt.ui.action;
 
 import org.eclipse.emf.ecore.EObject;
-import org.vclipse.configscan.actions.AbstractConfigScanXmlAction;
+import org.vclipse.configscan.actions.AbstractConfigScanXmlHandler;
 import org.vclipse.configscan.vcmlt.vcmlT.Model;
 import org.vclipse.configscan.vcmlt.vcmlT.TestCase;
 
+public class ConvertVcmlT2ConfigScanXmlHandler extends AbstractConfigScanXmlHandler {
 
-public class ConvertVcmlT2ConfigScanXmlAction extends AbstractConfigScanXmlAction {
-	
 	@Override
 	public String getFileExtension() {
 		return "VcmlT";

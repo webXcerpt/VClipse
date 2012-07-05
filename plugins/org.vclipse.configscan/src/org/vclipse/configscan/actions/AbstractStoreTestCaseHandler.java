@@ -1,26 +1,13 @@
-/*******************************************************************************
- * Copyright (c) 2012 webXcerpt Software GmbH.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *    webXcerpt Software GmbH - initial creator
- ******************************************************************************/
 package org.vclipse.configscan.actions;
 
+import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.emf.common.util.WrappedException;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IObjectActionDelegate;
-import org.eclipse.ui.IWorkbenchPart;
+import org.vclipse.base.ui.FileListHandler;
+import org.vclipse.configscan.ConfigScanPlugin;
 import org.vclipse.connection.IConnection;
 import org.vclipse.connection.IConnectionHandler;
 
@@ -30,38 +17,28 @@ import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoParameterList;
 import com.sap.conn.jco.JCoStructure;
 
-/**
- *
- */
-public abstract class AbstractStoreTestcaseInConfigScanAction implements IObjectActionDelegate {
-
-	private IStructuredSelection selection;
+public abstract class AbstractStoreTestCaseHandler extends FileListHandler {
 
 	@Inject
 	private IConnectionHandler handler;
 	
-	public void run(IAction action) {
+	@Override
+	public void handleListVariable(final Iterable<IFile> collection, ExecutionEvent event) {
 		Job job = new Job("Store test cases in ConfigScan") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask(
-						"Storing test cases in ConfigScan",
-						selection.size());
-				for (Object s : selection.toList()) {
-					if (monitor.isCanceled()) {
+				monitor.beginTask("Storing test cases in ConfigScan", IProgressMonitor.UNKNOWN);
+				for(IFile file : collection) {
+					if(monitor.isCanceled()) {
 						return Status.CANCEL_STATUS;
 					}
-					if (s instanceof IFile) {
-						IFile file = (IFile)s;
-						monitor.subTask(file.getName());
-						try {
-							storeTestcaseFileInConfigScan(file);
-						} catch (JCoException ex) {
-							throw new WrappedException(ex);
-						}
-						monitor.worked(1);
+					monitor.subTask(file.getName());
+					try {
+						storeTestcaseFileInConfigScan(file);
+					} catch (JCoException exception) {
+						ConfigScanPlugin.log(exception.getMessage(), exception);
 					}
-					
+					monitor.worked(1);
 				}
 				monitor.done();
 				return Status.OK_STATUS;
@@ -69,9 +46,9 @@ public abstract class AbstractStoreTestcaseInConfigScanAction implements IObject
 		};
 		job.schedule();
 	}
-
+	
 	abstract protected void storeTestcaseFileInConfigScan(IFile file) throws JCoException;
-		
+	
 	/*
 	FUNCTION zfsb_add_tc_string_to_kmat .
 	*"----------------------------------------------------------------------
@@ -85,9 +62,7 @@ public abstract class AbstractStoreTestcaseInConfigScanAction implements IObject
 	*"     VALUE(RETURN) TYPE  BAPIRET2
 	*/
 
-	protected void storeTestcaseInConfigScan(String xmlString, String matNr,
-			String docNumber, String docDescr, String docVersion, String docPart)
-			throws JCoException {
+	protected void storeTestcaseInConfigScan(String xmlString, String matNr, String docNumber, String docDescr, String docVersion, String docPart) throws JCoException {
 		if (docDescr == null) {
 			docDescr = docNumber;
 		}
@@ -115,12 +90,4 @@ public abstract class AbstractStoreTestcaseInConfigScanAction implements IObject
 		structure.setValue("DOC_PART", docPart); // 3 characters
 		function.execute(handler.getJCoDestination());
 	}
-
-	public void selectionChanged(IAction action, ISelection selection) {
-		this.selection = (IStructuredSelection) selection;
-	}
-
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-	}
-
 }

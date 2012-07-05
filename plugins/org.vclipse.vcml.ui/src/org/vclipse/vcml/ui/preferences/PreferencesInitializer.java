@@ -13,20 +13,14 @@ package org.vclipse.vcml.ui.preferences;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.vclipse.vcml.ui.IUiConstants;
-import org.vclipse.vcml.ui.internal.VCMLActivator;
 import org.vclipse.vcml.utils.ISapConstants;
 import org.vclipse.vcml.vcml.Language;
 
 import com.google.inject.Inject;
 
-/**
- *	Default implementation for VClipse plug-in.
- */
 public class PreferencesInitializer extends AbstractPreferenceInitializer {
 	
 	@Inject
@@ -36,14 +30,11 @@ public class PreferencesInitializer extends AbstractPreferenceInitializer {
 	
 	public PreferencesInitializer() throws IOException {
 		properties = new Properties();
+		ClassLoader classLoader = getClass().getClassLoader();
 		try {
-			properties.load(
-					FileLocator.openStream(VCMLActivator.getInstance().getBundle(), 
-							new Path("src/org/vclipse/vcml/ui/preferences/sap_overridden_settings.properties"), false));
+			properties.load(classLoader.getResourceAsStream("org/vclipse/vcml/ui/preferences/sap_overridden_settings.properties"));
 		} catch(Exception exception) {
-			properties.load(
-					FileLocator.openStream(VCMLActivator.getInstance().getBundle(), 
-							new Path("src/org/vclipse/vcml/ui/preferences/sap_default_settings.properties"), false));			
+			properties.load(classLoader.getResourceAsStream("org/vclipse/vcml/ui/preferences/sap_default_settings.properties"));			
 		}
 	}
 	

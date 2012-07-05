@@ -46,6 +46,19 @@
                 </with>        
             </and>
         </definition>
+        <definition
+              id="org.vclipse.vcmlt.resources.files.vcmlt">
+           <iterate
+                 ifEmpty="false">
+              <adapt
+                    type="org.eclipse.core.resources.IResource">
+                 <test
+                       property="org.eclipse.core.resources.extension"
+                       value="vcmlt">
+                 </test>
+              </adapt>
+           </iterate>
+        </definition>
     </extension>
     <extension
             point="org.eclipse.ui.preferencePages">
@@ -113,6 +126,33 @@
             </visibleWhen>
          </command>  
          </menuContribution>
+        <menuContribution
+              locationURI="popup:org.vclipse.configscan.menus.popup?after=additions">
+           <command
+                 commandId="org.vclipse.commands.configscan.convertVcmlT2ConfigScanXml"
+                 icon="icons/generate_xml_16x16.gif"
+                 label="Convert VCMLT file to ConfigScan XML file"
+                 style="push">
+              <visibleWhen
+                    checkEnabled="false">
+                 <reference
+                       definitionId="org.vclipse.vcmlt.resources.files.vcmlt">
+                 </reference>
+              </visibleWhen>
+           </command>
+           <command
+                 commandId="org.vclipse.commands.configscan.storeVcmlT2ConfigScanXml"
+                 icon="icons/generate_xml_16x16.gif"
+                 label="Store VCMLT test cases in ConfigScan"
+                 style="push">
+              <visibleWhen
+                    checkEnabled="false">
+                 <reference
+                       definitionId="org.vclipse.vcmlt.resources.files.vcmlt">
+                 </reference>
+              </visibleWhen>
+           </command>
+        </menuContribution>
     </extension>
     <extension point="org.eclipse.ui.menus">
 		<menuContribution locationURI="popup:#TextEditorContext?endof=group.find">
@@ -188,6 +228,14 @@
 				</reference>
 			</activeWhen>
 		</handler>
+  <handler
+        class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.vclipse.configscan.vcmlt.ui.action.ConvertVcmlT2ConfigScanXmlHandler"
+        commandId="org.vclipse.commands.configscan.convertVcmlT2ConfigScanXml">
+  </handler>
+  <handler
+        class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.vclipse.configscan.vcmlt.ui.action.StoreVcmlTInConfigScanHandler"
+        commandId="org.vclipse.commands.configscan.storeVcmlT2ConfigScanXml">
+  </handler>
 	</extension>
 	<extension
 		point="org.eclipse.ui.commands">
@@ -196,6 +244,18 @@
 			id="org.eclipse.xtext.ui.editor.outline.QuickOutline"
 			name="Quick Outline">
 		</command>
+  <command
+        categoryId="org.vclipse.ui.commands"
+        defaultHandler="org.vclipse.configscan.vcmlt.ui.action.ConvertVcmlT2ConfigScanXmlHandler"
+        id="org.vclipse.commands.configscan.convertVcmlT2ConfigScanXml"
+        name="Convert VCMLT file to ConfigScan XML file">
+  </command>
+  <command
+        categoryId="org.vclipse.ui.commands"
+        defaultHandler="org.vclipse.configscan.vcmlt.ui.action.StoreVcmlTInConfigScanHandler"
+        id="org.vclipse.commands.configscan.storeVcmlT2ConfigScanXml"
+        name="Store VCMLT test cases in ConfigScan">
+  </command>
 	</extension>
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution
@@ -306,50 +366,6 @@
            id="org.vclipse.configscan.vcmlt.ui.imports.configscan"
            name="VClipse test case files (VCMLT) from ConfigScan (*.xml) files">
      </wizard>
-  </extension>
-  <extension
-        point="org.eclipse.ui.popupMenus">
-     <objectContribution
-           adaptable="true"
-           id="com.webxcerpt.cm.nsn.cmlt.exportxmlfile"
-           objectClass="org.eclipse.core.resources.IFile">
-        <action
-              class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.vclipse.configscan.vcmlt.ui.action.ConvertVcmlT2ConfigScanXmlAction"
-              icon="icons/generate_xml_16x16.gif"
-              id="org.vclipse.configscan.vcmlt.convertVCMLT_XML"
-              label="Convert VCMLT file to ConfigScan XML file"
-              menubarPath="org.vclipse.configscan.popupMenu.resource/content">
-           <enablement>
-              <and>
-                 <objectClass
-                       name="org.eclipse.core.resources.IFile">
-                 </objectClass>
-                 <objectState
-                       name="extension"
-                       value="vcmlt">
-                 </objectState>
-              </and>
-           </enablement>
-        </action>
-         <action
-              class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.vclipse.configscan.vcmlt.ui.action.StoreVcmlTInConfigScanAction"
-              icon="icons/generate_xml_16x16.gif"
-              id="org.vclipse.configscan.vcmlt.storeVCMLT"
-              label="Store VCMLT test cases in ConfigScan"
-              menubarPath="org.vclipse.configscan.popupMenu.resource/content">
-           <enablement>
-              <and>
-                 <objectClass
-                       name="org.eclipse.core.resources.IFile">
-                 </objectClass>
-                 <objectState
-                       name="extension"
-                       value="vcmlt">
-                 </objectState>
-              </and>
-           </enablement>
-        </action>
-     </objectContribution>
   </extension>
   <extension
         point="org.vclipse.configscan.testLanguageExtension">

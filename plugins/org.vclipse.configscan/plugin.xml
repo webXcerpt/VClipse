@@ -74,46 +74,66 @@
       </page>
    </extension>
    <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="true"
-            id="org.vclipse.configscan.popupMenu.resourceContribution"
-            objectClass="org.eclipse.core.resources.IResource">
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
          <menu
                icon="icons/fysbee.png"
-               id="org.vclipse.configscan.popupMenu.resource"
-               label="ConfigScan"
-               path="additions">
-            <groupMarker
-                  name="content">
-            </groupMarker>
-            <separator
-                  name="additions">
-            </separator>
+               id="org.vclipse.configscan.menus.popup"
+               label="ConfigScan">
+            <command
+                  commandId="org.vclipse.commands.configscan.storeXmlInConfigScan"
+                  label="Store XML test cases in ConfigScan"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="org.vclipse.configscan.resources.files.xml">
+                  </reference>
+               </visibleWhen>
+            </command>
          </menu>
-      </objectContribution>
-      <objectContribution
-            adaptable="true"
-            id="org.vclipse.configscan.actions.StoreXmlTestcaseInConfigScan"
-            objectClass="org.eclipse.core.resources.IFile">
-         <action
-               class="org.vclipse.configscan.injection.ExecutableExtensionFactory:org.vclipse.configscan.actions.StoreXmlTestcaseInConfigScanAction"
-               icon="icons/generic_xml_obj_16x16.gif"
-               id="org.vclipse.configscan.actions.store"
-               label="Store XML test cases in ConfigScan"
-               menubarPath="org.vclipse.configscan.popupMenu.resource/content">
-            <enablement>
-               <and>
-                  <objectClass
-                        name="org.eclipse.core.resources.IFile">
-                  </objectClass>
-                  <objectState
-                        name="extension"
-                        value="xml">
-                  </objectState>
-               </and>
-            </enablement>
-         </action>
-      </objectContribution>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.vclipse.configscan.injection.ExecutableExtensionFactory:org.vclipse.configscan.actions.StoreXmlInConfigScanHandler"
+            commandId="org.vclipse.commands.configscan.storeXmlInConfigScan">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="org.vclipse.ui.commands"
+            defaultHandler="org.vclipse.configscan.actions.StoreXmlInConfigScanHandler"
+            id="org.vclipse.commands.configscan.storeXmlInConfigScan"
+            name="Store XML test cases in ConfigScan">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.vclipse.commands.configscan.storeXmlInConfigScan"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="Ctrl+Shift+S">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="org.vclipse.configscan.resources.files.xml">
+         <iterate
+               ifEmpty="false">
+            <adapt
+                  type="org.eclipse.core.resources.IResource">
+               <test
+                     property="org.eclipse.core.resources.extension"
+                     value="xml">
+               </test>
+            </adapt>
+         </iterate>
+      </definition>
    </extension>
 </plugin>

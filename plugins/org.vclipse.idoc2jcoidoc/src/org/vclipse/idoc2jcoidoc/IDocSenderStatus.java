@@ -14,7 +14,6 @@ public class IDocSenderStatus extends Status {
 	
 	public IDocSenderStatus(int severity, String message) {
 		super(severity, IDoc2JCoIDocPlugin.ID, message);
-		
 	}
 	
 	public void setMessage(String message) {

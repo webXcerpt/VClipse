@@ -7,13 +7,10 @@ package org.vclipse.idoc2jcoidoc.internal;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.vclipse.idoc2jcoidoc.IDoc2JCoIDocPlugin;
 import org.vclipse.idoc2jcoidoc.IUiConstants;
-import org.vclipse.vcml2idoc.VCML2IDocUIPlugin;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -37,10 +34,15 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	
 	public PreferenceInitializer() throws IOException {
 		properties = new Properties();
+		ClassLoader classLoader = getClass().getClassLoader();
 		try {
-			properties.load(FileLocator.openStream(IDoc2JCoIDocPlugin.getDefault().getBundle(), new Path("src/org/vclipse/idoc2jcoidoc/internal/rfc_overridden_settings.properties"), false));
+			properties.load(
+					classLoader.getResourceAsStream(
+							"src/org/vclipse/idoc2jcoidoc/internal/rfc_overridden_settings.properties"));
 		} catch(Exception exception) {
-			properties.load(FileLocator.openStream(IDoc2JCoIDocPlugin.getDefault().getBundle(), new Path("src/org/vclipse/idoc2jcoidoc/internal/rfc_default_settings.properties"), false));		
+			properties.load(
+					classLoader.getResourceAsStream(
+							"src/org/vclipse/idoc2jcoidoc/internal/rfc_default_settings.properties"));		
 		}
 	}
 	

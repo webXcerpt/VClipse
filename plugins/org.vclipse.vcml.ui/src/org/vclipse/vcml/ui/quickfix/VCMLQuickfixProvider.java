@@ -46,7 +46,6 @@ import org.vclipse.vcml.vcml.VcmlPackage;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
-@SuppressWarnings("restriction")
 public class VCMLQuickfixProvider extends DefaultQuickfixProvider {
 	
 	@Inject VCMLPrettyPrinter prettyPrinter;

@@ -5,6 +5,7 @@
 		<accessrules>
 			<accessrule kind="accessible" pattern="**/xtext/ui/refactoring/**"/>
 			<accessrule kind="accessible" pattern="**/team/internal/ui/**"/>
+			<accessrule kind="accessible" pattern="**/e4/ui/workbench/modeling/**"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>

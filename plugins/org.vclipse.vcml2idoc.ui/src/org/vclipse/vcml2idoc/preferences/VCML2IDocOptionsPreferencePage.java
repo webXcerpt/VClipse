@@ -17,7 +17,6 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.vclipse.vcml2idoc.IVCML2IDocPreferences;
 
 import com.google.inject.Inject;
 

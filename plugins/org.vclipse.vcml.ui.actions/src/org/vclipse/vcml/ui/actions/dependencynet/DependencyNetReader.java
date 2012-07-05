@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.common.util.EList;
 import org.vclipse.vcml.ui.actions.BAPIUtils;
 import org.vclipse.vcml.ui.actions.constraint.ConstraintReader;
 import org.vclipse.vcml.utils.VCMLProxyFactory;
@@ -24,7 +23,6 @@ import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
-import org.vclipse.vcml.vcml.VCObject;
 
 import com.google.inject.Inject;
 import com.sap.conn.jco.AbapException;

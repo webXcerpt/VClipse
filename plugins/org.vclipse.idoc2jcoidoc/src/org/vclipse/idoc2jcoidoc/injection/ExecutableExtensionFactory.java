@@ -16,12 +16,12 @@ public class ExecutableExtensionFactory extends AbstractGuiceAwareExecutableExte
 
 	@Override
 	protected Bundle getBundle() {
-		return IDoc2JCoIDocPlugin.getDefault().getBundle();
+		return IDoc2JCoIDocPlugin.getInstance().getBundle();
 	}
 
 	@Override
 	protected Injector getInjector() {
-		return IDoc2JCoIDocPlugin.getDefault().getInjector();
+		return IDoc2JCoIDocPlugin.getInstance().getInjector();
 	}
 
 }

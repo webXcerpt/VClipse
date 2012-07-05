@@ -1,13 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2012 webXcerpt Software GmbH.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *    webXcerpt Software GmbH - initial creator
- ******************************************************************************/
 package org.vclipse.configscan.actions;
 
 import java.io.IOException;
@@ -25,20 +15,16 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.sap.conn.jco.JCoException;
 
-/**
- *
- */
-public class StoreXmlTestcaseInConfigScanAction extends
-		AbstractStoreTestcaseInConfigScanAction {
+public class StoreXmlInConfigScanHandler extends AbstractStoreTestCaseHandler {
 
 	private String matNr;
 	private String docNumber;
 	private String docDescr;
 	protected String docVersion;
 	protected String docPart;
-
-	protected void storeTestcaseFileInConfigScan(IFile file)
-			throws JCoException {
+	
+	@Override
+	protected void storeTestcaseFileInConfigScan(IFile file) throws JCoException {
 		XMLReader xmlReader;
 		try {
 			xmlReader = XMLReaderFactory.createXMLReader();
@@ -74,5 +60,4 @@ public class StoreXmlTestcaseInConfigScanAction extends
 			throw new WrappedException(e);
 		}
 	}
-
 }

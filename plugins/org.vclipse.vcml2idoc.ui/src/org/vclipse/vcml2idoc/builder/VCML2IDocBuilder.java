@@ -24,8 +24,8 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.vclipse.vcml2idoc.IVcml2IDocTransformation;
-import org.vclipse.vcml2idoc.VCML2IDocUIPlugin;
+import org.vclipse.vcml2idoc.VCML2IDocPlugin;
+import org.vclipse.vcml2idoc.transformation.IVCML2IDocTransformation;
 
 /**
  * 
@@ -44,19 +44,16 @@ public class VCML2IDocBuilder extends IncrementalProjectBuilder {
 	private Set<IFile> pathsToBuild;
 	
 	
-	private IVcml2IDocTransformation transformation;
+	private IVCML2IDocTransformation transformation;
 	
 	/**
 	 * 
 	 */
 	public VCML2IDocBuilder() {
 		pathsToBuild = new HashSet<IFile>();
-		transformation = VCML2IDocUIPlugin.getDefault().getInjector().getInstance(IVcml2IDocTransformation.class);
+		transformation = VCML2IDocPlugin.getDefault().getInjector().getInstance(IVCML2IDocTransformation.class);
 	}
 
-	/**
-	 * @see org.eclipse.core.resources.IncrementalProjectBuilder#build(int, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
-	 */
 	@SuppressWarnings("rawtypes")
 	@Override
 	protected IProject[] build(final int kind, final Map args, final IProgressMonitor monitor) throws CoreException {
@@ -85,18 +82,15 @@ public class VCML2IDocBuilder extends IncrementalProjectBuilder {
 		}
 		
 		try {
-			transformation.tranform(pathsToBuild.iterator(), monitor);
+			transformation.transform(pathsToBuild, monitor);
 			monitor.done();
 		} catch (final InvocationTargetException exception) {
 			monitor.setCanceled(true);
-			VCML2IDocUIPlugin.log(exception.getMessage(), exception);
+			VCML2IDocPlugin.log(exception.getMessage(), exception);
 		}
 		return new IProject[0];
 	}
 
-	/**
-	 * @see org.eclipse.core.resources.IncrementalProjectBuilder#clean(org.eclipse.core.runtime.IProgressMonitor)
-	 */
 	@Override
 	protected void clean(final IProgressMonitor monitor) throws CoreException {
 		final IProject project = getProject();
@@ -115,9 +109,6 @@ public class VCML2IDocBuilder extends IncrementalProjectBuilder {
 		monitor.done();
 	}
 
-	/**
-	 * @param file
-	 */
 	private void collect(final IResource resource, final String extension) {
 		if(IResource.FILE == resource.getType() && extension.equals(resource.getFileExtension())) {
 			pathsToBuild.add((IFile)resource);

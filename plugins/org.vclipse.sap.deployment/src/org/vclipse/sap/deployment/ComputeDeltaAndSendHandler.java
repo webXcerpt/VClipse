@@ -3,6 +3,7 @@ package org.vclipse.sap.deployment;
 import java.io.IOException;
 import java.util.Iterator;
 
+import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -16,16 +17,13 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResource;
@@ -34,6 +32,7 @@ import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.util.StringInputStream;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.tigris.subversion.subclipse.core.SVNTeamProvider;
+import org.vclipse.base.ui.FileListHandler;
 import org.vclipse.base.ui.util.VClipseResourceUtil;
 import org.vclipse.idoc2jcoidoc.IDocSenderStatus;
 import org.vclipse.sap.deployment.preferences.PreferencesInitializer;
@@ -44,7 +43,7 @@ import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
 
-public class DeltaDeploymentAction implements IObjectActionDelegate {
+public class ComputeDeltaAndSendHandler extends FileListHandler {
 
 	private static final String SAP_CONTAINER = "SAP";
 	
@@ -60,22 +59,21 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 	@Inject
 	private VClipseResourceUtil resourceUtils;
 	
-	private IStructuredSelection selection;
 	private IWorkbenchPart activePart;
 	
 	@Override
-	public void run(IAction action) {
+	public void handleListVariable(final Iterable<IFile> collection, ExecutionEvent event) {
+		activePart = HandlerUtil.getActivePart(event);
 		Job deltaDeploymentJob = new Job("Delta deployment job.") {
 			@Override
 			protected IStatus run(final IProgressMonitor monitor) {
 				final String errorMessage = "Error during delta extraction and deployment to SAP system";
 				monitor.beginTask("Extracting delta and deploying to SAP system...", IProgressMonitor.UNKNOWN);
-				Object firstElement = selection.getFirstElement();
-				if(firstElement instanceof IFile) {
-					IFile currentFile = (IFile)firstElement;
+				Iterator<IFile> iterator = collection.iterator();
+				if(iterator.hasNext()) {
+					IFile currentFile = iterator.next();
 					XtextResourceSet resourceSet = new XtextResourceSet();
 					try {
-						
 						// handle files and folders
 						IFolder folder = currentFile.getProject().getFolder(new Path(SAP_CONTAINER));
 						if(!folder.exists()) {
@@ -102,8 +100,8 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 						// the diff resource is empty
 						EList<EObject> contents = diffResource.getContents();
 						if(contents.isEmpty()) {
-							Iterator<VCObject> iterator = Iterables.filter(contents.get(0).eContents(), VCObject.class).iterator();
-							if(!iterator.hasNext()) {
+							Iterator<VCObject> filteredContent = Iterables.filter(contents.get(0).eContents(), VCObject.class).iterator();
+							if(!filteredContent.hasNext()) {
 								DeploymentPlugin.showErrorDialog("Error during deployment to SAP system", 
 										"Delta deployment to SAP system was cancelled.", 
 											new Status(IStatus.ERROR, DeploymentPlugin.ID, "No differing objects found"));
@@ -189,17 +187,4 @@ public class DeltaDeploymentAction implements IObjectActionDelegate {
 		};
 		deltaDeploymentJob.schedule();
 	}
-
-	@Override
-	public void selectionChanged(IAction action, ISelection selection) {
-		if(selection instanceof IStructuredSelection) {
-			this.selection = (IStructuredSelection)selection;
-		}
-	}
-
-	@Override
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		activePart = targetPart;
-	}
 }
-

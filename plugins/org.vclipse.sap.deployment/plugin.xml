@@ -1,61 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-	<extension point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="true"
-            id="org.vclipse.deployment.vcml2idocSend"
-            objectClass="org.eclipse.core.resources.IFile">
-         <action
-               class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.ConvertSendAction"
-               icon="icons/package_go.png"
-               id="org.vclipse.actions.convertToIDocsAndSend"
-               label="Create and send ALE distribution packet"
-               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/deployment">
-	         <enablement>
-	            <and>
-	               <objectClass
-	                     name="org.eclipse.core.resources.IFile">
-	               </objectClass>
-	               <or>
-	               <objectState
-	                     name="extension"
-	                     value="vcml">
-	               </objectState>
-	               <objectState
-	                     name="extension"
-	                     value="idoc">
-	               </objectState>
-				   </or>
-	            </and>
-	         </enablement>
-         </action>
-      </objectContribution>
-      <objectContribution
-            adaptable="true"
-            id="org.vclipse.deployment.diff"
-            objectClass="org.eclipse.core.resources.IFile">
-         <action
-               class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.DeltaDeploymentAction"
-               enablesFor="1"
-               icon="icons/delta_package_go.png"
-               id="org.vclipse.deployment.diff"
-               label="Create and send ALE distribution packet of delta"
-               menubarPath="org.vclipse.vcml.ui.popupMenu.resource/deployment">
-            <enablement>
-               <and>
-                  <objectClass
-                        name="org.eclipse.core.resources.IFile">
-                  </objectClass>
-                  <objectState
-                        name="extension"
-                        value="vcml">
-                  </objectState>
-               </and>
-            </enablement>
-         </action>
-      </objectContribution>
-   </extension>
  <extension
        point="org.eclipse.core.runtime.preferences">
     <initializer
@@ -70,5 +15,77 @@
           id="org.vclipse.deployment.preferencePage"
           name="Deployment">
     </page>
+ </extension>
+ <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          allPopups="false"
+          locationURI="popup:org.vclipse.ui.menus.popup?after=additions">
+       <command
+             commandId="org.vclipse.commands.vcml2idoc.convertAndSend"
+             icon="icons/package_go.png"
+             label="Create and send ALE distribution packet"
+             style="push">
+          <visibleWhen
+                checkEnabled="false">
+             <reference
+                   definitionId="org.vclipse.vcml.resources.files.vcml">
+             </reference>
+          </visibleWhen>
+       </command>
+       <command
+             commandId="org.vclipse.commands.computeDeltaAndSend"
+             icon="icons/delta_package_go.png"
+             label="Create and send ALE distribution packet of delta"
+             style="push">
+          <visibleWhen
+                checkEnabled="false">
+             <reference
+                   definitionId="org.vclipse.vcml.resources.files.vcml">
+             </reference>
+          </visibleWhen>
+       </command>
+    </menuContribution>
+ </extension>
+ <extension
+       point="org.eclipse.ui.handlers">
+    <handler
+          class="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.ConvertAndSendHandler"
+          commandId="org.vclipse.commands.vcml2idoc.convertAndSend">
+    </handler>
+    <handler
+          class="org.vclipse.sap.deployment.ComputeDeltaAndSendHandler"
+          commandId="org.vclipse.commands.computeDeltaAndSend">
+    </handler>
+ </extension>
+ <extension
+       point="org.eclipse.ui.commands">
+    <command
+          categoryId="org.vclipse.ui.commands"
+          defaultHandler="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.ConvertAndSendHandler"
+          id="org.vclipse.commands.vcml2idoc.convertAndSend"
+          name="Create and send ALE distribution packet">
+    </command>
+    <command
+          categoryId="org.vclipse.ui.commands"
+          defaultHandler="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.ComputeDeltaAndSendHandler"
+          id="org.vclipse.commands.computeDeltaAndSend"
+          name="Create and send ALE distribution packet of delta">
+    </command>
+ </extension>
+ <extension
+       point="org.eclipse.ui.bindings">
+    <key
+          commandId="org.vclipse.commands.vcml2idoc.convertAndSend"
+          contextId="org.eclipse.ui.contexts.window"
+          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+          sequence="Ctrl+Shift+O">
+    </key>
+    <key
+          commandId="org.vclipse.commands.computeDeltaAndSend"
+          contextId="org.eclipse.ui.contexts.window"
+          schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+          sequence="Ctrl+Shift+P">
+    </key>
  </extension>
 </plugin>

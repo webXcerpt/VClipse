@@ -17,10 +17,11 @@ import org.vclipse.sap.deployment.OneClickWorkflow;
 import org.vclipse.vcml.VCMLRuntimeModule;
 import org.vclipse.vcml.diff.compare.VcmlCompare;
 import org.vclipse.vcml.ui.VCMLUiPlugin;
-import org.vclipse.vcml2idoc.VCML2IDocUIPlugin;
-import org.vclipse.vcml2idoc.builder.VCML2IDocSwitch;
+import org.vclipse.vcml2idoc.VCML2IDocPlugin;
+import org.vclipse.vcml2idoc.transformation.VCML2IDocSwitch;
 
 import com.google.inject.Binder;
+import com.google.inject.Injector;
 import com.google.inject.name.Names;
 
 public class DeploymentModule extends VCMLRuntimeModule {
@@ -39,36 +40,35 @@ public class DeploymentModule extends VCMLRuntimeModule {
 		return plugin;
 	}
 	
-	public Class<? extends IExtendedImageHelper> bindImageHelper() {
-		return ClasspathAwareImageHelper.class;
-	}
-	
 	@Override
 	public void configure(Binder binder) {
 		super.configure(binder);
 		
+		Injector connectionInjector = VClipseConnectionPlugin.getDefault().getInjector();
+		binder.bind(IConnectionHandler.class).toInstance(connectionInjector.getInstance(IConnectionHandler.class));
+		
+		Injector vcmlInjector = VCMLUiPlugin.getDefault().getInjector();
 		binder.bind(IPreferenceStore.class).annotatedWith(Names.named(VCMLUiPlugin.ID)).
-			toInstance(VCMLUiPlugin.getDefault().getInjector().getInstance(IPreferenceStore.class));
+			toInstance(vcmlInjector.getInstance(IPreferenceStore.class));
 		
-		binder.bind(IPreferenceStore.class).annotatedWith(Names.named(VCML2IDocUIPlugin.ID)).
-			toInstance(VCML2IDocUIPlugin.getDefault().getInjector().getInstance(IPreferenceStore.class));
+		Injector vcml2IDocInjector = VCML2IDocPlugin.getDefault().getInjector();
+		binder.bind(IPreferenceStore.class).annotatedWith(Names.named(VCML2IDocPlugin.ID)).
+			toInstance(vcml2IDocInjector.getInstance(IPreferenceStore.class));
+		binder.bind(VCML2IDocSwitch.class).toInstance(vcml2IDocInjector.getInstance(VCML2IDocSwitch.class));
 		
+		Injector idoc2JCoIDocInjector = IDoc2JCoIDocPlugin.getInstance().getInjector();
 		binder.bind(IPreferenceStore.class).annotatedWith(Names.named(IDoc2JCoIDocPlugin.ID)).
-			toInstance(IDoc2JCoIDocPlugin.getDefault().getInjector().getInstance(IPreferenceStore.class));
-	}
-
-	public IConnectionHandler bindConnectionHandler() {
-		return VClipseConnectionPlugin.getDefault().getInjector().getInstance(IConnectionHandler.class);
+			toInstance(idoc2JCoIDocInjector.getInstance(IPreferenceStore.class));
 	}
 	
+	public Class<? extends IExtendedImageHelper> bindImageHelper() {
+		return ClasspathAwareImageHelper.class;
+	}
+
 	public Class<? extends IIDoc2JCoIDocProcessor> bindIDoc2JCoIDocProcessor() {
 		return DefaultIDoc2JCoIDocProcessor.class;
 	}
 
-	public VCML2IDocSwitch bindVCML2IDocSwitch() {
-		return VCML2IDocUIPlugin.getDefault().getInjector().getInstance(VCML2IDocSwitch.class);
-	}
-	
 	public Class<? extends OneClickWorkflow> bindOneClickWorkflow() {
 		return OneClickWorkflow.class;
 	}

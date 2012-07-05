@@ -57,6 +57,19 @@
                 </with>        
             </and>
         </definition>
+        <definition
+              id="org.vclipse.idoc.resources.files.idocs">
+           <iterate
+                 ifEmpty="false"
+                 operator="and">
+              <adapt
+                    type="org.eclipse.core.resources.IResource">
+                 <test
+                       property="org.eclipse.core.resources.extension"
+                       value="idoc">
+                 </test>
+              </adapt></iterate>
+        </definition>
     </extension>
     <extension
             point="org.eclipse.ui.preferencePages">
