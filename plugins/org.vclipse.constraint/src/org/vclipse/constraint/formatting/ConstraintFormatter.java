@@ -95,24 +95,27 @@ public class ConstraintFormatter extends AbstractDeclarativeFormatter {
 				String value = currentKeyword.getValue();
 				if (".".equals(value)) {
 					c.setNoSpace().around(currentKeyword);
-//					System.err.println(value);
 				}
 				else if(",".equals(value)) {
 					c.setNoSpace().before(currentKeyword);
-//					System.err.println(value);
 				}
 				else if("(".equals(value)) {
-					c.setNoSpace().after(currentKeyword);
-//					System.err.println(value);
+//					c.setNoSpace().after(currentKeyword);
 				}
 				else if(")".equals(value)) {
-					c.setNoSpace().before(currentKeyword);
-//					System.err.println(value);
+//					c.setNoSpace().before(currentKeyword);
 				}
 //			}
 	    }
 		
 		{	// SAPObject definitions on toplevel
+//			c.setNoSpace().before(elements.getObjectsKeyword_0());
+//			c.setNoSpace().before(elements.getConditionKeyword_5_0());
+//			c.setNoSpace().before(elements.getRestrictionKeyword_6_0());
+//			c.setNoSpace().before(elements.getRestrictionsKeyword_6_1());
+//			c.setNoSpace().before(elements.getInferencesKeyword_11_0());
+			
+//			c.setIndentationDecrement().before(elements.getInferencesKeyword_11_0()););
 			c.setNoSpace().before(elements.getColonKeyword_1());
 //			c.setLinewrap(2).before(elements.getObjectsKeyword_0());
 			
@@ -152,30 +155,47 @@ public class ConstraintFormatter extends AbstractDeclarativeFormatter {
 			c.setLinewrap().after(elements.getFullStopKeyword_5_3());
 			c.setLinewrap().after(elements.getFullStopKeyword_4());
 
-			c.setIndentationDecrement().before(elements.getConditionKeyword_5_0());
-			c.setIndentationDecrement().before(elements.getRestrictionKeyword_6_0());
-			c.setIndentationDecrement().before(elements.getRestrictionsKeyword_6_1());
-			c.setIndentationDecrement().before(elements.getInferencesKeyword_11_0());	// 2x ?
+//			c.setIndentationDecrement().before(elements.getConditionKeyword_5_0());
+//			c.setIndentationDecrement().before(elements.getRestrictionKeyword_6_0());
+//			c.setIndentationDecrement().before(elements.getRestrictionsKeyword_6_1());
+//			c.setIndentationDecrement().before(elements.getInferencesKeyword_11_0());	// 2x ?
 //			c.setIndentationDecrement().before(elements.getInferencesKeyword_11_0());
 			
+			c.setIndentation(elements.getObjectsKeyword_0(), elements.getConditionKeyword_5_0());
+			c.setIndentation(elements.getConditionKeyword_5_0(), elements.getRestrictionsKeyword_6_1());
+			c.setIndentation(elements.getRestrictionsKeyword_6_1(), elements.getInferencesKeyword_11_0());
+			c.setIndentationIncrement().after(elements.getInferencesKeyword_11_0());
 			
-			c.setIndentationIncrement().after(elements.getColonKeyword_1());
-			c.setIndentationIncrement().after(elements.getColonKeyword_5_1());
-			c.setIndentationIncrement().after(elements.getColonKeyword_7());
-			c.setIndentationIncrement().after(elements.getColonKeyword_11_1());
+//			c.setIndentationIncrement().after(elements.getColonKeyword_1());
+//			c.setIndentationIncrement().after(elements.getColonKeyword_5_1());
+//			c.setIndentationIncrement().after(elements.getColonKeyword_7());
+//			c.setIndentationIncrement().after(elements.getColonKeyword_11_1());
 			
 			c.setLinewrap().after(cga.getConstraintClassAccess().getWhereKeyword_2_0());
-			c.setIndentation(cga.getConstraintClassAccess().getWhereKeyword_2_0()/* getShortVarsAssignment_2_1() */, cga.getConstraintClassAccess().getShortVarsAssignment_2_2_1());
+			c.setIndentation(cga.getConstraintClassAccess().getWhereKeyword_2_0(), cga.getConstraintClassAccess().getShortVarsAssignment_2_2_1());
 			
 			c.setLinewrap().after(cga.getConditionalConstraintRestrictionAccess().getIfKeyword_1_1());
-			c.setIndentation(cga.getConditionalConstraintRestrictionAccess().getIfKeyword_1_1(), elements.getCommaKeyword_9_0());
+			c.setIndentation(cga.getConditionalConstraintRestrictionAccess().getIfKeyword_1_1(), elements.getRestrictionsConditionalConstraintRestrictionParserRuleCall_9_1_0());
+// !!!			c.setIndentation(cga.getConditionalConstraintRestrictionAccess().getIfKeyword_1_1(), cga.getConditionalConstraintRestrictionAccess().getConditionConditionParserRuleCall_1_2_0());
+//			c.setIndentationDecrement().after(elements.getRestrictionsConditionalConstraintRestrictionParserRuleCall_9_1_0());
+
+//			c.setIndentationDecrement().after(elements.getRestrictionsAssignment_8());
+			// c.setIndentationIncrement().between(cga.getConditionalConstraintRestrictionAccess().getIfKeyword_1_1(), cga.getConditionalConstraintRestrictionAccess().getConditionConditionParserRuleCall_1_2_0());		
+//			c.setIndentationIncrement().after(cga.getConditionalConstraintRestrictionAccess().getIfKeyword_1_1());
+//			c.setIndentationIncrement().before(cga.getConditionalConstraintRestrictionAccess().getConditionAssignment_1_2());
+//			c.setIndentationIncrement().before(cga.getConditionalConstraintRestrictionAccess().getIfKeyword_1_1());
+//			c.setIndentation(cga.getConditionalConstraintRestrictionAccess().getConstraintRestrictionLHSParserRuleCall_0(), cga.getConditionalConstraintRestrictionAccess().getConditionAssignment_1_2());
 			
+// !!			c.setIndentationIncrement().between(cga.getConditionalConstraintRestrictionAccess().getIfKeyword_1_1(), cga.getConditionalConstraintRestrictionAccess().getConditionAssignment_1_2()); // , elements.getCommaKeyword_9_0());
+//			c.setIndentationDecrement().before(cga.getConditionalConstraintRestrictionAccess().getConditionConditionParserRuleCall_1_2_0());
 			
 //			c.setIndentationIncrement().after(cga.getConstraintClassAccess().getWhereKeyword_2_0());				// commented
 //			c.setIndentationDecrement().after(elements.getCommaKeyword_9_0());										// commented
 			
-//			c.setIndentationIncrement().after(cga.getConditionalConstraintRestrictionAccess().getIfKeyword_1_1());	// commented
-//			c.setIndentationDecrement().after(elements.getCommaKeyword_9_0());										// commented
+			//c.setIndentationIncrement().after(cga.getConditionalConstraintRestrictionAccess().getIfKeyword_1_1());	// commented
+			//c.setIndentationDecrement().after(cga.getConditionalConstraintRestrictionAccess().getConditionAssignment_1_2());										// commented
+			
+//			c.setIndentationIncrement().around(cga.getConditionalConstraintRestrictionAccess().getConditionConditionParserRuleCall_1_2_0());	// commented
 			
 			c.setLinewrap().after(elements.getCommaKeyword_3_0());
 			c.setLinewrap().after(elements.getFullStopKeyword_4());
@@ -205,6 +225,7 @@ public class ConstraintFormatter extends AbstractDeclarativeFormatter {
 		{	// table
 			c.setLinewrap(2).before(cga.getTableAccess().getTableKeyword_0());
 			c.setLinewrap().after(cga.getTableAccess().getLeftParenthesisKeyword_2());
+//			c.setIndentation(cga.getTableAccess().getLeftParenthesisKeyword_2(), cga.getTableAccess().getRightParenthesisKeyword_7());
 			c.setIndentationIncrement().after(cga.getTableAccess().getLeftParenthesisKeyword_2());
 			c.setIndentationDecrement().before(cga.getTableAccess().getRightParenthesisKeyword_7());
 			c.setLinewrap().before(cga.getTableAccess().getRightParenthesisKeyword_7());
