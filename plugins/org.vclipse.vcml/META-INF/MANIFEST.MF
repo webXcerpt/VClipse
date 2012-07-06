@@ -8,7 +8,10 @@ Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext.generator,
  org.vclipse.base;visibility:=reexport,
  org.vclipse.jpplib,
- org.vclipse.vcml.mm;visibility:=reexport
+ org.vclipse.vcml.mm;visibility:=reexport,
+ org.eclipse.xtext,
+ org.eclipse.xtext.util,
+ org.antlr.runtime
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.vcml,
  org.vclipse.vcml.conversion,
