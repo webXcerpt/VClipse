@@ -7,17 +7,12 @@ Bundle-SymbolicName: org.vclipse.procedure.ui;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.vclipse.procedure;visibility:=reexport,
  org.eclipse.xtext.ui,
- org.eclipse.ui.editors,
- org.eclipse.ui.ide,
  org.eclipse.xtext.ui.shared,
- org.eclipse.ui,
  org.eclipse.xtext.builder,
  org.eclipse.compare,
- org.antlr.runtime,
  org.eclipse.xtext.ui.codetemplates.ui,
  org.vclipse.dependency.ui
-Import-Package: org.apache.log4j,
- org.apache.commons.logging
+Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.procedure.ui,
  org.vclipse.procedure.ui.contentassist,
@@ -26,3 +21,4 @@ Export-Package: org.vclipse.procedure.ui,
  org.vclipse.procedure.ui.quickfix,
  org.vclipse.procedure.ui.internal
 Bundle-Activator: org.vclipse.procedure.ui.internal.ProcedureActivator
+Bundle-ClassPath: .

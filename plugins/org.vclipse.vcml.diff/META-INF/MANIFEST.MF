@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.vclipse.vcml.diff;singleton:=true
 Bundle-Version: 0.4.2.qualifier
 Bundle-Activator: org.vclipse.vcml.diff.VcmlDiffPlugin
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
-Require-Bundle: org.eclipse.xtext.ui;bundle-version="2.3.0";visibility:=reexport,
+Require-Bundle: org.eclipse.xtext.ui;visibility:=reexport,
  org.eclipse.emf.compare;bundle-version="1.3.1",
  org.eclipse.emf.compare.diff.edit;bundle-version="1.3.1",
  org.eclipse.emf.compare.match;bundle-version="1.3.1",
@@ -22,3 +22,4 @@ Export-Package: org.vclipse.vcml.diff,
  org.vclipse.vcml.diff.storage,
  org.vclipse.vcml.diff.ui
 Import-Package: org.apache.log4j
+Bundle-ClassPath: .

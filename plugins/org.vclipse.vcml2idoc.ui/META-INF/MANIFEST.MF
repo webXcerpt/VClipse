@@ -19,3 +19,4 @@ Export-Package: org.vclipse.vcml2idoc,
  org.vclipse.vcml2idoc.preferences,
  org.vclipse.vcml2idoc.transformation
 Import-Package: org.apache.log4j
+Bundle-ClassPath: .

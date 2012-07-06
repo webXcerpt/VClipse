@@ -5,15 +5,10 @@ Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Bundle-Version: 0.4.2.qualifier
 Bundle-SymbolicName: org.vclipse.idoc;singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.xtext.generator;bundle-version="2.3.0",
- org.eclipse.emf.mwe2.launch;bundle-version="2.2.0",
+Require-Bundle: org.eclipse.xtext.generator,
+ org.eclipse.emf.mwe2.launch,
  org.vclipse.jpplib,
- org.vclipse.base,
- org.eclipse.xtext,
- org.eclipse.xtext.util,
- org.eclipse.emf.ecore,
- org.eclipse.emf.common,
- org.antlr.runtime
+ org.vclipse.base
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.idoc,
  org.vclipse.idoc.services,
@@ -26,7 +21,4 @@ Export-Package: org.vclipse.idoc,
  org.vclipse.idoc.validation,
  org.vclipse.idoc.scoping,
  org.vclipse.idoc.formatting
-Import-Package: org.slf4j;version="1.6.4",
- org.apache.commons.logging,
- org.apache.log4j,
- org.eclipse.xtext.xbase.lib
+Bundle-ClassPath: .

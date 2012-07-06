@@ -22,3 +22,4 @@ Import-Package: com.sap.conn.idoc,
  com.sap.conn.jco
 Export-Package: org.vclipse.idoc2jcoidoc,
  org.vclipse.idoc2jcoidoc.actions
+Bundle-ClassPath: .

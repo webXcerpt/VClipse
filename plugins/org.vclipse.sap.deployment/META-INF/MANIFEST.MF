@@ -18,3 +18,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.sap.conn.idoc,
  com.sap.conn.jco
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
+Bundle-ClassPath: .

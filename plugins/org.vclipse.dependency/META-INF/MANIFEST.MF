@@ -5,17 +5,8 @@ Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Bundle-Version: 0.4.2.qualifier
 Bundle-SymbolicName: org.vclipse.dependency;singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.xtext;bundle-version="2.1.0";visibility:=reexport,
- org.eclipse.xtext.xbase;bundle-version="2.1.0";resolution:=optional;visibility:=reexport,
- org.eclipse.xtext.generator;resolution:=optional,
- org.eclipse.emf.codegen.ecore;resolution:=optional,
- org.eclipse.emf.mwe.utils;resolution:=optional,
- org.eclipse.emf.mwe2.launch;resolution:=optional,
- org.eclipse.xtext.util,
- org.antlr.runtime,
+Require-Bundle: org.eclipse.xtext.generator;resolution:=optional,
  org.vclipse.vcml;visibility:=reexport
-Import-Package: org.apache.log4j,
- org.apache.commons.logging
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.dependency,
  org.vclipse.dependency.formatting,
@@ -27,3 +18,4 @@ Export-Package: org.vclipse.dependency,
  org.vclipse.dependency.scoping,
  org.vclipse.dependency.services,
  org.vclipse.dependency.validation
+Bundle-ClassPath: .

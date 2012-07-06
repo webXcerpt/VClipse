@@ -6,9 +6,9 @@ Bundle-Version: 0.4.2.qualifier
 Bundle-Activator: org.vclipse.base.BasePlugin
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
- org.eclipse.xtext;bundle-version="2.3.0";visibility:=reexport
+ org.eclipse.xtext;visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.vclipse.base,
  org.vclipse.base.naming
-Import-Package: org.apache.log4j
+Bundle-ClassPath: .

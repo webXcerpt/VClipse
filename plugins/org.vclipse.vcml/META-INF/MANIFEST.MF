@@ -5,13 +5,10 @@ Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Bundle-Version: 0.4.2.qualifier
 Bundle-SymbolicName: org.vclipse.vcml; singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.xtext.generator;bundle-version="2.3.0",
+Require-Bundle: org.eclipse.xtext.generator,
  org.vclipse.base;visibility:=reexport,
  org.vclipse.jpplib,
- org.vclipse.vcml.mm;bundle-version="0.4.2";visibility:=reexport,
- org.eclipse.xtext,
- org.eclipse.xtext.util,
- org.antlr.runtime
+ org.vclipse.vcml.mm;visibility:=reexport
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.vcml,
  org.vclipse.vcml.conversion,
@@ -30,4 +27,4 @@ Export-Package: org.vclipse.vcml,
  org.vclipse.vcml.scoping
 Bundle-Activator: org.vclipse.vcml.VCMLPlugin
 Bundle-ClassPath: .
-Import-Package: org.apache.log4j
+Import-Package: org.apache.log4j;version="1.2.15"
