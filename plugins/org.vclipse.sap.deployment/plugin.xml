@@ -28,9 +28,14 @@
              style="push">
           <visibleWhen
                 checkEnabled="false">
-             <reference
-                   definitionId="org.vclipse.vcml.resources.files.vcml">
-             </reference>
+             <or>
+                <reference
+                      definitionId="org.vclipse.vcml.resources.files.vcml">
+                </reference>
+                <reference
+                      definitionId="org.vclipse.idoc.resources.files.idocs">
+                </reference>
+             </or>
           </visibleWhen>
        </command>
        <command
