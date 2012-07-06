@@ -6,7 +6,10 @@ Bundle-Version: 0.4.2.qualifier
 Bundle-SymbolicName: org.vclipse.dependency;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext.generator;resolution:=optional,
- org.vclipse.vcml;visibility:=reexport
+ org.vclipse.vcml;visibility:=reexport,
+ org.eclipse.xtext,
+ org.eclipse.xtext.util,
+ org.antlr.runtime
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.dependency,
  org.vclipse.dependency.formatting,
@@ -19,3 +22,4 @@ Export-Package: org.vclipse.dependency,
  org.vclipse.dependency.services,
  org.vclipse.dependency.validation
 Bundle-ClassPath: .
+Import-Package: org.apache.log4j
