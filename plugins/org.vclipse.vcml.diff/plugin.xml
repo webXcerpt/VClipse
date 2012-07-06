@@ -37,7 +37,7 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.vclipse.ui.menus.popup?after=additions">
+            locationURI="popup:org.vclipse.ui.menus.popup?after=group.begin">
          <command
                commandId="org.vclipse.commands.exportDiffs"
                icon="icons/compare.png"

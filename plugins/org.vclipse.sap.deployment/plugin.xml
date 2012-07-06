@@ -20,7 +20,7 @@
        point="org.eclipse.ui.menus">
     <menuContribution
           allPopups="false"
-          locationURI="popup:org.vclipse.ui.menus.popup?after=additions">
+          locationURI="popup:org.vclipse.ui.menus.popup?before=group.begin">
        <command
              commandId="org.vclipse.commands.vcml2idoc.convertAndSend"
              icon="icons/package_go.png"

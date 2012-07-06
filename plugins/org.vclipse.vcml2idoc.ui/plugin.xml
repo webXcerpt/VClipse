@@ -54,7 +54,7 @@
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
-            locationURI="popup:org.vclipse.ui.menus.popup?after=additions">
+            locationURI="popup:org.vclipse.ui.menus.popup?after=group.begin">
          <command
                commandId="org.vclipse.commands.transformation.vcml2idoc"
                icon="icons/run_transformation.png"

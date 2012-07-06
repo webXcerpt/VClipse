@@ -177,6 +177,14 @@
               </or>
            </visibleWhen>
         </command>
+        <separator
+              name="group.begin"
+              visible="true">
+        </separator>
+        <separator
+              name="group.end"
+              visible="true">
+        </separator>
      </menu>
   </menuContribution>
     </extension>
