@@ -36,6 +36,7 @@ import org.vclipse.vcml.vcml.ConstraintRestriction;
 import org.vclipse.vcml.vcml.ConstraintRestrictionFalse;
 import org.vclipse.vcml.vcml.DelDefault;
 import org.vclipse.vcml.vcml.Expression;
+import org.vclipse.vcml.vcml.Fixing;
 import org.vclipse.vcml.vcml.FunctionCall;
 import org.vclipse.vcml.vcml.FunctionName;
 import org.vclipse.vcml.vcml.InCondition_C;
@@ -529,5 +530,10 @@ public class VcmlUtils {
 		object.setOperator(operator);
 		object.setExpression(expression);
 		return object;
+	}
+
+	public static Fixing createFixingFromInt(int int1) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

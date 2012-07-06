@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="vcml"
-    nsURI="http://www.vclipse.org/vcml" nsPrefix="">
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="vcml" nsURI="http://www.vclipse.org/vcml" nsPrefix="">
   <eClassifiers xsi:type="ecore:EClass" name="Model">
     <eStructuralFeatures xsi:type="ecore:EReference" name="imports" upperBound="-1"
         eType="#//Import" containment="true"/>
@@ -128,6 +126,8 @@
         upperBound="-1" eType="#//DependencyNet"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entries" upperBound="-1"
         eType="#//ConfigurationProfileEntry" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fixing" eType="#//Fixing"
+        defaultValueLiteral=""/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Dependency"/>
   <eClassifiers xsi:type="ecore:EClass" name="Procedure" eSuperTypes="#//VCObject #//Dependency">
@@ -575,5 +575,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="operator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//Condition"
         containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Fixing">
+    <eLiterals name="None" literal="None"/>
+    <eLiterals name="Entry" value="1" literal="Entry"/>
+    <eLiterals name="TopDown" value="2" literal="TopDown"/>
+    <eLiterals name="BottomUp" value="3" literal="BottomUp"/>
   </eClassifiers>
 </ecore:EPackage>

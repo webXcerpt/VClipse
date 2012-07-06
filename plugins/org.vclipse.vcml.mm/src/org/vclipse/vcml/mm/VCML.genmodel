@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<genmodel:GenModel xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.vclipse.vcml.mm/emf-gen"
-    editDirectory="/org.vclipse.vcml.edit/src" editorDirectory="/org.vclipse.vcml.editor/src"
-    modelPluginID="org.vclipse.vcml.mm" forceOverwrite="true" modelName="VCML" updateClasspath="false"
-    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="5.0" copyrightFields="false" editPluginID="org.vclipse.vcml.edit"
-    editorPluginID="org.vclipse.vcml.editor">
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.vclipse.vcml.mm/emf-gen" editDirectory="/org.vclipse.vcml.edit/src"
+    editorDirectory="/org.vclipse.vcml.editor/src" modelPluginID="org.vclipse.vcml.mm"
+    forceOverwrite="true" modelName="VCML" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
+    editPluginID="org.vclipse.vcml.edit" editorPluginID="org.vclipse.vcml.editor">
   <foreignModel>VCML.ecore</foreignModel>
   <genPackages prefix="Vcml" basePackage="org.vclipse.vcml" disposableProviderFactory="true"
       ecorePackage="VCML.ecore#/">
@@ -100,6 +98,12 @@
       <genEnumLiterals ecoreEnumLiteral="VCML.ecore#//FunctionName/TRUNK"/>
       <genEnumLiterals ecoreEnumLiteral="VCML.ecore#//FunctionName/FLOOR"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="VCML.ecore#//Fixing">
+      <genEnumLiterals ecoreEnumLiteral="VCML.ecore#//Fixing/None"/>
+      <genEnumLiterals ecoreEnumLiteral="VCML.ecore#//Fixing/Entry"/>
+      <genEnumLiterals ecoreEnumLiteral="VCML.ecore#//Fixing/TopDown"/>
+      <genEnumLiterals ecoreEnumLiteral="VCML.ecore#//Fixing/BottomUp"/>
+    </genEnums>
     <genClasses ecoreClass="VCML.ecore#//Model">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Model/imports"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Model/options"/>
@@ -192,6 +196,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference VCML.ecore#//ConfigurationProfile/uidesign"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference VCML.ecore#//ConfigurationProfile/dependencyNets"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//ConfigurationProfile/entries"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//ConfigurationProfile/fixing"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//Dependency"/>
     <genClasses ecoreClass="VCML.ecore#//Procedure">

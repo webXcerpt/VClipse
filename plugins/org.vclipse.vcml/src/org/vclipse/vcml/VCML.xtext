@@ -186,6 +186,7 @@ ConfigurationProfile :
 	   (	('status' status=Status)?
 	   &	('bomapplication' bomapplication=XID)?
 	   &	('uidesign' uidesign=[InterfaceDesign | EXTENDED_ID])?
+	   &    ('fixing' fixing=Fixing)?
 	   )
        (dependencyNets+=[DependencyNet|EXTENDED_ID])*
        (entries+=ConfigurationProfileEntry)*
@@ -322,6 +323,8 @@ Row
 
 // auxiliary grammar rules
 enum Status : Released = 'released' | InPreparation = 'inPreparation' | Locked = 'locked';
+
+enum Fixing : Entry = 'entry' | TopDown = 'top-down' | BottomUp = 'bottom-up' | None = 'none';
 
 Description : 
 	  SimpleDescription

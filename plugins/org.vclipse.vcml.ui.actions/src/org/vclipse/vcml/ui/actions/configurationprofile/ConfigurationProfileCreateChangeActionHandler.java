@@ -20,6 +20,7 @@ import org.vclipse.vcml.ui.outline.actions.IVcmlOutlineActionHandler;
 import org.vclipse.vcml.vcml.ConfigurationProfile;
 import org.vclipse.vcml.vcml.ConfigurationProfileEntry;
 import org.vclipse.vcml.vcml.DependencyNet;
+import org.vclipse.vcml.vcml.Fixing;
 import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Option;
@@ -41,9 +42,14 @@ public class ConfigurationProfileCreateChangeActionHandler extends BAPIUtils imp
 	@Override
 	public void run(ConfigurationProfile object, Resource resource,	IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
 		String materialNumber = ((Material)object.eContainer()).getName();
+		String fixing = null;
+		if (object.getFixing() != Fixing.NONE) {
+			fixing = object.getFixing().getLiteral();
+		}
 		JCoFunction function = getJCoFunction("CAMA_CON_PROFILE_MAINTAIN", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue("OBJECT_TYPE", "MARA");
+		
 		
 		handleOptions(options, ipl, null, null);
 		
@@ -60,6 +66,9 @@ public class ConfigurationProfileCreateChangeActionHandler extends BAPIUtils imp
 		conProAttributes.setValue("CLASSTYPE", 300);
 		conProAttributes.setValue("STATUS", VcmlUtils.createIntFromStatus(object.getStatus()));
 		conProAttributes.setValue("BOMAPPL", object.getBomapplication());
+		if(fixing != null) {
+			conProAttributes.setValue("OB_FIX", fixing);
+		}
 		InterfaceDesign uidesign = object.getUidesign();
 		if (uidesign!=null) {
 			conProAttributes.setValue("DESIGN", uidesign.getName());

@@ -29,6 +29,7 @@ import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.ConfigurationProfile;
 import org.vclipse.vcml.vcml.ConfigurationProfileEntry;
 import org.vclipse.vcml.vcml.DependencyNet;
+import org.vclipse.vcml.vcml.Fixing;
 import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Model;
@@ -62,6 +63,10 @@ public class ConfigurationProfileReader extends BAPIUtils {
 		if(materialName == null || !seenObjects.add("ConfigurationProfile/" + materialName.toUpperCase())) {
 			return;
 		}
+//		String fixing = containerMaterial.getConfigurationprofiles().get(0).getFixing().getLiteral();
+//		if (object.getFixing() != Fixing.NONE) {
+//			fixing = object.getFixing().getLiteral();
+//		}
 		JCoFunction function = getJCoFunction("CARD_CON_PROFILE_READ", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue("OBJECT_TYPE", "MARA");
@@ -89,6 +94,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 				object.setName(name);
 				object.setStatus(VcmlUtils.createStatusFromInt(conProAttributes.getInt("STATUS")));
 				object.setBomapplication(conProAttributes.getString("BOMAPPL"));
+				object.setFixing(VcmlUtils.createFixingFromInt(conProAttributes.getInt("OB_FIX")));
 				// TODO System.out.println("Class type\t" + conProAttributes.getString("CLASSTYPE"));
 				// TODO System.out.println("BOM explosion\t" + conProAttributes.getValue("BOMEXPL"));
 				// TODO more attributes for configuration profiles?
