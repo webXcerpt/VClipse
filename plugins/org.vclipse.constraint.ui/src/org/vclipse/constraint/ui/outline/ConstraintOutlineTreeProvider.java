@@ -98,7 +98,7 @@ public class ConstraintOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		return true;
 	}
 	
-	String _text(Comparison comparison) {
+	Object _text(Comparison comparison) {
 		return text(comparison.getLeft()) + " " + comparison.getOperator().getLiteral() + " " + text(comparison.getRight());
 	}
 	
@@ -106,15 +106,15 @@ public class ConstraintOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		return true;
 	}
 	
-	String _text(BinaryCondition condition) {
+	Object _text(BinaryCondition condition) {
 		return text(condition.getLeft()) + " " + condition.getOperator() + " " + text(condition.getRight()); 
 	}
 	
-	String _text(ConstraintRestrictionFalse restriction) {
+	Object _text(ConstraintRestrictionFalse restriction) {
 		return "false";
 	}
 	
-	String _text(PartOfCondition partOfCondition) {
+	Object _text(PartOfCondition partOfCondition) {
 		return "part_of(" + partOfCondition.getChild().getName() + ", " + partOfCondition.getParent().getName() + ")";
 	}
 	
