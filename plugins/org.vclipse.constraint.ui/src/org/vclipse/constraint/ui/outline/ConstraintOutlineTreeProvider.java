@@ -35,7 +35,7 @@ public class ConstraintOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	private static final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
 
 	Object text(EObject object) {
-		return textDispatcher.invoke(object);
+		return object == null ? null : textDispatcher.invoke(object);
 	}
 	
 	void _createChildren(DocumentRootNode parentNode, ConstraintSource constraintSource) {
