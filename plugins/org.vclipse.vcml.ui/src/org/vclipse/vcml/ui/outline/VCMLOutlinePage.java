@@ -19,6 +19,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -26,6 +27,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
 import org.vclipse.base.ui.util.IExtendedImageHelper;
 import org.vclipse.vcml.ui.IUiConstants;
@@ -37,7 +39,7 @@ import com.google.inject.Inject;
 
 public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListener {
 
-	private static final String POPUP_MENU_ID = VCMLOutlinePage.class.getSimpleName() + ".popup";
+	private static final String POPUP_MENU_ID = VCMLOutlinePage.class.getSimpleName().toLowerCase() + "menu";
 
 	@Inject
 	private IExtendedImageHelper imageHelper;
@@ -121,10 +123,12 @@ public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListe
 					GroupMarker groupMarker = new GroupMarker(entry.getValue());
 					manager.add(groupMarker);
 					manager.appendToGroup(groupMarker.getGroupName(), entry.getKey());
+					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 				}
 			}
 		});
 		menu = menuManager.createContextMenu(treeViewer.getControl());
 		treeViewer.getControl().setMenu(menu);
+		getSite().registerContextMenu(POPUP_MENU_ID, menuManager, treeViewer);
 	}
 }
