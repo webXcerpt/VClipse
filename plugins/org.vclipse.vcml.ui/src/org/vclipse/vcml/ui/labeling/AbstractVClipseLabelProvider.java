@@ -22,6 +22,8 @@ import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.Description;
 import org.vclipse.vcml.vcml.Language;
+import org.vclipse.vcml.vcml.Table;
+import org.vclipse.vcml.vcml.VariantTable;
 
 import com.google.inject.Inject;
 
@@ -68,5 +70,10 @@ public abstract class AbstractVClipseLabelProvider extends DefaultEObjectLabelPr
 	
 	public StyledString text(Class element) {
 		return createStyledString(element.getName(), element.getDescription());
+	}
+	
+	public StyledString text(Table table) {
+		VariantTable variantTable = table.getTable();
+		return createStyledString(table.getTable().getName() + " (...)", variantTable.getDescription());
 	}
 }

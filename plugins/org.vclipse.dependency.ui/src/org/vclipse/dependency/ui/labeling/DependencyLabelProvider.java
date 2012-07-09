@@ -9,7 +9,6 @@ import org.vclipse.vcml.vcml.CharacteristicReference_P;
 import org.vclipse.vcml.vcml.Function;
 import org.vclipse.vcml.vcml.IsInvisible;
 import org.vclipse.vcml.vcml.ProcedureLocation;
-import org.vclipse.vcml.vcml.Table;
 
 import com.google.inject.Inject;
 
@@ -33,10 +32,6 @@ public class DependencyLabelProvider extends AbstractVClipseLabelProvider {
 		return text(element.getFunction()) + " (...)";
 	}
 
-	public String text(Table element) {
-		return text(element.getTable()) + " (...)";
-	}
-	
 	public String text(CharacteristicReference_P element) {
 		ProcedureLocation location = element.getLocation();
 		return (location!=null ? location.getLiteral() + "." : "") + text(element.getCharacteristic());
