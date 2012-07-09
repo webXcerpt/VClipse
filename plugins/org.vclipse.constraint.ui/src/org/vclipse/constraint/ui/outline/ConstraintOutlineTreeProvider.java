@@ -6,7 +6,6 @@ package org.vclipse.constraint.ui.outline;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.DefaultOutlineTreeProvider;
@@ -35,13 +34,8 @@ public class ConstraintOutlineTreeProvider extends DefaultOutlineTreeProvider {
 
 	private static final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
 
-	String text(EObject object) {
-		Object returnedText = textDispatcher.invoke(object);
-		if(returnedText instanceof String) {
-			return (String)returnedText;
-		} else {
-			return ((StyledString)returnedText).getString();
-		}
+	Object text(EObject object) {
+		return textDispatcher.invoke(object);
 	}
 	
 	void _createChildren(DocumentRootNode parentNode, ConstraintSource constraintSource) {
