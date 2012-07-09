@@ -3,7 +3,13 @@
 */
 package org.vclipse.condition.ui.labeling;
 
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.xtext.resource.IReferenceDescription;
 import org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider;
+
+import com.google.inject.Inject;
 
 /**
  * Provides labels for a IEObjectDescriptions and IResourceDescriptions.
@@ -12,16 +18,13 @@ import org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider;
  */
 public class ConditionDescriptionLabelProvider extends DefaultDescriptionLabelProvider {
 
-/*
-	//Labels and icons can be computed like this:
+	@Inject
+	private ConditionLabelProvider labelProvider;
 	
-	String text(IEObjectDescription ele) {
-	  return "my "+ele.getName();
+	@Override
+	public Object text(IReferenceDescription referenceDescription) {
+		URI sourceUri = referenceDescription.getSourceEObjectUri();
+		EObject object = new ResourceSetImpl().getEObject(sourceUri, true);
+		return labelProvider.getText(object);
 	}
-	 
-    String image(IEObjectDescription ele) {
-      return ele.getEClass().getName() + ".gif";
-    }	 
-*/
-
 }

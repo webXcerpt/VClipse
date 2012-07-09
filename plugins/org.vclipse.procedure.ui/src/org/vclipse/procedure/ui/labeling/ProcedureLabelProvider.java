@@ -6,12 +6,10 @@ package org.vclipse.procedure.ui.labeling;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.vclipse.dependency.ui.labeling.DependencyLabelProvider;
 import org.vclipse.vcml.vcml.Assignment;
-import org.vclipse.vcml.vcml.CharacteristicReference_P;
 import org.vclipse.vcml.vcml.CompoundStatement;
 import org.vclipse.vcml.vcml.ConditionalStatement;
 import org.vclipse.vcml.vcml.DelDefault;
 import org.vclipse.vcml.vcml.IsSpecified_P;
-import org.vclipse.vcml.vcml.ProcedureLocation;
 import org.vclipse.vcml.vcml.SetDefault;
 
 import com.google.inject.Inject;
@@ -30,11 +28,6 @@ public class ProcedureLabelProvider extends DependencyLabelProvider {
 
 	public String text(Assignment element) {
 		return text(element.getCharacteristic()) + " = ...";
-	}
-	
-	public String text(CharacteristicReference_P element) {
-		ProcedureLocation location = element.getLocation();
-		return (location!=null ? location.getLiteral() + "." : "") + text(element.getCharacteristic());
 	}
 	
 	public String text(CompoundStatement element) {
