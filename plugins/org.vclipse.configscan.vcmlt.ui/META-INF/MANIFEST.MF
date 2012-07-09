@@ -15,7 +15,10 @@ Require-Bundle: org.vclipse.configscan,
  org.eclipse.compare,
  org.vclipse.vcml,
  org.vclipse.connection,
- org.vclipse.base.ui
+ org.vclipse.base.ui,
+ org.eclipse.ui.editors,
+ org.eclipse.ui,
+ org.antlr.runtime
 Import-Package: com.sap.conn.jco,
  org.apache.log4j
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
