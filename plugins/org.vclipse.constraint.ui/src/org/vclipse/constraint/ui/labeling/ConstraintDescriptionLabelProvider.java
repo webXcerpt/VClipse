@@ -27,4 +27,9 @@ public class ConstraintDescriptionLabelProvider extends DefaultDescriptionLabelP
 		EObject object = new ResourceSetImpl().getEObject(sourceUri, true);
 		return labelProvider.getText(object);
 	}
+	
+	@Override
+	public Object image(IReferenceDescription referenceDescription) {
+		return labelProvider.getImage(referenceDescription);
+	}
 }
