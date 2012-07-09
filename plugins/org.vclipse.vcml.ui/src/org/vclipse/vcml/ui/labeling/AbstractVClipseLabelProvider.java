@@ -21,8 +21,10 @@ import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.Description;
+import org.vclipse.vcml.vcml.Function;
 import org.vclipse.vcml.vcml.Language;
 import org.vclipse.vcml.vcml.Table;
+import org.vclipse.vcml.vcml.VariantFunction;
 import org.vclipse.vcml.vcml.VariantTable;
 
 import com.google.inject.Inject;
@@ -75,5 +77,10 @@ public abstract class AbstractVClipseLabelProvider extends DefaultEObjectLabelPr
 	public StyledString text(Table table) {
 		VariantTable variantTable = table.getTable();
 		return createStyledString(table.getTable().getName() + " (...)", variantTable.getDescription());
+	}
+	
+	public StyledString text(Function element) {
+		VariantFunction function = element.getFunction();
+		return createStyledString(function.getName() + " (...)", function.getDescription());
 	}
 }

@@ -6,7 +6,6 @@ package org.vclipse.dependency.ui.labeling;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.vclipse.vcml.ui.labeling.AbstractVClipseLabelProvider;
 import org.vclipse.vcml.vcml.CharacteristicReference_P;
-import org.vclipse.vcml.vcml.Function;
 import org.vclipse.vcml.vcml.IsInvisible;
 import org.vclipse.vcml.vcml.ProcedureLocation;
 
@@ -28,10 +27,6 @@ public class DependencyLabelProvider extends AbstractVClipseLabelProvider {
 		return text(element.getCharacteristic()) + "is invisible ";
 	}
 	
-	public String text(Function element) {
-		return text(element.getFunction()) + " (...)";
-	}
-
 	public String text(CharacteristicReference_P element) {
 		ProcedureLocation location = element.getLocation();
 		return (location!=null ? location.getLiteral() + "." : "") + text(element.getCharacteristic());
