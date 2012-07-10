@@ -46,6 +46,7 @@ import org.vclipse.vcml.vcml.SelectionCondition;
 import org.vclipse.vcml.vcml.SymbolicType;
 import org.vclipse.vcml.vcml.VariantFunction;
 import org.vclipse.vcml.vcml.VariantTable;
+import org.vclipse.vcml.vcml.VariantTableContent;
 import org.vclipse.vcml.vcml.util.VcmlSwitch;
 
 import com.google.inject.Inject;
@@ -287,4 +288,7 @@ public class VCMLLabelProvider extends AbstractVClipseLabelProvider {
 		return createStyledString(element.getName(), element.getDescription());
 	}
 	
+	public StyledString text(VariantTableContent element) {
+		return createStyledString(element.getTable().getName(), element.getDescription());
+	}
 }
