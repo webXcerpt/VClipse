@@ -24,7 +24,7 @@ import org.vclipse.vcml.ui.actions.dependencynet.DependencyNetReader;
 import org.vclipse.vcml.ui.actions.intefacedesign.InterfaceDesignReader;
 import org.vclipse.vcml.ui.actions.procedure.ProcedureReader;
 import org.vclipse.vcml.utils.VCMLProxyFactory;
-import org.vclipse.vcml.utils.VcmlObjectUtils;
+import org.vclipse.vcml.utils.VCMLObjectUtils;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.ConfigurationProfile;
 import org.vclipse.vcml.vcml.ConfigurationProfileEntry;
@@ -160,8 +160,8 @@ public class ConfigurationProfileReader extends BAPIUtils {
 				} else {
 					throw new IllegalArgumentException("unknown dependency type in configuration profile: " + depName + " of type " + depType);
 				}
-				VcmlObjectUtils.sortDependencyNets(profile.getDependencyNets());
-				VcmlObjectUtils.sortEntries(profile.getEntries());
+				VCMLObjectUtils.sortDependencyNets(profile.getDependencyNets());
+				VCMLObjectUtils.sortEntries(profile.getEntries());
 			}
 			
 
