@@ -5,7 +5,7 @@ package org.vclipse.procedure.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
-import org.vclipse.vcml.ui.editor.VcmlResourceContainerState;
+import org.vclipse.vcml.ui.resources.VcmlResourceContainerState;
 
 import com.google.inject.Provider;
 

@@ -1,4 +1,4 @@
-package org.vclipse.vcml.ui.editor;
+package org.vclipse.vcml.ui.resources;
 
 import java.util.Collection;
 import java.util.Collections;

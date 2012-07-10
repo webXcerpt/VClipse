@@ -1,8 +1,7 @@
-package org.vclipse.vcml.ui.editor;
+package org.vclipse.vcml.ui.actions;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -12,6 +11,10 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.ui.workbench.modeling.ExpressionContext;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -25,6 +28,7 @@ import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.utils.EditorUtils;
 import org.vclipse.base.ui.BaseUiPlugin;
 import org.vclipse.base.ui.util.VClipseResourceUtil;
+import org.vclipse.vcml.ui.resources.VcmlResourceContainerState;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.vcml.Dependency;
 import org.vclipse.vcml.vcml.Model;
@@ -49,47 +53,60 @@ public class CleanUpDependenciesHandler extends AbstractHandler {
 	@Inject
 	private DependencySourceUtils sourceUtils;
 	
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		Object appContext = event.getApplicationContext();
 		if(appContext instanceof ExpressionContext) {
 			Object defVariable = ((ExpressionContext)appContext).getDefaultVariable();
-			if(defVariable instanceof List<?>) {
-				for(Object entry : (List<?>)defVariable) {
-					if(entry instanceof IContainer) {
-						handleContainer(entry);
-					}
-				}
-			} else if(defVariable instanceof Set<?>) {
-				for(Object entry : ((Set<?>)defVariable)) {
-					if(entry instanceof ITextSelection) {
-						XtextEditor xtextEditor = EditorUtils.getActiveXtextEditor(event);
-						IResource resource = xtextEditor.getResource();
-						if(resource instanceof IFile) {
-							handleFile(resource);
+			if(defVariable instanceof Collection<?>) {
+				final Collection<?> entries = (Collection<?>)defVariable;
+				Job job = new Job("Cleanup dependencies job") {
+					@Override
+					protected IStatus run(IProgressMonitor monitor) {
+						monitor.beginTask("Removing not required files with source code.", IProgressMonitor.UNKNOWN);
+						for(Object entry : entries) {
+							if(monitor.isCanceled()) {
+								return Status.CANCEL_STATUS;
+							}
+							if(entry instanceof IContainer) {
+								IContainer container = (IContainer)entry;
+								monitor.subTask("Handling " + container.getName());
+								handleContainer(container, monitor);
+								monitor.worked(1);
+							} else if(entry instanceof ITextSelection) {
+								XtextEditor xtextEditor = EditorUtils.getActiveXtextEditor(event);
+								IResource resource = xtextEditor.getResource();
+								if(resource instanceof IFile) {
+									monitor.subTask("Handling file " + ((IFile)resource).getName());
+									handleFile(resource, monitor);
+									monitor.worked(1);
+								}
+							}
 						}
+						return Status.OK_STATUS;
 					}
-				}
-			}
+				};
+				job.schedule();
+			} 
 		}
 		return null;
 	}
 
-	protected void handleFile(IResource resource) {
+	protected void handleFile(IResource resource, IProgressMonitor monitor) {
 		IFile file = (IFile)resource;
 		URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), true);
-		executeOn(uri);
+		executeOn(uri, monitor);
 	}
 
-	protected void handleContainer(Object entry) {
+	protected void handleContainer(Object entry, IProgressMonitor monitor) {
 		String folderPath = ((IContainer)entry).getFullPath().toString();
 		URI folderUri = URI.createPlatformResourceURI(folderPath, true);
 		Collection<URI> containedURIs = containerState.getContainedURIs(folderUri.toString());
 		for(URI uri : containedURIs) {
-			executeOn(uri);
+			executeOn(uri, monitor);
 		}
 	}
 
-	protected void executeOn(URI uri) {
+	protected void executeOn(URI uri, IProgressMonitor monitor) {
 		String fileExtension = uri.fileExtension();
 		if(DependencySourceUtils.EXTENSION_VCML.equals(fileExtension)) {
 			Resource resource = resourceUtil.getResourceSet().getResource(uri, true);
