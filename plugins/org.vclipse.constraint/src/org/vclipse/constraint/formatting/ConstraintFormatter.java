@@ -3,27 +3,17 @@
  */
 package org.vclipse.constraint.formatting;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.xtext.Grammar;
 import org.eclipse.xtext.GrammarUtil;
 import org.eclipse.xtext.IGrammarAccess;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.formatting.impl.AbstractDeclarativeFormatter;
 import org.eclipse.xtext.formatting.impl.FormattingConfig;
-import org.eclipse.xtext.service.AbstractElementFinder;
-import org.eclipse.xtext.service.AbstractElementFinder.AbstractGrammarElementFinder;
-import org.eclipse.xtext.service.AbstractElementFinder.AbstractParserRuleElementFinder;
 import org.vclipse.constraint.services.ConstraintGrammarAccess;
-import org.vclipse.constraint.services.ConstraintGrammarAccess.ConstraintClassElements;
 import org.vclipse.constraint.services.ConstraintGrammarAccess.ConstraintSourceElements;
-import org.vclipse.dependency.formatting.DependencyFormatter;
-import org.vclipse.vcml.services.VCMLGrammarAccess.ConstraintElements;
-import org.vclipse.vcml.vcml.ConstraintClass;
 
 import com.google.common.collect.Lists;
-import com.google.inject.Inject;
 
 /**
  * This class contains custom formatting description.
@@ -58,8 +48,8 @@ public class ConstraintFormatter extends AbstractDeclarativeFormatter {
 		ConstraintSourceElements elements = cga.getConstraintSourceAccess();
 		{	// comment
 //			c.setNoSpace().around(cga.getSL_COMMENTRule());
-			c.setLinewrap(0, 1, 2).before(cga.getSL_COMMENTRule());
-			c.setLinewrap(0, 1, 1).after(cga.getSL_COMMENTRule());
+			//c.setLinewrap(0, 1, 2).before(cga.getSL_COMMENTRule());
+			//c.setLinewrap(0, 1, 1).after(cga.getSL_COMMENTRule());
 		}
 		
 		List<IGrammarAccess> grammarList = Lists.newArrayList();
