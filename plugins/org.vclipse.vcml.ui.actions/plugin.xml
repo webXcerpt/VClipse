@@ -391,5 +391,14 @@
 
 
    </extension>
+   <extension
+         id="extractions"
+         point="org.vclipse.vcml.ui.outlinePageActions">
+      <handler
+            action="org.vclipse.vcml.ui.actions.extract"
+            handler="org.vclipse.vcml.ui.actions.injection.ExecutableExtensionFactory:org.vclipse.vcml.ui.actions.varianttable.content.VariantTableContentExtractActionHandler"
+            type="org.vclipse.vcml.vcml.VariantTableContent">
+      </handler>
+   </extension>
 
 </plugin>
