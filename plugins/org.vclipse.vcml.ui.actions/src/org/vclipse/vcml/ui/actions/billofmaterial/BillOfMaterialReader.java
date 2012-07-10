@@ -30,8 +30,8 @@ import org.vclipse.vcml.ui.actions.material.MaterialReader;
 import org.vclipse.vcml.ui.actions.procedure.ProcedureReader;
 import org.vclipse.vcml.ui.actions.selectioncondition.SelectionConditionReader;
 import org.vclipse.vcml.utils.VCMLProxyFactory;
-import static org.vclipse.vcml.utils.VcmlObjectUtils.mkConfigurationProfileEntry;
-import static org.vclipse.vcml.utils.VcmlObjectUtils.sortEntries;
+import static org.vclipse.vcml.utils.VCMLObjectUtils.mkConfigurationProfileEntry;
+import static org.vclipse.vcml.utils.VCMLObjectUtils.sortEntries;
 
 import com.google.inject.Inject;
 import com.sap.conn.jco.AbapException;
