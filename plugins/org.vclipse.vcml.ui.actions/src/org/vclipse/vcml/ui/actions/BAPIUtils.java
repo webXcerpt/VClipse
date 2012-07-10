@@ -34,7 +34,7 @@ import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.utils.DescriptionHandler;
 import org.vclipse.vcml.utils.DocumentationHandler;
 import org.vclipse.vcml.utils.ISapConstants;
-import org.vclipse.vcml.utils.VcmlObjectUtils;
+import org.vclipse.vcml.utils.VCMLObjectUtils;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Dependency;
 import org.vclipse.vcml.vcml.Description;
@@ -290,7 +290,7 @@ public class BAPIUtils {
 	
 	protected Description readDescription(JCoTable table, String languageFieldISO, String languageField, String descriptionField) {
 		Description simplifyMultiLanguageDescriptions = simplifyMultiLanguageDescriptions(readMultiLanguageDescriptions(table, languageFieldISO, languageField, descriptionField));
-		return simplifyMultiLanguageDescriptions == null ? VcmlObjectUtils.mkSimpleDescription("") : simplifyMultiLanguageDescriptions;
+		return simplifyMultiLanguageDescriptions == null ? VCMLObjectUtils.mkSimpleDescription("") : simplifyMultiLanguageDescriptions;
 	}
 
 	protected MultiLanguageDescriptions readMultiLanguageDescriptions(JCoTable table, String languageFieldISO, String languageField, String descriptionField) {
@@ -327,7 +327,7 @@ public class BAPIUtils {
 		case 1: 
 			MultiLanguageDescription multiLanguageDescription = multiLanguageDescriptions.getDescriptions().get(0);
 			if (VcmlUtils.getDefaultLanguage().equals(multiLanguageDescription.getLanguage())) {
-				return VcmlObjectUtils.mkSimpleDescription(multiLanguageDescription.getValue());
+				return VCMLObjectUtils.mkSimpleDescription(multiLanguageDescription.getValue());
 			}
 		}
 		return multiLanguageDescriptions;
@@ -470,9 +470,8 @@ public class BAPIUtils {
 		return function;
 	}
 
-	protected void execute(JCoFunction function, IProgressMonitor monitor, String arguments)
-			throws JCoException {
-		if (monitor.isCanceled()) 
+	protected void execute(JCoFunction function, IProgressMonitor monitor, String arguments) throws JCoException {
+		if(monitor.isCanceled()) 
 			throw new OutlineActionCanceledException();
 		monitor.subTask("executing " + function.getName() + " " + arguments);
 		task.println("// " + function.getName() + " " + arguments);
