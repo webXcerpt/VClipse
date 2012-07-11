@@ -392,11 +392,36 @@
 
    </extension>
    <extension
-         id="extractions"
+         id="extract"
          point="org.vclipse.vcml.ui.outlinePageActions">
       <handler
             action="org.vclipse.vcml.ui.actions.extract"
             handler="org.vclipse.vcml.ui.actions.injection.ExecutableExtensionFactory:org.vclipse.vcml.ui.actions.varianttable.content.VariantTableContentExtractActionHandler"
+            type="org.vclipse.vcml.vcml.VariantTableContent">
+      </handler>
+   </extension>
+   <extension
+         id="create"
+         point="org.vclipse.vcml.ui.outlinePageActions">
+      <handler
+            action="org.vclipse.vcml.ui.actions.create"
+            handler="org.vclipse.vcml.ui.actions.injection.ExecutableExtensionFactory:org.vclipse.vcml.ui.actions.varianttable.content.VariantTableContentCreateActionHandler"
+            type="org.vclipse.vcml.vcml.VariantTableContent">
+      </handler>
+   </extension>
+   <extension
+         point="org.vclipse.vcml.ui.outlinePageActions">
+      <handler
+            action="org.vclipse.vcml.ui.actions.delete"
+            handler="org.vclipse.vcml.ui.actions.injection.ExecutableExtensionFactory:org.vclipse.vcml.vcml.VariantTableContent"
+            type="org.vclipse.vcml.vcml.VariantTableContent">
+      </handler>
+   </extension>
+   <extension
+         point="org.vclipse.vcml.ui.outlinePageActions">
+      <handler
+            action="org.vclipse.vcml.ui.actions.display"
+            handler="org.vclipse.vcml.ui.actions.injection.ExecutableExtensionFactory:org.vclipse.vcml.ui.actions.varianttable.content.VariantTableContentDisplayActionHandler"
             type="org.vclipse.vcml.vcml.VariantTableContent">
       </handler>
    </extension>
