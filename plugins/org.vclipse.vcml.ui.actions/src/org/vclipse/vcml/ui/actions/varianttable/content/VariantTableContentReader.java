@@ -46,7 +46,6 @@ public class VariantTableContentReader extends BAPIUtils {
 			EList<Row> rows = content.getRows();
 			Row row = VCML.createRow();
 			EList<Literal> values = row.getValues();
-			rows.add(row);
 			int numOfColumns = variantTable.getArguments().size();
 			int columnIndex = 0;
 			for(int numRows=0; numRows<entries.getNumRows(); numRows++) {
