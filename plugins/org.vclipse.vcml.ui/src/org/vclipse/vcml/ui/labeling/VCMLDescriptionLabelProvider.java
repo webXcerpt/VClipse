@@ -13,7 +13,7 @@
 */
 package org.vclipse.vcml.ui.labeling;
 
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider;
 
 import com.google.inject.Inject;
 
@@ -22,11 +22,9 @@ import com.google.inject.Inject;
  * 
  * see http://www.eclipse.org/Xtext/documentation/latest/xtext.html#labelProvider
  */
-public class VCMLDescriptionLabelProvider extends VCMLLabelProvider {
-
+public class VCMLDescriptionLabelProvider extends DefaultDescriptionLabelProvider {
+	
 	@Inject
-	public VCMLDescriptionLabelProvider(AdapterFactoryLabelProvider delegate) {
-		super(delegate);
-	}
+	private VCMLLabelProvider labelProvider;
 	
 }
