@@ -410,14 +410,16 @@
       </handler>
    </extension>
    <extension
+         id="delete"
          point="org.vclipse.vcml.ui.outlinePageActions">
       <handler
             action="org.vclipse.vcml.ui.actions.delete"
-            handler="org.vclipse.vcml.ui.actions.injection.ExecutableExtensionFactory:org.vclipse.vcml.vcml.VariantTableContent"
+            handler="org.vclipse.vcml.ui.actions.injection.ExecutableExtensionFactory:org.vclipse.vcml.ui.actions.varianttable.content.VariantTableContentDeleteActionHandler"
             type="org.vclipse.vcml.vcml.VariantTableContent">
       </handler>
    </extension>
    <extension
+         id="display"
          point="org.vclipse.vcml.ui.outlinePageActions">
       <handler
             action="org.vclipse.vcml.ui.actions.display"
