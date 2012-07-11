@@ -1,5 +1,6 @@
 package org.vclipse.vcml.ui.actions.varianttable.content;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -7,6 +8,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.vclipse.vcml.ui.actions.BAPIUtils;
 import org.vclipse.vcml.ui.actions.varianttable.VariantTableReader;
+import org.vclipse.vcml.utils.VCMLObjectUtils;
 import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.NumericLiteral;
@@ -32,9 +34,20 @@ public class VariantTableContentReader extends BAPIUtils {
 		if(variantTableName == null || !seenObjects.add("VariantTableContent/" + variantTableName.toUpperCase()) || monitor.isCanceled()) {
 			return null;
 		}
-		VariantTable variantTable = variantTableReader.read(variantTableName, vcmlModel, monitor, seenObjects, options, recurse);
+		VariantTable table = null;
+		if(recurse) {
+			table = variantTableReader.read(variantTableName, vcmlModel, monitor, seenObjects, options, recurse);			
+		} else {
+			 Iterator<VariantTable> iterator = VCMLObjectUtils.getObjectsByNameAndType(variantTableName, vcmlModel, VariantTable.class).iterator();
+			 if(iterator.hasNext()) {
+				 table = iterator.next();
+			 }
+		}
+		if(table == null) {
+			return null;
+		}
 		VariantTableContent content = VCML.createVariantTableContent();
-		content.setTable(variantTable);
+		content.setTable(table);
 		vcmlModel.getObjects().add(content);
 		JCoFunction function = getJCoFunction("CARD_TABLE_READ_ENTRIES", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
@@ -46,7 +59,7 @@ public class VariantTableContentReader extends BAPIUtils {
 			EList<Row> rows = content.getRows();
 			Row row = VCML.createRow();
 			EList<Literal> values = row.getValues();
-			int numOfColumns = variantTable.getArguments().size();
+			int numOfColumns = table.getArguments().size();
 			int columnIndex = 0;
 			for(int numRows=0; numRows<entries.getNumRows(); numRows++) {
 				entries.setRow(numRows);

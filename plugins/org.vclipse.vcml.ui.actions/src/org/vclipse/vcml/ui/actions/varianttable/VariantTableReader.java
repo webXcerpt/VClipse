@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.vclipse.vcml.ui.actions.BAPIUtils;
 import org.vclipse.vcml.ui.actions.characteristic.CharacteristicReader;
+import org.vclipse.vcml.ui.actions.varianttable.content.VariantTableContentReader;
 import org.vclipse.vcml.utils.VCMLProxyFactory;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
@@ -37,6 +38,9 @@ public class VariantTableReader extends BAPIUtils {
 
 	@Inject
 	private CharacteristicReader csicReader;
+	
+	@Inject
+	private VariantTableContentReader contentReader;
 	
 	public VariantTable read(String variantTableName, Model vcmlModel, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
 		if(variantTableName == null || !seenObjects.add("VariantTable/" + variantTableName.toUpperCase()) || monitor.isCanceled()) {
@@ -86,6 +90,9 @@ public class VariantTableReader extends BAPIUtils {
 						variantTableArgument.setKey(true);
 					}
 				}
+			}
+			if(recurse) {
+				contentReader.read(variantTableName, vcmlModel, monitor, seenObjects, options, false);
 			}
 		} catch (AbapException e) {
 			handleAbapException(e);
