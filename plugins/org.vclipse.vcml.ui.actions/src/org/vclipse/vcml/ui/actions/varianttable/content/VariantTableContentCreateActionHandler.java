@@ -38,12 +38,15 @@ public class VariantTableContentCreateActionHandler extends BAPIUtils implements
 		VariantTable table = content.getTable();
 		EList<VariantTableArgument> arguments = table.getArguments();
 		
-		JCoFunction function = getJCoFunction("CAMA_TABLE_MAINTAIN_ENTRIES", monitor);
+		JCoFunction function = getJCoFunction("CAMA_TABLE_MAINTAIN_ENTRI_LINE", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		handleOptions(options, ipl, "CHANGE_NO", "DATE");
 		ipl.setValue("VAR_TABLE", table.getName());
 		JCoParameterList tpl = function.getTableParameterList();
-		JCoTable entries = tpl.getTable("VAR_TAB_ENTRIES");
+		
+		JCoTable cstics = tpl.getTable("SELECT_WHERE_VALUES");
+		
+		JCoTable entries = tpl.getTable("VAR_TAB_LINE_ENTRIES");
 		EList<Row> rows = content.getRows();
 		for(VariantTableArgument argument : arguments) {
 			int index = arguments.indexOf(argument);
@@ -51,9 +54,15 @@ public class VariantTableContentCreateActionHandler extends BAPIUtils implements
 			String csticName = cstic.getName();
 			for(Row row : rows) {
 				entries.appendRow();
+				cstics.appendRow();
 				EList<Literal> values = row.getValues();
 				Literal literal = values.get(index);
 				String value = getValue(literal);
+				
+				cstics.setValue("CHARACT", csticName);
+				cstics.setValue("VALUE", value);
+				cstics.setValue("VAL_DSCR", "no description");
+				
 				entries.setValue("VTCHARACT", csticName);
 				entries.setValue("VTLINENO", "" + index);
 				entries.setValue("VTLINNOINT", rows.indexOf(row));

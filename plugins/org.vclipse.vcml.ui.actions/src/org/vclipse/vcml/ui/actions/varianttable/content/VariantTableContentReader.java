@@ -16,8 +16,11 @@ import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Row;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
 import org.vclipse.vcml.vcml.VariantTable;
+import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -34,20 +37,20 @@ public class VariantTableContentReader extends BAPIUtils {
 		if(variantTableName == null || !seenObjects.add("VariantTableContent/" + variantTableName.toUpperCase()) || monitor.isCanceled()) {
 			return null;
 		}
-		VariantTable table = null;
+		VariantTable variantTable = null;
 		if(recurse) {
-			table = variantTableReader.read(variantTableName, vcmlModel, monitor, seenObjects, options, recurse);			
+			variantTable = variantTableReader.read(variantTableName, vcmlModel, monitor, seenObjects, options, recurse);
 		} else {
-			 Iterator<VariantTable> iterator = VCMLObjectUtils.getObjectsByNameAndType(variantTableName, vcmlModel, VariantTable.class).iterator();
-			 if(iterator.hasNext()) {
-				 table = iterator.next();
-			 }
+			Iterator<VariantTable> iterator = VCMLObjectUtils.getObjectsByNameAndType(variantTableName, vcmlModel, VariantTable.class).iterator();
+			if(iterator.hasNext()) {
+				variantTable = iterator.next();
+			}
 		}
-		if(table == null) {
+		if(variantTable == null) {
 			return null;
 		}
 		VariantTableContent content = VCML.createVariantTableContent();
-		content.setTable(table);
+		content.setTable(variantTable);
 		vcmlModel.getObjects().add(content);
 		JCoFunction function = getJCoFunction("CARD_TABLE_READ_ENTRIES", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
@@ -56,34 +59,53 @@ public class VariantTableContentReader extends BAPIUtils {
 		try {
 			execute(function, monitor, variantTableName);
 			JCoTable entries = function.getTableParameterList().getTable("VAR_TAB_ENTRIES");
+			EList<VariantTableArgument> arguments = variantTable.getArguments();
 			EList<Row> rows = content.getRows();
-			Row row = VCML.createRow();
-			EList<Literal> values = row.getValues();
-			int numOfColumns = table.getArguments().size();
-			int columnIndex = 0;
-			for(int numRows=0; numRows<entries.getNumRows(); numRows++) {
+			int rowsNumberSap = entries.getNumRows();
+			int rowsNumberContent = rowsNumberSap / arguments.size();
+			Literal[][] contentEntries = new Literal[rowsNumberContent][arguments.size()];
+			for(int numRows=0; numRows<rowsNumberSap; numRows++) {
 				entries.setRow(numRows);
-				if(columnIndex == numOfColumns) {
-					row = VCML.createRow();
-					values = row.getValues();
-					rows.add(row);
+				String cstic = entries.getString("VTCHARACT");
+				String entryValue = entries.getString("VTVALUE");
+				VariantTableArgument argument = getArgument(cstic, arguments);
+				Literal literal = getLiteral(entryValue);
+				int columnIndex = arguments.indexOf(argument);
+				int rowIndex = numRows % rowsNumberContent;
+				contentEntries[rowIndex][columnIndex] = literal;
+			}
+			for(int i=0; i<contentEntries.length; i++) {
+				Row row = VCML.createRow();
+				EList<Literal> values = row.getValues();
+				rows.add(row);
+				for(int l=0; l<contentEntries[i].length; l++) {
+					values.add(contentEntries[i][l]);
 				}
-				String value = entries.getString("VTVALUE");
-				try {
-					Integer.parseInt(value);
-					NumericLiteral numLit = VCML.createNumericLiteral();
-					numLit.setValue(value);
-					values.add(numLit);
-				} catch(NumberFormatException exception) {
-					SymbolicLiteral symLit = VCML.createSymbolicLiteral();
-					symLit.setValue(value);
-					values.add(symLit);
-				}
-				columnIndex++;
 			}
 		} catch(AbapException exception) {
 			handleAbapException(exception);
 		}
 		return content;
+	}
+	
+	protected VariantTableArgument getArgument(final String name, Iterable<VariantTableArgument> arguments) {
+		return Iterables.find(arguments, new Predicate<VariantTableArgument>() {
+			public boolean apply(VariantTableArgument argument) {
+				return name.equals(argument.getCharacteristic().getName());
+			}
+		});
+	}
+	
+	protected Literal getLiteral(String value) {
+		try {
+			Integer.parseInt(value);
+			NumericLiteral numLit = VCML.createNumericLiteral();
+			numLit.setValue(value);
+			return numLit;
+		} catch(NumberFormatException exception) {
+			SymbolicLiteral symLit = VCML.createSymbolicLiteral();
+			symLit.setValue(value);
+			return symLit;
+		}
 	}
 }
