@@ -55,6 +55,7 @@ import org.vclipse.vcml.vcml.Import;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.VCObject;
+import org.vclipse.vcml.vcml.VariantTableContent;
 import org.vclipse.vcml.vcml.VcmlFactory;
 
 import com.google.common.collect.Sets;
@@ -136,7 +137,9 @@ public class VcmlOutlineAction extends Action implements ISelectionChangedListen
 							}
 							IVcmlOutlineActionHandler<?> actionHandler = actionHandlers.get(getInstanceTypeName(obj));
 							String simpleName = actionHandler.getClass().getSimpleName();
-							taskName = "Executing " + simpleName + " for " + SimpleAttributeResolver.NAME_RESOLVER.apply(obj);
+							taskName = "Executing " + simpleName + " for " + 
+									SimpleAttributeResolver.NAME_RESOLVER.apply(
+											obj instanceof VariantTableContent ? ((VariantTableContent)obj).getTable() : obj);
 							monitor.setTaskName(taskName);
 							if (actionHandler != null) {
 								try {
