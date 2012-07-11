@@ -42,6 +42,7 @@ import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Precondition;
 import org.vclipse.vcml.vcml.Procedure;
+import org.vclipse.vcml.vcml.Row;
 import org.vclipse.vcml.vcml.SelectionCondition;
 import org.vclipse.vcml.vcml.SymbolicType;
 import org.vclipse.vcml.vcml.VariantFunction;
@@ -289,6 +290,10 @@ public class VCMLLabelProvider extends AbstractVClipseLabelProvider {
 	}
 	
 	public StyledString text(VariantTableContent element) {
-		return createStyledString(element.getTable().getName(), element.getDescription());
+		return createStyledString(element.getTable().getName() + " (content)", element.getDescription());
+	}
+	
+	public StyledString text(Row row) {
+		return createStyledString("row", null);
 	}
 }
