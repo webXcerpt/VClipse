@@ -152,12 +152,18 @@ public class CharacteristicReader extends BAPIUtils {
 					MultipleLanguageDocumentation multipleLanguageDocumentation = VCML.createMultipleLanguageDocumentation();
 					final EList<MultipleLanguageDocumentation_LanguageBlock> languageBlocks = multipleLanguageDocumentation.getLanguageblocks();
 					final Description description = value.getDescription();
-					if (description!=null) {
+					if (description==null) {
+						try {
+							MultipleLanguageDocumentation_LanguageBlock languageBlock = getLanguageBlock(object, value, null, monitor);
+							if (!languageBlock.getFormattedDocumentationBlocks().isEmpty())
+								languageBlocks.add(languageBlock);
+						} catch (JCoException e) {
+							throw new WrappedException(e);
+						}
+					} else  {
 						new DescriptionHandler() {
 							@Override
 							public void handleSingleDescription(Language language, String descriptionValue) {
-								// problem: this extracts only the documentation for languages with description
-								// TODO error handling, handle case of no documentation available
 								try {
 									MultipleLanguageDocumentation_LanguageBlock languageBlock = getLanguageBlock(object, value, language, monitor);
 									if (!languageBlock.getFormattedDocumentationBlocks().isEmpty())
@@ -167,9 +173,9 @@ public class CharacteristicReader extends BAPIUtils {
 								}
 							}
 						}.handleDescription(description);
-						if (!languageBlocks.isEmpty())
-							value.setDocumentation(multipleLanguageDocumentation);
 					}
+					if (!languageBlocks.isEmpty())
+						value.setDocumentation(multipleLanguageDocumentation);
 				}
 
 			} else if ("DATE".equals(dataType)) {
@@ -251,10 +257,12 @@ public class CharacteristicReader extends BAPIUtils {
 		ipl.setValue("CHARACTNAME", cstic.getName());
 		if (value!=null)
 			ipl.setValue("VALUE_CHAR", value.getName());
-		ipl.setValue("LANGUAGE_ISO", language.toString());
-		execute(function, monitor, cstic.getName() + " " + (value==null ? "" : value.getName() + " ") + language);
+		if (language!=null) {
+			ipl.setValue("LANGUAGE_ISO", language.toString());
+		}
+		execute(function, monitor, cstic.getName() + " " + (value==null ? "" : value.getName() + " ") + (language!=null ? language : "(no language)"));
 		MultipleLanguageDocumentation_LanguageBlock lb = VCML.createMultipleLanguageDocumentation_LanguageBlock();
-		lb.setLanguage(language);
+		lb.setLanguage(language==null ? VcmlUtils.getDefaultLanguage() : language);
 		EList<FormattedDocumentationBlock> fdbs = lb.getFormattedDocumentationBlocks();
 		JCoParameterList tpl = function.getTableParameterList();
 		JCoTable longText = tpl.getTable("LONGTEXT");
