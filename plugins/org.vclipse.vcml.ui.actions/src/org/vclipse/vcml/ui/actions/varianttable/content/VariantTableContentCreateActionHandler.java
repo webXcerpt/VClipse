@@ -35,7 +35,7 @@ public class VariantTableContentCreateActionHandler extends BAPIUtils implements
 		beginTransaction();
 		VariantTable table = content.getTable();
 		EList<VariantTableArgument> arguments = table.getArguments();
-		JCoFunction function = getJCoFunction("CARD_TABLE_READ_ENTRIES", monitor);
+		JCoFunction function = getJCoFunction("CAMA_TABLE_MAINTAIN_ENTRIES", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		handleOptions(options, ipl, "CHANGE_NO", "DATE");
 		ipl.setValue("VAR_TABLE", table.getName());
