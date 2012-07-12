@@ -10,9 +10,12 @@ import org.eclipse.emf.common.util.EList;
 import org.vclipse.vcml.ui.actions.BAPIUtils;
 import org.vclipse.vcml.ui.actions.varianttable.VariantTableReader;
 import org.vclipse.vcml.utils.VCMLObjectUtils;
+import org.vclipse.vcml.vcml.Characteristic;
+import org.vclipse.vcml.vcml.CharacteristicType;
 import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.NumericLiteral;
+import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Row;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
@@ -61,15 +64,27 @@ public class VariantTableContentReader extends BAPIUtils {
 			JCoTable entries = function.getTableParameterList().getTable("VAR_TAB_ENTRIES");
 			EList<VariantTableArgument> arguments = variantTable.getArguments();
 			EList<Row> rows = content.getRows();
-			Map<String, Integer> name2Argument = Maps.newHashMap();
+			
+			Map<String, Integer> name2RowNum = Maps.newHashMap();
+			Map<String, Characteristic> name2Cstic = Maps.newHashMap();
 			for(VariantTableArgument argument : arguments) {
-				name2Argument.put(argument.getCharacteristic().getName(), arguments.indexOf(argument));
+				Characteristic characteristic = argument.getCharacteristic();
+				String name = characteristic.getName();
+				name2RowNum.put(name, arguments.indexOf(argument));
+				name2Cstic.put(name, characteristic);
 			}
+			
 			Map<String, Row> line2Row = Maps.newHashMap();
 			for(int curRow=0; curRow<entries.getNumRows(); curRow++) {
 				entries.setRow(curRow);
 				String cstic = entries.getString("VTCHARACT");
-				String value = entries.getString("VTVALUE");
+				CharacteristicType type = name2Cstic.get(cstic).getType();
+				Literal literal = null;
+				if(type instanceof NumericType) {
+					literal = getLiteral("" + entries.getInt("VTVALUE"));
+				} else {
+					literal = getLiteral(entries.getString("VTVALUE"));
+				}
 				String line = entries.getString("VTLINENO");
 				Row row = line2Row.get(line);
 				if(row == null) {
@@ -78,8 +93,7 @@ public class VariantTableContentReader extends BAPIUtils {
 					line2Row.put(line, row);
 				} 
 				List<Literal> values = row.getValues();
-				int columnIndex = name2Argument.get(cstic);
-				Literal literal = getLiteral(value);
+				int columnIndex = name2RowNum.get(cstic);
 				values.add(columnIndex, literal);
 			}
 		} catch(AbapException exception) {
