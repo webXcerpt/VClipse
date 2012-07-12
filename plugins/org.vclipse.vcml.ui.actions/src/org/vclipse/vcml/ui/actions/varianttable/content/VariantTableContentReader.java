@@ -2,6 +2,7 @@ package org.vclipse.vcml.ui.actions.varianttable.content;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -19,8 +20,8 @@ import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -61,41 +62,34 @@ public class VariantTableContentReader extends BAPIUtils {
 			JCoTable entries = function.getTableParameterList().getTable("VAR_TAB_ENTRIES");
 			EList<VariantTableArgument> arguments = variantTable.getArguments();
 			EList<Row> rows = content.getRows();
-			int rowsNumberSap = entries.getNumRows();
-			int rowsNumberContent = rowsNumberSap / arguments.size();
-			Literal[][] contentEntries = new Literal[rowsNumberContent][arguments.size()];
-			for(int numRows=0; numRows<rowsNumberSap; numRows++) {
-				entries.setRow(numRows);
-				String cstic = entries.getString("VTCHARACT");
-				String entryValue = entries.getString("VTVALUE");
-				VariantTableArgument argument = getArgument(cstic, arguments);
-				Literal literal = getLiteral(entryValue);
-				int columnIndex = arguments.indexOf(argument);
-				int rowIndex = numRows % rowsNumberContent;
-				contentEntries[rowIndex][columnIndex] = literal;
+			Map<String, Integer> name2Argument = Maps.newHashMap();
+			for(VariantTableArgument argument : arguments) {
+				name2Argument.put(argument.getCharacteristic().getName(), arguments.indexOf(argument));
 			}
-			for(int i=0; i<contentEntries.length; i++) {
-				Row row = VCML.createRow();
-				EList<Literal> values = row.getValues();
-				rows.add(row);
-				for(int l=0; l<contentEntries[i].length; l++) {
-					values.add(contentEntries[i][l]);
+			Map<String, Row> line2Row = Maps.newHashMap();
+			for(int curRow=0; curRow<entries.getNumRows(); curRow++) {
+				entries.setRow(curRow);
+				String cstic = entries.getString("VTCHARACT");
+				String value = entries.getString("VTVALUE");
+				String line = entries.getString("VTLINENO");
+				Row row = line2Row.get(line);
+				List<Literal> values = Lists.newArrayList();
+				if(row == null) {
+					row = VCML.createRow();
+					values = row.getValues();
+					rows.add(row);
+					line2Row.put(line, row);
 				}
+				int columnIndex = name2Argument.get(cstic);
+				Literal literal = getLiteral(value);
+				values.add(columnIndex, literal);
 			}
 		} catch(AbapException exception) {
 			handleAbapException(exception);
 		}
 		return content;
 	}
-	
-	protected VariantTableArgument getArgument(final String name, Iterable<VariantTableArgument> arguments) {
-		return Iterables.find(arguments, new Predicate<VariantTableArgument>() {
-			public boolean apply(VariantTableArgument argument) {
-				return name.equals(argument.getCharacteristic().getName());
-			}
-		});
-	}
-	
+
 	protected Literal getLiteral(String value) {
 		try {
 			Integer.parseInt(value);
