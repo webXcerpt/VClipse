@@ -8,7 +8,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.vcml.ui.actions.BAPIUtils;
 import org.vclipse.vcml.ui.outline.actions.IVcmlOutlineActionHandler;
-import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.Option;
@@ -34,39 +33,24 @@ public class VariantTableContentCreateActionHandler extends BAPIUtils implements
 	public void run(VariantTableContent content, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws Exception {
 		final String name = content.getTable().getName();
 		beginTransaction();
-		
 		VariantTable table = content.getTable();
 		EList<VariantTableArgument> arguments = table.getArguments();
-		
-		JCoFunction function = getJCoFunction("CAMA_TABLE_MAINTAIN_ENTRI_LINE", monitor);
+		JCoFunction function = getJCoFunction("CARD_TABLE_READ_ENTRIES", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		handleOptions(options, ipl, "CHANGE_NO", "DATE");
 		ipl.setValue("VAR_TABLE", table.getName());
 		JCoParameterList tpl = function.getTableParameterList();
-		
-		JCoTable cstics = tpl.getTable("SELECT_WHERE_VALUES");
-		
-		JCoTable entries = tpl.getTable("VAR_TAB_LINE_ENTRIES");
+		JCoTable entries = tpl.getTable("VAR_TAB_ENTRIES");
 		EList<Row> rows = content.getRows();
-		for(VariantTableArgument argument : arguments) {
-			int index = arguments.indexOf(argument);
-			Characteristic cstic = argument.getCharacteristic();
-			String csticName = cstic.getName();
-			for(Row row : rows) {
+		for(Row row : rows) {
+			for(VariantTableArgument arg : arguments) {
+				String cstic = arg.getCharacteristic().getName();
+				int index = arguments.indexOf(arg);
 				entries.appendRow();
-				cstics.appendRow();
-				EList<Literal> values = row.getValues();
-				Literal literal = values.get(index);
-				String value = getValue(literal);
-				
-				cstics.setValue("CHARACT", csticName);
-				cstics.setValue("VALUE", value);
-				cstics.setValue("VAL_DSCR", "no description");
-				
-				entries.setValue("VTCHARACT", csticName);
-				entries.setValue("VTLINENO", "" + index);
-				entries.setValue("VTLINNOINT", rows.indexOf(row));
-				entries.setValue("VTVALUE", value);
+				Literal literal = row.getValues().get(index);
+				entries.setValue("VTCHARACT", cstic);
+				entries.setValue("VTLINENO", "" + rows.indexOf(row));
+				entries.setValue("VTVALUE", getValue(literal));
 			}
 		}
 		try {
