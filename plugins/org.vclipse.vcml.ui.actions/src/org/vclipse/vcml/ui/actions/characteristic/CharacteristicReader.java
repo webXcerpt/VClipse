@@ -109,9 +109,23 @@ public class CharacteristicReader extends BAPIUtils {
 				type.setNumberOfChars(charactDetail.getInt("LENGTH"));
 				type.setCaseSensitive("X".equals(charactDetail.getValue("CASE_SENSITIV")));
 				EList<CharacteristicValue> values = type.getValues();
+				HashMap<String, CharacteristicValue> seenValues = new HashMap<String, CharacteristicValue>(); // for grouping the descriptions by value
+				JCoTable charactValuesChar = tpl.getTable("CHARACTVALUESCHAR");
+				if (charactValuesChar!=null) {
+					for (int i = 0; i < charactValuesChar.getNumRows(); i++) {
+						charactValuesChar.setRow(i);
+						String name = charactValuesChar.getString("VALUE_CHAR");
+						CharacteristicValue value = seenValues.get(name);
+						if (value==null) {
+							value = VCML.createCharacteristicValue();
+							values.add(value);
+							value.setName(name);
+							seenValues.put(name, value);
+						}
+					}
+				}
 				JCoTable charactValuesDescr = tpl.getTable("CHARACTVALUESDESCR");
 				if (charactValuesDescr!=null) {
-					HashMap<String, CharacteristicValue> seenValues = new HashMap<String, CharacteristicValue>(); // for grouping the descriptions by value
 					for (int i = 0; i < charactValuesDescr.getNumRows(); i++) {
 						charactValuesDescr.setRow(i);
 						String name = charactValuesDescr.getString("VALUE_CHAR");
@@ -120,15 +134,17 @@ public class CharacteristicReader extends BAPIUtils {
 							value = VCML.createCharacteristicValue();
 							values.add(value);
 							value.setName(name);
-							value.setDescription(VCML.createMultiLanguageDescriptions());
 							seenValues.put(name, value);
 						}
+						value.setDescription(VCML.createMultiLanguageDescriptions());
 						MultiLanguageDescriptions multiLanguageDescriptions = (MultiLanguageDescriptions)value.getDescription();
-						EList<MultiLanguageDescription> descriptions = multiLanguageDescriptions.getDescriptions();
-						MultiLanguageDescription multiLanguageDescription = VCML.createMultiLanguageDescription();
-						multiLanguageDescription.setLanguage(VcmlUtils.getLanguageByISOString(charactValuesDescr.getString("LANGUAGE_ISO")));
-						multiLanguageDescription.setValue(charactValuesDescr.getString("DESCRIPTION"));
-						descriptions.add(multiLanguageDescription);
+						if (multiLanguageDescriptions!=null) {
+							EList<MultiLanguageDescription> descriptions = multiLanguageDescriptions.getDescriptions();
+							MultiLanguageDescription multiLanguageDescription = VCML.createMultiLanguageDescription();
+							multiLanguageDescription.setLanguage(VcmlUtils.getLanguageByISOString(charactValuesDescr.getString("LANGUAGE_ISO")));
+							multiLanguageDescription.setValue(charactValuesDescr.getString("DESCRIPTION"));
+							descriptions.add(multiLanguageDescription);
+						}
 					}
 				}
 				for (final CharacteristicValue value : values) {
