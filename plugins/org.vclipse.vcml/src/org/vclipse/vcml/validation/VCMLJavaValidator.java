@@ -188,7 +188,7 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	}
 	
 	@Check(CheckType.FAST)
-	public void checkVaraiantTableContents(final VariantTableContent content) {
+	public void checkVariantTableContents(final VariantTableContent content) {
 		EList<VariantTableArgument> parameters = content.getTable().getArguments();
 		EList<Row> rows = content.getRows();
 		for(Row row : rows) {
@@ -200,7 +200,7 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 				int index = values.indexOf(value);
 				if(index < parameters.size()) {
 					Characteristic param = parameters.get(index).getCharacteristic();
-					if(!param.eIsProxy() && !contains(param.getType(), value)) {
+					if(!param.eIsProxy() && !param.isAdditionalValues() && !contains(param.getType(), value)) {
 						error("Parameter " + param.getName() + " does not contain value " + VcmlUtils.getLiteralName(value), 
 								row, VcmlPackage.Literals.ROW__VALUES, index);
 					}
@@ -211,6 +211,9 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	
 	private boolean contains(CharacteristicType type, Literal value) {
 		if(value instanceof SymbolicLiteral && type instanceof SymbolicType) {
+			if (((SymbolicType)type).getValues().isEmpty()) {
+				return true;
+			}
 			String strValue = ((SymbolicLiteral)value).getValue();
 			for(CharacteristicValue cv : ((SymbolicType)type).getValues()) {
 				if(cv.getName().equals(strValue)) {
@@ -218,6 +221,9 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 				}
 			}
 		} else if(value instanceof NumericLiteral && type instanceof NumericType) {
+			if (((NumericType)type).getValues().isEmpty()) {
+				return true;
+			}
 			String strValue = ((NumericLiteral)value).getValue();
 			for(NumericCharacteristicValue ncv : ((NumericType)type).getValues()) {
 				NumberListEntry entry = ncv.getEntry();
