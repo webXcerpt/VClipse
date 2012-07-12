@@ -20,7 +20,6 @@ import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.sap.conn.jco.AbapException;
@@ -73,13 +72,12 @@ public class VariantTableContentReader extends BAPIUtils {
 				String value = entries.getString("VTVALUE");
 				String line = entries.getString("VTLINENO");
 				Row row = line2Row.get(line);
-				List<Literal> values = Lists.newArrayList();
 				if(row == null) {
 					row = VCML.createRow();
-					values = row.getValues();
 					rows.add(row);
 					line2Row.put(line, row);
-				}
+				} 
+				List<Literal> values = row.getValues();
 				int columnIndex = name2Argument.get(cstic);
 				Literal literal = getLiteral(value);
 				values.add(columnIndex, literal);
