@@ -81,9 +81,13 @@ public class VariantTableContentReader extends BAPIUtils {
 				CharacteristicType type = name2Cstic.get(cstic).getType();
 				Literal literal = null;
 				if(type instanceof NumericType) {
-					literal = getLiteral("" + entries.getInt("VTVALUE"));
+					NumericLiteral numLit = VCML.createNumericLiteral();
+					numLit.setValue(entries.getString("VTVALUE").replace(",","."));
+					literal = numLit;
 				} else {
-					literal = getLiteral(entries.getString("VTVALUE"));
+					SymbolicLiteral symLit = VCML.createSymbolicLiteral();
+					symLit.setValue(entries.getString("VTVALUE"));
+					literal = symLit;
 				}
 				String line = entries.getString("VTLINENO");
 				Row row = line2Row.get(line);
@@ -102,16 +106,4 @@ public class VariantTableContentReader extends BAPIUtils {
 		return content;
 	}
 
-	protected Literal getLiteral(String value) {
-		try {
-			Integer.parseInt(value);
-			NumericLiteral numLit = VCML.createNumericLiteral();
-			numLit.setValue(value);
-			return numLit;
-		} catch(NumberFormatException exception) {
-			SymbolicLiteral symLit = VCML.createSymbolicLiteral();
-			symLit.setValue(value);
-			return symLit;
-		}
-	}
 }
