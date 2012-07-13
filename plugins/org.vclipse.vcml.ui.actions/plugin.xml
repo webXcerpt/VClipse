@@ -427,5 +427,13 @@
             type="org.vclipse.vcml.vcml.VariantTableContent">
       </handler>
    </extension>
+   <extension
+         point="org.vclipse.vcml.ui.outlinePageActions">
+      <handler
+            action="org.vclipse.vcml.ui.actions.change"
+            handler="org.vclipse.vcml.ui.actions.injection.ExecutableExtensionFactory:org.vclipse.vcml.ui.actions.varianttable.content.VariantTableContentCreateActionHandler"
+            type="org.vclipse.vcml.vcml.VariantTableContent">
+      </handler>
+   </extension>
 
 </plugin>
