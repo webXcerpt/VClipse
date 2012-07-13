@@ -1,5 +1,7 @@
 package org.vclipse.vcml.ui.actions.varianttable.content;
 
+import static org.vclipse.vcml.utils.VCMLObjectUtils.getObjectsByNameAndType;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -7,9 +9,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
-import org.vclipse.vcml.ui.actions.BAPIUtils;
 import org.vclipse.vcml.ui.actions.varianttable.VariantTableReader;
-import org.vclipse.vcml.utils.VCMLObjectUtils;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicType;
 import org.vclipse.vcml.vcml.Literal;
@@ -31,7 +31,7 @@ import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoParameterList;
 import com.sap.conn.jco.JCoTable;
 
-public class VariantTableContentReader extends BAPIUtils {
+public class VariantTableContentReader extends VariantTableContentDeleteActionHandler {
 
 	@Inject
 	private VariantTableReader variantTableReader;
@@ -44,7 +44,7 @@ public class VariantTableContentReader extends BAPIUtils {
 		if(recurse) {
 			variantTable = variantTableReader.read(variantTableName, vcmlModel, monitor, seenObjects, options, recurse);
 		} else {
-			Iterator<VariantTable> iterator = VCMLObjectUtils.getObjectsByNameAndType(variantTableName, vcmlModel, VariantTable.class).iterator();
+			Iterator<VariantTable> iterator = getObjectsByNameAndType(variantTableName, vcmlModel, VariantTable.class).iterator();
 			if(iterator.hasNext()) {
 				variantTable = iterator.next();
 			}
