@@ -145,7 +145,7 @@
     </category>
 			<command
 				categoryId="org.vclipse.ui.commands"
-				defaultHandler="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.vclipse.vcml.ui.editor.CleanUpDependenciesHandler"
+				defaultHandler="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.vclipse.vcml.ui.actions.CleanUpDependenciesHandler"
 				description="Delete not required dependency code for a vcml source file"
 				id="org.vclipse.ui.commands.cleanUpDepedencyCode"
 				name="Clean Up Dependency Code">
