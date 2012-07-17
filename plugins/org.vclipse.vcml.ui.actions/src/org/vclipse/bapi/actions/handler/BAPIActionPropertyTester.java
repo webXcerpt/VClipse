@@ -1,5 +1,6 @@
 package org.vclipse.bapi.actions.handler;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
 
@@ -38,13 +39,18 @@ public class BAPIActionPropertyTester extends PropertyTester {
 		return false;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	protected boolean handlerExists(Object receiver, String expectedValue) {
 		String[] parts = ((String)expectedValue).split(SEPARATOR);
 		if(parts.length == 2) {
 			for(IBAPIActionRunner<?> handler : contributionReader.getHandler(parts[1])) {
 				try {
-					handler.getClass().getMethod("run", new Class[]{receiver.getClass().getInterfaces()[0], Resource.class, IProgressMonitor.class, Set.class, List.class});
-					return EXISTS_STRING.equals(parts[0]);
+					Class<? extends IBAPIActionRunner> handlerClass = handler.getClass();
+					Class<?> instanceType = BAPIActionUtils.getInstanceType(receiver);
+					handlerClass.getMethod("run", new Class[]{instanceType, Resource.class, IProgressMonitor.class, Set.class, List.class});
+					Method enbledMethod = handlerClass.getMethod("isEnabled", new Class[]{instanceType});
+					Object invoke = enbledMethod.invoke(handler, receiver);
+					return EXISTS_STRING.equals(parts[0]) && (Boolean)invoke;
 				} catch (Exception exception) {
 					// ignore
 				} 

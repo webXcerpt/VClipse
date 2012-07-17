@@ -36,11 +36,19 @@ public class BAPIActionUtils {
 		return null;
 	}
 	
-	public static Class<?> getInstanceType(EObject object) throws ClassNotFoundException {
+	public static Class<?> getInstanceType(Object object) throws ClassNotFoundException {
 		return Class.forName(getInstanceTypeName(object));
 	}
 	
-	public static String getInstanceTypeName(EObject object) {
-		return object.eClass().getInstanceTypeName();
+	public static String getInstanceTypeName(Object object) {
+		if(object instanceof EObject) {
+			return ((EObject)object).eClass().getInstanceTypeName();			
+		} else {
+			Class<?>[] interfaces = object.getClass().getInterfaces();
+			if(interfaces.length > 0) {
+				return interfaces[0].getName();				
+			}
+		}
+		return "";
 	}
 }
