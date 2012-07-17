@@ -155,6 +155,10 @@
            icon="icons/vcml.png"
            id="org.vclipse.ui.menus.popup"
            label="VClipse">
+        <separator
+              name="group.begin"
+              visible="true">
+        </separator>
         <command
               commandId="org.vclipse.ui.commands.cleanUpDepedencyCode"
               icon="icons/actions/delete.png"
@@ -172,10 +176,6 @@
               </or>
            </visibleWhen>
         </command>
-        <separator
-              name="group.begin"
-              visible="true">
-        </separator>
         <separator
               name="group.end"
               visible="true">
