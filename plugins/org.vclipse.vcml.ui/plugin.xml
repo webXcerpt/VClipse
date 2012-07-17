@@ -5,11 +5,6 @@
 	<!-- Extensions, contributed by VClipse developers -->
 
 	<!-- entry for own extension point -->
-	<extension-point 
-		id="outlinePageActions" 
-		name="Outline page actions" 
-		schema="schema/outlinePageActions.exsd"
-	/>
 
 	<!-- Extensions for cleaning up the dependency code -->
    

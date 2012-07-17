@@ -1,0 +1,265 @@
+package org.vclipse.bapi.actions.handler;
+
+import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.e4.ui.workbench.modeling.ExpressionContext;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
+import org.eclipse.xtext.resource.SaveOptions;
+import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
+import org.eclipse.xtext.ui.util.ResourceUtil;
+import org.eclipse.xtext.util.SimpleAttributeResolver;
+import org.eclipse.xtext.util.StringInputStream;
+import org.vclipse.bapi.actions.resources.BAPIException;
+import org.vclipse.vcml.ui.IUiConstants;
+import org.vclipse.vcml.vcml.BillOfMaterial;
+import org.vclipse.vcml.vcml.Import;
+import org.vclipse.vcml.vcml.Model;
+import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VCObject;
+import org.vclipse.vcml.vcml.VariantTableContent;
+import org.vclipse.vcml.vcml.VcmlFactory;
+
+import com.google.common.collect.Sets;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
+public class BAPIActionHandler extends AbstractHandler {
+
+	protected static final String EXTRACTED_FILENAME_ADDON = "extracted.";
+	
+	protected static final VcmlFactory VCML = VcmlFactory.eINSTANCE;
+
+	private XtextResourceSet resourceSet;
+	
+	@Inject
+	private EObjectAtOffsetHelper offsetHelper;
+	
+	@Inject
+	protected IPreferenceStore preferenceStore;
+	
+	@Inject
+	@Named("Task")
+	protected PrintStream task; 
+	
+	@Inject
+	@Named("Error")
+	protected PrintStream errorStream; 
+	
+	@Inject
+	@Named("Warning")
+	protected PrintStream warningStream; 
+	
+	@Inject
+	@Named("Info")
+	protected PrintStream infoStream; 
+	
+	@Inject
+	@Named("Result")
+	private PrintStream resultStream;
+	
+	@Override
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		resourceSet = new XtextResourceSet();
+		final boolean fileOutput = preferenceStore.getBoolean(IUiConstants.OUTPUT_TO_FILE);
+		final Set<String> seenObjects = Sets.newHashSet();
+		final Object appContext = event.getApplicationContext();
+		final Collection<?> entries = getEntries(appContext);
+		final XtextResource source = getSourceResource(entries, event);
+		final Model vcmlSourceModel = (Model)source.getContents().get(0);
+		final EList<Option> options = vcmlSourceModel.getOptions();
+		final Resource result = getResultResource(source, seenObjects, fileOutput);
+		
+		Job sapActionJob = new Job("Executing SAP action") {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				String taskName = "Executing rfc call on SAP system";
+				monitor.beginTask(taskName, IProgressMonitor.UNKNOWN);
+				Model vcmlModel = VCML.createModel();
+				persistResultResource(fileOutput, result, vcmlModel, monitor);
+				for(Object entry : entries) {
+					if(monitor.isCanceled()) {
+						monitor.done();
+						return Status.CANCEL_STATUS;
+					}
+					
+					EObject current = null;
+					if(entry instanceof ITextSelection) {
+						current = BAPIActionUtils.getVCObject(offsetHelper, (ITextSelection)entry, source);
+					} else if(entry instanceof VCObject) {
+						current = (EObject)entry;
+					} else if(entry instanceof EObjectNode) {
+						current = (EObject)((EObjectNode)entry).getAdapter(VCObject.class);
+					}
+			
+					if(current == null) {
+						continue;
+					}
+					
+					Class<? extends BAPIActionHandler> bapiClass = BAPIActionHandler.this.getClass();
+					String simpleName = bapiClass.getSimpleName();
+					EObject eobject = current instanceof VariantTableContent ? ((VariantTableContent)current).getTable() : current;
+					String objectName = SimpleAttributeResolver.NAME_RESOLVER.apply(eobject);
+					taskName = "Executing " + simpleName + " for " + objectName;
+					monitor.setTaskName(taskName);
+					try {
+						Method method = bapiClass.getMethod("run", new Class[]{BAPIActionUtils.getInstanceType(current), Resource.class, IProgressMonitor.class, Set.class, List.class});
+						method.invoke(BAPIActionHandler.this, new Object[]{current, result, monitor, seenObjects, options});
+					} catch (InvocationTargetException e) {
+						if(e.getTargetException() instanceof BAPIException) {
+							errorStream.println("// canceled");
+							break;
+						} else {
+							e.printStackTrace();
+							e.getTargetException().printStackTrace(errorStream); // display original cause in VClipse console
+						}
+					} catch(Exception exception) {
+						exception.printStackTrace(errorStream); // this can be a JCoException or an AbapExeption
+					}
+				}
+				persistResultResource(fileOutput, result, vcmlModel, monitor);
+				resultStream.println("Task finished: " + taskName);
+				return Status.OK_STATUS;
+			}
+		};
+		sapActionJob.setPriority(Job.LONG);
+		sapActionJob.schedule();
+		return null;
+	}
+
+	protected XtextResource getSourceResource(Collection<?> entries, ExecutionEvent event) {
+		for(Object entry : entries) {
+			if(entry instanceof EObjectNode) {
+				Object adapter = ((EObjectNode)entry).getAdapter(VCObject.class);
+				if(adapter instanceof VCObject || adapter instanceof BillOfMaterial) {
+					return (XtextResource)((EObject)adapter).eResource();
+				}
+			} else if(entry instanceof ITextSelection) {
+				return BAPIActionUtils.getResource(HandlerUtil.getActiveEditor(event));
+			} else if(entry instanceof VCObject) {
+				return (XtextResource)((VCObject)entry).eResource();
+			}
+		}
+		return null;
+	}
+	
+	protected Resource getResultResource(Resource source, Set<String> seenObjects, boolean fileOutput) {
+		// TODO can we avoid the early resource creation ? 
+		if(fileOutput) {
+			URI sourceUri = source.getURI();
+			URI resultUri = sourceUri.trimFileExtension().appendFileExtension(EXTRACTED_FILENAME_ADDON + sourceUri.fileExtension());
+			Resource result = resourceSet.createResource(resultUri, "UTF-8");
+			result.getContents().add(VCML.createModel());
+			collectImportedObjects(seenObjects, source, result);
+			createResultFile(result);
+			return result;
+		} else {
+			return resourceSet.createResource(URI.createURI("bapiResults"));
+		}
+	}
+	
+	protected void persistResultResource(final boolean outputToFile, final Resource finalSourceResource, final Model vcmlModel, IProgressMonitor monitor) {
+		try {
+			if(outputToFile) {
+				finalSourceResource.save(SaveOptions.defaultOptions().toOptionsMap());
+			} else {
+				if (!vcmlModel.getObjects().isEmpty()) {
+					resultStream.println(((XtextResource)finalSourceResource).getSerializer().serialize(vcmlModel));
+				}
+				finalSourceResource.delete(null);
+			}
+		} catch (Exception exception) {
+			// currently, there can be exceptions if objects are not completeley initialized or linking fails or IOExceptions
+			exception.printStackTrace(errorStream);
+		}
+		
+		IFile file = ResourceUtil.getFile(finalSourceResource);
+		if(file != null && file.isAccessible()) {
+			try {
+				file.refreshLocal(IResource.DEPTH_ONE, monitor);
+			} catch(CoreException exception) {
+				exception.printStackTrace();
+			}
+		}
+	}
+	
+	protected void collectImportedObjects(Set<String> seenObjects, Resource sourceResource, Resource targetResource) {
+		Model targetModel = null;
+		EList<EObject> targetContents = targetResource.getContents();
+		if(!targetContents.isEmpty()) {
+			targetModel = (Model)targetContents.get(0);
+		}
+		
+		URI uri = sourceResource.getURI();
+		String platformString = uri.toPlatformString(true);
+		String lastSegment = uri.lastSegment();
+		EList<EObject> contents = sourceResource.getContents();
+		if(!contents.isEmpty()) {
+			for(Import importStatement : ((Model)contents.get(0)).getImports()) {
+				String importURI = importStatement.getImportURI();
+				String importResourcePath = platformString.replace(lastSegment, importURI);
+				Resource loadedResource = resourceSet.getResource(URI.createURI(importResourcePath), true);
+				EList<EObject> loadedContents = loadedResource.getContents();
+				if(!loadedContents.isEmpty()) {
+					if(targetModel != null) {
+						targetModel.getImports().add(EcoreUtil.copy(importStatement));
+					}
+					EObject topLevelObject = loadedContents.get(0);
+					if(topLevelObject instanceof Model) {
+						Model model = (Model)topLevelObject;
+						for(VCObject vcobject : model.getObjects()) {
+							seenObjects.add(vcobject.eClass().getName() + "/" +vcobject.getName());
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	protected void createResultFile(Resource resource) {
+		IFile resultfile = ResourceUtil.getFile(resource);
+		if(!resultfile.exists()) {
+			try {
+				resultfile.create(new StringInputStream(""), true, new NullProgressMonitor());
+			} catch(CoreException exception) {
+				exception.printStackTrace();
+			}
+		}
+	}
+	
+	protected Collection<?> getEntries(Object appContext) {
+		if(appContext instanceof ExpressionContext) {
+			Object defVariable = ((ExpressionContext)appContext).getDefaultVariable();
+			if(defVariable instanceof Collection<?>) {
+				return (Collection<?>)defVariable;
+			}
+		}
+		return Collections.EMPTY_LIST;
+	}
+}

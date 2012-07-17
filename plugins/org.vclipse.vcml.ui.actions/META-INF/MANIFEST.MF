@@ -3,30 +3,35 @@ Bundle-ManifestVersion: 2
 Bundle-Name: VClipse VCML UI RFC Actions Plug-in
 Bundle-SymbolicName: org.vclipse.vcml.ui.actions;singleton:=true
 Bundle-Version: 0.4.2.qualifier
-Bundle-Activator: org.vclipse.vcml.ui.actions.VcmlUiActionPlugin
+Bundle-Activator: org.vclipse.bapi.actions.BAPIActionPlugin
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Require-Bundle: org.eclipse.xtext.ui,
  org.vclipse.connection,
  org.vclipse.vcml.ui,
  org.vclipse.console,
- org.vclipse.vcml
+ org.vclipse.vcml,
+ org.eclipse.e4.ui.workbench;bundle-version="0.10.2",
+ org.eclipse.core.expressions
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.vclipse.vcml.ui.actions,
- org.vclipse.vcml.ui.actions.billofmaterial,
- org.vclipse.vcml.ui.actions.characteristic,
- org.vclipse.vcml.ui.actions.classes,
- org.vclipse.vcml.ui.actions.configurationprofile,
- org.vclipse.vcml.ui.actions.constraint,
- org.vclipse.vcml.ui.actions.dependencynet,
- org.vclipse.vcml.ui.actions.injection,
- org.vclipse.vcml.ui.actions.intefacedesign,
- org.vclipse.vcml.ui.actions.material,
- org.vclipse.vcml.ui.actions.precondition,
- org.vclipse.vcml.ui.actions.procedure,
- org.vclipse.vcml.ui.actions.selectioncondition,
- org.vclipse.vcml.ui.actions.variantfunction,
- org.vclipse.vcml.ui.actions.varianttable
+Export-Package: org.vclipse.bapi.actions,
+ org.vclipse.bapi.actions.billofmaterial,
+ org.vclipse.bapi.actions.characteristic,
+ org.vclipse.bapi.actions.classes,
+ org.vclipse.bapi.actions.configurationprofile,
+ org.vclipse.bapi.actions.constraint,
+ org.vclipse.bapi.actions.dependencynet,
+ org.vclipse.bapi.actions.handler,
+ org.vclipse.bapi.actions.injection,
+ org.vclipse.bapi.actions.interfacedesign,
+ org.vclipse.bapi.actions.material,
+ org.vclipse.bapi.actions.precondition,
+ org.vclipse.bapi.actions.procedure,
+ org.vclipse.bapi.actions.resources,
+ org.vclipse.bapi.actions.selectioncondition,
+ org.vclipse.bapi.actions.variantfunction,
+ org.vclipse.bapi.actions.varianttable,
+ org.vclipse.bapi.actions.varianttable.content
 Import-Package: com.sap.conn.jco,
  org.apache.log4j
 Bundle-ClassPath: .

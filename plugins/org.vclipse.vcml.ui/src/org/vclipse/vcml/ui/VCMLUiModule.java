@@ -34,8 +34,6 @@ import org.eclipse.xtext.ui.shared.Access;
 import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
 import org.vclipse.base.ui.util.IExtendedImageHelper;
 import org.vclipse.vcml.ui.editor.hover.VCMLHoverProvider;
-import org.vclipse.vcml.ui.extension.ExtensionPointUtilities;
-import org.vclipse.vcml.ui.extension.IExtensionPointUtilities;
 import org.vclipse.vcml.ui.hyperlinks.VcmlHyperlinkHelper;
 import org.vclipse.vcml.ui.hyperlinks.VcmlHyperlinkLabelProvider;
 import org.vclipse.vcml.ui.outline.VCMLOutlinePage;
@@ -74,10 +72,6 @@ public class VCMLUiModule extends org.vclipse.vcml.ui.AbstractVCMLUiModule {
 	
 	public IWorkspaceRoot bindWorkspaceRoot() {
 		return ResourcesPlugin.getWorkspace().getRoot();
-	}
-	
-	public Class<? extends IExtensionPointUtilities> bindExtensionPointReader() {
-		return ExtensionPointUtilities.class;
 	}
 	
 	public Class<? extends AbstractAntlrTokenToAttributeIdMapper> bindAbstractAntlrTokenToAttributeIdMapper() {

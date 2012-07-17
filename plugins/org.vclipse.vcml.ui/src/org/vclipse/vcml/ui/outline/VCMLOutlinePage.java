@@ -10,16 +10,11 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.outline;
 
-import java.util.List;
-import java.util.Map;
-
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -27,12 +22,9 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
 import org.vclipse.base.ui.util.IExtendedImageHelper;
 import org.vclipse.vcml.ui.IUiConstants;
-import org.vclipse.vcml.ui.extension.IExtensionPointUtilities;
-import org.vclipse.vcml.ui.outline.actions.VcmlOutlineAction;
 import org.vclipse.vcml.utils.ISapConstants;
 
 import com.google.inject.Inject;
@@ -47,9 +39,6 @@ public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListe
 	@Inject
 	private IPreferenceStore preferenceStore;
 	
-	@Inject
-	private IExtensionPointUtilities extensionPointUtilities;
-
 	private Menu menu;
 	
 	@Override
@@ -73,15 +62,7 @@ public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListe
 		IToolBarManager toolBarManager = getSite().getActionBars().getToolBarManager();
 		
 		createHierarchySwitchAction(toolBarManager);
-		createPopupMenuAction(treeViewer, toolBarManager);
 		createMenu(treeViewer);
-	}
-
-	private void createPopupMenuAction(TreeViewer treeViewer, IToolBarManager toolBarManager) {
-		List<VcmlOutlineAction> actions = extensionPointUtilities.getActions();
-		for(VcmlOutlineAction action : actions) {
-			treeViewer.addSelectionChangedListener(action);
-		}
 	}
 
 	private void createHierarchySwitchAction(IToolBarManager toolBarManager) {
@@ -119,12 +100,6 @@ public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListe
 		menuManager.setRemoveAllWhenShown(true);
 		menuManager.addMenuListener(new IMenuListener() {	
 			public void menuAboutToShow(final IMenuManager manager) {
-				for(Map.Entry<VcmlOutlineAction, String> entry : extensionPointUtilities.getPathes().entrySet()) {
-					GroupMarker groupMarker = new GroupMarker(entry.getValue());
-					manager.add(groupMarker);
-					manager.appendToGroup(groupMarker.getGroupName(), entry.getKey());
-					manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-				}
 			}
 		});
 		menu = menuManager.createContextMenu(treeViewer.getControl());
