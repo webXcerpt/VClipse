@@ -1,5 +1,6 @@
 package org.vclipse.bapi.actions;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
@@ -42,6 +43,15 @@ public class ContributionReader {
 							Object object = element.createExecutableExtension(CLASS_ATTRIBUTE);
 							if(object instanceof IBAPIActionRunner<?>) {
 								IBAPIActionRunner<?> handler = (IBAPIActionRunner<?>)object;
+								for(Method method : handler.getClass().getMethods()) {
+									if(method.getName().equals("run")) {
+										Class<?>[] parameterTypes = method.getParameterTypes();
+										if(parameterTypes.length > 0) {
+											type2Action.put(parameterTypes[0].getCanonicalName(), handler);											
+										}
+									}
+									break;
+								}
 								type2Action.put(handler.getClass().getName(), handler);
 							}
 						} catch (CoreException exception) {
