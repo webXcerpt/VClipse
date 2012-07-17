@@ -33,7 +33,7 @@
 <unit id="org.tigris.subversion.subclipse.mylyn.feature.group" version="3.0.0"/>
 <unit id="org.tigris.subversion.clientadapter.javahl.feature.feature.group" version="1.7.5.2"/>
 <unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.3"/>
-<unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.13"/>
+<unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.14"/>
 <unit id="com.collabnet.subversion.merge.feature.feature.group" version="3.0.9"/>
 <unit id="net.java.dev.jna.feature.group" version="3.4.0.t20120117_1605"/>
 <unit id="org.tigris.subversion.clientadapter.svnkit.feature.feature.group" version="1.7.5"/>
