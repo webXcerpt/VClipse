@@ -12,6 +12,7 @@
       </factory>
    </extension>
    <extension
+         id="create"
          point="org.eclipse.ui.handlers">
       <handler
             class="org.vclipse.bapi.actions.injection.ExecutableExtensionFactory:org.vclipse.bapi.actions.billofmaterial.BillOfMaterialCreateActionHandler"
