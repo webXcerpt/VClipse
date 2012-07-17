@@ -819,17 +819,15 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	public DataLayouter<NoExceptions> caseVariantTableContent(VariantTableContent object) {
 		layouter.beginC().print("varianttablecontent ");
 		printName(object.getTable());
-		if(hasBody(object)) {
-			layouter.print(" {").brk();
-			for(Row row : object.getRows()) {
-				layouter.print("row ");
-				for(Literal value : row.getValues()) {
-					doSwitch(value).print(" ");
-				}
-				layouter.brk();
+		layouter.print(" {").brk();
+		for(Row row : object.getRows()) {
+			layouter.print("row ");
+			for(Literal value : row.getValues()) {
+				doSwitch(value).print(" ");
 			}
-			layouter.brk(1, -INDENTATION).print("}");
+			layouter.brk();
 		}
+		layouter.brk(1, -INDENTATION).print("}");
 		return layouter.end();
 	}
 	
@@ -935,10 +933,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	
 	private boolean hasBody(VariantTable object) {
 		return object.getDescription()!=null;
-	}
-	
-	private boolean hasBody(VariantTableContent object) {
-		return !object.getRows().isEmpty();
 	}
 	
 	private boolean hasBody(InterfaceDesign object) {
