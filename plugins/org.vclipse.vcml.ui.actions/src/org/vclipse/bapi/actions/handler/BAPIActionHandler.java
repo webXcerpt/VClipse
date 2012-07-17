@@ -39,6 +39,7 @@ import org.eclipse.xtext.util.StringInputStream;
 import org.vclipse.bapi.actions.resources.BAPIException;
 import org.vclipse.vcml.ui.IUiConstants;
 import org.vclipse.vcml.vcml.BillOfMaterial;
+import org.vclipse.vcml.vcml.ConfigurationProfile;
 import org.vclipse.vcml.vcml.Import;
 import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
@@ -157,7 +158,7 @@ public class BAPIActionHandler extends AbstractHandler {
 		for(Object entry : entries) {
 			if(entry instanceof EObjectNode) {
 				Object adapter = ((EObjectNode)entry).getAdapter(VCObject.class);
-				if(adapter instanceof VCObject || adapter instanceof BillOfMaterial) {
+				if(adapter instanceof VCObject || adapter instanceof BillOfMaterial || adapter instanceof ConfigurationProfile) {
 					return (XtextResource)((EObject)adapter).eResource();
 				}
 			} else if(entry instanceof ITextSelection) {
