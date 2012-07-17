@@ -102,8 +102,7 @@ public class BAPIActionHandler extends AbstractHandler {
 			protected IStatus run(IProgressMonitor monitor) {
 				String taskName = "Executing rfc call on SAP system";
 				monitor.beginTask(taskName, IProgressMonitor.UNKNOWN);
-				Model vcmlModel = VCML.createModel();
-				persistResultResource(fileOutput, result, vcmlModel, monitor);
+				Model vcmlModel = (Model)result.getContents().get(0);
 				for(Object entry : entries) {
 					if(monitor.isCanceled()) {
 						monitor.done();
@@ -171,29 +170,25 @@ public class BAPIActionHandler extends AbstractHandler {
 	}
 	
 	protected Resource getResultResource(Resource source, Set<String> seenObjects, boolean fileOutput) {
-		// TODO can we avoid the early resource creation ? 
-		if(fileOutput) {
-			URI sourceUri = source.getURI();
-			URI resultUri = sourceUri.trimFileExtension().appendFileExtension(EXTRACTED_FILENAME_ADDON + sourceUri.fileExtension());
-			Resource result = resourceSet.createResource(resultUri, "UTF-8");
-			result.getContents().add(VCML.createModel());
-			collectImportedObjects(seenObjects, source, result);
-			createResultFile(result);
-			return result;
-		} else {
-			return resourceSet.createResource(URI.createURI("bapiResults"));
-		}
+		URI sourceUri = source.getURI();
+		URI resultUri = sourceUri.trimFileExtension().appendFileExtension(EXTRACTED_FILENAME_ADDON + sourceUri.fileExtension());
+		Resource result = resourceSet.createResource(resultUri, "UTF-8");
+		result.getContents().add(VCML.createModel());
+		collectImportedObjects(seenObjects, source, result);
+		createResultFile(result);
+		return result;
 	}
 	
-	protected void persistResultResource(final boolean outputToFile, final Resource finalSourceResource, final Model vcmlModel, IProgressMonitor monitor) {
+	protected void persistResultResource(boolean outputToFile, final Resource finalSourceResource, final Model vcmlModel, IProgressMonitor monitor) {
 		try {
 			if(outputToFile) {
 				finalSourceResource.save(SaveOptions.defaultOptions().toOptionsMap());
 			} else {
 				if (!vcmlModel.getObjects().isEmpty()) {
+					resultStream.println("\n");
 					resultStream.println(((XtextResource)finalSourceResource).getSerializer().serialize(vcmlModel));
 				}
-				finalSourceResource.delete(null);
+				finalSourceResource.delete(SaveOptions.defaultOptions().toOptionsMap());
 			}
 		} catch (Exception exception) {
 			// currently, there can be exceptions if objects are not completeley initialized or linking fails or IOExceptions
