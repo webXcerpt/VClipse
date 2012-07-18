@@ -88,6 +88,9 @@ public class ClassReader extends BAPIUtils {
 		{
 			JCoFunction function = getJCoFunction("BAPI_HIERA_GETSUPERCLASSALLOCS", monitor);
 			JCoParameterList ipl = function.getImportParameterList();
+			
+			handleOptions2(options, ipl, null, "KEYDATE");		// TODO check if handleOptions2 is the correct method
+			
 			ipl.setValue("CLASSTYPE", classType);
 			ipl.setValue("CLASSNUM", className);
 			try {
