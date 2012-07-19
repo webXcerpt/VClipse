@@ -20,13 +20,13 @@ import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.billofmaterial.BillOfMaterialReader;
 import org.vclipse.bapi.actions.classes.ClassReader;
 import org.vclipse.bapi.actions.configurationprofile.ConfigurationProfileReader;
+import org.vclipse.vcml.utils.VCMLProxyFactory;
 import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.Classification;
 import org.vclipse.vcml.vcml.Material;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.SimpleDescription;
-import org.vclipse.vcml.utils.VCMLProxyFactory;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
@@ -52,7 +52,7 @@ public class MaterialReader extends BAPIUtils {
 		}
 		Material object = VCML.createMaterial();
 		object.setName(materialName);
-		Model model = (Model)resource.getContents().get(0);
+		VcmlModel model = (VcmlModel)resource.getContents().get(0);
 		model.getObjects().add(object);
 		JCoFunction function = getJCoFunction("BAPI_MATERIAL_GET_DETAIL", monitor);
 		JCoParameterList ipl = function.getImportParameterList();

@@ -17,10 +17,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.vcml.utils.VcmlUtils;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Procedure;
 import org.vclipse.vcml.vcml.ProcedureSource;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -36,7 +36,7 @@ public class ProcedureReader extends BAPIUtils {
 		}
 		Procedure object = VCML.createProcedure();
 		object.setName(procedureName);
-		Model vcmlModel = (Model)resource.getContents().get(0);
+		VcmlModel vcmlModel = (VcmlModel)resource.getContents().get(0);
 		vcmlModel.getObjects().add(object);
 		JCoFunction function = getJCoFunction("CARD_DEPENDENCY_READ", monitor);
 		JCoParameterList ipl = function.getImportParameterList();

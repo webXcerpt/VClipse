@@ -13,7 +13,6 @@ import org.vclipse.bapi.actions.varianttable.VariantTableReader;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicType;
 import org.vclipse.vcml.vcml.Literal;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.Option;
@@ -22,6 +21,7 @@ import org.vclipse.vcml.vcml.SymbolicLiteral;
 import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -36,7 +36,7 @@ public class VariantTableContentReader extends VariantTableContentDeleteActionHa
 	@Inject
 	private VariantTableReader variantTableReader;
 	
-	public VariantTableContent read(String variantTableName, Model vcmlModel, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public VariantTableContent read(String variantTableName, VcmlModel vcmlModel, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
 		if(variantTableName == null || !seenObjects.add("VariantTableContent/" + variantTableName.toUpperCase()) || monitor.isCanceled()) {
 			return null;
 		}

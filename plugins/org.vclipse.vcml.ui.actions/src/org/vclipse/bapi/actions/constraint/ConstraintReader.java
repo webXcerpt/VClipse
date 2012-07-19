@@ -19,8 +19,8 @@ import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.ConstraintSource;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -36,7 +36,7 @@ public class ConstraintReader extends BAPIUtils {
 		}
 		Constraint object = VCML.createConstraint();
 		object.setName(constraintName);
-		Model model = (Model)resource.getContents().get(0);
+		VcmlModel model = (VcmlModel)resource.getContents().get(0);
 		model.getObjects().add(object);
 		JCoFunction function = getJCoFunction("CARD_CNET_CONSTRAINT_READ", monitor);
 		JCoParameterList ipl = function.getImportParameterList();

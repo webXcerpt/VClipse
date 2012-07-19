@@ -21,8 +21,8 @@ import org.vclipse.vcml.utils.VCMLProxyFactory;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.inject.Inject;
 import com.sap.conn.jco.AbapException;
@@ -37,7 +37,7 @@ public class DependencyNetReader extends BAPIUtils {
 	@Inject
 	private ConstraintReader constraintReader;
 
-	public DependencyNet read(String depNetName, Model vcmlModel, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public DependencyNet read(String depNetName, VcmlModel vcmlModel, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
 		if(depNetName == null || !seenObjects.add("DependencyNet/" + depNetName.toUpperCase())) {
 			return null;
 		}

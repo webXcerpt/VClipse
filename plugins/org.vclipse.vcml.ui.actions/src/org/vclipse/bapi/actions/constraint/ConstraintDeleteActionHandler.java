@@ -20,8 +20,8 @@ import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.IBAPIActionRunner;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VcmlModel;
 import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.sap.conn.jco.AbapException;
@@ -39,7 +39,7 @@ public class ConstraintDeleteActionHandler  extends BAPIUtils implements IBAPIAc
 		// determine name of containing dependencyNet
 		// TODO implement finding containing dependency net with ECoreUtils
 		DependencyNet dependencyNet = null;
-		Model model = (Model)object.eContainer();
+		VcmlModel model = (VcmlModel)object.eContainer();
 		for (Object o : EcoreUtil.getObjectsByType(model.getObjects(), VcmlPackage.Literals.DEPENDENCY_NET)) {
 			DependencyNet depNet = (DependencyNet)o;
 			if (depNet.getConstraints().contains(object)) {

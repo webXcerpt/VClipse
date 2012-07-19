@@ -34,7 +34,11 @@ public class BillOfMaterialDeleteActionHandler extends BillOfMaterialReader impl
 	public void run(BillOfMaterial billOfMaterial, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
 		JCoFunction function = getJCoFunction("CSAP_MAT_BOM_DELETE", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
-		String materialNumber = ((Material)billOfMaterial.eContainer()).getName();
+		Material material = billOfMaterial.getMaterial();
+		if(material == null) {
+			return;
+		}
+		String materialNumber = material.getName();
 		String plant = getPlant();
 		String bomUsage = getBomUsage();
 		

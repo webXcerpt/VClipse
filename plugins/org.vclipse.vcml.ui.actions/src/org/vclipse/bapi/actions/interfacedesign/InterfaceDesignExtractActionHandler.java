@@ -17,8 +17,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.bapi.actions.IBAPIActionRunner;
 import org.vclipse.vcml.vcml.InterfaceDesign;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.sap.conn.jco.JCoException;
 
@@ -29,7 +29,7 @@ public class InterfaceDesignExtractActionHandler extends InterfaceDesignReader i
 	}
 
 	public void run(InterfaceDesign interfaceDesign, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
-		read(interfaceDesign.getName(), (Model)resource.getContents().get(0), monitor, seenObjects, options, true);
+		read(interfaceDesign.getName(), (VcmlModel)resource.getContents().get(0), monitor, seenObjects, options, true);
 	}
 
 }

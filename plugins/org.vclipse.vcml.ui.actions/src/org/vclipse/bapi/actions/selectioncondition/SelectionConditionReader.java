@@ -18,9 +18,9 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.ConditionSource;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.SelectionCondition;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -36,7 +36,7 @@ public class SelectionConditionReader extends BAPIUtils {
 		}
 		SelectionCondition object = VCML.createSelectionCondition();
 		object.setName(selectionConditionName);
-		Model model = (Model)resource.getContents().get(0);
+		VcmlModel model = (VcmlModel)resource.getContents().get(0);
 		model.getObjects().add(object);
 		JCoFunction function = getJCoFunction("CARD_DEPENDENCY_READ", monitor);
 		JCoParameterList ipl = function.getImportParameterList();

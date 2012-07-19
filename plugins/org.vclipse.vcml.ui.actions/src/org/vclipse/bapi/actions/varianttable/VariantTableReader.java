@@ -21,10 +21,10 @@ import org.vclipse.bapi.actions.varianttable.content.VariantTableContentReader;
 import org.vclipse.vcml.utils.VCMLProxyFactory;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VariantTableArgument;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.inject.Inject;
 import com.sap.conn.jco.AbapException;
@@ -42,7 +42,7 @@ public class VariantTableReader extends BAPIUtils {
 	@Inject
 	private VariantTableContentReader contentReader;
 	
-	public VariantTable read(String variantTableName, Model vcmlModel, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public VariantTable read(String variantTableName, VcmlModel vcmlModel, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
 		if(variantTableName == null || !seenObjects.add("VariantTable/" + variantTableName.toUpperCase()) || monitor.isCanceled()) {
 			return null;
 		}

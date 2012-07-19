@@ -20,10 +20,10 @@ import org.vclipse.bapi.actions.characteristic.CharacteristicReader;
 import org.vclipse.vcml.utils.VCMLProxyFactory;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.VariantFunction;
 import org.vclipse.vcml.vcml.VariantFunctionArgument;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.inject.Inject;
 import com.sap.conn.jco.AbapException;
@@ -38,7 +38,7 @@ public class VariantFunctionReader extends BAPIUtils {
 	@Inject
 	private CharacteristicReader csticReader;
 	
-	public VariantFunction read(String variantFunctionName, Model vcmlModel, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public VariantFunction read(String variantFunctionName, VcmlModel vcmlModel, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
 		if(variantFunctionName == null || !seenObjects.add("VariantFunction/" + variantFunctionName.toUpperCase()) || monitor.isCanceled()) {
 			return null;
 		}

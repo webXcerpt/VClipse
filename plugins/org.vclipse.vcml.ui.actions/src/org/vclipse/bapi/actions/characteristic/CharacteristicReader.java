@@ -30,7 +30,6 @@ import org.vclipse.vcml.vcml.DateType;
 import org.vclipse.vcml.vcml.Description;
 import org.vclipse.vcml.vcml.FormattedDocumentationBlock;
 import org.vclipse.vcml.vcml.Language;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.MultiLanguageDescription;
 import org.vclipse.vcml.vcml.MultiLanguageDescriptions;
 import org.vclipse.vcml.vcml.MultipleLanguageDocumentation;
@@ -41,6 +40,7 @@ import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.SymbolicType;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
@@ -53,7 +53,7 @@ public class CharacteristicReader extends BAPIUtils {
 	public static final SimpleDateFormat DATEFORMAT_SAP = new SimpleDateFormat("yyyyMMdd");
 	public static final SimpleDateFormat DATEFORMAT_VCML = new SimpleDateFormat("dd.MM.yyyy");
 
-	public Characteristic read(String csticName, Model vcmlModel, final IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public Characteristic read(String csticName, VcmlModel vcmlModel, final IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
 		if(csticName == null || !seenObjects.add("Characteristic/" + csticName.toUpperCase()) || monitor.isCanceled()) {
 			return null;			
 		}

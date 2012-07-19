@@ -41,7 +41,11 @@ public class ConfigurationProfileCreateChangeActionHandler extends BAPIUtils imp
 
 	@Override
 	public void run(ConfigurationProfile object, Resource resource,	IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
-		String materialNumber = ((Material)object.eContainer()).getName();
+		Material material = object.getMaterial();
+		if(material == null) {
+			return;
+		}
+		String materialNumber = material.getName();
 		String fixing = null;
 		if (object.getFixing() != Fixing.NONE) {
 			fixing = object.getFixing().getLiteral();

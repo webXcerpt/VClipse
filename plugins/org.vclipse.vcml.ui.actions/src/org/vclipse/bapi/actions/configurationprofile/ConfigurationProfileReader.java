@@ -31,9 +31,9 @@ import org.vclipse.vcml.vcml.ConfigurationProfileEntry;
 import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.Material;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Procedure;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.inject.Inject;
 import com.sap.conn.jco.AbapException;
@@ -54,10 +54,11 @@ public class ConfigurationProfileReader extends BAPIUtils {
 	private InterfaceDesignReader interfaceDesignReader;
 
 	public void readAll(Material containerMaterial, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
-		read(containerMaterial, null, resource, monitor, seenObjects, options, recurse);
+		read(containerMaterial, containerMaterial.getName(), resource, monitor, seenObjects, options, recurse);
 	}
 	
 	public void read(Material containerMaterial, String profileName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+		VcmlModel model = (VcmlModel)resource.getContents().get(0);
 		String materialName = containerMaterial.getName();
 		if(materialName == null || !seenObjects.add("ConfigurationProfile/" + materialName.toUpperCase())) {
 			return;
@@ -104,7 +105,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 						if(monitor.isCanceled()) {
 							return;
 						}
-						interfaceDesign = interfaceDesignReader.read(design, (Model)resource.getContents().get(0), monitor, seenObjects, options, recurse);
+						interfaceDesign = interfaceDesignReader.read(design, model, monitor, seenObjects, options, recurse);
 					}
 					if (interfaceDesign==null) {
 						interfaceDesign = VCMLProxyFactory.createInterfaceDesignProxy(resource, design);
@@ -150,7 +151,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 						if(monitor.isCanceled()) {
 							return;
 						}
-						dependencyNet = dependencyNetReader.read(depName, (Model)resource.getContents().get(0), monitor, seenObjects, options, recurse);
+						dependencyNet = dependencyNetReader.read(depName, model, monitor, seenObjects, options, recurse);
 					}
 					if (dependencyNet==null) {
 						dependencyNet = VCMLProxyFactory.createDependencyNetProxy(resource, depName);
@@ -162,8 +163,6 @@ public class ConfigurationProfileReader extends BAPIUtils {
 				VCMLObjectUtils.sortDependencyNets(profile.getDependencyNets());
 				VCMLObjectUtils.sortEntries(profile.getEntries());
 			}
-			
-
 		} catch (AbapException e) {
 			handleAbapException(e);
 		} 

@@ -38,14 +38,12 @@ import org.eclipse.xtext.util.SimpleAttributeResolver;
 import org.eclipse.xtext.util.StringInputStream;
 import org.vclipse.bapi.actions.resources.BAPIException;
 import org.vclipse.vcml.ui.IUiConstants;
-import org.vclipse.vcml.vcml.BillOfMaterial;
-import org.vclipse.vcml.vcml.ConfigurationProfile;
 import org.vclipse.vcml.vcml.Import;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VariantTableContent;
 import org.vclipse.vcml.vcml.VcmlFactory;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
@@ -93,16 +91,16 @@ public class BAPIActionHandler extends AbstractHandler {
 		final Object appContext = event.getApplicationContext();
 		final Collection<?> entries = getEntries(appContext);
 		final XtextResource source = getSourceResource(entries, event);
-		final Model vcmlSourceModel = (Model)source.getContents().get(0);
+		final VcmlModel vcmlSourceModel = (VcmlModel)source.getContents().get(0);
 		final EList<Option> options = vcmlSourceModel.getOptions();
-		final Resource result = getResultResource(source, seenObjects, fileOutput);
 		
 		Job sapActionJob = new Job("Executing SAP action") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
+				Resource result = getResultResource(source, seenObjects, fileOutput);
 				String taskName = "Executing rfc call on SAP system";
 				monitor.beginTask(taskName, IProgressMonitor.UNKNOWN);
-				Model vcmlModel = (Model)result.getContents().get(0);
+				VcmlModel vcmlModel = (VcmlModel)result.getContents().get(0);
 				for(Object entry : entries) {
 					if(monitor.isCanceled()) {
 						monitor.done();
@@ -157,8 +155,8 @@ public class BAPIActionHandler extends AbstractHandler {
 		for(Object entry : entries) {
 			if(entry instanceof EObjectNode) {
 				Object adapter = ((EObjectNode)entry).getAdapter(VCObject.class);
-				if(adapter instanceof VCObject || adapter instanceof BillOfMaterial || adapter instanceof ConfigurationProfile) {
-					return (XtextResource)((EObject)adapter).eResource();
+				if(adapter instanceof VCObject) {
+					return (XtextResource)((VCObject)adapter).eResource();
 				}
 			} else if(entry instanceof ITextSelection) {
 				return BAPIActionUtils.getResource(HandlerUtil.getActiveEditor(event));
@@ -173,13 +171,13 @@ public class BAPIActionHandler extends AbstractHandler {
 		URI sourceUri = source.getURI();
 		URI resultUri = sourceUri.trimFileExtension().appendFileExtension(EXTRACTED_FILENAME_ADDON + sourceUri.fileExtension());
 		Resource result = resourceSet.createResource(resultUri, "UTF-8");
-		result.getContents().add(VCML.createModel());
+		result.getContents().add(VCML.createVcmlModel());
 		collectImportedObjects(seenObjects, source, result);
 		createResultFile(result);
 		return result;
 	}
 	
-	protected void persistResultResource(boolean outputToFile, final Resource finalSourceResource, final Model vcmlModel, IProgressMonitor monitor) {
+	protected void persistResultResource(boolean outputToFile, final Resource finalSourceResource, final VcmlModel vcmlModel, IProgressMonitor monitor) {
 		try {
 			if(outputToFile) {
 				finalSourceResource.save(SaveOptions.defaultOptions().toOptionsMap());
@@ -206,10 +204,10 @@ public class BAPIActionHandler extends AbstractHandler {
 	}
 	
 	protected void collectImportedObjects(Set<String> seenObjects, Resource sourceResource, Resource targetResource) {
-		Model targetModel = null;
+		VcmlModel targetModel = null;
 		EList<EObject> targetContents = targetResource.getContents();
 		if(!targetContents.isEmpty()) {
-			targetModel = (Model)targetContents.get(0);
+			targetModel = (VcmlModel)targetContents.get(0);
 		}
 		
 		URI uri = sourceResource.getURI();
@@ -217,7 +215,8 @@ public class BAPIActionHandler extends AbstractHandler {
 		String lastSegment = uri.lastSegment();
 		EList<EObject> contents = sourceResource.getContents();
 		if(!contents.isEmpty()) {
-			for(Import importStatement : ((Model)contents.get(0)).getImports()) {
+			VcmlModel vcmlModel = (VcmlModel)contents.get(0);
+			for(Import importStatement : vcmlModel.getImports()) {
 				String importURI = importStatement.getImportURI();
 				String importResourcePath = platformString.replace(lastSegment, importURI);
 				Resource loadedResource = resourceSet.getResource(URI.createURI(importResourcePath), true);
@@ -227,8 +226,8 @@ public class BAPIActionHandler extends AbstractHandler {
 						targetModel.getImports().add(EcoreUtil.copy(importStatement));
 					}
 					EObject topLevelObject = loadedContents.get(0);
-					if(topLevelObject instanceof Model) {
-						Model model = (Model)topLevelObject;
+					if(topLevelObject instanceof VcmlModel) {
+						VcmlModel model = (VcmlModel)topLevelObject;
 						for(VCObject vcobject : model.getObjects()) {
 							seenObjects.add(vcobject.eClass().getName() + "/" +vcobject.getName());
 						}

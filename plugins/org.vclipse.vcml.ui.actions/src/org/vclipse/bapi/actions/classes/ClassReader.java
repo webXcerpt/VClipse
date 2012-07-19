@@ -20,8 +20,8 @@ import org.vclipse.vcml.utils.VCMLProxyFactory;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.Class;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
@@ -35,7 +35,7 @@ public class ClassReader extends BAPIUtils {
 	@Inject
 	private CharacteristicReader csticReader;
 	
-	public Class read(String classSpec, Model model, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public Class read(String classSpec, VcmlModel model, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
 		int classType = VcmlUtils.getClassType(classSpec);
 		String className = VcmlUtils.getClassName(classSpec);
 		String newClassSpec = "(" + classType + ")" + className;
@@ -88,9 +88,6 @@ public class ClassReader extends BAPIUtils {
 		{
 			JCoFunction function = getJCoFunction("BAPI_HIERA_GETSUPERCLASSALLOCS", monitor);
 			JCoParameterList ipl = function.getImportParameterList();
-			
-			handleOptions2(options, ipl, null, "KEYDATE");		// TODO check if handleOptions2 is the correct method
-			
 			ipl.setValue("CLASSTYPE", classType);
 			ipl.setValue("CLASSNUM", className);
 			try {

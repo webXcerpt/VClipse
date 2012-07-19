@@ -16,9 +16,9 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.bapi.actions.IBAPIActionRunner;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.VariantFunction;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.sap.conn.jco.JCoException;
 
@@ -29,7 +29,7 @@ public class VariantFunctionExtractActionHandler extends VariantFunctionReader i
 	}
 
 	public void run(VariantFunction variantFunction, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
-		read(variantFunction.getName(), (Model)resource.getContents().get(0), monitor, seenObjects, options, true);
+		read(variantFunction.getName(), (VcmlModel)resource.getContents().get(0), monitor, seenObjects, options, true);
 	}
 
 }

@@ -29,6 +29,10 @@ public class ConfigurationProfileExtractActionHandler extends ConfigurationProfi
 	}
 
 	public void run(ConfigurationProfile configurationProfile, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
-		read((Material)configurationProfile.eContainer(), configurationProfile.getName(), resource, monitor, seenObjects, options, true);
+		Material material = configurationProfile.getMaterial();
+		if(material == null) {
+			return;
+		}
+		read(material, configurationProfile.getName(), resource, monitor, seenObjects, options, true);
 	}
 }

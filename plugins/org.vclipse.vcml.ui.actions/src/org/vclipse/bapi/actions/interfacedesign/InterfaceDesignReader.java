@@ -24,10 +24,10 @@ import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicGroup;
 import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.Language;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.MultiLanguageDescription;
 import org.vclipse.vcml.vcml.MultiLanguageDescriptions;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
@@ -40,7 +40,7 @@ public class InterfaceDesignReader extends BAPIUtils {
 	@Inject
 	private CharacteristicReader csticReader;
 	
-	public InterfaceDesign read(String interfaceDesignName, Model model, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public InterfaceDesign read(String interfaceDesignName, VcmlModel model, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
 		if (interfaceDesignName == null || !seenObjects.add("InterfaceDesign/" + interfaceDesignName.toUpperCase()) || monitor.isCanceled()) {
 			return null;
 		}

@@ -29,7 +29,11 @@ public class BillOfMaterialDisplayActionHandler extends BillOfMaterialReader imp
 	}
 
 	public void run(BillOfMaterial billOfMaterial, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
-		read((Material)billOfMaterial.eContainer(), resource, monitor, seenObjects, options, false);
+		Material material = billOfMaterial.getMaterial();
+		if(material == null) {
+			return;
+		}
+		read(material, resource, monitor, seenObjects, options, false);
 	}
 
 }
