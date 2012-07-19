@@ -10,6 +10,7 @@ import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.OptionType;
 import org.vclipse.vcml.vcml.VcmlFactory;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -21,7 +22,7 @@ public abstract class Abstract2VcmlTImportTransformation extends AbstractConfigS
 	
 	public void init() {
 		if(referencedModel != null) {
-			org.vclipse.vcml.vcml.Model vcmlModel = (org.vclipse.vcml.vcml.Model)referencedModel;
+			VcmlModel vcmlModel = (VcmlModel)referencedModel;
 			String materialNumber = "";
 			for(Option option : vcmlModel.getOptions()) {
 				if(OptionType.UPS == option.getName()) {
