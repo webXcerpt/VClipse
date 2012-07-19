@@ -3,8 +3,8 @@ grammar org.vclipse.vcml.VCML with org.eclipse.xtext.common.Terminals
 import "platform:/resource/org.vclipse.vcml.mm/src/org/vclipse/vcml/mm/VCML.ecore"
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
-Model 
-	:	{Model}
+VcmlModel
+	:	{VcmlModel}
 		imports+=Import*
 	    ('options' '{' (options+=Option)* '}')?
     	(objects+=VCObject)*
@@ -24,31 +24,27 @@ enum OptionType
 	| KeyDate
 	;
 
-// this enforces that all VCObjects have a name attribute
-DummyRule returns VCObject
-	:	name=STRING
+VCObject 
+	:	Characteristic
+	| 	Class
+	| 	Constraint 
+	| 	SelectionCondition 
+	| 	Precondition 
+	| 	Procedure 
+	| 	DependencyNet
+	| 	Material
+	| 	InterfaceDesign
+	| 	VariantFunction
+	| 	VariantTable
+	| 	VariantTableContent
+	| 	BillOfMaterial
+	| 	ConfigurationProfile
 	;
-	
-VCObject :
-	  Characteristic
-	| Class
-	| Constraint 
-	| SelectionCondition 
-	| Precondition 
-	| Procedure 
-	| DependencyNet
-	| Material
-	| InterfaceDesign
-	| VariantFunction
-	| VariantTable
-	| VariantTableContent
-	;
-
-// concrete classes
 
 BillOfMaterial :
 	{BillOfMaterial}
-	'billofmaterial' '{'
+	'billofmaterial' name=EXTENDED_ID '{'
+		('material' material=[Material|EXTENDED_ID])?
 		('items' '{' items+=BOMItem* '}')?
 	//	('classitems' '{' classitems+=BOMItem* '}')? // currently deactivated
 	'}'
@@ -183,6 +179,7 @@ CLASSNAME
 
 ConfigurationProfile :
     'configurationprofile' name=EXTENDED_ID '{'
+    	('material' material=[Material|EXTENDED_ID])?
 	   (	('status' status=Status)?
 	   &	('bomapplication' bomapplication=XID)?
 	   &	('uidesign' uidesign=[InterfaceDesign | EXTENDED_ID])?
@@ -263,12 +260,12 @@ CharacteristicGroup :
 
 Material : 
 	'material' name=EXTENDED_ID ('{'
-		(	description=Description
-		&	('type' type=EXTENDED_ID)
+		(description=Description 
+		& ('type' type=EXTENDED_ID)
+		& ('billofmaterials' '{' billofmaterials+=[BillOfMaterial|EXTENDED_ID]* '}')?
+		& ('configurationprofiles' '{' configurationprofiles+=[ConfigurationProfile|EXTENDED_ID]* '}')?
+		& ('classes' '{' classifications+=Classification* '}')?
 		)
-		billofmaterials+=BillOfMaterial*
-		('classes' '{' classifications+=Classification* '}')?
-		configurationprofiles+=ConfigurationProfile*
 	'}')?
 	;
 
@@ -343,7 +340,7 @@ MultiLanguageDescriptions :
 MultiLanguageDescription :
 	language=Language value=STRING
 	;
-	
+	 
 enum Language
 	:	AF // Afrikaans       
 	|	AR // Arabic          

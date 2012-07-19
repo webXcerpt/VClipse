@@ -22,12 +22,12 @@ import org.vclipse.vcml.vcml.ConditionSource;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.Dependency;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Precondition;
 import org.vclipse.vcml.vcml.Procedure;
 import org.vclipse.vcml.vcml.ProcedureSource;
 import org.vclipse.vcml.vcml.SelectionCondition;
 import org.vclipse.vcml.vcml.VCObject;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -161,7 +161,8 @@ public class DependencySourceUtils {
 		try {
 			EList<EObject> contents = new ResourceSetImpl().getResource(vcmlResourceUri, true).getContents();
 			if(!contents.isEmpty()) {
-				Iterator<VCObject> iterator = Iterables.filter(((Model)contents.get(0)).getObjects(), new Predicate<VCObject>() {
+				VcmlModel vcmlModel = (VcmlModel)contents.get(0);
+				Iterator<VCObject> iterator = Iterables.filter(vcmlModel.getObjects(), new Predicate<VCObject>() {
 					public boolean apply(VCObject object) {
 						return object.getName().equals(searchName);
 					}

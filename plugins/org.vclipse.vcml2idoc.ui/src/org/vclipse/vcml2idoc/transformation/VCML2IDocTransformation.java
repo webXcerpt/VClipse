@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.vclipse.idoc.iDoc.IDocFactory;
-import org.vclipse.vcml.vcml.Model;
+import org.vclipse.vcml.vcml.VcmlModel;
 import org.vclipse.vcml2idoc.VCML2IDocPlugin;
 
 import com.google.inject.Inject;
@@ -44,9 +44,9 @@ public class VCML2IDocTransformation implements IVCML2IDocTransformation {
 		EList<EObject> contents = vcmlResource.getContents();
 		if(!contents.isEmpty()) {
 			EObject object = contents.get(0);
-			if(object instanceof Model) {
+			if(object instanceof VcmlModel) {
 				monitor.subTask("Converting " + vcmlResource.getURI().lastSegment());
-				org.vclipse.idoc.iDoc.Model idocModel = vcml2IDocSwitch.vcml2IDocs((Model)object);
+				org.vclipse.idoc.iDoc.Model idocModel = vcml2IDocSwitch.vcml2IDocs((VcmlModel)object);
 				if(idocModel == null) {
 					idocModel = IDocFactory.eINSTANCE.createModel();
 				}

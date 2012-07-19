@@ -17,9 +17,9 @@ import org.eclipse.xtext.ui.editor.quickfix.Fix;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor;
 import org.eclipse.xtext.validation.Issue;
 import org.vclipse.vcml.utils.DependencySourceUtils;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlFactory;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.inject.Inject;
 
@@ -85,13 +85,14 @@ public class DependencyQuickfixProvider extends DefaultQuickfixProvider {
 		EList<EObject> contents = resource.getContents();
 		if(!contents.isEmpty()) {
 			EObject topObject = contents.get(0);
-			if(topObject instanceof Model) {
+			if(topObject instanceof VcmlModel) {
+				VcmlModel vcmlModel = (VcmlModel)topObject;
 				VcmlFactory vcml = VcmlFactory.eINSTANCE;
 				Object result = vcml.getClass().getMethod("create" + referenceType).invoke(vcml);
 				if(result instanceof VCObject) {
 					VCObject vcobject = (VCObject)result;
 					vcobject.setName(linkText);
-					((Model)topObject).getObjects().add(vcobject);
+					vcmlModel.getObjects().add(vcobject);
 					resource.save(SaveOptions.defaultOptions().toOptionsMap());
 				}
 			}

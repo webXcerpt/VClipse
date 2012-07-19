@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.vclipse.idoc.iDoc.IDoc;
@@ -60,7 +61,6 @@ import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.Language;
 import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.Material;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.MultiLanguageDescription;
 import org.vclipse.vcml.vcml.MultiLanguageDescriptions;
 import org.vclipse.vcml.vcml.NumberListEntry;
@@ -84,6 +84,7 @@ import org.vclipse.vcml.vcml.VariantFunctionArgument;
 import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
+import org.vclipse.vcml.vcml.VcmlModel;
 import org.vclipse.vcml.vcml.util.VcmlSwitch;
 import org.vclipse.vcml2idoc.VCML2IDocPlugin;
 import org.vclipse.vcml2idoc.preferences.IVCML2IDocPreferences;
@@ -99,6 +100,7 @@ import com.google.inject.name.Named;
  */
 public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 
+	private static final Logger LOGGER = Logger.getLogger(VCML2IDocSwitch.class);
 	private static final IDocFactory IDOC = IDocFactory.eINSTANCE;
 
 	private static final SimpleDateFormat DATEFORMAT_SAP = new SimpleDateFormat("yyyyMMdd");
@@ -159,7 +161,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 	/**
 	 * not reentrant!
 	 */
-	public org.vclipse.idoc.iDoc.Model vcml2IDocs(final Model vcmlModel) {
+	public org.vclipse.idoc.iDoc.Model vcml2IDocs(final VcmlModel vcmlModel) {
 		if(vcmlModel != null) {
 			setTransformationTimeConstants();
 			setOptionsFromModel(vcmlModel);
@@ -242,7 +244,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		return ups!=null && generateIDocsFor(IVCML2IDocPreferences.UPSMAS);
 	}
 
-	private void setOptionsFromModel(final Model model) {
+	private void setOptionsFromModel(final VcmlModel model) {
 		for(final Option option : model.getOptions()) {
 			switch (option.getName()) {
 				case ECM: ecm = option.getValue(); break;
@@ -282,49 +284,54 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		setValue(segmentE1SZUTH, "TDSPRAS_ISO", "EN");
 		*/
 
-		final String materialNumber = ((Material)object.eContainer()).getName();
-		final String plant = getPlant();
+		Material material = object.getMaterial();
+		if(material == null) {
+			LOGGER.warn(object.getClass().getSimpleName() + " " + object.getName() + " has no assigned material.");
+		} else {
+			final String materialNumber = material.getName();
+			final String plant = getPlant();
 
 
-		final Segment segmentE1MASTM = addChildSegment(segmentE1STZUM, "E1MASTM");
-		setValue(segmentE1MASTM, "MSGFN", "005");
-		setValue(segmentE1MASTM, "MATNR", toUpperCase(materialNumber));
-		setValue(segmentE1MASTM, "WERKS", toUpperCase(plant));
-		setValue(segmentE1MASTM, "STLAN", toUpperCase(bomUsage));
-		// setValue(segmentE1MASTM, "STLNR", ""); // Stuecklistennummer?
-		setValue(segmentE1MASTM, "STLAL", alternativeBOM); // Alternative BOM
+			final Segment segmentE1MASTM = addChildSegment(segmentE1STZUM, "E1MASTM");
+			setValue(segmentE1MASTM, "MSGFN", "005");
+			setValue(segmentE1MASTM, "MATNR", toUpperCase(materialNumber));
+			setValue(segmentE1MASTM, "WERKS", toUpperCase(plant));
+			setValue(segmentE1MASTM, "STLAN", toUpperCase(bomUsage));
+			// setValue(segmentE1MASTM, "STLNR", ""); // Stuecklistennummer?
+			setValue(segmentE1MASTM, "STLAL", alternativeBOM); // Alternative BOM
 
-		final Segment segmentE1STKOM = addChildSegment(segmentE1STZUM, "E1STKOM");
-		setValue(segmentE1STKOM, "MSGFN", "005");
-		setValue(segmentE1STKOM, "STLAL", alternativeBOM); // Alternative BOM
-		setValue(segmentE1STKOM, "BMEIN", "PCE"); // unit of measure for base quantity
-		setValue(segmentE1STKOM, "STLST", "01"); // BOM status
+			final Segment segmentE1STKOM = addChildSegment(segmentE1STZUM, "E1STKOM");
+			setValue(segmentE1STKOM, "MSGFN", "005");
+			setValue(segmentE1STKOM, "STLAL", alternativeBOM); // Alternative BOM
+			setValue(segmentE1STKOM, "BMEIN", "PCE"); // unit of measure for base quantity
+			setValue(segmentE1STKOM, "STLST", "01"); // BOM status
 
-		for(final BOMItem item : object.getItems()) {
-			final Segment segmentE1STPOM = addChildSegment(segmentE1STZUM, "E1STPOM");
-			setValue(segmentE1STPOM, "MSGFN", "005");
-			// setValue(segmentE1STPOM, "STLKN", "00000001"); // BOM item code number
-			setValue(segmentE1STPOM, "IDNRK", item.getMaterial().getName());
-			setValue(segmentE1STPOM, "POSTP", "N");
-			setValue(segmentE1STPOM, "POSNR", item.getItemnumber());
-			setValue(segmentE1STPOM, "MEINS", "PCE");
-			setValue(segmentE1STPOM, "MENGE_C", "1");
-			setValue(segmentE1STPOM, "RVREL", "X"); // Indicator: item relevant to sales
+			for(final BOMItem item : object.getItems()) {
+				final Segment segmentE1STPOM = addChildSegment(segmentE1STZUM, "E1STPOM");
+				setValue(segmentE1STPOM, "MSGFN", "005");
+				// setValue(segmentE1STPOM, "STLKN", "00000001"); // BOM item code number
+				setValue(segmentE1STPOM, "IDNRK", item.getMaterial().getName());
+				setValue(segmentE1STPOM, "POSTP", "N");
+				setValue(segmentE1STPOM, "POSNR", item.getItemnumber());
+				setValue(segmentE1STPOM, "MEINS", "PCE");
+				setValue(segmentE1STPOM, "MENGE_C", "1");
+				setValue(segmentE1STPOM, "RVREL", "X"); // Indicator: item relevant to sales
 
-			final SelectionCondition selectionCondition = item.getSelectionCondition();
-			if(selectionCondition != null) {
-				addSegmentE1CUKBM(segmentE1STPOM, selectionCondition.getName(), "SEL", selectionCondition.getGroup(), selectionCondition.getStatus(), null);
-			}
-			for(final ConfigurationProfileEntry entry : item.getEntries()) {
-				final Procedure procedure = entry.getDependency();
-				if(procedure != null) {
-					addSegmentE1CUKBM(segmentE1STPOM, toUpperCase(procedure.getName()), "PROC", toUpperCase(procedure.getGroup()), procedure.getStatus(), String.format("%1$04d", entry.getSequence()));
+				final SelectionCondition selectionCondition = item.getSelectionCondition();
+				if(selectionCondition != null) {
+					addSegmentE1CUKBM(segmentE1STPOM, selectionCondition.getName(), "SEL", selectionCondition.getGroup(), selectionCondition.getStatus(), null);
+				}
+				for(final ConfigurationProfileEntry entry : item.getEntries()) {
+					final Procedure procedure = entry.getDependency();
+					if(procedure != null) {
+						addSegmentE1CUKBM(segmentE1STPOM, toUpperCase(procedure.getName()), "PROC", toUpperCase(procedure.getGroup()), procedure.getStatus(), String.format("%1$04d", entry.getSequence()));
+					}
 				}
 			}
+			final String objid = String.format("%1$-18s%2$4s%3$1s%4$2s", materialNumber, plant, bomUsage, alternativeBOM);
+			addSegmentE1UPSLINK(iDoc, objid, VcmlUtils.DEFAULT_VALIDITY_START);
+			addSegmentE1UPSITM(iDoc, "BOMMAT", "MBOM", objid, HIELEV_BOMMAT, inslev_BOMMAT, sublev_BOMMAT++);
 		}
-		final String objid = String.format("%1$-18s%2$4s%3$1s%4$2s", materialNumber, plant, bomUsage, alternativeBOM);
-		addSegmentE1UPSLINK(iDoc, objid, VcmlUtils.DEFAULT_VALIDITY_START);
-		addSegmentE1UPSITM(iDoc, "BOMMAT", "MBOM", objid, HIELEV_BOMMAT, inslev_BOMMAT, sublev_BOMMAT++);
 		return Collections.singletonList(iDoc);
 	}
 

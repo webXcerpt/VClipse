@@ -23,9 +23,9 @@ import org.eclipse.xtext.validation.Issue.IssueImpl;
 import org.vclipse.vcml.diff.IVcmlDiffFilter;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.VCObject;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
@@ -39,8 +39,8 @@ public class DiffModelSwitch extends DiffSwitch<Boolean> {
 	private Boolean HANDLED = Boolean.TRUE;
 	private Boolean NOT_HANDLED = null;
 
-	private Model resultModel;
-	private Model newStateModel;
+	private VcmlModel resultModel;
+	private VcmlModel newStateModel;
 	private Set<VCObject> modelElements;
 	private IProgressMonitor monitor;
 
@@ -57,7 +57,7 @@ public class DiffModelSwitch extends DiffSwitch<Boolean> {
 		this.diffValidation = diffValidation;
 	}
 	
-	public void extractDifferences(DiffModel diffModel, Model resultModel, Model newStateModel, IProgressMonitor monitor) {
+	public void extractDifferences(DiffModel diffModel, VcmlModel resultModel, VcmlModel newStateModel, IProgressMonitor monitor) {
 		modelElements.clear();
 		name2Issue.clear();
 		this.resultModel = resultModel;
@@ -80,8 +80,8 @@ public class DiffModelSwitch extends DiffSwitch<Boolean> {
 		}
 		
 		for(EObject root : diffModel.getLeftRoots()) {
-			if(root instanceof Model) {
-				List<DependencyNet> dependencyNets = Lists.newArrayList(Iterables.filter(((Model)root).getObjects(), DependencyNet.class)); // to avoid concurrent modification
+			if(root instanceof VcmlModel) {
+				List<DependencyNet> dependencyNets = Lists.newArrayList(Iterables.filter(((VcmlModel)root).getObjects(), DependencyNet.class)); // to avoid concurrent modification
 				for(DependencyNet dnet : dependencyNets) {
 					depnet:
 					for(Constraint constraint : dnet.getConstraints()) {

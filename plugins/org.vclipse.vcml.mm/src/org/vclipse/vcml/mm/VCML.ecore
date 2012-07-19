@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="vcml" nsURI="http://www.vclipse.org/vcml" nsPrefix="">
-  <eClassifiers xsi:type="ecore:EClass" name="Model">
+  <eClassifiers xsi:type="ecore:EClass" name="VcmlModel">
     <eStructuralFeatures xsi:type="ecore:EReference" name="imports" upperBound="-1"
         eType="#//Import" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="options" upperBound="-1"
@@ -26,9 +26,11 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="description" eType="#//Description"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BillOfMaterial">
+  <eClassifiers xsi:type="ecore:EClass" name="BillOfMaterial" eSuperTypes="#//VCObject">
     <eStructuralFeatures xsi:type="ecore:EReference" name="items" upperBound="-1"
         eType="#//BOMItem" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="material" eType="#//Material"
+        eOpposite="#//Material/billofmaterials"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BOMItem">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="itemnumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -117,8 +119,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="superClasses" unique="false"
         upperBound="-1" eType="#//Class"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ConfigurationProfile">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ConfigurationProfile" eSuperTypes="#//VCObject">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//Status"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="bomapplication" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="uidesign" eType="#//InterfaceDesign"/>
@@ -128,6 +129,8 @@
         eType="#//ConfigurationProfileEntry" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fixing" eType="#//Fixing"
         defaultValueLiteral=""/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="material" eType="#//Material"
+        eOpposite="#//Material/configurationprofiles"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Dependency"/>
   <eClassifiers xsi:type="ecore:EClass" name="Procedure" eSuperTypes="#//VCObject #//Dependency">
@@ -192,11 +195,11 @@
   <eClassifiers xsi:type="ecore:EClass" name="Material" eSuperTypes="#//VCObject">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="billofmaterials" upperBound="-1"
-        eType="#//BillOfMaterial" containment="true"/>
+        eType="#//BillOfMaterial" eOpposite="#//BillOfMaterial/material"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="classifications" upperBound="-1"
         eType="#//Classification" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="configurationprofiles"
-        upperBound="-1" eType="#//ConfigurationProfile" containment="true"/>
+        upperBound="-1" eType="#//ConfigurationProfile" eOpposite="#//ConfigurationProfile/material"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Classification">
     <eStructuralFeatures xsi:type="ecore:EReference" name="cls" eType="#//Class"/>

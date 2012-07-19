@@ -29,7 +29,7 @@ public class VcmlDiffFilter extends EcoreSwitch<Boolean> implements IVcmlDiffFil
 	
 	@Override
 	public Boolean caseEStructuralFeature(EStructuralFeature object) {
-		if(VcmlPackage.Literals.MODEL__OBJECTS.equals(object)) {
+		if(VcmlPackage.Literals.VCML_MODEL__OBJECTS.equals(object)) {
 			return true;
 		} else if(VcmlPackage.Literals.SYMBOLIC_TYPE__VALUES.equals(object)) {
 			return preferenceStore.getBoolean(IVcmlDiffFilter.CHARACTERISTIC_IGNORE_VALUE_ORDER);

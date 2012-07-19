@@ -24,7 +24,6 @@ import org.vclipse.vcml.vcml.Description;
 import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.Material;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.ObjectType;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.OptionType;
@@ -43,6 +42,7 @@ import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
 import org.vclipse.vcml.vcml.VcmlFactory;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -164,8 +164,8 @@ public class VCMLObjectUtils {
 		return material;
 	}
 
-	static public Model mkModel() {
-		return VCML.createModel();
+	static public VcmlModel mkModel() {
+		return VCML.createVcmlModel();
 	}
 
 	static public Option mkOption(final OptionType type, final String value) {
@@ -277,7 +277,7 @@ public class VCMLObjectUtils {
 		entries.addAll(arrayList);
 	}
 	
-	static public <T extends VCObject> Iterable<T> getObjectsByNameAndType(final String name, Model vcmlModel, final java.lang.Class<T> type) { 
+	static public <T extends VCObject> Iterable<T> getObjectsByNameAndType(final String name, VcmlModel vcmlModel, final java.lang.Class<T> type) { 
 		if(vcmlModel == null || type == null) {
 			return Lists.newArrayList();
 		} else {

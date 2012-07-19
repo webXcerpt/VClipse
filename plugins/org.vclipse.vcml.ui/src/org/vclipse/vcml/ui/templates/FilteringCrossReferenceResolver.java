@@ -43,7 +43,7 @@ public class FilteringCrossReferenceResolver extends AbstractTemplateVariableRes
 		if(parameters.size() == 2 && parameters.get(1) instanceof String) {
 			IScope scope = castedContext.getScopeProvider().getScope(
 					castedContext.getContentAssistContext().getCurrentModel(), 
-						VcmlPackage.eINSTANCE.getModel_Objects());
+						VcmlPackage.eINSTANCE.getVcmlModel_Objects());
 			final EClassifier classifier = getEClassifierForGrammar((String)parameters.get(1), grammarAccess.getGrammar());
 			Iterator<IEObjectDescription> iterator = Iterables.filter(scope.getAllElements(), new Predicate<IEObjectDescription>() {
 				public boolean apply(IEObjectDescription input) {

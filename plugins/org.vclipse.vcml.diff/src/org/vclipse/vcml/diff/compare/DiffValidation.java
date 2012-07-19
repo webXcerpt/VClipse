@@ -26,8 +26,8 @@ import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicType;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.VCObject;
+import org.vclipse.vcml.vcml.VcmlModel;
 import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.google.common.collect.HashMultimap;
@@ -59,8 +59,8 @@ public class DiffValidation {
 		Map<String, DependencyNet> constraintDependencyNet = Maps.newHashMap();
 		
 		for(EObject root : diffModel.getRightRoots()) {
-			if(root instanceof Model) {
-				for(DependencyNet dnet : Lists.newArrayList(Iterables.filter(((Model)root).getObjects(), DependencyNet.class))) {
+			if(root instanceof VcmlModel) {
+				for(DependencyNet dnet : Lists.newArrayList(Iterables.filter(((VcmlModel)root).getObjects(), DependencyNet.class))) {
 					for(Constraint constraint : dnet.getConstraints()) {
 						constraintNameDependencyNetName.put(constraint.getName(), dnet.getName());
 						constraintDependencyNet.put(constraint.getName(), dnet);
@@ -69,8 +69,8 @@ public class DiffValidation {
 			} 
 		}
 		for(EObject root : diffModel.getLeftRoots()) {
-			if(root instanceof Model) {
-				for(DependencyNet dependencyNet : Lists.newArrayList(Iterables.filter(((Model)root).getObjects(), DependencyNet.class))) {
+			if(root instanceof VcmlModel) {
+				for(DependencyNet dependencyNet : Lists.newArrayList(Iterables.filter(((VcmlModel)root).getObjects(), DependencyNet.class))) {
 					for(Constraint constraint : dependencyNet.getConstraints()) {
 						String name = constraint.getName();
 						DependencyNet oldDepedencyNet = constraintDependencyNet.get(constraint.getName());

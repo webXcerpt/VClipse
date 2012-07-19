@@ -15,11 +15,11 @@ import org.vclipse.vcml.vcml.Comparison;
 import org.vclipse.vcml.vcml.Expression;
 import org.vclipse.vcml.vcml.MDataCharacteristic_C;
 import org.vclipse.vcml.vcml.MDataCharacteristic_P;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
 import org.vclipse.vcml.vcml.UnaryExpression;
 import org.vclipse.vcml.vcml.VCObject;
+import org.vclipse.vcml.vcml.VcmlModel;
 import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.google.common.base.Predicate;
@@ -41,7 +41,8 @@ public class DependencyJavaValidator extends AbstractDependencyJavaValidator {
 				EList<EObject> contents = vcmlResource.getContents();
 				if(!contents.isEmpty()) {
 					if(!contents.isEmpty()) {
-						Iterator<VCObject> iterator = Iterables.filter(((Model)contents.get(0)).getObjects(), new Predicate<VCObject>() {
+						VcmlModel vcmlModel = (VcmlModel)contents.get(0);
+						Iterator<VCObject> iterator = Iterables.filter(vcmlModel.getObjects(), new Predicate<VCObject>() {
 							public boolean apply(VCObject object) {
 								return object.getName().equals(fileName);
 							}

@@ -104,10 +104,10 @@
       <genEnumLiterals ecoreEnumLiteral="VCML.ecore#//Fixing/TopDown"/>
       <genEnumLiterals ecoreEnumLiteral="VCML.ecore#//Fixing/BottomUp"/>
     </genEnums>
-    <genClasses ecoreClass="VCML.ecore#//Model">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Model/imports"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Model/options"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Model/objects"/>
+    <genClasses ecoreClass="VCML.ecore#//VcmlModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//VcmlModel/imports"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//VcmlModel/options"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//VcmlModel/objects"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//Import">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//Import/importURI"/>
@@ -122,6 +122,7 @@
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//BillOfMaterial">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//BillOfMaterial/items"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference VCML.ecore#//BillOfMaterial/material"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//BOMItem">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//BOMItem/itemnumber"/>
@@ -190,13 +191,13 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference VCML.ecore#//Class/superClasses"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//ConfigurationProfile">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//ConfigurationProfile/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//ConfigurationProfile/status"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//ConfigurationProfile/bomapplication"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference VCML.ecore#//ConfigurationProfile/uidesign"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference VCML.ecore#//ConfigurationProfile/dependencyNets"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//ConfigurationProfile/entries"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//ConfigurationProfile/fixing"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference VCML.ecore#//ConfigurationProfile/material"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//Dependency"/>
     <genClasses ecoreClass="VCML.ecore#//Procedure">

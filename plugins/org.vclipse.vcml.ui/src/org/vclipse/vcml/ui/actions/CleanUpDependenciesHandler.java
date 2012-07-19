@@ -31,8 +31,8 @@ import org.vclipse.base.ui.util.VClipseResourceUtil;
 import org.vclipse.vcml.ui.resources.VcmlResourceContainerState;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.vcml.Dependency;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.VCObject;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
@@ -117,8 +117,9 @@ public class CleanUpDependenciesHandler extends AbstractHandler {
 			Set<String> dependencyNames = Sets.newHashSet();
 			if(!contents.isEmpty()) {
 				EObject topObject = contents.get(0);
-				if(topObject instanceof Model) {
-					for(VCObject vcobject : ((Model)topObject).getObjects()) {
+				if(topObject instanceof VcmlModel) {
+					VcmlModel vcmlModel = (VcmlModel)topObject;
+					for(VCObject vcobject : vcmlModel.getObjects()) {
 						if(vcobject instanceof Dependency) {
 							dependencyNames.add(nameProvider.getFullyQualifiedName(vcobject).getLastSegment());
 						}

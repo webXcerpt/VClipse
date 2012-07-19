@@ -21,7 +21,7 @@ import org.eclipse.xtext.ui.containers.AbstractAllContainersState;
 import org.vclipse.base.ui.util.VClipseResourceUtil;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.vcml.Import;
-import org.vclipse.vcml.vcml.Model;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -59,8 +59,9 @@ public class VcmlResourceContainerState extends AbstractAllContainersState {
 				EList<EObject> contents = resource.getContents();
 				if(!contents.isEmpty()) {
 					EObject topObject = contents.get(0);
-					if(topObject instanceof Model) {
-						for(Import immport : ((Model)topObject).getImports()) {
+					if(topObject instanceof VcmlModel) {
+						VcmlModel vcmlModel = (VcmlModel)topObject;
+						for(Import immport : vcmlModel.getImports()) {
 							String[] parts = immport.getImportURI().split("/");
 							URI importedUri = URI.createURI(handle).trimSegments(parts.length - 1);
 							for(int i=1; i<parts.length; i++) {

@@ -34,10 +34,10 @@ import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.validation.VCMLJavaValidatorIssues;
 import org.vclipse.vcml.vcml.Dependency;
 import org.vclipse.vcml.vcml.Import;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.OptionType;
 import org.vclipse.vcml.vcml.VcmlFactory;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -89,7 +89,7 @@ public class VcmlCompare {
 		EList<EObject> contents = resultResource.getContents();
 		IParseResult parse = vcmlParser.parse(new FileReader(resultFile.getLocation().toFile()));
 		EObject rootASTElement = parse.getRootASTElement();
-		if(rootASTElement instanceof Model) {
+		if(rootASTElement instanceof VcmlModel) {
 			contents.clear();
 			contents.add(rootASTElement);
 		}
@@ -108,7 +108,7 @@ public class VcmlCompare {
 		
 		monitor.worked(10);
 		
-		Model resultModel = VCML_FACTORY.createModel();	
+		VcmlModel resultModel = VCML_FACTORY.createVcmlModel();	
 		EList<EObject> contents = resultResource.getContents();
 		if(!contents.isEmpty()) {
 			contents.clear();
@@ -116,12 +116,12 @@ public class VcmlCompare {
 		contents.add(resultModel);
 		
 		// get the ups option from the new file and provide it to the results file
-		Model changedModel = VCML_FACTORY.createModel();
+		VcmlModel changedModel = VCML_FACTORY.createVcmlModel();
 		List<EObject> newModelContent = newResource.getContents();
 		if(!newModelContent.isEmpty()) {
 			EObject object = newModelContent.get(0);
-			if(object instanceof Model) {
-				changedModel = (Model)newModelContent.get(0);
+			if(object instanceof VcmlModel) {
+				changedModel = (VcmlModel)newModelContent.get(0);
 				for(Option option : changedModel.getOptions()) {
 					if(OptionType.UPS.equals(option.getName())) {
 						resultModel.getOptions().add(EcoreUtil2.copy(option));

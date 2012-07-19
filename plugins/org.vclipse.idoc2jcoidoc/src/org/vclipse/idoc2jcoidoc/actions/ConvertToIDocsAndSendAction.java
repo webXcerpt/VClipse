@@ -21,7 +21,7 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.idoc2jcoidoc.IIDoc2JCoIDocProcessor;
 import org.vclipse.idoc2jcoidoc.RFCIDocsSender;
-import org.vclipse.vcml.vcml.Model;
+import org.vclipse.vcml.vcml.VcmlModel;
 import org.vclipse.vcml2idoc.transformation.VCML2IDocSwitch;
 
 import com.google.inject.Inject;
@@ -58,8 +58,8 @@ public class ConvertToIDocsAndSendAction implements IObjectActionDelegate {
 				EList<EObject> contents = resource.getContents();
 				if(!contents.isEmpty()) {
 					EObject object = contents.get(0);
-					if(object instanceof Model) {
-						Model vcmlModel = (Model)object;
+					if(object instanceof VcmlModel) {
+						VcmlModel vcmlModel = (VcmlModel)object;
 						try {
 							monitor.subTask("Converting VCML model to IDoc model...");
 							org.vclipse.idoc.iDoc.Model idocModel = vcml2IDoc.vcml2IDocs(vcmlModel);

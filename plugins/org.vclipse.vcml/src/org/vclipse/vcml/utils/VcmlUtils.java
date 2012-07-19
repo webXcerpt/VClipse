@@ -47,7 +47,6 @@ import org.vclipse.vcml.vcml.IsSpecified_P;
 import org.vclipse.vcml.vcml.Language;
 import org.vclipse.vcml.vcml.List;
 import org.vclipse.vcml.vcml.Literal;
-import org.vclipse.vcml.vcml.Model;
 import org.vclipse.vcml.vcml.NumberList;
 import org.vclipse.vcml.vcml.NumberListEntry;
 import org.vclipse.vcml.vcml.NumericInterval;
@@ -69,6 +68,7 @@ import org.vclipse.vcml.vcml.UnaryExpression;
 import org.vclipse.vcml.vcml.UnaryExpressionOperator;
 import org.vclipse.vcml.vcml.VariantFunction;
 import org.vclipse.vcml.vcml.VcmlFactory;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 
 
@@ -272,8 +272,8 @@ public class VcmlUtils {
 	
 	private static final VcmlFactory VCML = VcmlFactory.eINSTANCE;
 
-	static public Model mkModel() {
-		return VCML.createModel();
+	static public VcmlModel mkModel() {
+		return VCML.createVcmlModel();
 	}
 
 	static public Option mkOption(final OptionType type, final String value) {

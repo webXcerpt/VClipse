@@ -20,7 +20,7 @@ import org.vclipse.idoc.iDoc.IDocFactory;
 import org.vclipse.idoc2jcoidoc.IIDoc2JCoIDocProcessor;
 import org.vclipse.idoc2jcoidoc.RFCIDocsSender;
 import org.vclipse.sap.deployment.preferences.PreferencesInitializer;
-import org.vclipse.vcml.vcml.Model;
+import org.vclipse.vcml.vcml.VcmlModel;
 import org.vclipse.vcml2idoc.transformation.VCML2IDocSwitch;
 
 import com.google.inject.Inject;
@@ -48,9 +48,9 @@ public class OneClickWorkflow {
 		if(!contents.isEmpty()) {
 			EObject object = contents.get(0);
 			org.vclipse.idoc.iDoc.Model idocModel = IDocFactory.eINSTANCE.createModel();
-			if(object instanceof Model) {
+			if(object instanceof VcmlModel) {
 				monitor.subTask("Converting VCML model to IDoc model...");
-				idocModel = vcml2IDoc.vcml2IDocs((Model)object);
+				idocModel = vcml2IDoc.vcml2IDocs((VcmlModel)object);
 				monitor.worked(1);
 			} else if(object instanceof org.vclipse.idoc.iDoc.Model) {
 				idocModel = (org.vclipse.idoc.iDoc.Model)object;
