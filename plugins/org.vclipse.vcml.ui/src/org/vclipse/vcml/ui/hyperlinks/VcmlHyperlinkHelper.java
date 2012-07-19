@@ -27,7 +27,7 @@ public class VcmlHyperlinkHelper extends HyperlinkHelper {
 	@Override
 	public void createHyperlinksByOffset(XtextResource resource, int offset, IHyperlinkAcceptor acceptor) {
 		super.createHyperlinksByOffset(resource, offset, acceptor);
-		EObject elementAt = eObjectAtOffsetHelper.resolveElementAt(resource, offset);
+		EObject elementAt = eObjectAtOffsetHelper.resolveContainedElementAt(resource, offset);
 		if(elementAt instanceof Dependency) {
 			EObject source = sourceUtils.getSource((Dependency)elementAt);
 			if(source != null) {
