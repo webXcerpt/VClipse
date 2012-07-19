@@ -12,6 +12,7 @@ Require-Bundle: org.eclipse.xtext.ui;visibility:=reexport,
  org.eclipse.ui.ide;visibility:=reexport,
  org.vclipse.base.ui;visibility:=reexport,
  org.vclipse.vcml,
+ org.vclipse.jpplib,
  org.eclipse.compare;visibility:=reexport,
  org.eclipse.team.ui;visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
