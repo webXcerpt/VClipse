@@ -539,14 +539,13 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	 */
 	@Override
 	public DataLayouter<NoExceptions> caseBillOfMaterial(BillOfMaterial object) {
-		layouter.brk().beginC().print("billofmaterial ");
-		printNullsafe(object.getName()); 
+		layouter.beginC().print("billofmaterial ");
+		printName(object); 
 		layouter.print(" {");
 		Material material = object.getMaterial();
-		if(material != null) {
-			layouter.brk().beginC().print("material ");
+		if (material != null ) {
+			layouter.brk().print("material ");
 			printName(material);
-			layouter.brk(1, -INDENTATION).end();
 		}
 		EList<BOMItem> items = object.getItems();
 		if(!items.isEmpty()) {
@@ -671,31 +670,33 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	public DataLayouter<NoExceptions> caseConfigurationProfile(ConfigurationProfile profile) {
 		layouter.beginC().print("configurationprofile ");
 		printName(profile);
-		if(hasBody(profile)) {
-			layouter.print(" {");
-			{
-				String bomapplication = profile.getBomapplication();
-				if (bomapplication != null && !bomapplication.isEmpty()) {
-					layouter.brk().print("bomapplication ").print(profile.getBomapplication());
-				}
-				if(profile.getUidesign() != null) {
-					layouter.brk().print("uidesign ");
-					printCrossReference(profile, VCMLPACKAGE.getConfigurationProfile_Uidesign(), VCMLPACKAGE.getVCObject_Name());
-				}
-				for(DependencyNet net : profile.getDependencyNets()) {
-					layouter.brk();
-					printCrossReference(profile, net, VCMLPACKAGE.getConfigurationProfile_DependencyNets(), VCMLPACKAGE.getVCObject_Name());
-				}
-				for(ConfigurationProfileEntry entry : profile.getEntries()) {
-					layouter.brk();
-					printNullsafe(entry.getSequence());
-					layouter.print(" ");
-					printCrossReference(entry, VCMLPACKAGE.getConfigurationProfileEntry_Dependency(), VCMLPACKAGE.getVCObject_Name());
-				}
+		layouter.print(" {");
+		{
+			Material material = profile.getMaterial();
+			if (material != null ) {
+				layouter.brk().print("material ");
+				printName(material);
 			}
-			layouter.brk(1, -INDENTATION).print("}").end();
+			String bomapplication = profile.getBomapplication();
+			if (bomapplication != null && !bomapplication.isEmpty()) {
+				layouter.brk().print("bomapplication ").print(profile.getBomapplication());
+			}
+			if(profile.getUidesign() != null) {
+				layouter.brk().print("uidesign ");
+				printCrossReference(profile, VCMLPACKAGE.getConfigurationProfile_Uidesign(), VCMLPACKAGE.getVCObject_Name());
+			}
+			for(DependencyNet net : profile.getDependencyNets()) {
+				layouter.brk();
+				printCrossReference(profile, net, VCMLPACKAGE.getConfigurationProfile_DependencyNets(), VCMLPACKAGE.getVCObject_Name());
+			}
+			for(ConfigurationProfileEntry entry : profile.getEntries()) {
+				layouter.brk();
+				printNullsafe(entry.getSequence());
+				layouter.print(" ");
+				printCrossReference(entry, VCMLPACKAGE.getConfigurationProfileEntry_Dependency(), VCMLPACKAGE.getVCObject_Name());
+			}
 		}
-		return layouter.end();
+		return layouter.brk(1, -INDENTATION).print("}").end();
 	}
 
 	/**
@@ -902,10 +903,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	private boolean hasBody(Characteristic object) {
 		return object.getDescription()!=null
 		|| object.getDocumentation()!=null;
-	}
-	
-	private boolean hasBody(ConfigurationProfile profile) {
-		return profile.getDescription() != null;
 	}
 	
 	private boolean hasBody(CharacteristicValue object) {
