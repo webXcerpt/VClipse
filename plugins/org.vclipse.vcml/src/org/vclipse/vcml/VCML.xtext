@@ -179,8 +179,8 @@ CLASSNAME
 
 ConfigurationProfile :
     'configurationprofile' name=EXTENDED_ID '{'
-    	('material' material=[Material|EXTENDED_ID])?
-	   (	('status' status=Status)?
+	   (	('material' material=[Material|EXTENDED_ID])?
+	   &	('status' status=Status)?
 	   &	('bomapplication' bomapplication=XID)?
 	   &	('uidesign' uidesign=[InterfaceDesign | EXTENDED_ID])?
 	   &    ('fixing' fixing=Fixing)?
