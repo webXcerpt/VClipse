@@ -2,6 +2,7 @@
 <?eclipse version="3.0"?>
 
 <plugin>
+   <extension-point id="hyperlinksDelegate" name="Hyperlink Delegate" schema="schema/hyperlinksDelegate.exsd"/>
 	<!-- Extensions, contributed by VClipse developers -->
 
 	<!-- entry for own extension point -->
