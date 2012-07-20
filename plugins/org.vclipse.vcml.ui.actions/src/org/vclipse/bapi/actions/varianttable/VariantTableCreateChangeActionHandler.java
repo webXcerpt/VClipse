@@ -24,7 +24,6 @@ import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.utils.DescriptionHandler;
 import org.vclipse.vcml.utils.VcmlUtils;
 
-import com.google.inject.Inject;
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
@@ -33,17 +32,13 @@ import com.sap.conn.jco.JCoTable;
 
 public class VariantTableCreateChangeActionHandler extends BAPIUtils implements IBAPIActionRunner<VariantTable>{
 
-	@Inject
-	private VariantTableDeleteActionHandler deleteHandler;
-	
 	@Override
 	public boolean isEnabled(VariantTable object) {
-		return hasBody(object);
+		return isConnected() && hasBody(object);
 	}
 
 	@Override
 	public void run(VariantTable object, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
-		deleteHandler.run(object, resource, monitor, seenObjects, options);
 		final String name = object.getName();
 		beginTransaction();
 		JCoFunction function = getJCoFunction("CAMA_TABLE_MAINTAIN_STRUCTURE", monitor);
