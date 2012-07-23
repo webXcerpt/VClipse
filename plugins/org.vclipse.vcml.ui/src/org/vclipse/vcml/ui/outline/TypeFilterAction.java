@@ -10,6 +10,8 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.vclipse.base.VClipseStrings;
@@ -23,13 +25,21 @@ public class TypeFilterAction extends Action {
 	private TreeViewer treeViewer;
 	private ViewerFilter filter;
 	
+	private ImageDescriptor enabled;
+	private ImageDescriptor disabled;
+	
+	boolean stateEnabled;
+	
 	public TypeFilterAction(TreeViewer treeViewer, final EClass type, ILabelProvider labelProvider) {
-		super(VClipseStrings.appendTo("Type filter for ", VClipseStrings.splitCamelCase(type.getName()), true), Action.AS_CHECK_BOX);
+		super(VClipseStrings.appendTo("Type filter for ", VClipseStrings.splitCamelCase(type.getName()), true));
 		this.treeViewer = treeViewer;
 		
-		setImageDescriptor(
-				ImageDescriptor.createFromImage(
-						labelProvider.getImage(VcmlFactory.eINSTANCE.create(type))));
+		Image actionImage = labelProvider.getImage(VcmlFactory.eINSTANCE.create(type));
+		enabled = ImageDescriptor.createFromImage(actionImage);
+		disabled = ImageDescriptor.createWithFlags(enabled, SWT.IMAGE_GRAY);
+		
+		setImageDescriptor(disabled);
+		stateEnabled = false;
 		
 		filter = new ViewerFilter() {
 			@Override
@@ -40,7 +50,7 @@ public class TypeFilterAction extends Action {
 							return eobject;
 						}
 					});
-					if(isChecked()) {
+					if(stateEnabled) {
 						if(result.eClass() == type) {
 							return false;
 						}
@@ -56,10 +66,14 @@ public class TypeFilterAction extends Action {
 		List<ViewerFilter> filters = 
 				Lists.newArrayList(treeViewer.getFilters());
 		
-		if(filters.contains(filter) && isChecked()) {
+		if(filters.contains(filter) && stateEnabled) {
 			filters.remove(filter);
+			setImageDescriptor(disabled);
+			stateEnabled = false;
 		} else {
 			filters.add(this.filter);
+			setImageDescriptor(enabled);
+			stateEnabled = true;
 		}
 		treeViewer.setFilters(Iterables.toArray(filters, ViewerFilter.class));
 	}

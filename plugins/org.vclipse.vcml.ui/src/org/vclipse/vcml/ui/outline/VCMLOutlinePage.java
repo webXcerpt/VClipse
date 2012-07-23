@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
 import org.vclipse.base.ui.util.IExtendedImageHelper;
 import org.vclipse.vcml.ui.IUiConstants;
@@ -66,22 +67,24 @@ public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListe
 		super.createControl(parent);
 		preferenceStore.addPropertyChangeListener(this);
 		TreeViewer treeViewer = getTreeViewer();
-		IToolBarManager toolBarManager = getSite().getActionBars().getToolBarManager();
-
-		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getCharacteristic(), labelProvider));
-		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getClass_(), labelProvider));
-		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getConstraint(), labelProvider));
-		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getSelectionCondition(), labelProvider));
-		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getPrecondition(), labelProvider));
-		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getProcedure(), labelProvider));
-		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getDependencyNet(), labelProvider));
-		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getMaterial(), labelProvider));
-		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getInterfaceDesign(), labelProvider));
-		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getVariantFunction(), labelProvider));
-		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getVariantTable(), labelProvider));
-		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getVariantTableContent(), labelProvider));
-		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getBillOfMaterial(), labelProvider));
-		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getConfigurationProfile(), labelProvider));
+		IActionBars actionBars = getSite().getActionBars();
+		IMenuManager menuManager = actionBars.getMenuManager();
+		IToolBarManager toolBarManager = actionBars.getToolBarManager();
+	
+		menuManager.add(new TypeFilterAction(treeViewer, INSTANCE.getCharacteristic(), labelProvider));
+		menuManager.add(new TypeFilterAction(treeViewer, INSTANCE.getClass_(), labelProvider));
+		menuManager.add(new TypeFilterAction(treeViewer, INSTANCE.getConstraint(), labelProvider));
+		menuManager.add(new TypeFilterAction(treeViewer, INSTANCE.getSelectionCondition(), labelProvider));
+		menuManager.add(new TypeFilterAction(treeViewer, INSTANCE.getPrecondition(), labelProvider));
+		menuManager.add(new TypeFilterAction(treeViewer, INSTANCE.getProcedure(), labelProvider));
+		menuManager.add(new TypeFilterAction(treeViewer, INSTANCE.getDependencyNet(), labelProvider));
+		menuManager.add(new TypeFilterAction(treeViewer, INSTANCE.getMaterial(), labelProvider));
+		menuManager.add(new TypeFilterAction(treeViewer, INSTANCE.getInterfaceDesign(), labelProvider));
+		menuManager.add(new TypeFilterAction(treeViewer, INSTANCE.getVariantFunction(), labelProvider));
+		menuManager.add(new TypeFilterAction(treeViewer, INSTANCE.getVariantTable(), labelProvider));
+		menuManager.add(new TypeFilterAction(treeViewer, INSTANCE.getVariantTableContent(), labelProvider));
+		menuManager.add(new TypeFilterAction(treeViewer, INSTANCE.getBillOfMaterial(), labelProvider));
+		menuManager.add(new TypeFilterAction(treeViewer, INSTANCE.getConfigurationProfile(), labelProvider));
 
 		createHierarchySwitchAction(toolBarManager);
 		createMenu(treeViewer);
