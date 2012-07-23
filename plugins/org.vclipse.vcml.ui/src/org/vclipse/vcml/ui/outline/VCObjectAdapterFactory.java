@@ -4,8 +4,6 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
-import org.vclipse.vcml.vcml.BillOfMaterial;
-import org.vclipse.vcml.vcml.ConfigurationProfile;
 import org.vclipse.vcml.vcml.VCObject;
 
 @SuppressWarnings("rawtypes")
@@ -13,24 +11,19 @@ public class VCObjectAdapterFactory implements IAdapterFactory {
 
 	public Object getAdapter(Object adaptableObject,  Class adapterType) {
 		if(adaptableObject instanceof EObjectNode) {
-			if(VCObject.class == adapterType || 
-					BillOfMaterial.class == adapterType ||
-						ConfigurationProfile.class == adapterType) {
-				EObjectNode node = (EObjectNode)adaptableObject;
-				EObject result = node.readOnly(new IUnitOfWork<EObject, EObject>() {
+			if(VCObject.class == adapterType) {
+				EObject result = ((EObjectNode)adaptableObject).readOnly(new IUnitOfWork<EObject, EObject>() {
 					public EObject exec(EObject object) throws Exception {
 						return object;
 					}
 				});
-				return result instanceof VCObject || 
-						result instanceof BillOfMaterial ||
-							result instanceof ConfigurationProfile ? result : null;
+				return result instanceof VCObject ? result : null;
 			}
 		}
 		return null;
 	}
 
 	public Class[] getAdapterList() {
-		return new Class[]{VCObject.class, BillOfMaterial.class};
+		return new Class[] { VCObject.class };
 	}
 }
