@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <psf version="2.0">
 <provider id="org.tigris.subversion.subclipse.core.svnnature">
-<project reference="0.9.3,https://svn2.hosted-projects.com/webxcerpt/ConfigModeler/trunk/plugins/com.sap.conn.jco,com.sap.conn.jco"/>
-<project reference="0.9.3,https://svn2.hosted-projects.com/webxcerpt/ConfigModeler/trunk/plugins/com.sap.conn.jco.doc,com.sap.conn.jco.doc"/>
-<project reference="0.9.3,https://svn2.hosted-projects.com/webxcerpt/ConfigModeler/trunk/plugins/com.sap.conn.jco.idoc,com.sap.conn.jco.idoc"/>
-<project reference="0.9.3,https://svn2.hosted-projects.com/webxcerpt/ConfigModeler/trunk/plugins/com.sap.conn.jco.linux.x86,com.sap.conn.jco.linux.x86"/>
-<project reference="0.9.3,https://svn2.hosted-projects.com/webxcerpt/ConfigModeler/trunk/plugins/com.sap.conn.jco.linux.x86_64,com.sap.conn.jco.linux.x86_64"/>
-<project reference="0.9.3,https://svn2.hosted-projects.com/webxcerpt/ConfigModeler/trunk/plugins/com.sap.conn.jco.osx.x86,com.sap.conn.jco.osx.x86"/>
-<project reference="0.9.3,https://svn2.hosted-projects.com/webxcerpt/ConfigModeler/trunk/plugins/com.sap.conn.jco.osx.x86_64,com.sap.conn.jco.osx.x86_64"/>
-<project reference="0.9.3,https://svn2.hosted-projects.com/webxcerpt/ConfigModeler/trunk/plugins/com.sap.conn.jco.win32.x86,com.sap.conn.jco.win32.x86"/>
-<project reference="0.9.3,https://svn2.hosted-projects.com/webxcerpt/ConfigModeler/trunk/plugins/com.sap.conn.jco.win32.x86_64,com.sap.conn.jco.win32.x86_64"/>
+<project reference="0.9.3,https://subversion.assembla.com/svn/webxcerpt_configmodeler_nsn/trunk/plugins/com.sap.conn.jco,com.sap.conn.jco"/>
+<project reference="0.9.3,https://subversion.assembla.com/svn/webxcerpt_configmodeler_nsn/trunk/plugins/com.sap.conn.jco.doc,com.sap.conn.jco.doc"/>
+<project reference="0.9.3,https://subversion.assembla.com/svn/webxcerpt_configmodeler_nsn/trunk/plugins/com.sap.conn.jco.idoc,com.sap.conn.jco.idoc"/>
+<project reference="0.9.3,https://subversion.assembla.com/svn/webxcerpt_configmodeler_nsn/trunk/plugins/com.sap.conn.jco.linux.x86,com.sap.conn.jco.linux.x86"/>
+<project reference="0.9.3,https://subversion.assembla.com/svn/webxcerpt_configmodeler_nsn/trunk/plugins/com.sap.conn.jco.linux.x86_64,com.sap.conn.jco.linux.x86_64"/>
+<project reference="0.9.3,https://subversion.assembla.com/svn/webxcerpt_configmodeler_nsn/trunk/plugins/com.sap.conn.jco.osx.x86,com.sap.conn.jco.osx.x86"/>
+<project reference="0.9.3,https://subversion.assembla.com/svn/webxcerpt_configmodeler_nsn/trunk/plugins/com.sap.conn.jco.osx.x86_64,com.sap.conn.jco.osx.x86_64"/>
+<project reference="0.9.3,https://subversion.assembla.com/svn/webxcerpt_configmodeler_nsn/trunk/plugins/com.sap.conn.jco.win32.x86,com.sap.conn.jco.win32.x86"/>
+<project reference="0.9.3,https://subversion.assembla.com/svn/webxcerpt_configmodeler_nsn/trunk/plugins/com.sap.conn.jco.win32.x86_64,com.sap.conn.jco.win32.x86_64"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.base,org.vclipse.base"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.base.ui,org.vclipse.base.ui"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.condition,org.vclipse.condition"/>
@@ -99,13 +99,13 @@
 <workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1340900570034_4" label="Language Vcmlt / ConfigScan" name="Language Vcmlt / ConfigScan">
 <item elementID="=org.vclipse.configscan.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.configscan.vcmlt.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.configscan.vcmlt" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.configscan.vcmlt.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.configscan.vcmlt" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.configscan" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 </workingSets>
 <workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1340900664601_10" label="VClipse Features" name="VClipse Features">
-<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.vclipse.idoc_feature" type="4"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.vclipse.vcml_feature" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.vclipse.idoc_feature" type="4"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.vclipse.rfc_feature" type="4"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.vclipse.configscan_feature" type="4"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.vclipse.pdr_feature" type="4"/>
@@ -120,8 +120,8 @@
 <item elementID="=org.vclipse.vcml.ui.actions" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.base" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.vcml.ui.wizards.imports" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.console" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.vcml2idoc.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.console" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.base.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 </workingSets>
 <workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1340900525961_2" label="VClipse Releng" name="VClipse Releng">
