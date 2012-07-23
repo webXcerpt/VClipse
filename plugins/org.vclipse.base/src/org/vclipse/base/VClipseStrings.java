@@ -10,6 +10,10 @@
  ******************************************************************************/
 package org.vclipse.base;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
 public class VClipseStrings extends org.eclipse.xtext.util.Strings {
 
 	// copied from org.eclipse.xtext.util.Strings, but removed \\u conversion
@@ -111,5 +115,26 @@ public class VClipseStrings extends org.eclipse.xtext.util.Strings {
 		return outBuffer.toString();
 	}
 
-	
+	public static List<String> splitCamelCase(String string) {
+		List<Integer> indexes = Lists.newArrayList();
+		for(int i=0; i<string.length(); i++) {
+			if(Character.isUpperCase(string.charAt(i))) {
+				indexes.add(i);
+			}
+		}
+		List<String> parts = Lists.newArrayList();
+		int prev = -1;
+		for(Integer index : indexes) {
+			if(prev == -1) {
+				prev = index;				
+			} else {
+				parts.add(string.substring(prev, index));
+				prev = index;
+			}
+			if(indexes.indexOf(index) == indexes.size() - 1) {
+				parts.add(string.substring(index, string.length()));
+			}
+		}
+		return parts;
+	}
 }
