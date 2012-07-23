@@ -45,7 +45,7 @@ public class VcmlHyperlinkHelper extends HyperlinkHelper {
 				links.addAll(Arrays.asList(createHyperlinksByOffset));				
 			}
 		}
-		return Iterables.toArray(links, IHyperlink.class);
+		return links.isEmpty() ? null : Iterables.toArray(links, IHyperlink.class);
 	}
 
 	@Override
