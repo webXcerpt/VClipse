@@ -19,6 +19,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
@@ -26,10 +27,13 @@ import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
 import org.vclipse.base.ui.util.IExtendedImageHelper;
 import org.vclipse.vcml.ui.IUiConstants;
 import org.vclipse.vcml.utils.ISapConstants;
+import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.google.inject.Inject;
 
 public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListener {
+
+	private static final VcmlPackage INSTANCE = VcmlPackage.eINSTANCE;
 
 	private static final String POPUP_MENU_ID = VCMLOutlinePage.class.getSimpleName().toLowerCase() + "menu";
 
@@ -38,6 +42,9 @@ public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListe
 	
 	@Inject
 	private IPreferenceStore preferenceStore;
+	
+	@Inject
+	private ILabelProvider labelProvider;
 	
 	private Menu menu;
 	
@@ -60,7 +67,22 @@ public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListe
 		preferenceStore.addPropertyChangeListener(this);
 		TreeViewer treeViewer = getTreeViewer();
 		IToolBarManager toolBarManager = getSite().getActionBars().getToolBarManager();
-		
+
+		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getCharacteristic(), labelProvider));
+		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getClass_(), labelProvider));
+		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getConstraint(), labelProvider));
+		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getSelectionCondition(), labelProvider));
+		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getPrecondition(), labelProvider));
+		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getProcedure(), labelProvider));
+		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getDependencyNet(), labelProvider));
+		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getMaterial(), labelProvider));
+		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getInterfaceDesign(), labelProvider));
+		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getVariantFunction(), labelProvider));
+		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getVariantTable(), labelProvider));
+		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getVariantTableContent(), labelProvider));
+		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getBillOfMaterial(), labelProvider));
+		toolBarManager.add(new TypeFilterAction(treeViewer, INSTANCE.getConfigurationProfile(), labelProvider));
+
 		createHierarchySwitchAction(toolBarManager);
 		createMenu(treeViewer);
 	}
