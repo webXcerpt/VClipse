@@ -137,4 +137,15 @@ public class VClipseStrings extends org.eclipse.xtext.util.Strings {
 		}
 		return parts;
 	}
+	
+	public static String appendTo(String string, List<String> parts, boolean changeToLower) {
+		StringBuilder builder = new StringBuilder(string);
+		for(String part : parts) {
+			builder.append(changeToLower ? part.toLowerCase() : part);
+			if(parts.indexOf(string) != parts.size()-1) {
+				builder.append(" ");					
+			}
+		}
+		return builder.toString();
+	}
 }
