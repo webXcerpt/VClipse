@@ -29,6 +29,7 @@ import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Procedure;
 import org.vclipse.vcml.vcml.SelectionCondition;
+import org.vclipse.vcml.vcml.VcmlModel;
 import org.vclipse.vcml.utils.VCMLProxyFactory;
 import static org.vclipse.vcml.utils.VCMLObjectUtils.mkConfigurationProfileEntry;
 import static org.vclipse.vcml.utils.VCMLObjectUtils.sortEntries;
@@ -58,6 +59,7 @@ public class BillOfMaterialReader extends BAPIUtils {
 		if(materialNumber == null || !seenObjects.add("BillOfMaterial/" + materialNumber.toUpperCase()) || monitor.isCanceled()) {
 			return;
 		}
+		VcmlModel model = (VcmlModel)resource.getContents().get(0);
 		JCoFunction function = getJCoFunction("CSAP_MAT_BOM_READ", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		String plant = getPlant();
@@ -79,7 +81,9 @@ public class BillOfMaterialReader extends BAPIUtils {
 				tSTKO.setRow(i);
 				String bomNo = tSTKO.getString("BOM_NO");
 				BillOfMaterial object = VCML.createBillOfMaterial();
+				object.setName(materialNumber);
 				containerMaterial.getBillofmaterials().add(object);
+				model.getObjects().add(object);
 				billOfMaterialByName.put(bomNo, object);
 				// object.setStatus(VCMLUtils.createStatus(tSTKO.getInt("BOM_STATUS"))); // TODO BOM should have a status
 			}

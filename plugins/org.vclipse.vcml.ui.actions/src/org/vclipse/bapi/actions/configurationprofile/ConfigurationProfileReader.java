@@ -35,6 +35,7 @@ import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Procedure;
 import org.vclipse.vcml.vcml.VcmlModel;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -53,16 +54,13 @@ public class ConfigurationProfileReader extends BAPIUtils {
 	@Inject
 	private InterfaceDesignReader interfaceDesignReader;
 
-	public void readAll(Material containerMaterial, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
-		read(containerMaterial, containerMaterial.getName(), resource, monitor, seenObjects, options, recurse);
-	}
-	
-	public void read(Material containerMaterial, String profileName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public List<ConfigurationProfile> read(Material containerMaterial, String profileName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
 		VcmlModel model = (VcmlModel)resource.getContents().get(0);
 		String materialName = containerMaterial.getName();
 		if(materialName == null || !seenObjects.add("ConfigurationProfile/" + materialName.toUpperCase())) {
-			return;
+			return null;
 		}
+		List<ConfigurationProfile> profiles = Lists.newArrayList();
 //		String fixing = containerMaterial.getConfigurationprofiles().get(0).getFixing().getLiteral();
 //		if (object.getFixing() != Fixing.NONE) {
 //			fixing = object.getFixing().getLiteral();
@@ -91,6 +89,8 @@ public class ConfigurationProfileReader extends BAPIUtils {
 					continue;
 				}
 				ConfigurationProfile object = VCML.createConfigurationProfile();
+				profiles.add(object);
+				model.getObjects().add(object);
 				object.setName(name);
 				object.setStatus(VcmlUtils.createStatusFromInt(conProAttributes.getInt("STATUS")));
 				object.setBomapplication(conProAttributes.getString("BOMAPPL"));
@@ -103,7 +103,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 					InterfaceDesign interfaceDesign = null;
 					if (recurse) {
 						if(monitor.isCanceled()) {
-							return;
+							return profiles;
 						}
 						interfaceDesign = interfaceDesignReader.read(design, model, monitor, seenObjects, options, recurse);
 					}
@@ -136,7 +136,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 					Procedure procedure = null;
 					if (recurse) {
 						if(monitor.isCanceled()) {
-							return;
+							return profiles;
 						}
 						procedure = procedureReader.read(depName, resource, monitor, seenObjects, options, recurse);
 					}
@@ -149,7 +149,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 					DependencyNet dependencyNet = null;
 					if (recurse) {
 						if(monitor.isCanceled()) {
-							return;
+							return profiles;
 						}
 						dependencyNet = dependencyNetReader.read(depName, model, monitor, seenObjects, options, recurse);
 					}
@@ -162,10 +162,12 @@ public class ConfigurationProfileReader extends BAPIUtils {
 				}
 				VCMLObjectUtils.sortDependencyNets(profile.getDependencyNets());
 				VCMLObjectUtils.sortEntries(profile.getEntries());
+				return profiles;
 			}
 		} catch (AbapException e) {
 			handleAbapException(e);
-		} 
+		}
+		return profiles; 
 	}
 
 	private int getSequenceNumber(JCoTable tOrder, String profileName, String depName) {

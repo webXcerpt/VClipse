@@ -76,7 +76,7 @@ public class MaterialReader extends BAPIUtils {
 		if(monitor.isCanceled()) {
 			return null;
 		}
-		configurationProfileReader.readAll(object, resource, monitor, seenObjects, options, recurse);
+		configurationProfileReader.read(object, null /* all profiles */, resource, monitor, seenObjects, options, recurse);
 
 		if(monitor.isCanceled()) {
 			return null;
