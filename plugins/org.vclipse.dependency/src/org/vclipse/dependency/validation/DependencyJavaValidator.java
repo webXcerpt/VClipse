@@ -1,5 +1,6 @@
 package org.vclipse.dependency.validation;
 
+import java.net.URLDecoder;
 import java.util.Iterator;
 
 import org.eclipse.emf.common.util.EList;
@@ -22,6 +23,7 @@ import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 import org.vclipse.vcml.vcml.VcmlPackage;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
@@ -37,6 +39,7 @@ public class DependencyJavaValidator extends AbstractDependencyJavaValidator {
 		if(vcmlUri != null) {
 			final String fileName = sourceResource.getURI().trimFileExtension().lastSegment();
 			try {
+				final String sourceObjectName = URLDecoder.decode(fileName, Charsets.UTF_8.toString());
 				Resource vcmlResource = sourceResource.getResourceSet().getResource(vcmlUri, true);
 				EList<EObject> contents = vcmlResource.getContents();
 				if(!contents.isEmpty()) {
@@ -44,7 +47,7 @@ public class DependencyJavaValidator extends AbstractDependencyJavaValidator {
 						VcmlModel vcmlModel = (VcmlModel)contents.get(0);
 						Iterator<VCObject> iterator = Iterables.filter(vcmlModel.getObjects(), new Predicate<VCObject>() {
 							public boolean apply(VCObject object) {
-								return object.getName().equals(fileName);
+								return object.getName().equals(sourceObjectName);
 							}
 						}).iterator();
 						if(!iterator.hasNext()) {
