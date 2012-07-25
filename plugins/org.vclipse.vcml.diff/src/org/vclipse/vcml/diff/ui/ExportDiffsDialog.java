@@ -238,7 +238,7 @@ public class ExportDiffsDialog extends TitleAreaDialog {
 		
 		// create a name for the result file and provide this value to the text widget
 		if(generateExportFileButton.getSelection() && oldFile != null) {
-			String newName = newFile.getName().replaceAll(".vcml", "_diff.vcml");
+			String newName = newFile.getName().replaceAll("\\.vcml", "_diff.vcml");
 			resultFile = newFile.getParent().getFile(new Path(newName));
 			resultsFileText.setText(resultFile.getFullPath().toString());
 		} else {
