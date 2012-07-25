@@ -50,7 +50,9 @@ public class ConstraintOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		
 		Condition condition = constraintSource.getCondition();
 		if(condition != null) {
-			createNode(parentNode, constraintSource.getCondition());			
+			EStructuralFeatureNode objectsNode = createEStructuralFeatureNode(parentNode, constraintSource, 
+					VCML_PACKAGE.getConstraintSource_Condition(), _image(constraintSource), "condition", false);
+			createNode(objectsNode, constraintSource.getCondition());			
 		}
 		
 		EList<ConstraintRestriction> restrictions = constraintSource.getRestrictions();
