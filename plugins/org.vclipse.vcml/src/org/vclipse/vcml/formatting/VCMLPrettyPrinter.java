@@ -1031,7 +1031,7 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	}
 
 	private void writeSourceCode(Dependency object, EObject sourceCode) {
-		if(optionsProvider != null) {
+		if(optionsProvider != null && sourceCode != null) {
 			String vcmluri = optionsProvider.get().get(OptionsProvider.VCML_FILE_URI);
 			if(vcmluri != null && sourceUtils != null) {
 				try {

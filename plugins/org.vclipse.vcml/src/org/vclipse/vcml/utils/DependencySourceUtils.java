@@ -45,6 +45,9 @@ public class DependencySourceUtils {
 
 	public EObject getSource(Dependency object) {
 		Resource resource = object.eResource();
+		if(resource == null) {
+			return null;
+		}
 		URI sourceURI = getSourceURI(object);
 		List<EObject> contents = Lists.newArrayList();
 		ResourceSet resourceSet = resource.getResourceSet();
@@ -60,8 +63,9 @@ public class DependencySourceUtils {
 			return contents.get(0);
 		}
 		return null;
-		
 	}
+	
+	
 	
 	public ProcedureSource getProcedureSource(Procedure object) {
 		return (ProcedureSource)getSource(object);
