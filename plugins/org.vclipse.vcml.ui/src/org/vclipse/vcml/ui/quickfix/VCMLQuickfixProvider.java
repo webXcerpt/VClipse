@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.vclipse.vcml.ui.quickfix;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.eclipse.compare.CompareUI;
@@ -277,9 +278,10 @@ public class VCMLQuickfixProvider extends DefaultQuickfixProvider {
 	}
 	
 	@Fix("Not_Existent_Source")
-	public void fixNotExistentSourceElement(Issue issue, IssueResolutionAcceptor acceptor) {
+	public void fixNotExistentSourceElement(Issue issue, IssueResolutionAcceptor acceptor) throws UnsupportedEncodingException {
 		final String[] data = issue.getData();
-		String label = "Create a new file " + data[2];
+		final String fileName = URI.decode(data[2]);
+		String label = "Create a new file " + fileName;
 		String description = "Creates a new source file for the type " + data[1] + " and name " + data[0];
 		acceptor.accept(issue, label, description, null, new ISemanticModification() {
 			public void apply(EObject element, IModificationContext context) throws Exception {
@@ -293,7 +295,7 @@ public class VCMLQuickfixProvider extends DefaultQuickfixProvider {
 					} catch(final IOWrappedException exception) {
 						BaseUiPlugin.showErrorDialog(
 							exception, "Error during quick fix", "Can not " +
-								"create a file " + data[2] + " for " + data[1]);
+								"create a file " + fileName + " for " + data[1]);
 					}
 				}
 			}
