@@ -91,7 +91,7 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 	 ***/
 	@Check
 	public void checkNameLength(VCObject object) {
-		String name = object.getName();
+		String name = object instanceof VariantTableContent ? ((VariantTableContent)object).getTable().getName() : object.getName();
 		if(object instanceof Class) {
 			if(VcmlUtils.getClassName(name).length() > MAXLENGTH_CLASS_NAME) {
 				error("Name of class is limited to " + MAXLENGTH_CLASS_NAME + " characters", VcmlPackage.Literals.VC_OBJECT__NAME);
