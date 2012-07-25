@@ -18,7 +18,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.Resource.IOWrappedException;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.team.internal.ui.history.CompareFileRevisionEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -34,7 +34,6 @@ import org.eclipse.xtext.ui.editor.quickfix.Fix;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolution;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor;
 import org.eclipse.xtext.validation.Issue;
-import org.vclipse.base.ui.BaseUiPlugin;
 import org.vclipse.vcml.diff.storage.EObjectTypedElement;
 import org.vclipse.vcml.formatting.VCMLPrettyPrinter;
 import org.vclipse.vcml.utils.DependencySourceUtils;
@@ -288,14 +287,13 @@ public class VCMLQuickfixProvider extends DefaultQuickfixProvider {
 				Resource resource = element.eResource();
 				if(element instanceof Dependency) {
 					URI sourceURI = sourceUtils.getSourceURI((Dependency)element);
+					ResourceSet resourceSet = resource.getResourceSet();
 					try {
-						resource.getResourceSet().
-							createResource(sourceURI).save(
-								SaveOptions.defaultOptions().toOptionsMap());
-					} catch(final IOWrappedException exception) {
-						BaseUiPlugin.showErrorDialog(
-							exception, "Error during quick fix", "Can not " +
-								"create a file " + fileName + " for " + data[1]);
+						Resource sourceResource = resourceSet.getResource(sourceURI, true);
+						sourceResource.save(SaveOptions.defaultOptions().toOptionsMap());
+					} catch(final Exception exception) {
+						Resource sourceResource = resourceSet.createResource(sourceURI);
+						sourceResource.save(SaveOptions.defaultOptions().toOptionsMap());
 					}
 				}
 			}
