@@ -20,6 +20,7 @@ import org.eclipse.xtext.linking.lazy.LazyURIEncoder;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.parsetree.reconstr.ITokenSerializer;
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
+import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.validation.CompositeEValidator;
 import org.eclipse.xtext.validation.INamesAreUniqueValidationHelper;
 import org.vclipse.base.naming.IClassNameProvider;
@@ -27,6 +28,7 @@ import org.vclipse.base.naming.NullQualifiedNameConverter;
 import org.vclipse.vcml.conversion.VCMLValueConverter;
 import org.vclipse.vcml.documentation.VCMLClassNameProvider;
 import org.vclipse.vcml.formatting.VCMLCrossReferenceSerializer;
+import org.vclipse.vcml.formatting.VCMLSerializer;
 import org.vclipse.vcml.linking.VCMLLinker;
 import org.vclipse.vcml.naming.VcmlNamesAreUniqueValidationHelper;
 import org.vclipse.vcml.resource.VCMLResourceDescriptionStrategy;
@@ -67,8 +69,8 @@ public class VCMLRuntimeModule extends org.vclipse.vcml.AbstractVCMLRuntimeModul
 	
 	@Override
 	public Class<? extends org.eclipse.xtext.resource.IContainer.Manager> bindIContainer$Manager() {
-		  return org.eclipse.xtext.resource.containers.StateBasedContainerManager.class;
-		}
+		return org.eclipse.xtext.resource.containers.StateBasedContainerManager.class;
+	}
 	
 	public Class<? extends IClassNameProvider> bindIClassNameProvider() {
 		return VCMLClassNameProvider.class;
@@ -88,5 +90,10 @@ public class VCMLRuntimeModule extends org.vclipse.vcml.AbstractVCMLRuntimeModul
 	
 	public Class<? extends IDefaultResourceDescriptionStrategy> bindIDefaultResourceDescriptionStrategy() {
 		return VCMLResourceDescriptionStrategy.class;
+	}
+
+	@Override
+	public Class<? extends ISerializer> bindISerializer() {
+		return VCMLSerializer.class;
 	}
 }
