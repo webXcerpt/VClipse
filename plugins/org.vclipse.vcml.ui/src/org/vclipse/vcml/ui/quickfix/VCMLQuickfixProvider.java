@@ -288,13 +288,13 @@ public class VCMLQuickfixProvider extends DefaultQuickfixProvider {
 				if(element instanceof Dependency) {
 					URI sourceURI = sourceUtils.getSourceURI((Dependency)element);
 					ResourceSet resourceSet = resource.getResourceSet();
+					Resource sourceResource = null;
 					try {
-						Resource sourceResource = resourceSet.getResource(sourceURI, true);
-						sourceResource.save(SaveOptions.defaultOptions().toOptionsMap());
-					} catch(final Exception exception) {
-						Resource sourceResource = resourceSet.createResource(sourceURI);
-						sourceResource.save(SaveOptions.defaultOptions().toOptionsMap());
+						sourceResource = resourceSet.getResource(sourceURI, true);
+					} catch(Exception exception) {
+						sourceResource = resourceSet.getResource(sourceURI, true);
 					}
+					sourceResource.save(SaveOptions.defaultOptions().toOptionsMap());
 				}
 			}
 		});
