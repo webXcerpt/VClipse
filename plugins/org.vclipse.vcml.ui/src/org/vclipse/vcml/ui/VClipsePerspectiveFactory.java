@@ -43,6 +43,9 @@ public class VClipsePerspectiveFactory implements IPerspectiveFactory {
 		IFolderLayout bottom = layout.createFolder("bottom", IPageLayout.BOTTOM, 0.75f, layout.getEditorArea());
 		bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
 		bottom.addView(IPageLayout.ID_PROGRESS_VIEW);
+		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
+		bottom.addView(IPageLayout.ID_TASK_LIST);
+		bottom.addView("org.eclipse.pde.runtime.LogView");
 		
 		// add to "Open Perspective" menu
 		layout.addPerspectiveShortcut("org.eclipse.ui.resourcePerspective");
