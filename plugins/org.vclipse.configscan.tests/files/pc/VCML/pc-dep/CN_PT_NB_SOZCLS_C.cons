@@ -1,0 +1,9 @@
+objects: NOTEBOOK is_a (300)PT_NB . 
+restrictions:
+  NOTEBOOK.RAM_MODULES_AMOUNT in (2,  3,  4) if
+    NOTEBOOK.NOTEBOOK_TYPE in ('netbook'),
+  NOTEBOOK.RAM_MODULES_AMOUNT in (3,  4,  5,  6) if
+    NOTEBOOK.NOTEBOOK_TYPE in ('business', 'development'),
+  NOTEBOOK.RAM_MODULES_AMOUNT in (5,  6,  7,  8) if
+    NOTEBOOK.NOTEBOOK_TYPE in ('multimedia'). 
+inferences: NOTEBOOK.RAM_MODULES_AMOUNT. 
