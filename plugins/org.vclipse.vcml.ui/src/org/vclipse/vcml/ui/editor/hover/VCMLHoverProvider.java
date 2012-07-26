@@ -23,7 +23,6 @@ import org.vclipse.base.naming.IClassNameProvider;
 import org.vclipse.vcml.documentation.VCMLAdditionalInformationProvider;
 import org.vclipse.vcml.documentation.VCMLDescriptionProvider;
 import org.vclipse.vcml.documentation.VCMLDocumentationProvider;
-import org.vclipse.vcml.formatting.VCMLSerializer;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.utils.DescriptionHandler;
 import org.vclipse.vcml.utils.VcmlUtils;
@@ -58,9 +57,6 @@ public class VCMLHoverProvider extends DefaultEObjectHoverProvider {
 	
 	@Inject
 	private DependencySourceUtils sourceUtils;
-	
-	@Inject
-	private VCMLSerializer serializer;
 	
 	@Inject
 	private IPreferenceStore preferenceStore;

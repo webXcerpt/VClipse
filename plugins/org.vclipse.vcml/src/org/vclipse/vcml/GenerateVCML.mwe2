@@ -12,6 +12,7 @@ var runtimeProject = "../${projectName}"
 Workflow {
     bean = StandaloneSetup {
 	    scanClassPath = true
+	    registerGenModelFile = "../org.vclipse.vcml.mm/src/org/vclipse/vcml/mm/VCML.genmodel"
 		platformUri = "${runtimeProject}/.."
 	}
 
@@ -43,7 +44,10 @@ Workflow {
 			fragment = grammarAccess.GrammarAccessFragment {}
 
 			// the serialization component
-			fragment = parseTreeConstructor.ParseTreeConstructorFragment {}
+			//fragment = parseTreeConstructor.ParseTreeConstructorFragment {}
+			fragment = serializer.SerializerFragment {
+            	generateStub = false
+            }
 
 			// a custom ResourceFactory for use with EMF 
 			fragment = resourceFactory.ResourceFactoryFragment {

@@ -19,7 +19,6 @@ Export-Package: org.vclipse.vcml,
  org.vclipse.vcml.formatting,
  org.vclipse.vcml.linking,
  org.vclipse.vcml.naming,
- org.vclipse.vcml.parseTreeConstruction,
  org.vclipse.vcml.parser.antlr,
  org.vclipse.vcml.parser.antlr.internal,
  org.vclipse.vcml.parser.antlr.lexer,
@@ -27,7 +26,8 @@ Export-Package: org.vclipse.vcml,
  org.vclipse.vcml.services,
  org.vclipse.vcml.utils,
  org.vclipse.vcml.validation,
- org.vclipse.vcml.scoping
+ org.vclipse.vcml.scoping,
+ org.vclipse.vcml.serializer
 Bundle-Activator: org.vclipse.vcml.VCMLPlugin
 Bundle-ClassPath: .
 Import-Package: org.apache.commons.logging,
