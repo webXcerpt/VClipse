@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: VClipse Base UI Plug-in
 Bundle-SymbolicName: org.vclipse.base.ui;singleton:=true
-Bundle-Version: 0.4.2.qualifier
+Bundle-Version: 0.5.0.qualifier
 Bundle-Activator: org.vclipse.base.ui.BaseUiPlugin
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Require-Bundle: org.eclipse.xtext.ui,

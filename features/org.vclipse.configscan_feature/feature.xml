@@ -2,7 +2,7 @@
 <feature
       id="org.vclipse.configscan_feature"
       label="VClipse ConfigScan Integration"
-      version="0.4.2.qualifier"
+      version="0.5.0.qualifier"
       provider-name="webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com) and other committers">
 
    <description>

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: VClipse Procedure Language UI Plug-in
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
-Bundle-Version: 0.4.2.qualifier
+Bundle-Version: 0.5.0.qualifier
 Bundle-SymbolicName: org.vclipse.procedure.ui;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.vclipse.procedure;visibility:=reexport,
