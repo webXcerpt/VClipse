@@ -45,7 +45,6 @@ public class SapProxyResolver {
 							CrossReference crossRef = (CrossReference)nextLevelGrammarElement;
 							EReference reference = GrammarUtil.getReference(crossRef, semanticElement.eClass());
 							Object referenceValue = semanticElement.eGet(reference);
-							System.out.println(referenceValue);
 							if(referenceValue instanceof EObject) {
 								resolve(object, seenObjects, output, options, nextLevelChildNode, referenceValue);
 							} else if(referenceValue instanceof List<?>) {
