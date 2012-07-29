@@ -57,7 +57,7 @@ public class ConstraintReader extends BAPIUtils {
 			
 			ConstraintSource constraintSource = sourceUtils.getConstraintSource(object);
 			if(constraintSource!=null) {
-				sapProxyResolver.resolveProxies(constraintSource, seenObjects, object.eResource(), options);
+				sapProxyResolver.extractFromSource(constraintSource, model, monitor, seenObjects, options);
 			}
 		} catch (AbapException e) {
 			handleAbapException(e);
