@@ -1,4 +1,4 @@
-package org.vclipse.bapi.actions.resources;
+package org.vclipse.bapi.actions;
 
 import java.util.Iterator;
 import java.util.List;

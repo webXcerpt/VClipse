@@ -27,7 +27,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.util.Strings;
 import org.vclipse.bapi.actions.handler.BAPIActionHandler;
 import org.vclipse.bapi.actions.resources.BAPIException;
-import org.vclipse.bapi.actions.resources.SourceCrossReferenceExtractor;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.utils.DescriptionHandler;
