@@ -36,7 +36,7 @@ import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.eclipse.xtext.ui.util.ResourceUtil;
 import org.eclipse.xtext.util.SimpleAttributeResolver;
 import org.eclipse.xtext.util.StringInputStream;
-import org.vclipse.bapi.actions.resources.BAPIException;
+import org.vclipse.bapi.actions.BAPIException;
 import org.vclipse.vcml.ui.IUiConstants;
 import org.vclipse.vcml.vcml.Import;
 import org.vclipse.vcml.vcml.Option;

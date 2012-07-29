@@ -8,7 +8,7 @@
  * Contributors:
  *    webXcerpt Software GmbH - initial creator
  ******************************************************************************/
-package org.vclipse.bapi.actions.resources;
+package org.vclipse.bapi.actions;
 
 public class BAPIException extends RuntimeException {
 
