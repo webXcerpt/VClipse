@@ -160,12 +160,13 @@ public class ConfigurationProfileReader extends BAPIUtils {
 				} else {
 					throw new IllegalArgumentException("unknown dependency type in configuration profile: " + depName + " of type " + depType);
 				}
-				VCMLObjectUtils.sortDependencyNets(profile.getDependencyNets());
-				VCMLObjectUtils.sortEntries(profile.getEntries());
-				return profiles;
 			}
 		} catch (AbapException e) {
 			handleAbapException(e);
+		}
+		for (ConfigurationProfile profile : profiles) {
+			VCMLObjectUtils.sortDependencyNets(profile.getDependencyNets());
+			VCMLObjectUtils.sortEntries(profile.getEntries());
 		}
 		return profiles; 
 	}
