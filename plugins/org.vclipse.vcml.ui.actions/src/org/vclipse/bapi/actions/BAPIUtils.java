@@ -27,7 +27,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.util.Strings;
 import org.vclipse.bapi.actions.handler.BAPIActionHandler;
 import org.vclipse.bapi.actions.resources.BAPIException;
-import org.vclipse.bapi.actions.resources.SapProxyResolver;
+import org.vclipse.bapi.actions.resources.SourceCrossReferenceExtractor;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.utils.DescriptionHandler;
@@ -73,7 +73,7 @@ public class BAPIUtils extends BAPIActionHandler {
 	protected DependencySourceUtils sourceUtils;
 
 	@Inject
-	protected SapProxyResolver sapProxyResolver;
+	protected SourceCrossReferenceExtractor sourceCrossReferenceExtractor;
 	
 	/**
 	 * @param function

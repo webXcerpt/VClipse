@@ -5,11 +5,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
@@ -28,7 +26,7 @@ import org.vclipse.vcml.vcml.VcmlPackage;
 import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
 
-public class SapProxyResolver {
+public class SourceCrossReferenceExtractor {
 
 	@Inject
 	private CharacteristicReader csticReader;
