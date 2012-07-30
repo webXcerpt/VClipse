@@ -2,6 +2,8 @@ package org.vclipse.bapi.actions.injection;
 
 import java.io.PrintStream;
 
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.service.AbstractGenericModule;
 import org.vclipse.connection.IConnectionHandler;
@@ -19,6 +21,8 @@ public class ActionModule extends AbstractGenericModule {
 	
 	@Override
 	public void configure(Binder binder) {
+		binder.bind(IWorkspace.class).toInstance(ResourcesPlugin.getWorkspace());
+		
 		Injector vcmlInjector = VCMLActivator.getInstance().getInjector(VCMLActivator.ORG_VCLIPSE_VCML_VCML);
 		Injector connectionInjector = VClipseConnectionPlugin.getDefault().getInjector();
 		
