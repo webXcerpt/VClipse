@@ -10,7 +10,7 @@ public class VcmlResourcesStateProvider implements Provider<IAllContainersState>
 
 	private static VcmlResourcesStateProvider provider;
 	
-	private VcmlResourceContainerState state;
+	private VcmlResourcesState state;
 	
 	public static VcmlResourcesStateProvider getInstance() {
 		if(provider == null) {
@@ -28,7 +28,7 @@ public class VcmlResourcesStateProvider implements Provider<IAllContainersState>
 	public IAllContainersState get() {
 		if(state == null) {
 			Injector injector = VCMLActivator.getInstance().getInjector(VCMLActivator.ORG_VCLIPSE_VCML_VCML);
-			state = injector.getInstance(VcmlResourceContainerState.class);
+			state = injector.getInstance(VcmlResourcesState.class);
 			state.doInitVisibleHandles(null);
 		}
 		return state;
