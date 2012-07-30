@@ -4,10 +4,6 @@
 package org.vclipse.dependency.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xtext.resource.containers.IAllContainersState;
-import org.vclipse.vcml.ui.resources.VcmlResourceContainerState;
-
-import com.google.inject.Provider;
 
 /**
  * Use this class to register components to be used within the IDE.
@@ -16,9 +12,5 @@ public class DependencyUiModule extends org.vclipse.dependency.ui.AbstractDepend
 	
 	public DependencyUiModule(AbstractUIPlugin plugin) {
 		super(plugin);
-	}
-	
-	public Provider<IAllContainersState> provideIAllContainersState() {
-		return org.eclipse.xtext.ui.shared.Access.<IAllContainersState>provider(VcmlResourceContainerState.class);
 	}
 }

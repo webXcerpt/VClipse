@@ -4,10 +4,6 @@
 package org.vclipse.constraint.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xtext.resource.containers.IAllContainersState;
-import org.vclipse.vcml.ui.resources.VcmlResourceContainerState;
-
-import com.google.inject.Provider;
 
 /**
  * Use this class to register components to be used within the IDE.
@@ -16,10 +12,5 @@ public class ConstraintUiModule extends org.vclipse.constraint.ui.AbstractConstr
 	
 	public ConstraintUiModule(AbstractUIPlugin plugin) {
 		super(plugin);
-	}
-	
-	@Override
-	public Provider<IAllContainersState> provideIAllContainersState() {
-		return org.eclipse.xtext.ui.shared.Access.<IAllContainersState>provider(VcmlResourceContainerState.class);
 	}
 }
