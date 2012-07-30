@@ -13,12 +13,13 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRunnable;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.e4.ui.workbench.modeling.ExpressionContext;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -32,13 +33,10 @@ import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
-import org.eclipse.xtext.ui.editor.utils.EditorUtils;
 import org.eclipse.xtext.ui.util.ResourceUtil;
 import org.eclipse.xtext.util.SimpleAttributeResolver;
 import org.eclipse.xtext.util.StringInputStream;
-import org.vclipse.bapi.actions.BAPIActionPlugin;
 import org.vclipse.bapi.actions.BAPIException;
 import org.vclipse.vcml.ui.IUiConstants;
 import org.vclipse.vcml.vcml.Import;
@@ -86,9 +84,6 @@ public class BAPIActionHandler extends AbstractHandler {
 	@Named("Result")
 	private PrintStream resultStream;
 	
-	@Inject
-	private IWorkspace workspace;
-	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		resourceSet = new XtextResourceSet();
@@ -100,15 +95,19 @@ public class BAPIActionHandler extends AbstractHandler {
 		final VcmlModel vcmlSourceModel = (VcmlModel)source.getContents().get(0);
 		final EList<Option> options = vcmlSourceModel.getOptions();
 		
-		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
+		WorkspaceJob workspaceJob = new WorkspaceJob("Executing SAP action") {
 			@Override
-			public void run(IProgressMonitor monitor) throws CoreException {
+			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				Resource result = getResultResource(source, seenObjects, fileOutput);
 				String taskName = "Executing rfc call on SAP system";
 				monitor.beginTask(taskName, IProgressMonitor.UNKNOWN);
 				VcmlModel vcmlModel = (VcmlModel)result.getContents().get(0);
 				for(Object entry : entries) {
-					shouldCancel(monitor, taskName);
+					if(monitor.isCanceled()) {
+						monitor.done();
+						resultStream.println("Task cancelled: " + taskName);
+						return Status.CANCEL_STATUS;
+					}
 					EObject current = null;
 					if(entry instanceof ITextSelection) {
 						current = BAPIActionUtils.getVCObject(offsetHelper, (ITextSelection)entry, source);
@@ -126,7 +125,11 @@ public class BAPIActionHandler extends AbstractHandler {
 					String objectName = SimpleAttributeResolver.NAME_RESOLVER.apply(eobject);
 					taskName = "Executing " + simpleName + " for " + objectName;
 					monitor.setTaskName(taskName);
-					shouldCancel(monitor, taskName);
+					if(monitor.isCanceled()) {
+						monitor.done();
+						resultStream.println("Task cancelled: " + taskName);
+						return Status.CANCEL_STATUS;
+					}
 					try {
 						Method method = bapiClass.getMethod("run", new Class[]{BAPIActionUtils.getInstanceType(current), Resource.class, IProgressMonitor.class, Set.class, List.class});
 						method.invoke(BAPIActionHandler.this, new Object[]{current, result, monitor, seenObjects, options});
@@ -142,27 +145,19 @@ public class BAPIActionHandler extends AbstractHandler {
 						exception.printStackTrace(errorStream); // this can be a JCoException or an AbapExeption
 					}
 				}
-				shouldCancel(monitor, taskName);
+				if(monitor.isCanceled()) {
+					monitor.done();
+					resultStream.println("Task cancelled: " + taskName);
+					return Status.CANCEL_STATUS;
+				}
 				persistResultResource(fileOutput, result, vcmlModel, monitor);
 				resultStream.println("Task finished: " + taskName);
+				return Status.OK_STATUS;
 			}
 		};
-		XtextEditor activeXtextEditor = EditorUtils.getActiveXtextEditor();
-		IProgressMonitor monitor = activeXtextEditor.getEditorSite().getActionBars().getStatusLineManager().getProgressMonitor();
-		try {
-			workspace.run(runnable, workspace.getRuleFactory().createRule(ResourceUtil.getFile(source)), IWorkspace.AVOID_UPDATE, monitor);
-		} catch (CoreException exception) {
-			BAPIActionPlugin.log(exception.getMessage(), exception);
-		}
+		workspaceJob.setPriority(Job.LONG);
+		workspaceJob.schedule();
 		return null;
-	}
-	
-	protected void shouldCancel(IProgressMonitor monitor, String taskName) throws CoreException {
-		if(monitor.isCanceled()) {
-			monitor.done();
-			resultStream.println("Task cancelled: " + taskName);
-			throw new CoreException(Status.CANCEL_STATUS);
-		}
 	}
 
 	protected XtextResource getSourceResource(Collection<?> entries, ExecutionEvent event) {
