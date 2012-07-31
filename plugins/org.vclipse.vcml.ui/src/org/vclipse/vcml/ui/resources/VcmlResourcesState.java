@@ -136,7 +136,7 @@ public class VcmlResourcesState extends AbstractAllContainersState {
 				}
 			}
 		} else {
-			LOGGER.warn("stringHandle was null, doInitContainedURIs for container " + containerHandle);
+			//LOGGER.warn("stringHandle was null, doInitContainedURIs for container " + containerHandle);
 		}
 		return containedUris;
 	}
@@ -146,6 +146,9 @@ public class VcmlResourcesState extends AbstractAllContainersState {
 		List<String> handles = Lists.newArrayList();
 		if(handle == null) {
 			for(IProject project : getWorkspaceRoot().getProjects()) {
+				if(!project.isAccessible()) {
+					continue;
+				}
 				URI uri = URI.createPlatformResourceURI(project.getFullPath().toString(), true);
 				String projectHandle = getContainerHandle(uri);
 				handles.add(projectHandle);
