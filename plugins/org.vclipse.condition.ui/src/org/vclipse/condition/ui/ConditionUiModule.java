@@ -4,10 +4,6 @@
 package org.vclipse.condition.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xtext.resource.containers.IAllContainersState;
-import org.vclipse.vcml.ui.resources.VcmlResourceContainerState;
-
-import com.google.inject.Provider;
 
 /**
  * Use this class to register components to be used within the IDE.
@@ -18,11 +14,7 @@ public class ConditionUiModule extends org.vclipse.condition.ui.AbstractConditio
 		super(plugin);
 	}
 	
-	public Provider<IAllContainersState> provideIAllContainersState() {
-		return org.eclipse.xtext.ui.shared.Access.<IAllContainersState>provider(VcmlResourceContainerState.class);
+	public com.google.inject.Provider<org.eclipse.xtext.resource.containers.IAllContainersState> provideIAllContainersState() {
+		return org.eclipse.xtext.ui.shared.Access.getWorkspaceProjectsState();
 	}
-	
-//	public Provider<IAllContainersState> provideIAllContainersState() {
-//		return VcmlResourcesStateProvider.getInstance();
-//	}
 }
