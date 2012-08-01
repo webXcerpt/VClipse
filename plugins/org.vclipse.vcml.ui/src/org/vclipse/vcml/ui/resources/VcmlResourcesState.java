@@ -166,13 +166,42 @@ public class VcmlResourcesState extends AbstractAllContainersState {
 	public String getContainerHandle(URI uri) {
 		return sourceUtils.getVcmlResourceURI(uri).toString();
 	}
-
+	
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
 		switch(event.getType()) {
 			case IResourceChangeEvent.PRE_DELETE :
-				String fullPath = event.getResource().getFullPath().toString();
-				cache_visibleContainerHandles.remove(fullPath);
+				IResource resource = event.getResource();
+				if(resource instanceof IContainer) {
+					IContainer container = (IContainer)resource;
+					final List<String> vcmlcontainers = Lists.newArrayList();
+					try {
+						container.accept(new IResourceVisitor() {
+							public boolean visit(IResource resource) throws CoreException {
+								if(resource instanceof IFile && DependencySourceUtils.EXTENSION_VCML.equals(((IFile)resource).getFileExtension())) {
+									vcmlcontainers.add(URI.createPlatformResourceURI(resource.getFullPath().toString(), true).toString());
+								}
+								return true;
+							}
+						});
+					} catch(CoreException exception) {
+						BaseUiPlugin.log(exception.getMessage(), exception);
+					}
+					for(String containerhandle : vcmlcontainers) {
+						cache_visibleContainerHandles.remove(containerhandle);
+					}
+				} else if(resource instanceof IFile) {
+					IFile file = (IFile)resource;
+					if(DependencySourceUtils.EXTENSION_VCML.equals(file.getFileExtension())) {
+						URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), true);
+						String vcmlpath = uri.toString();
+						List<String> visibleContainers = getVisibleContainerHandles(vcmlpath);
+						for(String container : visibleContainers) {
+							cache_visibleContainerHandles.remove(container);
+						}
+						cache_visibleContainerHandles.remove(vcmlpath);
+					}
+				}
 				break;
 			default	:
 				super.resourceChanged(event);
