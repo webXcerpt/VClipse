@@ -27,7 +27,8 @@ public class VcmlResourcesStateProvider implements Provider<IAllContainersState>
 	
 	public IAllContainersState get() {
 		if(state == null) {
-			Injector injector = VCMLActivator.getInstance().getInjector(VCMLActivator.ORG_VCLIPSE_VCML_VCML);
+			VCMLActivator activator = VCMLActivator.getInstance();
+			Injector injector = activator.getInjector(VCMLActivator.ORG_VCLIPSE_VCML_VCML);
 			state = injector.getInstance(VcmlResourcesState.class);
 		}
 		return state;
