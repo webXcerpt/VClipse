@@ -24,11 +24,11 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.resource.SaveOptions;
-import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.utils.EditorUtils;
 import org.vclipse.base.ui.BaseUiPlugin;
 import org.vclipse.base.ui.util.VClipseResourceUtil;
+import org.vclipse.vcml.ui.resources.VcmlResourceContainerState;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.vcml.Dependency;
 import org.vclipse.vcml.vcml.VCObject;
@@ -45,7 +45,7 @@ public class CleanUpDependenciesHandler extends AbstractHandler {
 	private VClipseResourceUtil resourceUtil;
 	
 	@Inject
-	private IAllContainersState containerState;
+	private VcmlResourceContainerState containerState;
 	
 	@Inject
 	private IQualifiedNameProvider nameProvider;
