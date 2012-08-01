@@ -22,6 +22,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.xtext.documentation.IEObjectDocumentationProvider;
 import org.eclipse.xtext.documentation.impl.MultiLineCommentDocumentationProvider;
+import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.ui.IImageHelper;
 import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider;
 import org.eclipse.xtext.ui.editor.hyperlinking.HyperlinkLabelProvider;
@@ -39,6 +40,7 @@ import org.vclipse.vcml.ui.hyperlinks.VcmlHyperlinkLabelProvider;
 import org.vclipse.vcml.ui.outline.VCMLOutlinePage;
 import org.vclipse.vcml.ui.outline.VCMLOutlineTreeProvider;
 import org.vclipse.vcml.ui.refactoring.VcmlRenameRefactoringExecutor;
+import org.vclipse.vcml.ui.resources.VcmlResourcesStateProvider;
 import org.vclipse.vcml.ui.syntaxcoloring.VCMLAntlrTokenToAttributeIdMapper;
 import org.vclipse.vcml.ui.templates.VcmlTemplateContextType;
 
@@ -78,8 +80,8 @@ public class VCMLUiModule extends org.vclipse.vcml.ui.AbstractVCMLUiModule {
 		return VCMLAntlrTokenToAttributeIdMapper.class;
 	}
 
-	public com.google.inject.Provider<org.eclipse.xtext.resource.containers.IAllContainersState> provideIAllContainersState() {
-		return org.eclipse.xtext.ui.shared.Access.getWorkspaceProjectsState();
+	public Provider<IAllContainersState> provideIAllContainersState() {
+		return VcmlResourcesStateProvider.getInstance();
 	}
 
 	@Override

@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -20,20 +20,23 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.xtext.ui.containers.AbstractAllContainersState;
-import org.vclipse.base.ui.util.VClipseResourceUtil;
+import org.vclipse.base.ui.BaseUiPlugin;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.vcml.Import;
 import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 public class VcmlResourcesState extends AbstractAllContainersState {
 	
-	private static Logger LOGGER = Logger.getLogger(VcmlResourceContainerState.class);
-	
 	public static final String VCML_EXTENSION = "." + DependencySourceUtils.EXTENSION_VCML;
+	
+	private final Set<String> EXTENSIONS = Sets.newHashSet(
+			DependencySourceUtils.EXTENSION_CONSTRAINT, DependencySourceUtils.EXTENSION_PRECONDITION, 
+				DependencySourceUtils.EXTENSION_PROCEDURE, DependencySourceUtils.EXTENSION_SELECTIONCONDITION);
 	
 	@Inject
 	private DependencySourceUtils sourceUtils;
@@ -41,10 +44,86 @@ public class VcmlResourcesState extends AbstractAllContainersState {
 	@Inject
 	private IWorkspace workspace;
 	
-	@Inject
-	private VClipseResourceUtil resourceUtil;
-	
 	private Map<String, List<String>> cache_visibleContainerHandles;
+	
+	@Override
+	protected void initialize() {
+		super.initialize();
+		cache_visibleContainerHandles = Maps.newHashMap();
+	}
+	
+	@Override
+	protected String doInitHandle(URI uri) {
+		if(DependencySourceUtils.EXTENSION_VCML.equals(uri.fileExtension())) {
+			return uri.toString();
+		}
+		return null;
+	}
+	
+	@Override
+	public boolean isEmpty(String containerHandle) {
+		return false;
+	}
+	
+	@Override
+	public List<String> getVisibleContainerHandles(String handle) {
+		List<String> visibleContainerHandles = cache_visibleContainerHandles.get(handle);
+		if(visibleContainerHandles == null) {
+			visibleContainerHandles = getVisibleContainerHandles_Raw(handle);
+			cache_visibleContainerHandles.put(handle, visibleContainerHandles);
+		}
+		return visibleContainerHandles;
+	}
+
+	@Override
+	protected Collection<URI> doInitContainedURIs(String containerHandle) {
+		final List<URI> containedUris = Lists.newArrayList();
+		if(containerHandle.contains(VCML_EXTENSION)) {
+			containerHandle = containerHandle.replace(VCML_EXTENSION, DependencySourceUtils.SUFFIX_SOURCEFOLDER);
+		}
+		String stringHandle = URI.createURI(containerHandle).toPlatformString(true);
+		if(stringHandle != null) {
+			IResource findMember = workspace.getRoot().findMember(stringHandle);
+			if(findMember instanceof IContainer) {
+				try {
+					((IContainer)findMember).accept(new IResourceVisitor() {
+						public boolean visit(IResource resource) throws CoreException {
+							if(resource instanceof IFile) {
+								IFile file = (IFile)resource;
+								if(EXTENSIONS.contains(file.getFileExtension())) {
+									String path = file.getFullPath().toString();
+									URI uri = URI.createPlatformResourceURI(path, true);
+									containedUris.add(uri);									
+								}
+							}
+							return true;
+						}
+					});
+				} catch(CoreException exception) {
+					BaseUiPlugin.log(exception.getMessage(), exception);
+				}
+			}
+		}
+		return containedUris;
+	}
+
+	@Override
+	protected List<String> doInitVisibleHandles(String handle) {
+		List<String> handles = Lists.newArrayList();
+		if(handle == null) {
+			for(IProject project : getWorkspaceRoot().getProjects()) {
+				URI uri = URI.createPlatformResourceURI(project.getFullPath().toString(), true);
+				String projectHandle = getContainerHandle(uri);
+				handles.add(projectHandle);
+				List<String> uris = Lists.newArrayList();
+				for(URI containedUri : doInitContainedURIs(projectHandle)) {
+					uris.add(containedUri.toString());
+				}
+				cache_visibleContainerHandles.put(handle, uris);
+			}
+		}
+		return handles;
+	}
 	
 	private List<String> getVisibleContainerHandles_Raw(String handle) {
 		List<String> visibleContainerHandles = Lists.newArrayList(handle);
@@ -78,85 +157,14 @@ public class VcmlResourcesState extends AbstractAllContainersState {
 		return visibleContainerHandles;
 	}
 	
-	public List<String> getVisibleContainerHandles(String handle) {
-		List<String> visibleContainerHandles = cache_visibleContainerHandles.get(handle);
-		if (visibleContainerHandles == null) {
-			visibleContainerHandles = getVisibleContainerHandles_Raw(handle);
-			cache_visibleContainerHandles.put(handle, visibleContainerHandles);
-		}
-		return visibleContainerHandles;
-	}
-
-	@Override
-	protected void initialize() {
-		super.initialize();
-		cache_visibleContainerHandles = Maps.newHashMap();
-	}
-
 	public Collection<URI> getContainedURIs(String containerHandle) {
-		return containerHandle.endsWith(VCML_EXTENSION) ? 
+		return containerHandle.endsWith(DependencySourceUtils.EXTENSION_VCML) ? 
 				Collections.singletonList(URI.createURI(containerHandle)) :
 					super.getContainedURIs(containerHandle);
 	}
 
-	public boolean isEmpty(String containerHandle) {
-		return false;
-	}
-
 	public String getContainerHandle(URI uri) {
 		return sourceUtils.getVcmlResourceURI(uri).toString();
-	}
-
-	@Override
-	protected String doInitHandle(URI uri) {
-		return null;
-	}
-
-	@Override
-	protected Collection<URI> doInitContainedURIs(String containerHandle) {
-		if(containerHandle.contains(VCML_EXTENSION)) {
-			containerHandle = containerHandle.replace(VCML_EXTENSION, DependencySourceUtils.SUFFIX_SOURCEFOLDER);
-		}
-		final List<URI> containedUris = Lists.newArrayList();
-		String stringHandle = URI.createURI(containerHandle).toPlatformString(true);
-		if(stringHandle != null) {
-			IResource findMember = workspace.getRoot().findMember(stringHandle);
-			if(findMember instanceof IContainer) {
-				try {
-					((IContainer)findMember).accept(new IResourceVisitor() {
-						public boolean visit(IResource resource) throws CoreException {
-							if(resource instanceof IFile) {
-								containedUris.add(resourceUtil.getResource(((IFile)resource)).getURI());
-							}
-							return true;
-						}
-					});
-				} catch (CoreException e) {
-					e.printStackTrace();
-				}
-			}
-		} else {
-			LOGGER.warn("stringHandle was null, doInitContainedURIs for container " + containerHandle);
-		}
-		return containedUris;
-	}
-
-	@Override
-	protected List<String> doInitVisibleHandles(String handle) {
-		List<String> handles = Lists.newArrayList();
-		if(handle == null) {
-			for(IProject project : getWorkspaceRoot().getProjects()) {
-				URI uri = URI.createPlatformResourceURI(project.getFullPath().toString(), true);
-				String projectHandle = getContainerHandle(uri);
-				handles.add(projectHandle);
-				List<String> uris = Lists.newArrayList();
-				for(URI containedUri : doInitContainedURIs(projectHandle)) {
-					uris.add(containedUri.toString());
-				}
-				cache_visibleContainerHandles.put(handle, uris);
-			}
-		}
-		return handles;
 	}
 
 	@Override

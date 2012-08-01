@@ -28,7 +28,7 @@ import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.utils.EditorUtils;
 import org.vclipse.base.ui.BaseUiPlugin;
 import org.vclipse.base.ui.util.VClipseResourceUtil;
-import org.vclipse.vcml.ui.resources.VcmlResourceContainerState;
+import org.vclipse.vcml.ui.resources.VcmlResourcesState;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.vcml.Dependency;
 import org.vclipse.vcml.vcml.VCObject;
@@ -45,7 +45,7 @@ public class CleanUpDependenciesHandler extends AbstractHandler {
 	private VClipseResourceUtil resourceUtil;
 	
 	@Inject
-	private VcmlResourceContainerState containerState;
+	private VcmlResourcesState containerState;
 	
 	@Inject
 	private IQualifiedNameProvider nameProvider;

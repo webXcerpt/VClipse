@@ -5,7 +5,7 @@ package org.vclipse.constraint.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
-import org.vclipse.vcml.ui.resources.VcmlResourceContainerState;
+import org.vclipse.vcml.ui.resources.VcmlResourcesStateProvider;
 
 import com.google.inject.Provider;
 
@@ -19,10 +19,6 @@ public class ConstraintUiModule extends org.vclipse.constraint.ui.AbstractConstr
 	}
 	
 	public Provider<IAllContainersState> provideIAllContainersState() {
-		return org.eclipse.xtext.ui.shared.Access.<IAllContainersState>provider(VcmlResourceContainerState.class);
+		return VcmlResourcesStateProvider.getInstance();
 	}
-	
-//	public Provider<IAllContainersState> provideIAllContainersState() {
-//		return VcmlResourcesStateProvider.getInstance();
-//	}
 }
