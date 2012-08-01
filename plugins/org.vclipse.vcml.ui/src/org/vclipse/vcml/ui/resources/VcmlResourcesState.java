@@ -152,7 +152,7 @@ public class VcmlResourcesState extends AbstractAllContainersState {
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
 		switch(event.getType()) {
-			case IResourceChangeEvent.PRE_DELETE :
+			case IResourceChangeEvent.PRE_DELETE : case IResourceChangeEvent.PRE_CLOSE :
 				IResource resource = event.getResource();
 				if(resource instanceof IContainer) {
 					IContainer container = (IContainer)resource;
@@ -172,20 +172,10 @@ public class VcmlResourcesState extends AbstractAllContainersState {
 					for(String containerhandle : vcmlcontainers) {
 						cache_visibleContainerHandles.remove(containerhandle);
 					}
-				} else if(resource instanceof IFile) {
-					IFile file = (IFile)resource;
-					if(DependencySourceUtils.EXTENSION_VCML.equals(file.getFileExtension())) {
-						URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), true);
-						String vcmlpath = uri.toString();
-						List<String> visibleContainers = getVisibleContainerHandles(vcmlpath);
-						for(String container : visibleContainers) {
-							cache_visibleContainerHandles.remove(container);
-						}
-						cache_visibleContainerHandles.remove(vcmlpath);
-					}
 				}
 				break;
 			default	:
+				cache_visibleContainerHandles.clear();
 				super.resourceChanged(event);
 		}
 	}
