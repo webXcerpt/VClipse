@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceVisitor;
@@ -61,6 +60,39 @@ public class VcmlResourcesState extends AbstractAllContainersState {
 	}
 	
 	@Override
+	protected List<String> doInitVisibleHandles(String handle) {
+		List<String> visibleContainerHandles = Lists.newArrayList(handle);
+		if(handle.endsWith(VCML_EXTENSION)) {
+			URI createURI = URI.createURI(handle);
+			ResourceSetImpl resourceSetImpl = new ResourceSetImpl();
+			Resource resource = null;
+			try {
+				resource = resourceSetImpl.getResource(createURI, true);
+			} catch(Exception exception) {
+				resource = resourceSetImpl.createResource(createURI);
+			}
+			if(resource != null) {
+				EList<EObject> contents = resource.getContents();
+				if(!contents.isEmpty()) {
+					EObject topObject = contents.get(0);
+					if(topObject instanceof VcmlModel) {
+						VcmlModel vcmlModel = (VcmlModel)topObject;
+						for(Import immport : vcmlModel.getImports()) {
+							String[] parts = immport.getImportURI().split("/");
+							URI importedUri = URI.createURI(handle).trimSegments(parts.length - 1);
+							for(int i=1; i<parts.length; i++) {
+								importedUri = importedUri.appendSegment(parts[i]);
+							}
+							visibleContainerHandles.add(importedUri.toString());
+						}
+					}
+				}
+			}
+		}
+		return visibleContainerHandles;
+	}
+	
+	@Override
 	public boolean isEmpty(String containerHandle) {
 		return false;
 	}
@@ -69,7 +101,7 @@ public class VcmlResourcesState extends AbstractAllContainersState {
 	public List<String> getVisibleContainerHandles(String handle) {
 		List<String> visibleContainerHandles = cache_visibleContainerHandles.get(handle);
 		if(visibleContainerHandles == null) {
-			visibleContainerHandles = getVisibleContainerHandles_Raw(handle);
+			visibleContainerHandles = doInitVisibleHandles(handle);
 			cache_visibleContainerHandles.put(handle, visibleContainerHandles);
 		}
 		return visibleContainerHandles;
@@ -105,56 +137,6 @@ public class VcmlResourcesState extends AbstractAllContainersState {
 			}
 		}
 		return containedUris;
-	}
-
-	@Override
-	protected List<String> doInitVisibleHandles(String handle) {
-		List<String> handles = Lists.newArrayList();
-		if(handle == null) {
-			for(IProject project : getWorkspaceRoot().getProjects()) {
-				URI uri = URI.createPlatformResourceURI(project.getFullPath().toString(), true);
-				String projectHandle = getContainerHandle(uri);
-				handles.add(projectHandle);
-				List<String> uris = Lists.newArrayList();
-				for(URI containedUri : doInitContainedURIs(projectHandle)) {
-					uris.add(containedUri.toString());
-				}
-				cache_visibleContainerHandles.put(handle, uris);
-			}
-		}
-		return handles;
-	}
-	
-	private List<String> getVisibleContainerHandles_Raw(String handle) {
-		List<String> visibleContainerHandles = Lists.newArrayList(handle);
-		if(handle.endsWith(VCML_EXTENSION)) {
-			URI createURI = URI.createURI(handle);
-			ResourceSetImpl resourceSetImpl = new ResourceSetImpl();
-			Resource resource = null;
-			try {
-				resource = resourceSetImpl.getResource(createURI, true);
-			} catch(Exception exception) {
-				resource = resourceSetImpl.createResource(createURI);
-			}
-			if(resource != null) {
-				EList<EObject> contents = resource.getContents();
-				if(!contents.isEmpty()) {
-					EObject topObject = contents.get(0);
-					if(topObject instanceof VcmlModel) {
-						VcmlModel vcmlModel = (VcmlModel)topObject;
-						for(Import immport : vcmlModel.getImports()) {
-							String[] parts = immport.getImportURI().split("/");
-							URI importedUri = URI.createURI(handle).trimSegments(parts.length - 1);
-							for(int i=1; i<parts.length; i++) {
-								importedUri = importedUri.appendSegment(parts[i]);
-							}
-							visibleContainerHandles.add(importedUri.toString());
-						}
-					}
-				}
-			}
-		}
-		return visibleContainerHandles;
 	}
 	
 	public Collection<URI> getContainedURIs(String containerHandle) {
