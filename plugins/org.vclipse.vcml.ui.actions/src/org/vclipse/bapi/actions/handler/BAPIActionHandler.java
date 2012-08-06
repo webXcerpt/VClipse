@@ -38,6 +38,7 @@ import org.eclipse.xtext.ui.util.ResourceUtil;
 import org.eclipse.xtext.util.SimpleAttributeResolver;
 import org.eclipse.xtext.util.StringInputStream;
 import org.vclipse.bapi.actions.BAPIException;
+import org.vclipse.base.ui.util.EditorUtilsExtensions;
 import org.vclipse.vcml.ui.IUiConstants;
 import org.vclipse.vcml.vcml.Import;
 import org.vclipse.vcml.vcml.Option;
@@ -168,7 +169,7 @@ public class BAPIActionHandler extends AbstractHandler {
 					return (XtextResource)((VCObject)adapter).eResource();
 				}
 			} else if(entry instanceof ITextSelection) {
-				return BAPIActionUtils.getResource(HandlerUtil.getActiveEditor(event));
+				return EditorUtilsExtensions.getResource(HandlerUtil.getActiveEditor(event));
 			} else if(entry instanceof VCObject) {
 				return (XtextResource)((VCObject)entry).eResource();
 			}
