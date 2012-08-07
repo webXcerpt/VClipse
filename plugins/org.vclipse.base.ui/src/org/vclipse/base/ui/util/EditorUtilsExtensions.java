@@ -20,4 +20,17 @@ public class EditorUtilsExtensions {
 		}
 		return null;
 	}
+	
+	public static EObject getRootElement(XtextEditor editor) {
+		if(editor != null) {
+			EObject parseResult = editor.getDocument().readOnly(
+				new IUnitOfWork<EObject, XtextResource>() {
+					public EObject exec(XtextResource resource) throws Exception {
+						return resource.getParseResult().getRootASTElement();
+					}
+				});
+			return parseResult;
+		}
+		return null;
+	}
 }
