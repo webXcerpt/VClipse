@@ -8,13 +8,13 @@
 <unit id="org.eclipse.emf.mwe.sdk.feature.group" version="1.2.1.v201206110920"/>
 <unit id="org.eclipse.emf.mwe2.language.sdk.feature.group" version="2.3.0.v201206120758"/>
 <unit id="org.eclipse.emf.mwe2.runtime.sdk.feature.group" version="2.3.0.v201206110920"/>
-<unit id="org.eclipse.xtext.xtend2.sdk.feature.group" version="2.3.1.v201208161042"/>
-<unit id="org.eclipse.xtext.docs.feature.group" version="2.3.1.v201208161042"/>
-<unit id="org.eclipse.xtext.ui.feature.group" version="2.3.1.v201208161042"/>
-<unit id="org.eclipse.xtext.runtime.feature.group" version="2.3.1.v201208161042"/>
-<unit id="org.eclipse.xtext.xbase.feature.group" version="2.3.1.v201208161042"/>
-<unit id="org.eclipse.xtext.examples.feature.group" version="2.3.1.v201208161042"/>
-<unit id="org.eclipse.xtext.sdk.feature.group" version="2.3.1.v201208161042"/>
+<unit id="org.eclipse.xtext.xtend2.sdk.feature.group" version="2.3.1.v201208210947"/>
+<unit id="org.eclipse.xtext.docs.feature.group" version="2.3.1.v201208210947"/>
+<unit id="org.eclipse.xtext.ui.feature.group" version="2.3.1.v201208210947"/>
+<unit id="org.eclipse.xtext.runtime.feature.group" version="2.3.1.v201208210947"/>
+<unit id="org.eclipse.xtext.xbase.feature.group" version="2.3.1.v201208210947"/>
+<unit id="org.eclipse.xtext.examples.feature.group" version="2.3.1.v201208210947"/>
+<unit id="org.eclipse.xtext.sdk.feature.group" version="2.3.1.v201208210947"/>
 <unit id="de.itemis.xtext.antlr.feature.feature.group" version="2.0.0.v201108011202"/>
 <unit id="de.itemis.xtext.antlr.sdk.feature.group" version="2.0.0.v201108011202"/>
 <repository location="http://download.itemis.de/updates"/>
@@ -31,8 +31,8 @@
 <unit id="org.tigris.subversion.subclipse.mylyn.feature.group" version="3.0.0"/>
 <unit id="org.tigris.subversion.clientadapter.javahl.feature.feature.group" version="1.7.6"/>
 <unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.3"/>
-<unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.15"/>
-<unit id="com.collabnet.subversion.merge.feature.feature.group" version="3.0.9"/>
+<unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.16"/>
+<unit id="com.collabnet.subversion.merge.feature.feature.group" version="3.0.10"/>
 <unit id="net.java.dev.jna.feature.group" version="3.4.0.t20120117_1605"/>
 <unit id="org.tigris.subversion.clientadapter.svnkit.feature.feature.group" version="1.7.5.1"/>
 <unit id="org.tmatesoft.svnkit.feature.group" version="1.7.5.v1_r9382_v20120718_1415"/>
