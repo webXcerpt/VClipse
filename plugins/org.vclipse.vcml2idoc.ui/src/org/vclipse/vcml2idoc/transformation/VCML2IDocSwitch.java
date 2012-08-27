@@ -449,7 +449,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 			setValue(segmentE1CABZM, "REF_FIELD", object.getField());
 		}
 
-		addSegmentE1DATEM(segmentE1CABNM);
+		addSegmentE1DATEM(segmentE1CABNM, object);
 		addSegmentE1UPSLINK(iDoc, toUpperCase(object.getName()), VcmlUtils.DEFAULT_VALIDITY_START);
 
 		addSegmentE1UPSITM(iDoc, "CHRMAS", "CHR", toUpperCase(object.getName()), HIELEV_CHRMAS, inslev_CHRMAS++, 1);
@@ -686,7 +686,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 				}
 			}.handleDescription(object.getDescription());
 
-			addSegmentE1DATEM(segmentE1KLAHM);
+			addSegmentE1DATEM(segmentE1KLAHM, object);
 			addSegmentE1UPSLINK(iDoc, toUpperCase(className), VcmlUtils.DEFAULT_VALIDITY_START);
 
 			addSegmentE1UPSITM(iDoc, "CLSMAS", "CLS", classType + toUpperCase(className), HIELEV_CLSMAS, inslev_CLSMAS++, 1);
@@ -712,7 +712,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 				setValue(segmentE1KSSKM, "DATUV", "00000000");
 				setValue(segmentE1KSSKM, "STATU", VcmlUtils.createIntFromStatus(superClass.getStatus())); // TODO is status neccessary here?
 			}
-			addSegmentE1DATEM(segmentE1OCLFM);
+			addSegmentE1DATEM(segmentE1OCLFM, object);
 			addSegmentE1UPSLINK(clfmas_iDoc, classType + toUpperCase(className), VcmlUtils.DEFAULT_VALIDITY_START);
 			
 			addSegmentE1UPSITM(clfmas_iDoc, "CLSMAS", "SUBCLS", classType + toUpperCase(className), HIELEV_CLFMAS, inslev_CLFMAS++, 1);
@@ -756,7 +756,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		final Segment segmentE1CUTY = addChildSegment(iDoc, "E1CUTY");
 		setValue(segmentE1CUTY, "MSGFN", "004");
 		setValue(segmentE1CUTY, "OBJECT_TYP", "MARA");
-		addSegmentE1DATEM(segmentE1CUTY);
+		addSegmentE1DATEM(segmentE1CUTY, profile);
 
 		// Master configuration profile object ID
 		final Segment segmentE1CUID = addChildSegment(segmentE1CUTY, "E1CUID");
@@ -872,7 +872,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 				addSegmentsForDependencyDocumentation(segmentE1CUKB5, "E1CUTX1", constraint.getDocumentation());
 			}
 		}
-		addSegmentE1DATEM(segmentE1CUKBM);
+		addSegmentE1DATEM(segmentE1CUKBM, dnet);
 		addSegmentE1UPSLINK(iDoc, toUpperCase(dnet.getName()), VcmlUtils.DEFAULT_VALIDITY_START);
 		addSegmentE1UPSITM(iDoc, "DEPNET", "DEP", toUpperCase(dnet.getName()), HIELEV_DEPNET, inslev_DEPNET++, 1);
 		return Collections.singletonList(iDoc);
@@ -934,7 +934,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		setValue(segmentE1CUKBM, "STATUS", VcmlUtils.createIntFromStatus(procedure.getStatus()));
 		setValue(segmentE1CUKBM, "GROUP", toUpperCase(procedure.getGroup()));
 
-		addSegmentE1DATEM(segmentE1CUKBM);
+		addSegmentE1DATEM(segmentE1CUKBM, procedure);
 
 		addSegmentsForDescription(segmentE1CUKBM, "E1CUKBT", "DESCRIPT", procedure.getDescription());
 		addSegmentsForSource(segmentE1CUKBM, procedure);
@@ -966,7 +966,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		setValue(segmentE1CUKBM, "STATUS", VcmlUtils.createIntFromStatus(precondition.getStatus()));
 		setValue(segmentE1CUKBM, "GROUP", toUpperCase(precondition.getGroup()));
 
-		addSegmentE1DATEM(segmentE1CUKBM);
+		addSegmentE1DATEM(segmentE1CUKBM, precondition);
 
 		addSegmentsForDescription(segmentE1CUKBM, "E1CUKBT", "DESCRIPT", precondition.getDescription());
 		addSegmentsForSource(segmentE1CUKBM, precondition);
@@ -992,7 +992,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		setValue(segmentE1CUKBM, "DEP_TYPE", "5");
 		setValue(segmentE1CUKBM, "STATUS", VcmlUtils.createIntFromStatus(condition.getStatus()));
 		setValue(segmentE1CUKBM, "GROUP", toUpperCase(condition.getGroup()));
-		addSegmentE1DATEM(segmentE1CUKBM);
+		addSegmentE1DATEM(segmentE1CUKBM, condition);
 		addSegmentsForDescription(segmentE1CUKBM, "E1CUKBT", "DESCRIPT", condition.getDescription());
 		addSegmentsForSource(segmentE1CUKBM, condition);
 		addSegmentsForDependencyDocumentation(segmentE1CUKBM, "E1CUTXM", condition.getDocumentation());
@@ -1166,7 +1166,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 				setValue(segmentE1OCLFM, "KLART", classType);
 				setValue(segmentE1OCLFM, "MAFID", "O");
 				setValue(segmentE1OCLFM, "OBJECT_TABLE", "MARA");
-				addSegmentE1DATEM(segmentE1OCLFM);
+				addSegmentE1DATEM(segmentE1OCLFM, material);
 				// Distribution Classification: Object Class Assignment
 				for(final Classification classification : entry.getValue()) {
 					Class cls = classification.getCls();
@@ -1227,7 +1227,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		setValue(segmentE1CUVFM, "STATUS", VcmlUtils.createIntFromStatusVFT(varfunc.getStatus()));
 		setValue(segmentE1CUVFM, "GROUP", toUpperCase(varfunc.getGroup()));
 
-		addSegmentE1DATEM(segmentE1CUVFM);
+		addSegmentE1DATEM(segmentE1CUVFM, varfunc);
 
 		for(final VariantFunctionArgument argument : varfunc.getArguments()) {
 			final Segment segmentE1CUFCM = addChildSegment(segmentE1CUVFM, "E1CUFCM");
@@ -1277,7 +1277,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		setValue(segmentE1CUVTM, "STATUS", VcmlUtils.createIntFromStatusVFT(vartab.getStatus()));
 		setValue(segmentE1CUVTM, "VTGROUP", toUpperCase(vartab.getGroup()));
 
-		addSegmentE1DATEM(segmentE1CUVTM);
+		addSegmentE1DATEM(segmentE1CUVTM, vartab);
 
 		for(final VariantTableArgument argument : vartab.getArguments()) {
 			final Segment segmentE1CUVCM = addChildSegment(segmentE1CUVTM, "E1CUVCM");
@@ -1313,7 +1313,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		String tableName = toUpperCase(table.getName());
 		setValue(segmentE1CUVTM, "VAR_TAB", tableName);
 		
-		addSegmentE1DATEM(segmentE1CUVTM);
+		addSegmentE1DATEM(segmentE1CUVTM, tableContent);
 		
 		EList<Row> rows = tableContent.getRows();
 		EList<VariantTableArgument> arguments = table.getArguments();
@@ -1352,14 +1352,24 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 	
 	/**
 	 * @param parentSegment
+	 * @param vcObject TODO
 	 * @return
 	 */
-	private Segment addSegmentE1DATEM(final Segment parentSegment) {
+	private Segment addSegmentE1DATEM(final Segment parentSegment, VCObject vcObject) {
 		// Master Key Date and Change Number
 		final Segment segmentE1DATEM = addChildSegment(parentSegment, "E1DATEM");
 		setValue(segmentE1DATEM, "KEY_DATE", today);
-		setValue(segmentE1DATEM, "AENNR", ecm);
+		setValue(segmentE1DATEM, "AENNR", getEcm(vcObject));
 		return segmentE1DATEM;
+	}
+
+	private String getEcm(VCObject vcObject) {
+		for (Option o : vcObject.getOptions()) {
+			switch (o.getName()) {
+			case ECM: return o.getValue();
+			}
+		}
+		return ecm;
 	}
 
 	/**

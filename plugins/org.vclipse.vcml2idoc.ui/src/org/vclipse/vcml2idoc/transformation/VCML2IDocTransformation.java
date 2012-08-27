@@ -22,8 +22,9 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.resource.SaveOptions;
+import org.eclipse.xtext.resource.XtextResourceSet;
 import org.vclipse.idoc.iDoc.IDocFactory;
 import org.vclipse.vcml.vcml.VcmlModel;
 import org.vclipse.vcml2idoc.VCML2IDocPlugin;
@@ -62,16 +63,11 @@ public class VCML2IDocTransformation implements IVCML2IDocTransformation {
 	
 	public void transform(IFile vcmlFile, IProgressMonitor monitor) throws InvocationTargetException {
 		if(vcmlFile.getFileExtension().equals(VCML_EXTENSION)) {
-			URI vcmlUri = URI.createURI(vcmlFile.getFullPath().toString());
+			URI vcmlUri = URI.createURI(vcmlFile.getLocationURI().toString());
 			URI idocUri = vcmlUri.trimFileExtension().appendFileExtension(IDOC_EXTENSION);
-			ResourceSet resourceSet = new ResourceSetImpl();
+			ResourceSet resourceSet = new XtextResourceSet();
 			Resource vcmlResource = resourceSet.getResource(vcmlUri, true);
-			Resource idocResource;
-			try {
-				idocResource = resourceSet.getResource(idocUri, true);
-			} catch(Exception exception) {
-				idocResource = resourceSet.createResource(idocUri, "UTF-8");
-			} 
+			Resource idocResource = resourceSet.createResource(idocUri, "UTF-8");
 			transform(vcmlResource, idocResource, monitor);
 		} else {
 			LOGGER.error("Only vcml files can be transformed. Got " + vcmlFile.getName());

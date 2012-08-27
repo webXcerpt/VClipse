@@ -6,7 +6,7 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 VcmlModel
 	:	{VcmlModel}
 		imports+=Import*
-	    ('options' '{' (options+=Option)* '}')?
+	    ('options' '{' options+=Option* '}')?
     	(objects+=VCObject)*
     ;
 
@@ -43,7 +43,7 @@ VCObject
 
 BillOfMaterial :
 	{BillOfMaterial}
-	'billofmaterial' name=EXTENDED_ID '{'
+	'billofmaterial' name=EXTENDED_ID ('[' options+=Option* ']')? '{'
 		('material' material=[Material|EXTENDED_ID])?
 		('items' '{' items+=BOMItem* '}')?
 	//	('classitems' '{' classitems+=BOMItem* '}')? // currently deactivated
@@ -60,7 +60,7 @@ BOMItem :
 	;
 
 Characteristic :
-	'characteristic' name=XID ('{'
+	'characteristic' name=XID ('[' options+=Option* ']')? ('{'
 	(	description=Description
 	&	documentation=Documentation?
 	&	type=CharacteristicType
@@ -159,7 +159,7 @@ CharacteristicOrValueDependencies :
 	;
 
 Class :
-	'class' name=CLASSNAME ('{'
+	'class' name=CLASSNAME ('[' options+=Option* ']')? ('{'
 		(	description=Description
 		&	('status' status=Status)?
 		&	('group' group=STRING)?
@@ -178,7 +178,7 @@ CLASSNAME
 	;
 
 ConfigurationProfile :
-    'configurationprofile' name=EXTENDED_ID '{'
+    'configurationprofile' name=EXTENDED_ID ('[' options+=Option* ']')? '{'
 	   (	('material' material=[Material|EXTENDED_ID])?
 	   &	('status' status=Status)?
 	   &	('bomapplication' bomapplication=XID)?
@@ -191,7 +191,7 @@ ConfigurationProfile :
     ;
 
 Procedure :
-    'procedure' name=EXTENDED_ID ('{'
+    'procedure' name=EXTENDED_ID ('[' options+=Option* ']')? ('{'
 		(	description=Description
 		&	documentation=Documentation?
 		&	('status' status=Status)?
@@ -201,7 +201,7 @@ Procedure :
     ;
 
 SelectionCondition :
-    'selectioncondition' name=EXTENDED_ID ('{'
+    'selectioncondition' name=EXTENDED_ID ('[' options+=Option* ']')? ('{'
 		(	description=Description
 		&	documentation=Documentation?
 		&	('status' status=Status)?
@@ -211,7 +211,7 @@ SelectionCondition :
     ;
 
 Precondition :
-    'precondition' name=EXTENDED_ID ('{'
+    'precondition' name=EXTENDED_ID ('[' options+=Option* ']')? ('{'
 		(	description=Description
 		&	documentation=Documentation?
 		&	('status' status=Status)?
@@ -221,7 +221,7 @@ Precondition :
     ;
 
 DependencyNet :
-	'dependencynet' name=EXTENDED_ID ('{'
+	'dependencynet' name=EXTENDED_ID ('[' options+=Option* ']')? ('{'
 		(	description=Description
 		&	documentation=Documentation?
 		&	('status' status=Status)?
@@ -232,7 +232,7 @@ DependencyNet :
 	;
 
 Constraint :
-    'constraint' name=EXTENDED_ID ('{'
+    'constraint' name=EXTENDED_ID ('[' options+=Option* ']')? ('{'
 		(	description=Description
 		&	documentation=Documentation?
 		&	('status' status=Status)?
@@ -246,7 +246,7 @@ ConfigurationProfileEntry :
     ;
 
 InterfaceDesign :
-	'interfacedesign' name=EXTENDED_ID ('{'
+	'interfacedesign' name=EXTENDED_ID ('[' options+=Option* ']')? ('{'
 		(characteristicGroups+=CharacteristicGroup)*
 	'}')?
 	;
@@ -259,7 +259,7 @@ CharacteristicGroup :
 	;    
 
 Material : 
-	'material' name=EXTENDED_ID ('{'
+	'material' name=EXTENDED_ID ('[' options+=Option* ']')? ('{'
 		(description=Description 
 		& ('type' type=EXTENDED_ID)
 		& ('billofmaterials' '{' billofmaterials+=[BillOfMaterial|EXTENDED_ID]* '}')?
@@ -280,7 +280,7 @@ ValueAssignment :
 	;
 	
 VariantFunction :
-	'variantfunction' name=XID ('{'
+	'variantfunction' name=XID ('[' options+=Option* ']')? ('{'
 		(	description=Description
 		&	('status' status=Status)?
 		&	('group' group=STRING)?
@@ -294,7 +294,7 @@ VariantFunctionArgument
 	;
 	
 VariantTable
-	:	'varianttable' name=XID ('{'
+	:	'varianttable' name=XID ('[' options+=Option* ']')? ('{'
 			(	description=Description
 			&	('status' status=Status)?
 			&	('group' group=STRING)?
@@ -308,7 +308,7 @@ VariantTableArgument
 	;
 
 VariantTableContent
-	:	'varianttablecontent' table=[VariantTable | XID] '{'
+	:	'varianttablecontent' table=[VariantTable | XID] ('[' options+=Option* ']')? '{'
 			rows += Row*
 		'}'
 	;

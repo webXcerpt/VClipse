@@ -117,7 +117,7 @@ public class VCMLFormatter extends AbstractDeclarativeFormatter {
 	    c.setLinewrap(2).before(f.getCharacteristicAccess().getCharacteristicKeyword_0());
 	    c.setLinewrap(2).before(f.getConstraintAccess().getConstraintKeyword_0());
 	    c.setLinewrap(2).before(f.getDependencyNetAccess().getDependencynetKeyword_0());
-	    c.setIndentationIncrement().before(f.getDependencyNetAccess().getDescriptionAssignment_2_1_0());
+	    c.setIndentationIncrement().before(f.getDependencyNetAccess().getDescriptionAssignment_3_1_0());
 	    c.setLinewrap(2).before(f.getInterfaceDesignAccess().getInterfacedesignKeyword_0());
 	    c.setLinewrap(2).before(f.getMaterialAccess().getMaterialKeyword_0());
 	    c.setLinewrap(2).before(f.getPreconditionAccess().getPreconditionKeyword_0());

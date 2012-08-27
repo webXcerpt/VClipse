@@ -119,6 +119,7 @@
     <genClasses ecoreClass="VCML.ecore#//VCObject">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//VCObject/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//VCObject/description"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//VCObject/options"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//BillOfMaterial">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//BillOfMaterial/items"/>

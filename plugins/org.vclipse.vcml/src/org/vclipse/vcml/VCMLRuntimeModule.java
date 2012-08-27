@@ -59,9 +59,9 @@ public class VCMLRuntimeModule extends org.vclipse.vcml.AbstractVCMLRuntimeModul
 		return VCMLLinker.class;
 	}
 
-	public Class<? extends LazyURIEncoder> bindURIEncoder() {
-		return VCMLURIEncoder.class;
-	}
+//	public Class<? extends LazyURIEncoder> bindURIEncoder() {
+//		return VCMLURIEncoder.class;
+//	}
 
 	public Class<? extends ITokenSerializer.ICrossReferenceSerializer> bindICrossReferenceSerializer() {
 		return VCMLCrossReferenceSerializer.class;
