@@ -15,7 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
@@ -40,6 +40,7 @@ import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.SymbolicType;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.sap.conn.jco.JCoException;
@@ -53,11 +54,17 @@ public class CharacteristicReader extends BAPIUtils {
 	public static final SimpleDateFormat DATEFORMAT_SAP = new SimpleDateFormat("yyyyMMdd");
 	public static final SimpleDateFormat DATEFORMAT_VCML = new SimpleDateFormat("dd.MM.yyyy");
 
-	public Characteristic read(String csticName, VcmlModel vcmlModel, final IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
-		if(csticName == null || !seenObjects.add("Characteristic/" + csticName.toUpperCase()) || monitor.isCanceled()) {
+	public Characteristic read(String csticName, VcmlModel vcmlModel, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+		if(csticName == null || monitor.isCanceled()) {
 			return null;			
 		}
+		String id = "Characteristic/" + csticName.toUpperCase();
+		VCObject seenObject = seenObjects.get(id);
+		if (seenObject instanceof Characteristic) {
+			return (Characteristic)seenObject;
+		}
 		final Characteristic object = VCML.createCharacteristic();
+		seenObjects.put(id, object);
 		JCoFunction function = getJCoFunction("BAPI_CHARACT_GETDETAIL", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue("CHARACTNAME", csticName);

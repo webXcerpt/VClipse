@@ -11,7 +11,7 @@
 package org.vclipse.bapi.actions.selectioncondition;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -20,6 +20,7 @@ import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.ConditionSource;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.SelectionCondition;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.sap.conn.jco.AbapException;
@@ -30,11 +31,17 @@ import com.sap.conn.jco.JCoStructure;
 
 public class SelectionConditionReader extends BAPIUtils {
 
-	public SelectionCondition read(String selectionConditionName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
-		if(selectionConditionName == null || !seenObjects.add("SelectionCondition/" + selectionConditionName.toUpperCase()) || monitor.isCanceled()) {
+	public SelectionCondition read(String selectionConditionName, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+		if(selectionConditionName == null || monitor.isCanceled()) {
 			return null;
 		}
+		String id = "SelectionCondition/" + selectionConditionName.toUpperCase();
+		VCObject seenObject = seenObjects.get(id);
+		if (seenObject instanceof SelectionCondition) {
+			return (SelectionCondition)seenObject;
+		}
 		SelectionCondition object = VCML.createSelectionCondition();
+		seenObjects.put(id, object);
 		object.setName(selectionConditionName);
 		VcmlModel model = (VcmlModel)resource.getContents().get(0);
 		model.getObjects().add(object);

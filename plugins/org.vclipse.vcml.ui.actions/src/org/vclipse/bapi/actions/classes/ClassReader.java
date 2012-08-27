@@ -11,7 +11,7 @@
 package org.vclipse.bapi.actions.classes;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.vclipse.bapi.actions.BAPIUtils;
@@ -21,6 +21,7 @@ import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.inject.Inject;
@@ -35,14 +36,17 @@ public class ClassReader extends BAPIUtils {
 	@Inject
 	private CharacteristicReader csticReader;
 	
-	public Class read(String classSpec, VcmlModel model, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public Class read(String classSpec, VcmlModel model, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
 		int classType = VcmlUtils.getClassType(classSpec);
 		String className = VcmlUtils.getClassName(classSpec);
 		String newClassSpec = "(" + classType + ")" + className;
-		if (!seenObjects.add("Class/" + newClassSpec.toUpperCase())) {
-			return null;
+		String id = "Class/" + newClassSpec.toUpperCase();
+		VCObject seenObject = seenObjects.get(id);
+		if (seenObject instanceof Class) {
+			return (Class)seenObject;
 		}
 		Class object = VCML.createClass();
+		seenObjects.put(id, object);
 		object.setName(newClassSpec);
 		model.getObjects().add(object);
 		{

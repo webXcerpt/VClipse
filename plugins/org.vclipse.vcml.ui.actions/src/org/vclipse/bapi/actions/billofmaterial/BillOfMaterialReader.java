@@ -10,10 +10,12 @@
  ******************************************************************************/
 package org.vclipse.bapi.actions.billofmaterial;
 
+import static org.vclipse.vcml.utils.VCMLObjectUtils.mkConfigurationProfileEntry;
+import static org.vclipse.vcml.utils.VCMLObjectUtils.sortEntries;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -23,16 +25,15 @@ import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.material.MaterialReader;
 import org.vclipse.bapi.actions.procedure.ProcedureReader;
 import org.vclipse.bapi.actions.selectioncondition.SelectionConditionReader;
+import org.vclipse.vcml.utils.VCMLProxyFactory;
 import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Procedure;
 import org.vclipse.vcml.vcml.SelectionCondition;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
-import org.vclipse.vcml.utils.VCMLProxyFactory;
-import static org.vclipse.vcml.utils.VCMLObjectUtils.mkConfigurationProfileEntry;
-import static org.vclipse.vcml.utils.VCMLObjectUtils.sortEntries;
 
 import com.google.inject.Inject;
 import com.sap.conn.jco.AbapException;
@@ -54,9 +55,14 @@ public class BillOfMaterialReader extends BAPIUtils {
 	@Inject
 	private SelectionConditionReader selectionConditionReader;
 	
-	public void read(Material containerMaterial, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public void read(Material containerMaterial, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
 		String materialNumber = containerMaterial.getName();
-		if(materialNumber == null || !seenObjects.add("BillOfMaterial/" + materialNumber.toUpperCase()) || monitor.isCanceled()) {
+		if(materialNumber == null || monitor.isCanceled()) {
+			return;
+		}
+		String id = "BillOfMaterial/" + materialNumber.toUpperCase();
+		VCObject seenObject = seenObjects.get(id);
+		if (seenObject instanceof BillOfMaterial) {
 			return;
 		}
 		VcmlModel model = (VcmlModel)resource.getContents().get(0);
@@ -84,6 +90,7 @@ public class BillOfMaterialReader extends BAPIUtils {
 				object.setName(materialNumber);
 				containerMaterial.getBillofmaterials().add(object);
 				model.getObjects().add(object);
+				seenObjects.put(id, object);
 				billOfMaterialByName.put(bomNo, object);
 				// object.setStatus(VCMLUtils.createStatus(tSTKO.getInt("BOM_STATUS"))); // TODO BOM should have a status
 			}

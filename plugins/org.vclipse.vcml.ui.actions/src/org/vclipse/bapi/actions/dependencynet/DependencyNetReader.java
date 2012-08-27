@@ -11,7 +11,7 @@
 package org.vclipse.bapi.actions.dependencynet;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.vclipse.bapi.actions.BAPIUtils;
@@ -22,6 +22,7 @@ import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.inject.Inject;
@@ -37,11 +38,17 @@ public class DependencyNetReader extends BAPIUtils {
 	@Inject
 	private ConstraintReader constraintReader;
 
-	public DependencyNet read(String depNetName, VcmlModel vcmlModel, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
-		if(depNetName == null || !seenObjects.add("DependencyNet/" + depNetName.toUpperCase())) {
+	public DependencyNet read(String depNetName, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+		if(depNetName == null) {
 			return null;
 		}
+		String id = "DependencyNet/" + depNetName.toUpperCase();
+		VCObject seenObject = seenObjects.get(id);
+		if (seenObject instanceof DependencyNet) {
+			return (DependencyNet)seenObject;
+		}
 		DependencyNet object = VCML.createDependencyNet();
+		seenObjects.put(id, object);
 		object.setName(depNetName);
 		JCoFunction function = getJCoFunction("CARD_CONSTRAINT_NET_READ", monitor);
 		JCoParameterList ipl = function.getImportParameterList();

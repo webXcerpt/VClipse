@@ -11,7 +11,7 @@
 package org.vclipse.bapi.actions.variantfunction;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
@@ -21,6 +21,7 @@ import org.vclipse.vcml.utils.VCMLProxyFactory;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VariantFunction;
 import org.vclipse.vcml.vcml.VariantFunctionArgument;
 import org.vclipse.vcml.vcml.VcmlModel;
@@ -38,11 +39,17 @@ public class VariantFunctionReader extends BAPIUtils {
 	@Inject
 	private CharacteristicReader csticReader;
 	
-	public VariantFunction read(String variantFunctionName, VcmlModel vcmlModel, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
-		if(variantFunctionName == null || !seenObjects.add("VariantFunction/" + variantFunctionName.toUpperCase()) || monitor.isCanceled()) {
+	public VariantFunction read(String variantFunctionName, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+		if(variantFunctionName == null || monitor.isCanceled()) {
 			return null;
 		}
+		String id = "VariantFunction/" + variantFunctionName.toUpperCase();
+		VCObject seenObject = seenObjects.get(id);
+		if (seenObject instanceof VariantFunction) {
+			return (VariantFunction)seenObject;
+		}
 		VariantFunction object = VCML.createVariantFunction();
+		seenObjects.put(id, object);
 		object.setName(variantFunctionName);
 		vcmlModel.getObjects().add(object);
 		JCoFunction function = getJCoFunction("CARD_FUNCTION_READ", monitor);

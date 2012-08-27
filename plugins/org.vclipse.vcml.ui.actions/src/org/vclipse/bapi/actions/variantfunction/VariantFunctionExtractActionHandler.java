@@ -11,12 +11,13 @@
 package org.vclipse.bapi.actions.variantfunction;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.bapi.actions.IBAPIActionRunner;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VariantFunction;
 import org.vclipse.vcml.vcml.VcmlModel;
 
@@ -28,7 +29,7 @@ public class VariantFunctionExtractActionHandler extends VariantFunctionReader i
 		return isConnected();
 	}
 
-	public void run(VariantFunction variantFunction, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
+	public void run(VariantFunction variantFunction, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
 		read(variantFunction.getName(), (VcmlModel)resource.getContents().get(0), monitor, seenObjects, options, true);
 	}
 

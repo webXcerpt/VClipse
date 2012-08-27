@@ -11,12 +11,13 @@
 package org.vclipse.bapi.actions.configurationprofile;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.IBAPIActionRunner;
+import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.ConfigurationProfile;
 import org.vclipse.vcml.vcml.ConfigurationProfileEntry;
 import org.vclipse.vcml.vcml.DependencyNet;
@@ -24,7 +25,7 @@ import org.vclipse.vcml.vcml.Fixing;
 import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Option;
-import org.vclipse.vcml.utils.VcmlUtils;
+import org.vclipse.vcml.vcml.VCObject;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -40,7 +41,7 @@ public class ConfigurationProfileCreateChangeActionHandler extends BAPIUtils imp
 	}
 
 	@Override
-	public void run(ConfigurationProfile object, Resource resource,	IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
+	public void run(ConfigurationProfile object, Resource resource,	IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
 		Material material = object.getMaterial();
 		if(material == null) {
 			return;

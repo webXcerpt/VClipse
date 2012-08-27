@@ -11,18 +11,19 @@
 package org.vclipse.bapi.actions.classes;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.IBAPIActionRunner;
+import org.vclipse.vcml.utils.DescriptionHandler;
+import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.Language;
 import org.vclipse.vcml.vcml.Option;
-import org.vclipse.vcml.utils.DescriptionHandler;
-import org.vclipse.vcml.utils.VcmlUtils;
+import org.vclipse.vcml.vcml.VCObject;
 
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
@@ -44,7 +45,7 @@ public abstract class AbstractClassCreateChangeActionHandler extends BAPIUtils i
 		return isConnected() && hasBody(object);
 	}
 
-	public void run(Class object, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
+	public void run(Class object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
 		beginTransaction();
 		JCoFunction function = getJCoFunction(getBAPI(), monitor);	
 		JCoParameterList ipl = function.getImportParameterList();

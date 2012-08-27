@@ -11,7 +11,7 @@
 package org.vclipse.bapi.actions.configurationprofile;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -19,6 +19,7 @@ import org.vclipse.bapi.actions.IBAPIActionRunner;
 import org.vclipse.vcml.vcml.ConfigurationProfile;
 import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VCObject;
 
 import com.sap.conn.jco.JCoException;
 
@@ -28,7 +29,7 @@ public class ConfigurationProfileExtractActionHandler extends ConfigurationProfi
 		return isConnected();
 	}
 
-	public void run(ConfigurationProfile configurationProfile, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
+	public void run(ConfigurationProfile configurationProfile, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
 		Material material = configurationProfile.getMaterial();
 		if(material == null) {
 			return;

@@ -11,7 +11,7 @@
 package org.vclipse.bapi.actions.interfacedesign;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
@@ -27,6 +27,7 @@ import org.vclipse.vcml.vcml.Language;
 import org.vclipse.vcml.vcml.MultiLanguageDescription;
 import org.vclipse.vcml.vcml.MultiLanguageDescriptions;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.inject.Inject;
@@ -40,11 +41,17 @@ public class InterfaceDesignReader extends BAPIUtils {
 	@Inject
 	private CharacteristicReader csticReader;
 	
-	public InterfaceDesign read(String interfaceDesignName, VcmlModel model, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
-		if (interfaceDesignName == null || !seenObjects.add("InterfaceDesign/" + interfaceDesignName.toUpperCase()) || monitor.isCanceled()) {
+	public InterfaceDesign read(String interfaceDesignName, VcmlModel model, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+		if (interfaceDesignName == null || monitor.isCanceled()) {
 			return null;
 		}
+		String id = "InterfaceDesign/" + interfaceDesignName.toUpperCase();
+		VCObject seenObject = seenObjects.get(id);
+		if (seenObject instanceof InterfaceDesign) {
+			return (InterfaceDesign)seenObject;
+		}
 		InterfaceDesign object = VCML.createInterfaceDesign();
+		seenObjects.put(id, object);
 		object.setName(interfaceDesignName);
 		model.getObjects().add(object);
 

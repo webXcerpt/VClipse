@@ -11,18 +11,19 @@
 package org.vclipse.bapi.actions.varianttable;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.IBAPIActionRunner;
-import org.vclipse.vcml.vcml.Language;
-import org.vclipse.vcml.vcml.Option;
-import org.vclipse.vcml.vcml.VariantTable;
-import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.utils.DescriptionHandler;
 import org.vclipse.vcml.utils.VcmlUtils;
+import org.vclipse.vcml.vcml.Language;
+import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VCObject;
+import org.vclipse.vcml.vcml.VariantTable;
+import org.vclipse.vcml.vcml.VariantTableArgument;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -38,7 +39,7 @@ public class VariantTableCreateChangeActionHandler extends BAPIUtils implements 
 	}
 
 	@Override
-	public void run(VariantTable object, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
+	public void run(VariantTable object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
 		final String name = object.getName();
 		beginTransaction();
 		JCoFunction function = getJCoFunction("CAMA_TABLE_MAINTAIN_STRUCTURE", monitor);
@@ -46,7 +47,7 @@ public class VariantTableCreateChangeActionHandler extends BAPIUtils implements 
 		JCoParameterList tpl = function.getTableParameterList();
 		JCoTable varTabBasicData = tpl.getTable("VAR_TAB_BASIC_DATA");
 		varTabBasicData.appendRow();
-		varTabBasicData.setValue("VAR_TAB", name);
+		varTabBasicData.setValue("VAR_TAB", name.toUpperCase());
 		varTabBasicData.setValue("STATUS", VcmlUtils.createIntFromStatusVFT(object.getStatus())); // TODO is this the correct status translation?
 		varTabBasicData.setValue("VTGROUP", object.getGroup());
 		final JCoTable varTabDescriptions = tpl.getTable("VAR_TAB_DESCRIPTIONS");

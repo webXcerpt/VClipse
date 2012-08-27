@@ -11,7 +11,7 @@
 package org.vclipse.bapi.actions.precondition;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -20,6 +20,7 @@ import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.ConditionSource;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Precondition;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.sap.conn.jco.AbapException;
@@ -30,11 +31,17 @@ import com.sap.conn.jco.JCoStructure;
 
 public class PreconditionReader extends BAPIUtils {
 	
-	public Precondition read(String preconditionName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
-		if(preconditionName == null || !seenObjects.add("Precondition/" + preconditionName.toUpperCase()) || monitor.isCanceled()) {
+	public Precondition read(String preconditionName, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+		if(preconditionName == null || monitor.isCanceled()) {
 			return null;
 		}
+		String id = "Precondition/" + preconditionName.toUpperCase();
+		VCObject seenObject = seenObjects.get(id);
+		if (seenObject instanceof Precondition) {
+			return (Precondition)seenObject;
+		}
 		Precondition object = VCML.createPrecondition();
+		seenObjects.put(id, object);
 		object.setName(preconditionName);
 		VcmlModel model = (VcmlModel)resource.getContents().get(0);
 		model.getObjects().add(object);

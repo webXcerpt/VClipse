@@ -11,13 +11,14 @@
 package org.vclipse.bapi.actions.material;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.bapi.actions.IBAPIActionRunner;
 import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VCObject;
 
 import com.sap.conn.jco.JCoException;
 
@@ -28,7 +29,7 @@ public class MaterialDisplayActionHandler extends MaterialReader implements IBAP
 	}
 
 	@Override
-	public void run(Material material, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
+	public void run(Material material, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
 		read(material.getName(), resource, monitor, seenObjects, options, false);
 	}
 

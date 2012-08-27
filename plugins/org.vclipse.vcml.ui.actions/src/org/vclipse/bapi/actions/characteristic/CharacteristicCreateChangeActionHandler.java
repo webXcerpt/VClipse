@@ -12,13 +12,15 @@ package org.vclipse.bapi.actions.characteristic;
 
 import java.text.ParseException;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.IBAPIActionRunner;
+import org.vclipse.vcml.utils.DescriptionHandler;
+import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicValue;
 import org.vclipse.vcml.vcml.DateCharacteristicValue;
@@ -36,9 +38,8 @@ import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.SimpleDocumentation;
 import org.vclipse.vcml.vcml.SymbolicType;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.util.VcmlSwitch;
-import org.vclipse.vcml.utils.DescriptionHandler;
-import org.vclipse.vcml.utils.VcmlUtils;
 
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
@@ -47,7 +48,7 @@ import com.sap.conn.jco.JCoTable;
 
 public class CharacteristicCreateChangeActionHandler extends BAPIUtils implements IBAPIActionRunner<Characteristic> {
 	
-	public void run(final Characteristic object, Resource resource, final IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
+	public void run(final Characteristic object, Resource resource, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
 		final DocumentationHandler documentationHandler = new DocumentationHandler(monitor);
 		beginTransaction();
 		final JCoFunction function = getJCoFunction("BAPI_CHARACT_CHANGE", monitor);

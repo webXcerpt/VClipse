@@ -1,7 +1,7 @@
 package org.vclipse.bapi.actions.varianttable.content;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
@@ -11,6 +11,7 @@ import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Row;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
@@ -26,7 +27,7 @@ public class VariantTableContentCreateActionHandler extends VariantTableContentD
 	}
 	
 	@Override
-	public void run(VariantTableContent content, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws Exception {
+	public void run(VariantTableContent content, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws Exception {
 		VariantTable table = content.getTable();
 		JCoFunction deletefunc = maintainEntries(content, monitor, options, true);
 		executeTransaction(monitor, "DELETE " + table.getName(), deletefunc);

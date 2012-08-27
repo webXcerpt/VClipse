@@ -12,7 +12,7 @@ package org.vclipse.bapi.actions.material;
 
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -26,6 +26,7 @@ import org.vclipse.vcml.vcml.Classification;
 import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.SimpleDescription;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.inject.Inject;
@@ -46,11 +47,17 @@ public class MaterialReader extends BAPIUtils {
 	@Inject
 	private BillOfMaterialReader bomReader;
 	
-	public Material read(String materialName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
-		if(materialName == null || !seenObjects.add("Material/" + materialName.toUpperCase()) || monitor.isCanceled() ) {
+	public Material read(String materialName, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+		if(materialName == null || monitor.isCanceled() ) {
 			return null;
 		}
+		String id = "Material/" + materialName.toUpperCase();
+		VCObject seenObject = seenObjects.get(id);
+		if (seenObject instanceof Material) {
+			return (Material)seenObject;
+		}
 		Material object = VCML.createMaterial();
+		seenObjects.put(id, object);
 		object.setName(materialName);
 		VcmlModel model = (VcmlModel)resource.getContents().get(0);
 		model.getObjects().add(object);

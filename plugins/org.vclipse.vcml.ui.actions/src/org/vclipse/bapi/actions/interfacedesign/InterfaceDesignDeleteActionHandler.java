@@ -11,7 +11,7 @@
 package org.vclipse.bapi.actions.interfacedesign;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -19,6 +19,7 @@ import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.IBAPIActionRunner;
 import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VCObject;
 
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
@@ -30,7 +31,7 @@ public class InterfaceDesignDeleteActionHandler extends BAPIUtils implements IBA
 		return isConnected();
 	}
 
-	public void run(InterfaceDesign object, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
+	public void run(InterfaceDesign object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
 		JCoFunction function = getJCoFunction("BAPI_UI_DELETE", monitor);	
 		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue("DESIGNNAME", object.getName());

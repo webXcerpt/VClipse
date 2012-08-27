@@ -11,7 +11,7 @@
 package org.vclipse.bapi.actions.constraint;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -20,6 +20,7 @@ import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.sap.conn.jco.AbapException;
@@ -30,11 +31,17 @@ import com.sap.conn.jco.JCoStructure;
 
 public class ConstraintReader extends BAPIUtils {
 
-	public Constraint read(String constraintName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
-		if(constraintName == null || !seenObjects.add("Constraint/" + constraintName.toUpperCase()) || monitor.isCanceled()) {
+	public Constraint read(String constraintName, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+		if(constraintName == null || monitor.isCanceled()) {
 			return null;
 		}
+		String id = "Constraint/" + constraintName.toUpperCase();
+		VCObject seenObject = seenObjects.get(id);
+		if (seenObject instanceof Constraint) {
+			return (Constraint)seenObject;
+		}
 		Constraint object = VCML.createConstraint();
+		seenObjects.put(id, object);
 		object.setName(constraintName);
 		VcmlModel model = (VcmlModel)resource.getContents().get(0);
 		model.getObjects().add(object);

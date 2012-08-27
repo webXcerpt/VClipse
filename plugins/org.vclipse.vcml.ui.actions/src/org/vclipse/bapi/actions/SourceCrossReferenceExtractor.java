@@ -2,7 +2,7 @@ package org.vclipse.bapi.actions;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -20,6 +20,7 @@ import org.vclipse.vcml.vcml.Function;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.PFunction;
 import org.vclipse.vcml.vcml.Table;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 import org.vclipse.vcml.vcml.VcmlPackage;
 
@@ -40,7 +41,7 @@ public class SourceCrossReferenceExtractor {
 	@Inject
 	private VariantTableReader variantTableReader;
 
-	public void extractFromSource(EObject source, VcmlModel model, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
+	public void extractFromSource(EObject source, VcmlModel model, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
 		TreeIterator<EObject> iterator = source.eAllContents();
 		while (iterator.hasNext()) {
 			EObject eObject = iterator.next();

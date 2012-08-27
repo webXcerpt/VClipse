@@ -2,7 +2,7 @@ package org.vclipse.bapi.actions.handler;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -47,7 +47,7 @@ public class BAPIActionPropertyTester extends PropertyTester {
 				try {
 					Class<? extends IBAPIActionRunner> handlerClass = handler.getClass();
 					Class<?> instanceType = BAPIActionUtils.getInstanceType(receiver);
-					handlerClass.getMethod("run", new Class[]{instanceType, Resource.class, IProgressMonitor.class, Set.class, List.class});
+					handlerClass.getMethod("run", new Class[]{instanceType, Resource.class, IProgressMonitor.class, Map.class, List.class});
 					Method enbledMethod = handlerClass.getMethod("isEnabled", new Class[]{instanceType});
 					Object invoke = enbledMethod.invoke(handler, receiver);
 					return EXISTS_STRING.equals(parts[0]) && (Boolean)invoke;

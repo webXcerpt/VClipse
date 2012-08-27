@@ -10,10 +10,10 @@
  ******************************************************************************/
 package org.vclipse.bapi.actions.configurationprofile;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
@@ -33,6 +33,7 @@ import org.vclipse.vcml.vcml.InterfaceDesign;
 import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Procedure;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.common.collect.Lists;
@@ -54,11 +55,16 @@ public class ConfigurationProfileReader extends BAPIUtils {
 	@Inject
 	private InterfaceDesignReader interfaceDesignReader;
 
-	public List<ConfigurationProfile> read(Material containerMaterial, String profileName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public List<ConfigurationProfile> read(Material containerMaterial, String profileName, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
 		VcmlModel model = (VcmlModel)resource.getContents().get(0);
 		String materialName = containerMaterial.getName();
-		if(materialName == null || !seenObjects.add("ConfigurationProfile/" + materialName.toUpperCase())) {
+		if(materialName == null) {
 			return null;
+		}
+		String id = "ConfigurationProfile/" + materialName.toUpperCase();
+		VCObject seenObject = seenObjects.get(id);
+		if (seenObject instanceof ConfigurationProfile) {
+			return Collections.singletonList((ConfigurationProfile)seenObject);
 		}
 		List<ConfigurationProfile> profiles = Lists.newArrayList();
 //		String fixing = containerMaterial.getConfigurationprofiles().get(0).getFixing().getLiteral();
@@ -91,6 +97,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 				ConfigurationProfile object = VCML.createConfigurationProfile();
 				profiles.add(object);
 				model.getObjects().add(object);
+				seenObjects.put(id, object);
 				object.setName(name);
 				object.setStatus(VcmlUtils.createStatusFromInt(conProAttributes.getInt("STATUS")));
 				object.setBomapplication(conProAttributes.getString("BOMAPPL"));

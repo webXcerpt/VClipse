@@ -11,7 +11,7 @@
 package org.vclipse.bapi.actions.billofmaterial;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -21,6 +21,7 @@ import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VCObject;
 
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
@@ -34,7 +35,7 @@ public class BillOfMaterialCreateActionHandler extends BAPIUtils implements IBAP
 		return isConnected();
 	}
 
-	public void run(BillOfMaterial billOfMaterial, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
+	public void run(BillOfMaterial billOfMaterial, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
 		JCoFunction function = getJCoFunction("CSAP_MAT_BOM_CREATE", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		Material material = billOfMaterial.getMaterial();

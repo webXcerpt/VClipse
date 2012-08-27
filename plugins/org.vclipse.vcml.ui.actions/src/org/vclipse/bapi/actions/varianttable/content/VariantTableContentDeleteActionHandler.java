@@ -1,7 +1,7 @@
 package org.vclipse.bapi.actions.varianttable.content;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -11,6 +11,7 @@ import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VariantTableContent;
 
@@ -27,7 +28,7 @@ public class VariantTableContentDeleteActionHandler extends BAPIUtils implements
 	}
 	
 	@Override
-	public void run(VariantTableContent content, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws Exception {
+	public void run(VariantTableContent content, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws Exception {
 		String name = content.getTable().getName();
 		JCoFunction function = maintainEntries(content, monitor, options, true);
 		executeTransaction(monitor, "DELETE " + name, function);
@@ -39,7 +40,7 @@ public class VariantTableContentDeleteActionHandler extends BAPIUtils implements
 		JCoFunction function = getJCoFunction("CAMA_TABLE_MAINTAIN_ENTRIES", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		handleOptions(options, ipl, "CHANGE_NO", "DATE");
-		ipl.setValue("VAR_TABLE", table.getName());
+		ipl.setValue("VAR_TABLE", table.getName().toUpperCase());
 		if(delete) {
 			ipl.setValue("FLDELETE", "X");			
 		}

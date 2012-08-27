@@ -11,13 +11,14 @@
 package org.vclipse.bapi.actions.variantfunction;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.IBAPIActionRunner;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VariantFunction;
 
 import com.sap.conn.jco.AbapException;
@@ -33,7 +34,7 @@ public class VariantFunctionDeleteActionHandler extends BAPIUtils implements IBA
 	}
 
 	@Override
-	public void run(VariantFunction object, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
+	public void run(VariantFunction object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
 		String name = object.getName();
 		beginTransaction();
 		JCoFunction function = getJCoFunction("CAMA_FUNCTION_MAINTAIN", monitor);

@@ -11,15 +11,16 @@
 package org.vclipse.bapi.actions;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VCObject;
 
 public interface IBAPIActionRunner<T> {
 	
-	public void run(T object, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws Exception;
+	public void run(T object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws Exception;
 
 	public boolean isEnabled(T object);
 }

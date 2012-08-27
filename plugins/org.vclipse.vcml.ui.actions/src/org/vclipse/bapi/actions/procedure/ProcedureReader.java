@@ -11,7 +11,7 @@
 package org.vclipse.bapi.actions.procedure;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -20,6 +20,7 @@ import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Procedure;
 import org.vclipse.vcml.vcml.ProcedureSource;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.sap.conn.jco.AbapException;
@@ -30,11 +31,17 @@ import com.sap.conn.jco.JCoStructure;
 
 public class ProcedureReader extends BAPIUtils {
 
-	public Procedure read(String procedureName, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
-		if(procedureName == null || !seenObjects.add("Procedure/" + procedureName.toUpperCase()) || monitor.isCanceled()) {
+	public Procedure read(String procedureName, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+		if(procedureName == null || monitor.isCanceled()) {
 			return null;
 		}
+		String id = "Procedure/" + procedureName.toUpperCase();
+		VCObject seenObject = seenObjects.get(id);
+		if (seenObject instanceof Procedure) {
+			return (Procedure)seenObject;
+		}
 		Procedure object = VCML.createProcedure();
+		seenObjects.put(id, object);
 		object.setName(procedureName);
 		VcmlModel vcmlModel = (VcmlModel)resource.getContents().get(0);
 		vcmlModel.getObjects().add(object);

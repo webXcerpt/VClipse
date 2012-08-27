@@ -11,7 +11,7 @@
 package org.vclipse.bapi.actions.constraint;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -22,6 +22,7 @@ import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.DependencyNet;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 import org.vclipse.vcml.vcml.VcmlPackage;
 
@@ -37,7 +38,7 @@ public class ConstraintCreateChangeActionHandler extends BAPIUtils implements IB
 		return isConnected() && hasBody(object);
 	}
 
-	public void run(Constraint object, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
+	public void run(Constraint object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
 		
 		// determine name of containing dependencyNet
 		// TODO implement finding containing dependency net with ECoreUtils

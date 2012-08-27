@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -47,7 +48,7 @@ import org.vclipse.vcml.vcml.VariantTableContent;
 import org.vclipse.vcml.vcml.VcmlFactory;
 import org.vclipse.vcml.vcml.VcmlModel;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -89,7 +90,7 @@ public class BAPIActionHandler extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		resourceSet = new XtextResourceSet();
 		final boolean fileOutput = preferenceStore.getBoolean(IUiConstants.OUTPUT_TO_FILE);
-		final Set<String> seenObjects = Sets.newHashSet();
+		final Map<String, VCObject> seenObjects = Maps.newHashMap();
 		final Object appContext = event.getApplicationContext();
 		final Collection<?> entries = getEntries(appContext);
 		final XtextResource source = getSourceResource(entries, event);
@@ -132,7 +133,7 @@ public class BAPIActionHandler extends AbstractHandler {
 						return Status.CANCEL_STATUS;
 					}
 					try {
-						Method method = bapiClass.getMethod("run", new Class[]{BAPIActionUtils.getInstanceType(current), Resource.class, IProgressMonitor.class, Set.class, List.class});
+						Method method = bapiClass.getMethod("run", new Class[]{BAPIActionUtils.getInstanceType(current), Resource.class, IProgressMonitor.class, Map.class, List.class});
 						method.invoke(BAPIActionHandler.this, new Object[]{current, result, monitor, seenObjects, options});
 					} catch (InvocationTargetException e) {
 						if(e.getTargetException() instanceof BAPIException) {
@@ -177,7 +178,7 @@ public class BAPIActionHandler extends AbstractHandler {
 		return null;
 	}
 	
-	protected Resource getResultResource(Resource source, Set<String> seenObjects, boolean fileOutput) {
+	protected Resource getResultResource(Resource source, Map<String, VCObject> seenObjects, boolean fileOutput) {
 		URI sourceUri = source.getURI();
 		URI resultUri = sourceUri.trimFileExtension().appendFileExtension(EXTRACTED_FILENAME_ADDON + sourceUri.fileExtension());
 		Resource result = resourceSet.createResource(resultUri, "UTF-8");
@@ -213,7 +214,7 @@ public class BAPIActionHandler extends AbstractHandler {
 		}
 	}
 	
-	protected void collectImportedObjects(Set<String> seenObjects, Resource sourceResource, Resource targetResource) {
+	protected void collectImportedObjects(Map<String, VCObject> seenObjects, Resource sourceResource, Resource targetResource) {
 		VcmlModel targetModel = null;
 		EList<EObject> targetContents = targetResource.getContents();
 		if(!targetContents.isEmpty()) {
@@ -239,7 +240,7 @@ public class BAPIActionHandler extends AbstractHandler {
 					if(topLevelObject instanceof VcmlModel) {
 						VcmlModel model = (VcmlModel)topLevelObject;
 						for(VCObject vcobject : model.getObjects()) {
-							seenObjects.add(vcobject.eClass().getName() + "/" +vcobject.getName());
+							seenObjects.put(vcobject.eClass().getName() + "/" +vcobject.getName(), vcobject);
 						}
 					}
 				}

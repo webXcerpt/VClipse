@@ -11,7 +11,7 @@
 package org.vclipse.bapi.actions.varianttable;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
@@ -22,6 +22,7 @@ import org.vclipse.vcml.utils.VCMLProxyFactory;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VcmlModel;
@@ -42,11 +43,17 @@ public class VariantTableReader extends BAPIUtils {
 	@Inject
 	private VariantTableContentReader contentReader;
 	
-	public VariantTable read(String variantTableName, VcmlModel vcmlModel, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
-		if(variantTableName == null || !seenObjects.add("VariantTable/" + variantTableName.toUpperCase()) || monitor.isCanceled()) {
+	public VariantTable read(String variantTableName, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+		if(variantTableName == null || monitor.isCanceled()) {
 			return null;
 		}
+		String id = "VariantTable/" + variantTableName.toUpperCase();
+		VCObject seenObject = seenObjects.get(id);
+		if (seenObject instanceof VariantTable) {
+			return (VariantTable)seenObject;
+		}
 		VariantTable object = VCML.createVariantTable();
+		seenObjects.put(id, object);
 		object.setName(variantTableName);
 		vcmlModel.getObjects().add(object);
 		JCoFunction function = getJCoFunction("CARD_TABLE_READ_STRUCTURE", monitor);
@@ -54,7 +61,7 @@ public class VariantTableReader extends BAPIUtils {
 		
 		handleOptions(options, ipl, "CHANGE_NO", "DATE");
 		
-		ipl.setValue("VAR_TAB", variantTableName);
+		ipl.setValue("VAR_TAB", variantTableName.toUpperCase());
 		try {
 			execute(function, monitor, variantTableName);
 			JCoParameterList epl = function.getExportParameterList();

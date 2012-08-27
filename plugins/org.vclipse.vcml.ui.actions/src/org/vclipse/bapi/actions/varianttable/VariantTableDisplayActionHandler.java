@@ -11,12 +11,13 @@
 package org.vclipse.bapi.actions.varianttable;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.bapi.actions.IBAPIActionRunner;
 import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VcmlModel;
 
@@ -28,7 +29,7 @@ public class VariantTableDisplayActionHandler extends VariantTableReader impleme
 		return isConnected();
 	}
 
-	public void run(VariantTable variantTable, Resource resource, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options) throws JCoException {
+	public void run(VariantTable variantTable, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
 		read(variantTable.getName(), (VcmlModel)resource.getContents().get(0), monitor, seenObjects, options, false);
 	}
 

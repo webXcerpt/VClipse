@@ -5,7 +5,6 @@ import static org.vclipse.vcml.utils.VCMLObjectUtils.getObjectsByNameAndType;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
@@ -18,6 +17,7 @@ import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Row;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
@@ -36,9 +36,14 @@ public class VariantTableContentReader extends VariantTableContentDeleteActionHa
 	@Inject
 	private VariantTableReader variantTableReader;
 	
-	public VariantTableContent read(String variantTableName, VcmlModel vcmlModel, IProgressMonitor monitor, Set<String> seenObjects, List<Option> options, boolean recurse) throws JCoException {
-		if(variantTableName == null || !seenObjects.add("VariantTableContent/" + variantTableName.toUpperCase()) || monitor.isCanceled()) {
+	public VariantTableContent read(String variantTableName, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+		if(variantTableName == null || monitor.isCanceled()) {
 			return null;
+		}
+		String id = "VariantTableContent/" + variantTableName.toUpperCase();
+		VCObject seenObject = seenObjects.get(id);
+		if (seenObject instanceof VariantTableContent) {
+			return (VariantTableContent)seenObject;
 		}
 		VariantTable variantTable = null;
 		if(recurse) {
@@ -53,12 +58,13 @@ public class VariantTableContentReader extends VariantTableContentDeleteActionHa
 			return null;
 		}
 		VariantTableContent content = VCML.createVariantTableContent();
+		seenObjects.put(id, content);
 		content.setTable(variantTable);
 		vcmlModel.getObjects().add(content);
 		JCoFunction function = getJCoFunction("CARD_TABLE_READ_ENTRIES", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		handleOptions(options, ipl, "CHANGE_NO", "DATE");
-		ipl.setValue("VAR_TABLE", variantTableName);
+		ipl.setValue("VAR_TABLE", variantTableName.toUpperCase());
 		try {
 			execute(function, monitor, variantTableName);
 			JCoTable entries = function.getTableParameterList().getTable("VAR_TAB_ENTRIES");
