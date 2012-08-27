@@ -16,6 +16,8 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -69,6 +71,11 @@ public class VCML2IDocTransformation implements IVCML2IDocTransformation {
 			Resource vcmlResource = resourceSet.getResource(vcmlUri, true);
 			Resource idocResource = resourceSet.createResource(idocUri, "UTF-8");
 			transform(vcmlResource, idocResource, monitor);
+			try {
+				vcmlFile.getParent().refreshLocal(IResource.DEPTH_ONE, monitor);
+			} catch(CoreException exception) {
+				exception.printStackTrace();
+			}
 		} else {
 			LOGGER.error("Only vcml files can be transformed. Got " + vcmlFile.getName());
 		}
