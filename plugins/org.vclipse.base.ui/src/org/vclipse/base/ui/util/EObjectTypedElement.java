@@ -34,11 +34,17 @@ public class EObjectTypedElement implements IStreamContentAccessor, ITypedElemen
 	private ISerializer serializer;
 	
 	private IStorage bufferedContents;
-	private final String localEncoding;
+	private String localEncoding;
 	private ISharedDocumentAdapter sharedDocumentAdapter;
 	
 	public EObjectTypedElement(EObject object, ISerializer serializer) {
-		localEncoding = object.eResource() instanceof XMLResource ? (String)object.eResource().getResourceSet().getLoadOptions().get(XMLResource.OPTION_ENCODING) : "";
+		assert object != null;
+		assert serializer != null;
+		Resource eResource = object.eResource();
+		localEncoding = "";
+		if(eResource != null) {
+			localEncoding = eResource instanceof XMLResource ? (String)eResource.getResourceSet().getLoadOptions().get(XMLResource.OPTION_ENCODING) : "";			
+		}
 		this.object = object;
 		this.serializer = serializer;
 	}
