@@ -129,7 +129,10 @@ public class VClipseStrings extends org.eclipse.xtext.util.Strings {
 		int prev = -1;
 		for(Integer index : indexes) {
 			if(prev == -1) {
-				prev = index;				
+				prev = index;
+				if(prev > 0) {
+					parts.add(string.substring(0, prev));
+				}
 			} else {
 				parts.add(string.substring(prev, index));
 				prev = index;
