@@ -122,6 +122,9 @@ public class VClipseStrings extends org.eclipse.xtext.util.Strings {
 				indexes.add(i);
 			}
 		}
+		if(indexes.isEmpty()) {
+			return Lists.newArrayList(string);
+		}
 		List<String> parts = Lists.newArrayList();
 		int prev = -1;
 		for(Integer index : indexes) {
