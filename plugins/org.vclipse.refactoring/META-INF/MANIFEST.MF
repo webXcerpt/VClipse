@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: VClipse Refactoring Plug-in
+Bundle-SymbolicName: org.vclipse.refactoring;singleton:=true
+Bundle-Version: 0.5.0.qualifier
+Bundle-Activator: org.vclipse.refactoring.RefactoringPlugin
+Bundle-Vendor: webXcerpt SW GmbH, Munich, Germany
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.emf.ecore,
+ org.eclipse.ltk.core.refactoring;visibility:=reexport,
+ org.eclipse.ltk.ui.refactoring;visibility:=reexport,
+ org.eclipse.compare;visibility:=reexport,
+ org.eclipse.xtext.ui,
+ org.vclipse.base.ui
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Import-Package: com.google.common.collect
+Export-Package: org.vclipse.refactoring,
+ org.vclipse.refactoring.core,
+ org.vclipse.refactoring.ui
