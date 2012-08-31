@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.vclipse.refactoring.core;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class RefactoringCustomisation extends MethodCollector {
 		if(pair != null) {
 			try {
 				return (IEvaluationResult)pair.getSecond().invoke(this, new Object[]{context, pair.getFirst()});
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			} catch (Exception e) {
 				RefactoringPlugin.log(e.getMessage(), e);
 			}
 		} 
@@ -51,7 +50,7 @@ public class RefactoringCustomisation extends MethodCollector {
 		if(pair != null) {
 			try {
 				return (List<EStructuralFeature>)pair.getSecond().invoke(this, new Object[]{context, pair.getFirst()});
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			} catch (Exception e) {
 				RefactoringPlugin.log(e.getMessage(), e);
 			}
 		} 

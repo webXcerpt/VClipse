@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.vclipse.refactoring.core;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -60,7 +59,7 @@ public abstract class Refactoring extends MethodCollector {
 			try {
 				Object invoke = pair.getSecond().invoke(this, new Object[]{context, pair.getFirst()});
 				changes.addAll((List<EObject>)invoke);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException exception) {
+			} catch (Exception exception) {
 				RefactoringPlugin.log(exception.getMessage(), exception);
 			}
 		} 

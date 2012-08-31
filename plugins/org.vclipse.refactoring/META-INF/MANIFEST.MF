@@ -13,7 +13,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.compare;visibility:=reexport,
  org.eclipse.xtext.ui,
  org.vclipse.base.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: com.google.common.collect
 Export-Package: org.vclipse.refactoring,

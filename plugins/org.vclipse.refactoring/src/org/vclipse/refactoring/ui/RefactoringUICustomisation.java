@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.vclipse.refactoring.ui;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class RefactoringUICustomisation extends RefactoringCustomisation {
 		if(pair != null) {
 			try {
 				pair.getSecond().invoke(this, new Object[]{context, pair.getFirst()});
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException exception) {
+			} catch (Exception exception) {
 				RefactoringPlugin.log(exception.getMessage(), exception);
 			}
 		} 
@@ -48,7 +47,7 @@ public class RefactoringUICustomisation extends RefactoringCustomisation {
 		if(pair != null) {
 			try {
 				return ((List<? extends UserInputWizardPage>)pair.getSecond().invoke(this, new Object[]{context, pair.getFirst()}));
-			} catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException exception) {
+			} catch(Exception exception) {
 				RefactoringPlugin.log(exception.getMessage(), exception);
 			}
 		}
