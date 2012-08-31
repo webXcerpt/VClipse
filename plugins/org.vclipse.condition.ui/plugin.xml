@@ -305,4 +305,14 @@
     </provider>
   </extension>
 
+  <extension
+        point="org.vclipse.refactoring">
+     <refactoring
+           class="org.vclipse.vcml.vcml.ConditionSource"
+           customisation="org.vclipse.condition.ui.ConditionExecutableExtensionFactory:org.vclipse.vcml.ui.refactoring.VCMLCustomisation"
+           executor="org.vclipse.condition.ui.ConditionExecutableExtensionFactory:org.vclipse.vcml.ui.refactoring.VCMLRefactoring"
+           package="http://www.vclipse.org/vcml"
+           uicustomisation="org.vclipse.condition.ui.ConditionExecutableExtensionFactory:org.vclipse.vcml.ui.refactoring.VCMLUICustomisation">
+     </refactoring>
+  </extension>
 </plugin>
