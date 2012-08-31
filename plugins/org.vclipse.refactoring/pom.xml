@@ -11,6 +11,6 @@
 	</parent>
 
 	<artifactId>org.vclipse.refactoring</artifactId>
-	<packaging>eclipse-feature</packaging>
+	<packaging>eclipse-plugin</packaging>
 	<version>0.5.0.qualifier</version>
 </project>
