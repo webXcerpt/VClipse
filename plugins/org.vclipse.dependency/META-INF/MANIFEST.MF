@@ -20,6 +20,7 @@ Export-Package: org.vclipse.dependency,
  org.vclipse.dependency.resource,
  org.vclipse.dependency.scoping,
  org.vclipse.dependency.services,
- org.vclipse.dependency.validation
+ org.vclipse.dependency.validation,
+ org.vclipse.dependency.serializer
 Bundle-ClassPath: .
 Import-Package: org.apache.log4j

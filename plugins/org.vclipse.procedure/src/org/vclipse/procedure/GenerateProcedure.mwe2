@@ -37,6 +37,10 @@ Workflow {
 		language = {
 			uri = grammarURI
 			fileExtensions = file.extensions
+			
+			fragment = serializer.SerializerFragment {
+            	generateStub = true
+            }
 
 			// Java API to access grammar elements (required by several other fragments)
 			fragment = grammarAccess.GrammarAccessFragment {}

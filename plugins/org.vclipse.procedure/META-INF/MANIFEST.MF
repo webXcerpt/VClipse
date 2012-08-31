@@ -19,6 +19,7 @@ Export-Package: org.vclipse.procedure,
  org.vclipse.procedure.parseTreeConstruction,
  org.vclipse.procedure.parser.antlr,
  org.vclipse.procedure.parser.antlr.internal,
- org.vclipse.procedure.parser.antlr.lexer
+ org.vclipse.procedure.parser.antlr.lexer,
+ org.vclipse.procedure.serializer
 Bundle-ClassPath: .
 Import-Package: org.apache.log4j

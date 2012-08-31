@@ -19,6 +19,7 @@ Export-Package: org.vclipse.constraint,
  org.vclipse.constraint.parseTreeConstruction,
  org.vclipse.constraint.parser.antlr,
  org.vclipse.constraint.parser.antlr.internal,
- org.vclipse.constraint.parser.antlr.lexer
+ org.vclipse.constraint.parser.antlr.lexer,
+ org.vclipse.constraint.serializer
 Bundle-ClassPath: .
 Import-Package: org.apache.log4j

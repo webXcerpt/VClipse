@@ -20,6 +20,7 @@ Export-Package: org.vclipse.condition,
  org.vclipse.condition.parser.antlr,
  org.vclipse.condition.parser.antlr.internal,
  org.vclipse.condition.parser.antlr.lexer,
- org.vclipse.condition.services
+ org.vclipse.condition.services,
+ org.vclipse.condition.serializer
 Bundle-ClassPath: .
 Import-Package: org.apache.log4j
