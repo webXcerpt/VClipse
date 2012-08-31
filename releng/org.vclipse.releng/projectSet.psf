@@ -44,6 +44,7 @@
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.vcml2idoc.ui,org.vclipse.vcml2idoc.ui"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/features/org.vclipse.vcml2idoc_feature,org.vclipse.vcml2idoc_feature"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/features/org.vclipse.vcml_feature,org.vclipse.vcml_feature"/>
+<project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.refactoring,org.vclipse.refactoring"/>
 </provider>
 <workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1340900936185_12" label="JCO" name="JCO">
 <item elementID="=com.sap.conn.jco.idoc" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
@@ -114,6 +115,7 @@
 <item elementID="=org.vclipse.vcml2idoc.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.console" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.base.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.refactoring" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 </workingSets>
 <workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1340900525961_2" label="VClipse Releng" name="VClipse Releng">
 <item elementID="=org.vclipse.releng" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
