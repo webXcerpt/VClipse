@@ -81,6 +81,7 @@
 		
 		<module>../org.vclipse.configscan</module>
 		<!-- org.vclipse.configscan.tests -->
+		<module>../org.vclipse.refactoring</module>
 		
 		<!-- VClipse Features -->
 		<module>../org.vclipse.idoc_feature</module>
