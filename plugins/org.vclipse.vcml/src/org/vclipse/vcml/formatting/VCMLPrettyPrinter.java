@@ -111,22 +111,17 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return optionsProvider;
 	}
 	
-	public String prettyPrint(final EObject o) {
+	public String prettyPrint(EObject object) {
 		final StringBuilder sb = new StringBuilder();
 		if(Platform.getPreferencesService() != null) {
 			lineLength = Platform.getPreferencesService().getInt(VCMLPlugin.PREFERENCES_ID, ISapConstants.PP_LINE_LENGTH, 70, null);
 		}
-		layouter =
-		new DataLayouter<NoExceptions>(
-				new StringBackend(sb, lineLength), INDENTATION);
-		doSwitch(o);
+		layouter = new DataLayouter<NoExceptions>(new StringBackend(sb, lineLength), INDENTATION);
+		doSwitch(object);
 		layouter.close();
 		return sb.toString();
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseModel(org.vclipse.vcml.vcml.Model)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseVcmlModel(VcmlModel object) {
 		layouter.beginC(0);
@@ -157,9 +152,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.end();
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseOption(org.vclipse.vcml.vcml.Option)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseOption(Option object) {
 		layouter.beginI(0);
@@ -167,9 +159,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.brk().print("=").brk().print(doublequote(object.getValue())).end();
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseCharacteristic(org.vclipse.vcml.vcml.Characteristic)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseCharacteristic(Characteristic object) {
 		layouter.beginC().print("characteristic ");
@@ -220,9 +209,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.end();
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseNumericType(org.vclipse.vcml.vcml.NumericType)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseNumericType(NumericType object) {
 		layouter.brk().beginC().print("numeric {");
@@ -286,9 +272,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter;
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseSymbolicType(org.vclipse.vcml.vcml.SymbolicType)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseSymbolicType(SymbolicType object) {
 		layouter.brk().beginC().print("symbolic {");
@@ -353,9 +336,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.brk(1, -INDENTATION).print("}").end();
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseCharacteristicValue(org.vclipse.vcml.vcml.CharacteristicValue)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseCharacteristicValue(CharacteristicValue object) {
 		layouter.brk().beginC();
@@ -370,9 +350,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.end();
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseCharacteristicOrValueDependencies(org.vclipse.vcml.vcml.CharacteristicOrValueDependencies)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseCharacteristicOrValueDependencies(CharacteristicOrValueDependencies object) {
 		layouter.brk().beginC().print("dependencies {");
@@ -383,9 +360,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.brk(1, -INDENTATION).print("}").end();
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseMultipleLanguageDocumentation(org.vclipse.vcml.vcml.MultipleLanguageDocumentation)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseMultipleLanguageDocumentation(MultipleLanguageDocumentation object) {
 		layouter.brk().beginC().print("documentation {");
@@ -407,17 +381,11 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.brk(1,-INDENTATION).print("}").end();   
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseSimpleDocumentation(org.vclipse.vcml.vcml.SimpleDocumentation)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseSimpleDocumentation(SimpleDocumentation object) {
 		return layouter.brk().print("documentation ").print(doublequote(object.getValue()));
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseClass(org.vclipse.vcml.vcml.Class)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseClass(Class object) {
 		layouter.beginC().print("class ");
@@ -453,9 +421,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.end();
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseConstraint(org.vclipse.vcml.vcml.Constraint)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseConstraint(Constraint object) {
 		layouter.beginC().print("constraint ");
@@ -469,15 +434,11 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 				printGroup(object.getGroup());
 			}
 			layouter.brk(1,-INDENTATION).print("}");
-			
 			writeSourceCode(object, object.getSource());
 		}
 		return layouter.end();
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseDependencyNet(org.vclipse.vcml.vcml.DependencyNet)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseDependencyNet(DependencyNet object) {
 		layouter.beginC().print("dependencynet ");
@@ -499,9 +460,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.end();
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseInterfaceDesign(org.vclipse.vcml.vcml.InterfaceDesign)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseInterfaceDesign(InterfaceDesign object) {
 		layouter.beginC().print("interfacedesign ");
@@ -518,9 +476,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.end();
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseCharacteristicGroup(org.vclipse.vcml.vcml.CharacteristicGroup)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseCharacteristicGroup(CharacteristicGroup object) {
 		layouter.brk().beginC().print("characteristicgroup ");
@@ -534,9 +489,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.brk(1, -INDENTATION).print("}").end();
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseBillOfMaterial(org.vclipse.vcml.vcml.BillOfMaterial)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseBillOfMaterial(BillOfMaterial object) {
 		layouter.beginC().print("billofmaterial ");
@@ -559,9 +511,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.brk(1, -INDENTATION).print("}").end();
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseBOMItem(org.vclipse.vcml.vcml.BOMItem)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseBOMItem(BOMItem object) {
 		printNullsafe(object.getItemnumber());
@@ -588,9 +537,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseMaterial(org.vclipse.vcml.vcml.Material)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseMaterial(Material object) {
 		layouter.beginC().print("material ");
@@ -699,9 +645,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.brk(1, -INDENTATION).print("}").end();
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#casePrecondition(org.vclipse.vcml.vcml.Precondition)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> casePrecondition(Precondition object) {
 		layouter.beginC().print("precondition ");
@@ -719,17 +662,11 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.end();
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseSimpleDescription(org.vclipse.vcml.vcml.SimpleDescription)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseSimpleDescription(SimpleDescription object) {
 		return layouter.brk().beginC().print("description ").print(doublequote(object.getValue())).end();
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseMultiLanguageDescriptions(org.vclipse.vcml.vcml.MultiLanguageDescriptions)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseMultiLanguageDescriptions(MultiLanguageDescriptions object) {
 		layouter.brk().beginC().print("description {");
@@ -743,9 +680,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.brk(1,-INDENTATION).print("}").end();   
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseProcedure(org.vclipse.vcml.vcml.Procedure)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseProcedure(Procedure object) {
 		layouter.beginC().print("procedure ");
@@ -765,9 +699,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.end();
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseSelectionCondition(org.vclipse.vcml.vcml.SelectionCondition)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseSelectionCondition(SelectionCondition object) {
 		layouter.beginC().print("selectioncondition ");
@@ -785,9 +716,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.end();
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseVariantFunction(org.vclipse.vcml.vcml.VariantFunction)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseVariantFunction(VariantFunction object) {
 		layouter.beginC().print("variantfunction ");
@@ -815,9 +743,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter.end();
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseVariantTable(org.vclipse.vcml.vcml.VariantTable)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseVariantTable(VariantTable object) {
 		layouter.beginC().print("varianttable ");
@@ -875,10 +800,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return layouter;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#doSwitch(org.eclipse.emf.ecore.EObject)
-	 * allow calls with null argument (should not do anything)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> doSwitch(EObject theEObject) {
 		if (theEObject==null) {
@@ -887,10 +808,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return super.doSwitch(theEObject);
 	}
 
-	/**
-	 * @param theEObject
-	 * @return
-	 */
 	public DataLayouter<NoExceptions> brk_doSwitch(EObject theEObject) {
 		if (theEObject==null) {
 			return layouter;

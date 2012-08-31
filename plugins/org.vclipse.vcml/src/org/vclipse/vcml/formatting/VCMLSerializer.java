@@ -1,73 +1,52 @@
 package org.vclipse.vcml.formatting;
 
-import java.io.IOException;
-import java.io.Writer;
-
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.serializer.impl.Serializer;
-import org.vclipse.vcml.VCMLPlugin;
-import org.vclipse.vcml.utils.ISapConstants;
+import org.eclipse.xtext.util.ReplaceRegion;
 import org.vclipse.vcml.vcml.ConditionSource;
 import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.ProcedureSource;
 
+import com.google.inject.Inject;
+
 public class VCMLSerializer extends Serializer {
 
+	@Inject
+	private VCMLPrettyPrinter prettyPrinter;
+	
 	@Override
-	public String serialize(EObject obj, SaveOptions options) {
-		if(usePrettyPrinter()) { 
-			return serialize(obj);
+	public String serialize(EObject object, SaveOptions options) {
+		String text = getDependencyObjectText(object);
+		return text.isEmpty() ? prettyPrinter.prettyPrint(object) : text;
+	}
+	
+	@Override
+	public ReplaceRegion serializeReplacement(EObject object, SaveOptions options) {
+		String text = getDependencyObjectText(object);
+		if(text.isEmpty()) {
+			return super.serializeReplacement(object, options);
 		} else {
-			return super.serialize(obj, options);
+			ICompositeNode node = NodeModelUtils.findActualNodeFor(object);
+			int offset = node.getOffset();
+			int length = node.getLength();
+			return new ReplaceRegion(offset, length, text);
 		}
 	}
-
-	@Override
-	public void serialize(EObject obj, Writer writer, SaveOptions options) throws IOException {
-		writer.append(serialize(obj));
-		writer.flush();
-	}
-
-	@Override
-	public String serialize(EObject obj) {
-		if(usePrettyPrinter()) {
-			if(obj instanceof ConditionSource || obj instanceof ProcedureSource) {
-				return new ProcedurePrettyPrinter().prettyPrint(obj);
-			} else if (obj instanceof ConstraintSource) {
-				return new ConstraintPrettyPrinter().prettyPrint(obj);
-			} else {
-				return new VCMLPrettyPrinter().prettyPrint(obj);
-			}
-		} else {
-			return super.serialize(obj);
+	
+	private String getDependencyObjectText(EObject object) {
+		EObject rootContainer = EcoreUtil.getRootContainer(object);
+		if(object instanceof ConstraintSource || rootContainer instanceof ConstraintSource) {
+			return new ConstraintPrettyPrinter().prettyPrint(object);
+		} else if(object instanceof ConditionSource || 
+				rootContainer instanceof ConditionSource || 
+					object instanceof ProcedureSource ||
+						rootContainer instanceof ProcedureSource) {
+			return new ProcedurePrettyPrinter().prettyPrint(object);
 		}
-	}
-
-	// FIXME
-	/*
-	@Override
-	public TreeConstructionReport serialize(EObject obj, OutputStream out, CompositeNode node, boolean format) throws IOException {
-		if (usePrettyPrinter()) {
-			out.write(serialize(obj).getBytes("UTF-8"));
-			return new TreeConstructionReport() {
-				public TreeConstructionDiagnostic getDiagnostic() {
-					return null;
-				}
-				public boolean isSuccess() {
-					return true;
-				}
-			};
-		} else {
-			return super.serialize(obj, out, node, format);
-		}
-	}
-*/
-
-	private boolean usePrettyPrinter() {
-		IPreferencesService preferencesService = Platform.getPreferencesService();
-		return preferencesService == null ? false : preferencesService.getBoolean(VCMLPlugin.PREFERENCES_ID, ISapConstants.USE_PRETTY_PRINTER, false, null);
+		return "";
 	}
 }
