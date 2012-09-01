@@ -4,7 +4,7 @@ Bundle-Name: VClipse Refactoring Plug-in
 Bundle-SymbolicName: org.vclipse.refactoring;singleton:=true
 Bundle-Version: 0.5.0.qualifier
 Bundle-Activator: org.vclipse.refactoring.RefactoringPlugin
-Bundle-Vendor: webXcerpt SW GmbH, Munich, Germany
+Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.emf.ecore,
