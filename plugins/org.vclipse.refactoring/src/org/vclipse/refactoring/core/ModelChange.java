@@ -124,7 +124,7 @@ public class ModelChange extends Change {
 		}
 		resource.getContents().clear();
 		EObject container = EcoreUtil.getRootContainer(object);
-		EcoreUtil.Copier copier = new EcoreUtil.Copier(false);
+		EcoreUtil.Copier copier = new EcoreUtil.Copier(true);
 		container = copier.copy(container);
 		copier.copyReferences();
 		resource.getContents().add(container);
