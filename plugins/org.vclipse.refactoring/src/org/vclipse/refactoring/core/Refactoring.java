@@ -45,7 +45,8 @@ public abstract class Refactoring extends MethodCollector {
 	protected ReferenceFinderExtension referencesFinder;
 	
 	public Refactoring() {
-		super(2);
+		collect(1, IRefactoringContext.class);
+		collect(2);
 		changeFactory = ChangeFactory.eINSTANCE;
 	}
 	

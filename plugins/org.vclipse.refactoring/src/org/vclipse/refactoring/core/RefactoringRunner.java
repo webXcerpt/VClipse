@@ -41,7 +41,16 @@ public class RefactoringRunner {
 			Pair<EObject, Method> pair = refactoring.getRefactoring(context);
 			if(pair != null) {
 				try {
-					changes.addAll((List<EObject>)pair.getSecond().invoke(refactoring, new Object[]{context, pair.getFirst()}));
+					Method method = pair.getSecond();
+					List<Object> params = Lists.newArrayList();
+					if(method.getParameterTypes().length == 1) {
+						params.add(context);
+					} else if(method.getParameterTypes().length == 2) {
+						params.add(context);
+						params.add(pair.getFirst());
+					}
+					Object result = pair.getSecond().invoke(refactoring, params.toArray());
+					changes.addAll((List<EObject>)result);
 				} catch (Exception exception) {
 					BasePlugin.log(exception.getMessage(), exception);
 				}
