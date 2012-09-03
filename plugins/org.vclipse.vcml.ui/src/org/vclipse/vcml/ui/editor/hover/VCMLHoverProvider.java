@@ -30,6 +30,7 @@ import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicType;
 import org.vclipse.vcml.vcml.CharacteristicValue;
 import org.vclipse.vcml.vcml.Dependency;
+import org.vclipse.vcml.vcml.Description;
 import org.vclipse.vcml.vcml.Language;
 import org.vclipse.vcml.vcml.MultiLanguageDescription;
 import org.vclipse.vcml.vcml.MultiLanguageDescriptions;
@@ -111,6 +112,10 @@ public class VCMLHoverProvider extends DefaultEObjectHoverProvider {
 						final Language defaultLanguage = VcmlUtils.getDefaultLanguage();
 						buffer.append("<br/><br/>Values:<ul>");
 						for(CharacteristicValue value : symbolicType.getValues()) {
+							Description value_description = value.getDescription();
+							if(value_description == null) {
+								continue;
+							}
 							buffer.append("<li><b>" + value.getName() + "</b>");
 							new DescriptionHandler() {
 								@Override
@@ -132,7 +137,7 @@ public class VCMLHoverProvider extends DefaultEObjectHoverProvider {
 									return this;
 								}
 								
-							}.doSwitch(value.getDescription());
+							}.doSwitch(value_description);
 							buffer.append("</li>");
 						}
 						buffer.append("</ul>");					
