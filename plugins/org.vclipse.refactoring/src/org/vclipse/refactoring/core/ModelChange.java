@@ -132,6 +132,9 @@ public class ModelChange extends Change {
 	}
 	
 	public static EObject getEqualTo(EObject searchFor, EObject rootContainer) {
+		if(equals(searchFor, rootContainer)) {
+			return rootContainer;
+		}
 		TreeIterator<EObject> contents = rootContainer.eAllContents();
 		while(contents.hasNext()) {
 			EObject next = contents.next();
