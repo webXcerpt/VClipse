@@ -1,4 +1,7 @@
-package org.vclipse.vcml.formatting;
+package org.vclipse.vcml.serializer;
+
+import java.io.IOException;
+import java.io.Writer;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -7,6 +10,9 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.serializer.impl.Serializer;
 import org.eclipse.xtext.util.ReplaceRegion;
+import org.vclipse.vcml.formatting.ConstraintPrettyPrinter;
+import org.vclipse.vcml.formatting.ProcedurePrettyPrinter;
+import org.vclipse.vcml.formatting.VCMLPrettyPrinter;
 import org.vclipse.vcml.vcml.ConditionSource;
 import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.ProcedureSource;
@@ -25,6 +31,12 @@ public class VCMLSerializer extends Serializer {
 	}
 	
 	@Override
+	public void serialize(EObject object, Writer writer, SaveOptions options) throws IOException {
+		writer.append(serialize(object, options));
+		writer.flush();
+	}
+
+	@Override
 	public ReplaceRegion serializeReplacement(EObject object, SaveOptions options) {
 		String text = getDependencyObjectText(object);
 		if(text.isEmpty()) {
@@ -41,10 +53,8 @@ public class VCMLSerializer extends Serializer {
 		EObject rootContainer = EcoreUtil.getRootContainer(object);
 		if(object instanceof ConstraintSource || rootContainer instanceof ConstraintSource) {
 			return new ConstraintPrettyPrinter().prettyPrint(object);
-		} else if(object instanceof ConditionSource || 
-				rootContainer instanceof ConditionSource || 
-					object instanceof ProcedureSource ||
-						rootContainer instanceof ProcedureSource) {
+		} else if(object instanceof ConditionSource || rootContainer instanceof ConditionSource || 
+					object instanceof ProcedureSource || rootContainer instanceof ProcedureSource) {
 			return new ProcedurePrettyPrinter().prettyPrint(object);
 		}
 		return "";

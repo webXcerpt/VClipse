@@ -16,7 +16,6 @@ package org.vclipse.vcml;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.linking.ILinker;
 import org.eclipse.xtext.linking.ILinkingDiagnosticMessageProvider;
-import org.eclipse.xtext.linking.lazy.LazyURIEncoder;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.parsetree.reconstr.ITokenSerializer;
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
@@ -28,11 +27,10 @@ import org.vclipse.base.naming.NullQualifiedNameConverter;
 import org.vclipse.vcml.conversion.VCMLValueConverter;
 import org.vclipse.vcml.documentation.VCMLClassNameProvider;
 import org.vclipse.vcml.formatting.VCMLCrossReferenceSerializer;
-import org.vclipse.vcml.formatting.VCMLSerializer;
 import org.vclipse.vcml.linking.VCMLLinker;
 import org.vclipse.vcml.naming.VcmlNamesAreUniqueValidationHelper;
 import org.vclipse.vcml.resource.VCMLResourceDescriptionStrategy;
-import org.vclipse.vcml.resource.VCMLURIEncoder;
+import org.vclipse.vcml.serializer.VCMLSerializer;
 import org.vclipse.vcml.validation.VCMLLinkingDiagnosticMessageProvider;
 
 import com.google.inject.Binder;
@@ -44,10 +42,10 @@ import com.google.inject.name.Names;
 public class VCMLRuntimeModule extends org.vclipse.vcml.AbstractVCMLRuntimeModule {
 
 	@Override
-	 public void configure(Binder binder) {
-		 super.configure(binder);
-		 binder.bindConstant().annotatedWith(Names.named(CompositeEValidator.USE_EOBJECT_VALIDATOR)).to(false);
-	 }
+	public void configure(Binder binder) {
+		super.configure(binder);
+		binder.bindConstant().annotatedWith(Names.named(CompositeEValidator.USE_EOBJECT_VALIDATOR)).to(false);
+	}
 
 	@Override
 	public Class<? extends IValueConverterService> bindIValueConverterService() {
@@ -58,10 +56,6 @@ public class VCMLRuntimeModule extends org.vclipse.vcml.AbstractVCMLRuntimeModul
 	public Class<? extends ILinker> bindILinker() {
 		return VCMLLinker.class;
 	}
-
-//	public Class<? extends LazyURIEncoder> bindURIEncoder() {
-//		return VCMLURIEncoder.class;
-//	}
 
 	public Class<? extends ITokenSerializer.ICrossReferenceSerializer> bindICrossReferenceSerializer() {
 		return VCMLCrossReferenceSerializer.class;
