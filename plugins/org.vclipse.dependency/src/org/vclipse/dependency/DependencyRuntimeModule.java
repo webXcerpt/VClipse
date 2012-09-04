@@ -10,7 +10,7 @@ import org.eclipse.xtext.serializer.ISerializer;
 import org.vclipse.dependency.resource.DependencyResourceDescriptionStrategy;
 import org.vclipse.vcml.conversion.VCMLValueConverter;
 import org.vclipse.vcml.formatting.VCMLCrossReferenceSerializer;
-import org.vclipse.vcml.formatting.VCMLSerializer;
+import org.vclipse.vcml.serializer.VCMLSerializer;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.

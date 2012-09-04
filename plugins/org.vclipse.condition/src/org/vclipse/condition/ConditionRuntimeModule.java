@@ -13,7 +13,7 @@ import org.vclipse.dependency.formatting.SourceCommentHandlingStreamer;
 import org.vclipse.dependency.resource.DependencyResourceDescriptionStrategy;
 import org.vclipse.vcml.conversion.VCMLValueConverter;
 import org.vclipse.vcml.formatting.VCMLCrossReferenceSerializer;
-import org.vclipse.vcml.formatting.VCMLSerializer;
+import org.vclipse.vcml.serializer.VCMLSerializer;
 import org.vclipse.vcml.validation.VCMLLinkingDiagnosticMessageProvider;
 
 /**
