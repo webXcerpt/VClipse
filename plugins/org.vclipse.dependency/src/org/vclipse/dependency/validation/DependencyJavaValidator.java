@@ -47,7 +47,7 @@ public class DependencyJavaValidator extends AbstractDependencyJavaValidator {
 						VcmlModel vcmlModel = (VcmlModel)contents.get(0);
 						Iterator<VCObject> iterator = Iterables.filter(vcmlModel.getObjects(), new Predicate<VCObject>() {
 							public boolean apply(VCObject object) {
-								return object.getName().equals(sourceObjectName);
+								return object.getName().toUpperCase().equals(sourceObjectName.toUpperCase());
 							}
 						}).iterator();
 						if(!iterator.hasNext()) {
