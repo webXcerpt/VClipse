@@ -1,4 +1,4 @@
-package org.vclipse.vcml.ui.refactoring;
+package org.vclipse.vcml.refactoring;
 
 import java.util.List;
 

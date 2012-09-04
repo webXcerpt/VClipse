@@ -1,4 +1,4 @@
-package org.vclipse.vcml.ui.refactoring;
+package org.vclipse.vcml.refactoring;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +14,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IReferenceDescription;
 import org.vclipse.refactoring.core.IRefactoringContext;
-import org.vclipse.refactoring.core.Refactoring;
 import org.vclipse.vcml.vcml.BinaryCondition;
 import org.vclipse.vcml.vcml.CharacteristicReference_C;
 import org.vclipse.vcml.vcml.CharacteristicReference_P;
@@ -29,18 +28,13 @@ import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.PFunction;
 import org.vclipse.vcml.vcml.SymbolList;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
-import org.vclipse.vcml.vcml.VcmlFactory;
-import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.google.common.collect.Lists;
 
-public class VCMLRefactoring extends Refactoring {
+public class VCMLRefactoring extends VCMLSimplifier {
 
 	private static final String RIGHT_REFERENCE_ENTRY = "@right";
 	
-	private static final VcmlFactory VCML_FACTORY = VcmlFactory.eINSTANCE;
-	private static final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
-
 	public List<? extends EObject> refactoring_Extract_InCondition_C_list(IRefactoringContext context, InCondition_C condtion) {
 		List<EObject> changes = Lists.newArrayList();
 		CharacteristicReference_C cstic = condtion.getCharacteristic();

@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.xtext.generator,
  org.vclipse.vcml.mm;visibility:=reexport,
  org.eclipse.xtext,
  org.eclipse.xtext.util,
- org.antlr.runtime
+ org.antlr.runtime,
+ org.vclipse.refactoring;visibility:=reexport
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.vcml,
  org.vclipse.vcml.conversion,
@@ -22,12 +23,13 @@ Export-Package: org.vclipse.vcml,
  org.vclipse.vcml.parser.antlr,
  org.vclipse.vcml.parser.antlr.internal,
  org.vclipse.vcml.parser.antlr.lexer,
+ org.vclipse.vcml.refactoring,
  org.vclipse.vcml.resource,
+ org.vclipse.vcml.scoping,
+ org.vclipse.vcml.serializer,
  org.vclipse.vcml.services,
  org.vclipse.vcml.utils,
- org.vclipse.vcml.validation,
- org.vclipse.vcml.scoping,
- org.vclipse.vcml.serializer
+ org.vclipse.vcml.validation
 Bundle-Activator: org.vclipse.vcml.VCMLPlugin
 Bundle-ClassPath: .
 Import-Package: org.apache.commons.logging,
