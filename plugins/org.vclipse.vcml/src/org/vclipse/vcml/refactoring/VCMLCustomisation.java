@@ -9,6 +9,7 @@ import org.vclipse.refactoring.core.IEvaluationResult;
 import org.vclipse.refactoring.core.IRefactoringContext;
 import org.vclipse.refactoring.core.RefactoringCustomisation;
 import org.vclipse.vcml.vcml.CharacteristicReference_P;
+import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.InCondition_C;
 import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.MDataCharacteristic_P;
@@ -27,6 +28,10 @@ public class VCMLCustomisation extends RefactoringCustomisation {
 	
 	public List<? extends EStructuralFeature> features_Replace_PFunction_values(IRefactoringContext context, PFunction pfunction) {
 		return Lists.newArrayList(VCML_PACKAGE.getPFunction_Values());
+	}
+	
+	public IEvaluationResult evaluate_Inline_ConstraintSource(IRefactoringContext context, ConstraintSource reference) {
+		return EvaluationResult.getTrueResult(reference);
 	}
 	
 	public IEvaluationResult evaluate_Extract_InCondition_C_list(IRefactoringContext context, InCondition_C reference) {
