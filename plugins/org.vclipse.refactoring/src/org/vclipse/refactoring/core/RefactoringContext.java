@@ -28,12 +28,30 @@ public class RefactoringContext implements IRefactoringContext {
 	
 	private EStructuralFeature feature;
 	
+	private String text;
+	
 	public static RefactoringContext getEmpty() {
 		return new RefactoringContext();
 	}
 	
+	public static RefactoringContext create(EObject object, EStructuralFeature feature, RefactoringType type) {
+		RefactoringContext empty = getEmpty();
+		empty.setSourceElement(object);
+		empty.setStructuralFeature(feature);
+		empty.setType(type);
+		return empty;
+	}
+	
 	public RefactoringContext() {
 		attributes = Maps.newHashMap();
+	}
+	
+	public String getText() {
+		return text;
+	}
+	
+	public void setText(String text) {
+		this.text = text;
 	}
 	
 	@Override

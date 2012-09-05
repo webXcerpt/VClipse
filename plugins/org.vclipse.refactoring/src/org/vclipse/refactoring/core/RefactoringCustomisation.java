@@ -26,22 +26,31 @@ public class RefactoringCustomisation extends MethodCollector {
 	public static final String EVALUATION_PREFIX = "evaluate_";
 	
 	public RefactoringCustomisation() {
+		collect(1, IRefactoringContext.class);
 		collect(2);
 	}
 	 
-	public IEvaluationResult evaluate(IRefactoringContext context) {
+	public boolean evaluate(IRefactoringContext context) {
 		EObject element = context.getSourceElement();
 		String prefix = EVALUATION_PREFIX + context.getType();
 		Pair<EObject, Method> pair = getMethod(element, context.getStructuralFeature(), prefix);
 		if(pair != null) {
 			try {
-				context.setSourceElement(pair.getFirst());
-				return (IEvaluationResult)pair.getSecond().invoke(this, new Object[]{context, pair.getFirst()});
+				Method method = pair.getSecond();
+				List<Object> params = Lists.newArrayList();
+				if(method.getParameterTypes().length == 1) {
+					params.add(context);
+				} else if(method.getParameterTypes().length == 2) {
+					params.add(context);
+					params.add(pair.getFirst());
+				}
+				Object result = pair.getSecond().invoke(this, params.toArray());
+				return (Boolean)result;
 			} catch (Exception e) {
 				RefactoringPlugin.log(e.getMessage(), e);
 			}
 		} 
-		return EvaluationResult.getFalseResult(element);
+		return Boolean.FALSE;
 	}
 	
 	public List<? extends EStructuralFeature> features(IRefactoringContext context) {

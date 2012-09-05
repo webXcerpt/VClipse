@@ -38,4 +38,7 @@ public interface IRefactoringContext {
 	
 	public String getDescription();
 	
+	public String getText();
+	
+	public void setText(String text);
 }

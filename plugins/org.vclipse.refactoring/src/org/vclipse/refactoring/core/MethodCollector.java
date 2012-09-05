@@ -116,7 +116,7 @@ public abstract class MethodCollector {
 			}
 			
 			for(EReference reference : object.eClass().getEAllReferences()) {
-				String nameWithFeature = prefixWithType + "_" + reference.getName();
+				String nameWithFeature = prefix + "_" + reference.getName();
 				pair = iterateMethodCollection(object, nameWithFeature);
 				if(pair != null) {
 					return pair;
@@ -124,7 +124,7 @@ public abstract class MethodCollector {
 			}
 			
 			for(EReference reference : object.eClass().getEAllReferences()) {
-				String nameWithFeature = prefix + "_" + reference.getName();
+				String nameWithFeature = prefixWithType + "_" + reference.getName();
 				pair = iterateMethodCollection(object, nameWithFeature);
 				if(pair != null) {
 					return pair;

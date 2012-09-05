@@ -12,22 +12,22 @@ package org.vclipse.refactoring.ui;
 
 import java.util.List;
 
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.vclipse.base.VClipseStrings;
 
 public class RefactoringUtility {
 
 	public String getRefactoringText(IUIRefactoringContext context) {
-		EStructuralFeature feature = context.getStructuralFeature();
-		EObject element = context.getSourceElement();
-		StringBuffer text = new StringBuffer();
-		text.append(context.getType().name() + " ");
-		if(feature != null) {
-			appendToBuffer(text, feature.getName(), true);
+		String text = context.getText();
+		if(text == null || text.isEmpty()) {
+			StringBuffer buffer = new StringBuffer();
+			buffer.append(context.getType().name() + " ");
+			if(context.getStructuralFeature() != null) {
+				appendToBuffer(buffer, context.getStructuralFeature().getName(), true);
+			}
+			appendToBuffer(buffer, context.getSourceElement().eClass().getName(), false);
+			return buffer.toString();
 		}
-		appendToBuffer(text, element.eClass().getName(), false);
-		return text.toString();
+		return text;
 	}
 	
 	private void appendToBuffer(StringBuffer buffer, String text, boolean handleLastIndex) {

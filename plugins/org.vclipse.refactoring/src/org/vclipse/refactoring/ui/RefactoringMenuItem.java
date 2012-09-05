@@ -13,6 +13,7 @@ package org.vclipse.refactoring.ui;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -37,7 +38,6 @@ import org.eclipse.xtext.ui.editor.utils.EditorUtils;
 import org.vclipse.base.ui.BaseUiPlugin;
 import org.vclipse.base.ui.util.EditorUtilsExtensions;
 import org.vclipse.refactoring.ExtensionsReader;
-import org.vclipse.refactoring.core.IEvaluationResult;
 import org.vclipse.refactoring.core.LanguageRefactoringProcessor;
 import org.vclipse.refactoring.core.RefactoringCustomisation;
 import org.vclipse.refactoring.core.RefactoringRunner;
@@ -94,22 +94,25 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 								IUIRefactoringContext context = contextProvider.get();
 								context.setSourceElement(elementAt);
 								context.setType(type);
-								context.setSourceElement(elementAt);
-								List<? extends EStructuralFeature> featuresForRefactoring = customisation.features(context);
-								if(featuresForRefactoring.isEmpty()) {
-									IEvaluationResult result = customisation.evaluate(context);
-									if(result.success()) {
-										context.setDocument(editor.getDocument());
-										createMenuItem(menu, context);
-									}
+								if(customisation.evaluate(context)) {
+									context.setDocument(editor.getDocument());
+									createMenuItem(menu, context);
 								} else {
-									for(EStructuralFeature feature : featuresForRefactoring) {
-										if(featuresForRefactoring.indexOf(feature) > 0) {
+									EClass eClass = elementAt.eClass();
+									for(EClass superType : eClass.getEAllSuperTypes()) {
+										for(EStructuralFeature feature : superType.getEAllStructuralFeatures()) {
 											context = ((UIRefactoringContext)context).copy();
+											context.setStructuralFeature(feature);
+											if(customisation.evaluate(context) && context.getStructuralFeature() == feature) {
+												context.setDocument(editor.getDocument());
+												createMenuItem(menu, context);
+											}
 										}
+									}
+									for(EStructuralFeature feature : eClass.getEStructuralFeatures()) {
+										context = ((UIRefactoringContext)context).copy();
 										context.setStructuralFeature(feature);
-										IEvaluationResult result = customisation.evaluate(context);
-										if(result.success() && result.getStructuralFeature() == feature) {
+										if(customisation.evaluate(context) && context.getStructuralFeature() == feature) {
 											context.setDocument(editor.getDocument());
 											createMenuItem(menu, context);
 										}
