@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
 import org.vclipse.refactoring.core.IRefactoringContext;
 import org.vclipse.refactoring.core.Refactoring;
+import org.vclipse.vcml.vcml.Comparison;
 import org.vclipse.vcml.vcml.Condition;
 import org.vclipse.vcml.vcml.ConditionalConstraintRestriction;
 import org.vclipse.vcml.vcml.ConstraintRestriction;
@@ -30,12 +31,18 @@ public class VCMLSimplifier extends Refactoring {
 		EObject sourceElement = context.getSourceElement();
 		sourceElement = EcoreUtil2.getContainerOfType(sourceElement, ConstraintSource.class);
 		if(sourceElement instanceof ConstraintSource) {
-			simplify((ConstraintSource)sourceElement, changes);
+			extractCondition((ConstraintSource)sourceElement, changes);
 		}
 		return changes;
 	}
 	
-	public void simplify(ConstraintSource source, List<EObject> changes) {
+	public List<? extends EObject> refactoring_Inline_ConstraintSource(IRefactoringContext context) {
+		List<EObject> changes = Lists.newArrayList();
+		inlineCondition(EcoreUtil2.getContainerOfType(context.getSourceElement(), ConstraintSource.class), changes);
+		return changes;
+	}
+	
+	public void extractCondition(ConstraintSource source, List<EObject> changes) {
 		ConditionalConstraintRestriction previous = null; 
 		EList<ConstraintRestriction> restrictions = source.getRestrictions();
 		for(ConstraintRestriction restriction : restrictions) {
@@ -63,6 +70,36 @@ public class VCMLSimplifier extends Refactoring {
 			for(ConstraintRestriction restriction : restrictions) {
 				ConstraintRestriction entry = ((ConditionalConstraintRestriction)restriction).getRestriction();
 				newRestrictions.add(EcoreUtil.copy(entry));
+			}
+			ListDifferenceAnalyzer analyzer = new ListDifferenceAnalyzer();
+			for(ListChange listChange : analyzer.analyzeLists(restrictions, newRestrictions)) {
+				listChange.applyAndReverse(getObjectList(restrictions));
+				changes.add(listChange);
+			}
+		}
+	}
+
+	public void inlineCondition(ConstraintSource source, List<EObject> changes) {
+		Comparison previous = null;
+		EList<ConstraintRestriction> restrictions = source.getRestrictions();
+		for(ConstraintRestriction restriction : restrictions) {
+			if(previous == null) {
+				if(!(restriction instanceof Comparison)) {
+					break;
+				}
+				previous = (Comparison)restriction;
+				continue;
+			} 
+		}
+		if(previous != null) {
+			Condition condition = source.getCondition();
+			changes.add(getChangeDescription(source, VCML_PACKAGE.getConstraintSource_Condition(), null));
+			EList<ConstraintRestriction> newRestrictions = new BasicEList<ConstraintRestriction>();
+			for(ConstraintRestriction restriction : restrictions) {
+				ConditionalConstraintRestriction ccr = VCML_FACTORY.createConditionalConstraintRestriction();
+				ccr.setCondition(EcoreUtil.copy(condition));
+				ccr.setRestriction(EcoreUtil.copy(restriction));
+				newRestrictions.add(ccr);
 			}
 			ListDifferenceAnalyzer analyzer = new ListDifferenceAnalyzer();
 			for(ListChange listChange : analyzer.analyzeLists(restrictions, newRestrictions)) {
