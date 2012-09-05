@@ -17,6 +17,8 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.xtext.util.Pair;
+import org.eclipse.xtext.util.Tuples;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
@@ -25,23 +27,6 @@ import com.google.common.collect.Multimap;
 public abstract class MethodCollector {
 
 	protected Multimap<String, Method> name2Method;
-	
-	public class Pair<First, Second> {
-		First first;
-		Second second;
-		Pair(First first, Second second) {
-			this.first = first;
-			this.second = second;
-		}
-		
-		public First getFirst() {
-			return first;
-		}
-		
-		public Second getSecond() {
-			return second;
-		}
-	}
 	
 	public MethodCollector() {
 		name2Method = HashMultimap.create();
@@ -94,8 +79,13 @@ public abstract class MethodCollector {
 		if(object == null) {
 			return null;
 		} else {
+			Pair<EObject, Method> pair = iterateMethodCollection(object, prefix);
+			if(pair != null) {
+				return pair;
+			}
+			
 			String prefixWithType = prefix + "_" + object.eClass().getName();
-			Pair<EObject, Method> pair = iterateMethodCollection(object, prefixWithType);
+			pair = iterateMethodCollection(object, prefixWithType);
 			if(pair != null) {
 				return pair;
 			}
@@ -138,7 +128,7 @@ public abstract class MethodCollector {
 		Iterator<Method> iterator = name2Method.get(methodname).iterator();
 		while(iterator.hasNext()) {
 			Method current = iterator.next();
-			return new Pair<EObject, Method>(object, current);
+			return Tuples.create(object, current);
 		}
 		return null;
 	}

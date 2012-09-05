@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.xtext.util.Pair;
 import org.vclipse.refactoring.RefactoringPlugin;
 
 import com.google.common.collect.Lists;

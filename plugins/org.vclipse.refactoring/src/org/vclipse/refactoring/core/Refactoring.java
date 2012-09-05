@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.ListChange;
 import org.eclipse.emf.ecore.change.util.ListDifferenceAnalyzer;
 import org.eclipse.xtext.nodemodel.impl.NodeModelBuilder;
+import org.eclipse.xtext.util.Pair;
 import org.vclipse.refactoring.RefactoringPlugin;
 
 import com.google.common.collect.Lists;
