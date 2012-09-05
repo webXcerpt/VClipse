@@ -8,6 +8,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.ListChange;
 import org.eclipse.emf.ecore.change.util.ListDifferenceAnalyzer;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtext.EcoreUtil2;
 import org.vclipse.refactoring.core.IRefactoringContext;
 import org.vclipse.refactoring.core.Refactoring;
 import org.vclipse.vcml.vcml.Condition;
@@ -27,6 +28,7 @@ public class VCMLSimplifier extends Refactoring {
 	public List<? extends EObject> refactoring_Extract_ConstraintSource(IRefactoringContext context) {
 		List<EObject> changes = Lists.newArrayList();
 		EObject sourceElement = context.getSourceElement();
+		sourceElement = EcoreUtil2.getContainerOfType(sourceElement, ConstraintSource.class);
 		if(sourceElement instanceof ConstraintSource) {
 			simplify((ConstraintSource)sourceElement, changes);
 		}
