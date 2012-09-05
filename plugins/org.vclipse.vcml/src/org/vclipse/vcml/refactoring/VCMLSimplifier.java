@@ -24,7 +24,7 @@ public class VCMLSimplifier extends Refactoring {
 	protected final VcmlFactory VCML_FACTORY = VcmlFactory.eINSTANCE;
 	protected final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
 	
-	public List<? extends EObject> refactoring_Inline_ConstraintSource(IRefactoringContext context) {
+	public List<? extends EObject> refactoring_Extract_ConstraintSource(IRefactoringContext context) {
 		List<EObject> changes = Lists.newArrayList();
 		EObject sourceElement = context.getSourceElement();
 		if(sourceElement instanceof ConstraintSource) {
