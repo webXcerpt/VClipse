@@ -17,7 +17,7 @@ import org.vclipse.base.VClipseStrings;
 public class RefactoringUtility {
 
 	public String getRefactoringText(IUIRefactoringContext context) {
-		String text = context.getText();
+		String text = context.getLabel();
 		if(text == null || text.isEmpty()) {
 			StringBuffer buffer = new StringBuffer();
 			buffer.append(context.getType().name() + " ");

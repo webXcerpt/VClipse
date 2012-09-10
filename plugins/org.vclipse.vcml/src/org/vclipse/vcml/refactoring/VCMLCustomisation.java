@@ -21,7 +21,7 @@ public class VCMLCustomisation extends RefactoringCustomisation {
 	private VCMLRefactoring vcmlRefactoring;
 	
 	public boolean evaluate_Extract_ConstraintSource(IRefactoringContext context, ConstraintSource reference) {
-		context.setText("Extract common conditions from restrictions");
+		context.setLabel("Extract common conditions from restrictions");
 		ConstraintSource source = EcoreUtil2.getContainerOfType(context.getSourceElement(), ConstraintSource.class);
 		for(ConstraintRestriction restriction : source.getRestrictions()) {
 			if(restriction instanceof ConditionalConstraintRestriction) {
@@ -32,7 +32,7 @@ public class VCMLCustomisation extends RefactoringCustomisation {
 	}
 	
 	public boolean evaluate_Inline_ConstraintSource(IRefactoringContext context, ConstraintSource source) {
-		context.setText("Inline conditions for each restriction");
+		context.setLabel("Inline conditions for each restriction");
 		if(source.getCondition() != null) {
 			return Boolean.TRUE;		
 		}
@@ -40,7 +40,7 @@ public class VCMLCustomisation extends RefactoringCustomisation {
 	}
 	
 	public boolean evaluate_Extract_InCondition_C_list(IRefactoringContext context, InCondition_C reference) {
-		context.setText("Extract to conditional or expresssion");
+		context.setLabel("Extract to conditional or expresssion");
 		return Boolean.TRUE;
 	}
 	

@@ -46,11 +46,11 @@ public class RefactoringContext implements IRefactoringContext {
 		attributes = Maps.newHashMap();
 	}
 	
-	public String getText() {
+	public String getLabel() {
 		return text;
 	}
 	
-	public void setText(String text) {
+	public void setLabel(String text) {
 		this.text = text;
 	}
 	
