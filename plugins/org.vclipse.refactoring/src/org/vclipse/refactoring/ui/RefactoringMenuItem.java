@@ -13,7 +13,6 @@ package org.vclipse.refactoring.ui;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -94,38 +93,22 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 								IUIRefactoringContext context = contextProvider.get();
 								context.setSourceElement(elementAt);
 								context.setType(type);
-								if(customisation.evaluate(context)) {
-									context.setDocument(editor.getDocument());
-									createMenuItem(menu, context);
-								} else {
-									EClass eClass = elementAt.eClass();
-									for(EClass superType : eClass.getEAllSuperTypes()) {
-										for(EStructuralFeature feature : superType.getEAllStructuralFeatures()) {
-											context = ((UIRefactoringContext)context).copy();
-											context.setStructuralFeature(feature);
-											if(customisation.evaluate(context) && context.getStructuralFeature() == feature) {
-												context.setDocument(editor.getDocument());
-												createMenuItem(menu, context);
-											}
-										}
-									}
-									for(EStructuralFeature feature : eClass.getEStructuralFeatures()) {
-										context = ((UIRefactoringContext)context).copy();
-										context.setStructuralFeature(feature);
-										if(customisation.evaluate(context) && context.getStructuralFeature() == feature) {
-											context.setDocument(editor.getDocument());
-											createMenuItem(menu, context);
-										}
+								for(EStructuralFeature feature : customisation.features(context)) {
+									context = ((UIRefactoringContext)context).copy();
+									context.setStructuralFeature(feature);
+									if(customisation.evaluate(context) && context.getStructuralFeature() == feature) {
+										context.setDocument(editor.getDocument());
+										createMenuItem(menu, context);
 									}
 								}
-							}
+							}	
 						}
 					}	
 				}
 			}
 		}
 	}
-
+	
 	private void createMenuItem(Menu menu, IUIRefactoringContext context) {
 		if(refactoring.isRefactoringAvailable(context)) {
 			MenuItem item = new MenuItem(menu, SWT.PUSH);

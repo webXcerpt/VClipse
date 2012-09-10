@@ -13,9 +13,9 @@ package org.vclipse.refactoring.core;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
@@ -24,13 +24,20 @@ import org.vclipse.refactoring.RefactoringPlugin;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 
 public abstract class MethodCollector {
 
 	protected Multimap<String, Method> name2Method;
 	
+	protected Set<String> seenMethods;
+	
 	public MethodCollector() {
 		name2Method = HashMultimap.create();
+	}
+	
+	protected void enableFiltering() {
+		seenMethods = Sets.newHashSet();
 	}
 	
 	protected Object invoke(IRefactoringContext context, String prefix) {
@@ -99,54 +106,45 @@ public abstract class MethodCollector {
 	}
 	
 	protected Pair<EObject, Method> getMethod(EObject object, EStructuralFeature feature, String prefix) {
-		if(object == null) {
+		if(object == null || prefix==null || prefix.isEmpty()) {
 			return null;
-		} else {
-			Pair<EObject, Method> pair = iterateMethodCollection(object, prefix);
-			if(pair != null) {
-				return pair;
-			}
-			
-			String prefixWithType = prefix + "_" + object.eClass().getName();
-			pair = iterateMethodCollection(object, prefixWithType);
-			if(pair != null) {
-				return pair;
-			}
-			
-			String methodname = prefixWithType + (feature == null ? "" : "_" + feature.getName());
-			pair = iterateMethodCollection(object, methodname);
-			if(pair != null) {
-				return pair;
-			}
-			
-			feature = object.eContainingFeature();
-			if(feature != null) {
-				String nameWithContainingFeature = prefixWithType + "_" + feature.getName();
-				pair = iterateMethodCollection(object, nameWithContainingFeature);
-				if(pair != null) {
-					return pair;
-				}
-			}
-			
-			for(EReference reference : object.eClass().getEAllReferences()) {
-				String nameWithFeature = prefix + "_" + reference.getName();
-				pair = iterateMethodCollection(object, nameWithFeature);
-				if(pair != null) {
-					return pair;
-				}
-			}
-			
-			for(EReference reference : object.eClass().getEAllReferences()) {
-				String nameWithFeature = prefixWithType + "_" + reference.getName();
-				pair = iterateMethodCollection(object, nameWithFeature);
-				if(pair != null) {
-					return pair;
-				}
-			}
-			return getMethod(object.eContainer(), feature, prefix);
 		}
+		List<String> methodNames = Lists.newArrayList();
+		if(feature != null) {
+			// prefix_RefactoringType_feature
+			methodNames.add(prefix + "_" + feature.getName());
+			// prefix_RefactoringType_TypeName_feature
+			methodNames.add(prefix + "_" + object.eClass().getName() + "_" + feature.getName());
+		}
+		
+		// prefix_RefactoringType_TypeName
+		methodNames.add(prefix + "_" + object.eClass().getName());
+		// prefix_RefactoringType
+		methodNames.add(prefix);
+		
+		for(String methodname : methodNames) {
+			if(seenMethods == null) {
+				Pair<EObject, Method> pair = iterateMethodCollection(object, methodname);
+				if(pair != null) {
+					return pair;
+				}
+			} else {
+				if(seenMethods.contains(methodname)) {
+					return null;
+				} else {
+					Pair<EObject, Method> pair = iterateMethodCollection(object, methodname);
+					if(pair != null) {
+						seenMethods.add(methodname);
+						return pair;
+					}					
+				}
+			}
+		}
+		
+		// try container
+		return getMethod(object.eContainer(), feature, prefix);
 	}
-
+	
 	protected Pair<EObject, Method> iterateMethodCollection(EObject object, String methodname) {
 		Iterator<Method> iterator = name2Method.get(methodname).iterator();
 		while(iterator.hasNext()) {

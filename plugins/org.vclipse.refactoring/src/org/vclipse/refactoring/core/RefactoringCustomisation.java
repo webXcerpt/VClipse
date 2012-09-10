@@ -12,13 +12,15 @@ package org.vclipse.refactoring.core;
 
 import java.util.List;
 
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import com.google.common.collect.Lists;
 
 @SuppressWarnings("unchecked")
 public class RefactoringCustomisation extends MethodCollector {
-
+	
 	public RefactoringCustomisation() {
 		collect(1, IRefactoringContext.class);
 		collect(2);
@@ -31,6 +33,21 @@ public class RefactoringCustomisation extends MethodCollector {
 	
 	public List<? extends EStructuralFeature> features(IRefactoringContext context) {
 		Object result = invoke(context, "features_");
-		return result instanceof List ? (List<EStructuralFeature>)result : Lists.<EStructuralFeature>newArrayList();
+		if(result instanceof List) {
+			return (List<EStructuralFeature>)result;
+		} else {
+			enableFiltering();
+			return getFeatures(context.getSourceElement());
+		}
+	}
+	
+	protected List<EStructuralFeature> getFeatures(EObject object) {
+		List<EStructuralFeature> features = Lists.newArrayList();
+		EClass eClass = object.eClass();
+		for(EClass superType : eClass.getEAllSuperTypes()) {
+			features.addAll(superType.getEAllStructuralFeatures());
+		}
+		features.addAll(eClass.getEAllStructuralFeatures());
+		return features;
 	}
 }
