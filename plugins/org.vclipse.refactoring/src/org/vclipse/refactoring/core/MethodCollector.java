@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
+import org.vclipse.refactoring.RefactoringPlugin;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
@@ -30,6 +31,28 @@ public abstract class MethodCollector {
 	
 	public MethodCollector() {
 		name2Method = HashMultimap.create();
+	}
+	
+	protected Object invoke(IRefactoringContext context, String prefix) {
+		Object result = null;
+		prefix = prefix + context.getType();
+		Pair<EObject, Method> pair = getMethod(context.getSourceElement(), context.getStructuralFeature(), prefix);
+		if(pair != null) {
+			try {
+				Method method = pair.getSecond();
+				List<Object> params = Lists.newArrayList();
+				if(method.getParameterTypes().length == 1) {
+					params.add(context);
+				} else if(method.getParameterTypes().length == 2) {
+					params.add(context);
+					params.add(pair.getFirst());
+				}
+				result = pair.getSecond().invoke(this, params.toArray());
+			} catch(Exception exception) {
+				RefactoringPlugin.log(exception.getMessage(), exception);
+			} 
+		}
+		return result;
 	}
 	
 	protected void collect(int paramCount) {
