@@ -57,6 +57,11 @@ public class ComboInputPage extends WidgetProvider {
 				if(index > -1) {
 					String item = combo.getItem(index);
 					context.addAttribute(Refactoring.TEXT_FIELD_ENTRY, item);					
+				} else {
+					String text = combo.getText();
+					if(text != null && !text.isEmpty()) { 
+						context.addAttribute(Refactoring.TEXT_FIELD_ENTRY, text);		
+					}
 				}
 			}
 		});
