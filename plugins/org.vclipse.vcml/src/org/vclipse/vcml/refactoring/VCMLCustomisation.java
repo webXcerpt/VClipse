@@ -1,7 +1,6 @@
 package org.vclipse.vcml.refactoring;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.xtext.EcoreUtil2;
 import org.vclipse.refactoring.core.IRefactoringContext;
 import org.vclipse.refactoring.core.RefactoringCustomisation;
 import org.vclipse.vcml.vcml.CharacteristicReference_P;
@@ -20,9 +19,8 @@ public class VCMLCustomisation extends RefactoringCustomisation {
 	@Inject
 	private VCMLRefactoring vcmlRefactoring;
 	
-	public boolean evaluate_Extract_ConstraintSource(IRefactoringContext context, ConstraintSource reference) {
+	public boolean evaluate_Extract_ConstraintSource(IRefactoringContext context, ConstraintSource source) {
 		context.setLabel("Extract common conditions from restrictions");
-		ConstraintSource source = EcoreUtil2.getContainerOfType(context.getSourceElement(), ConstraintSource.class);
 		for(ConstraintRestriction restriction : source.getRestrictions()) {
 			if(restriction instanceof ConditionalConstraintRestriction) {
 				return Boolean.TRUE;
