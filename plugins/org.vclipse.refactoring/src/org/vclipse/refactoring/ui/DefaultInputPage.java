@@ -10,9 +10,6 @@
  ******************************************************************************/
 package org.vclipse.refactoring.ui;
 
-import java.lang.reflect.Field;
-
-import org.eclipse.ltk.ui.refactoring.UserInputWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -24,14 +21,12 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Widget;
 import org.eclipse.xtext.conversion.ValueConverterException;
-import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.core.Refactoring;
 
 import com.google.common.collect.Lists;
 
-public class DefaultInputPage extends UserInputWizardPage {
+public class DefaultInputPage extends WidgetProvider {
 	
 	private IUIRefactoringContext context;
 	
@@ -78,27 +73,7 @@ public class DefaultInputPage extends UserInputWizardPage {
 		setControl(composite);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public <T extends Widget> T getWidget(String name, Class<T> type) {
-		if(name == null || name.isEmpty()) {
-			return null;
-		}
-		for(Field field : getClass().getDeclaredFields()) {
-			if(field.getName().equals(name)) {
-				field.setAccessible(true);
-				Object fieldValue;
-				try {
-					fieldValue = field.get(this);
-					if(type.isAssignableFrom(fieldValue.getClass())) {
-						return (T)fieldValue;
-					}
-				} catch (Exception e) {
-					RefactoringPlugin.log(e.getMessage(), e);
-				}
-			}
-		}
-		return null;
-	}
+	
 	
 	private void validate() {
 		if(text.getEnabled()) {

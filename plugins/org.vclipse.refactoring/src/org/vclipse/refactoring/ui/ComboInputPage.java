@@ -10,9 +10,6 @@
  ******************************************************************************/
 package org.vclipse.refactoring.ui;
 
-import java.lang.reflect.Field;
-
-import org.eclipse.ltk.ui.refactoring.UserInputWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -21,13 +18,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Widget;
-import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.core.Refactoring;
 
 import com.google.common.collect.Lists;
 
-public class ComboInputPage extends UserInputWizardPage {
+public class ComboInputPage extends WidgetProvider {
 	
 	private IUIRefactoringContext context;
 	
@@ -53,14 +48,15 @@ public class ComboInputPage extends UserInputWizardPage {
 		label.setText("New name: ");
 		label.setLayoutData(new GridData());
 
-		combo = new Combo(mainArea, SWT.READ_ONLY);
+		combo = new Combo(mainArea, SWT.NONE);
 		combo.setFont(mainArea.getFont());
 		combo.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, false));
 		combo.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				int index = combo.getSelectionIndex();
 				if(index > -1) {
-					context.addAttribute(Refactoring.TEXT_FIELD_ENTRY, combo.getItem(index));					
+					String item = combo.getItem(index);
+					context.addAttribute(Refactoring.TEXT_FIELD_ENTRY, item);					
 				}
 			}
 		});
@@ -68,27 +64,4 @@ public class ComboInputPage extends UserInputWizardPage {
 		context.handleWidgets();
 		setControl(mainArea);
 	}
-	
-	@SuppressWarnings("unchecked")
-	public <T extends Widget> T getWidget(String name, Class<T> type) {
-		if(name == null || name.isEmpty()) {
-			return null;
-		}
-		for(Field field : getClass().getDeclaredFields()) {
-			if(field.getName().equals(name)) {
-				field.setAccessible(true);
-				Object fieldValue;
-				try {
-					fieldValue = field.get(this);
-					if(type.isAssignableFrom(fieldValue.getClass())) {
-						return (T)fieldValue;
-					}
-				} catch (Exception e) {
-					RefactoringPlugin.log(e.getMessage(), e);
-				}
-			}
-		}
-		return null;
-	}
-	
 }
