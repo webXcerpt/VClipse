@@ -26,6 +26,7 @@ public class RefactoringUICustomisation extends RefactoringCustomisation {
 	
 	public RefactoringUICustomisation() {
 		collect(1, IUIRefactoringContext.class);
+		collect(2);
 	}
 	
 	public void switchWidgets(IRefactoringContext context) {
