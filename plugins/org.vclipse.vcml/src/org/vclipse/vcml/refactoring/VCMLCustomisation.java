@@ -25,6 +25,10 @@ public class VCMLCustomisation extends RefactoringCustomisation {
 	
 	protected static VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
 	
+	public List<? extends EStructuralFeature> features_Inline_ConstraintSource(IRefactoringContext context) {
+		return features_Extract_ConstraintSource(context);
+	}
+	
 	public List<? extends EStructuralFeature> features_Extract_ConstraintSource(IRefactoringContext context) {
 		return get(VCML_PACKAGE.getConstraintSource_Restrictions());
 	}
