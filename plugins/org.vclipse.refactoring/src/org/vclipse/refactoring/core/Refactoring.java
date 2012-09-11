@@ -28,6 +28,7 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.nodemodel.impl.NodeModelBuilder;
 import org.eclipse.xtext.util.Pair;
 import org.vclipse.refactoring.RefactoringPlugin;
+import org.vclipse.refactoring.ui.RefactoringUtility;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -46,6 +47,9 @@ public abstract class Refactoring extends MethodCollector {
 	
 	@Inject
 	protected ReferenceFinderExtension referencesFinder;
+	
+	@Inject
+	protected RefactoringUtility refactoringUtility;
 	
 	public Refactoring() {
 		collect(1, IRefactoringContext.class);
