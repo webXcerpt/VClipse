@@ -13,7 +13,6 @@ package org.vclipse.refactoring.core;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -24,20 +23,13 @@ import org.vclipse.refactoring.RefactoringPlugin;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 
 public abstract class MethodCollector {
 
 	protected Multimap<String, Method> name2Method;
 	
-	protected Set<String> seenMethods;
-	
 	public MethodCollector() {
 		name2Method = HashMultimap.create();
-	}
-	
-	protected void enableFiltering() {
-		seenMethods = Sets.newHashSet();
 	}
 	
 	protected Object invoke(IRefactoringContext context, String prefix) {
@@ -123,21 +115,10 @@ public abstract class MethodCollector {
 		methodNames.add(prefix);
 		
 		for(String methodname : methodNames) {
-			if(seenMethods == null) {
-				Pair<EObject, Method> pair = iterateMethodCollection(object, methodname);
-				if(pair != null) {
-					return pair;
-				}
-			} else {
-				if(seenMethods.contains(methodname)) {
-					return null;
-				} else {
-					Pair<EObject, Method> pair = iterateMethodCollection(object, methodname);
-					if(pair != null) {
-						seenMethods.add(methodname);
-						return pair;
-					}					
-				}
+			Pair<EObject, Method> pair = iterateMethodCollection(object, methodname);
+			if(pair != null) {
+
+				return pair;
 			}
 		}
 		

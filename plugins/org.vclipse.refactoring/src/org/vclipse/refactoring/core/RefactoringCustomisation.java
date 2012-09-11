@@ -36,7 +36,6 @@ public class RefactoringCustomisation extends MethodCollector {
 		if(result instanceof List) {
 			return (List<EStructuralFeature>)result;
 		} else {
-			enableFiltering();
 			return getFeatures(context.getSourceElement());
 		}
 	}
@@ -49,5 +48,9 @@ public class RefactoringCustomisation extends MethodCollector {
 		}
 		features.addAll(eClass.getEAllStructuralFeatures());
 		return features;
+	}
+	
+	protected List<? extends EStructuralFeature> get(EStructuralFeature ... features) {
+		return Lists.newArrayList(features);
 	}
 }
