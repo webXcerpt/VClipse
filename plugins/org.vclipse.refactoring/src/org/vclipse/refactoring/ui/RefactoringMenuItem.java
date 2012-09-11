@@ -96,7 +96,7 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 								for(EStructuralFeature feature : customisation.features(context)) {
 									context = ((UIRefactoringContext)context).copy();
 									context.setStructuralFeature(feature);
-									if(customisation.evaluate(context)) {
+									if(customisation.init(context)) {
 										context.setDocument(editor.getDocument());
 										createMenuItem(menu, context);
 									}

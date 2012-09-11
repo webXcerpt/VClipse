@@ -47,7 +47,7 @@ public class VCMLCustomisation extends RefactoringCustomisation {
 	/**
 	 * Evaluation
 	 */
-	public boolean evaluate_Extract_ConstraintSource(IRefactoringContext context, ConstraintSource source) {
+	public boolean init_Extract_ConstraintSource(IRefactoringContext context, ConstraintSource source) {
 		context.setLabel("Extract common conditions from restrictions");
 		for(ConstraintRestriction restriction : source.getRestrictions()) {
 			if(restriction instanceof ConditionalConstraintRestriction) {
@@ -57,7 +57,7 @@ public class VCMLCustomisation extends RefactoringCustomisation {
 		return Boolean.FALSE;
 	}
 	
-	public boolean evaluate_Inline_ConstraintSource(IRefactoringContext context, ConstraintSource source) {
+	public boolean init_Inline_ConstraintSource(IRefactoringContext context, ConstraintSource source) {
 		context.setLabel("Inline conditions for each restriction");
 		if(source.getCondition() != null) {
 			return Boolean.TRUE;		
@@ -65,12 +65,12 @@ public class VCMLCustomisation extends RefactoringCustomisation {
 		return Boolean.FALSE;
 	}
 	
-	public boolean evaluate_Extract_InCondition_C_list(IRefactoringContext context, InCondition_C reference) {
+	public boolean init_Extract_InCondition_C_list(IRefactoringContext context, InCondition_C reference) {
 		context.setLabel("Extract to conditional or expresssion");
 		return Boolean.TRUE;
 	}
 	
-	public boolean evaluate_Replace_PFunction_values(IRefactoringContext context, PFunction pfunction) {
+	public boolean init_Replace_PFunction_values(IRefactoringContext context, PFunction pfunction) {
 		EList<Literal> values = pfunction.getValues();
 		for(Literal literal : values) {
 			if(literal instanceof MDataCharacteristic_P || literal instanceof CharacteristicReference_P) {

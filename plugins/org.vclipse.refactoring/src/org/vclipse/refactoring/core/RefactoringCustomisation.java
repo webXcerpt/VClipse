@@ -26,8 +26,8 @@ public class RefactoringCustomisation extends MethodCollector {
 		collect(2);
 	}
 	 
-	public boolean evaluate(IRefactoringContext context) {
-		Object result = invoke(context, "evaluate_");
+	public boolean init(IRefactoringContext context) {
+		Object result = invoke(context, "init_");
 		return result instanceof Boolean ? (Boolean)result : Boolean.FALSE;
 	}
 	
