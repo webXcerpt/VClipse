@@ -25,6 +25,9 @@ public class VCMLCustomisation extends RefactoringCustomisation {
 	
 	protected static VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
 	
+	/**
+	 * Features
+	 */
 	public List<? extends EStructuralFeature> features_Inline_ConstraintSource(IRefactoringContext context) {
 		return features_Extract_ConstraintSource(context);
 	}
@@ -33,6 +36,17 @@ public class VCMLCustomisation extends RefactoringCustomisation {
 		return get(VCML_PACKAGE.getConstraintSource_Restrictions());
 	}
 	
+	public List<? extends EStructuralFeature> features_Extract_InCondition_C(IRefactoringContext context) {
+		return get(VCML_PACKAGE.getInCondition_C_List());
+	}
+	
+	public List<? extends EStructuralFeature> features_Replace_PFunction(IRefactoringContext context) {
+		return get(VCML_PACKAGE.getPFunction_Values());
+	}
+	
+	/**
+	 * Evaluation
+	 */
 	public boolean evaluate_Extract_ConstraintSource(IRefactoringContext context, ConstraintSource source) {
 		context.setLabel("Extract common conditions from restrictions");
 		for(ConstraintRestriction restriction : source.getRestrictions()) {
