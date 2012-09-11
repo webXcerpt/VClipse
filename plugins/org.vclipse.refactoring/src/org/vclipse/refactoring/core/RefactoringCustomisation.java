@@ -11,12 +11,14 @@
 package org.vclipse.refactoring.core;
 
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 @SuppressWarnings("unchecked")
 public class RefactoringCustomisation extends MethodCollector {
@@ -41,13 +43,17 @@ public class RefactoringCustomisation extends MethodCollector {
 	}
 	
 	protected List<EStructuralFeature> getFeatures(EObject object) {
-		List<EStructuralFeature> features = Lists.newArrayList();
+		Map<String, EStructuralFeature> name2Feature = Maps.newHashMap();
 		EClass eClass = object.eClass();
 		for(EClass superType : eClass.getEAllSuperTypes()) {
-			features.addAll(superType.getEAllStructuralFeatures());
+			for(EStructuralFeature feature : superType.getEAllStructuralFeatures()) {
+				name2Feature.put(feature.getName(), feature);
+			}
 		}
-		features.addAll(eClass.getEAllStructuralFeatures());
-		return features;
+		for(EStructuralFeature feature : eClass.getEAllStructuralFeatures()) {
+			name2Feature.put(feature.getName(), feature);
+		}
+		return Lists.newArrayList(name2Feature.values());
 	}
 	
 	protected List<? extends EStructuralFeature> get(EStructuralFeature ... features) {
