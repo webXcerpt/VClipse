@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.EcoreUtil2;
 import org.vclipse.base.VClipseStrings;
 import org.vclipse.base.naming.INameProvider;
 import org.vclipse.refactoring.ExtensionsReader;
@@ -34,8 +34,8 @@ public class RefactoringUtility {
 	public INameProvider getNameProvider(EObject object) {
 		INameProvider nameProvider = null;
 		if(object != null) {
-			EClass eClass = object.eClass();
-			Iterator<Injector> iterator = extensionReader.getInjector().get(eClass).iterator();
+			EObject container = EcoreUtil2.getRootContainer(object);
+			Iterator<Injector> iterator = extensionReader.getInjector().get(container.eClass()).iterator();
 			if(iterator.hasNext()) {
 				nameProvider = iterator.next().getInstance(INameProvider.class);
 			}
