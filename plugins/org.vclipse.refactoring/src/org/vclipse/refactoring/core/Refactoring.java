@@ -11,6 +11,7 @@
 package org.vclipse.refactoring.core;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.BasicEList;
@@ -23,6 +24,7 @@ import org.eclipse.emf.ecore.change.ChangeKind;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.ListChange;
 import org.eclipse.emf.ecore.change.util.ListDifferenceAnalyzer;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.nodemodel.impl.NodeModelBuilder;
 import org.eclipse.xtext.util.Pair;
 import org.vclipse.refactoring.RefactoringPlugin;
@@ -159,7 +161,12 @@ public abstract class Refactoring extends MethodCollector {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public EList<EObject> getEObjectList(EList<?> elements) {
+	public EList<EObject> getEObjectList(List<?> elements) {
 		return (EList<EObject>)elements;
+	}
+	
+	public EList<EObject> copy(EList<? extends EObject> elements) {
+		Collection<EObject> listCopy = EcoreUtil2.copyAll(elements);
+		return new BasicEList<EObject>(listCopy);
 	}
 }
