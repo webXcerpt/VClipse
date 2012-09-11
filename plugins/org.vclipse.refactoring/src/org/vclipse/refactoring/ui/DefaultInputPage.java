@@ -73,8 +73,6 @@ public class DefaultInputPage extends WidgetProvider {
 		setControl(composite);
 	}
 	
-	
-	
 	private void validate() {
 		if(text.getEnabled()) {
 			String newName = text.getText();

@@ -13,8 +13,11 @@ package org.vclipse.refactoring.ui;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -28,6 +31,7 @@ public class ComboInputPage extends WidgetProvider {
 	
 	private Label label;
 	private Combo combo;
+	private Button button;
 	
 	private Composite mainArea;
 	
@@ -63,6 +67,15 @@ public class ComboInputPage extends WidgetProvider {
 						context.addAttribute(Refactoring.TEXT_FIELD_ENTRY, text);		
 					}
 				}
+			}
+		});
+		
+		button = new Button(mainArea, SWT.CHECK);
+		button.setText("Replace all occurences");
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				context.addAttribute(Refactoring.BUTTON_STATE, button.getSelection());
 			}
 		});
 		
