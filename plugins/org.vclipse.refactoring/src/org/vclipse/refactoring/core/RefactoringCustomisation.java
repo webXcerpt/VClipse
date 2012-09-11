@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import com.google.common.collect.Lists;
@@ -52,6 +53,10 @@ public class RefactoringCustomisation extends MethodCollector {
 		}
 		for(EStructuralFeature feature : eClass.getEAllStructuralFeatures()) {
 			name2Feature.put(feature.getName(), feature);
+		}
+		EReference containment = object.eContainmentFeature();
+		if(containment != null) {
+			name2Feature.put(containment.getName(), containment);			
 		}
 		return Lists.newArrayList(name2Feature.values());
 	}

@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
@@ -102,18 +103,23 @@ public abstract class MethodCollector {
 			return null;
 		}
 		List<String> methodNames = Lists.newArrayList();
+		String className = object.eClass().getName();
 		if(feature != null) {
 			// prefix_RefactoringType_feature
 			methodNames.add(prefix + "_" + feature.getName());
 			// prefix_RefactoringType_TypeName_feature
-			methodNames.add(prefix + "_" + object.eClass().getName() + "_" + feature.getName());
+			methodNames.add(prefix + "_" + className + "_" + feature.getName());
 		}
-		
 		// prefix_RefactoringType_TypeName
-		methodNames.add(prefix + "_" + object.eClass().getName());
+		methodNames.add(prefix + "_" + className);
 		// prefix_RefactoringType
 		methodNames.add(prefix);
 		
+		// prefix_Refactoring_Type_TypeName_ContainmentFeature
+		EReference containmentFeature = object.eContainmentFeature();
+		if(containmentFeature != null) {
+			methodNames.add(prefix + "_" + className + "_" + containmentFeature.getName());
+		}
 		for(String methodname : methodNames) {
 			Pair<EObject, Method> pair = iterateMethodCollection(object, methodname);
 			if(pair != null) {

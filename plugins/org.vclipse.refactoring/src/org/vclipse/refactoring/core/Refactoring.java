@@ -40,6 +40,8 @@ public abstract class Refactoring extends MethodCollector {
 	
 	public static final String REFACTORING_PREFIX = "refactoring_";
 	
+	public static final List<EObject> NO_CHANGES = null;
+	
 	protected ChangeFactory changeFactory;
 	
 	@Inject
@@ -86,6 +88,11 @@ public abstract class Refactoring extends MethodCollector {
 		return getMethod(context.getSourceElement(), context.getStructuralFeature(), prefix);
 	}
 
+	protected ChangeDescription getChangeDescription(EObject object, EStructuralFeature feature) {
+		// just replace the value
+		return getChangeDescription(object, feature, null);
+	}
+	
 	protected ChangeDescription getChangeDescription(EObject object, EStructuralFeature feature, EObject value) {
 		// TODO extract comment handling - commented out at the moment - exception during extraction
 		
