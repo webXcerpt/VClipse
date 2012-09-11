@@ -10,12 +10,79 @@
  ******************************************************************************/
 package org.vclipse.refactoring.ui;
 
+import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.vclipse.base.VClipseStrings;
+import org.vclipse.base.naming.INameProvider;
+import org.vclipse.refactoring.ExtensionsReader;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 public class RefactoringUtility {
 
+	@Inject
+	private ExtensionsReader extensionReader;
+	
+	public INameProvider getNameProvider(EObject object) {
+		INameProvider nameProvider = null;
+		if(object != null) {
+			EClass eClass = object.eClass();
+			Iterator<Injector> iterator = extensionReader.getInjector().get(eClass).iterator();
+			if(iterator.hasNext()) {
+				nameProvider = iterator.next().getInstance(INameProvider.class);
+			}
+		}
+		return nameProvider;
+	}
+	
+	public EObject get(EList<EObject> entries, String name, Class<? extends EObject> type) {
+		if(type == null) {
+			if(name == null) {
+				return null;
+			} else {
+				Iterator<EObject> namedResults = get(entries, name);
+				return namedResults.hasNext() ? namedResults.next() : null;
+			}
+		} else {
+			Iterator<? extends EObject> iterator = get(entries, type);
+			if(name == null) {
+				return iterator.hasNext() ? iterator.next() : null;
+			} else {
+				iterator = get(Lists.newArrayList(iterator), name);
+				return iterator.hasNext() ? iterator.next() : null;
+			}
+		}
+	}
+	
+	public Iterator<EObject> get(Iterable<EObject> entries, final String name) {
+		Iterator<EObject> iterator = entries.iterator();
+		if(!iterator.hasNext() || name == null || name.isEmpty()) {
+			return null;
+		}
+		final INameProvider nameProvider = getNameProvider(iterator.next());
+		return Iterables.filter(entries, new Predicate<EObject>() {
+			public boolean apply(EObject eobject) {
+				return nameProvider.apply(eobject).equals(name);
+			}
+		}).iterator();
+	}
+	
+	public Iterator<? extends EObject> get(Iterable<EObject> entries, Class<? extends EObject> type) {
+		Iterator<EObject> iterator = entries.iterator();
+		if(!iterator.hasNext() || type == null) {
+			return null;
+		}
+		return Iterables.filter(entries, type).iterator();
+	}
+	
 	public String getRefactoringText(IUIRefactoringContext context) {
 		String text = context.getLabel();
 		if(text == null || text.isEmpty()) {
