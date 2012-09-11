@@ -12,11 +12,10 @@ import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.google.common.collect.Maps;
 
-public class VcmlNamesAreUniqueValidationHelper extends NamesAreUniqueValidationHelper {
+public class UniqueNamesValidationHelper extends NamesAreUniqueValidationHelper {
 
 	private static final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
 
-	// reported a bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=383863
 	@Override
 	protected void checkDescriptionForDuplicatedName(IEObjectDescription description, Map<EClass, Map<QualifiedName, IEObjectDescription>> clusterTypeToName, ValidationMessageAcceptor acceptor) {
 		EObject object = description.getEObjectOrProxy();

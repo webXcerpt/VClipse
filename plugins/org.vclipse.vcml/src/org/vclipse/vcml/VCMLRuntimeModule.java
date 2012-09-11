@@ -28,7 +28,7 @@ import org.vclipse.vcml.conversion.VCMLValueConverter;
 import org.vclipse.vcml.documentation.VCMLClassNameProvider;
 import org.vclipse.vcml.formatting.VCMLCrossReferenceSerializer;
 import org.vclipse.vcml.linking.VCMLLinker;
-import org.vclipse.vcml.naming.VcmlNamesAreUniqueValidationHelper;
+import org.vclipse.vcml.naming.UniqueNamesValidationHelper;
 import org.vclipse.vcml.resource.VCMLResourceDescriptionStrategy;
 import org.vclipse.vcml.serializer.VCMLSerializer;
 import org.vclipse.vcml.validation.VCMLLinkingDiagnosticMessageProvider;
@@ -79,7 +79,7 @@ public class VCMLRuntimeModule extends org.vclipse.vcml.AbstractVCMLRuntimeModul
 	}
 	
 	public Class<? extends INamesAreUniqueValidationHelper> bindNamesAreUniqueValidationHelper() {
-		return VcmlNamesAreUniqueValidationHelper.class;
+		return UniqueNamesValidationHelper.class;
 	} 
 	
 	public Class<? extends IDefaultResourceDescriptionStrategy> bindIDefaultResourceDescriptionStrategy() {
