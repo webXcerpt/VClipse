@@ -12,6 +12,7 @@ package org.vclipse.refactoring.ui;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -23,6 +24,7 @@ import org.vclipse.refactoring.ExtensionsReader;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
@@ -41,6 +43,24 @@ public class RefactoringUtility {
 			}
 		}
 		return nameProvider;
+	}
+	
+	public Set<String> getText(List<EObject> values) {
+		Set<String> names = Sets.newHashSet();
+		if(!values.isEmpty()) {
+			EObject object = values.get(0);
+			INameProvider nameProvider = getNameProvider(object);
+			if(nameProvider != null) {
+				for(EObject value : values) {
+					String name = nameProvider.apply(value);
+					if(name == null) {
+						System.err.println("name for " + value + " was null");
+					}
+					names.add(name);
+				}
+			}
+		}
+		return names;
 	}
 	
 	public EObject get(EList<EObject> entries, String name, Class<? extends EObject> type) {

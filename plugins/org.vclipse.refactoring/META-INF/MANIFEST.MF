@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.ui;visibility:=reexport,
  org.vclipse.base.ui;visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Import-Package: com.google.common.collect
+Import-Package: com.google.common.collect,
+ org.apache.log4j
 Export-Package: org.vclipse.refactoring,
  org.vclipse.refactoring.core,
  org.vclipse.refactoring.ui
