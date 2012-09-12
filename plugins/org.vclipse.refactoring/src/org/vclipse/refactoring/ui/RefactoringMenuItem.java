@@ -134,11 +134,13 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 				if(iterator.hasNext()) {
 					pages = iterator.next().getPages(context);
 				}
-				new RefactoringWizardOpenOperation( 
-						new LanguageRefactoringWizard(pages, 
-								new ProcessorBasedRefactoring(refactoringProcessor), 
-										RefactoringWizard.DIALOG_BASED_USER_INTERFACE)).run(activeShell, 
-												refactoringUtility.getRefactoringText(context));
+				ProcessorBasedRefactoring pbr = refactoringProcessor.getRefactoring();
+				if(pbr == null) {
+					pbr = new ProcessorBasedRefactoring(refactoringProcessor);
+				}
+				LanguageRefactoringWizard lrw = new LanguageRefactoringWizard(pages, pbr, RefactoringWizard.DIALOG_BASED_USER_INTERFACE);
+				RefactoringWizardOpenOperation rwoo = new RefactoringWizardOpenOperation(lrw);
+				rwoo.run(activeShell, refactoringUtility.getRefactoringText(context));
 			} catch(InterruptedException exception) {
 				BaseUiPlugin.log(exception.getMessage(), exception);
 			}
