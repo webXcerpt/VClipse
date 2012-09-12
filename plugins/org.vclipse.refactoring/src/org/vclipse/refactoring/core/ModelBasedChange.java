@@ -27,26 +27,22 @@ public class ModelBasedChange extends CompositeChange implements IChangeCompare 
 
 	@Override
 	public EObject getCurrent() {
-		if(current == null) {
-			IUIRefactoringContext context = processor.getContext();
-			current = utility.rootContainerCopy(context.getSourceElement(), NAME_EXTENSION_CURRENT);
-		}
+		IUIRefactoringContext context = processor.getContext();
+		current = utility.rootContainerCopy(context.getSourceElement(), NAME_EXTENSION_CURRENT);
 		return current;
 	}
 
 	@Override
 	public EObject getChanged() {
-		if(changed == null) {
-			IUIRefactoringContext context = processor.getContext();
-			EObject sourceElement = context.getSourceElement();
-			changed = utility.rootContainerCopy(sourceElement, NAME_EXTENSION_CHANGED);
-			EObject equal = utility.getEqualTo(sourceElement, changed);
-			IUIRefactoringContext contextCopy = ((UIRefactoringContext)context).copy();
-			if(equal != null) {
-				contextCopy.setSourceElement(equal);
-			}
-			runner.refactor(contextCopy);		
+		IUIRefactoringContext context = processor.getContext();
+		EObject sourceElement = context.getSourceElement();
+		changed = utility.rootContainerCopy(sourceElement, NAME_EXTENSION_CHANGED);
+		EObject equal = utility.getEqualTo(sourceElement, changed);
+		IUIRefactoringContext contextCopy = ((UIRefactoringContext)context).copy();
+		if(equal != null) {
+			contextCopy.setSourceElement(equal);
 		}
+		runner.refactor(contextCopy);		
 		return changed;
 	}
 }
