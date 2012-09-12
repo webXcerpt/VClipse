@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ltk.core.refactoring.Change;
+import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.resource.XtextResource;
@@ -49,7 +50,9 @@ public class ModelChange extends Change {
 	
 	@Override
 	public String getName() {
-		return processor.getContext().getDescription();
+		EObject element = processor.getContext().getSourceElement();
+		URI uri = element.eResource().getURI();
+		return "Changes in the resource " + uri.lastSegment();
 	}
 	
 	public void setProcessor(LanguageRefactoringProcessor processor) {
@@ -105,7 +108,9 @@ public class ModelChange extends Change {
 			}
 		};
 		Display.getDefault().asyncExec(refactoringRunnable);
-		return null;
+		EObject element = processor.getContext().getSourceElement();
+		URI uri = element.eResource().getURI();
+		return new CompositeChange("Changes in the resource " + uri.lastSegment(), new Change[]{this});
 	}
 
 	@Override

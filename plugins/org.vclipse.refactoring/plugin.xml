@@ -29,9 +29,17 @@
             class="org.vclipse.refactoring.ExtensionFactory:org.vclipse.refactoring.ui.ChangePreviewViewer"
             id="org.vclipse.refactoring.ui.changePreviewViewer">
          <enablement>
-            <instanceof
-                  value="org.vclipse.refactoring.core.ModelChange">
-            </instanceof></enablement>
+            <or>
+               <instanceof
+                     value="org.vclipse.refactoring.core.ModelBasedChange">
+               </instanceof>
+               <instanceof
+                     value="org.vclipse.refactoring.core.ContextBasedChange">
+               </instanceof>
+               <instanceof
+                     value="org.vclipse.refactoring.core.ModelChange">
+               </instanceof>
+            </or></enablement>
       </changePreviewViewer>
    </extension>
 </plugin>

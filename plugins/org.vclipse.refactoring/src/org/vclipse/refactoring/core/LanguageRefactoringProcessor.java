@@ -26,7 +26,9 @@ import org.vclipse.refactoring.ui.RefactoringUtility;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.Singleton;
 
+@Singleton
 public class LanguageRefactoringProcessor extends RefactoringProcessor {
 
 	private IUIRefactoringContext context;
@@ -35,7 +37,13 @@ public class LanguageRefactoringProcessor extends RefactoringProcessor {
 	private Provider<ModelChange> provider;
 	
 	@Inject
+	private Provider<ContextBasedChange> contextBasedChange;
+	
+	@Inject
 	private RefactoringUtility utility;
+	
+	@Inject
+	private RefactoringRunner refactoringRunner;
 	
 	public void setContext(IUIRefactoringContext context) {
 		this.context = context;
@@ -87,6 +95,10 @@ public class LanguageRefactoringProcessor extends RefactoringProcessor {
 
 	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
+//		ModelBasedChange mbc = new ModelBasedChange(this, refactoringRunner, utility);
+//		mbc.add(contextBasedChange.get());
+//		return mbc;
+		
 		ModelChange change = provider.get();
 		change.setProcessor(this);
 		return change;

@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.ui.compare.InjectableViewerCreator;
 import org.vclipse.base.ui.util.EObjectTypedElement;
-import org.vclipse.refactoring.ExtensionsReader;
+import org.vclipse.refactoring.core.IChangeCompare;
 import org.vclipse.refactoring.core.ModelChange;
 
 import com.google.inject.Inject;
@@ -36,12 +36,12 @@ import com.google.inject.Injector;
 public class ChangePreviewViewer implements IChangePreviewViewer {
 
 	@Inject
-	private ExtensionsReader extensionReader;
+	private RefactoringUtility refactoringUtility;
 	
 	private Viewer viewer;
 	
 	private Composite composite;
-
+	
 	@Override
 	public void createControl(Composite parent) {
 		viewer = new NullViewer(parent);
@@ -58,22 +58,32 @@ public class ChangePreviewViewer implements IChangePreviewViewer {
 
 	@Override
 	public void setInput(ChangePreviewViewerInput input) {
-		if(viewer instanceof NullViewer) {
-			Change change = input.getChange();
-			if(change instanceof ModelChange) {
-				ModelChange modelChange = (ModelChange)change;
-				EObject current = modelChange.getCurrent();
-				EObject rootContainer = EcoreUtil.getRootContainer(current);
-				Iterator<Injector> iterator = extensionReader.getInjector().get(rootContainer.eClass()).iterator();
-				if(iterator.hasNext()) {
-					Injector injector = iterator.next();
-					InjectableViewerCreator instance = injector.getInstance(InjectableViewerCreator.class);
-					viewer = instance.createViewer(composite, new CompareConfiguration());
-					ISerializer serializer = injector.getInstance(ISerializer.class);
-					DiffNode diffNode = new DiffNode(new EObjectTypedElement(current, serializer), new EObjectTypedElement(modelChange.getChanged(), serializer));
-					viewer.setInput(diffNode);	
-				}
-			}
+		Change change = input.getChange();
+//		if(change instanceof IChangeCompare) {
+//			IChangeCompare changeCompare = (IChangeCompare)change;
+//			EObject current = changeCompare.getCurrent();
+//			Injector injector = refactoringUtility.getInjector(current);
+//			if(injector != null) {
+//				if(viewer instanceof NullViewer) {
+//					InjectableViewerCreator instance = injector.getInstance(InjectableViewerCreator.class);
+//					viewer = instance.createViewer(composite, new CompareConfiguration());
+//				}
+//				EObject changed = changeCompare.getChanged();
+//				ISerializer serializer = injector.getInstance(ISerializer.class);
+//				DiffNode diffNode = new DiffNode(new EObjectTypedElement(current, serializer), new EObjectTypedElement(changed, serializer));
+//				viewer.setInput(diffNode);	
+//			}
+//		}
+		
+		if(change instanceof ModelChange) {
+			ModelChange modelChange = (ModelChange)change;
+			EObject current = modelChange.getCurrent();
+			Injector injector = refactoringUtility.getInjector(current);
+			InjectableViewerCreator instance = injector.getInstance(InjectableViewerCreator.class);
+			viewer = instance.createViewer(composite, new CompareConfiguration());
+			ISerializer serializer = injector.getInstance(ISerializer.class);
+			DiffNode diffNode = new DiffNode(new EObjectTypedElement(current, serializer), new EObjectTypedElement(modelChange.getChanged(), serializer));
+			viewer.setInput(diffNode);	
 		}
 	}
 }

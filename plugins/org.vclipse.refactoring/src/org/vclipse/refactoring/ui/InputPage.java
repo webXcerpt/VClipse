@@ -31,8 +31,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
-import org.eclipse.xtext.conversion.ValueConverterException;
 import org.vclipse.refactoring.RefactoringPlugin;
+import org.vclipse.refactoring.core.LanguageRefactoringProcessor;
 import org.vclipse.refactoring.core.Refactoring;
 
 import com.google.common.collect.Iterables;
@@ -45,11 +45,13 @@ public class InputPage extends UserInputWizardPage {
 	private Logger logger = Logger.getLogger(InputPage.class);
 	
 	private IUIRefactoringContext context;
+	private List<Widget> widgets;
 	
 	@Inject
 	private RefactoringUtility refactoringUtility;
 	
-	private List<Widget> widgets;
+	@Inject
+	private LanguageRefactoringProcessor processor;
 	
 	public static InputPage getInstance(IUIRefactoringContext context) {
 		Injector injector = RefactoringPlugin.getInstance().getInjector();
@@ -140,11 +142,15 @@ public class InputPage extends UserInputWizardPage {
 	}
 
 	private void createTextWidget(Composite composite) {
-		Text text = new Text(composite, SWT.BORDER);
+		final Text text = new Text(composite, SWT.BORDER);
 		text.setFont(composite.getFont());
 		text.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, false));
 		text.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
+				String string = text.getText();
+				if(!string.isEmpty()) {
+					context.addAttribute(Refactoring.TEXT_FIELD_ENTRY, string);
+				}
 				validate();
 			}
 		});
@@ -157,26 +163,47 @@ public class InputPage extends UserInputWizardPage {
 	}
 	
 	private void validate() {
-		Iterator<Text> iterator = Iterables.filter(widgets, Text.class).iterator();
-		if(iterator.hasNext()) {
-			Text text = iterator.next();
-			if(text.getEnabled()) {
-				String newName = text.getText();
-				if(!newName.isEmpty()) {
-					try {
-						setPageComplete(true);
-						setErrorMessage(null);
-						setDescription("Please push OK button for refactoring execution.");
-						context.addAttribute(Refactoring.TEXT_FIELD_ENTRY, newName);
-					} catch(ValueConverterException exception) {
-						setPageComplete(false);
-						setErrorMessage("Text field contains not valid entry " + newName);
-					}
-				} else {
-					setPageComplete(false);
-					setErrorMessage("Text field contains not valid entry " + newName);
-				}
-			}
-		}
+//		EObject element = context.getSourceElement();
+//		EValidator.Registry validator = refactoringUtility.getValidator(element);
+//		if(validator != null) {
+//			EValidator eValidator = validator.getEValidator(element.eClass().getEPackage());
+//			BasicDiagnostic diagnostics = new BasicDiagnostic();
+//			Object[] elements = processor.getElements();
+//			if(elements.length > 0) {
+//				if(elements[0] instanceof ModelChange) {
+//					ModelChange change = (ModelChange)elements[0];
+//					EObject changed = change.getChanged();
+//					ISerializer serializer = refactoringUtility.getSerializer(element);
+//					try {
+//						serializer.serialize(changed);
+//					} catch(Exception exception) {
+//						System.out.println(exception.getMessage());
+//					}
+//					boolean success = eValidator.validate(element, diagnostics, Maps.newHashMap());
+//					System.out.println("");					
+//				}
+//			}
+//		}
+//		Iterator<Text> iterator = Iterables.filter(widgets, Text.class).iterator();
+//		if(iterator.hasNext()) {
+//			Text text = iterator.next();
+//			if(text.getEnabled()) {
+//				String newName = text.getText();
+//				if(!newName.isEmpty()) {
+//					try {
+//						setPageComplete(true);
+//						setErrorMessage(null);
+//						setDescription("Please push OK button for refactoring execution.");
+//						context.addAttribute(Refactoring.TEXT_FIELD_ENTRY, newName);
+//					} catch(ValueConverterException exception) {
+//						setPageComplete(false);
+//						setErrorMessage("Text field contains not valid entry " + newName);
+//					}
+//				} else {
+//					setPageComplete(false);
+//					setErrorMessage("Text field contains not valid entry " + newName);
+//				}
+//			}
+//		}
 	}
 }
