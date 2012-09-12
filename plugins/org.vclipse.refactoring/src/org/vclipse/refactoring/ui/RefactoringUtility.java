@@ -15,8 +15,15 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EValidator;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.serializer.ISerializer;
 import org.vclipse.base.VClipseStrings;
 import org.vclipse.base.naming.INameProvider;
 import org.vclipse.refactoring.ExtensionsReader;
@@ -27,22 +34,39 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 
+@Singleton
 public class RefactoringUtility {
 
 	@Inject
 	private ExtensionsReader extensionReader;
 	
-	public INameProvider getNameProvider(EObject object) {
-		INameProvider nameProvider = null;
-		if(object != null) {
-			EObject container = EcoreUtil2.getRootContainer(object);
-			Iterator<Injector> iterator = extensionReader.getInjector().get(container.eClass()).iterator();
-			if(iterator.hasNext()) {
-				nameProvider = iterator.next().getInstance(INameProvider.class);
-			}
+	public Injector getInjector(EObject object) {
+		if(object == null) {
+			return null;
 		}
-		return nameProvider;
+		EObject container = EcoreUtil2.getRootContainer(object);
+		if(container == null) {
+			return null;
+		}
+		Iterator<Injector> iterator = extensionReader.getInjector().get(container.eClass()).iterator();
+		return iterator.hasNext() ? iterator.next() : null;
+	}
+	
+	public INameProvider getNameProvider(EObject object) {
+		Injector injector = getInjector(object);
+		return injector == null ? null : injector.getInstance(INameProvider.class);
+	}
+	
+	public EValidator.Registry getValidator(EObject object) {
+		Injector injector = getInjector(object);
+		return injector == null ? null : injector.getInstance(EValidator.Registry.class);
+	}
+	
+	public ISerializer getSerializer(EObject object) {
+		Injector injector = getInjector(object);
+		return injector == null ? null : injector.getInstance(ISerializer.class);
 	}
 	
 	public Set<String> getText(List<EObject> values) {
@@ -89,7 +113,8 @@ public class RefactoringUtility {
 		final INameProvider nameProvider = getNameProvider(iterator.next());
 		return Iterables.filter(entries, new Predicate<EObject>() {
 			public boolean apply(EObject eobject) {
-				return nameProvider.apply(eobject).equals(name);
+				String result = nameProvider.apply(eobject);
+				return result == null ? false : result.equals(name);
 			}
 		}).iterator();
 	}
@@ -114,6 +139,42 @@ public class RefactoringUtility {
 			return buffer.toString();
 		}
 		return text;
+	}
+	
+	public EObject rootContainerCopy(EObject object, String resourceNameExtension) {
+		Resource resource = object.eResource();
+		ResourceSet set = resource.getResourceSet();
+		URI uri = URI.createURI("temporary_" + resourceNameExtension + "." + resource.getURI().fileExtension());
+		try {
+			resource = set.getResource(uri, true);
+		} catch(Exception exception) {
+			resource = set.getResource(uri, true);
+		}
+		resource.getContents().clear();
+		EObject container = EcoreUtil.getRootContainer(object);
+		EcoreUtil.Copier copier = new EcoreUtil.Copier(true);
+		container = copier.copy(container);
+		copier.copyReferences();
+		resource.getContents().add(container);
+		return container;
+	}
+	
+	public EObject getEqualTo(EObject searchFor, EObject rootContainer) {
+		if(equals(searchFor, rootContainer)) {
+			return rootContainer;
+		}
+		TreeIterator<EObject> contents = rootContainer.eAllContents();
+		while(contents.hasNext()) {
+			EObject next = contents.next();
+			if(equals(searchFor, next)) {
+				return next;
+			}
+		}
+		return null;
+	}
+	
+	public boolean equals(EObject object_one, EObject object_two) {
+		return EcoreUtil.equals(object_one, object_two) && EcoreUtil.equals(object_one.eContainer(), object_two.eContainer());
 	}
 	
 	private void appendToBuffer(StringBuffer buffer, String text, boolean handleLastIndex) {
