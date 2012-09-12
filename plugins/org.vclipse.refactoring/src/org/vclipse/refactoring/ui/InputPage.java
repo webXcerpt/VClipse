@@ -91,37 +91,15 @@ public class InputPage extends UserInputWizardPage {
 
 			Object value = element.eGet(feature);
 			if(value instanceof EObject) {
-				Text text = new Text(composite, SWT.BORDER);
-				text.setFont(composite.getFont());
-				text.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, false));
-				text.addModifyListener(new ModifyListener() {
-					public void modifyText(ModifyEvent e) {
-						validate();
-					}
-				});
-				widgets.add(text);
+				createTextWidget(composite);
 			} else if(value instanceof List<?>) {
 				List<EObject> values = (List<EObject>)value;
 				Set<String> names = refactoringUtility.getText(values);
-				final Combo combo = new Combo(composite, SWT.NONE);
-				combo.setFont(composite.getFont());
-				combo.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, false));
-				combo.addModifyListener(new ModifyListener() {
-					public void modifyText(ModifyEvent e) {
-						int index = combo.getSelectionIndex();
-						if(index > -1) {
-							String item = combo.getItem(index);
-							context.addAttribute(Refactoring.TEXT_FIELD_ENTRY, item);					
-						} else {
-							String text = combo.getText();
-							if(text != null && !text.isEmpty()) { 
-								context.addAttribute(Refactoring.TEXT_FIELD_ENTRY, text);		
-							}
-						}
-					}
-				});
-				combo.setItems(names.toArray(new String[names.size()]));
-				widgets.add(combo);
+				if(names.isEmpty()) {
+					createTextWidget(composite);
+				} else {
+					createComboWidget(composite, names);					
+				}
 			}
 			
 			final Button button = new Button(composite, SWT.CHECK);
@@ -137,6 +115,40 @@ public class InputPage extends UserInputWizardPage {
 			validate();
 			setControl(composite);
 		}
+	}
+
+	private void createComboWidget(Composite composite, Set<String> names) {
+		final Combo combo = new Combo(composite, SWT.NONE);
+		combo.setFont(composite.getFont());
+		combo.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, false));
+		combo.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				int index = combo.getSelectionIndex();
+				if(index > -1) {
+					String item = combo.getItem(index);
+					context.addAttribute(Refactoring.TEXT_FIELD_ENTRY, item);					
+				} else {
+					String text = combo.getText();
+					if(text != null && !text.isEmpty()) { 
+						context.addAttribute(Refactoring.TEXT_FIELD_ENTRY, text);		
+					}
+				}
+			}
+		});
+		combo.setItems(names.toArray(new String[names.size()]));
+		widgets.add(combo);
+	}
+
+	private void createTextWidget(Composite composite) {
+		Text text = new Text(composite, SWT.BORDER);
+		text.setFont(composite.getFont());
+		text.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, false));
+		text.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				validate();
+			}
+		});
+		widgets.add(text);
 	}
 	
 	public <T extends Widget> T getWidget(Class<T> type) {

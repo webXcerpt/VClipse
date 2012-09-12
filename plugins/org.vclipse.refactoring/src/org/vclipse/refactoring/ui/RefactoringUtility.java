@@ -53,10 +53,9 @@ public class RefactoringUtility {
 			if(nameProvider != null) {
 				for(EObject value : values) {
 					String name = nameProvider.apply(value);
-					if(name == null) {
-						System.err.println("name for " + value + " was null");
+					if(name != null) {
+						names.add(name);						
 					}
-					names.add(name);
 				}
 			}
 		}
