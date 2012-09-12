@@ -11,10 +11,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
+import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
-import org.vclipse.base.naming.INameProvider;
 import org.vclipse.refactoring.ui.IUIRefactoringContext;
 import org.vclipse.refactoring.ui.RefactoringUtility;
 
@@ -70,7 +71,7 @@ public class ContextBasedChange extends Change implements IChangeCompare {
 			}
 		};
 		Display.getDefault().asyncExec(refactoringRunnable);
-		return getParent();
+		return null;
 	}
 
 	@Override
@@ -83,12 +84,16 @@ public class ContextBasedChange extends Change implements IChangeCompare {
 		Change parent = getParent();
 		if(parent instanceof ModelBasedChange) {
 			EObject container = ((ModelBasedChange)parent).getCurrent();
-			INameProvider nameProvider = utility.getNameProvider(container);
-			String name = nameProvider.getName(processor.getContext().getSourceElement());
-			Iterator<EObject> iterator = utility.get(Lists.newArrayList(container.eAllContents()), name);
-			if(iterator.hasNext()) {
-				return iterator.next();
+			IQualifiedNameProvider qualifiedNameProvider = utility.getInstance(container, IQualifiedNameProvider.class);
+			QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(processor.getContext().getSourceElement());
+			String name = qualifiedName == null ? null : qualifiedName.getLastSegment();
+			if(name != null) {
+				Iterator<EObject> iterator = utility.get(Lists.newArrayList(container.eAllContents()), name);
+				if(iterator != null && iterator.hasNext()) {
+					return iterator.next();
+				}
 			}
+			return container;
 		}
 		return null;
 	}
@@ -97,13 +102,17 @@ public class ContextBasedChange extends Change implements IChangeCompare {
 		Change parent = getParent();
 		if(parent instanceof ModelBasedChange) {
 			EObject container = ((ModelBasedChange)parent).getChanged();
-			INameProvider nameProvider = utility.getNameProvider(container);
-			String name = nameProvider.apply(processor.getContext().getSourceElement());
-			List<EObject> entries = Lists.newArrayList(container.eAllContents());
-			Iterator<EObject> iterator = utility.get(entries, name);
-			if(iterator.hasNext()) {
-				return iterator.next();
+			IQualifiedNameProvider qualifiedNameProvider = utility.getInstance(container, IQualifiedNameProvider.class);
+			QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(processor.getContext().getSourceElement());
+			if(qualifiedName != null) {
+				String name = qualifiedName.getLastSegment();
+				List<EObject> entries = Lists.newArrayList(container.eAllContents());
+				Iterator<EObject> iterator = utility.get(entries, name);
+				if(iterator != null && iterator.hasNext()) {
+					return iterator.next();
+				}
 			}
+			return container;
 		}
 		return null;
 	}

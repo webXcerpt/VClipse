@@ -18,20 +18,21 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.serializer.ISerializer;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
+import org.eclipse.xtext.naming.QualifiedName;
 import org.vclipse.base.VClipseStrings;
-import org.vclipse.base.naming.INameProvider;
 import org.vclipse.refactoring.ExtensionsReader;
+import org.vclipse.refactoring.RefactoringPlugin;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.inject.ConfigurationException;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
@@ -54,31 +55,29 @@ public class RefactoringUtility {
 		return iterator.hasNext() ? iterator.next() : null;
 	}
 	
-	public INameProvider getNameProvider(EObject object) {
-		Injector injector = getInjector(object);
-		return injector == null ? null : injector.getInstance(INameProvider.class);
-	}
-	
-	public EValidator.Registry getValidator(EObject object) {
-		Injector injector = getInjector(object);
-		return injector == null ? null : injector.getInstance(EValidator.Registry.class);
-	}
-	
-	public ISerializer getSerializer(EObject object) {
-		Injector injector = getInjector(object);
-		return injector == null ? null : injector.getInstance(ISerializer.class);
+	public <T> T getInstance(EObject object, Class<T> type) {
+		try {
+			Injector injector = getInjector(object);
+			return injector == null ? null : injector.getInstance(type);
+		} catch(ConfigurationException exception) {
+			RefactoringPlugin.log(exception.getMessage(), exception);
+			return null;
+		}
 	}
 	
 	public Set<String> getText(List<EObject> values) {
 		Set<String> names = Sets.newHashSet();
 		if(!values.isEmpty()) {
 			EObject object = values.get(0);
-			INameProvider nameProvider = getNameProvider(object);
+			IQualifiedNameProvider nameProvider = getInstance(object, IQualifiedNameProvider.class);
 			if(nameProvider != null) {
 				for(EObject value : values) {
-					String name = nameProvider.apply(value);
-					if(name != null) {
-						names.add(name);						
+					QualifiedName qualifiedName = nameProvider.apply(value);
+					if(qualifiedName != null) {
+						String name = qualifiedName.getLastSegment();
+						if(name != null) {
+							names.add(name);						
+						}						
 					}
 				}
 			}
@@ -97,10 +96,10 @@ public class RefactoringUtility {
 		} else {
 			Iterator<? extends EObject> iterator = get(entries, type);
 			if(name == null) {
-				return iterator.hasNext() ? iterator.next() : null;
+				return iterator == null ? null : iterator.hasNext() ? iterator.next() : null;
 			} else {
 				iterator = get(Lists.newArrayList(iterator), name);
-				return iterator.hasNext() ? iterator.next() : null;
+				return iterator == null ? null : iterator.hasNext() ? iterator.next() : null;
 			}
 		}
 	}
@@ -110,13 +109,16 @@ public class RefactoringUtility {
 		if(!iterator.hasNext() || name == null || name.isEmpty()) {
 			return null;
 		}
-		final INameProvider nameProvider = getNameProvider(iterator.next());
-		return Iterables.filter(entries, new Predicate<EObject>() {
-			public boolean apply(EObject eobject) {
-				String result = nameProvider.apply(eobject);
-				return result == null ? false : result.equals(name);
-			}
-		}).iterator();
+		final IQualifiedNameProvider nameProvider = getInstance(iterator.next(), IQualifiedNameProvider.class);
+		if(nameProvider != null) {
+			return Iterables.filter(entries, new Predicate<EObject>() {
+				public boolean apply(EObject eobject) {
+					QualifiedName qualifiedName = nameProvider.apply(eobject);
+					return qualifiedName == null ? false : qualifiedName.getLastSegment().equals(name);
+				}
+			}).iterator();			
+		}
+		return null;
 	}
 	
 	public Iterator<? extends EObject> get(Iterable<EObject> entries, Class<? extends EObject> type) {

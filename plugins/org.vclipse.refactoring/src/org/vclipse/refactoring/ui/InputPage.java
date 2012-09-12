@@ -91,19 +91,23 @@ public class InputPage extends UserInputWizardPage {
 			label.setLayoutData(new GridData());
 			widgets.add(label);
 
-			Object value = element.eGet(feature);
-			if(value instanceof EObject) {
-				createTextWidget(composite);
-			} else if(value instanceof List<?>) {
-				List<EObject> values = (List<EObject>)value;
-				Set<String> names = refactoringUtility.getText(values);
-				if(names.isEmpty()) {
+			if(element.eClass().getEAllStructuralFeatures().contains(feature)) {
+				Object value = element.eGet(feature);
+				if(value instanceof EObject) {
 					createTextWidget(composite);
-				} else {
-					createComboWidget(composite, names);					
+				} else if(value instanceof List<?>) {
+					List<EObject> values = (List<EObject>)value;
+					Set<String> names = refactoringUtility.getText(values);
+					if(names.isEmpty()) {
+						createTextWidget(composite);
+					} else {
+						createComboWidget(composite, names);					
+					}
 				}
+			} else {
+				createTextWidget(composite);
 			}
-			
+
 			final Button button = new Button(composite, SWT.CHECK);
 			button.setText("Replace all occurences");
 			button.addSelectionListener(new SelectionAdapter() {
@@ -141,7 +145,7 @@ public class InputPage extends UserInputWizardPage {
 		widgets.add(combo);
 	}
 
-	private void createTextWidget(Composite composite) {
+	private Text createTextWidget(Composite composite) {
 		final Text text = new Text(composite, SWT.BORDER);
 		text.setFont(composite.getFont());
 		text.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, false));
@@ -155,6 +159,7 @@ public class InputPage extends UserInputWizardPage {
 			}
 		});
 		widgets.add(text);
+		return text;
 	}
 	
 	public <T extends Widget> T getWidget(Class<T> type) {

@@ -95,13 +95,13 @@ public class LanguageRefactoringProcessor extends RefactoringProcessor {
 
 	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
-//		ModelBasedChange mbc = new ModelBasedChange(this, refactoringRunner, utility);
-//		mbc.add(contextBasedChange.get());
-//		return mbc;
+		ModelBasedChange mbc = new ModelBasedChange(this, refactoringRunner, utility);
+		mbc.add(contextBasedChange.get());
+		return mbc;
 		
-		ModelChange change = provider.get();
-		change.setProcessor(this);
-		return change;
+//		ModelChange change = provider.get();
+//		change.setProcessor(this);
+//		return change;
 	}
 
 	@Override
