@@ -68,16 +68,5 @@ public class ChangePreviewViewer implements IChangePreviewViewer {
 			DiffNode diffNode = new DiffNode(new EObjectTypedElement(current, serializer), new EObjectTypedElement(changed, serializer));
 			viewer.setInput(diffNode);
 		}
-		
-//		if(change instanceof ModelChange) {
-//			ModelChange modelChange = (ModelChange)change;
-//			EObject current = modelChange.getCurrent();
-//			Injector injector = refactoringUtility.getInjector(current);
-//			InjectableViewerCreator instance = injector.getInstance(InjectableViewerCreator.class);
-//			viewer = instance.createViewer(composite, new CompareConfiguration());
-//			ISerializer serializer = injector.getInstance(ISerializer.class);
-//			DiffNode diffNode = new DiffNode(new EObjectTypedElement(current, serializer), new EObjectTypedElement(modelChange.getChanged(), serializer));
-//			viewer.setInput(diffNode);	
-//		}
 	}
 }

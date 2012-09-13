@@ -94,26 +94,6 @@ public abstract class Refactoring extends MethodCollector {
 	}
 	
 	protected ChangeDescription getChangeDescription(EObject object, EStructuralFeature feature, EObject value) {
-		// TODO extract comment handling - commented out at the moment - exception during extraction
-		
-//		HiddenLeafNode comment = null;
-//		ICompositeNode node = NodeModelUtils.getNode(object);
-//		BidiTreeIterator<INode> iterator = node.getAsTreeIterable().iterator();
-//		while(iterator.hasNext()) {
-//			INode next = iterator.next();
-//			if(next instanceof HiddenLeafNode) {
-//				HiddenLeafNode hln = (HiddenLeafNode)next;
-//				EObject grammarElement = hln.getGrammarElement();
-//				if(grammarElement instanceof TerminalRule) {
-//					TerminalRule tr = (TerminalRule)grammarElement;
-//					if(tr.getName().contains("COMMENT")) {
-//						comment = hln;
-//						break;
-//					}
-//				}
-//			}
-//		}
-		
 		ChangeDescription description = changeFactory.createChangeDescription();
 		FeatureChange featureChange = changeFactory.createFeatureChange(feature, object.eGet(feature), true);
 		featureChange.setFeatureName(feature.getName());
@@ -123,14 +103,6 @@ public abstract class Refactoring extends MethodCollector {
 		changes.add(featureChange);
 		description.getObjectChanges().put(object, changes);
 		description.applyAndReverse();
-		
-//		if(comment != null) {
-//			ILeafNode newLeafNode = nodeModelBuilder.newLeafNode(comment.getOffset(), comment.getLength(), comment.getGrammarElement(), true, null, node);
-// 
-//			// TODO - the comment code is deleted without this line, there is an exception with with line after the first replacement		
-//			nodeModelBuilder.replaceAndTransferLookAhead(comment, newLeafNode);
-//		}
-		
 		return description;
 	}
 	
