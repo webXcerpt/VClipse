@@ -140,6 +140,10 @@ public abstract class MethodCollector {
 		}
 		return null;
 	}
+	
+	protected boolean hasFeature(EObject object, EStructuralFeature feature) {
+		return object.eClass().getEAllStructuralFeatures().contains(feature);
+	}
 
 	private boolean equal(List<Class<?>> signature_one, List<Class<?>> signature_two) {
 		if(signature_one.size() != signature_two.size()) {
