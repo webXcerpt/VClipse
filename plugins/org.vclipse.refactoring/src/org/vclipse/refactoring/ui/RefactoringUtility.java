@@ -14,9 +14,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -85,7 +85,7 @@ public class RefactoringUtility {
 		return names;
 	}
 	
-	public EObject get(EList<EObject> entries, String name, Class<? extends EObject> type) {
+	public EObject get(List<EObject> entries, String name, EClass type) {
 		if(type == null) {
 			if(name == null) {
 				return null;
@@ -94,7 +94,7 @@ public class RefactoringUtility {
 				return namedResults.hasNext() ? namedResults.next() : null;
 			}
 		} else {
-			Iterator<? extends EObject> iterator = get(entries, type);
+			Iterator<EObject> iterator = get(entries, type).iterator();
 			if(name == null) {
 				return iterator == null ? null : iterator.hasNext() ? iterator.next() : null;
 			} else {
@@ -121,12 +121,18 @@ public class RefactoringUtility {
 		return null;
 	}
 	
-	public Iterator<? extends EObject> get(Iterable<EObject> entries, Class<? extends EObject> type) {
+	public Iterable<EObject> get(Iterable<EObject> entries, EClass type) {
 		Iterator<EObject> iterator = entries.iterator();
 		if(!iterator.hasNext() || type == null) {
 			return null;
 		}
-		return Iterables.filter(entries, type).iterator();
+		List<EObject> foundEntries = Lists.newArrayList();
+		for(EObject entry : entries) {
+			if(entry.eClass() == type) {
+				foundEntries.add(entry);
+			}
+		}
+		return foundEntries;
 	}
 	
 	public String getRefactoringText(IUIRefactoringContext context) {

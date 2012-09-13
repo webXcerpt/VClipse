@@ -36,9 +36,6 @@
                <instanceof
                      value="org.vclipse.refactoring.core.ContextBasedChange">
                </instanceof>
-               <instanceof
-                     value="org.vclipse.refactoring.core.ModelChange">
-               </instanceof>
             </or></enablement>
       </changePreviewViewer>
    </extension>

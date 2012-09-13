@@ -85,13 +85,12 @@ public class ContextBasedChange extends Change implements IChangeCompare {
 		if(parent instanceof ModelBasedChange) {
 			EObject container = ((ModelBasedChange)parent).getCurrent();
 			IQualifiedNameProvider qualifiedNameProvider = utility.getInstance(container, IQualifiedNameProvider.class);
-			QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(processor.getContext().getSourceElement());
+			EObject element = processor.getContext().getSourceElement();
+			QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(element);
 			String name = qualifiedName == null ? null : qualifiedName.getLastSegment();
 			if(name != null) {
-				Iterator<EObject> iterator = utility.get(Lists.newArrayList(container.eAllContents()), name);
-				if(iterator != null && iterator.hasNext()) {
-					return iterator.next();
-				}
+				EObject entry = utility.get(Lists.newArrayList(container.eAllContents()), name, element.eClass());
+				return entry;
 			}
 			return container;
 		}

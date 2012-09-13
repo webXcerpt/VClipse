@@ -34,9 +34,6 @@ public class LanguageRefactoringProcessor extends RefactoringProcessor {
 	private IUIRefactoringContext context;
 	
 	@Inject
-	private Provider<ModelChange> provider;
-	
-	@Inject
 	private Provider<ContextBasedChange> contextBasedChange;
 	
 	@Inject
@@ -98,10 +95,6 @@ public class LanguageRefactoringProcessor extends RefactoringProcessor {
 		ModelBasedChange mbc = new ModelBasedChange(this, refactoringRunner, utility);
 		mbc.add(contextBasedChange.get());
 		return mbc;
-		
-//		ModelChange change = provider.get();
-//		change.setProcessor(this);
-//		return change;
 	}
 
 	@Override
