@@ -14,8 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
@@ -162,16 +160,7 @@ public class RefactoringUtility {
 		}
 		resource.getContents().clear();
 		EObject container = EcoreUtil.getRootContainer(object);
-		@SuppressWarnings("serial")
-		EcoreUtil.Copier copier = new EcoreUtil.Copier(true) {
-			@Override
-			protected EObject createCopy(EObject object) {
-				EObject copy = super.createCopy(object);
-				EList<Adapter> adapters = object.eAdapters();
-				copy.eAdapters().addAll(adapters);
-				return copy;
-			}
-		};
+		EcoreUtil.Copier copier = new EcoreUtil.Copier(true);
 		container = copier.copy(container);
 		copier.copyReferences();
 		resource.getContents().add(container);
