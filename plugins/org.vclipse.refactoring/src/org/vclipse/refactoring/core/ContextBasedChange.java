@@ -38,7 +38,11 @@ public class ContextBasedChange extends Change implements IChangeCompare {
 	@Override
 	public String getName() {
 		IUIRefactoringContext context = processor.getContext();
-		return context.getLabel();
+		String name = context.getLabel();
+		if(name == null || name.isEmpty()) {
+			name = utility.getRefactoringText(context);
+		}
+		return name;
 	}
 
 	@Override
