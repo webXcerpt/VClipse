@@ -1,6 +1,5 @@
 package org.vclipse.refactoring.core;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -84,15 +83,8 @@ public class ContextBasedChange extends Change implements IChangeCompare {
 		Change parent = getParent();
 		if(parent instanceof ModelBasedChange) {
 			EObject container = ((ModelBasedChange)parent).getCurrent();
-			IQualifiedNameProvider qualifiedNameProvider = utility.getInstance(container, IQualifiedNameProvider.class);
-			EObject element = processor.getContext().getSourceElement();
-			QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(element);
-			String name = qualifiedName == null ? null : qualifiedName.getLastSegment();
-			if(name != null) {
-				EObject entry = utility.get(Lists.newArrayList(container.eAllContents()), name, element.eClass());
-				return entry;
-			}
-			return container;
+			EObject entry = getEntry(container, processor.getContext());
+			return entry == null ? container : entry;
 		}
 		return null;
 	}
@@ -101,17 +93,20 @@ public class ContextBasedChange extends Change implements IChangeCompare {
 		Change parent = getParent();
 		if(parent instanceof ModelBasedChange) {
 			EObject container = ((ModelBasedChange)parent).getChanged();
-			IQualifiedNameProvider qualifiedNameProvider = utility.getInstance(container, IQualifiedNameProvider.class);
-			QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(processor.getContext().getSourceElement());
-			if(qualifiedName != null) {
-				String name = qualifiedName.getLastSegment();
-				List<EObject> entries = Lists.newArrayList(container.eAllContents());
-				Iterator<EObject> iterator = utility.get(entries, name);
-				if(iterator != null && iterator.hasNext()) {
-					return iterator.next();
-				}
-			}
-			return container;
+			EObject entry = getEntry(container, processor.getContext());
+			return entry == null ? container : entry;
+		}
+		return null;
+	}
+	
+	protected EObject getEntry(EObject container, IUIRefactoringContext context) {
+		IQualifiedNameProvider qualifiedNameProvider = utility.getInstance(container, IQualifiedNameProvider.class);
+		EObject element = context.getSourceElement();
+		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(element);
+		if(qualifiedName != null) {
+			String name = qualifiedName.getLastSegment();
+			List<EObject> entries = Lists.newArrayList(container.eAllContents());
+			return utility.get(entries, name, element.eClass());
 		}
 		return null;
 	}
