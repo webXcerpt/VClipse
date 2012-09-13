@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.util.Pair;
 import org.vclipse.base.BasePlugin;
@@ -29,13 +28,10 @@ public class RefactoringRunner {
 	@Inject
 	private ExtensionsReader reader;
 	
-	private ChangeRecorder changeRecorder;
-	
 	@SuppressWarnings("unchecked")
 	public List<EObject> refactor(IRefactoringContext context) {
 		List<EObject> changes = Lists.<EObject>newArrayList();
 		EObject sourceElement = context.getSourceElement();
-		changeRecorder = new ChangeRecorder(sourceElement.eResource());
 		Refactoring refactoring = getRefactoring(sourceElement);
 		if(refactoring != null) {
 			Pair<EObject, Method> pair = refactoring.getRefactoring(context);
@@ -60,7 +56,6 @@ public class RefactoringRunner {
 	}
 	
 	public void refactor(EObject object) {
-		changeRecorder = new ChangeRecorder(object.eResource());
 		IRefactoringContext context = new RefactoringContext();
 		context.setSourceElement(object);
 		context.setType(RefactoringType.Replace);
@@ -69,10 +64,6 @@ public class RefactoringRunner {
 	
 	public boolean isRefactoringAvailable(IRefactoringContext context) {
 		return getRefactoring(context.getSourceElement()) != null;
-	}
-	
-	public ChangeRecorder getChangeRecorder() {
-		return changeRecorder;
 	}
 	
 	private Refactoring getRefactoring(EObject object) {

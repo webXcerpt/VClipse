@@ -10,20 +10,21 @@
  ******************************************************************************/
 package org.vclipse.refactoring.ui;
 
+import java.io.StringReader;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.TreeIterator;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.parser.IParseResult;
+import org.eclipse.xtext.parser.IParser;
+import org.eclipse.xtext.serializer.ISerializer;
 import org.vclipse.base.VClipseStrings;
 import org.vclipse.refactoring.ExtensionsReader;
 import org.vclipse.refactoring.RefactoringPlugin;
@@ -149,22 +150,13 @@ public class RefactoringUtility {
 		return text;
 	}
 	
-	public EObject rootContainerCopy(EObject object, String resourceNameExtension) {
-		Resource resource = object.eResource();
-		ResourceSet set = resource.getResourceSet();
-		URI uri = URI.createURI("temporary_" + resourceNameExtension + "." + resource.getURI().fileExtension());
-		try {
-			resource = set.getResource(uri, true);
-		} catch(Exception exception) {
-			resource = set.getResource(uri, true);
-		}
-		resource.getContents().clear();
+	public EObject rootContainerCopy(EObject object) {
 		EObject container = EcoreUtil.getRootContainer(object);
-		EcoreUtil.Copier copier = new EcoreUtil.Copier(true);
-		container = copier.copy(container);
-		copier.copyReferences();
-		resource.getContents().add(container);
-		return container;
+		ISerializer serializer = getInstance(container, ISerializer.class);
+		IParser instance = getInstance(container, IParser.class);
+		String string = serializer.serialize(container);
+		IParseResult parseResult = instance.parse(new StringReader(string));
+		return parseResult.getRootASTElement();
 	}
 	
 	public EObject getEqualTo(EObject searchFor, EObject rootContainer) {

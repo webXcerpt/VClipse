@@ -1,16 +1,18 @@
 package org.vclipse.refactoring.core;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
+import org.eclipse.xtext.naming.QualifiedName;
 import org.vclipse.refactoring.ui.IUIRefactoringContext;
 import org.vclipse.refactoring.ui.RefactoringUtility;
 import org.vclipse.refactoring.ui.UIRefactoringContext;
 
+import com.google.common.collect.Lists;
+
 public class ModelBasedChange extends CompositeChange implements IChangeCompare {
 
-	private static final String NAME_EXTENSION_CHANGED = "changed";
-	private static final String NAME_EXTENSION_CURRENT = "current";
-	
 	private LanguageRefactoringProcessor processor;
 	private RefactoringRunner runner;
 	private RefactoringUtility utility;
@@ -28,7 +30,8 @@ public class ModelBasedChange extends CompositeChange implements IChangeCompare 
 	@Override
 	public EObject getCurrent() {
 		IUIRefactoringContext context = processor.getContext();
-		current = utility.rootContainerCopy(context.getSourceElement(), NAME_EXTENSION_CURRENT);
+		EObject element = context.getSourceElement();
+		current = EcoreUtil.getRootContainer(element);
 		return current;
 	}
 
@@ -36,13 +39,18 @@ public class ModelBasedChange extends CompositeChange implements IChangeCompare 
 	public EObject getChanged() {
 		IUIRefactoringContext context = processor.getContext();
 		EObject sourceElement = context.getSourceElement();
-		changed = utility.rootContainerCopy(sourceElement, NAME_EXTENSION_CHANGED);
-		EObject equal = utility.getEqualTo(sourceElement, changed);
-		IUIRefactoringContext contextCopy = ((UIRefactoringContext)context).copy();
-		if(equal != null) {
-			contextCopy.setSourceElement(equal);
-		}
-		runner.refactor(contextCopy);		
+		changed = utility.rootContainerCopy(sourceElement);
+		IQualifiedNameProvider nameProvider = utility.getInstance(sourceElement, IQualifiedNameProvider.class);
+		QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(sourceElement);
+		if(qualifiedName != null) {
+			String name = qualifiedName.getLastSegment();
+			EObject toChange = utility.get(Lists.newArrayList(changed.eAllContents()), name, sourceElement.eClass());
+			IUIRefactoringContext contextCopy = ((UIRefactoringContext)context).copy();
+			if(toChange != null) {
+				contextCopy.setSourceElement(toChange);
+			}
+			runner.refactor(contextCopy);
+		}	
 		return changed;
 	}
 }
