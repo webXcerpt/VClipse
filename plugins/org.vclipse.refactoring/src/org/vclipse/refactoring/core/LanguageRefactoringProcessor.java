@@ -12,6 +12,7 @@ package org.vclipse.refactoring.core;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -21,6 +22,7 @@ import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringProcessor;
 import org.eclipse.ltk.core.refactoring.participants.SharableParticipants;
+import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.ui.IUIRefactoringContext;
 import org.vclipse.refactoring.ui.RefactoringUtility;
 
@@ -42,6 +44,8 @@ public class LanguageRefactoringProcessor extends RefactoringProcessor {
 	@Inject
 	private RefactoringRunner refactoringRunner;
 	
+	private ModelBasedChange modelBaseChange;
+	
 	public void setContext(IUIRefactoringContext context) {
 		this.context = context;
 	}
@@ -52,7 +56,14 @@ public class LanguageRefactoringProcessor extends RefactoringProcessor {
 	 
 	@Override
 	public Object[] getElements() {
-		return new Object[]{context.getSourceElement()};
+		if(modelBaseChange == null) {
+			try {
+				createChange(new NullProgressMonitor());
+			} catch (Exception exception) {
+				RefactoringPlugin.log(exception.getMessage(), exception);
+			}
+		}
+		return new Object[]{modelBaseChange};
 	}
 
 	@Override
@@ -92,9 +103,9 @@ public class LanguageRefactoringProcessor extends RefactoringProcessor {
 
 	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
-		ModelBasedChange mbc = new ModelBasedChange(this, refactoringRunner, utility);
-		mbc.add(contextBasedChange.get());
-		return mbc;
+		modelBaseChange = new ModelBasedChange(this, refactoringRunner, utility);
+		modelBaseChange.add(contextBasedChange.get());
+		return modelBaseChange;
 	}
 
 	@Override
