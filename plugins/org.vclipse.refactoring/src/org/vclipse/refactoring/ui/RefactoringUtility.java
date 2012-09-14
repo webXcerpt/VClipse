@@ -164,12 +164,13 @@ public class RefactoringUtility {
 		Resource resource = container.eResource();
 		ResourceSet resourceSet = resource.getResourceSet();
 		URI uri = resource.getURI();
-		uri = uri.appendFileExtension("preview" + uri.fileExtension());
+		uri = URI.createURI("preview." + uri.fileExtension());
 		try {
 			resource = resourceSet.getResource(uri, true);
 		} catch(Exception exception) {
 			resource = resourceSet.getResource(uri, true);
 		}
+		resource.getContents().clear();
 		resource.getContents().add(parseResult.getRootASTElement());
 		ILinker linker = getInstance(container, ILinker.class);
 		final ListBasedDiagnosticConsumer consumer = new ListBasedDiagnosticConsumer();
