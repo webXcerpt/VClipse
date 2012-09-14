@@ -39,6 +39,7 @@ import org.vclipse.refactoring.core.LanguageRefactoringProcessor;
 import org.vclipse.refactoring.core.ModelBasedChange;
 import org.vclipse.refactoring.core.Refactoring;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -185,16 +186,18 @@ public class InputPage extends UserInputWizardPage {
 					EValidator evalidator = validator.getEValidator(changed.eClass().getEPackage());
 					evalidator.validate(changed, diagnosticsCollection, Maps.newHashMap());
 					List<Diagnostic> diagnostics = diagnosticsCollection.getChildren();
-					if(diagnostics.isEmpty()) {
+					Iterator<Diagnostic> iterator = Iterables.filter(diagnostics, new Predicate<Diagnostic>() {
+						public boolean apply(Diagnostic diagnostic) {
+							return Diagnostic.ERROR == diagnostic.getSeverity();
+						}
+					}).iterator();
+					if(iterator.hasNext()) {
+						Diagnostic diagnostic = iterator.next();
+						setErrorMessage(diagnostic.getMessage());
+						setPageComplete(false);
+					} else {
 						setErrorMessage(null);
 						setPageComplete(true);
-					} else {
-						for(Diagnostic diagnostic : diagnostics) {
-							if(Diagnostic.ERROR == diagnostic.getSeverity()) {
-								setErrorMessage(diagnostic.getMessage());
-								setPageComplete(false);
-							}
-						}
 					}
 				}
 			}
