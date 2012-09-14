@@ -177,13 +177,13 @@ public class InputPage extends UserInputWizardPage {
 		EObject element = context.getSourceElement();
 		EValidator.Registry validator = refactoringUtility.getInstance(element, EValidator.Registry.class);
 		if(validator != null) {
-			BasicDiagnostic diagnosticsCollection = new BasicDiagnostic();
 			Object[] elements = processor.getElements();
 			if(elements.length > 0) {
 				if(elements[0] instanceof ModelBasedChange) {
 					ModelBasedChange mbc = (ModelBasedChange)elements[0];
 					EObject changed = mbc.getChanged();
 					EValidator evalidator = validator.getEValidator(changed.eClass().getEPackage());
+					BasicDiagnostic diagnosticsCollection = new BasicDiagnostic();
 					evalidator.validate(changed, diagnosticsCollection, Maps.newHashMap());
 					List<Diagnostic> diagnostics = diagnosticsCollection.getChildren();
 					Iterator<Diagnostic> iterator = Iterables.filter(diagnostics, new Predicate<Diagnostic>() {
