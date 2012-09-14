@@ -16,14 +16,19 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.linking.ILinker;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.parser.IParser;
+import org.eclipse.xtext.resource.impl.ListBasedDiagnosticConsumer;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.vclipse.base.VClipseStrings;
 import org.vclipse.refactoring.ExtensionsReader;
@@ -153,9 +158,22 @@ public class RefactoringUtility {
 	public EObject rootContainerCopy(EObject object) {
 		EObject container = EcoreUtil.getRootContainer(object);
 		ISerializer serializer = getInstance(container, ISerializer.class);
-		IParser instance = getInstance(container, IParser.class);
-		String string = serializer.serialize(container);
-		IParseResult parseResult = instance.parse(new StringReader(string));
+		IParser parser = getInstance(container, IParser.class);
+		String string = serializer.serialize(container);		
+		IParseResult parseResult = parser.parse(new StringReader(string));
+		Resource resource = container.eResource();
+		ResourceSet resourceSet = resource.getResourceSet();
+		URI uri = resource.getURI();
+		uri = uri.appendFileExtension("preview" + uri.fileExtension());
+		try {
+			resource = resourceSet.getResource(uri, true);
+		} catch(Exception exception) {
+			resource = resourceSet.getResource(uri, true);
+		}
+		resource.getContents().add(parseResult.getRootASTElement());
+		ILinker linker = getInstance(container, ILinker.class);
+		final ListBasedDiagnosticConsumer consumer = new ListBasedDiagnosticConsumer();
+		linker.linkModel(parseResult.getRootASTElement(), consumer);
 		return parseResult.getRootASTElement();
 	}
 	
