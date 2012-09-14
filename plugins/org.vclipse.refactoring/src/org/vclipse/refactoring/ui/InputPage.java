@@ -189,10 +189,11 @@ public class InputPage extends UserInputWizardPage {
 						setErrorMessage(null);
 						setPageComplete(true);
 					} else {
-						Diagnostic diagnostic = diagnostics.get(0);
-						if(Diagnostic.ERROR == diagnostic.getSeverity()) {
-							setErrorMessage(diagnostic.getMessage());
-							setPageComplete(false);
+						for(Diagnostic diagnostic : diagnostics) {
+							if(Diagnostic.ERROR == diagnostic.getSeverity()) {
+								setErrorMessage(diagnostic.getMessage());
+								setPageComplete(false);
+							}
 						}
 					}
 				}
