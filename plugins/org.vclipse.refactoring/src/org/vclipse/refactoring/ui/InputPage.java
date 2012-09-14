@@ -185,9 +185,14 @@ public class InputPage extends UserInputWizardPage {
 					EValidator evalidator = validator.getEValidator(changed.eClass().getEPackage());
 					evalidator.validate(changed, diagnosticsCollection, Maps.newHashMap());
 					List<Diagnostic> diagnostics = diagnosticsCollection.getChildren();
-					for(Diagnostic diagnostic : diagnostics) {
+					if(diagnostics.isEmpty()) {
+						setErrorMessage(null);
+						setPageComplete(true);
+					} else {
+						Diagnostic diagnostic = diagnostics.get(0);
 						if(Diagnostic.ERROR == diagnostic.getSeverity()) {
 							setErrorMessage(diagnostic.getMessage());
+							setPageComplete(false);
 						}
 					}
 				}
