@@ -122,9 +122,10 @@ public class InputPage extends UserInputWizardPage {
 					context.addAttribute(Refactoring.BUTTON_STATE, button.getSelection());
 				}
 			});
+			button.setSelection(false);
 			widgets.add(button);
 			context.handleWidgets();
-			validate();
+			validateWidgets();
 			setControl(composite);
 		}
 	}
@@ -157,11 +158,7 @@ public class InputPage extends UserInputWizardPage {
 		text.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, false));
 		text.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				String string = text.getText();
-				if(!string.isEmpty()) {
-					context.addAttribute(Refactoring.TEXT_FIELD_ENTRY, string);
-				}
-				validate();
+				validateWidgets();
 			}
 		});
 		widgets.add(text);
@@ -173,7 +170,24 @@ public class InputPage extends UserInputWizardPage {
 		return iterator.hasNext() ? iterator.next() : null;
 	}
 	
-	private void validate() {
+	private void validateWidgets() {
+		Iterator<Text> iterator = Iterables.filter(widgets, Text.class).iterator();
+		if(iterator.hasNext()) {
+			Text text = iterator.next();
+			String string = text.getText();
+			if(string.isEmpty()) {
+				setErrorMessage("Please provide a textual input for the text field.");
+				setPageComplete(false);
+			} else {
+				context.addAttribute(Refactoring.TEXT_FIELD_ENTRY, string);
+				setErrorMessage(null);
+				setPageComplete(true);
+				validateChangeModel();
+			}
+		}
+	}
+	
+	private void validateChangeModel() {
 		EObject element = context.getSourceElement();
 		EValidator.Registry validator = refactoringUtility.getInstance(element, EValidator.Registry.class);
 		if(validator != null) {
