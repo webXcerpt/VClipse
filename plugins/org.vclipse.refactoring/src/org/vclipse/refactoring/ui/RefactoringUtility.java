@@ -164,7 +164,7 @@ public class RefactoringUtility {
 		Resource resource = container.eResource();
 		ResourceSet resourceSet = resource.getResourceSet();
 		URI uri = resource.getURI();
-		uri = URI.createURI("preview." + uri.fileExtension());
+		uri = URI.createURI(uri.toString() + ".preview." + uri.fileExtension());
 		try {
 			resource = resourceSet.getResource(uri, true);
 		} catch(Exception exception) {
