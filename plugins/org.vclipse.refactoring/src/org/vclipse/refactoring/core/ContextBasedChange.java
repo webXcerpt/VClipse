@@ -110,7 +110,7 @@ public class ContextBasedChange extends Change implements IChangeCompare {
 		if(qualifiedName != null) {
 			String name = qualifiedName.getLastSegment();
 			List<EObject> entries = Lists.newArrayList(container.eAllContents());
-			return utility.get(entries, name, element.eClass());
+			return utility.getEntry(entries, name, element.eClass());
 		}
 		return null;
 	}

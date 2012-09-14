@@ -44,7 +44,7 @@ public class ModelBasedChange extends CompositeChange implements IChangeCompare 
 		QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(sourceElement);
 		if(qualifiedName != null) {
 			String name = qualifiedName.getLastSegment();
-			EObject toChange = utility.get(Lists.newArrayList(changed.eAllContents()), name, sourceElement.eClass());
+			EObject toChange = utility.getEntry(Lists.newArrayList(changed.eAllContents()), name, sourceElement.eClass());
 			IUIRefactoringContext contextCopy = ((UIRefactoringContext)context).copy();
 			if(toChange != null) {
 				contextCopy.setSourceElement(toChange);

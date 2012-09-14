@@ -91,26 +91,26 @@ public class RefactoringUtility {
 		return names;
 	}
 	
-	public EObject get(List<EObject> entries, String name, EClass type) {
+	public EObject getEntry(List<EObject> entries, String name, EClass type) {
 		if(type == null) {
 			if(name == null) {
 				return null;
 			} else {
-				Iterator<EObject> namedResults = get(entries, name);
+				Iterator<EObject> namedResults = getEntry(entries, name);
 				return namedResults.hasNext() ? namedResults.next() : null;
 			}
 		} else {
-			Iterator<EObject> iterator = get(entries, type).iterator();
+			Iterator<EObject> iterator = getEntry(entries, type).iterator();
 			if(name == null) {
 				return iterator == null ? null : iterator.hasNext() ? iterator.next() : null;
 			} else {
-				iterator = get(Lists.newArrayList(iterator), name);
+				iterator = getEntry(Lists.newArrayList(iterator), name);
 				return iterator == null ? null : iterator.hasNext() ? iterator.next() : null;
 			}
 		}
 	}
 	
-	public Iterator<EObject> get(Iterable<EObject> entries, final String name) {
+	public Iterator<EObject> getEntry(Iterable<EObject> entries, final String name) {
 		Iterator<EObject> iterator = entries.iterator();
 		if(!iterator.hasNext() || name == null || name.isEmpty()) {
 			return null;
@@ -127,7 +127,7 @@ public class RefactoringUtility {
 		return null;
 	}
 	
-	public Iterable<EObject> get(Iterable<EObject> entries, EClass type) {
+	public Iterable<EObject> getEntry(Iterable<EObject> entries, EClass type) {
 		Iterator<EObject> iterator = entries.iterator();
 		if(!iterator.hasNext() || type == null) {
 			return null;
