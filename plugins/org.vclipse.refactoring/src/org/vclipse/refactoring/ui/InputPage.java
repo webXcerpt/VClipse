@@ -15,8 +15,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.BasicDiagnostic;
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.ltk.ui.refactoring.UserInputWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -33,10 +36,12 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.core.LanguageRefactoringProcessor;
+import org.vclipse.refactoring.core.ModelBasedChange;
 import org.vclipse.refactoring.core.Refactoring;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
@@ -168,47 +173,25 @@ public class InputPage extends UserInputWizardPage {
 	}
 	
 	private void validate() {
-//		EObject element = context.getSourceElement();
-//		EValidator.Registry validator = refactoringUtility.getValidator(element);
-//		if(validator != null) {
-//			EValidator eValidator = validator.getEValidator(element.eClass().getEPackage());
-//			BasicDiagnostic diagnostics = new BasicDiagnostic();
-//			Object[] elements = processor.getElements();
-//			if(elements.length > 0) {
-//				if(elements[0] instanceof ModelChange) {
-//					ModelChange change = (ModelChange)elements[0];
-//					EObject changed = change.getChanged();
-//					ISerializer serializer = refactoringUtility.getSerializer(element);
-//					try {
-//						serializer.serialize(changed);
-//					} catch(Exception exception) {
-//						System.out.println(exception.getMessage());
-//					}
-//					boolean success = eValidator.validate(element, diagnostics, Maps.newHashMap());
-//					System.out.println("");					
-//				}
-//			}
-//		}
-//		Iterator<Text> iterator = Iterables.filter(widgets, Text.class).iterator();
-//		if(iterator.hasNext()) {
-//			Text text = iterator.next();
-//			if(text.getEnabled()) {
-//				String newName = text.getText();
-//				if(!newName.isEmpty()) {
-//					try {
-//						setPageComplete(true);
-//						setErrorMessage(null);
-//						setDescription("Please push OK button for refactoring execution.");
-//						context.addAttribute(Refactoring.TEXT_FIELD_ENTRY, newName);
-//					} catch(ValueConverterException exception) {
-//						setPageComplete(false);
-//						setErrorMessage("Text field contains not valid entry " + newName);
-//					}
-//				} else {
-//					setPageComplete(false);
-//					setErrorMessage("Text field contains not valid entry " + newName);
-//				}
-//			}
-//		}
+		EObject element = context.getSourceElement();
+		EValidator.Registry validator = refactoringUtility.getInstance(element, EValidator.Registry.class);
+		if(validator != null) {
+			BasicDiagnostic diagnosticsCollection = new BasicDiagnostic();
+			Object[] elements = processor.getElements();
+			if(elements.length > 0) {
+				if(elements[0] instanceof ModelBasedChange) {
+					ModelBasedChange mbc = (ModelBasedChange)elements[0];
+					EObject changed = mbc.getChanged();
+					EValidator evalidator = validator.getEValidator(changed.eClass().getEPackage());
+					evalidator.validate(changed, diagnosticsCollection, Maps.newHashMap());
+					List<Diagnostic> diagnostics = diagnosticsCollection.getChildren();
+					for(Diagnostic diagnostic : diagnostics) {
+						if(Diagnostic.ERROR == diagnostic.getSeverity()) {
+							setErrorMessage(diagnostic.getMessage());
+						}
+					}
+				}
+			}
+		}
 	}
 }
