@@ -174,15 +174,17 @@ public class InputPage extends UserInputWizardPage {
 		Iterator<Text> iterator = Iterables.filter(widgets, Text.class).iterator();
 		if(iterator.hasNext()) {
 			Text text = iterator.next();
-			String string = text.getText();
-			if(string.isEmpty()) {
-				setErrorMessage("Please provide a textual input for the text field.");
-				setPageComplete(false);
-			} else {
-				context.addAttribute(Refactoring.TEXT_FIELD_ENTRY, string);
-				setErrorMessage(null);
-				setPageComplete(true);
-				validateChangeModel();
+			if(text.isEnabled()) {
+				String string = text.getText();
+				if(string.isEmpty()) {
+					setErrorMessage("Please provide a textual input for the text field.");
+					setPageComplete(false);
+				} else {
+					context.addAttribute(Refactoring.TEXT_FIELD_ENTRY, string);
+					setErrorMessage(null);
+					setPageComplete(true);
+					validateChangeModel();
+				}				
 			}
 		}
 	}
