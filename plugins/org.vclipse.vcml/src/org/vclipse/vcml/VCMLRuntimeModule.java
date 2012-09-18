@@ -17,6 +17,7 @@ import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.linking.ILinker;
 import org.eclipse.xtext.linking.ILinkingDiagnosticMessageProvider;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.parsetree.reconstr.ITokenSerializer;
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
 import org.eclipse.xtext.serializer.ISerializer;
@@ -28,6 +29,7 @@ import org.vclipse.vcml.conversion.VCMLValueConverter;
 import org.vclipse.vcml.documentation.VCMLClassNameProvider;
 import org.vclipse.vcml.formatting.VCMLCrossReferenceSerializer;
 import org.vclipse.vcml.linking.VCMLLinker;
+import org.vclipse.vcml.naming.CrossRefExtractingSimpleNameProvider;
 import org.vclipse.vcml.naming.UniqueNamesValidationHelper;
 import org.vclipse.vcml.resource.VCMLResourceDescriptionStrategy;
 import org.vclipse.vcml.serializer.VCMLSerializer;
@@ -89,5 +91,9 @@ public class VCMLRuntimeModule extends org.vclipse.vcml.AbstractVCMLRuntimeModul
 	@Override
 	public Class<? extends ISerializer> bindISerializer() {
 		return VCMLSerializer.class;
+	}
+	
+	public Class<? extends IQualifiedNameProvider> bindIQualifiedNameProvider() {
+		return CrossRefExtractingSimpleNameProvider.class;
 	}
 }
