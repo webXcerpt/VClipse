@@ -84,7 +84,7 @@ public class LanguageRefactoringProcessor extends RefactoringProcessor {
 	@Override
 	public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		Resource resource = context.getSourceElement().eResource();
-		if(resource.getErrors().isEmpty()) {
+		if(resource != null && resource.getErrors().isEmpty()) {
 			return RefactoringStatus.create(Status.OK_STATUS);			
 		} else {
 			return RefactoringStatus.create(Status.CANCEL_STATUS);
@@ -94,7 +94,7 @@ public class LanguageRefactoringProcessor extends RefactoringProcessor {
 	@Override
 	public RefactoringStatus checkFinalConditions(IProgressMonitor pm, CheckConditionsContext context) throws CoreException, OperationCanceledException {
 		Resource resource = this.context.getSourceElement().eResource();
-		if(resource.getErrors().isEmpty()) {
+		if(resource != null && resource.getErrors().isEmpty()) {
 			return RefactoringStatus.create(Status.OK_STATUS);			
 		} else {
 			return RefactoringStatus.create(Status.CANCEL_STATUS);
