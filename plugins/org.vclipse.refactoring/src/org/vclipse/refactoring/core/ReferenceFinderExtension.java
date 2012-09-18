@@ -21,7 +21,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IReferenceDescription;
 import org.eclipse.xtext.ui.editor.findrefs.IReferenceFinder;
@@ -38,7 +37,6 @@ public class ReferenceFinderExtension {
 	public List<IReferenceDescription> getReferences(EObject target, boolean allReferences) {
 		Resource eResource = target.eResource();
 		ResourceSet resourceSet = eResource.getResourceSet();
-		EcoreUtil.resolveAll(target);
 		SimpleLocalResourceAccess access = new SimpleLocalResourceAccess(resourceSet);
 		final List<IReferenceDescription> references = newArrayList();
 		IAcceptor<IReferenceDescription> acceptor = new IAcceptor<IReferenceDescription>() {
