@@ -188,6 +188,9 @@ public class InputPage extends UserInputWizardPage {
 					Display.getDefault().timerExec(1000, validationThread);
 				}
 			}
+		} else {
+			setPageComplete(true);
+			setErrorMessage(null);
 		}
 	}
 	
