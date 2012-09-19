@@ -179,7 +179,6 @@ public class InputPage extends UserInputWizardPage {
 						validationThread = new Thread() {
 							@Override
 							public void run() {
-								System.out.println("run");
 								validateChangeModel();
 								setErrorMessage(null);
 								setPageComplete(true);
