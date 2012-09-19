@@ -15,6 +15,8 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.linking.ILinkingService;
+import org.eclipse.xtext.naming.QualifiedName;
+import org.vclipse.vcml.naming.CrossRefExtractingSimpleNameProvider;
 import org.vclipse.vcml.vcml.Assignment;
 import org.vclipse.vcml.vcml.BinaryCondition;
 import org.vclipse.vcml.vcml.BinaryExpression;
@@ -53,6 +55,9 @@ public abstract class CodePrettyPrinter extends VcmlSwitch<DataLayouter<NoExcept
 	
 	@Inject
 	protected ILinkingService linkingService;
+	
+	@Inject
+	protected CrossRefExtractingSimpleNameProvider crossRefNameProvider;
 	
 	// idea of precedence levels is from Haskell's showsPrec
 	protected static int PREC_OR = 7;
@@ -457,14 +462,14 @@ public abstract class CodePrettyPrinter extends VcmlSwitch<DataLayouter<NoExcept
 		if (object==null) {
 			return "###NULL###";
 		}
-		String linkText = "";
+		String linkText = "";		
 		Object o = object.eGet(att);
 		if (o!=null) {
 			linkText = o.toString();
 		} else {
-			linkText = "###UNKNOWN###";
+			QualifiedName qualifiedName = crossRefNameProvider.getFullyQualifiedName(context);
+			linkText = qualifiedName == null ? "###UNKNOWN###" : qualifiedName.getLastSegment();
 		}
 		return linkText;
 	}
-	
 }

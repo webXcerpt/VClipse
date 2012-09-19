@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
@@ -31,6 +30,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
@@ -48,16 +48,15 @@ import com.google.inject.Injector;
 
 public class InputPage extends UserInputWizardPage {
 	
-	private Logger logger = Logger.getLogger(InputPage.class);
-	
-	private IUIRefactoringContext context;
-	private List<Widget> widgets;
-	
 	@Inject
 	private RefactoringUtility refactoringUtility;
 	
 	@Inject
 	private LanguageRefactoringProcessor processor;
+	
+	private IUIRefactoringContext context;
+	private List<Widget> widgets;
+	private Thread validationThread;
 	
 	public static InputPage getInstance(IUIRefactoringContext context) {
 		Injector injector = RefactoringPlugin.getInstance().getInjector();
@@ -81,56 +80,50 @@ public class InputPage extends UserInputWizardPage {
 	public void createControl(Composite parent) {
 		EObject element = context.getSourceElement();
 		EStructuralFeature feature = context.getStructuralFeature();
-		if(element == null) {
-			logger.error("element should not be null");
-		} else if(feature == null) {
-			logger.error("feature should not be null");
-		} else {
-			Composite composite = new Composite(parent, SWT.NONE);
-			composite.setLayout(new GridLayout(2, false));
-			composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-			composite.setFont(parent.getFont());
-			widgets.add(composite);
+		Composite composite = new Composite(parent, SWT.NONE);
+		composite.setLayout(new GridLayout(2, false));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		composite.setFont(parent.getFont());
+		widgets.add(composite);
 
-			Label label = new Label(composite, SWT.NONE);
-			label.setText("New name: ");
-			label.setLayoutData(new GridData());
-			widgets.add(label);
+		Label label = new Label(composite, SWT.NONE);
+		label.setText("New name: ");
+		label.setLayoutData(new GridData());
+		widgets.add(label);
 
-			if(element.eClass().getEAllStructuralFeatures().contains(feature)) {
-				Object value = element.eGet(feature);
-				if(value instanceof EObject) {
-					createTextWidget(composite);
-				} else if(value instanceof List<?>) {
-					List<EObject> values = (List<EObject>)value;
-					Set<String> names = refactoringUtility.getText(values);
-					if(names.isEmpty()) {
-						createTextWidget(composite);
-					} else {
-						createComboWidget(composite, names);					
-					}
-				}
-			} else {
+		if(element.eClass().getEAllStructuralFeatures().contains(feature)) {
+			Object value = element.eGet(feature);
+			if(value instanceof EObject) {
 				createTextWidget(composite);
-			}
-
-			final Button button = new Button(composite, SWT.CHECK);
-			button.setText("Replace all occurences");
-			button.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent event) {
-					context.addAttribute(Refactoring.BUTTON_STATE, button.getSelection());
+			} else if(value instanceof List<?>) {
+				List<EObject> values = (List<EObject>)value;
+				Set<String> names = refactoringUtility.getText(values);
+				if(names.isEmpty()) {
+					createTextWidget(composite);
+				} else {
+					createComboWidget(composite, names);					
 				}
-			});
-			button.setSelection(false);
-			widgets.add(button);
-			context.handleWidgets();
-			validateWidgets();
-			setControl(composite);
+			}
+		} else {
+			createTextWidget(composite);
 		}
+
+		final Button button = new Button(composite, SWT.CHECK);
+		button.setText("Replace all occurences");
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				context.addAttribute(Refactoring.BUTTON_STATE, button.getSelection());
+			}
+		});
+		button.setSelection(false);
+		widgets.add(button);
+		context.handleWidgets();
+		validateWidgets();
+		setControl(composite);
 	}
 
-	private void createComboWidget(Composite composite, Set<String> names) {
+	private Combo createComboWidget(Composite composite, Set<String> names) {
 		final Combo combo = new Combo(composite, SWT.NONE);
 		combo.setFont(composite.getFont());
 		combo.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, false));
@@ -150,6 +143,7 @@ public class InputPage extends UserInputWizardPage {
 		});
 		combo.setItems(names.toArray(new String[names.size()]));
 		widgets.add(combo);
+		return combo;
 	}
 
 	private Text createTextWidget(Composite composite) {
@@ -157,7 +151,7 @@ public class InputPage extends UserInputWizardPage {
 		text.setFont(composite.getFont());
 		text.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, false));
 		text.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
+			public void modifyText(ModifyEvent event) {
 				validateWidgets();
 			}
 		});
@@ -171,50 +165,64 @@ public class InputPage extends UserInputWizardPage {
 	}
 	
 	private void validateWidgets() {
+		setPageComplete(false);
 		Iterator<Text> iterator = Iterables.filter(widgets, Text.class).iterator();
 		if(iterator.hasNext()) {
 			Text text = iterator.next();
 			if(text.isEnabled()) {
-				String string = text.getText();
+				final String string = text.getText();
+				context.addAttribute(Refactoring.TEXT_FIELD_ENTRY, string);				
 				if(string.isEmpty()) {
 					setErrorMessage("Please provide a textual input for the text field.");
-					setPageComplete(false);
 				} else {
-					context.addAttribute(Refactoring.TEXT_FIELD_ENTRY, string);
-					setErrorMessage(null);
-					setPageComplete(true);
-					validateChangeModel();
-				}				
+					if(validationThread == null) {
+						validationThread = new Thread() {
+							@Override
+							public void run() {
+								System.out.println("run");
+								validateChangeModel();
+								setErrorMessage(null);
+								setPageComplete(true);
+							}
+						};
+					}
+					Display.getDefault().timerExec(1000, validationThread);
+				}
 			}
 		}
 	}
 	
 	private void validateChangeModel() {
 		EObject element = context.getSourceElement();
-		EValidator.Registry validator = refactoringUtility.getInstance(element, EValidator.Registry.class);
+		final  EValidator.Registry validator = refactoringUtility.getInstance(element, EValidator.Registry.class);
 		if(validator != null) {
-			Object[] elements = processor.getElements();
+			final Object[] elements = processor.getElements();
 			if(elements.length > 0) {
 				if(elements[0] instanceof ModelBasedChange) {
 					ModelBasedChange mbc = (ModelBasedChange)elements[0];
-					EObject changed = mbc.getChanged();
+					final EObject changed = mbc.getChanged();
 					EValidator evalidator = validator.getEValidator(changed.eClass().getEPackage());
 					BasicDiagnostic diagnosticsCollection = new BasicDiagnostic();
 					evalidator.validate(changed, diagnosticsCollection, Maps.newHashMap());
 					List<Diagnostic> diagnostics = diagnosticsCollection.getChildren();
-					Iterator<Diagnostic> iterator = Iterables.filter(diagnostics, new Predicate<Diagnostic>() {
+					final Iterator<Diagnostic> iterator = Iterables.filter(diagnostics, new Predicate<Diagnostic>() {
 						public boolean apply(Diagnostic diagnostic) {
 							return Diagnostic.ERROR == diagnostic.getSeverity();
 						}
 					}).iterator();
-					if(iterator.hasNext()) {
-						Diagnostic diagnostic = iterator.next();
-						setErrorMessage(diagnostic.getMessage());
-						setPageComplete(false);
-					} else {
-						setErrorMessage(null);
-						setPageComplete(true);
-					}
+					Display.getDefault().asyncExec(new Runnable() {
+						@Override
+						public void run() {
+							if(iterator.hasNext()) {
+								Diagnostic diagnostic = iterator.next();
+								setErrorMessage(diagnostic.getMessage());
+								setPageComplete(false);
+							} else {
+								setErrorMessage(null);
+								setPageComplete(true);
+							}
+						}
+					});
 				}
 			}
 		}

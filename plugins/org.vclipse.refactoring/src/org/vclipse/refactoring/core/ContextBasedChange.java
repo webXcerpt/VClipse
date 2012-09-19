@@ -1,5 +1,6 @@
 package org.vclipse.refactoring.core;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -7,6 +8,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.swt.widgets.Display;
@@ -87,8 +89,15 @@ public class ContextBasedChange extends Change implements IChangeCompare {
 		Change parent = getParent();
 		if(parent instanceof ModelBasedChange) {
 			EObject container = ((ModelBasedChange)parent).getCurrent();
-			EObject entry = getEntry(container, processor.getContext());
-			return entry == null ? container : entry;
+			IUIRefactoringContext context = processor.getContext();
+			IQualifiedNameProvider qualifiedNameProvider = utility.getInstance(container, IQualifiedNameProvider.class);
+			EObject element = context.getSourceElement();
+			QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(element);
+			if(qualifiedName != null) {
+				String name = qualifiedName.getLastSegment();
+				List<EObject> entries = Lists.newArrayList(container.eAllContents());
+				return utility.getEntry(entries, name, element.eClass());
+			}
 		}
 		return null;
 	}
@@ -96,21 +105,41 @@ public class ContextBasedChange extends Change implements IChangeCompare {
 	public EObject getChanged() {
 		Change parent = getParent();
 		if(parent instanceof ModelBasedChange) {
-			EObject container = ((ModelBasedChange)parent).getChanged();
-			EObject entry = getEntry(container, processor.getContext());
-			return entry == null ? container : entry;
-		}
-		return null;
-	}
-	
-	protected EObject getEntry(EObject container, IUIRefactoringContext context) {
-		IQualifiedNameProvider qualifiedNameProvider = utility.getInstance(container, IQualifiedNameProvider.class);
-		EObject element = context.getSourceElement();
-		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(element);
-		if(qualifiedName != null) {
-			String name = qualifiedName.getLastSegment();
-			List<EObject> entries = Lists.newArrayList(container.eAllContents());
-			return utility.getEntry(entries, name, element.eClass());
+			ModelBasedChange mbc = (ModelBasedChange)parent;
+			EObject container = mbc.getChanged();
+		
+			IUIRefactoringContext context = processor.getContext();
+			EObject element = context.getSourceElement();
+			EStructuralFeature feature = context.getStructuralFeature();
+			
+			if(feature.isMany()) {
+				EObject elementsContainer = element.eContainer();
+				Object objectEntries = elementsContainer.eGet(feature);
+				if(objectEntries instanceof List<?>) {
+					List<?> entries = (List<?>)objectEntries;
+					int index = entries.indexOf(element);
+					Iterator<EObject> iterator = utility.getEntry(Lists.newArrayList(container.eAllContents()), elementsContainer.eClass()).iterator();
+					if(iterator.hasNext()) {
+						EObject next = iterator.next();
+						objectEntries = next.eGet(feature);
+						if(objectEntries instanceof List<?>) {
+							entries = (List<?>)objectEntries;
+							Object object = entries.get(index);
+							if(object instanceof EObject) {
+								return (EObject)object;
+							}
+						}
+					}
+				}
+			} else {
+				IQualifiedNameProvider qualifiedNameProvider = utility.getInstance(container, IQualifiedNameProvider.class);
+				QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(element);
+				if(qualifiedName != null) {
+					String name = qualifiedName.getLastSegment();
+					List<EObject> entries = Lists.newArrayList(container.eAllContents());
+					return utility.getEntry(entries, name, element.eClass());
+				}
+			}
 		}
 		return null;
 	}

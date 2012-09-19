@@ -22,9 +22,6 @@ public class UniqueNamesValidationHelper extends NamesAreUniqueValidationHelper 
 		EClass eClass = object.eClass();
 		QualifiedName qualifiedName = description.getName();
 		EClass clusterType = getAssociatedClusterType(eClass);
-		if(clusterType == null) {
-			return;
-		}
 		Map<QualifiedName, IEObjectDescription> nameToDescription = clusterTypeToName.get(clusterType);
 		if (nameToDescription == null) {
 			nameToDescription = Maps.newHashMap();

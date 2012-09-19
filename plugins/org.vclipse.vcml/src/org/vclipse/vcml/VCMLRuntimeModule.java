@@ -27,11 +27,11 @@ import org.vclipse.base.naming.IClassNameProvider;
 import org.vclipse.base.naming.NullQualifiedNameConverter;
 import org.vclipse.vcml.conversion.VCMLValueConverter;
 import org.vclipse.vcml.documentation.VCMLClassNameProvider;
-import org.vclipse.vcml.formatting.VCMLCrossReferenceSerializer;
 import org.vclipse.vcml.linking.VCMLLinker;
 import org.vclipse.vcml.naming.CrossRefExtractingSimpleNameProvider;
 import org.vclipse.vcml.naming.UniqueNamesValidationHelper;
 import org.vclipse.vcml.resource.VCMLResourceDescriptionStrategy;
+import org.vclipse.vcml.serializer.VCMLCrossReferenceSerializer;
 import org.vclipse.vcml.serializer.VCMLSerializer;
 import org.vclipse.vcml.validation.VCMLLinkingDiagnosticMessageProvider;
 

@@ -119,7 +119,7 @@ public class RefactoringUtility {
 		if(nameProvider != null) {
 			return Iterables.filter(entries, new Predicate<EObject>() {
 				public boolean apply(EObject eobject) {
-					QualifiedName qualifiedName = nameProvider.apply(eobject);
+					QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(eobject);
 					return qualifiedName == null ? false : qualifiedName.getLastSegment().equals(name);
 				}
 			}).iterator();			

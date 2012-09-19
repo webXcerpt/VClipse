@@ -83,11 +83,12 @@ public class VCMLRefactoring extends VCMLSimplifier {
 
 	public List<? extends EObject> refactoring_Replace_PFunction_values(IRefactoringContext context, PFunction pfunction) {
 		List<EObject> changes = Lists.newArrayList();
-		for(Literal literal : pfunction.getValues()) {
-			CharacteristicReference_P cstic_p = literal instanceof MDataCharacteristic_P ? 
-					((MDataCharacteristic_P)literal).getCharacteristic() : (CharacteristicReference_P)literal;
+		EList<Literal> values = pfunction.getValues();
+		Literal literal = values.get(values.indexOf(context.getSourceElement()));
+		if(literal instanceof CharacteristicReference_P) {
+			CharacteristicReference_P crp = (CharacteristicReference_P)literal;
 			Map<?, ?> attributes = context.getAttributes();
-			replaceCsticReferences(changes, cstic_p, attributes);
+			replaceCsticReferences(changes, crp, attributes);
 		}
 		return changes;
 	}

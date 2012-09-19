@@ -24,6 +24,12 @@ public class VCMLSerializer extends Serializer {
 	@Inject
 	private VCMLPrettyPrinter prettyPrinter;
 	
+	@Inject
+	private ProcedurePrettyPrinter procedurePrinter;
+	
+	@Inject
+	private ConstraintPrettyPrinter constraintPrinter;
+	
 	@Override
 	public String serialize(EObject object, SaveOptions options) {
 		String text = getDependencyObjectText(object);
@@ -52,10 +58,10 @@ public class VCMLSerializer extends Serializer {
 	private String getDependencyObjectText(EObject object) {
 		EObject rootContainer = EcoreUtil.getRootContainer(object);
 		if(object instanceof ConstraintSource || rootContainer instanceof ConstraintSource) {
-			return new ConstraintPrettyPrinter().prettyPrint(object);
+			return constraintPrinter.prettyPrint(object);
 		} else if(object instanceof ConditionSource || rootContainer instanceof ConditionSource || 
 					object instanceof ProcedureSource || rootContainer instanceof ProcedureSource) {
-			return new ProcedurePrettyPrinter().prettyPrint(object);
+			return procedurePrinter.prettyPrint(object);
 		}
 		return "";
 	}
