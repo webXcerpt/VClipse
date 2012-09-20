@@ -10,13 +10,7 @@ package org.vclipse.constraint.lexer;
 
 // Hack: Use our own Lexer superclass by means of import. 
 // Currently there is no other way to specify the superclass for the lexer.
-import org.eclipse.xtext.parser.antlr.Lexer;
-}
-
-@members{
-  private boolean atStartOfLine() {
-    return input.getCharPositionInLine() == 0;
-  }
+import org.vclipse.dependency.lexer.Lexer;
 }
 
 

@@ -10,15 +10,8 @@ package org.vclipse.procedure.lexer;
 
 // Hack: Use our own Lexer superclass by means of import. 
 // Currently there is no other way to specify the superclass for the lexer.
-import org.eclipse.xtext.parser.antlr.Lexer;
+import org.vclipse.dependency.lexer.Lexer;
 }
-
-@members{
-  private boolean atStartOfLine() {
-    return input.getCharPositionInLine() == 0;
-  }
-}
-
 
 KEYWORD_68 : '$'('S'|'s')('E'|'e')('T'|'t')'_'('P'|'p')('R'|'r')('I'|'i')('C'|'c')('I'|'i')('N'|'n')('G'|'g')'_'('F'|'f')('A'|'a')('C'|'c')('T'|'t')('O'|'o')('R'|'r');
 
