@@ -6,7 +6,7 @@
     <extension
             point="org.eclipse.ui.editors">
         <editor
-            class="org.vclipse.condition.ui.ConditionExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            class="org.vclipse.condition.ui.ConditionExecutableExtensionFactory:org.vclipse.dependency.ui.editor.DependencyEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
             extensions="pre,sel"

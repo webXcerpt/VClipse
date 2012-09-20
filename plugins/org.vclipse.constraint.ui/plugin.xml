@@ -6,7 +6,7 @@
     <extension
             point="org.eclipse.ui.editors">
         <editor
-            class="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+            class="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.vclipse.dependency.ui.editor.DependencyEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
             extensions="cons,sapconstraint"

@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
@@ -891,13 +892,15 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 			while ((line = br.readLine()) != null) {
 				final Segment segmentE1CUKNM = addChildSegment(parentSegment, "E1CUKNM");
 				setValue(segmentE1CUKNM, "MSGFN", "004");
-				setValue(segmentE1CUKNM, "LINE", line);
+				setValue(segmentE1CUKNM, "LINE", whitespacePattern.matcher(line).replaceAll(" "));
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
+	private static Pattern whitespacePattern = Pattern.compile("\\s");
 
 	/**
 	 * @param parentSegment

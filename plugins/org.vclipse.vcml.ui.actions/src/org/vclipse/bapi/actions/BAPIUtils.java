@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -366,7 +367,7 @@ public class BAPIUtils extends BAPIActionHandler {
 			while ((line = br.readLine()) != null) {
 				table.appendRow();
 				table.setValue("LINE_NO", lineNo++);
-				table.setValue("LINE", line);
+				table.setValue("LINE", whitespacePattern.matcher(line).replaceAll(" "));
 				table.nextRow();
 			}
 		} catch (IOException e) {
@@ -374,6 +375,8 @@ public class BAPIUtils extends BAPIActionHandler {
 			e.printStackTrace();
 		}
 	}
+	
+	private static Pattern whitespacePattern = Pattern.compile("\\s");
 	
 	protected void readSource(JCoTable table, Dependency dependency) {
 		StringBuffer source = readSourceLines(table);
