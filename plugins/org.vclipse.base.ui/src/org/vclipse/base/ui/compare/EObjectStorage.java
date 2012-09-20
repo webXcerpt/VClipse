@@ -79,7 +79,7 @@ public class EObjectStorage implements IEncodedStorage {
 			}
 		} 
 		String name = SimpleAttributeResolver.NAME_RESOLVER.apply(object);
-		return name == null ? object.eClass().getInstanceClassName() : name;
+		return name == null ? object.eClass().getName() : name;
 	}
 
 	@Override
