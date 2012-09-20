@@ -11,6 +11,8 @@ import org.eclipse.compare.SharedDocumentAdapter;
 import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -27,6 +29,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.internal.part.NullEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.ui.util.ResourceUtil;
 import org.vclipse.base.ui.BaseUiPlugin;
@@ -38,6 +41,7 @@ public class EObjectTypedElement implements ITypedElement, IEncodedStreamContent
 
 	private EObject object;
 	private ISerializer serializer;
+	private IQualifiedNameProvider nameProvider;
 	
 	private IEncodedStorage bufferedContents;
 	private String localEncoding;
@@ -46,6 +50,10 @@ public class EObjectTypedElement implements ITypedElement, IEncodedStreamContent
 	private final String DEFAULT_ENCODING = Charsets.UTF_8.name();
 	
 	public EObjectTypedElement(EObject object, ISerializer serializer) {
+		this(object, serializer, null);
+	}
+	
+	public EObjectTypedElement(EObject object, ISerializer serializer, IQualifiedNameProvider nameProvider) {
 		if(object == null) {
 			throw new IllegalArgumentException("object = null");
 		}
@@ -64,6 +72,7 @@ public class EObjectTypedElement implements ITypedElement, IEncodedStreamContent
 		}
 		this.object = object;
 		this.serializer = serializer;
+		this.nameProvider = nameProvider;
 	}
 	
 	public InputStream getContents() throws CoreException {
@@ -74,7 +83,8 @@ public class EObjectTypedElement implements ITypedElement, IEncodedStreamContent
 	}
 
 	public void cacheContents(IProgressMonitor monitor) throws CoreException {
-		bufferedContents = new EObjectStorage(object, serializer);
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		bufferedContents = new EObjectStorage(object, serializer, nameProvider, root);
 	}
 
 	public IStorage getBufferedStorage() {
