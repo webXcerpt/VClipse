@@ -8,6 +8,8 @@ import org.eclipse.compare.IEncodedStreamContentAccessor;
 import org.eclipse.compare.ISharedDocumentAdapter;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.SharedDocumentAdapter;
+import org.eclipse.compare.structuremergeviewer.IDiffContainer;
+import org.eclipse.compare.structuremergeviewer.IDiffElement;
 import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
@@ -15,6 +17,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.ui.URIEditorInput;
@@ -32,23 +35,31 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.ui.util.ResourceUtil;
+import org.eclipse.xtext.util.StringInputStream;
 import org.vclipse.base.ui.BaseUiPlugin;
 import org.vclipse.base.ui.util.EditorUtilsExtensions;
 
 import com.google.common.base.Charsets;
 
 @SuppressWarnings("rawtypes")
-public class EObjectTypedElement implements ITypedElement, IEncodedStreamContentAccessor, IAdaptable  {
+public class EObjectTypedElement implements IDiffElement, IEncodedStreamContentAccessor, IAdaptable  {
 
 	private EObject object;
 	private ISerializer serializer;
 	private IQualifiedNameProvider nameProvider;
 	
 	private IEncodedStorage bufferedContents;
-	private String localEncoding;
 	private ISharedDocumentAdapter sharedDocumentAdapter;
+	private String localEncoding;
+	
+	private IDiffContainer parentContainer;
+	private int changeKind;
 	
 	private final String DEFAULT_ENCODING = Charsets.UTF_8.name();
+	
+	public static EObjectTypedElement getEmpty() {
+		return new EObjectTypedElement();
+	}
 	
 	public EObjectTypedElement(EObject object, ISerializer serializer) {
 		this(object, serializer, null);
@@ -76,6 +87,10 @@ public class EObjectTypedElement implements ITypedElement, IEncodedStreamContent
 		this.nameProvider = nameProvider;
 	}
 	
+	private EObjectTypedElement() {
+		
+	}
+	
 	public InputStream getContents() throws CoreException {
 		if(bufferedContents == null) {
 			cacheContents(EditorUtilsExtensions.getProgressMonitor());
@@ -85,7 +100,36 @@ public class EObjectTypedElement implements ITypedElement, IEncodedStreamContent
 
 	public void cacheContents(IProgressMonitor monitor) throws CoreException {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		bufferedContents = new EObjectStorage(object, serializer, nameProvider, root);
+		if(object != null && serializer != null) {
+			bufferedContents = new EObjectStorage(object, serializer, nameProvider, root);			
+		} else {
+			bufferedContents = new IEncodedStorage() {
+				@Override
+				public Object getAdapter(Class adapter) {
+					return null;
+				}
+				@Override
+				public boolean isReadOnly() {
+					return true;
+				}
+				@Override
+				public String getName() {
+					return "";
+				}
+				@Override
+				public IPath getFullPath() {
+					return null;
+				}
+				@Override
+				public InputStream getContents() throws CoreException {
+					return new StringInputStream("");
+				}
+				@Override
+				public String getCharset() throws CoreException {
+					return Charsets.UTF_8.name();
+				}
+			};
+		}
 	}
 
 	public IStorage getBufferedStorage() {
@@ -97,16 +141,7 @@ public class EObjectTypedElement implements ITypedElement, IEncodedStreamContent
 	}
 
 	public String getType() {
-		String name = getName();
-		if (name != null) {
-			int index = name.lastIndexOf('.');
-			if (index == -1)
-				return ""; //$NON-NLS-1$
-			if (index == (name.length() - 1))
-				return ""; //$NON-NLS-1$
-			return name.substring(index + 1);
-		}
-		return ITypedElement.FOLDER_TYPE;
+		return ITypedElement.UNKNOWN_TYPE;
 	}
 
 	public String getCharset() throws CoreException {
@@ -165,5 +200,24 @@ public class EObjectTypedElement implements ITypedElement, IEncodedStreamContent
 			}
 		}
 		return bufferedContents.getName();
+	}
+
+	@Override
+	public IDiffContainer getParent() {
+		return parentContainer;
+	}
+
+	@Override
+	public void setParent(IDiffContainer parent) {
+		this.parentContainer = parent;
+	}
+	
+	public void setKind(int kind) {
+		this.changeKind = kind;
+	}
+	
+	@Override
+	public int getKind() {
+		return changeKind;
 	}
 }

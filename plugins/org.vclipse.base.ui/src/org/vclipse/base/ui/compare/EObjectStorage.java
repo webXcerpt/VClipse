@@ -33,13 +33,6 @@ public class EObjectStorage implements IEncodedStorage {
 	}
 	
 	public EObjectStorage(EObject object, ISerializer serializer, IQualifiedNameProvider qualifiedNameProvider, IWorkspaceRoot root) {
-		if(object == null) {
-			throw new IllegalArgumentException("object = null");
-		}
-		if(serializer == null) {
-			throw new IllegalArgumentException("serializer = null");
-		}
-		
 		// initialize from resources plug-in
 		this.root = root == null ? ResourcesPlugin.getWorkspace().getRoot() : root;
 		this.object = object;
@@ -85,7 +78,8 @@ public class EObjectStorage implements IEncodedStorage {
 				return qualifiedName.getLastSegment();
 			}
 		} 
-		return SimpleAttributeResolver.NAME_RESOLVER.apply(object);
+		String name = SimpleAttributeResolver.NAME_RESOLVER.apply(object);
+		return name == null ? object.eClass().getInstanceClassName() : name;
 	}
 
 	@Override
