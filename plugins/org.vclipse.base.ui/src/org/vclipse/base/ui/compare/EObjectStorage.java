@@ -1,4 +1,4 @@
-package org.vclipse.base.ui.util;
+package org.vclipse.base.ui.compare;
 
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;

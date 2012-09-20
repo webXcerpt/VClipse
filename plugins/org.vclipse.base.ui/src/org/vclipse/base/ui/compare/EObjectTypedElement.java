@@ -1,4 +1,4 @@
-package org.vclipse.base.ui.util;
+package org.vclipse.base.ui.compare;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -33,6 +33,7 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.ui.util.ResourceUtil;
 import org.vclipse.base.ui.BaseUiPlugin;
+import org.vclipse.base.ui.util.EditorUtilsExtensions;
 
 import com.google.common.base.Charsets;
 

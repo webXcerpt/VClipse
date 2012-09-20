@@ -13,6 +13,7 @@ Require-Bundle: org.eclipse.xtext.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.vclipse.base.ui,
+ org.vclipse.base.ui.compare,
  org.vclipse.base.ui.dialogs,
  org.vclipse.base.ui.util
 Bundle-ClassPath: .
