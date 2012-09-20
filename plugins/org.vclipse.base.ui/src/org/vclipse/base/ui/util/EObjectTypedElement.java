@@ -1,11 +1,11 @@
 package org.vclipse.base.ui.util;
 
 import java.io.InputStream;
+import java.util.Map;
 
 import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.IEncodedStreamContentAccessor;
 import org.eclipse.compare.ISharedDocumentAdapter;
-import org.eclipse.compare.IStreamContentAccessor;
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.SharedDocumentAdapter;
 import org.eclipse.core.resources.IEncodedStorage;
@@ -14,57 +14,67 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.internal.part.NullEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.ui.util.ResourceUtil;
+import org.vclipse.base.ui.BaseUiPlugin;
+
+import com.google.common.base.Charsets;
 
 @SuppressWarnings("rawtypes")
-public class EObjectTypedElement implements IStreamContentAccessor, ITypedElement, IEncodedStreamContentAccessor, IAdaptable  {
+public class EObjectTypedElement implements ITypedElement, IEncodedStreamContentAccessor, IAdaptable  {
 
 	private EObject object;
 	private ISerializer serializer;
 	
-	private IStorage bufferedContents;
+	private IEncodedStorage bufferedContents;
 	private String localEncoding;
 	private ISharedDocumentAdapter sharedDocumentAdapter;
 	
+	private final String DEFAULT_ENCODING = Charsets.UTF_8.name();
+	
 	public EObjectTypedElement(EObject object, ISerializer serializer) {
-		assert object != null;
-		assert serializer != null;
-		Resource eResource = object.eResource();
-		localEncoding = "";
-		if(eResource != null) {
-			localEncoding = eResource instanceof XMLResource ? (String)eResource.getResourceSet().getLoadOptions().get(XMLResource.OPTION_ENCODING) : "";			
+		if(object == null) {
+			throw new IllegalArgumentException("object = null");
+		}
+		if(serializer == null) {
+			throw new IllegalArgumentException("serializer = null");
+		}
+		
+		Resource resource = object.eResource();
+		localEncoding = DEFAULT_ENCODING;
+		if(resource != null) {
+			ResourceSet resourceset = resource.getResourceSet();
+			Map<Object, Object> loadOptions = resourceset.getLoadOptions();
+			localEncoding = resource instanceof XMLResource ? 
+					(String)loadOptions.get(XMLResource.OPTION_ENCODING) : 
+						DEFAULT_ENCODING;			
 		}
 		this.object = object;
 		this.serializer = serializer;
 	}
 	
 	public InputStream getContents() throws CoreException {
-		if (bufferedContents == null) {
-			cacheContents(new NullProgressMonitor());
+		if(bufferedContents == null) {
+			cacheContents(EditorUtilsExtensions.getProgressMonitor());
 		}
-		if (bufferedContents != null) {
-			return bufferedContents.getContents();
-		}
-		return null;
+		return bufferedContents.getContents();
 	}
 
 	public void cacheContents(IProgressMonitor monitor) throws CoreException {
-		bufferedContents = fetchContents(monitor);
-	}
-
-	protected IStorage fetchContents(IProgressMonitor monitor) throws CoreException {
-		return new EObjectStorage(object, serializer);
+		bufferedContents = new EObjectStorage(object, serializer);
 	}
 
 	public IStorage getBufferedStorage() {
@@ -89,18 +99,15 @@ public class EObjectTypedElement implements IStreamContentAccessor, ITypedElemen
 	}
 
 	public String getCharset() throws CoreException {
-		if(localEncoding != null)
-			return localEncoding;
 		if(bufferedContents == null) {
-			cacheContents(new NullProgressMonitor());
+			cacheContents(EditorUtilsExtensions.getProgressMonitor());
+			return bufferedContents.getCharset();
 		}
-		if(bufferedContents instanceof IEncodedStorage) {
-			return ((IEncodedStorage)bufferedContents).getCharset();
-		}
-		return null;
+		return DEFAULT_ENCODING;
 	}
 	
 	public Object getAdapter(Class adapter) {
+		// IHunk
 		if(adapter == ISharedDocumentAdapter.class) {
 			synchronized(this) {
 				if(sharedDocumentAdapter == null) {
@@ -120,11 +127,16 @@ public class EObjectTypedElement implements IStreamContentAccessor, ITypedElemen
 
 	protected IEditorInput getDocumentKey(Object element) {
 		if(element instanceof EObject) {
-			Resource eResource = ((EObject)element).eResource();
-			IFile file = ResourceUtil.getFile(eResource);
-			return element instanceof EObject ? new FileEditorInput(file) : null;			
+			EObject eobject = (EObject)element;
+			Resource resource = eobject.eResource();
+			if(resource == null) {
+				return new URIEditorInput(EcoreUtil.getURI(eobject));
+			} else {
+				IFile file = ResourceUtil.getFile(resource);
+				return new FileEditorInput(file);
+			}
 		} else {
-			return null;
+			return new NullEditorInput();
 		}	
 	}
 
@@ -134,6 +146,13 @@ public class EObjectTypedElement implements IStreamContentAccessor, ITypedElemen
 
 	@Override
 	public String getName() {
-		return "name";
+		if(bufferedContents == null) {
+			try {
+				cacheContents(EditorUtilsExtensions.getProgressMonitor());				
+			} catch(CoreException exception) {
+				BaseUiPlugin.log(exception.getMessage(), exception);
+			}
+		}
+		return bufferedContents.getName();
 	}
 }
