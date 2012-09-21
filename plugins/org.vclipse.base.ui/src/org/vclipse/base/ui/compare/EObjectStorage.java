@@ -1,7 +1,6 @@
 package org.vclipse.base.ui.compare;
 
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.resources.IResource;
@@ -17,9 +16,6 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.util.SimpleAttributeResolver;
 import org.eclipse.xtext.util.StringInputStream;
-import org.vclipse.base.ui.BaseUiPlugin;
-
-import com.google.common.base.Charsets;
 
 public class EObjectStorage implements IEncodedStorage {
 
@@ -49,12 +45,7 @@ public class EObjectStorage implements IEncodedStorage {
 	@Override
 	public InputStream getContents() throws CoreException {
 		String serialized = serializer.serialize(object);
-		try {
-			return new StringInputStream(serialized, getCharset());			
-		} catch(UnsupportedEncodingException exception) {
-			BaseUiPlugin.log(exception.getMessage(), exception);
-			return new StringInputStream(serialized);
-		}
+		return new StringInputStream(serialized);
 	}
 
 	@Override
@@ -91,6 +82,6 @@ public class EObjectStorage implements IEncodedStorage {
 
 	@Override
 	public String getCharset() throws CoreException {
-		return Charsets.UTF_8.name();
+		return root.getDefaultCharset();
 	}
 }

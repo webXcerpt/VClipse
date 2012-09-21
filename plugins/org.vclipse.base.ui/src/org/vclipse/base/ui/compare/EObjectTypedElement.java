@@ -20,11 +20,9 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.graphics.Image;
@@ -35,7 +33,6 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.ui.util.ResourceUtil;
-import org.eclipse.xtext.util.StringInputStream;
 import org.vclipse.base.ui.BaseUiPlugin;
 import org.vclipse.base.ui.util.EditorUtilsExtensions;
 
@@ -59,6 +56,10 @@ public class EObjectTypedElement implements IDiffElement, IEncodedStreamContentA
 	
 	public static EObjectTypedElement getEmpty() {
 		return new EObjectTypedElement();
+	}
+	
+	private EObjectTypedElement() {
+
 	}
 	
 	public EObjectTypedElement(EObject object, ISerializer serializer) {
@@ -87,10 +88,6 @@ public class EObjectTypedElement implements IDiffElement, IEncodedStreamContentA
 		this.nameProvider = nameProvider;
 	}
 	
-	private EObjectTypedElement() {
-		
-	}
-	
 	public InputStream getContents() throws CoreException {
 		if(bufferedContents == null) {
 			cacheContents(EditorUtilsExtensions.getProgressMonitor());
@@ -105,28 +102,28 @@ public class EObjectTypedElement implements IDiffElement, IEncodedStreamContentA
 		} else {
 			bufferedContents = new IEncodedStorage() {
 				@Override
-				public Object getAdapter(Class adapter) {
+				public InputStream getContents() throws CoreException {
 					return null;
-				}
-				@Override
-				public boolean isReadOnly() {
-					return true;
-				}
-				@Override
-				public String getName() {
-					return "";
 				}
 				@Override
 				public IPath getFullPath() {
 					return null;
 				}
 				@Override
-				public InputStream getContents() throws CoreException {
-					return new StringInputStream("");
+				public String getName() {
+					return "no name";
+				}
+				@Override
+				public boolean isReadOnly() {
+					return false;
+				}
+				@Override
+				public Object getAdapter(Class adapter) {
+					return null;
 				}
 				@Override
 				public String getCharset() throws CoreException {
-					return Charsets.UTF_8.name();
+					return null;
 				}
 			};
 		}
@@ -141,7 +138,16 @@ public class EObjectTypedElement implements IDiffElement, IEncodedStreamContentA
 	}
 
 	public String getType() {
-		return ITypedElement.UNKNOWN_TYPE;
+		String name = getName();
+		if (name != null) {
+			int index = name.lastIndexOf('.');
+			if (index == -1)
+				return ""; //$NON-NLS-1$
+			if (index == (name.length() - 1))
+				return ""; //$NON-NLS-1$
+			return name.substring(index + 1);
+		}
+		return ITypedElement.FOLDER_TYPE;
 	}
 
 	public String getCharset() throws CoreException {
@@ -171,19 +177,23 @@ public class EObjectTypedElement implements IDiffElement, IEncodedStreamContentA
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
+	protected EObject getEObject() {
+		return object;
+	}
+	
 	protected IEditorInput getDocumentKey(Object element) {
-		if(element instanceof EObject) {
-			EObject eobject = (EObject)element;
-			Resource resource = eobject.eResource();
-			if(resource == null) {
-				return new URIEditorInput(EcoreUtil.getURI(eobject));
-			} else {
-				IFile file = ResourceUtil.getFile(resource);
-				return new FileEditorInput(file);
+		if(element instanceof EObjectTypedElement) {
+			EObjectTypedElement typedElement = (EObjectTypedElement)element;
+			EObject eobject = typedElement.getEObject();
+			if(eobject != null) {
+				Resource resource = eobject.eResource();
+				if(resource != null) {
+					IFile file = ResourceUtil.getFile(resource);
+					return new FileEditorInput(file);					
+				}
 			}
-		} else {
-			return new NullEditorInput();
-		}	
+		}
+		return new NullEditorInput();
 	}
 
 	public String getLocalEncoding() {
@@ -199,7 +209,8 @@ public class EObjectTypedElement implements IDiffElement, IEncodedStreamContentA
 				BaseUiPlugin.log(exception.getMessage(), exception);
 			}
 		}
-		return bufferedContents.getName();
+		String name = bufferedContents.getName();
+		return name == null ? "no name" : name;
 	}
 
 	@Override
