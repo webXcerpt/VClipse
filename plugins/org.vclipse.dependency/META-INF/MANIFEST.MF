@@ -14,6 +14,7 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.dependency,
  org.vclipse.dependency.formatting,
  org.vclipse.dependency.lexer,
+ org.vclipse.dependency.linking,
  org.vclipse.dependency.parseTreeConstruction,
  org.vclipse.dependency.parser.antlr,
  org.vclipse.dependency.parser.antlr.internal,
