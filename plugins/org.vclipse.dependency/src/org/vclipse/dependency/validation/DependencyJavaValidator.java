@@ -1,5 +1,6 @@
 package org.vclipse.dependency.validation;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Iterator;
 
@@ -7,7 +8,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.validation.Check;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.vcml.BinaryExpression;
@@ -37,38 +37,38 @@ public class DependencyJavaValidator extends AbstractDependencyJavaValidator {
 	protected void checkSource(EObject source) {
 		Resource sourceResource = source.eResource();
 		URI vcmlUri = sourceUtils.getVcmlResourceURI(sourceResource.getURI());
-		if(vcmlUri != null) {
-			final String fileName = sourceResource.getURI().trimFileExtension().lastSegment();
+		if (vcmlUri != null) {
+			final String fileName = sourceResource.getURI().trimFileExtension()
+					.lastSegment();
+			String sourceName = source.eClass().getName();
+			String objectName = sourceName.replace("Source", "");
+			String sourceObjectName_decoded;
 			try {
-				final String sourceObjectName = URLDecoder.decode(fileName, Charsets.UTF_8.toString());
-				Resource vcmlResource = sourceResource.getResourceSet().getResource(vcmlUri, true);
-				EList<EObject> contents = vcmlResource.getContents();
-				if(!contents.isEmpty()) {
-					if(!contents.isEmpty()) {
-						VcmlModel vcmlModel = (VcmlModel)contents.get(0);
-						Iterator<VCObject> iterator = Iterables.filter(vcmlModel.getObjects(), new Predicate<VCObject>() {
+				sourceObjectName_decoded = URLDecoder.decode(fileName,
+						Charsets.UTF_8.toString());
+			} catch (UnsupportedEncodingException e) {
+				sourceObjectName_decoded = fileName;
+			}
+			final String sourceObjectName = sourceObjectName_decoded;
+			Resource vcmlResource = sourceResource.getResourceSet()
+					.getResource(vcmlUri, true);
+			EList<EObject> contents = vcmlResource.getContents();
+			if (!contents.isEmpty()) {
+				VcmlModel vcmlModel = (VcmlModel) contents.get(0);
+				Iterator<VCObject> iterator = Iterables.filter(
+						vcmlModel.getObjects(), new Predicate<VCObject>() {
 							public boolean apply(VCObject object) {
-								return object.getName().toUpperCase().equals(sourceObjectName.toUpperCase());
+								return object.getName().equalsIgnoreCase(
+										sourceObjectName);
 							}
 						}).iterator();
-						if(!iterator.hasNext()) {
-							String sourceName = source.eClass().getName();
-							String objectName = sourceName.replace("Source", "");
-							warning(objectName + " object does not exist for the " + sourceName,
-									source, null, "Not_Existent_Source_Object", 
-										new String[]{source.eClass().getName().replace("Source", ""), 
-											fileName, vcmlResource.getURI().toString()});
-						}
-					}
+				if (!iterator.hasNext()) {
+					warning(objectName + " object does not exist for the "
+							+ sourceName, source, null,
+							"Not_Existent_Source_Object", new String[] {
+									sourceName, fileName,
+									vcmlResource.getURI().toString() });
 				}
-			} catch(Exception exception) {
-				// resource does not exist
-				String sourceName = source.eClass().getName();
-				String objectName = sourceName.replace("Source", "");
-				warning(objectName + " object does not exist for the " + sourceName,
-						source, null, "Not_Existent_Source_Object", 
-							new String[]{source.eClass().getName().replace("Source", ""), 
-								fileName, vcmlUri.toString()});
 			}
 		}
 	}
