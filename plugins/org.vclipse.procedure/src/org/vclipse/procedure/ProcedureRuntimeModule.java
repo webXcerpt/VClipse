@@ -15,8 +15,8 @@ import org.vclipse.dependency.formatting.SourceCommentHandlingStreamer;
 import org.vclipse.dependency.linking.DependencyLinker;
 import org.vclipse.dependency.resource.DependencyResourceDescriptionStrategy;
 import org.vclipse.vcml.conversion.VCMLValueConverter;
-import org.vclipse.vcml.formatting.VCMLCrossReferenceSerializer;
 import org.vclipse.vcml.naming.CrossRefExtractingSimpleNameProvider;
+import org.vclipse.vcml.serializer.VCMLCrossReferenceSerializer;
 import org.vclipse.vcml.serializer.VCMLSerializer;
 import org.vclipse.vcml.validation.VCMLLinkingDiagnosticMessageProvider;
 
