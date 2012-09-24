@@ -95,12 +95,13 @@ public class CharacteristicReader extends BAPIUtils {
 						NumericCharacteristicValue value = VCML.createNumericCharacteristicValue();
 						String from = charactValuesNum.getString("VALUE_FROM");
 						String to = charactValuesNum.getString("VALUE_TO");
-						// FIXME: the following decision is not correct. There is a flag. 
-						if (from.equals(to)) {
+						String relation = charactValuesNum.getString("VALUE_RELATION");
+						if ("1".equals(relation)) {
 							NumericLiteral literal = VCML.createNumericLiteral();
 							literal.setValue(new BigDecimal(from).toPlainString());
 							value.setEntry(literal);
 						} else {
+							// TODO handle interval bound (include / exclude)
 							NumericInterval interval = VCML.createNumericInterval();
 							interval.setLowerBound(new BigDecimal(from).toPlainString());
 							interval.setUpperBound(new BigDecimal(to).toPlainString());
