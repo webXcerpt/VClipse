@@ -177,7 +177,7 @@ public class EObjectTypedElement implements IDiffElement, IEncodedStreamContentA
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
-	protected EObject getEObject() {
+	public EObject getEObject() {
 		return object;
 	}
 	
