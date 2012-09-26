@@ -83,65 +83,65 @@ public class VCMLRefactoring extends VCMLSimplifier {
 		context.setSourceElement(container);
 	}
 
-	public List<? extends EObject> refactoring_Replace_PFunction_values(IRefactoringContext context, PFunction pfunction) {
-		List<EObject> changes = Lists.newArrayList();
-		EList<Literal> values = pfunction.getValues();
-		Literal literal = values.get(values.indexOf(context.getSourceElement()));
-		if(literal instanceof CharacteristicReference_P) {
-			CharacteristicReference_P crp = (CharacteristicReference_P)literal;
-			Map<?, ?> attributes = context.getAttributes();
-			replaceCsticReferences(changes, crp, attributes);
-		}
-		return changes;
-	}
-	
-	private void replaceCsticReferences(List<EObject> changes, CharacteristicReference_P cstic_p, Map<?, ?> args) {
-		Resource resource = cstic_p.eResource();
-		Object button_state = args.get(BUTTON_STATE);
-		if(button_state instanceof Boolean && (Boolean)button_state) {
-			for(IReferenceDescription description :  referencesFinder.getReferences(cstic_p.getCharacteristic(), true)) {
-				URI uri = description.getSourceEObjectUri();
-				if(uri.toString().contains(RIGHT_REFERENCE_ENTRY)) {
-					EObject eObject = resource.getEObject(uri.fragment());
-					EObject first = cstic_p.eContainer();
-					EObject second = eObject.eContainer();
-					if(first != null && second != null) {
-						if(first.eClass() == second.eClass()) {
-							if(eObject instanceof CharacteristicReference_P) {
-								replaceCsticReference(changes, (CharacteristicReference_P)eObject, args);
-							}
-						}
-					}				
-				}
-			}
-		} 
-		replaceCsticReference(changes, cstic_p, args);
-	}
-	
-	private void replaceCsticReference(List<EObject> changes, CharacteristicReference_P cstic_p, Map<?, ?> args) {
-		PFunction pfunction = EcoreUtil2.getContainerOfType(cstic_p, PFunction.class);
-		if(pfunction != null) {
-			Object text_field_entry = args.get(TEXT_FIELD_ENTRY);
-			if(text_field_entry instanceof String) {
-				String text = (String)text_field_entry;
-				Literal newLiteral = null;
-				try {
-					Integer.parseInt(text);
-					NumericLiteral numLit = VCML_FACTORY.createNumericLiteral();
-					numLit.setValue(text);
-					newLiteral = numLit;
-				} catch(Exception exception) {
-					SymbolicLiteral symlit = VCML_FACTORY.createSymbolicLiteral();
-					symlit.setValue(text);
-					newLiteral = symlit;
-				}
-				EReference reference = VCML_PACKAGE.getPFunction_Values();
-				ListChange listChange = getListChange(ChangeKind.ADD_LITERAL, reference, newLiteral, pfunction.getValues());
-				changes.add(listChange);
-				EObject removeObject = cstic_p.eContainer() instanceof MDataCharacteristic_P ? cstic_p.eContainer() : cstic_p;
-				listChange = getListChange(ChangeKind.REMOVE_LITERAL, reference, removeObject, pfunction.getValues());
-				changes.add(listChange);
-			}			
-		}
-	}
+//	public List<? extends EObject> refactoring_Replace_PFunction_values(IRefactoringContext context, PFunction pfunction) {
+//		List<EObject> changes = Lists.newArrayList();
+//		EList<Literal> values = pfunction.getValues();
+//		Literal literal = values.get(values.indexOf(context.getSourceElement()));
+//		if(literal instanceof CharacteristicReference_P) {
+//			CharacteristicReference_P crp = (CharacteristicReference_P)literal;
+//			Map<?, ?> attributes = context.getAttributes();
+//			replaceCsticReferences(changes, crp, attributes);
+//		}
+//		return changes;
+//	}
+//	
+//	private void replaceCsticReferences(List<EObject> changes, CharacteristicReference_P cstic_p, Map<?, ?> args) {
+//		Resource resource = cstic_p.eResource();
+//		Object button_state = args.get(BUTTON_STATE);
+//		if(button_state instanceof Boolean && (Boolean)button_state) {
+//			for(IReferenceDescription description :  referencesFinder.getReferences(cstic_p.getCharacteristic(), true)) {
+//				URI uri = description.getSourceEObjectUri();
+//				if(uri.toString().contains(RIGHT_REFERENCE_ENTRY)) {
+//					EObject eObject = resource.getEObject(uri.fragment());
+//					EObject first = cstic_p.eContainer();
+//					EObject second = eObject.eContainer();
+//					if(first != null && second != null) {
+//						if(first.eClass() == second.eClass()) {
+//							if(eObject instanceof CharacteristicReference_P) {
+//								replaceCsticReference(changes, (CharacteristicReference_P)eObject, args);
+//							}
+//						}
+//					}				
+//				}
+//			}
+//		} 
+//		replaceCsticReference(changes, cstic_p, args);
+//	}
+//	
+//	private void replaceCsticReference(List<EObject> changes, CharacteristicReference_P cstic_p, Map<?, ?> args) {
+//		PFunction pfunction = EcoreUtil2.getContainerOfType(cstic_p, PFunction.class);
+//		if(pfunction != null) {
+//			Object text_field_entry = args.get(TEXT_FIELD_ENTRY);
+//			if(text_field_entry instanceof String) {
+//				String text = (String)text_field_entry;
+//				Literal newLiteral = null;
+//				try {
+//					Integer.parseInt(text);
+//					NumericLiteral numLit = VCML_FACTORY.createNumericLiteral();
+//					numLit.setValue(text);
+//					newLiteral = numLit;
+//				} catch(Exception exception) {
+//					SymbolicLiteral symlit = VCML_FACTORY.createSymbolicLiteral();
+//					symlit.setValue(text);
+//					newLiteral = symlit;
+//				}
+//				EReference reference = VCML_PACKAGE.getPFunction_Values();
+//				ListChange listChange = getListChange(ChangeKind.ADD_LITERAL, reference, newLiteral, pfunction.getValues());
+//				changes.add(listChange);
+//				EObject removeObject = cstic_p.eContainer() instanceof MDataCharacteristic_P ? cstic_p.eContainer() : cstic_p;
+//				listChange = getListChange(ChangeKind.REMOVE_LITERAL, reference, removeObject, pfunction.getValues());
+//				changes.add(listChange);
+//			}			
+//		}
+//	}
 }
