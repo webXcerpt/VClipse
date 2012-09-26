@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.ui.compare.InjectableViewerCreator;
-import org.vclipse.base.ui.util.EObjectTypedElement;
+import org.vclipse.base.ui.compare.EObjectTypedElement;
 import org.vclipse.refactoring.core.IChangeCompare;
 
 import com.google.inject.Inject;
