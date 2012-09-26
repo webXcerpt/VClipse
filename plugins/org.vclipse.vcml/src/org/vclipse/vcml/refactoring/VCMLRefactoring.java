@@ -35,8 +35,7 @@ public class VCMLRefactoring extends VCMLSimplifier {
 
 	private static final String RIGHT_REFERENCE_ENTRY = "@right";
 	
-	public List<? extends EObject> refactoring_Extract_InCondition_C_list(IRefactoringContext context, InCondition_C condtion) {
-		List<EObject> changes = Lists.newArrayList();
+	public void refactoring_Extract_InCondition_C_list(IRefactoringContext context, InCondition_C condtion) {
 		CharacteristicReference_C cstic = condtion.getCharacteristic();
 		org.vclipse.vcml.vcml.List list = condtion.getList();
 		List<Comparison> comparisons = Lists.newArrayList();
@@ -77,8 +76,11 @@ public class VCMLRefactoring extends VCMLSimplifier {
 				current.setRight(comparison);
 			}
 		}
-		changes.add(getChangeDescription(condtion.eContainer(), condtion.eContainmentFeature(), be));
-		return changes;
+		
+		EObject container = condtion.eContainer();
+		EReference feature = condtion.eContainmentFeature();
+		container.eSet(feature, be);
+		context.setSourceElement(container);
 	}
 
 	public List<? extends EObject> refactoring_Replace_PFunction_values(IRefactoringContext context, PFunction pfunction) {
