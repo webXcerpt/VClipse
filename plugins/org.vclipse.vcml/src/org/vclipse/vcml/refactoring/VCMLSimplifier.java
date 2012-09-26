@@ -42,7 +42,7 @@ public class VCMLSimplifier extends Refactoring {
 //		return changes;
 //	}
 //	
-//	public void extractCondition(ConstraintSource source, List<EObject> changes) {
+	public void extractCondition(ConstraintSource source, List<EObject> changes) {
 //		ConditionalConstraintRestriction previous = null; 
 //		EList<ConstraintRestriction> restrictions = source.getRestrictions();
 //		for(ConstraintRestriction restriction : restrictions) {
@@ -62,7 +62,7 @@ public class VCMLSimplifier extends Refactoring {
 //					break;
 //				}
 //			}
-//		}
+		}
 //		if(previous != null) {
 //			Condition condition = EcoreUtil.copy(previous.getCondition());
 //			changes.add(getChangeDescription(source, VCML_PACKAGE.getConstraintSource_Condition(), condition));
