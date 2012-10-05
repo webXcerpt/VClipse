@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.vclipse.refactoring.core.IRefactoringContext;
+import org.vclipse.refactoring.IRefactoringContext;
 import org.vclipse.refactoring.core.RefactoringCustomisation;
 import org.vclipse.vcml.vcml.CharacteristicReference_P;
 import org.vclipse.vcml.vcml.ConditionalConstraintRestriction;

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.eclipse.ltk.ui.refactoring.UserInputWizardPage;
 import org.eclipse.swt.widgets.Label;
-import org.vclipse.refactoring.ui.IUIRefactoringContext;
+import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.ui.InputPage;
 import org.vclipse.refactoring.ui.RefactoringUICustomisation;
 import org.vclipse.vcml.vcml.PFunction;
@@ -13,11 +13,11 @@ import com.google.common.collect.Lists;
 
 public class VCMLUICustomisation extends RefactoringUICustomisation {
 
-	public List<? extends UserInputWizardPage> pages_Replace_PFunction_values(IUIRefactoringContext context, PFunction pfunction) {
+	public List<? extends UserInputWizardPage> pages_Replace_PFunction_values(IRefactoringUIContext context, PFunction pfunction) {
 		return Lists.newArrayList(InputPage.getInstance(context));
 	}
 	
-	public void switch_widgets_Replace_PFunction_values(IUIRefactoringContext context, PFunction pfunction) {
+	public void switch_widgets_Replace_PFunction_values(IRefactoringUIContext context, PFunction pfunction) {
 		for(UserInputWizardPage page : context.getPages()) {
 			if(page instanceof InputPage) {
 				InputPage dip = (InputPage)page;

@@ -9,8 +9,8 @@ import org.eclipse.emf.ecore.change.ListChange;
 import org.eclipse.emf.ecore.change.util.ListDifferenceAnalyzer;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
-import org.vclipse.refactoring.core.IRefactoringContext;
-import org.vclipse.refactoring.core.Refactoring;
+import org.vclipse.refactoring.IRefactoringContext;
+import org.vclipse.refactoring.core.RefactoringExecuter;
 import org.vclipse.vcml.vcml.Comparison;
 import org.vclipse.vcml.vcml.Condition;
 import org.vclipse.vcml.vcml.ConditionalConstraintRestriction;
@@ -21,7 +21,7 @@ import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.google.common.collect.Lists;
 
-public class VCMLSimplifier extends Refactoring {
+public class VCMLSimplifier extends RefactoringExecuter {
 
 	protected final VcmlFactory VCML_FACTORY = VcmlFactory.eINSTANCE;
 	protected final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
