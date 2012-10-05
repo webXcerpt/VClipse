@@ -75,8 +75,6 @@ public class EObjectStorage implements IEncodedStorage {
 
 	@Override
 	public boolean isReadOnly() {
-		// there are currently no use 
-		// cases for writing available => true 
 		return true;
 	}
 
