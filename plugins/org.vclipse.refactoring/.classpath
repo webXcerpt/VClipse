@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
+		<accessrules>
+			<accessrule kind="accessible" pattern="**/core/internal/registry/osgi/**"/>
+			<accessrule kind="accessible" pattern="**/xtext/ui/editor/findrefs/**"/>
+			<accessrule kind="accessible" pattern="**/xtext/ui/compare/**"/>
+			<accessrule kind="accessible" pattern="**/compare/internal/**"/>
+			<accessrule kind="accessible" pattern="**/ltk/internal/ui/refactoring/**"/>
+		</accessrules>
+	</classpathentry>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

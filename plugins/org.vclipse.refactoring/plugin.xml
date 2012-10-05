@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	<extension-point id="org.vclipse.refactoring" name="Refactoring" schema="schema/org.vclipse.refactoring.exsd"/>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <menu
+               icon="icons/refactoring.png"
+               label="Refactoring">
+            <visibleWhen
+                  checkEnabled="false">
+               <reference
+                     definitionId="isActiveEditorAnInstanceOfXtextEditor">
+               </reference>
+            </visibleWhen>
+            <dynamic
+                  class="org.vclipse.refactoring.configuration.ExtensionFactory:org.vclipse.refactoring.ui.RefactoringMenuItem"
+                  id="org.vclipse.refactoring.ui.menuCreator">
+            </dynamic>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ltk.ui.refactoring.changePreviewViewers">
+      <changePreviewViewer
+            class="org.vclipse.refactoring.configuration.ExtensionFactory:org.vclipse.refactoring.ui.SourceCodeChangePreviewViewer"
+            id="org.vclipse.refactoring.ui.changePreviewViewer">
+         <enablement>
+            <instanceof
+                  value="org.vclipse.refactoring.IPreviewProvider">
+            </instanceof></enablement>
+      </changePreviewViewer>
+   </extension>
+</plugin>
