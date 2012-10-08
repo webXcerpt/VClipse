@@ -27,39 +27,43 @@ public class VCMLSimplifier extends RefactoringExecuter {
 		sourceElement = EcoreUtil2.getContainerOfType(sourceElement, ConstraintSource.class);
 		if(sourceElement instanceof ConstraintSource) {
 			ConstraintSource source = (ConstraintSource)sourceElement;
-			ConditionalConstraintRestriction previous = null; 
-			EList<ConstraintRestriction> restrictions = source.getRestrictions();
+			extract_Condition(source);
+			context.setSourceElement(source);
+		}
+	}
+	
+	public void extract_Condition(ConstraintSource source) {
+		ConditionalConstraintRestriction previous = null; 
+		EList<ConstraintRestriction> restrictions = source.getRestrictions();
+		for(ConstraintRestriction restriction : restrictions) {
+			if(previous == null) {
+				if(!(restriction instanceof ConditionalConstraintRestriction)) {
+					break;
+				}
+				previous = (ConditionalConstraintRestriction)restriction;
+				continue;
+			} 
+			if(restriction instanceof ConditionalConstraintRestriction) {
+				ConditionalConstraintRestriction ccr = (ConditionalConstraintRestriction)restriction;
+				if(EcoreUtil.equals(previous.getCondition(), ccr.getCondition())) {
+					previous = ccr;
+				} else {
+					previous = null;
+					break;
+				}
+			}
+		}
+		if(previous != null) {
+			Condition condition = EcoreUtil.copy(previous.getCondition());
+			source.setCondition(condition);			
+			List<ConstraintRestriction> newRestrictions = Lists.newArrayList();
 			for(ConstraintRestriction restriction : restrictions) {
-				if(previous == null) {
-					if(!(restriction instanceof ConditionalConstraintRestriction)) {
-						break;
-					}
-					previous = (ConditionalConstraintRestriction)restriction;
-					continue;
-				} 
-				if(restriction instanceof ConditionalConstraintRestriction) {
-					ConditionalConstraintRestriction ccr = (ConditionalConstraintRestriction)restriction;
-					if(EcoreUtil.equals(previous.getCondition(), ccr.getCondition())) {
-						previous = ccr;
-					} else {
-						previous = null;
-						break;
-					}
-				}
+				ConditionalConstraintRestriction ccr = (ConditionalConstraintRestriction)restriction;
+				ConstraintRestriction entry = ccr.getRestriction();
+				newRestrictions.add(EcoreUtil.copy(entry));
 			}
-			if(previous != null) {
-				Condition condition = EcoreUtil.copy(previous.getCondition());
-				source.setCondition(condition);			
-				List<ConstraintRestriction> newRestrictions = Lists.newArrayList();
-				for(ConstraintRestriction restriction : restrictions) {
-					ConditionalConstraintRestriction ccr = (ConditionalConstraintRestriction)restriction;
-					ConstraintRestriction entry = ccr.getRestriction();
-					newRestrictions.add(EcoreUtil.copy(entry));
-				}
-				source.getRestrictions().clear();
-				source.getRestrictions().addAll(newRestrictions);
-				context.setSourceElement(source);
-			}
+			source.getRestrictions().clear();
+			source.getRestrictions().addAll(newRestrictions);
 		}
 	}
 	
