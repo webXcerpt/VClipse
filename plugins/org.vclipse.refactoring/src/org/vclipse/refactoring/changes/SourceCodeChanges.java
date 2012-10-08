@@ -220,9 +220,11 @@ public class SourceCodeChanges extends CompositeChange implements IPreviewProvid
 		for(SourceCodeChange change : changes) {
 			DiffNode preview = change.getPreview();
 			try {
-				if(ByteStreams.equal(InputStreamProvider.getInstance(previewNode), InputStreamProvider.getInstance(preview))) {
-					if(!(size > 0)) {
-						markAsSynthetic();						
+				if(ByteStreams.equal(
+						InputStreamProvider.getInstance(previewNode), 
+							InputStreamProvider.getInstance(preview))) {
+					if(size == 1) {
+						markAsSynthetic();
 					} else {
 						continue;
 					}
