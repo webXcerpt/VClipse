@@ -32,8 +32,6 @@ import com.google.common.collect.Lists;
 
 public class VCMLRefactoring extends VCMLSimplifier {
 
-	private static final String RIGHT_REFERENCE_ENTRY = "@right";
-	
 	/*
 	 * Each value in the list is replaced through an equality expression
 	 */
@@ -107,19 +105,26 @@ public class VCMLRefactoring extends VCMLSimplifier {
 				Resource resource = cstic_p.eResource();
 				Object button_state = args.get(BUTTON_STATE);
 				if(button_state instanceof Boolean && (Boolean)button_state) {
+					EObject element = context.getSourceElement();
+					URI contextUri = element.eResource().getURI();
+					String contextSegment = contextUri.lastSegment();
 					for(IReferenceDescription description :  referencesFinder.getReferences(cstic_p.getCharacteristic(), true)) {
 						URI uri = description.getSourceEObjectUri();
-						if(uri.toString().contains(RIGHT_REFERENCE_ENTRY)) {
-							EObject eObject = resource.getEObject(uri.fragment());
-							EObject first = cstic_p.eContainer();
-							EObject second = eObject.eContainer();
-							if(first != null && second != null) {
-								if(first.eClass() == second.eClass()) {
-									if(eObject instanceof CharacteristicReference_P) {
-										replaceCsticReference((CharacteristicReference_P)eObject, args);
+						String fileName = uri.lastSegment();
+						if(contextSegment.contains(fileName)) {
+							String fragment = uri.fragment();
+							if("@values.".contains(fragment)) {
+								EObject eObject = resource.getEObject(fragment);
+								EObject first = cstic_p.eContainer();
+								EObject second = eObject.eContainer();
+								if(first != null && second != null) {
+									if(first.eClass() == second.eClass()) {
+										if(eObject instanceof CharacteristicReference_P) {
+											replaceCsticReference((CharacteristicReference_P)eObject, args);
+										}
 									}
 								}
-							}				
+							}						
 						}
 					}
 				} 
