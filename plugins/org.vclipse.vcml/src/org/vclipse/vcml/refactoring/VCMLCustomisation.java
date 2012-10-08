@@ -45,14 +45,17 @@ public class VCMLCustomisation extends RefactoringCustomisation {
 	}
 	
 	/**
-	 * Evaluation
+	 * 
 	 */
 	public boolean init_Extract_ConstraintSource(IRefactoringContext context, ConstraintSource source) {
 		context.setLabel("Extract common conditions from restrictions");
-		for(ConstraintRestriction restriction : source.getRestrictions()) {
-			if(restriction instanceof ConditionalConstraintRestriction) {
-				return Boolean.TRUE;
-			}
+		EList<ConstraintRestriction> restrictions = source.getRestrictions();
+		if(restrictions.size() > 1) {
+			for(ConstraintRestriction restriction : restrictions) {
+				if(restriction instanceof ConditionalConstraintRestriction) {
+					return Boolean.TRUE;
+				}
+			}			
 		}
 		return Boolean.FALSE;
 	}
