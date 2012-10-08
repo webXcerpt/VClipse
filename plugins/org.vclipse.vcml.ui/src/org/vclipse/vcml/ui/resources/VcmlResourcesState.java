@@ -47,6 +47,7 @@ public class VcmlResourcesState extends AbstractAllContainersState {
 	
 	@Override
 	protected void initialize() {
+		System.err.println("initialize");
 		super.initialize();
 		cache_visibleContainerHandles = Maps.newHashMap();
 	}
@@ -61,6 +62,7 @@ public class VcmlResourcesState extends AbstractAllContainersState {
 	
 	@Override
 	protected List<String> doInitVisibleHandles(String handle) {
+		System.err.println("doInitVisibleHandles " + handle + " " + this);
 		List<String> visibleContainerHandles = Lists.newArrayList(handle);
 		if(handle.endsWith(VCML_EXTENSION)) {
 			URI createURI = URI.createURI(handle);
@@ -175,7 +177,11 @@ public class VcmlResourcesState extends AbstractAllContainersState {
 				}
 				break;
 			default	:
-				cache_visibleContainerHandles.clear();
+				
+				// FIXME deactivate clear of the cache due to performance reasons (a re-parse of VCML files is required)
+				// This has to be cleaned up!
+				
+				// cache_visibleContainerHandles.clear();
 				super.resourceChanged(event);
 		}
 	}
