@@ -47,7 +47,6 @@ public class VcmlResourcesState extends AbstractAllContainersState {
 	
 	@Override
 	protected void initialize() {
-		System.err.println("initialize");
 		super.initialize();
 		cache_visibleContainerHandles = Maps.newHashMap();
 	}
@@ -62,7 +61,6 @@ public class VcmlResourcesState extends AbstractAllContainersState {
 	
 	@Override
 	protected List<String> doInitVisibleHandles(String handle) {
-		System.err.println("doInitVisibleHandles " + handle + " " + this);
 		List<String> visibleContainerHandles = Lists.newArrayList(handle);
 		if(handle.endsWith(VCML_EXTENSION)) {
 			URI createURI = URI.createURI(handle);
