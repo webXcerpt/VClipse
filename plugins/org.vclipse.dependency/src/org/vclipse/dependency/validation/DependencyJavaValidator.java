@@ -35,6 +35,11 @@ public class DependencyJavaValidator extends AbstractDependencyJavaValidator {
 	private DependencySourceUtils sourceUtils;
 	
 	protected void checkSource(EObject source) {
+		
+		// FIXME currently deactivated
+		// checkSource is currently deactivated since the implementation below is very bad for performance (VCML resources are parsed very often)
+		
+		if (true) return;
 		Resource sourceResource = source.eResource();
 		URI vcmlUri = sourceUtils.getVcmlResourceURI(sourceResource.getURI());
 		if (vcmlUri != null) {
