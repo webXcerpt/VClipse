@@ -38,8 +38,9 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
-import org.vclipse.refactoring.core.ModelChange;
+import org.vclipse.refactoring.changes.SourceCodeChanges;
 import org.vclipse.refactoring.core.RefactoringExecuter;
+import org.vclipse.refactoring.utils.RefactoringUtility;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -227,7 +228,7 @@ public class InputPage extends UserInputWizardPage {
 				refactoringUtility.getInstance(element, EValidator.Registry.class);
 		 
 		if(validator != null) {
-			ModelChange modelChange = context.getRefactoring().getChange();
+			SourceCodeChanges modelChange = context.getRefactoring().getChange();
 			Object modified = modelChange.getModifiedElement();
 			if(modified instanceof EObject) {
 				EObject changed = (EObject)modified;

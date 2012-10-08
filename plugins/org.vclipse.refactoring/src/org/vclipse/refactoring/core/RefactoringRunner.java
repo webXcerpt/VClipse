@@ -10,18 +10,12 @@
  ******************************************************************************/
 package org.vclipse.refactoring.core;
 
-import java.lang.reflect.Method;
-import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.util.Pair;
-import org.vclipse.base.BasePlugin;
 import org.vclipse.refactoring.IRefactoringContext;
 import org.vclipse.refactoring.configuration.ExtensionsReader;
 
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 public class RefactoringRunner {
@@ -37,27 +31,10 @@ public class RefactoringRunner {
 		changeRecorder = new ChangeRecorder(container);
 		RefactoringExecuter refactoring = getRefactoring(element);
 		if(refactoring != null) {
-			Pair<EObject, Method> pair = refactoring.getRefactoring(context);
-			if(pair != null) {
-				try {
-					Method method = pair.getSecond();
-					List<Object> params = Lists.newArrayList();
-					if(method.getParameterTypes().length == 1) {
-						params.add(context);
-					} else if(method.getParameterTypes().length == 2) {
-						params.add(context);
-						params.add(pair.getFirst());
-					}
-					pair.getSecond().invoke(refactoring, params.toArray());
-				} catch (Exception exception) {
-					BasePlugin.log(exception.getMessage(), exception);
-				}
-			}
+			refactoring.refactor(context);
+		} else {
+			System.err.println("Could not find re-factoring for type " + element.eClass());
 		}
-	}
-	
-	public void refactor(EObject object) {
-		refactor(RefactoringContext.create(object, null, RefactoringType.Replace));
 	}
 	
 	public boolean isRefactoringAvailable(IRefactoringContext context) {
@@ -65,7 +42,7 @@ public class RefactoringRunner {
 		return executerExists.getRefactoring(context) != null;
 	}
 	
-	protected ChangeRecorder getChangeRecorder() {
+	public ChangeRecorder getChangeRecorder() {
 		return changeRecorder;
 	}
 	

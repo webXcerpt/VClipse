@@ -21,7 +21,7 @@ import com.google.inject.Injector;
 
 public class RefactoringPlugin extends AbstractUIPlugin {
 
-	public static final String ID = "org.vclipse.refactoring"; //$NON-NLS-1$
+	public static final String ID = "org.vclipse.refactoring";
 
 	private static RefactoringPlugin plugin;
 	

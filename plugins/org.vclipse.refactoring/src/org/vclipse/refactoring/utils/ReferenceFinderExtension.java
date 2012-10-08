@@ -8,7 +8,7 @@
  * Contributors:
  *     webXcerpt Software GmbH - initial creator
  ******************************************************************************/
-package org.vclipse.refactoring.core;
+package org.vclipse.refactoring.utils;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,21 +34,23 @@ public class ReferenceFinderExtension {
 	private IReferenceFinder finder;
 
 	public List<IReferenceDescription> getReferences(EObject target, boolean allReferences) {
-		Resource eResource = target.eResource();
-		ResourceSet resourceSet = eResource.getResourceSet();
-		SimpleLocalResourceAccess access = new SimpleLocalResourceAccess(resourceSet);
 		final List<IReferenceDescription> references = Lists.newArrayList();
-		IAcceptor<IReferenceDescription> acceptor = new IAcceptor<IReferenceDescription>() {
-			public void accept(IReferenceDescription reference) {
-				references.add(reference);
-			}
-		};
-		Set<URI> resourceuris = Collections.singleton(eResource.getURI());
-		Set<URI> objecturis = Collections.singleton(EcoreUtil2.getNormalizedURI(target));
-		if(allReferences) {
-			finder.findAllReferences(objecturis, access, acceptor, new NullProgressMonitor());			
-		} else {
-			finder.findReferences(objecturis, resourceuris, access, acceptor, new NullProgressMonitor());
+		Resource resource = target.eResource();
+		if(resource != null) {
+			ResourceSet resourceSet = resource.getResourceSet();
+			SimpleLocalResourceAccess access = new SimpleLocalResourceAccess(resourceSet);
+			IAcceptor<IReferenceDescription> acceptor = new IAcceptor<IReferenceDescription>() {
+				public void accept(IReferenceDescription reference) {
+					references.add(reference);
+				}
+			};
+			Set<URI> resourceuris = Collections.singleton(resource.getURI());
+			Set<URI> objecturis = Collections.singleton(EcoreUtil2.getNormalizedURI(target));
+			if(allReferences) {
+				finder.findAllReferences(objecturis, access, acceptor, new NullProgressMonitor());			
+			} else {
+				finder.findReferences(objecturis, resourceuris, access, acceptor, new NullProgressMonitor());
+			}			
 		}
 		return references;
 	}

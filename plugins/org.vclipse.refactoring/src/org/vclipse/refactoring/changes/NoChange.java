@@ -8,7 +8,7 @@
  * Contributors:
  *     webXcerpt Software GmbH - initial creator
  ******************************************************************************/
-package org.vclipse.refactoring.core;
+package org.vclipse.refactoring.changes;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -19,6 +19,16 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
 public class NoChange extends Change {
 
+	private String label;
+	
+	public NoChange() {
+		
+	}
+	
+	public NoChange(String label) {
+		this.label = (label == null || label.isEmpty()) ? "no source code changes in this node" : label;
+	}
+	
 	@Override
 	public void initializeValidationData(IProgressMonitor pm) {
 		
@@ -41,6 +51,6 @@ public class NoChange extends Change {
 	
 	@Override
 	public String getName() {
-		return "";
+		return label;
 	}
 }

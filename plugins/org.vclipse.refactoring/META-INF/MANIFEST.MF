@@ -18,6 +18,8 @@ Bundle-ActivationPolicy: lazy
 Import-Package: com.google.common.io,
  org.apache.log4j
 Export-Package: org.vclipse.refactoring,
+ org.vclipse.refactoring.changes,
  org.vclipse.refactoring.configuration,
  org.vclipse.refactoring.core,
- org.vclipse.refactoring.ui
+ org.vclipse.refactoring.ui,
+ org.vclipse.refactoring.utils

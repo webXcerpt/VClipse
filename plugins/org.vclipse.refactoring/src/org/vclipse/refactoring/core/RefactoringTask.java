@@ -28,7 +28,8 @@ import org.eclipse.xtext.diagnostics.AbstractDiagnostic;
 import org.vclipse.base.ui.util.EditorUtilsExtensions;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
-import org.vclipse.refactoring.ui.RefactoringUtility;
+import org.vclipse.refactoring.changes.SourceCodeChanges;
+import org.vclipse.refactoring.utils.RefactoringUtility;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -36,7 +37,7 @@ import com.google.inject.Inject;
 
 public class RefactoringTask extends Refactoring {
 
-	private ModelChange modelChange;
+	private SourceCodeChanges modelChange;
 	private IRefactoringUIContext context;
 	
 	@Inject
@@ -51,7 +52,7 @@ public class RefactoringTask extends Refactoring {
 		this.utility = utility;
 	}
 	
-	public ModelChange getChange() {
+	public SourceCodeChanges getChange() {
 		if(modelChange == null) {
 			IProgressMonitor pm = EditorUtilsExtensions.getProgressMonitor();
 			try {
@@ -70,33 +71,36 @@ public class RefactoringTask extends Refactoring {
 		// at the moment a re-factoring is not executed if there are any errors in the model
 		EObject element = context.getSourceElement();
 		Resource resource = element.eResource();
-		EList<Diagnostic> errors = resource.getErrors();
-		if(resource != null && errors.isEmpty()) {
-			return RefactoringStatus.create(Status.OK_STATUS);			
-		} else {
-			Iterator<Diagnostic> diagnostics = Iterables.filter(errors, new Predicate<Diagnostic>() {
-				@Override
-				public boolean apply(Diagnostic diagnostic) {
-					return diagnostic instanceof AbstractDiagnostic;
-				}
-			}).iterator();
-			if(diagnostics.hasNext()) {
-				final Diagnostic diagnostic = diagnostics.next();
-				return RefactoringStatus.createFatalErrorStatus(diagnostic.getMessage(), new RefactoringStatusContext() {
+		if(resource != null) {
+			EList<Diagnostic> errors = resource.getErrors();
+			if(resource != null && errors.isEmpty()) {
+				return RefactoringStatus.create(Status.OK_STATUS);			
+			} else {
+				Iterator<Diagnostic> diagnostics = Iterables.filter(errors, new Predicate<Diagnostic>() {
 					@Override
-					public Object getCorrespondingElement() {
-						return ((AbstractDiagnostic)diagnostic).getCode();
+					public boolean apply(Diagnostic diagnostic) {
+						return diagnostic instanceof AbstractDiagnostic;
 					}
-				});
+				}).iterator();
+				if(diagnostics.hasNext()) {
+					final Diagnostic diagnostic = diagnostics.next();
+					return RefactoringStatus.createFatalErrorStatus(diagnostic.getMessage(), new RefactoringStatusContext() {
+						@Override
+						public Object getCorrespondingElement() {
+							return ((AbstractDiagnostic)diagnostic).getCode();
+						}
+					});
+				}
+				return RefactoringStatus.createInfoStatus("not the best conditions for a re-factoring");
 			}
-			return RefactoringStatus.createInfoStatus("not the best conditions for a re-factoring");
 		}
+		return RefactoringStatus.createInfoStatus("Could not validate initial conditions since resource == null");
 	}
 	
 	@Override
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		pm.beginTask("Creating a change description", IProgressMonitor.UNKNOWN);
-		modelChange = new ModelChange(context, runner, utility);	
+		modelChange = new SourceCodeChanges(context, runner, utility);	
 		modelChange.perform(pm);
 		pm.done();
 		return modelChange;

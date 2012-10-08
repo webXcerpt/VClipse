@@ -18,7 +18,7 @@ import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.ui.refactoring.UserInputWizardPage;
 import org.vclipse.base.ui.util.EditorUtilsExtensions;
 import org.vclipse.refactoring.RefactoringPlugin;
-import org.vclipse.refactoring.core.ModelChange;
+import org.vclipse.refactoring.changes.SourceCodeChanges;
 import org.vclipse.refactoring.core.RefactoringTask;
 
 import com.google.common.collect.Lists;
@@ -40,7 +40,7 @@ public class RefactoringWizard extends org.eclipse.ltk.ui.refactoring.Refactorin
 		if(refactoring instanceof RefactoringTask) {
 			RefactoringTask modelRefactoring = (RefactoringTask)refactoring;
 			IProgressMonitor pm = EditorUtilsExtensions.getProgressMonitor();
-			ModelChange modelChange = modelRefactoring.getChange();
+			SourceCodeChanges modelChange = modelRefactoring.getChange();
 			try {
 				modelChange.refactor(pm);
 			} catch(CoreException exception) {

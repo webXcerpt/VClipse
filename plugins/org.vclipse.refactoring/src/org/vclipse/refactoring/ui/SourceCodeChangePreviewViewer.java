@@ -20,9 +20,9 @@ import org.eclipse.ltk.ui.refactoring.IChangePreviewViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.xtext.ui.compare.InjectableViewerCreator;
+import org.vclipse.refactoring.IPreviewProvider;
 import org.vclipse.refactoring.core.DiffNode;
-import org.vclipse.refactoring.core.ModelChange;
-import org.vclipse.refactoring.core.SourceCodeChangePreview;
+import org.vclipse.refactoring.utils.RefactoringUtility;
 
 import com.google.inject.Inject;
 
@@ -52,13 +52,9 @@ public class SourceCodeChangePreviewViewer implements IChangePreviewViewer {
 				viewer = instance.createViewer(composite, new CompareConfiguration());					
 			}
 		}
-		if(change instanceof ModelChange) {
-			ModelChange modelChange = (ModelChange)change;
+		if(change instanceof IPreviewProvider) {
+			IPreviewProvider modelChange = (IPreviewProvider)change;
 			DiffNode preview = modelChange.getPreview();
-			viewer.setInput(preview);
-		} else if(change instanceof SourceCodeChangePreview) {
-			SourceCodeChangePreview contextChange = (SourceCodeChangePreview)change;
-			DiffNode preview = contextChange.getPreview();
 			viewer.setInput(preview);
 		}
 	}
@@ -70,5 +66,4 @@ public class SourceCodeChangePreviewViewer implements IChangePreviewViewer {
 		}
 		return null;
 	}
-
 }

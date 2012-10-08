@@ -40,6 +40,7 @@ import org.vclipse.refactoring.core.RefactoringTask;
 import org.vclipse.refactoring.core.RefactoringCustomisation;
 import org.vclipse.refactoring.core.RefactoringRunner;
 import org.vclipse.refactoring.core.RefactoringType;
+import org.vclipse.refactoring.utils.RefactoringUtility;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -82,7 +83,7 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 					EObject elementAt = offsetHelper.resolveContainedElementAt(xtextResource, textSelection.getOffset());
 					EObject rootContainer = EcoreUtil.getRootContainer(elementAt);
 					RefactoringCustomisation customisation = extensionReader.getCustomisation().get(rootContainer.eClass());
-					if(elementAt != null) {
+					if(elementAt != null && customisation != null) {
 						for(RefactoringType type : RefactoringType.values()) { 
 							IRefactoringUIContext context = contextProvider.get();
 							context.setSourceElement(elementAt);
@@ -94,8 +95,6 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 									context.setDocument(editor.getDocument());
 									if(refactoringRunner.isRefactoringAvailable(context)) {
 										MenuItem item = new MenuItem(menu, SWT.PUSH);
-										
-										// => context probably requires something like invokedOn-object
 										
 										// set the index if the object is in the list
 										EObject container = elementAt.eContainer();

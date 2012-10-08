@@ -16,17 +16,14 @@ import java.util.List;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.change.ChangeFactory;
-import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.nodemodel.impl.NodeModelBuilder;
 import org.eclipse.xtext.util.Pair;
 import org.vclipse.base.BasePlugin;
 import org.vclipse.refactoring.IRefactoringContext;
-import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.configuration.ExtensionsReader;
-import org.vclipse.refactoring.ui.RefactoringUtility;
+import org.vclipse.refactoring.utils.RefactoringUtility;
+import org.vclipse.refactoring.utils.ReferenceFinderExtension;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -37,13 +34,6 @@ public abstract class RefactoringExecuter extends MethodCollector {
 	public static String TEXT_FIELD_ENTRY = "text_field_entry";
 	
 	public static final String REFACTORING_PREFIX = "refactoring_";
-	
-	protected ChangeFactory changeFactory;
-	
-	private ChangeRecorder changeRecorder;
-	
-	@Inject
-	protected NodeModelBuilder nodeModelBuilder;
 	
 	@Inject
 	protected ReferenceFinderExtension referencesFinder;
@@ -57,14 +47,10 @@ public abstract class RefactoringExecuter extends MethodCollector {
 	public RefactoringExecuter() {		
 		collect(1, IRefactoringContext.class);
 		collect(2);
-		changeFactory = ChangeFactory.eINSTANCE;
 	}
 	
 	public void refactor(IRefactoringContext context) {
 		EObject element = context.getSourceElement();
-		EObject container = EcoreUtil.getRootContainer(element);
-		changeRecorder = new ChangeRecorder(container);
-		
 		RefactoringExecuter refactoring = getRefactoring(element);
 		if(refactoring != null) {
 			Pair<EObject, Method> refactoringMethod = getRefactoring(context);
@@ -88,28 +74,10 @@ public abstract class RefactoringExecuter extends MethodCollector {
 		} else {
 			System.err.println("refactoring for " + element + " was null");
 		}
-		
-		String prefix = REFACTORING_PREFIX + context.getType();
-		Pair<EObject, Method> pair = getMethod(element, context.getStructuralFeature(), prefix);
-		if(pair != null) {
-			try {
-				pair.getSecond().invoke(this, new Object[]{context, pair.getFirst()});
-			} catch (Exception exception) {
-				RefactoringPlugin.log(exception.getMessage(), exception);
-			}
-		} 
 	}
 	
 	public void refactor(EObject object) {
 		refactor(RefactoringContext.create(object, null, RefactoringType.Replace));
-	}
-	
-	protected ChangeRecorder getChangeRecorder() {
-		return changeRecorder;
-	}
-	
-	public boolean isRefactoringAvailable(IRefactoringContext context) {
-		return getRefactoring(context.getSourceElement()) != null;
 	}
 	
 	private RefactoringExecuter getRefactoring(EObject object) {

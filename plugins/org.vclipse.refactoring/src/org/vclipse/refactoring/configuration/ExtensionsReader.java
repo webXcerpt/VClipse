@@ -118,8 +118,8 @@ public class ExtensionsReader {
 					classifier.put(eclassifier, ePackage);
 
 					try {
-						readCustomisation(element, bundle, eclassifier, ATTRIBUTE_CUSTOMISATION, customisation);
-						readCustomisation(element, bundle, eclassifier, ATTRIBUTE_UICUSTOMISATION, uicustomisation);
+						readCustomisation(element.getAttribute(ATTRIBUTE_CUSTOMISATION), bundle, eclassifier, customisation);
+						readCustomisation(element.getAttribute(ATTRIBUTE_UICUSTOMISATION), bundle, eclassifier, uicustomisation);
 						
 						Object object = element.createExecutableExtension(ATTRIBUTE_EXECUTOR);
 						if(object instanceof RefactoringExecuter) {
@@ -134,9 +134,8 @@ public class ExtensionsReader {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private <T extends RefactoringCustomisation> void readCustomisation(IConfigurationElement element, Bundle bundle, EClassifier eClassifier, String attribute, Map<EClassifier, T> customisations) throws Exception {
-		String value = element.getAttribute(attribute);
-		String[] parts = value.split(":");
+	private <T extends RefactoringCustomisation> void readCustomisation(String attrValue, Bundle bundle, EClassifier eClassifier, Map<EClassifier, T> customisations) throws Exception {
+		String[] parts = attrValue.split(":");
 		if(parts.length != 2) {
 			BasePlugin.log("Instantiation of this extension point should contain executable extension part.", IStatus.ERROR);
 		}

@@ -8,7 +8,7 @@
  * Contributors:
  *     webXcerpt Software GmbH - initial creator
  ******************************************************************************/
-package org.vclipse.refactoring.core;
+package org.vclipse.refactoring.changes;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,7 +16,6 @@ import java.io.StringReader;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.core.runtime.CoreException;
@@ -26,7 +25,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.change.ChangeDescription;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
@@ -49,15 +47,16 @@ import org.vclipse.base.ui.compare.EObjectTypedElement;
 import org.vclipse.refactoring.IPreviewProvider;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
-import org.vclipse.refactoring.ui.RefactoringUtility;
+import org.vclipse.refactoring.core.DiffNode;
+import org.vclipse.refactoring.core.RefactoringRunner;
 import org.vclipse.refactoring.ui.UIRefactoringContext;
+import org.vclipse.refactoring.utils.RefactoringUtility;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.InputSupplier;
 
-public class ModelChange extends CompositeChange implements IPreviewProvider {
+public class SourceCodeChanges extends CompositeChange implements IPreviewProvider {
 	
 	private RefactoringRunner runner;
 	private RefactoringUtility utility;
@@ -105,7 +104,7 @@ public class ModelChange extends CompositeChange implements IPreviewProvider {
 		return context.getSourceElement().eResource().getURI().lastSegment();
 	}
 	
-	public ModelChange(IRefactoringUIContext context, RefactoringRunner runner, RefactoringUtility utility) {
+	public SourceCodeChanges(IRefactoringUIContext context, RefactoringRunner runner, RefactoringUtility utility) {
 		super("Changes in " + getChangeLabel(context));
 		this.context = context;
 		this.runner = runner;
@@ -129,6 +128,7 @@ public class ModelChange extends CompositeChange implements IPreviewProvider {
 		return previewNode;
 	}
 	
+
 	@Override
  	public Change perform(IProgressMonitor pm) throws CoreException {
 		if(!performed) {
@@ -162,7 +162,7 @@ public class ModelChange extends CompositeChange implements IPreviewProvider {
 			handleChanges(refactoringContext);
 			
 			if(getChildren().length == 0) {
-				add(new NoChange());
+				add(new NoChange(null));
 			}
 			pm.done();
 		}
@@ -202,35 +202,36 @@ public class ModelChange extends CompositeChange implements IPreviewProvider {
 		ChangeRecorder changeRecorder = runner.getChangeRecorder();
 		ChangeDescription endRecording = changeRecorder.endRecording();
 
-		List<EObject> entries = Lists.newArrayList(rootOriginal);
-		entries.addAll(Lists.newArrayList(rootOriginal.eAllContents()));
+		List<EObject> entries = Lists.newArrayList(rootOriginal.eAllContents());
+		entries.add(0, rootOriginal);
 		
-		Set<EObject> seenChanges = Sets.newHashSet();
+		List<SourceCodeChange> changes = Lists.newArrayList();
 		for(Entry<EObject, EList<FeatureChange>> entry : endRecording.getObjectChanges().entrySet()) {
-			EObject changeOnObject = entry.getKey();
-			seenChanges.add(changeOnObject);
-			for(FeatureChange change : entry.getValue()) {
-				EStructuralFeature feature = change.getFeature();
-				Object changedValue = changeOnObject.eGet(feature);
-				EObject existingEntry = getEqualOriginal(entries, changeOnObject);
-				
-				SourceCodeChangePreview sourceCodeChangePreview = 
-						new SourceCodeChangePreview(utility, existingEntry, changeOnObject, feature, changedValue);
-				
-				DiffNode preview = sourceCodeChangePreview.getPreview();
-				try {
-					if(ByteStreams.equal(InputStreamProvider.getInstance(previewNode), 
-							InputStreamProvider.getInstance(preview))) {
+			EObject changed = entry.getKey();
+			if(changed.eContainer() instanceof ChangeDescription) {
+				continue;
+			}
+			EObject existingEntry = getEqualOriginal(entries, changed);
+			SourceCodeChange scc = new SourceCodeChange(utility, existingEntry, changed, entry.getValue());
+			changes.add(scc);
+		}
+		
+		int size = changes.size();
+		for(SourceCodeChange change : changes) {
+			DiffNode preview = change.getPreview();
+			try {
+				if(ByteStreams.equal(InputStreamProvider.getInstance(previewNode), InputStreamProvider.getInstance(preview))) {
+					if(!(size > 0)) {
+						markAsSynthetic();						
+					} else {
 						continue;
 					}
-				} catch(IOException exception) {
-					continue;
 				}
-				
-				preview.setParent(previewNode);
-				add(sourceCodeChangePreview);
-			} 
-
+			} catch(IOException exception) {
+				continue;
+			}
+			preview.setParent(previewNode);
+			add(change);
 		}
 	}
 	
@@ -268,6 +269,7 @@ public class ModelChange extends CompositeChange implements IPreviewProvider {
 		rootCopy = rootContainerCopy(element);
 		
 		List<EObject> entries = Lists.newArrayList(rootCopy.eAllContents());
+		entries.add(0, rootCopy);
 		QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(element);
 		if(qualifiedName == null) {
 			EClass eclass = element.eClass();

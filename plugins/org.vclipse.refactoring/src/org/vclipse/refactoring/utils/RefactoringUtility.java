@@ -8,7 +8,7 @@
  * Contributors:
  *     webXcerpt Software GmbH - initial creator
  ******************************************************************************/
-package org.vclipse.refactoring.ui;
+package org.vclipse.refactoring.utils;
 
 import java.util.Iterator;
 import java.util.List;
@@ -146,11 +146,14 @@ public class RefactoringUtility {
 	}
 	
 	public boolean equalTypeWithContainerType(EObject first, EObject second) {
-		EClass firstClass = first.eClass();
-		EClass secondClass = second.eClass();
-		EClass firstContainerClass = first.eContainer().eClass();
-		EClass secondContainerClass = second.eContainer().eClass();
-		return firstClass == secondClass && firstContainerClass == secondContainerClass;
+		EClass firstType = first.eClass();
+		EClass secondType = second.eClass();
+		if(first.eContainer() == null || second.eContainer() == null) {
+			return firstType == secondType;
+		}
+		EClass firstContainerType = first.eContainer().eClass();
+		EClass secondContainerType = second.eContainer().eClass();
+		return firstType == secondType && firstContainerType == secondContainerType;
 	}
 	
 	private void appendToBuffer(StringBuffer buffer, String text, boolean handleLastIndex) {
