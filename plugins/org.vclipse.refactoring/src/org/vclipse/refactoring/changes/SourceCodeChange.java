@@ -35,12 +35,6 @@ public class SourceCodeChange extends NoChange implements IPreviewProvider {
 	
 	private RefactoringUtility utility;
 	
-	static String getName(RefactoringUtility utility, EObject object) {
-		IQualifiedNameProvider nameProvider = utility.getInstance(object, IQualifiedNameProvider.class);
-		QualifiedName qualifiedName = nameProvider == null ? QualifiedName.create("") : nameProvider.getFullyQualifiedName(object);
-		return qualifiedName == null ? object.eClass().getName() : qualifiedName.getLastSegment();
-	}
-	
 	public SourceCodeChange(RefactoringUtility utility, EObject original, EObject refactored, EList<FeatureChange> featureChanges) {
 		this.original = original;
 		this.refactored = refactored;
@@ -100,5 +94,11 @@ public class SourceCodeChange extends NoChange implements IPreviewProvider {
 	@Override
 	public String getName() {
 		return "Re-factoring for " + getName(utility, original);
+	}
+	
+	private String getName(RefactoringUtility utility, EObject object) {
+		IQualifiedNameProvider nameProvider = utility.getInstance(object, IQualifiedNameProvider.class);
+		QualifiedName qualifiedName = nameProvider == null ? QualifiedName.create("") : nameProvider.getFullyQualifiedName(object);
+		return qualifiedName == null ? object.eClass().getName() : qualifiedName.getLastSegment();
 	}
 }
