@@ -26,6 +26,7 @@ Require-Bundle: org.eclipse.xtext.ui.shared,
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.vcml.ui,
  org.vclipse.vcml.ui.actions,
+ org.vclipse.vcml.ui.builder,
  org.vclipse.vcml.ui.contentassist,
  org.vclipse.vcml.ui.contentassist.antlr,
  org.vclipse.vcml.ui.contentassist.antlr.internal,

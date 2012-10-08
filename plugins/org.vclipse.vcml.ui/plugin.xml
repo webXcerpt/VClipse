@@ -518,4 +518,11 @@
       </wizard>
    </extension>
 
+  <extension
+        point="org.eclipse.xtext.ui.shared.overridingGuiceModule">
+     <module
+           class="org.vclipse.vcml.ui.VCMLSharedModule">
+     </module>
+  </extension>
+
 </plugin>
