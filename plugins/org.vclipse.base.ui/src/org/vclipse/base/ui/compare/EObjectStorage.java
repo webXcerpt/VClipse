@@ -44,8 +44,11 @@ public class EObjectStorage implements IEncodedStorage {
 
 	@Override
 	public InputStream getContents() throws CoreException {
-		String serialized = serializer.serialize(object);
-		return new StringInputStream(serialized);
+		String content = "";
+		if(object != null && serializer != null) {
+			content = serializer.serialize(object);
+		}
+		return new StringInputStream(content);
 	}
 
 	@Override
