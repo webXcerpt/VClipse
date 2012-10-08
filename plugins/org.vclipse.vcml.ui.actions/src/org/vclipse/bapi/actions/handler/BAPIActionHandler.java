@@ -5,9 +5,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -100,6 +100,7 @@ public class BAPIActionHandler extends AbstractHandler {
 		WorkspaceJob workspaceJob = new WorkspaceJob("Executing SAP action") {
 			@Override
 			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+				resultStream.println("Task started (" + new Date() + ")");
 				Resource result = getResultResource(source, seenObjects, fileOutput);
 				String taskName = "Executing rfc call on SAP system";
 				monitor.beginTask(taskName, IProgressMonitor.UNKNOWN);
@@ -107,7 +108,7 @@ public class BAPIActionHandler extends AbstractHandler {
 				for(Object entry : entries) {
 					if(monitor.isCanceled()) {
 						monitor.done();
-						resultStream.println("Task cancelled: " + taskName);
+						resultStream.println("Task cancelled: " + taskName + " (" + new Date() + ")");
 						return Status.CANCEL_STATUS;
 					}
 					EObject current = null;
@@ -129,7 +130,7 @@ public class BAPIActionHandler extends AbstractHandler {
 					monitor.setTaskName(taskName);
 					if(monitor.isCanceled()) {
 						monitor.done();
-						resultStream.println("Task cancelled: " + taskName);
+						resultStream.println("Task cancelled: " + taskName + " (" + new Date() + ")");
 						return Status.CANCEL_STATUS;
 					}
 					try {
@@ -149,11 +150,11 @@ public class BAPIActionHandler extends AbstractHandler {
 				}
 				if(monitor.isCanceled()) {
 					monitor.done();
-					resultStream.println("Task cancelled: " + taskName);
+					resultStream.println("Task cancelled: " + taskName + " (" + new Date() + ")");
 					return Status.CANCEL_STATUS;
 				}
 				persistResultResource(fileOutput, result, vcmlModel, monitor);
-				resultStream.println("Task finished: " + taskName);
+				resultStream.println("Task finished: " + taskName + " (" + new Date() + ")");
 				return Status.OK_STATUS;
 			}
 		};
