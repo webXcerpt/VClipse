@@ -34,8 +34,4 @@ public class VClipseResourceUtil extends ResourceUtil {
 			return resourceSet.createResource(uri);				
 		}
 	}
-	
-	public Resource getResource(IFile file) {
-		return getResource(null, file);
-	}
 }
