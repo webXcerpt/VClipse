@@ -7,12 +7,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
 import org.eclipse.xtext.resource.SaveOptions;
+import org.eclipse.xtext.resource.XtextResourceSet;
 import org.vclipse.base.ui.BaseUiPlugin;
 import org.vclipse.base.ui.util.VClipseResourceUtil;
 import org.vclipse.vcml.utils.DependencySourceUtils;
@@ -64,7 +66,9 @@ public class VcmlRenameDependencyParticipant extends RenameParticipant {
 		Object[] elements = getProcessor().getElements();
 		if(elements.length > 0 && elements[0] instanceof IFile) {
 			IFile file = (IFile)elements[0];
-			Resource dependencyResource = resourceUtil.getResource(file);
+			String path = file.getFullPath().toString();
+			URI uri = URI.createPlatformResourceURI(path, true);
+			Resource dependencyResource = new XtextResourceSet().getResource(uri, true);
 			VCObject dependency = dependencySourceUtils.getDependency(dependencyResource.getURI());
 			if(dependency != null) {
 				dependency.eSet(VcmlPackage.eINSTANCE.getVCObject_Name(), getArguments().getNewName().replace("." + file.getFileExtension(), ""));
