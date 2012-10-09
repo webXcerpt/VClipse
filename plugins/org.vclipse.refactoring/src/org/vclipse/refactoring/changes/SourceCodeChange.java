@@ -1,10 +1,13 @@
 package org.vclipse.refactoring.changes;
 
+import java.util.Map;
+
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -20,6 +23,8 @@ import org.vclipse.base.ui.compare.EObjectTypedElement;
 import org.vclipse.refactoring.IPreviewProvider;
 import org.vclipse.refactoring.core.DiffNode;
 import org.vclipse.refactoring.utils.RefactoringUtility;
+
+import com.google.common.collect.Maps;
 
 public class SourceCodeChange extends NoChange implements IPreviewProvider {
 
@@ -51,11 +56,11 @@ public class SourceCodeChange extends NoChange implements IPreviewProvider {
 	@Override
 	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		pm.beginTask("Validating change for " + getName(utility, original), IProgressMonitor.UNKNOWN);
-//		BasicDiagnostic diagnostics = new BasicDiagnostic();
-//		HashMap<Object, Object> validationContext = Maps.newHashMap();
-//		validator.validate(original, diagnostics, validationContext);
-//		validator.validate(refactored, diagnostics, validationContext);
-//		pm.done();
+		BasicDiagnostic diagnostics = new BasicDiagnostic();
+		Map<Object, Object> validationContext = Maps.newHashMap();
+		validator.validate(original, diagnostics, validationContext);
+		validator.validate(refactored, diagnostics, validationContext);
+		pm.done();
 		return RefactoringStatus.create(Status.OK_STATUS);
 	}
 	
