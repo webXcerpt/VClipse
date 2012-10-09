@@ -296,7 +296,7 @@
      <refactoring
            class="org.vclipse.vcml.vcml.ConstraintSource"
            customisation="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.vclipse.vcml.refactoring.VCMLCustomisation"
-           executor="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.vclipse.vcml.refactoring.VCMLRefactoring"
+           executer="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.vclipse.vcml.refactoring.VCMLRefactoring"
            package="http://www.vclipse.org/vcml"
            uicustomisation="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.vclipse.vcml.ui.refactoring.VCMLUICustomisation">
      </refactoring>
