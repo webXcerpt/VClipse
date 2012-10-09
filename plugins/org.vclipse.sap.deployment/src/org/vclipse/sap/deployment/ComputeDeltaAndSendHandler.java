@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -90,9 +91,17 @@ public class ComputeDeltaAndSendHandler extends FileListHandler {
 						}
 
 						// handle resources
-						Resource newStateResource = resourceUtils.getResource(resourceSet, currentFile);
-						Resource sapStateResource = resourceUtils.getResource(resourceSet, sapStateFile);
-						Resource diffResource = resourceUtils.getResource(resourceSet, resultFile);
+						String path = currentFile.getFullPath().toString();
+						URI uri = URI.createPlatformResourceURI(path, true);
+						Resource newStateResource = resourceSet.getResource(uri, true);
+						
+						path = sapStateFile.getFullPath().toString();
+						uri = URI.createPlatformResourceURI(path, true);
+						Resource sapStateResource = resourceSet.getResource(uri, true);
+						
+						path = resultFile.getFullPath().toString();
+						uri = URI.createPlatformResourceURI(path, true);
+						Resource diffResource = resourceSet.getResource(uri, true);
 						
 						monitor.subTask("Comparing existing vcml resources.");
 						vcmlCompare.compare(sapStateResource, newStateResource, diffResource, monitor);
