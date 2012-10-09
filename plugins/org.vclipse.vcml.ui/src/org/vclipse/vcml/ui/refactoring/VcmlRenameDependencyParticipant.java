@@ -16,7 +16,6 @@ import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.vclipse.base.ui.BaseUiPlugin;
-import org.vclipse.base.ui.util.VClipseResourceUtil;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlPackage;
@@ -30,9 +29,6 @@ public class VcmlRenameDependencyParticipant extends RenameParticipant {
 	
 	@Inject
 	private DependencySourceUtils dependencySourceUtils;
-	
-	@Inject
-	private VClipseResourceUtil resourceUtil;
 	
 	@Override
 	protected boolean initialize(Object object) {

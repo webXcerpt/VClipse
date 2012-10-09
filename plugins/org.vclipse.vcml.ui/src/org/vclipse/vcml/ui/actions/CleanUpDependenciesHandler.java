@@ -24,10 +24,10 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.resource.SaveOptions;
+import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.utils.EditorUtils;
 import org.vclipse.base.ui.BaseUiPlugin;
-import org.vclipse.base.ui.util.VClipseResourceUtil;
 import org.vclipse.vcml.ui.resources.VcmlResourcesState;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.vcml.Dependency;
@@ -40,9 +40,6 @@ import com.google.inject.Inject;
 public class CleanUpDependenciesHandler extends AbstractHandler {
 
 	private static final Logger LOGGER = Logger.getLogger(CleanUpDependenciesHandler.class);
-	
-	@Inject
-	private VClipseResourceUtil resourceUtil;
 	
 	@Inject
 	private VcmlResourcesState containerState;
@@ -108,8 +105,9 @@ public class CleanUpDependenciesHandler extends AbstractHandler {
 
 	protected void executeOn(URI uri, IProgressMonitor monitor) {
 		String fileExtension = uri.fileExtension();
+		XtextResourceSet set = new XtextResourceSet();
 		if(DependencySourceUtils.EXTENSION_VCML.equals(fileExtension)) {
-			Resource resource = resourceUtil.getResourceSet().getResource(uri, true);
+			Resource resource = set.getResource(uri, true);
 			String uriStringNoExtension = uri.trimFileExtension().toString();
 			String sourceFolderUri = uriStringNoExtension.concat(DependencySourceUtils.SUFFIX_SOURCEFOLDER);
 			Collection<URI> containedURIs = containerState.getContainedURIs(sourceFolderUri);
@@ -146,7 +144,7 @@ public class CleanUpDependenciesHandler extends AbstractHandler {
 			VCObject dependency = sourceUtils.getDependency(uri);
 			if(dependency == null) {
 				try {
-					Resource resource = resourceUtil.getResourceSet().getResource(uri, true);
+					Resource resource = set.getResource(uri, true);
 					resource.delete(SaveOptions.defaultOptions().toOptionsMap());
 				} catch(IOException exception) {
 					LOGGER.error(exception.getMessage());
