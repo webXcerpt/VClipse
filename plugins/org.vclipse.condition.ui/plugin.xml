@@ -310,6 +310,7 @@
      <refactoring
            class="org.vclipse.vcml.vcml.ConditionSource"
            customisation="org.vclipse.condition.ui.ConditionExecutableExtensionFactory:org.vclipse.vcml.refactoring.VCMLCustomisation"
+           executer="org.vclipse.condition.ui.ConditionExecutableExtensionFactory:org.vclipse.vcml.refactoring.VCMLRefactoring"
            executor="org.vclipse.condition.ui.ConditionExecutableExtensionFactory:org.vclipse.vcml.refactoring.VCMLRefactoring"
            package="http://www.vclipse.org/vcml"
            uicustomisation="org.vclipse.condition.ui.ConditionExecutableExtensionFactory:org.vclipse.vcml.ui.refactoring.VCMLUICustomisation">
