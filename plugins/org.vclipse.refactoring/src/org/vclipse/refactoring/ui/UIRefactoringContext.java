@@ -20,7 +20,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ltk.ui.refactoring.UserInputWizardPage;
 import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.vclipse.refactoring.IRefactoringUIContext;
-import org.vclipse.refactoring.configuration.ExtensionsReader;
+import org.vclipse.refactoring.configuration.ConfigurationProvider;
 import org.vclipse.refactoring.core.RefactoringContext;
 import org.vclipse.refactoring.core.RefactoringTask;
 
@@ -34,7 +34,7 @@ public class UIRefactoringContext extends RefactoringContext implements IRefacto
 	private Provider<UIRefactoringContext> contextProvider;
 	
 	@Inject
-	private ExtensionsReader reader;
+	private ConfigurationProvider configuration;
 	
 	private IXtextDocument document;
 	
@@ -64,7 +64,7 @@ public class UIRefactoringContext extends RefactoringContext implements IRefacto
 	public void configureWidgets() {
 		EObject rootContainer = EcoreUtil.getRootContainer(getSourceElement());
 		EClass eClass = rootContainer.eClass();
-		RefactoringUICustomisation uicustomisation = reader.getUICustomisation().get(eClass);
+		RefactoringUICustomisation uicustomisation = configuration.getUICustomisation().get(eClass);
 		uicustomisation.switchWidgets(this);
 	}
 	

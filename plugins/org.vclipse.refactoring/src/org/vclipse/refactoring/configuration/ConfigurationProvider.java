@@ -39,7 +39,7 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
 @Singleton
-public class ExtensionsReader {
+public class ConfigurationProvider {
 
 	private static final Registry PACKAGE_REGISTRY = Registry.INSTANCE;
 
@@ -49,7 +49,7 @@ public class ExtensionsReader {
 	
 	private static final String ATTRIBUTE_CLASS = "class";
 	private static final String ATTRIBUTE_PACKAGE = "package";
-	private static final String ATTRIBUTE_EXECUTOR = "executor";
+	private static final String ATTRIBUTE_EXECUTER = "executer";
 	private static final String ATTRIBUTE_CUSTOMISATION = "customisation";
 	private static final String ATTRIBUTE_UICUSTOMISATION = "uicustomisation";
 	
@@ -121,7 +121,7 @@ public class ExtensionsReader {
 						readCustomisation(element.getAttribute(ATTRIBUTE_CUSTOMISATION), bundle, eclassifier, customisation);
 						readCustomisation(element.getAttribute(ATTRIBUTE_UICUSTOMISATION), bundle, eclassifier, uicustomisation);
 						
-						Object object = element.createExecutableExtension(ATTRIBUTE_EXECUTOR);
+						Object object = element.createExecutableExtension(ATTRIBUTE_EXECUTER);
 						if(object instanceof RefactoringExecuter) {
 							refactorings.put(eclassifier, (RefactoringExecuter)object);
 						}

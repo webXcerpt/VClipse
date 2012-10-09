@@ -35,10 +35,10 @@ import org.eclipse.xtext.ui.editor.utils.EditorUtils;
 import org.vclipse.base.ui.util.EditorUtilsExtensions;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
-import org.vclipse.refactoring.configuration.ExtensionsReader;
-import org.vclipse.refactoring.core.RefactoringTask;
+import org.vclipse.refactoring.configuration.ConfigurationProvider;
 import org.vclipse.refactoring.core.RefactoringCustomisation;
 import org.vclipse.refactoring.core.RefactoringRunner;
+import org.vclipse.refactoring.core.RefactoringTask;
 import org.vclipse.refactoring.core.RefactoringType;
 import org.vclipse.refactoring.utils.RefactoringUtility;
 
@@ -60,7 +60,7 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 	private EObjectAtOffsetHelper offsetHelper;
 	
 	@Inject
-	private ExtensionsReader extensionReader;
+	private ConfigurationProvider configuration;
 	
 	@Inject
 	private RefactoringUtility refactoringUtility;
@@ -82,7 +82,7 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 					XtextResource xtextResource = (XtextResource)object.eResource();
 					EObject elementAt = offsetHelper.resolveContainedElementAt(xtextResource, textSelection.getOffset());
 					EObject rootContainer = EcoreUtil.getRootContainer(elementAt);
-					RefactoringCustomisation customisation = extensionReader.getCustomisation().get(rootContainer.eClass());
+					RefactoringCustomisation customisation = configuration.getCustomisation().get(rootContainer.eClass());
 					if(elementAt != null && customisation != null) {
 						for(RefactoringType type : RefactoringType.values()) { 
 							IRefactoringUIContext context = contextProvider.get();
@@ -130,7 +130,7 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 				EObject rootContainer = EcoreUtil.getRootContainer(sourceElement);
 				
 				RefactoringUICustomisation uicustomisation = 
-						extensionReader.getUICustomisation().get(rootContainer.eClass());
+						configuration.getUICustomisation().get(rootContainer.eClass());
 				
 				pages = uicustomisation.getPages(context);
 				

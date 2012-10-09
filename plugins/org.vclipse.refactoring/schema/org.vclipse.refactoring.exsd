@@ -49,7 +49,14 @@
 
    <element name="refactoring">
       <complexType>
-         <attribute name="class" type="string">
+         <attribute name="package" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
                   
@@ -59,14 +66,7 @@
                </appinfo>
             </annotation>
          </attribute>
-         <attribute name="package" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="executor" type="string" use="required">
+         <attribute name="executer" type="string" use="required">
             <annotation>
                <documentation>
                   

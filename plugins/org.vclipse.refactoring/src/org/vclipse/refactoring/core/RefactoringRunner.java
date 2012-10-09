@@ -14,14 +14,14 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.vclipse.refactoring.IRefactoringContext;
-import org.vclipse.refactoring.configuration.ExtensionsReader;
+import org.vclipse.refactoring.configuration.ConfigurationProvider;
 
 import com.google.inject.Inject;
 
 public class RefactoringRunner {
 
 	@Inject
-	private ExtensionsReader reader;
+	private ConfigurationProvider configuration;
 	
 	private ChangeRecorder changeRecorder;
 	
@@ -48,6 +48,6 @@ public class RefactoringRunner {
 	
 	private RefactoringExecuter getRefactoring(EObject object) {
 		EObject rootContainer = EcoreUtil.getRootContainer(object);
-		return reader.getRefactorings().get(rootContainer.eClass());
+		return configuration.getRefactorings().get(rootContainer.eClass());
 	}
 }

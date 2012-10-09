@@ -22,7 +22,7 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.vclipse.base.VClipseStrings;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
-import org.vclipse.refactoring.configuration.ExtensionsReader;
+import org.vclipse.refactoring.configuration.ConfigurationProvider;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -37,7 +37,7 @@ import com.google.inject.Singleton;
 public class RefactoringUtility {
 
 	@Inject
-	private ExtensionsReader extensionReader;
+	private ConfigurationProvider configuration;
 	
 	public Injector getInjector(EObject object) {
 		if(object == null) {
@@ -47,7 +47,7 @@ public class RefactoringUtility {
 		if(container == null) {
 			return null;
 		}
-		Injector injector = extensionReader.getInjector().get(container.eClass());
+		Injector injector = configuration.getInjector().get(container.eClass());
 		return injector;
 	}
 	

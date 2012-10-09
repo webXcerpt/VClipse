@@ -21,7 +21,7 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.util.Pair;
 import org.vclipse.base.BasePlugin;
 import org.vclipse.refactoring.IRefactoringContext;
-import org.vclipse.refactoring.configuration.ExtensionsReader;
+import org.vclipse.refactoring.configuration.ConfigurationProvider;
 import org.vclipse.refactoring.utils.RefactoringUtility;
 import org.vclipse.refactoring.utils.ReferenceFinderExtension;
 
@@ -42,7 +42,7 @@ public abstract class RefactoringExecuter extends MethodCollector {
 	protected RefactoringUtility refactoringUtility;
 	
 	@Inject
-	private ExtensionsReader reader;
+	private ConfigurationProvider configuration;
 	
 	public RefactoringExecuter() {		
 		collect(1, IRefactoringContext.class);
@@ -82,7 +82,7 @@ public abstract class RefactoringExecuter extends MethodCollector {
 	
 	private RefactoringExecuter getRefactoring(EObject object) {
 		EObject rootContainer = EcoreUtil.getRootContainer(object);
-		return reader.getRefactorings().get(rootContainer.eClass());
+		return configuration.getRefactorings().get(rootContainer.eClass());
 	}
 	
 	public Pair<EObject, Method> getRefactoring(IRefactoringContext context) {
