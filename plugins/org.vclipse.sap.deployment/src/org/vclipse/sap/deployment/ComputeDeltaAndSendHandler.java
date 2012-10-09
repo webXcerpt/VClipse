@@ -34,7 +34,6 @@ import org.eclipse.xtext.util.StringInputStream;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.tigris.subversion.subclipse.core.SVNTeamProvider;
 import org.vclipse.base.ui.FileListHandler;
-import org.vclipse.base.ui.util.VClipseResourceUtil;
 import org.vclipse.idoc2jcoidoc.IDocSenderStatus;
 import org.vclipse.sap.deployment.preferences.PreferencesInitializer;
 import org.vclipse.vcml.diff.compare.VcmlCompare;
@@ -56,9 +55,6 @@ public class ComputeDeltaAndSendHandler extends FileListHandler {
 	
 	@Inject
 	private IPreferenceStore preferenceStore;
-	
-	@Inject
-	private VClipseResourceUtil resourceUtils;
 	
 	private IWorkbenchPart activePart;
 	
