@@ -64,12 +64,19 @@ public class VcmlCompare {
 	public void compare(IFile oldFile, IFile newFile, IFile resultFile, IProgressMonitor monitor) throws CoreException, InterruptedException, IOException {
 		monitor.subTask("Initialising models for comparison...");
 		
-		XtextResourceSet resourceSet = new XtextResourceSet();
+		XtextResourceSet set = new XtextResourceSet();
 		
-		// create resources from files
-		Resource newResource = resourceUtils.getResource(resourceSet, newFile);
-		Resource oldResource = resourceUtils.getResource(resourceSet, oldFile);
-		Resource resultResource = resourceUtils.getResource(resourceSet, resultFile);
+		String path = newFile.getFullPath().toString();
+		URI uri = URI.createPlatformResourceURI(path, true);
+		Resource newResource = set.getResource(uri, true);
+		
+		path = oldFile.getFullPath().toString();
+		uri = URI.createPlatformResourceURI(path, true);
+		Resource oldResource = set.getResource(uri, true);
+		
+		path = resultFile.getFullPath().toString();
+		uri = URI.createPlatformResourceURI(path, true);
+		Resource resultResource = set.getResource(uri, true);
 		
 		// clean the result resource if it does exist
 		EList<EObject> contents = resultResource.getContents();
