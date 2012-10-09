@@ -28,7 +28,6 @@ import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.vclipse.base.UriUtil;
-import org.vclipse.base.ui.util.VClipseResourceUtil;
 import org.vclipse.vcml.parser.antlr.VCMLParser;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.validation.VCMLJavaValidatorIssues;
@@ -52,8 +51,6 @@ public class VcmlCompare {
 	private @Inject DiffModelSwitch diffModelSwitch;
 	
 	private @Inject VCMLParser vcmlParser;
-	
-	private @Inject VClipseResourceUtil resourceUtils;
 	
 	private @Inject VCMLJavaValidatorIssues issuesValidator;
 	
