@@ -32,4 +32,5 @@ Export-Package: org.vclipse.vcml,
  org.vclipse.vcml.validation
 Bundle-Activator: org.vclipse.vcml.VCMLPlugin
 Bundle-ClassPath: .
-Import-Package: org.apache.commons.logging
+Import-Package: org.apache.commons.logging,
+ org.apache.log4j
