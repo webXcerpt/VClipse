@@ -3,6 +3,7 @@ package org.vclipse.vcml.refactoring;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.vclipse.refactoring.IRefactoringContext;
 import org.vclipse.refactoring.core.RefactoringCustomisation;
@@ -42,6 +43,12 @@ public class VCMLCustomisation extends RefactoringCustomisation {
 	
 	public List<? extends EStructuralFeature> features_Replace_PFunction(IRefactoringContext context) {
 		return get(VCML_PACKAGE.getPFunction_Values());
+	}
+	
+	public boolean init_Replace_objects(IRefactoringContext context) {
+		EObject element = context.getSourceElement();
+		context.setLabel("Delete " + element.eClass().getName().toLowerCase());
+		return Boolean.TRUE;
 	}
 	
 	/**

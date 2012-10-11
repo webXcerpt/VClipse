@@ -32,6 +32,22 @@ import com.google.common.collect.Lists;
 
 public class VCMLRefactoring extends VCMLSimplifier {
 
+	public void refactoring_Replace_objects(IRefactoringContext context) {
+		EObject element = context.getSourceElement();
+		EStructuralFeature feature = context.getStructuralFeature();
+		if(feature.equals(element.eContainmentFeature())) {
+			EObject container = element.eContainer();
+			Object value = container.eGet(feature);
+			if(value instanceof List<?>) {
+				List<?> entries = (List<?>)value;
+				int index = context.getIndex();
+				if(index >= 0 && index < entries.size()) {
+					entries.remove(index);
+				}
+			}
+		}
+	}
+	
 	/*
 	 * Each value in the list is replaced through an equality expression
 	 */

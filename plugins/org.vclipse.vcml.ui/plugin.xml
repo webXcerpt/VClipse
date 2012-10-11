@@ -524,5 +524,15 @@
            class="org.vclipse.vcml.ui.VCMLSharedModule">
      </module>
   </extension>
+  <extension
+        point="org.vclipse.refactoring">
+     <refactoring
+           class="org.vclipse.vcml.vcml.VcmlModel"
+           customisation="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.vclipse.vcml.refactoring.VCMLCustomisation"
+           executer="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.vclipse.vcml.refactoring.VCMLRefactoring"
+           package="http://www.vclipse.org/vcml"
+           uicustomisation="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.vclipse.vcml.ui.refactoring.VCMLUICustomisation">
+     </refactoring>
+  </extension>
 
 </plugin>
