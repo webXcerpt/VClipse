@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IReferenceDescription;
 import org.vclipse.refactoring.IRefactoringContext;
+import org.vclipse.refactoring.core.RefactoringExecuter;
 import org.vclipse.vcml.vcml.BinaryCondition;
 import org.vclipse.vcml.vcml.CharacteristicReference_C;
 import org.vclipse.vcml.vcml.CharacteristicReference_P;
@@ -32,17 +33,45 @@ import com.google.common.collect.Lists;
 
 public class VCMLRefactoring extends VCMLSimplifier {
 
+	@SuppressWarnings("unchecked")
 	public void refactoring_Replace_objects(IRefactoringContext context) {
 		EObject element = context.getSourceElement();
 		EStructuralFeature feature = context.getStructuralFeature();
+		boolean continueRefactoring = true;
 		if(feature.equals(element.eContainmentFeature())) {
 			EObject container = element.eContainer();
 			Object value = container.eGet(feature);
 			if(value instanceof List<?>) {
-				List<?> entries = (List<?>)value;
+				List<EObject> entries = (List<EObject>)value;
 				int index = context.getIndex();
 				if(index >= 0 && index < entries.size()) {
-					entries.remove(index);
+					Map<?, ?> attributes = context.getAttributes();
+					Object buttonState = attributes.get(RefactoringExecuter.BUTTON_STATE);
+					if(buttonState instanceof Boolean && (Boolean)buttonState) {
+						EObject entry = entries.get(index);
+						Resource resource = entry.eResource();
+						List<IReferenceDescription> references = referencesFinder.getReferences(entry, false);
+						for(IReferenceDescription curReference : references) {
+							URI uri = curReference.getSourceEObjectUri();
+							EObject eobject = resource.getEObject(uri.fragment());
+							EReference reference = curReference.getEReference();
+							if(reference.isMany()) {
+								EList<EObject> referencedEntries = (EList<EObject>)eobject.eGet(reference);
+								EObject foundEntry = refactoringUtility.findEntry(element, referencedEntries);
+								if(foundEntry != null) {
+									int entryIndex = referencedEntries.indexOf(foundEntry);
+									if(entryIndex > -1 && entryIndex < referencedEntries.size()) {
+										referencedEntries.remove(entryIndex);
+									}
+								}
+							} else {
+								eobject.eSet(reference, null);
+							}
+						}
+					}
+					if(continueRefactoring) {
+						entries.remove(index);						
+					}
 				}
 			}
 		}
