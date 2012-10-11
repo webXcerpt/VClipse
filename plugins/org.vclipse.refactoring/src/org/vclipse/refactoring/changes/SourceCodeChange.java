@@ -1,5 +1,6 @@
 package org.vclipse.refactoring.changes;
 
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.compare.structuremergeviewer.Differencer;
@@ -15,6 +16,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.EValidator.Registry;
 import org.eclipse.emf.ecore.change.FeatureChange;
+import org.eclipse.emf.ecore.change.ListChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -31,7 +33,7 @@ public class SourceCodeChange extends NoChange implements IPreviewProvider {
 	private EObject original;
 	private EObject refactored;
 	private EList<FeatureChange> featureChanges;
-	
+		
 	private DiffNode diffNode;
 	
 	private EValidator validator;
@@ -64,13 +66,34 @@ public class SourceCodeChange extends NoChange implements IPreviewProvider {
 		return RefactoringStatus.create(Status.OK_STATUS);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public RefactoringStatus refactor(IProgressMonitor pm) throws CoreException {
 		if(isEnabled()) {
 			pm.beginTask("Executing re-factoring for " + getName(utility, original), IProgressMonitor.UNKNOWN);
 			for(FeatureChange featureChange : featureChanges) {
 				EStructuralFeature feature = featureChange.getFeature();
-				Object newValue = refactored.eGet(feature);
-				original.eSet(feature, newValue);
+				Object refactoredValue = refactored.eGet(feature);
+				if(feature.isMany()) {
+					Object originalValue = original.eGet(feature);
+					if(feature.isMany()) {
+						List<EObject> refactoredEntries = (List<EObject>)refactoredValue;
+						List<EObject> originalEntries = (List<EObject>)originalValue;
+						EList<ListChange> listChanges = featureChange.getListChanges();
+						if(!listChanges.isEmpty()) {
+							for(ListChange listChange : listChanges) {
+								int index = listChange.getIndex();
+								EObject entry = refactoredEntries.get(index);
+								if(refactoredEntries.size() > originalEntries.size()) {
+									originalEntries.add(entry);
+								} else if(refactoredEntries.size() < originalEntries.size()) {
+									originalEntries.remove(entry);
+								}
+							}
+						}					
+					}
+				} else {
+					original.eSet(feature, refactoredValue);
+				}
 			}
 			pm.done();
 		}

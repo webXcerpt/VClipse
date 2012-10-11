@@ -128,7 +128,6 @@ public class SourceCodeChanges extends CompositeChange implements IPreviewProvid
 		return previewNode;
 	}
 	
-
 	@Override
  	public Change perform(IProgressMonitor pm) throws CoreException {
 		if(!performed) {
@@ -211,8 +210,11 @@ public class SourceCodeChanges extends CompositeChange implements IPreviewProvid
 			if(changed.eContainer() instanceof ChangeDescription) {
 				continue;
 			}
-			EObject existingEntry = getEqualOriginal(entries, changed);
-			SourceCodeChange scc = new SourceCodeChange(utility, existingEntry, changed, entry.getValue());
+			EObject existingEntry = 
+					getEqualOriginal(entries, changed);
+			
+			SourceCodeChange scc = 
+					new SourceCodeChange(utility, existingEntry, changed, entry.getValue());
 			changes.add(scc);
 		}
 		
@@ -220,14 +222,14 @@ public class SourceCodeChanges extends CompositeChange implements IPreviewProvid
 		for(SourceCodeChange change : changes) {
 			DiffNode preview = change.getPreview();
 			try {
-				if(ByteStreams.equal(
-						InputStreamProvider.getInstance(previewNode), 
-							InputStreamProvider.getInstance(preview))) {
+				InputStreamProvider streamRootNode = InputStreamProvider.getInstance(previewNode);
+				InputStreamProvider streamCurrentPreviewNode = InputStreamProvider.getInstance(preview);
+				if(ByteStreams.equal(streamRootNode, streamCurrentPreviewNode)) {
 					if(size == 1) {
 						markAsSynthetic();
-					} else {
-						continue;
 					}
+					add(change);
+					continue;
 				}
 			} catch(IOException exception) {
 				continue;
