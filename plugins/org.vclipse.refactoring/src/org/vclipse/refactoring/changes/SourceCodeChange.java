@@ -82,11 +82,11 @@ public class SourceCodeChange extends NoChange implements IPreviewProvider {
 						if(!listChanges.isEmpty()) {
 							for(ListChange listChange : listChanges) {
 								int index = listChange.getIndex();
-								EObject entry = refactoredEntries.get(index);
 								if(refactoredEntries.size() > originalEntries.size()) {
+									EObject entry = refactoredEntries.get(index);								
 									originalEntries.add(entry);
 								} else if(refactoredEntries.size() < originalEntries.size()) {
-									originalEntries.remove(entry);
+									originalEntries.remove(index);
 								}
 							}
 						}					
