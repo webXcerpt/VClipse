@@ -81,6 +81,37 @@ public class RefactoringUtility {
 		return names;
 	}
 	
+	public EObject findEntry(EObject object, List<EObject> entries) {
+		IQualifiedNameProvider nameProvider = getInstance(object, IQualifiedNameProvider.class);
+		
+		// search by name and type
+		EObject existingEntry = null;
+		EClass eclass = object.eClass();
+		QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(object);
+		if(qualifiedName == null) {
+			Iterator<EObject> iterator = getEntry(entries, eclass).iterator();
+			if(iterator.hasNext()) {
+				existingEntry = iterator.next();
+			}
+		} else {
+			String segment = qualifiedName.getLastSegment();
+			existingEntry = getEntry(entries, segment, eclass);
+		}
+
+		// search by type and container type
+		if(existingEntry == null) {
+			Iterator<EObject> iterator = getEntry(entries, eclass).iterator();
+			while(iterator.hasNext()) {
+				EObject next = iterator.next();
+				if(equalTypeWithContainerType(next, object)) {
+					existingEntry = next;
+					break;
+				}
+			}								
+		}
+		return existingEntry;
+	}
+	
 	public EObject getEntry(List<EObject> entries, String name, EClass type) {
 		if(type == null) {
 			if(name == null) {
@@ -117,18 +148,17 @@ public class RefactoringUtility {
 		return null;
 	}
 	
-	public Iterable<EObject> getEntry(Iterable<EObject> entries, EClass type) {
+	public Iterable<EObject> getEntry(Iterable<EObject> entries, final EClass type) {
 		Iterator<EObject> iterator = entries.iterator();
 		if(!iterator.hasNext() || type == null) {
 			return null;
 		}
-		List<EObject> foundEntries = Lists.newArrayList();
-		for(EObject entry : entries) {
-			if(entry.eClass() == type) {
-				foundEntries.add(entry);
+		Iterable<EObject> filter = Iterables.filter(entries, new Predicate<EObject>() {
+			public boolean apply(EObject eobject) {
+				return eobject.eClass() == type;
 			}
-		}
-		return foundEntries;
+		});
+		return Lists.newArrayList(filter);
 	}
 	
 	public String getRefactoringText(IRefactoringUIContext context) {

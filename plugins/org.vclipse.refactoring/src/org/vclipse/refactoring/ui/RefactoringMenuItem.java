@@ -81,6 +81,7 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 					ITextSelection textSelection = (ITextSelection)selection;
 					XtextResource xtextResource = (XtextResource)object.eResource();
 					EObject elementAt = offsetHelper.resolveContainedElementAt(xtextResource, textSelection.getOffset());
+					EObject container = elementAt.eContainer();
 					EObject rootContainer = EcoreUtil.getRootContainer(elementAt);
 					RefactoringCustomisation customisation = configuration.getCustomisation().get(rootContainer.eClass());
 					if(elementAt != null && customisation != null) {
@@ -96,8 +97,6 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 									if(refactoringRunner.isRefactoringAvailable(context)) {
 										MenuItem item = new MenuItem(menu, SWT.PUSH);
 										
-										// set the index if the object is in the list
-										EObject container = elementAt.eContainer();
 										EReference containment = elementAt.eContainmentFeature();
 										Object value = container.eGet(containment);
 										if(value instanceof List<?>) {

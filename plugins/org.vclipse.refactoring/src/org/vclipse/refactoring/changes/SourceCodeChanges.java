@@ -158,7 +158,7 @@ public class SourceCodeChanges extends CompositeChange implements IPreviewProvid
 			previewNode.setRight(
 					new EObjectTypedElement(refactoredRoot, serializer));
 			
-			handleChanges(refactoringContext);
+			recordSourceCodeChanges(refactoringContext);
 			
 			if(getChildren().length == 0) {
 				add(new NoChange(null));
@@ -197,7 +197,7 @@ public class SourceCodeChanges extends CompositeChange implements IPreviewProvid
 		return RefactoringStatus.create(Status.OK_STATUS);
 	}
 	
-	protected void handleChanges(IRefactoringUIContext previewContext) {
+	protected void recordSourceCodeChanges(IRefactoringUIContext previewContext) {
 		ChangeRecorder changeRecorder = runner.getChangeRecorder();
 		ChangeDescription endRecording = changeRecorder.endRecording();
 
@@ -210,16 +210,12 @@ public class SourceCodeChanges extends CompositeChange implements IPreviewProvid
 			if(changed.eContainer() instanceof ChangeDescription) {
 				continue;
 			}
-			EObject existingEntry = 
-					getEqualOriginal(entries, changed);
-			
-			SourceCodeChange scc = 
-					new SourceCodeChange(utility, existingEntry, changed, entry.getValue());
-			
+			EObject existingEntry = utility.findEntry(changed, entries);
+			SourceCodeChange scc = new SourceCodeChange(utility, existingEntry, changed, entry.getValue());
 			DiffNode preview = scc.getPreview();
 			try {
-				InputStreamProvider streamCurrentPreviewNode = InputStreamProvider.getInstance(preview);
-				if(ByteStreams.equal(streamRootNode, streamCurrentPreviewNode)) {
+				InputStreamProvider currentStream = InputStreamProvider.getInstance(preview);
+				if(ByteStreams.equal(streamRootNode, currentStream)) {
 					markAsSynthetic();
 				}
 			} catch(IOException exception) {
@@ -229,35 +225,6 @@ public class SourceCodeChanges extends CompositeChange implements IPreviewProvid
 		}
 	}
 	
-	protected EObject getEqualOriginal(List<EObject> entries, EObject changeOnObject) {
-		// search by name and type
-		EObject existingEntry = null;
-		EClass eclass = changeOnObject.eClass();
-		QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(changeOnObject);
-		if(qualifiedName == null) {
-			Iterator<EObject> iterator = utility.getEntry(entries, eclass).iterator();
-			if(iterator.hasNext()) {
-				existingEntry = iterator.next();
-			}
-		} else {
-			String segment = qualifiedName.getLastSegment();
-			existingEntry = utility.getEntry(entries, segment, eclass);
-		}
-
-		// search by type and container type
-		if(existingEntry == null) {
-			Iterator<EObject> iterator = utility.getEntry(entries, eclass).iterator();
-			while(iterator.hasNext()) {
-				EObject next = iterator.next();
-				if(utility.equalTypeWithContainerType(next, context.getSourceElement())) {
-					existingEntry = next;
-					break;
-				}
-			}								
-		}
-		return existingEntry;
-	}
-
 	protected IRefactoringUIContext createRefactoringContext(IRefactoringUIContext context) {
 		EObject element = context.getSourceElement();
 		rootCopy = rootContainerCopy(element);
