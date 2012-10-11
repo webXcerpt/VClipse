@@ -204,7 +204,7 @@ public class SourceCodeChanges extends CompositeChange implements IPreviewProvid
 		List<EObject> entries = Lists.newArrayList(rootOriginal.eAllContents());
 		entries.add(0, rootOriginal);
 		
-		List<SourceCodeChange> changes = Lists.newArrayList();
+		InputStreamProvider streamRootNode = InputStreamProvider.getInstance(previewNode);
 		for(Entry<EObject, EList<FeatureChange>> entry : endRecording.getObjectChanges().entrySet()) {
 			EObject changed = entry.getKey();
 			if(changed.eContainer() instanceof ChangeDescription) {
@@ -215,27 +215,17 @@ public class SourceCodeChanges extends CompositeChange implements IPreviewProvid
 			
 			SourceCodeChange scc = 
 					new SourceCodeChange(utility, existingEntry, changed, entry.getValue());
-			changes.add(scc);
-		}
-		
-		int size = changes.size();
-		for(SourceCodeChange change : changes) {
-			DiffNode preview = change.getPreview();
+			
+			DiffNode preview = scc.getPreview();
 			try {
-				InputStreamProvider streamRootNode = InputStreamProvider.getInstance(previewNode);
 				InputStreamProvider streamCurrentPreviewNode = InputStreamProvider.getInstance(preview);
 				if(ByteStreams.equal(streamRootNode, streamCurrentPreviewNode)) {
-					if(size == 1) {
-						markAsSynthetic();
-					}
-					add(change);
-					continue;
+					markAsSynthetic();
 				}
 			} catch(IOException exception) {
-				continue;
+				RefactoringPlugin.log(exception.getMessage(), exception);
 			}
-			preview.setParent(previewNode);
-			add(change);
+			add(scc);
 		}
 	}
 	
