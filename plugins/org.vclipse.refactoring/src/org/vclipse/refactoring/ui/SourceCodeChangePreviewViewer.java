@@ -47,7 +47,7 @@ public class SourceCodeChangePreviewViewer implements IChangePreviewViewer {
 		Object modifiedElement = change.getModifiedElement();
 		if(viewer instanceof NullViewer && modifiedElement instanceof EObject) {
 			EObject modifiedEObject = (EObject)modifiedElement;
-			InjectableViewerCreator instance = refactoringUtility.getInstance(modifiedEObject, InjectableViewerCreator.class);
+			InjectableViewerCreator instance = refactoringUtility.getInstance(InjectableViewerCreator.class, modifiedEObject);
 			if(instance != null) {
 				viewer = instance.createViewer(composite, new CompareConfiguration());					
 			}

@@ -113,10 +113,10 @@ public class SourceCodeChanges extends CompositeChange implements IPreviewProvid
 		EObject element = this.context.getSourceElement();
 		rootOriginal = EcoreUtil.getRootContainer(element);
 		
-		serializer = utility.getInstance(rootOriginal, ISerializer.class);
-		nameProvider = utility.getInstance(rootOriginal, IQualifiedNameProvider.class);
-		parser = utility.getInstance(rootOriginal, IParser.class);
-		linker = utility.getInstance(rootOriginal, ILinker.class);
+		serializer = utility.getInstance(ISerializer.class, rootOriginal);
+		nameProvider = utility.getInstance(IQualifiedNameProvider.class, rootOriginal);
+		parser = utility.getInstance(IParser.class, rootOriginal);
+		linker = utility.getInstance(ILinker.class, rootOriginal);
 	}
 	
 	@Override
@@ -239,7 +239,7 @@ public class SourceCodeChanges extends CompositeChange implements IPreviewProvid
 		QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(element);
 		if(qualifiedName == null) {
 			EClass eclass = element.eClass();
-			Iterator<EObject> iterator = utility.getEntry(entries, eclass).iterator();
+			Iterator<EObject> iterator = utility.getEntry(eclass, entries).iterator();
 			while(iterator.hasNext()) {
 				EObject next = iterator.next();
 				if(utility.equalTypeWithContainerType(element, next)) {
@@ -248,7 +248,7 @@ public class SourceCodeChanges extends CompositeChange implements IPreviewProvid
 			}
 		} else {
 			String name = qualifiedName.getLastSegment();
-			element = utility.getEntry(entries, name, element.eClass());
+			element = utility.findEntry(name, element.eClass(), entries);
 		}
 		IRefactoringUIContext changedContext = ((UIRefactoringContext)context).copy();
 		if(element != null) {

@@ -136,7 +136,7 @@ public class InputPage extends UserInputWizardPage {
 		combo.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				EObject element = context.getSourceElement();
-				final IQualifiedNameProvider nameProvider = refactoringUtility.getInstance(element, IQualifiedNameProvider.class);
+				final IQualifiedNameProvider nameProvider = refactoringUtility.getInstance(IQualifiedNameProvider.class, element);
 				int index = combo.getSelectionIndex();
 				if(index > -1) {
 					final String item = combo.getItem(index);
@@ -225,7 +225,7 @@ public class InputPage extends UserInputWizardPage {
 		EObject element = context.getSourceElement();
 		
 		final EValidator.Registry validator = 
-				refactoringUtility.getInstance(element, EValidator.Registry.class);
+				refactoringUtility.getInstance(EValidator.Registry.class, element);
 		 
 		if(validator != null) {
 			SourceCodeChanges modelChange = context.getRefactoring().getChange();

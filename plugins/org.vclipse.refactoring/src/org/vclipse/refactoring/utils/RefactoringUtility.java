@@ -51,7 +51,7 @@ public class RefactoringUtility {
 		return injector;
 	}
 	
-	public <T> T getInstance(EObject object, Class<T> type) {
+	public <T> T getInstance(Class<T> type, EObject object) {
 		try {
 			Injector injector = getInjector(object);
 			return injector == null ? null : injector.getInstance(type);
@@ -65,7 +65,7 @@ public class RefactoringUtility {
 		Set<String> names = Sets.newHashSet();
 		if(!values.isEmpty()) {
 			EObject object = values.get(0);
-			IQualifiedNameProvider nameProvider = getInstance(object, IQualifiedNameProvider.class);
+			IQualifiedNameProvider nameProvider = getInstance(IQualifiedNameProvider.class, object);
 			if(nameProvider != null) {
 				for(EObject value : values) {
 					QualifiedName qualifiedName = nameProvider.apply(value);
@@ -81,86 +81,6 @@ public class RefactoringUtility {
 		return names;
 	}
 	
-	public EObject findEntry(EObject object, List<EObject> entries) {
-		IQualifiedNameProvider nameProvider = getInstance(object, IQualifiedNameProvider.class);
-		
-		// search by name and type
-		EObject existingEntry = null;
-		EClass eclass = object.eClass();
-		QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(object);
-		if(qualifiedName == null) {
-			Iterator<EObject> iterator = getEntry(entries, eclass).iterator();
-			if(iterator.hasNext()) {
-				existingEntry = iterator.next();
-			}
-		} else {
-			String segment = qualifiedName.getLastSegment();
-			existingEntry = getEntry(entries, segment, eclass);
-		}
-
-		// search by type and container type
-		if(existingEntry == null) {
-			Iterator<EObject> iterator = getEntry(entries, eclass).iterator();
-			while(iterator.hasNext()) {
-				EObject next = iterator.next();
-				if(equalTypeWithContainerType(next, object)) {
-					existingEntry = next;
-					break;
-				}
-			}								
-		}
-		return existingEntry;
-	}
-	
-	public EObject getEntry(List<EObject> entries, String name, EClass type) {
-		if(type == null) {
-			if(name == null) {
-				return null;
-			} else {
-				Iterator<EObject> namedResults = getEntry(entries, name);
-				return namedResults.hasNext() ? namedResults.next() : null;
-			}
-		} else {
-			Iterator<EObject> iterator = getEntry(entries, type).iterator();
-			if(name == null) {
-				return iterator == null ? null : iterator.hasNext() ? iterator.next() : null;
-			} else {
-				iterator = getEntry(Lists.newArrayList(iterator), name);
-				return iterator == null ? null : iterator.hasNext() ? iterator.next() : null;
-			}
-		}
-	}
-	
-	public Iterator<EObject> getEntry(Iterable<EObject> entries, final String name) {
-		Iterator<EObject> iterator = entries.iterator();
-		if(!iterator.hasNext() || name == null || name.isEmpty()) {
-			return null;
-		}
-		final IQualifiedNameProvider nameProvider = getInstance(iterator.next(), IQualifiedNameProvider.class);
-		if(nameProvider != null) {
-			return Iterables.filter(entries, new Predicate<EObject>() {
-				public boolean apply(EObject eobject) {
-					QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(eobject);
-					return qualifiedName == null ? false : qualifiedName.getLastSegment().equals(name);
-				}
-			}).iterator();			
-		}
-		return null;
-	}
-	
-	public Iterable<EObject> getEntry(Iterable<EObject> entries, final EClass type) {
-		Iterator<EObject> iterator = entries.iterator();
-		if(!iterator.hasNext() || type == null) {
-			return null;
-		}
-		Iterable<EObject> filter = Iterables.filter(entries, new Predicate<EObject>() {
-			public boolean apply(EObject eobject) {
-				return eobject.eClass() == type;
-			}
-		});
-		return Lists.newArrayList(filter);
-	}
-	
 	public String getRefactoringText(IRefactoringUIContext context) {
 		String text = context.getLabel();
 		if(text == null || text.isEmpty()) {
@@ -173,6 +93,85 @@ public class RefactoringUtility {
 			return buffer.toString();
 		}
 		return text;
+	}
+	
+	public EObject findEntry(EObject object, List<EObject> entries) {
+		IQualifiedNameProvider nameProvider = getInstance(IQualifiedNameProvider.class, object);
+		
+		// search by name and type
+		EObject existingEntry = null;
+		EClass eclass = object.eClass();
+		QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(object);
+		if(qualifiedName == null) {
+			Iterator<EObject> iterator = getEntry(eclass, entries).iterator();
+			if(iterator.hasNext()) {
+				existingEntry = iterator.next();
+			}
+		} else {
+			String segment = qualifiedName.getLastSegment();
+			existingEntry = findEntry(segment, eclass, entries);
+		}
+
+		// search by type and container type
+		if(existingEntry == null) {
+			Iterator<EObject> iterator = getEntry(eclass, entries).iterator();
+			while(iterator.hasNext()) {
+				EObject next = iterator.next();
+				if(equalTypeWithContainerType(next, object)) {
+					existingEntry = next;
+					break;
+				}
+			}								
+		}
+		return existingEntry;
+	}
+	
+	public EObject findEntry(String name, EClass type, List<EObject> entries) {
+		if(type == null) {
+			if(name == null) {
+				return null;
+			} else {
+				Iterator<EObject> namedResults = getEntry(name, entries).iterator();
+				return namedResults.hasNext() ? namedResults.next() : null;
+			}
+		} else {
+			Iterator<EObject> iterator = getEntry(type, entries).iterator();
+			if(name == null) {
+				return iterator == null ? null : iterator.hasNext() ? iterator.next() : null;
+			} else {
+				iterator = getEntry(name, Lists.newArrayList(iterator)).iterator();
+				return iterator == null ? null : iterator.hasNext() ? iterator.next() : null;
+			}
+		}
+	}
+	
+	public Iterable<EObject> getEntry(final String name, Iterable<EObject> entries) {
+		Iterator<EObject> iterator = entries.iterator();
+		if(!iterator.hasNext() || name == null || name.isEmpty()) {
+			return null;
+		}
+		final IQualifiedNameProvider nameProvider = getInstance(IQualifiedNameProvider.class, iterator.next());
+		if(nameProvider != null) {
+			return Iterables.filter(entries, new Predicate<EObject>() {
+				public boolean apply(EObject eobject) {
+					QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(eobject);
+					return qualifiedName == null ? false : qualifiedName.getLastSegment().equals(name);
+				}
+			});			
+		}
+		return Lists.newArrayList();
+	}
+	
+	public Iterable<EObject> getEntry(final EClass type, Iterable<EObject> entries) {
+		Iterator<EObject> iterator = entries.iterator();
+		if(!iterator.hasNext() || type == null) {
+			return null;
+		}
+		return Iterables.filter(entries, new Predicate<EObject>() {
+			public boolean apply(EObject eobject) {
+				return eobject.eClass() == type;
+			}
+		});
 	}
 	
 	public boolean equalTypeWithContainerType(EObject first, EObject second) {

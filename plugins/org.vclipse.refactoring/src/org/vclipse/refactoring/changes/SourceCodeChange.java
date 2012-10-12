@@ -48,11 +48,11 @@ public class SourceCodeChange extends NoChange implements IPreviewProvider {
 		this.featureChanges = featureChanges;
 		this.utility = utility;
 		
-		Registry registry = utility.getInstance(original, EValidator.Registry.class);
+		Registry registry = utility.getInstance(EValidator.Registry.class, original);
 		EPackage epackage = original.eClass().getEPackage();
 		validator = registry.getEValidator(epackage);
-		nameProvider = utility.getInstance(original, IQualifiedNameProvider.class);
-		serializer = utility.getInstance(original, ISerializer.class);
+		nameProvider = utility.getInstance(IQualifiedNameProvider.class, original);
+		serializer = utility.getInstance(ISerializer.class, original);
 	}
 	
 	@Override
@@ -125,7 +125,7 @@ public class SourceCodeChange extends NoChange implements IPreviewProvider {
 	}
 	
 	private String getName(RefactoringUtility utility, EObject object) {
-		IQualifiedNameProvider nameProvider = utility.getInstance(object, IQualifiedNameProvider.class);
+		IQualifiedNameProvider nameProvider = utility.getInstance(IQualifiedNameProvider.class, object);
 		QualifiedName qualifiedName = nameProvider == null ? QualifiedName.create("") : nameProvider.getFullyQualifiedName(object);
 		return qualifiedName == null ? object.eClass().getName() : qualifiedName.getLastSegment();
 	}
