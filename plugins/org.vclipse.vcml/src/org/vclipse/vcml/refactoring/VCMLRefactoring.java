@@ -164,7 +164,7 @@ public class VCMLRefactoring extends VCMLSimplifier {
 								EObject second = eObject.eContainer();
 								if(first != null && second != null) {
 									if(first.eClass() == second.eClass()) {
-										if(eObject instanceof CharacteristicReference_P) {
+										if(eObject instanceof CharacteristicReference_P && eObject != cstic_p) {
 											replaceCsticReference((CharacteristicReference_P)eObject, args);
 										}
 									}
