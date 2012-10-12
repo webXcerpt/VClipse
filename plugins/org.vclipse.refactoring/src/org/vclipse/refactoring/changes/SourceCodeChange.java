@@ -22,13 +22,12 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.vclipse.base.ui.compare.EObjectTypedElement;
-import org.vclipse.refactoring.IPreviewProvider;
 import org.vclipse.refactoring.core.DiffNode;
 import org.vclipse.refactoring.utils.RefactoringUtility;
 
 import com.google.common.collect.Maps;
 
-public class SourceCodeChange extends NoChange implements IPreviewProvider {
+public class SourceCodeChange extends NoChange {
 
 	private EObject original;
 	private EObject refactored;
@@ -100,7 +99,7 @@ public class SourceCodeChange extends NoChange implements IPreviewProvider {
 		return RefactoringStatus.create(Status.OK_STATUS);
 	}
 	
-	public DiffNode getPreview() {		
+	public DiffNode getDiffNode() {		
 		diffNode = new DiffNode(Differencer.CHANGE);
 		EObjectTypedElement left = 
 				original == null ? EObjectTypedElement.getEmpty() : new EObjectTypedElement(original, serializer, nameProvider);

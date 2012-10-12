@@ -29,9 +29,15 @@
             class="org.vclipse.refactoring.configuration.ExtensionFactory:org.vclipse.refactoring.ui.SourceCodeChangePreviewViewer"
             id="org.vclipse.refactoring.ui.changePreviewViewer">
          <enablement>
-            <instanceof
-                  value="org.vclipse.refactoring.IPreviewProvider">
-            </instanceof></enablement>
+            <or>
+               <instanceof
+                     value="org.vclipse.refactoring.changes.SourceCodeChange">
+               </instanceof>
+               <instanceof
+                     value="org.vclipse.refactoring.changes.SourceCodeChanges">
+               </instanceof>
+            </or>
+        </enablement>
       </changePreviewViewer>
    </extension>
 </plugin>

@@ -44,7 +44,6 @@ import org.eclipse.xtext.resource.impl.ListBasedDiagnosticConsumer;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.vclipse.base.ui.compare.EObjectTypedElement;
-import org.vclipse.refactoring.IPreviewProvider;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.core.DiffNode;
@@ -56,7 +55,7 @@ import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.InputSupplier;
 
-public class SourceCodeChanges extends CompositeChange implements IPreviewProvider {
+public class SourceCodeChanges extends CompositeChange {
 	
 	private RefactoringRunner runner;
 	private RefactoringUtility utility;
@@ -124,7 +123,7 @@ public class SourceCodeChanges extends CompositeChange implements IPreviewProvid
 		return refactoredRoot;
 	}
 	
-	public DiffNode getPreview() {
+	public DiffNode getDiffNode() {
 		return previewNode;
 	}
 	
@@ -212,7 +211,7 @@ public class SourceCodeChanges extends CompositeChange implements IPreviewProvid
 			}
 			EObject existingEntry = utility.findEntry(changed, entries);
 			SourceCodeChange scc = new SourceCodeChange(utility, existingEntry, changed, entry.getValue());
-			DiffNode preview = scc.getPreview();
+			DiffNode preview = scc.getDiffNode();
 			try {
 				InputStreamProvider currentStream = InputStreamProvider.getInstance(preview);
 				if(ByteStreams.equal(streamRootNode, currentStream)) {
