@@ -155,10 +155,10 @@ public class VCMLRefactoring extends VCMLSimplifier {
 					String contextSegment = contextUri.lastSegment();
 					for(IReferenceDescription description :  referencesFinder.getReferences(cstic_p.getCharacteristic(), true)) {
 						URI uri = description.getSourceEObjectUri();
-						String fileName = uri.lastSegment();
+						String fileName = uri.trimFileExtension().lastSegment();
 						if(contextSegment.contains(fileName)) {
 							String fragment = uri.fragment();
-							if("@values.".contains(fragment)) {
+							if(fragment.contains("@values.")) {
 								EObject eObject = resource.getEObject(fragment);
 								EObject first = cstic_p.eContainer();
 								EObject second = eObject.eContainer();
