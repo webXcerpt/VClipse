@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EPackage;
@@ -28,10 +27,10 @@ import org.eclipse.emf.ecore.EPackage.Registry;
 import org.eclipse.xtext.ui.guice.AbstractGuiceAwareExecutableExtensionFactory;
 import org.eclipse.xtext.util.Strings;
 import org.osgi.framework.Bundle;
-import org.vclipse.base.BasePlugin;
 import org.vclipse.refactoring.RefactoringPlugin;
-import org.vclipse.refactoring.core.RefactoringExecuter;
+import org.vclipse.refactoring.RefactoringStatus;
 import org.vclipse.refactoring.core.RefactoringCustomisation;
+import org.vclipse.refactoring.core.RefactoringExecuter;
 import org.vclipse.refactoring.ui.RefactoringUICustomisation;
 
 import com.google.common.collect.Maps;
@@ -53,19 +52,11 @@ public class ConfigurationProvider {
 	private static final String ATTRIBUTE_CUSTOMISATION = "customisation";
 	private static final String ATTRIBUTE_UICUSTOMISATION = "uicustomisation";
 	
-	private Map<EClassifier, EPackage> classifier;
 	private Map<EClassifier, Injector> injectors;
 	private Map<EClassifier, RefactoringCustomisation> customisation;
 	private Map<EClassifier, RefactoringUICustomisation> uicustomisation;
 	private Map<EClassifier, RefactoringExecuter> refactorings;
 		
-	public Map<EClassifier, EPackage> getClassifier() {
-		if(classifier == null) {
-			readExtensions();
-		}
-		return Collections.unmodifiableMap(classifier);
-	}
-	
 	public Map<EClassifier, RefactoringCustomisation> getCustomisation() {
 		if(customisation == null) {
 			readExtensions();
@@ -95,7 +86,6 @@ public class ConfigurationProvider {
 	}
 
 	private void readExtensions() {
-		classifier = Maps.newHashMap();
 		injectors = Maps.newHashMap();
 		customisation = Maps.newHashMap();
 		uicustomisation = Maps.newHashMap();
@@ -115,7 +105,6 @@ public class ConfigurationProvider {
 					List<String> split = Strings.split(classString, ".");
 					classString = split.get(split.size() - 1);
 					EClassifier eclassifier = ePackage.getEClassifier(classString);
-					classifier.put(eclassifier, ePackage);
 
 					try {
 						readCustomisation(element.getAttribute(ATTRIBUTE_CUSTOMISATION), bundle, eclassifier, customisation);
@@ -137,7 +126,8 @@ public class ConfigurationProvider {
 	private <T extends RefactoringCustomisation> void readCustomisation(String attrValue, Bundle bundle, EClassifier eClassifier, Map<EClassifier, T> customisations) throws Exception {
 		String[] parts = attrValue.split(":");
 		if(parts.length != 2) {
-			BasePlugin.log("Instantiation of this extension point should contain executable extension part.", IStatus.ERROR);
+			RefactoringStatus status = RefactoringStatus.getConfigurationError();
+			RefactoringPlugin.log(status);
 		}
 		Class<?> loadClass = bundle.loadClass(parts[0]);
 		Object instance = loadClass.newInstance();

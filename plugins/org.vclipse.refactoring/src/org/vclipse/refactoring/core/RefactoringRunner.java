@@ -10,10 +10,13 @@
  ******************************************************************************/
 package org.vclipse.refactoring.core;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.vclipse.refactoring.IRefactoringContext;
+import org.vclipse.refactoring.RefactoringStatus;
 import org.vclipse.refactoring.configuration.ConfigurationProvider;
 
 import com.google.inject.Inject;
@@ -25,15 +28,17 @@ public class RefactoringRunner {
 	
 	private ChangeRecorder changeRecorder;
 	
-	public void refactor(IRefactoringContext context) {
+	public void refactor(IRefactoringContext context) throws CoreException {
 		EObject element = context.getSourceElement();
 		EObject container = EcoreUtil.getRootContainer(element);
 		changeRecorder = new ChangeRecorder(container);
 		RefactoringExecuter refactoring = getRefactoring(element);
-		if(refactoring != null) {
-			refactoring.refactor(context);
+		if(refactoring == null) {
+			EStructuralFeature feature = context.getStructuralFeature();
+			RefactoringStatus status = RefactoringStatus.getExcuterNotAvailable(element, feature);
+			throw new CoreException(status);
 		} else {
-			System.err.println("Could not find re-factoring for type " + element.eClass());
+			refactoring.refactor(context);			
 		}
 	}
 	

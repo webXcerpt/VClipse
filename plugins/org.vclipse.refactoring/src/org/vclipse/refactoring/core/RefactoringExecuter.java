@@ -12,15 +12,18 @@ package org.vclipse.refactoring.core;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
-import org.eclipse.emf.common.util.BasicEList;
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.util.Pair;
-import org.vclipse.base.BasePlugin;
 import org.vclipse.refactoring.IRefactoringContext;
+import org.vclipse.refactoring.RefactoringPlugin;
+import org.vclipse.refactoring.RefactoringStatus;
 import org.vclipse.refactoring.configuration.ConfigurationProvider;
 import org.vclipse.refactoring.utils.RefactoringUtility;
 import org.vclipse.refactoring.utils.ReferenceFinderExtension;
@@ -49,12 +52,23 @@ public abstract class RefactoringExecuter extends MethodCollector {
 		collect(2);
 	}
 	
-	public void refactor(IRefactoringContext context) {
+	public void refactor(IRefactoringContext context) throws CoreException {
 		EObject element = context.getSourceElement();
-		RefactoringExecuter refactoring = getRefactoring(element);
-		if(refactoring != null) {
+		EObject rootContainer = EcoreUtil.getRootContainer(element);
+		EClass containerType = rootContainer.eClass();
+		Map<EClassifier, RefactoringExecuter> refactorings = configuration.getRefactorings();
+		RefactoringExecuter executer = refactorings.get(containerType);
+		if(executer == null) {
+			EStructuralFeature feature = context.getStructuralFeature();
+			RefactoringStatus status = RefactoringStatus.getExcuterNotAvailable(element, feature);
+			throw new CoreException(status);
+		} else {
 			Pair<EObject, Method> refactoringMethod = getRefactoring(context);
-			if(refactoringMethod != null) {
+			if(refactoringMethod == null) {
+				EStructuralFeature feature = context.getStructuralFeature();
+				RefactoringStatus status = RefactoringStatus.getMethodNotAvailable(element, feature);
+				throw new CoreException(status);
+			} else {
 				try {
 					Method method = refactoringMethod.getSecond();
 					List<Object> params = Lists.newArrayList();
@@ -64,38 +78,21 @@ public abstract class RefactoringExecuter extends MethodCollector {
 						params.add(context);
 						params.add(refactoringMethod.getFirst());
 					}
-					refactoringMethod.getSecond().invoke(refactoring, params.toArray());
+					refactoringMethod.getSecond().invoke(executer, params.toArray());
 				} catch (Exception exception) {
-					BasePlugin.log(exception.getMessage(), exception);
+					RefactoringPlugin.log(exception.getMessage(), exception);
 				}
-			} else {
-				System.err.println("refactoring method was null");
 			}
-		} else {
-			System.err.println("refactoring for " + element + " was null");
 		}
 	}
 	
-	public void refactor(EObject object) {
-		refactor(RefactoringContext.create(object, null, RefactoringType.Replace));
-	}
-	
-	private RefactoringExecuter getRefactoring(EObject object) {
-		EObject rootContainer = EcoreUtil.getRootContainer(object);
-		return configuration.getRefactorings().get(rootContainer.eClass());
+	public void refactor(EObject object) throws CoreException {
+		RefactoringContext replaceContext = RefactoringContext.create(object, null, RefactoringType.Replace);
+		refactor(replaceContext);
 	}
 	
 	public Pair<EObject, Method> getRefactoring(IRefactoringContext context) {
 		String prefix = REFACTORING_PREFIX + context.getType();
 		return getMethod(context.getSourceElement(), context.getStructuralFeature(), prefix);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public EList<EObject> getEObjectList(List<?> elements) {
-		return (EList<EObject>)elements;
-	}
-	
-	public EList<EObject> copy(EList<? extends EObject> elements) {
-		return new BasicEList<EObject>(EcoreUtil2.copyAll(elements));
 	}
 }

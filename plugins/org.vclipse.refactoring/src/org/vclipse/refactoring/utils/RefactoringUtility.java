@@ -14,6 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
@@ -172,6 +174,15 @@ public class RefactoringUtility {
 				return eobject.eClass() == type;
 			}
 		});
+	}
+	
+	@SuppressWarnings("unchecked")
+	public EList<EObject> getEObjectList(List<?> elements) {
+		return (EList<EObject>)elements;
+	}
+	
+	public EList<EObject> copy(EList<? extends EObject> elements) {
+		return new BasicEList<EObject>(EcoreUtil2.copyAll(elements));
 	}
 	
 	public boolean equalTypeWithContainerType(EObject first, EObject second) {

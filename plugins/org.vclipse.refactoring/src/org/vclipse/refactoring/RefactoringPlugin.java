@@ -43,9 +43,16 @@ public class RefactoringPlugin extends AbstractUIPlugin {
 	
 	public Injector getInjector() {
 		if(injector == null) {
-			injector = Guice.createInjector(new RefactoringModule(this));
+			RefactoringModule module = new RefactoringModule(this);
+			injector = Guice.createInjector(module);
 		}
 		return injector;
+	}
+	
+	public static void log(IStatus status) {
+		if(status != null) {
+			getInstance().getLog().log(status);			
+		}
 	}
 	
 	public static void log(String message, int severity) {
