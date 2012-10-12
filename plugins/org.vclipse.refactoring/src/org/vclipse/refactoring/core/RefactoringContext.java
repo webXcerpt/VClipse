@@ -53,16 +53,24 @@ public class RefactoringContext implements IRefactoringContext {
 			StringBuffer buffer = new StringBuffer();
 			buffer.append(type.name());
 			buffer.append(" ");
-			if(feature != null) {
-				String featureName = feature.getName();
-				List<String> parts = VClipseStrings.splitCamelCase(featureName);
+			if(RefactoringType.Replace == type) {
+				String name = object.eClass().getName();
+				List<String> parts = VClipseStrings.splitCamelCase(name);
 				for(String part : parts) {
-					part = part.toLowerCase();
-					buffer.append(part);
-					buffer.append(" ");
+					buffer.append(part.toLowerCase());
+					buffer.append(parts.indexOf(part) == (parts.size() - 1) ? "" : " ");
+				}
+			} else {
+				if(feature != null) {
+					String featureName = feature.getName();
+					List<String> parts = VClipseStrings.splitCamelCase(featureName);
+					for(String part : parts) {
+						part = part.toLowerCase();
+						buffer.append(part);
+						buffer.append(" ");
+					}
 				}
 			}
-			buffer.append(" for " + object.eClass().getName().toLowerCase());
 			return buffer.toString();
 		}
 		return text;
