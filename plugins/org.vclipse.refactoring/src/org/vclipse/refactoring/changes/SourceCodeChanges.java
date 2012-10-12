@@ -177,12 +177,11 @@ public class SourceCodeChanges extends CompositeChange implements IPreviewProvid
 				public EObject exec(XtextResource state) throws Exception {
 					for(Change change : Lists.newArrayList(getChildren())) {
 						if(change instanceof SourceCodeChange) {
-							SourceCodeChange fragment = (SourceCodeChange)change;
-							if(fragment.isEnabled()) {
+							SourceCodeChange currentChange = (SourceCodeChange)change;
+							if(currentChange.isEnabled()) {
 								try {
-									fragment.refactor(pm);							
+									currentChange.refactor(pm);							
 								} catch(CoreException exception) {
-									exception.printStackTrace();
 									RefactoringPlugin.log(exception.getMessage(), exception);
 									continue;
 								}
@@ -204,6 +203,7 @@ public class SourceCodeChanges extends CompositeChange implements IPreviewProvid
 		List<EObject> entries = Lists.newArrayList(rootOriginal.eAllContents());
 		entries.add(0, rootOriginal);
 		
+		List<SourceCodeChange> sourceCodeChanges = Lists.newArrayList();
 		InputStreamProvider streamRootNode = InputStreamProvider.getInstance(previewNode);
 		for(Entry<EObject, EList<FeatureChange>> entry : endRecording.getObjectChanges().entrySet()) {
 			EObject changed = entry.getKey();
@@ -217,11 +217,16 @@ public class SourceCodeChanges extends CompositeChange implements IPreviewProvid
 				InputStreamProvider currentStream = InputStreamProvider.getInstance(preview);
 				if(ByteStreams.equal(streamRootNode, currentStream)) {
 					markAsSynthetic();
+					sourceCodeChanges.add(0, scc);
+					continue;
 				}
 			} catch(IOException exception) {
 				RefactoringPlugin.log(exception.getMessage(), exception);
 			}
-			add(scc);
+			sourceCodeChanges.add(scc);
+		}
+		for(SourceCodeChange change : sourceCodeChanges) {
+			add(change);
 		}
 	}
 	
