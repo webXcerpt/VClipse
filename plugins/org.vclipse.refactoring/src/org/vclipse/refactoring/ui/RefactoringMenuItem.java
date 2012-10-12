@@ -100,10 +100,13 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 										EReference containment = elementAt.eContainmentFeature();
 										Object value = container.eGet(containment);
 										if(value instanceof List<?>) {
-											context.setIndex(((List<?>)value).indexOf(elementAt));
+											List<?> entries = (List<?>)value;
+											int indexOf = entries.indexOf(elementAt);
+											context.setIndex(indexOf);
 										}
 										
-										item.setText(refactoringUtility.getRefactoringText(context));
+										String refactoringText = refactoringUtility.getRefactoringText(context);
+										item.setText(refactoringText);
 										item.addSelectionListener(this);
 										item.setData(CONTEXT, context);
 									}

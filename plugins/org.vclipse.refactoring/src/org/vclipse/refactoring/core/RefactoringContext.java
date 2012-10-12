@@ -11,6 +11,7 @@
 package org.vclipse.refactoring.core;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
@@ -49,14 +50,19 @@ public class RefactoringContext implements IRefactoringContext {
 	
 	public String getLabel() {
 		if(text == null) {
-			text = getDescription();
 			StringBuffer buffer = new StringBuffer();
-			for(String part : VClipseStrings.splitCamelCase(text)) {
-				for(String split : part.split("_")) {
+			buffer.append(type.name());
+			buffer.append(" ");
+			if(feature != null) {
+				String featureName = feature.getName();
+				List<String> parts = VClipseStrings.splitCamelCase(featureName);
+				for(String part : parts) {
+					part = part.toLowerCase();
+					buffer.append(part);
 					buffer.append(" ");
-					buffer.append(split.toLowerCase());					
 				}
 			}
+			buffer.append(" for " + object.eClass().getName().toLowerCase());
 			return buffer.toString();
 		}
 		return text;
