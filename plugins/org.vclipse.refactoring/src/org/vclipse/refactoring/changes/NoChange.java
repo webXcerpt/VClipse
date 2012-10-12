@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
-public class NoChange extends Change {
+class NoChange extends Change {
 
 	private String label;
 	

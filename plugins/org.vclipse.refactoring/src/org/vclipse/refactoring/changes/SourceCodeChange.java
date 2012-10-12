@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.BasicDiagnostic;
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -60,7 +61,18 @@ public class SourceCodeChange extends NoChange {
 		BasicDiagnostic diagnostics = new BasicDiagnostic();
 		Map<Object, Object> validationContext = Maps.newHashMap();
 		validator.validate(original, diagnostics, validationContext);
+		for(Diagnostic diagnostic : diagnostics.getChildren()) {
+			String message = diagnostic.getMessage();
+			RefactoringStatus status = RefactoringStatus.createErrorStatus(message);
+			return status;
+		}
+		
 		validator.validate(refactored, diagnostics, validationContext);
+		for(Diagnostic diagnostic : diagnostics.getChildren()) {
+			String message = diagnostic.getMessage();
+			RefactoringStatus status = RefactoringStatus.createErrorStatus(message);
+			return status;
+		}
 		pm.done();
 		return RefactoringStatus.create(Status.OK_STATUS);
 	}

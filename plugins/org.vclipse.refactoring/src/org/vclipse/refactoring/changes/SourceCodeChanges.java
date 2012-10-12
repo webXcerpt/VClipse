@@ -195,7 +195,7 @@ public class SourceCodeChanges extends CompositeChange {
 		return RefactoringStatus.create(Status.OK_STATUS);
 	}
 	
-	protected void recordSourceCodeChanges(IRefactoringUIContext previewContext) {
+	private void recordSourceCodeChanges(IRefactoringUIContext previewContext) {
 		ChangeRecorder changeRecorder = runner.getChangeRecorder();
 		ChangeDescription endRecording = changeRecorder.endRecording();
 
@@ -229,7 +229,7 @@ public class SourceCodeChanges extends CompositeChange {
 		}
 	}
 	
-	protected IRefactoringUIContext createRefactoringContext(IRefactoringUIContext context) {
+	private IRefactoringUIContext createRefactoringContext(IRefactoringUIContext context) {
 		EObject element = context.getSourceElement();
 		rootCopy = rootContainerCopy(element);
 		
@@ -264,7 +264,7 @@ public class SourceCodeChanges extends CompositeChange {
 		Resource resource = container.eResource();
 		ResourceSet resourceSet = resource.getResourceSet();
 		URI uri = resource.getURI();
-		uri = URI.createURI(uri.toString() + ".preview." + uri.fileExtension());
+		uri = URI.createURI(uri.trimFileExtension().toString() + ".refactored." + uri.fileExtension());
 		try {
 			resource = resourceSet.getResource(uri, true);
 		} catch(Exception exception) {
