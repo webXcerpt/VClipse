@@ -163,8 +163,16 @@ public class SourceCodeChanges extends CompositeChange {
 			final SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 60);
 
 			// creates a copy of a model and sets the source element to an equal one in the copied model
-			final IRefactoringUIContext refactoringContext = createRefactoringContext(context);
-			sm.worked(10);
+			final IRefactoringUIContext refactoringContext = context;
+			EObject element = context.getSourceElement();
+			EObject entry = utility.findEntry(element, copyContents);
+			if(entry != null) {
+				UIRefactoringContext uicontext = (UIRefactoringContext)context;
+				IRefactoringUIContext changedContext = uicontext.copy();
+				changedContext.setSourceElement(entry);
+				context = changedContext;			
+				sm.worked(10);
+			}
 			
 			// executes re-factoring on the copy of the model
 			context.getDocument().modify(new IUnitOfWork<Void, XtextResource>() {
@@ -267,19 +275,5 @@ public class SourceCodeChanges extends CompositeChange {
 		for(SourceCodeChange change : sourceCodeChanges) {
 			add(change);
 		}
-	}
-	
-	private IRefactoringUIContext createRefactoringContext(final IRefactoringUIContext context) {
-		EObject element = context.getSourceElement();
-		List<EObject> entries = Lists.newArrayList(rootCopy.eAllContents());
-		entries.add(0, rootCopy);
-		EObject entry = utility.findEntry(element, entries);
-		if(entry != null) {
-			UIRefactoringContext uicontext = (UIRefactoringContext)context;
-			IRefactoringUIContext changedContext = uicontext.copy();
-			changedContext.setSourceElement(entry);
-			return changedContext;			
-		}
-		return context;
 	}
 }

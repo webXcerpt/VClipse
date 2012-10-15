@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.ListChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
+import org.eclipse.xtext.diagnostics.AbstractDiagnostic;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.serializer.ISerializer;
@@ -71,10 +72,14 @@ public class SourceCodeChange extends NoChange {
 		if(!errors.isEmpty()) {
 			RefactoringStatus status = RefactoringStatus.create(Status.CANCEL_STATUS);
 			for(Diagnostic diagnostic : errors) {
-				status.addEntry(new RefactoringStatusEntry(IStatus.ERROR, diagnostic.getMessage()));
+				if(diagnostic instanceof AbstractDiagnostic) {
+					status.addEntry(new RefactoringStatusEntry(IStatus.ERROR, diagnostic.getMessage()));					
+				} 
 				sm.worked(1);
 			}
-			return status;
+			if(status.getEntries().length > 0) {
+				return status;				
+			}
 		}
 		return RefactoringStatus.create(Status.OK_STATUS);
 	}
