@@ -10,15 +10,19 @@
  ******************************************************************************/
 package org.vclipse.refactoring.ui;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.emf.common.util.BasicDiagnostic;
-import org.eclipse.emf.common.util.Diagnostic;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.EValidator;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.ui.refactoring.UserInputWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -38,14 +42,13 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
-import org.vclipse.refactoring.changes.SourceCodeChanges;
 import org.vclipse.refactoring.core.RefactoringExecuter;
+import org.vclipse.refactoring.core.RefactoringTask;
 import org.vclipse.refactoring.utils.RefactoringUtility;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
@@ -55,9 +58,86 @@ public class InputPage extends UserInputWizardPage {
 	private RefactoringUtility refactoringUtility;
 	
 	private List<Widget> widgets;
-	private Thread validationThread;
+	
+	private ValidationThread validationThread;
 	
 	private IRefactoringUIContext context;
+	
+	private boolean validate = true;
+	
+	private class ValidationThread extends Thread {
+
+		private final IRefactoringUIContext context;
+		private final InputPage inputPage;
+		
+		public ValidationThread(InputPage page, IRefactoringUIContext context) {
+			this.context = context;
+			this.inputPage = page;
+			
+			this.inputPage.setErrorMessage(null);
+			this.inputPage.setPageComplete(false);
+		}
+		
+		@Override
+		public void run() {
+			IWizardContainer container = this.inputPage.getContainer();
+			try {
+				container.run(true, true, new IRunnableWithProgress() {
+					@Override
+					public void run(final IProgressMonitor pm) throws InvocationTargetException, InterruptedException {
+						StringBuffer taskBuffer = new StringBuffer("Validating re-factoring :").append(context.getLabel());
+						pm.beginTask(taskBuffer.toString(), 100);
+						RefactoringTask refactoring = context.getRefactoring();
+						try {
+							if(pm.isCanceled()) {
+								pm.done();
+								return;
+							}
+							final RefactoringStatus initialStatus = refactoring.checkInitialConditions(pm);
+							if(pm.isCanceled()) {
+								pm.done();
+								return;
+							}
+							refactoring.getChange(pm);
+							if(pm.isCanceled()) {
+								pm.done();
+								return;
+							}
+							final RefactoringStatus finalStatus = refactoring.checkFinalConditions(pm);
+							
+							Display.getDefault().syncExec(new Runnable() {
+								@Override
+								public void run() {
+									if(initialStatus.isOK() && finalStatus.isOK()) {
+										inputPage.setPageComplete(true);
+										inputPage.setErrorMessage(null);
+									} else {
+										String errorMessage = initialStatus.getMessageMatchingSeverity(IStatus.ERROR);
+										if(errorMessage == null) {
+											errorMessage = finalStatus.getMessageMatchingSeverity(IStatus.ERROR);
+										}
+										inputPage.setErrorMessage(errorMessage);
+										inputPage.setPageComplete(false);				
+									}
+								}
+							});
+							pm.done();
+						} catch(final CoreException exception) {
+							inputPage.setPageComplete(false);
+							inputPage.setErrorMessage(exception.getMessage());
+						}
+					}
+				});							
+			} catch(InvocationTargetException exception) {
+				Throwable cause = exception.getCause();
+				RefactoringPlugin.log(cause.getMessage(), cause);
+			} catch(InterruptedException exception) {
+				Throwable cause = exception.getCause();
+				RefactoringPlugin.log(cause.getMessage(), cause);
+			}
+			container.updateButtons();
+		}
+	}
 	
 	public static InputPage getInstance(IRefactoringUIContext context) {
 		Injector injector = RefactoringPlugin.getInstance().getInjector();
@@ -185,80 +265,51 @@ public class InputPage extends UserInputWizardPage {
 		text.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, false));
 		text.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent event) {
+				String string = text.getText();
+				if(!string.isEmpty()) {
+					context.addAttribute(RefactoringExecuter.TEXT_FIELD_ENTRY, string);
+				}
 				validateWidgets();
 			}
 		});
 		widgets.add(text);
 		return text;
 	}
-	
+
+	/*
+	 *	Validation on text input
+	 */
 	private void validateWidgets() {
-		setPageComplete(false);
-		Iterator<Text> iterator = Iterables.filter(widgets, Text.class).iterator();
-		if(iterator.hasNext()) {
-			Text text = iterator.next();
-			if(text.isEnabled()) {
-				final String string = text.getText();
-				context.addAttribute(RefactoringExecuter.TEXT_FIELD_ENTRY, string);				
-				if(string.isEmpty()) {
-					setErrorMessage("Please provide a textual input for the text field.");
-				} else {
-					if(validationThread == null) {
-						validationThread = new Thread() {
-							@Override
-							public void run() {
-								validateChangeModel();
-								setErrorMessage(null);
-								setPageComplete(true);
-							}
-						};
-					}
-					Display.getDefault().timerExec(1000, validationThread);
-				}
-			} else {
-				setPageComplete(true);
-				setErrorMessage(null);
-			}
+		final String input = getCurrentInput();
+		if(input.isEmpty() && validate) {
+			setErrorMessage("Please provide a textual input for the text field.");
+			setPageComplete(false);
 		} else {
-			setPageComplete(true);
-			setErrorMessage(null);
+			if(validationThread == null) {
+				validationThread = new ValidationThread(this, context);
+			}
+			Display.getDefault().timerExec(1000, validationThread);
 		}
 	}
 	
-	private void validateChangeModel() {
-		EObject element = context.getSourceElement();
-		
-		final EValidator.Registry validator = 
-				refactoringUtility.getInstance(EValidator.Registry.class, element);
-		 
-		if(validator != null) {
-			SourceCodeChanges modelChange = context.getRefactoring().getChange();
-			Object modified = modelChange.getModifiedElement();
-			if(modified instanceof EObject) {
-				EObject changed = (EObject)modified;
-				EValidator evalidator = validator.getEValidator(changed.eClass().getEPackage());
-				BasicDiagnostic diagnosticsCollection = new BasicDiagnostic();
-				evalidator.validate(changed, diagnosticsCollection, Maps.newHashMap());
-				List<Diagnostic> diagnostics = diagnosticsCollection.getChildren();
-				final Iterator<Diagnostic> iterator = Iterables.filter(diagnostics, new Predicate<Diagnostic>() {
-					public boolean apply(Diagnostic diagnostic) {
-						return Diagnostic.ERROR == diagnostic.getSeverity();
-					}
-				}).iterator();
-				Display.getDefault().asyncExec(new Runnable() {
-					@Override
-					public void run() { 
-						if(iterator.hasNext()) {
-							Diagnostic diagnostic = iterator.next();
-							setErrorMessage(diagnostic.getMessage());
-							setPageComplete(false);
-						} else {
-							setErrorMessage(null);
-							setPageComplete(true);
-						}
-					}
-				});
+	private String getCurrentInput() {
+		Iterator<Text> textIterator = Iterables.filter(widgets, Text.class).iterator();
+		if(textIterator.hasNext()) {
+			Text text = textIterator.next();
+			if(!text.isEnabled()) {
+				validate = false;
+			}
+			return text.getText();
+		} else {
+			Iterator<Combo> comboIterator = Iterables.filter(widgets, Combo.class).iterator();
+			if(!comboIterator.hasNext()) {
+				Combo combo = comboIterator.next();
+				if(!combo.isEnabled()) {
+					validate = false;
+				}
+				return combo.getText();
 			}
 		}
+		return "";
 	}
 }

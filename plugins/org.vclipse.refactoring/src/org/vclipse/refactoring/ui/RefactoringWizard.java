@@ -10,13 +10,16 @@
  ******************************************************************************/
 package org.vclipse.refactoring.ui;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.ui.refactoring.UserInputWizardPage;
-import org.vclipse.base.ui.util.EditorUtilsExtensions;
 import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.changes.SourceCodeChanges;
 import org.vclipse.refactoring.core.RefactoringTask;
@@ -36,17 +39,33 @@ public class RefactoringWizard extends org.eclipse.ltk.ui.refactoring.Refactorin
 	
 	@Override
 	public boolean performFinish() {
+		IWizardContainer container = getContainer();
 		Refactoring refactoring = getRefactoring();
 		if(refactoring instanceof RefactoringTask) {
-			RefactoringTask modelRefactoring = (RefactoringTask)refactoring;
-			IProgressMonitor pm = EditorUtilsExtensions.getProgressMonitor();
-			SourceCodeChanges modelChange = modelRefactoring.getChange();
+			final RefactoringTask modelRefactoring = (RefactoringTask)refactoring;
 			try {
-				modelChange.refactor(pm);
-			} catch(CoreException exception) {
-				RefactoringPlugin.log(exception.getMessage(), exception);
+				container.run(true, true, new IRunnableWithProgress() {
+					@Override
+					public void run(IProgressMonitor pm) throws InvocationTargetException, InterruptedException {
+						try {
+							SourceCodeChanges changes = modelRefactoring.getChange(pm);
+							Change[] children = changes.getChildren();
+							StringBuffer labelBuffer = new StringBuffer("Executing re-factoring for ").append(changes.getContext().getLabel());
+							pm.beginTask(labelBuffer.toString(), children.length);
+							changes.refactor(pm);
+							changes.dispose();
+						} catch(CoreException exception) {
+							throw new InvocationTargetException(exception);
+						}
+					}
+				});
+			} catch(InvocationTargetException exception) {
+				Throwable cause = exception.getCause();
+				RefactoringPlugin.log(cause.getMessage(), cause);
+			} catch(InterruptedException exception) {
+				Throwable cause = exception.getCause();
+				RefactoringPlugin.log(cause.getMessage(), cause);
 			}
-			modelChange.dispose();
 		}
 		return super.performFinish();
 	}

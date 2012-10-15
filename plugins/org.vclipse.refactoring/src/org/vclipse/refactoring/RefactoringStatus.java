@@ -6,18 +6,26 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 
 public class RefactoringStatus extends Status {
 
-	public static RefactoringStatus getMethodNotAvailable(EObject object, EStructuralFeature feature) {
-		String message = 
-				"Re-factoring for type " + object.eClass().getName() + 
-					" and " + feature.getName() + " not available";
+	public static RefactoringStatus getInitialisationError(String message) {
 		return new RefactoringStatus(Status.ERROR, message);
+	}
+		
+	public static RefactoringStatus getMethodNotAvailable(EObject object, EStructuralFeature feature) {
+		StringBuffer messageBuffer = new StringBuffer("Re-factoring for type ");
+		messageBuffer.append(object.eClass().getName());
+		messageBuffer.append(" and ");
+		messageBuffer.append(feature.getName());
+		messageBuffer.append(" not available");
+		return new RefactoringStatus(Status.ERROR, messageBuffer.toString());
 	}
 	
 	public static RefactoringStatus getExcuterNotAvailable(EObject object, EStructuralFeature feature) {
-		String message = 
-				"Re-factoring executer for type " + object.eClass().getName() +
-					" and " + feature.getName() + " not available";
-		return new RefactoringStatus(Status.ERROR, message);
+		StringBuffer messageBuffer = new StringBuffer("Re-factoring executer for type ");
+		messageBuffer.append(object.eClass().getName());
+		messageBuffer.append(" and ");
+		messageBuffer.append(feature.getName());
+		messageBuffer.append(" not available");
+		return new RefactoringStatus(Status.ERROR, messageBuffer.toString());
 	}
 	
 	public static RefactoringStatus getConfigurationError() {

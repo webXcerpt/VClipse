@@ -13,7 +13,6 @@ package org.vclipse.refactoring.changes;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -23,7 +22,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.ChangeDescription;
 import org.eclipse.emf.ecore.change.FeatureChange;
@@ -35,8 +33,6 @@ import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.xtext.linking.ILinker;
-import org.eclipse.xtext.naming.IQualifiedNameProvider;
-import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.parser.IParser;
 import org.eclipse.xtext.resource.XtextResource;
@@ -62,15 +58,14 @@ public class SourceCodeChanges extends CompositeChange {
 	
 	private EObject rootOriginal;
 	private EObject rootCopy;
-	private EObject refactoredRoot;
 	
 	private DiffNode previewNode;
 	private IRefactoringUIContext context;
 	
+	private List<EObject> rootContents;
+	private List<EObject> copyContents;
+	
 	private final ISerializer serializer;
-	private final IQualifiedNameProvider nameProvider;
-	private final IParser parser;
-	private final ILinker linker;
 	
 	private boolean performed = false;
 	
@@ -112,30 +107,54 @@ public class SourceCodeChanges extends CompositeChange {
 		EObject element = this.context.getSourceElement();
 		rootOriginal = EcoreUtil.getRootContainer(element);
 		
+		rootContents = Lists.newArrayList(rootOriginal.eAllContents());
+		rootContents.add(0, rootOriginal);
+		
 		serializer = utility.getInstance(ISerializer.class, rootOriginal);
-		nameProvider = utility.getInstance(IQualifiedNameProvider.class, rootOriginal);
-		parser = utility.getInstance(IParser.class, rootOriginal);
-		linker = utility.getInstance(ILinker.class, rootOriginal);
+		IParser parser = utility.getInstance(IParser.class, rootOriginal);
+		ILinker linker = utility.getInstance(ILinker.class, rootOriginal);
+
+		String string = serializer.serialize(rootOriginal);		
+		IParseResult parseResult = parser.parse(new StringReader(string));
+		Resource resource = rootOriginal.eResource();
+		ResourceSet resourceSet = resource.getResourceSet();
+		URI uri = resource.getURI();
+		uri = URI.createURI(uri.trimFileExtension().toString() + ".refactored." + uri.fileExtension());
+		try {
+			resource = resourceSet.getResource(uri, true);
+		} catch(Exception exception) {
+			resource = resourceSet.getResource(uri, true);
+		}
+		resource.getContents().clear();
+		rootCopy = parseResult.getRootASTElement();
+		copyContents = Lists.newArrayList(rootCopy.eAllContents());
+		copyContents.add(0, rootCopy);
+		resource.getContents().add(rootCopy);
+		
+		linker.linkModel(rootCopy, new ListBasedDiagnosticConsumer());
+		
+		previewNode = new DiffNode(Differencer.CHANGE);
+		previewNode.setLeft(new EObjectTypedElement(rootOriginal, serializer));
 	}
 	
 	@Override
 	public Object getModifiedElement() {
-		return refactoredRoot;
+		return rootCopy;
 	}
 	
 	public DiffNode getDiffNode() {
 		return previewNode;
 	}
 	
+	public IRefactoringUIContext getContext() {
+		return context;
+	}
+	
 	@Override
  	public Change perform(IProgressMonitor pm) throws CoreException {
 		if(!performed) {
-			pm.beginTask("Initialising re-factoring operation", IProgressMonitor.UNKNOWN);
-			
-			// create new DiffNode, remove ChangeNodes
-			previewNode = new DiffNode(Differencer.CHANGE);
-			this.clear();
-				
+			pm.subTask("Initialising re-factoring operation");
+
 			// creates a copy of a model and sets the source element to an equal one in the copied model
 			final IRefactoringUIContext refactoringContext = createRefactoringContext(context);
 			
@@ -148,33 +167,27 @@ public class SourceCodeChanges extends CompositeChange {
 				}
 			});
 			
-			EObject changed = refactoringContext.getSourceElement();
-			refactoredRoot = EcoreUtil.getRootContainer(changed);
-			
-			previewNode.setLeft(
-					new EObjectTypedElement(rootOriginal, serializer));
-			
-			previewNode.setRight(
-					new EObjectTypedElement(refactoredRoot, serializer));
-			
-			recordSourceCodeChanges(refactoringContext);
+			previewNode.setRight(new EObjectTypedElement(rootCopy, serializer));
+		
+			recordSourceCodeChanges(pm, refactoringContext);
 			
 			if(getChildren().length == 0) {
 				add(new NoChange(null));
 			}
-			pm.done();
+			performed = true;
+			pm.worked(1);
 		}
-		performed = true;
 		return null;
 	}
 	
 	public RefactoringStatus refactor(final IProgressMonitor pm) throws CoreException {
 		if(isEnabled()) {
-			pm.beginTask("Executing re-factoring", IProgressMonitor.UNKNOWN);
+			pm.subTask("Executing re-factoring operation.");
 			context.getDocument().modify(new IUnitOfWork<EObject, XtextResource>() {
 				@Override
 				public EObject exec(XtextResource state) throws Exception {
-					for(Change change : Lists.newArrayList(getChildren())) {
+					List<Change> changes = Lists.newArrayList(getChildren());
+					for(Change change : changes) {
 						if(change instanceof SourceCodeChange) {
 							SourceCodeChange currentChange = (SourceCodeChange)change;
 							if(currentChange.isEnabled()) {
@@ -184,24 +197,22 @@ public class SourceCodeChanges extends CompositeChange {
 									RefactoringPlugin.log(exception.getMessage(), exception);
 									continue;
 								}
-							}					
+							}
+							pm.worked(1);
 						}
 					}
 					return null;
 				}
 			});
-			pm.done();
 		}
 		return RefactoringStatus.create(Status.OK_STATUS);
 	}
 	
-	private void recordSourceCodeChanges(IRefactoringUIContext previewContext) {
+	private void recordSourceCodeChanges(IProgressMonitor pm, IRefactoringUIContext previewContext) {
+		pm.subTask("Recording source code changes.");
 		ChangeRecorder changeRecorder = runner.getChangeRecorder();
 		ChangeDescription endRecording = changeRecorder.endRecording();
 
-		List<EObject> entries = Lists.newArrayList(rootOriginal.eAllContents());
-		entries.add(0, rootOriginal);
-		
 		List<SourceCodeChange> sourceCodeChanges = Lists.newArrayList();
 		InputStreamProvider streamRootNode = InputStreamProvider.getInstance(previewNode);
 		for(Entry<EObject, EList<FeatureChange>> entry : endRecording.getObjectChanges().entrySet()) {
@@ -209,7 +220,7 @@ public class SourceCodeChanges extends CompositeChange {
 			if(changed.eContainer() instanceof ChangeDescription) {
 				continue;
 			}
-			EObject existingEntry = utility.findEntry(changed, entries);
+			EObject existingEntry = utility.findEntry(changed, rootContents);
 			SourceCodeChange scc = new SourceCodeChange(utility, existingEntry, changed, entry.getValue());
 			DiffNode preview = scc.getDiffNode();
 			try {
@@ -223,57 +234,25 @@ public class SourceCodeChanges extends CompositeChange {
 				RefactoringPlugin.log(exception.getMessage(), exception);
 			}
 			sourceCodeChanges.add(scc);
+			pm.worked(5);
 		}
 		for(SourceCodeChange change : sourceCodeChanges) {
 			add(change);
+			pm.worked(1);
 		}
 	}
 	
-	private IRefactoringUIContext createRefactoringContext(IRefactoringUIContext context) {
+	private IRefactoringUIContext createRefactoringContext(final IRefactoringUIContext context) {
 		EObject element = context.getSourceElement();
-		rootCopy = rootContainerCopy(element);
-		
 		List<EObject> entries = Lists.newArrayList(rootCopy.eAllContents());
 		entries.add(0, rootCopy);
-		QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(element);
-		if(qualifiedName == null) {
-			EClass eclass = element.eClass();
-			Iterator<EObject> iterator = utility.getEntry(eclass, entries).iterator();
-			while(iterator.hasNext()) {
-				EObject next = iterator.next();
-				if(utility.equalTypeWithContainerType(element, next)) {
-					element = next;
-				}
-			}
-		} else {
-			String name = qualifiedName.getLastSegment();
-			element = utility.findEntry(name, element.eClass(), entries);
-		}
-		IRefactoringUIContext changedContext = ((UIRefactoringContext)context).copy();
-		if(element != null) {
-			changedContext.setSourceElement(element);
-			return changedContext;
+		EObject entry = utility.findEntry(element, entries);
+		if(entry != null) {
+			UIRefactoringContext uicontext = (UIRefactoringContext)context;
+			IRefactoringUIContext changedContext = uicontext.copy();
+			changedContext.setSourceElement(entry);
+			return changedContext;			
 		}
 		return context;
-	}
-	
-	private EObject rootContainerCopy(EObject object) {
-		EObject container = EcoreUtil.getRootContainer(object);
-		String string = serializer.serialize(container);		
-		IParseResult parseResult = parser.parse(new StringReader(string));
-		Resource resource = container.eResource();
-		ResourceSet resourceSet = resource.getResourceSet();
-		URI uri = resource.getURI();
-		uri = URI.createURI(uri.trimFileExtension().toString() + ".refactored." + uri.fileExtension());
-		try {
-			resource = resourceSet.getResource(uri, true);
-		} catch(Exception exception) {
-			resource = resourceSet.getResource(uri, true);
-		}
-		resource.getContents().clear();
-		resource.getContents().add(parseResult.getRootASTElement());
-		final ListBasedDiagnosticConsumer consumer = new ListBasedDiagnosticConsumer();
-		linker.linkModel(parseResult.getRootASTElement(), consumer);
-		return parseResult.getRootASTElement();
 	}
 }
