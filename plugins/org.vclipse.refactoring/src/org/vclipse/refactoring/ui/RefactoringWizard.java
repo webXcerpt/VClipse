@@ -44,7 +44,7 @@ public class RefactoringWizard extends org.eclipse.ltk.ui.refactoring.Refactorin
 		if(refactoring instanceof RefactoringTask) {
 			final RefactoringTask modelRefactoring = (RefactoringTask)refactoring;
 			try {
-				container.run(true, true, new IRunnableWithProgress() {
+				container.run(false, true, new IRunnableWithProgress() {
 					@Override
 					public void run(IProgressMonitor pm) throws InvocationTargetException, InterruptedException {
 						try {
