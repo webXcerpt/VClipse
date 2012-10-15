@@ -112,16 +112,18 @@ public class SourceCodeChange extends NoChange {
 	}
 	
 	public DiffNode getDiffNode() {		
-		diffNode = new DiffNode(Differencer.CHANGE);
-		EObjectTypedElement left = 
-				original == null ? EObjectTypedElement.getEmpty() : new EObjectTypedElement(original, serializer, nameProvider);
-		
-		diffNode.setLeft(left);
-		
-		EObjectTypedElement right = 
-				new EObjectTypedElement(refactored, serializer, nameProvider);
-		
-		diffNode.setRight(right);
+		if(diffNode == null) {
+			diffNode = new DiffNode(Differencer.CHANGE);
+			EObjectTypedElement left = 
+					original == null ? EObjectTypedElement.getEmpty() : new EObjectTypedElement(original, serializer, nameProvider);
+					
+					diffNode.setLeft(left);
+					
+					EObjectTypedElement right = 
+							new EObjectTypedElement(refactored, serializer, nameProvider);
+					
+					diffNode.setRight(right);			
+		}
 		return diffNode;
 	}
 	

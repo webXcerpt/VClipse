@@ -14,24 +14,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.ChangeDescription;
 import org.eclipse.emf.ecore.change.FeatureChange;
-import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
+import org.eclipse.ltk.core.refactoring.RefactoringStatusContext;
+import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
 import org.eclipse.xtext.linking.ILinker;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.parser.IParser;
@@ -48,6 +53,7 @@ import org.vclipse.refactoring.ui.UIRefactoringContext;
 import org.vclipse.refactoring.utils.RefactoringUtility;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.InputSupplier;
 
@@ -153,92 +159,113 @@ public class SourceCodeChanges extends CompositeChange {
 	@Override
  	public Change perform(IProgressMonitor pm) throws CoreException {
 		if(!performed) {
-			pm.subTask("Initialising re-factoring operation");
+			StringBuffer taskBuffer = new StringBuffer("Initialising re-factoring operation for ").append(context.getLabel());
+			final SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 60);
 
 			// creates a copy of a model and sets the source element to an equal one in the copied model
 			final IRefactoringUIContext refactoringContext = createRefactoringContext(context);
+			sm.worked(10);
 			
 			// executes re-factoring on the copy of the model
 			context.getDocument().modify(new IUnitOfWork<Void, XtextResource>() {
 				@Override
 				public java.lang.Void exec(XtextResource resource) throws Exception {
 					runner.refactor(refactoringContext);
+					sm.worked(20);
 					return null;
 				}
 			});
 			
 			previewNode.setRight(new EObjectTypedElement(rootCopy, serializer));
-		
-			recordSourceCodeChanges(pm, refactoringContext);
+			sm.worked(10);
+			
+			recordSourceCodeChanges(sm, refactoringContext);
+			sm.worked(20);
 			
 			if(getChildren().length == 0) {
 				add(new NoChange(null));
 			}
 			performed = true;
-			pm.worked(1);
 		}
 		return null;
 	}
 	
 	public RefactoringStatus refactor(final IProgressMonitor pm) throws CoreException {
+		RefactoringStatus refactoringStatus = RefactoringStatus.create(Status.OK_STATUS);
 		if(isEnabled()) {
-			pm.subTask("Executing re-factoring operation.");
+			StringBuffer taskBuffer = new StringBuffer("Executing re-factoring:").append(context.getLabel());
+			final List<Change> changes = Lists.newArrayList(getChildren());
+			final SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), changes.size());
+			final Map<SourceCodeChange, CoreException> exceptions = Maps.newHashMap();
 			context.getDocument().modify(new IUnitOfWork<EObject, XtextResource>() {
 				@Override
 				public EObject exec(XtextResource state) throws Exception {
-					List<Change> changes = Lists.newArrayList(getChildren());
 					for(Change change : changes) {
 						if(change instanceof SourceCodeChange) {
-							SourceCodeChange currentChange = (SourceCodeChange)change;
-							if(currentChange.isEnabled()) {
+							SourceCodeChange scc = (SourceCodeChange)change;
+							if(scc.isEnabled()) {
 								try {
-									currentChange.refactor(pm);							
+									scc.refactor(sm);							
 								} catch(CoreException exception) {
-									RefactoringPlugin.log(exception.getMessage(), exception);
-									continue;
+									exceptions.put(scc, exception);
 								}
 							}
-							pm.worked(1);
+							sm.worked(1);
 						}
 					}
 					return null;
 				}
 			});
+			
+			if(!exceptions.isEmpty()) {
+				taskBuffer = new StringBuffer("Collecting errors for ").append(context.getLabel());
+				SubMonitor sm_exceptions = SubMonitor.convert(pm, taskBuffer.toString(), exceptions.size());
+				for(Entry<SourceCodeChange, CoreException> exception : exceptions.entrySet()) {
+					final SourceCodeChange scc = exception.getKey();
+					final CoreException ce = exception.getValue();
+					refactoringStatus.addEntry(IStatus.ERROR, ce.getMessage(), new RefactoringStatusContext() {
+						@Override
+						public Object getCorrespondingElement() {
+							return scc.getModifiedElement();
+						}
+					}, RefactoringPlugin.ID, RefactoringStatusEntry.NO_CODE);
+					sm_exceptions.worked(1);
+				}
+			}
 		}
-		return RefactoringStatus.create(Status.OK_STATUS);
+		return refactoringStatus;
 	}
 	
 	private void recordSourceCodeChanges(IProgressMonitor pm, IRefactoringUIContext previewContext) {
-		pm.subTask("Recording source code changes.");
-		ChangeRecorder changeRecorder = runner.getChangeRecorder();
-		ChangeDescription endRecording = changeRecorder.endRecording();
-
+		StringBuffer taskBuffer = new StringBuffer("Recording source code changes for re-factoring ").append(previewContext.getLabel());
+		EMap<EObject, EList<FeatureChange>> objectChanges = runner.getChangeRecorder().endRecording().getObjectChanges();
+		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), objectChanges.size());
 		List<SourceCodeChange> sourceCodeChanges = Lists.newArrayList();
 		InputStreamProvider streamRootNode = InputStreamProvider.getInstance(previewNode);
-		for(Entry<EObject, EList<FeatureChange>> entry : endRecording.getObjectChanges().entrySet()) {
+		for(Entry<EObject, EList<FeatureChange>> entry : objectChanges.entrySet()) {
 			EObject changed = entry.getKey();
 			if(changed.eContainer() instanceof ChangeDescription) {
+				sm.worked(1);
 				continue;
 			}
 			EObject existingEntry = utility.findEntry(changed, rootContents);
 			SourceCodeChange scc = new SourceCodeChange(utility, existingEntry, changed, entry.getValue());
-			DiffNode preview = scc.getDiffNode();
 			try {
-				InputStreamProvider currentStream = InputStreamProvider.getInstance(preview);
+				InputStreamProvider currentStream = InputStreamProvider.getInstance(scc.getDiffNode());
 				if(ByteStreams.equal(streamRootNode, currentStream)) {
 					markAsSynthetic();
 					sourceCodeChanges.add(0, scc);
+					sm.worked(1);
 					continue;
 				}
 			} catch(IOException exception) {
 				RefactoringPlugin.log(exception.getMessage(), exception);
 			}
 			sourceCodeChanges.add(scc);
-			pm.worked(5);
+			sm.worked(1);
 		}
 		for(SourceCodeChange change : sourceCodeChanges) {
 			add(change);
-			pm.worked(1);
 		}
 	}
 	
