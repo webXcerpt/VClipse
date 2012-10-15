@@ -73,8 +73,8 @@ public class RefactoringTask extends Refactoring {
 	
 	@Override
 	public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws CoreException, OperationCanceledException {
-		String taskName = new StringBuffer("Checking initial conditions for ").append(context.getLabel()).toString();
-		SubMonitor sm = SubMonitor.convert(pm, taskName, 10);
+		StringBuffer taskBuffer = new StringBuffer("Checking initial conditions for ").append(context.getLabel());
+		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 10);
 		EObject element = context.getSourceElement();
 		if(pm.isCanceled()) {
 			return RefactoringStatus.create(Status.CANCEL_STATUS);
@@ -112,7 +112,7 @@ public class RefactoringTask extends Refactoring {
 		if(modelChange == null) {
 			return RefactoringStatus.createFatalErrorStatus("Could not execute validation. Refactored model is null.");
 		} else {
-			StringBuffer taskBuffer = new StringBuffer("Checking final conditions for re-factoring").append(context.getLabel());
+			StringBuffer taskBuffer = new StringBuffer("Checking final conditions for re-factoring ").append(context.getLabel());
 			SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 10);
 			Object modified = modelChange.getModifiedElement();
 			if(modified instanceof EObject) {
