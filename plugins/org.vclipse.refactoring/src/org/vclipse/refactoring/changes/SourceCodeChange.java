@@ -1,13 +1,14 @@
 package org.vclipse.refactoring.changes;
 
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.EList;
@@ -19,6 +20,7 @@ import org.eclipse.emf.ecore.EValidator.Registry;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.ListChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
+import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.serializer.ISerializer;
@@ -57,30 +59,31 @@ public class SourceCodeChange extends NoChange {
 	
 	@Override
 	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException, OperationCanceledException {
-		pm.beginTask("Validating change for " + getName(utility, original), IProgressMonitor.UNKNOWN);
+		StringBuffer taskBuffer = new StringBuffer("Validating change for ").append(getName(utility, refactored));
+		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 10);
 		BasicDiagnostic diagnostics = new BasicDiagnostic();
-		Map<Object, Object> validationContext = Maps.newHashMap();
-		validator.validate(original, diagnostics, validationContext);
-		for(Diagnostic diagnostic : diagnostics.getChildren()) {
-			String message = diagnostic.getMessage();
-			RefactoringStatus status = RefactoringStatus.createErrorStatus(message);
-			return status;
-		}
+		validator.validate(refactored, diagnostics, Maps.newHashMap());
+		sm.worked(10);
 		
-		validator.validate(refactored, diagnostics, validationContext);
-		for(Diagnostic diagnostic : diagnostics.getChildren()) {
-			String message = diagnostic.getMessage();
-			RefactoringStatus status = RefactoringStatus.createErrorStatus(message);
+		taskBuffer = new StringBuffer("Collecting errors after re-factoring.");
+		List<Diagnostic> errors = diagnostics.getChildren();
+		sm = SubMonitor.convert(pm, taskBuffer.toString(), errors.size());
+		if(!errors.isEmpty()) {
+			RefactoringStatus status = RefactoringStatus.create(Status.CANCEL_STATUS);
+			for(Diagnostic diagnostic : errors) {
+				status.addEntry(new RefactoringStatusEntry(IStatus.ERROR, diagnostic.getMessage()));
+				sm.worked(1);
+			}
 			return status;
 		}
-		pm.done();
 		return RefactoringStatus.create(Status.OK_STATUS);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public RefactoringStatus refactor(IProgressMonitor pm) throws CoreException {
 		if(isEnabled()) {
-			pm.beginTask("Executing re-factoring for " + getName(utility, original), IProgressMonitor.UNKNOWN);
+			StringBuffer taskBuffer = new StringBuffer("Executing re-factoring for ").append(getName(utility, original));
+			SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), featureChanges.size());
 			for(FeatureChange featureChange : featureChanges) {
 				EStructuralFeature feature = featureChange.getFeature();
 				Object refactoredValue = refactored.eGet(feature);
@@ -105,8 +108,8 @@ public class SourceCodeChange extends NoChange {
 				} else {
 					original.eSet(feature, refactoredValue);
 				}
+				sm.worked(1);
 			}
-			pm.done();
 		}
 		return RefactoringStatus.create(Status.OK_STATUS);
 	}
@@ -114,15 +117,10 @@ public class SourceCodeChange extends NoChange {
 	public DiffNode getDiffNode() {		
 		if(diffNode == null) {
 			diffNode = new DiffNode(Differencer.CHANGE);
-			EObjectTypedElement left = 
-					original == null ? EObjectTypedElement.getEmpty() : new EObjectTypedElement(original, serializer, nameProvider);
-					
-					diffNode.setLeft(left);
-					
-					EObjectTypedElement right = 
-							new EObjectTypedElement(refactored, serializer, nameProvider);
-					
-					diffNode.setRight(right);			
+			EObjectTypedElement left = original == null ? EObjectTypedElement.getEmpty() : new EObjectTypedElement(original, serializer, nameProvider);
+			diffNode.setLeft(left);
+			EObjectTypedElement right = new EObjectTypedElement(refactored, serializer, nameProvider);
+			diffNode.setRight(right);		
 		}
 		return diffNode;
 	}
