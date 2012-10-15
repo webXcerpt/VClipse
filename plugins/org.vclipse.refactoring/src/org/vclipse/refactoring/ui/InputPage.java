@@ -98,7 +98,11 @@ public class InputPage extends UserInputWizardPage {
 								pm.done();
 								return;
 							}
-							refactoring.getChange(pm);
+							try {
+								refactoring.getChange(pm);								
+							} catch(final CoreException exception) {
+								throw new InvocationTargetException(exception);
+							}
 							if(pm.isCanceled()) {
 								pm.done();
 								return;
@@ -128,12 +132,18 @@ public class InputPage extends UserInputWizardPage {
 						}
 					}
 				});							
-			} catch(InvocationTargetException exception) {
+			} catch(final InvocationTargetException exception) {
+				Display.getDefault().syncExec(new Runnable() {
+					@Override
+					public void run() {
+						inputPage.setPageComplete(false);
+						inputPage.setErrorMessage(exception.getMessage());
+					}
+				});
 				Throwable cause = exception.getCause();
 				RefactoringPlugin.log(cause.getMessage(), cause);
-			} catch(InterruptedException exception) {
-				Throwable cause = exception.getCause();
-				RefactoringPlugin.log(cause.getMessage(), cause);
+			} catch(final InterruptedException exception) {
+				
 			}
 			container.updateButtons();
 		}

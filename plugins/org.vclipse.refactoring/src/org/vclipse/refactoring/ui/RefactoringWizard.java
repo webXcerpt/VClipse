@@ -38,6 +38,17 @@ public class RefactoringWizard extends org.eclipse.ltk.ui.refactoring.Refactorin
 	}
 	
 	@Override
+	public boolean performCancel() {
+		boolean cancel = super.performCancel();
+		Refactoring refactoring = getRefactoring();
+		if(refactoring instanceof RefactoringTask) {
+			final RefactoringTask modelRefactoring = (RefactoringTask)refactoring;
+			modelRefactoring.dispose();
+		}
+		return cancel;
+	}
+
+	@Override
 	public boolean performFinish() {
 		IWizardContainer container = getContainer();
 		Refactoring refactoring = getRefactoring();

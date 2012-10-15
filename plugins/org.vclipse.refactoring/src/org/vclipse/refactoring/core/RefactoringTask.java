@@ -182,4 +182,9 @@ public class RefactoringTask extends Refactoring {
 		}
 		return RefactoringStatus.create(Status.OK_STATUS);
 	}
+
+	public void dispose() {
+		modelChange = null;
+		context = null;
+	}
 }

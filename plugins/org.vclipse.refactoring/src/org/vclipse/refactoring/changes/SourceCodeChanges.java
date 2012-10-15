@@ -97,15 +97,19 @@ public class SourceCodeChanges extends CompositeChange {
 				return null;
 			}
 		}
-		
 	}
 	
 	static String getChangeLabel(IRefactoringUIContext context) {
-		return context.getSourceElement().eResource().getURI().lastSegment();
+		EObject element = context.getSourceElement();
+		Resource resource = element.eResource();
+		if(resource == null) {
+			System.err.println("resource = null");
+		}
+		return resource.getURI().lastSegment();
 	}
 	
 	public SourceCodeChanges(IRefactoringUIContext context, RefactoringRunner runner, RefactoringUtility utility) {
-		super("Changes in " + getChangeLabel(context));
+ 		super("Changes in " + getChangeLabel(context));
 		this.context = context;
 		this.runner = runner;
 		this.utility = utility;
@@ -143,6 +147,7 @@ public class SourceCodeChanges extends CompositeChange {
 		previewNode.setLeft(new EObjectTypedElement(rootOriginal, serializer));
 	}
 	
+
 	@Override
 	public Object getModifiedElement() {
 		return rootCopy;
@@ -163,37 +168,39 @@ public class SourceCodeChanges extends CompositeChange {
 			final SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 60);
 
 			// creates a copy of a model and sets the source element to an equal one in the copied model
-			final IRefactoringUIContext refactoringContext = context;
 			EObject element = context.getSourceElement();
 			EObject entry = utility.findEntry(element, copyContents);
 			if(entry != null) {
 				UIRefactoringContext uicontext = (UIRefactoringContext)context;
-				IRefactoringUIContext changedContext = uicontext.copy();
-				changedContext.setSourceElement(entry);
-				context = changedContext;			
+				final IRefactoringUIContext refactoringContext = uicontext.copy();
+				refactoringContext.setSourceElement(entry);
+				try {
+					// executes re-factoring on the copy of the model
+					context.getDocument().modify(new IUnitOfWork<Void, XtextResource>() {
+						@Override
+						public java.lang.Void exec(XtextResource resource) throws Exception {
+							runner.refactor(refactoringContext);
+							sm.worked(20);
+							return null;
+						}
+					});
+				} catch(Exception exception) {
+					IStatus status = new Status(IStatus.ERROR, RefactoringPlugin.ID, exception.getMessage(), exception);
+					throw new CoreException(status);
+				}
+				
+				previewNode.setRight(new EObjectTypedElement(rootCopy, serializer));
+				sm.worked(10);
+				
+				recordSourceCodeChanges(sm, refactoringContext);
+				sm.worked(20);
+				
+				if(getChildren().length == 0) {
+					add(new NoChange(null));
+				}
+				performed = true;	
 				sm.worked(10);
 			}
-			
-			// executes re-factoring on the copy of the model
-			context.getDocument().modify(new IUnitOfWork<Void, XtextResource>() {
-				@Override
-				public java.lang.Void exec(XtextResource resource) throws Exception {
-					runner.refactor(refactoringContext);
-					sm.worked(20);
-					return null;
-				}
-			});
-			
-			previewNode.setRight(new EObjectTypedElement(rootCopy, serializer));
-			sm.worked(10);
-			
-			recordSourceCodeChanges(sm, refactoringContext);
-			sm.worked(20);
-			
-			if(getChildren().length == 0) {
-				add(new NoChange(null));
-			}
-			performed = true;
 		}
 		return null;
 	}
