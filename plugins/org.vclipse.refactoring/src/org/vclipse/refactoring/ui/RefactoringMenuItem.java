@@ -12,6 +12,7 @@ package org.vclipse.refactoring.ui;
 
 import java.util.List;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -126,30 +127,20 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 			MenuItem item = (MenuItem)source;
 			IRefactoringUIContext context = (IRefactoringUIContext)item.getData(CONTEXT);
 			try {
-				Shell activeShell = Display.getDefault().getActiveShell();
-				List<? extends UserInputWizardPage> pages = Lists.newArrayList();
 				EObject sourceElement = context.getSourceElement();
 				EObject rootContainer = EcoreUtil.getRootContainer(sourceElement);
-				
-				RefactoringUICustomisation uicustomisation = 
-						configuration.getUICustomisation().get(rootContainer.eClass());
-				
+				EClass rootType = rootContainer.eClass();
+				RefactoringUICustomisation uicustomisation = configuration.getUICustomisation().get(rootType);
+				List<? extends UserInputWizardPage> pages = Lists.newArrayList();
 				pages = uicustomisation.getPages(context);
-				
-				RefactoringTask refactoring = 
-						new RefactoringTask(context, refactoringRunner, refactoringUtility);
-				
+				RefactoringTask refactoring = new RefactoringTask(context, refactoringRunner, refactoringUtility);
 				context.setRefactoring(refactoring);
-	 
-				RefactoringWizard wizard = 
-						new RefactoringWizard(pages, 
-								refactoring, RefactoringWizard.DIALOG_BASED_USER_INTERFACE);
-				
-				new RefactoringWizardOpenOperation(wizard).
-					run(activeShell, 
-							refactoringUtility.getRefactoringText(context));
+				RefactoringWizard wizard = new RefactoringWizard(pages, refactoring, RefactoringWizard.DIALOG_BASED_USER_INTERFACE);
+				Shell activeShell = Display.getDefault().getActiveShell();
+				new RefactoringWizardOpenOperation(wizard).run(activeShell, refactoringUtility.getRefactoringText(context));
 			} catch(InterruptedException exception) {
-				RefactoringPlugin.log(exception.getMessage(), exception);
+				String message = exception.getMessage();
+				RefactoringPlugin.log(message, exception);
 			}
 		}
 	}
