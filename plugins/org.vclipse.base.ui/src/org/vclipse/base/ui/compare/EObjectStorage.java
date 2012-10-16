@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.util.SimpleAttributeResolver;
 import org.eclipse.xtext.util.StringInputStream;
@@ -46,7 +47,8 @@ public class EObjectStorage implements IEncodedStorage {
 	public InputStream getContents() throws CoreException {
 		String content = "";
 		if(object != null && serializer != null) {
-			content = serializer.serialize(object);
+			SaveOptions options = SaveOptions.newBuilder().noValidation().format().getOptions();
+			content = serializer.serialize(object, options);
 		}
 		return new StringInputStream(content);
 	}
