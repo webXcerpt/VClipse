@@ -78,7 +78,7 @@ public class RefactoringWizard extends org.eclipse.ltk.ui.refactoring.Refactorin
 				RefactoringPlugin.log(cause.getMessage(), cause);
 			}
 		}
-		return super.performFinish();
+		return true;
 	}
 
 	@Override
