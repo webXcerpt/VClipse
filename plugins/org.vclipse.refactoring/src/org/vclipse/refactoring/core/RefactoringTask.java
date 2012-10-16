@@ -11,6 +11,7 @@
 package org.vclipse.refactoring.core;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -18,18 +19,19 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.BasicDiagnostic;
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusContext;
 import org.eclipse.xtext.diagnostics.AbstractDiagnostic;
+import org.eclipse.xtext.validation.FeatureBasedDiagnostic;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.changes.SourceCodeChanges;
@@ -137,51 +139,27 @@ public class RefactoringTask extends Refactoring {
 	}
 	
 	private RefactoringStatus validate(IProgressMonitor pm, EObject object) {
-		Resource resource = object.eResource();
-		if(resource == null) {
-			RefactoringStatus.createFatalErrorStatus("Could not execute validation. The resource is null.");
-		} else {
-			EList<Diagnostic> errors = resource.getErrors();
-			if(errors.isEmpty()) {
-				return RefactoringStatus.create(Status.OK_STATUS);			
-			} else {
-				Iterator<Diagnostic> diagnosticsIterator = Iterables.filter(errors, new Predicate<Diagnostic>() {
-					@Override
-					public boolean apply(Diagnostic diagnostic) {
-						return diagnostic instanceof AbstractDiagnostic;
-					}
-				}).iterator();
-				
-				if(!diagnosticsIterator.hasNext()) {
-					EValidator.Registry validatorRegistry = utility.getInstance(EValidator.Registry.class, object);
-					EPackage epackage = object.eClass().getEPackage();
-					EValidator validator = validatorRegistry.getEValidator(epackage);
-					BasicDiagnostic diagnostics = new BasicDiagnostic();
-					if(pm.isCanceled()) {
-						return RefactoringStatus.create(Status.CANCEL_STATUS);
-					}
-					validator.validate(object, diagnostics, Maps.newHashMap());
-					diagnosticsIterator = Iterables.filter(errors, new Predicate<Diagnostic>() {
-						@Override
-						public boolean apply(Diagnostic diagnostic) {
-							return diagnostic instanceof AbstractDiagnostic;
-						}
-					}).iterator();
-					if(diagnosticsIterator.hasNext()) {
-						Diagnostic diagnostic = diagnosticsIterator.next();
-						return RefactoringStatus.createFatalErrorStatus(diagnostic.getMessage());
-					}
-				} else {
-					final Diagnostic diagnostic = diagnosticsIterator.next();
-					return RefactoringStatus.createFatalErrorStatus(diagnostic.getMessage(), new RefactoringStatusContext() {
-						@Override
-						public Object getCorrespondingElement() {
-							AbstractDiagnostic adiagnostic = (AbstractDiagnostic)diagnostic;
-							return adiagnostic.getCode();
-						}
-					});
+		EValidator.Registry validatorRegistry = utility.getInstance(EValidator.Registry.class, object);
+		EPackage epackage = object.eClass().getEPackage();
+		EValidator validator = validatorRegistry.getEValidator(epackage);
+		BasicDiagnostic diagnostics = new BasicDiagnostic();
+		if(pm.isCanceled()) {
+			return RefactoringStatus.create(Status.CANCEL_STATUS);
+		}
+		validator.validate(object, diagnostics, Maps.newHashMap()); 
+		List<Diagnostic> foundDiagnostics = diagnostics.getChildren();
+		Iterator<Diagnostic> validationIterator = Iterables.filter(foundDiagnostics, new Predicate<Diagnostic>() {
+			@Override
+			public boolean apply(Diagnostic diagnostic) {
+				if(diagnostic instanceof FeatureBasedDiagnostic) {
+					return FeatureBasedDiagnostic.ERROR == ((FeatureBasedDiagnostic)diagnostic).getSeverity();
 				}
+				return false;
 			}
+		}).iterator();
+		if(validationIterator.hasNext()) {
+			Diagnostic diagnostic = validationIterator.next();
+			return RefactoringStatus.createFatalErrorStatus(diagnostic.getMessage());
 		}
 		return RefactoringStatus.create(Status.OK_STATUS);
 	}
