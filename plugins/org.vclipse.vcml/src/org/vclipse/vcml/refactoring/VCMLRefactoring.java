@@ -144,6 +144,8 @@ public class VCMLRefactoring extends VCMLSimplifier {
 				cstic_p = ((MDataCharacteristic_P)object).getCharacteristic();
 			} else if(object instanceof CharacteristicReference_P) {
 				cstic_p = (CharacteristicReference_P)object;
+			} else if(object instanceof SymbolicLiteral) {
+				// TODO implement
 			}
 			if(cstic_p != null) {
 				Map<?, ?> args = context.getAttributes();

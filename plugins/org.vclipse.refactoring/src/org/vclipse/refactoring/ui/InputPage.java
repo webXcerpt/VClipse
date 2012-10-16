@@ -254,7 +254,6 @@ public class InputPage extends UserInputWizardPage {
 					}
 				} else {
 					String text = combo.getText();
-					System.out.println(text);
 					if(text != null && !text.isEmpty()) { 
 						context.addAttribute(RefactoringExecuter.TEXT_FIELD_ENTRY, text);
 						validateWidgets();

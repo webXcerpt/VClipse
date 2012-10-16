@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.EValidator.Registry;
+import org.eclipse.emf.ecore.change.ChangeKind;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.ListChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
@@ -104,11 +105,14 @@ public class SourceCodeChange extends NoChange {
 						if(!listChanges.isEmpty()) {
 							for(ListChange listChange : listChanges) {
 								int index = listChange.getIndex();
-								if(refactoredEntries.size() > originalEntries.size()) {
+								if(ChangeKind.REMOVE_LITERAL == listChange.getKind()) {
+									originalEntries.remove(index);									
+								} else if(ChangeKind.ADD_LITERAL == listChange.getKind()) {
 									EObject entry = refactoredEntries.get(index);								
 									originalEntries.add(entry);
-								} else if(refactoredEntries.size() < originalEntries.size()) {
-									originalEntries.remove(index);
+								} else if(ChangeKind.MOVE_LITERAL == listChange.getKind()) {
+									EObject entry = originalEntries.get(index);								
+									originalEntries.set(index, entry);
 								}
 							}
 						}					
