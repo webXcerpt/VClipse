@@ -224,7 +224,7 @@ public class InputPage extends UserInputWizardPage {
 		combo.setFont(composite.getFont());
 		combo.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, false));
 		combo.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
+			public void modifyText(ModifyEvent event) {
 				EObject element = context.getSourceElement();
 				final IQualifiedNameProvider nameProvider = refactoringUtility.getInstance(IQualifiedNameProvider.class, element);
 				int index = combo.getSelectionIndex();
@@ -254,8 +254,10 @@ public class InputPage extends UserInputWizardPage {
 					}
 				} else {
 					String text = combo.getText();
+					System.out.println(text);
 					if(text != null && !text.isEmpty()) { 
-						context.addAttribute(RefactoringExecuter.TEXT_FIELD_ENTRY, text);		
+						context.addAttribute(RefactoringExecuter.TEXT_FIELD_ENTRY, text);
+						validateWidgets();
 					}
 				}
 			}
@@ -308,7 +310,7 @@ public class InputPage extends UserInputWizardPage {
 			return text.getText();
 		} else {
 			Iterator<Combo> comboIterator = Iterables.filter(widgets, Combo.class).iterator();
-			if(!comboIterator.hasNext()) {
+			if(comboIterator.hasNext()) {
 				Combo combo = comboIterator.next();
 				if(!combo.isEnabled()) {
 					validate = false;
