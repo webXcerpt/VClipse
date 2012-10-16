@@ -80,6 +80,7 @@ public class InputPage extends UserInputWizardPage {
 		
 		@Override
 		public void run() {
+			final RefactoringTask refactoring = context.getRefactoring();
 			IWizardContainer container = this.inputPage.getContainer();
 			try {
 				container.run(true, true, new IRunnableWithProgress() {
@@ -87,28 +88,25 @@ public class InputPage extends UserInputWizardPage {
 					public void run(final IProgressMonitor pm) throws InvocationTargetException, InterruptedException {
 						StringBuffer taskBuffer = new StringBuffer("Validating re-factoring :").append(context.getLabel());
 						pm.beginTask(taskBuffer.toString(), 100);
-						RefactoringTask refactoring = context.getRefactoring();
 						try {
 							if(pm.isCanceled()) {
 								pm.done();
 								return;
 							}
+							// checking initial conditions
 							final RefactoringStatus initialStatus = refactoring.checkInitialConditions(pm);
 							if(pm.isCanceled()) {
 								pm.done();
 								return;
 							}
-							try {
-								refactoring.getChange(pm);								
-							} catch(final CoreException exception) {
-								throw new InvocationTargetException(exception);
-							}
+							// executing re-factoring 
+							refactoring.createChange(pm);								
 							if(pm.isCanceled()) {
 								pm.done();
 								return;
 							}
+							// checking final conditions
 							final RefactoringStatus finalStatus = refactoring.checkFinalConditions(pm);
-							
 							Display.getDefault().syncExec(new Runnable() {
 								@Override
 								public void run() {
@@ -127,8 +125,8 @@ public class InputPage extends UserInputWizardPage {
 							});
 							pm.done();
 						} catch(final CoreException exception) {
-							inputPage.setPageComplete(false);
-							inputPage.setErrorMessage(exception.getMessage());
+							pm.done();
+							throw new InvocationTargetException(exception);
 						}
 					}
 				});							
@@ -140,8 +138,6 @@ public class InputPage extends UserInputWizardPage {
 						inputPage.setErrorMessage(exception.getMessage());
 					}
 				});
-				Throwable cause = exception.getCause();
-				RefactoringPlugin.log(cause.getMessage(), cause);
 			} catch(final InterruptedException exception) {
 				
 			}
