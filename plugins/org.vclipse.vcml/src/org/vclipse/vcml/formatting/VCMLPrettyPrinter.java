@@ -11,6 +11,7 @@
 package org.vclipse.vcml.formatting;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Platform;
@@ -928,22 +929,32 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		printCrossReference(context, (EObject)context.eGet(ref), ref, att);
 	}
 
-	private void printCrossReference(EObject context, EObject object, EReference ref, EAttribute att) {
-		String linkText;
-		if (object==null) {
-			layouter.print("###null object for crossref###");
-			return;
-		}
-		Object o = object.eGet(att);
-		if (o!=null) {
-			linkText = o.toString();
+	private void printCrossReference(EObject context, EObject object, EReference reference, EAttribute attribute) {
+		if(object == null) {
+			if(context == null) {
+				printNullsafe("###UNKNOWN###");				
+			} else {
+				Object value = context.eGet(reference);
+				if(value instanceof EObject) {
+					printNullsafe(value);
+				} else if(value instanceof List<?>) {
+					for(Object entry : (List<?>)value) {
+						printNullsafe(entry);
+					}
+				}
+			}
 		} else {
-			linkText = "###UNKNOWN###";
-		}
-		if (ref.getEReferenceType() == VcmlPackage.Literals.CLASS) {
-			printNullsafe(linkText); // class names must not be quoted, since they contain the class type
-		} else {
-			printNullsafe(asSymbol(linkText));
+			Object value = object.eGet(attribute);
+			if(value == null) {
+				printNullsafe("###UNKNOWN###");
+			} else {
+				String linkText = value.toString();
+				if(VcmlPackage.Literals.CLASS == reference.getEReferenceType()) {
+					printNullsafe(linkText);
+				} else {
+					printNullsafe(asSymbol(linkText));
+				}
+			}
 		}
 	}
 
@@ -963,6 +974,4 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 			}
 		}
 	}
-	
-
 }
