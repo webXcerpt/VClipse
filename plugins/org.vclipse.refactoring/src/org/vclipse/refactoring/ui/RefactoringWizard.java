@@ -35,19 +35,12 @@ public class RefactoringWizard extends org.eclipse.ltk.ui.refactoring.Refactorin
 		setDefaultPageTitle("Language Refactoring");
 		setWindowTitle("Language Refactoring");
 		this.pages = pages == null ? Lists.<UserInputWizardPage>newArrayList() : pages;
+		
+		setNeedsProgressMonitor(true);
+		setForcePreviousAndNextButtons(true);
+		setChangeCreationCancelable(true);
 	}
 	
-	@Override
-	public boolean performCancel() {
-		boolean cancel = super.performCancel();
-		Refactoring refactoring = getRefactoring();
-		if(refactoring instanceof RefactoringTask) {
-			final RefactoringTask modelRefactoring = (RefactoringTask)refactoring;
-			modelRefactoring.dispose();
-		}
-		return cancel;
-	}
-
 	@Override
 	public boolean performFinish() {
 		IWizardContainer container = getContainer();
@@ -79,6 +72,17 @@ public class RefactoringWizard extends org.eclipse.ltk.ui.refactoring.Refactorin
 			}
 		}
 		return true;
+	}
+	
+	@Override
+	public boolean performCancel() {
+		boolean cancel = super.performCancel();
+		Refactoring refactoring = getRefactoring();
+		if(refactoring instanceof RefactoringTask) {
+			final RefactoringTask modelRefactoring = (RefactoringTask)refactoring;
+			modelRefactoring.dispose();
+		}
+		return cancel;
 	}
 
 	@Override
