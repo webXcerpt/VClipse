@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
@@ -76,10 +77,11 @@ public class RefactoringTask extends Refactoring {
 		StringBuffer taskBuffer = new StringBuffer("Checking initial conditions for ").append(context.getLabel());
 		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 10);
 		EObject element = context.getSourceElement();
+		EObject container = EcoreUtil.getRootContainer(element);
 		if(pm.isCanceled()) {
 			return RefactoringStatus.create(Status.CANCEL_STATUS);
 		}
-		RefactoringStatus status = validate(sm, element);
+		RefactoringStatus status = validate(sm, container);
 		sm.worked(10);
 		return status;
 	}
@@ -117,10 +119,11 @@ public class RefactoringTask extends Refactoring {
 			Object modified = modelChange.getModifiedElement();
 			if(modified instanceof EObject) {
 				EObject modifiedEObject = (EObject)modified;
+				EObject container = EcoreUtil.getRootContainer(modifiedEObject);
 				if(sm.isCanceled()) {
 					return RefactoringStatus.create(Status.CANCEL_STATUS);
 				}
-				RefactoringStatus status = validate(sm, modifiedEObject);
+				RefactoringStatus status = validate(sm, container);
 				sm.worked(10);
 				return status;				
 			}
