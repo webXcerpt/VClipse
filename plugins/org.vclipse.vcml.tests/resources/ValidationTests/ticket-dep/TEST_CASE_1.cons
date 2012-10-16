@@ -1,0 +1,12 @@
+objects: OBJECT is_a (300)TEST_CLASS . 
+restrictions:
+        OBJECT.TEST_CHARACTERISTIC_ONE
+        =
+        OBJECT.TEST_CHARACTERISTIC_TWO
+         if 
+        OBJECT.TEST_CHARACTERISTIC_FOUR
+        =
+        'TEST_STRING_TWO'.
+    inferences:
+        OBJECT.TEST_CHARACTERISTIC_ONE,
+        OBJECT.TEST_CHARACTERISTIC_TWO. 

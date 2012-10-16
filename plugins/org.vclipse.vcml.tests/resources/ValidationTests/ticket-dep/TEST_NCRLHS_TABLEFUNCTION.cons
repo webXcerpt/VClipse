@@ -1,0 +1,8 @@
+objects: OBJECT is_a (300)TEST_CLASS . 
+    restrictions:
+        not table TEST_TABLE(TEST_CHARACTERISTIC_ONE = 
+        	OBJECT.TEST_CHARACTERISTIC_TWO
+        ),
+        not function TEST_FUNCTION(TEST_CHARACTERISTIC_FIVE = 
+        	OBJECT.TEST_CHARACTERISTIC_FOUR
+        )

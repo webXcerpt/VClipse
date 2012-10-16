@@ -1,0 +1,3 @@
+objects: OBJECT is_a (300)TEST_CLASS . 
+    restrictions:
+        false.

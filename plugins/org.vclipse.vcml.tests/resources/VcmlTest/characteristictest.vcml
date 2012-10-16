@@ -1,3 +1,5 @@
+import "../ValidationTests/ticket.vcml"
+
 characteristic CSTIC1 {
 			description "test"
 			documentation "test-documentation"
@@ -7,12 +9,12 @@ characteristic CSTIC1 {
 					01.01.2012-02.01.2012 {
 						documentation "Date Documentation"
 						dependencies {
-							dependency3
+							TEST_CASE2
 						}
 					}
 				}
 			}
-			status Locked
+			status 	locked		
 			group "Group1"
 			[
 				additionalValues
@@ -20,7 +22,7 @@ characteristic CSTIC1 {
 				multiValue
 			]
 			dependencies {
-				dependency1
-				dependency2
+				TEST_CASE_1
+				TEST_CASE_3
 			}
 		}
