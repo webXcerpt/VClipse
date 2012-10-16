@@ -1,5 +1,6 @@
 package org.vclipse.refactoring.changes;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.compare.structuremergeviewer.Differencer;
@@ -26,10 +27,12 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.vclipse.base.ui.compare.EObjectTypedElement;
+import org.vclipse.refactoring.changes.SourceCodeChanges.InputStreamProvider;
 import org.vclipse.refactoring.core.DiffNode;
 import org.vclipse.refactoring.utils.RefactoringUtility;
 
 import com.google.common.collect.Maps;
+import com.google.common.io.ByteStreams;
 
 public class SourceCodeChange extends NoChange {
 
@@ -128,6 +131,16 @@ public class SourceCodeChange extends NoChange {
 			diffNode.setRight(right);		
 		}
 		return diffNode;
+	}
+	
+	protected boolean isEmpty() {
+		try {
+			InputStreamProvider empty = SourceCodeChanges.InputStreamProvider.getEmpty();
+			InputStreamProvider diff = SourceCodeChanges.InputStreamProvider.getInstance(getDiffNode());
+			return ByteStreams.equal(empty, diff);
+		} catch (IOException e) {
+			return false;
+		}
 	}
 	
 	@Override

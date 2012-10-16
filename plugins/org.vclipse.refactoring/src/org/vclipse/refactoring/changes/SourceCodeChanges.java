@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.vclipse.refactoring.changes;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -75,9 +76,13 @@ public class SourceCodeChanges extends CompositeChange {
 	
 	private boolean performed = false;
 	
-	private static class InputStreamProvider implements InputSupplier<InputStream> {
+	static class InputStreamProvider implements InputSupplier<InputStream> {
 
 		private DiffNode diffNode;
+		
+		static InputStreamProvider getEmpty() {
+			return new InputStreamProvider();
+		}
 		
 		static InputStreamProvider getInstance(DiffNode diffNode) {
 			return new InputStreamProvider(diffNode);
@@ -87,8 +92,15 @@ public class SourceCodeChanges extends CompositeChange {
 			this.diffNode = diffNode;
 		}
 		
+		public InputStreamProvider() {
+			
+		}
+		
 		@Override
 		public InputStream getInput() throws IOException {
+			if(diffNode == null) {
+				return new ByteArrayInputStream("".getBytes());
+			}
 			try {
 				EObjectTypedElement left = (EObjectTypedElement)diffNode.getLeft();
 				InputStream contents = left.getContents();
@@ -263,24 +275,34 @@ public class SourceCodeChanges extends CompositeChange {
 				sm.worked(1);
 				continue;
 			}
-			EObject existingEntry = utility.findEntry(changed, rootContents);
-			SourceCodeChange scc = new SourceCodeChange(utility, existingEntry, changed, entry.getValue());
-			try {
-				InputStreamProvider currentStream = InputStreamProvider.getInstance(scc.getDiffNode());
-				if(ByteStreams.equal(streamRootNode, currentStream)) {
-					markAsSynthetic();
-					sourceCodeChanges.add(0, scc);
-					sm.worked(1);
-					continue;
-				}
-			} catch(IOException exception) {
-				RefactoringPlugin.log(exception.getMessage(), exception);
-			}
-			sourceCodeChanges.add(scc);
-			sm.worked(1);
+			EList<FeatureChange> featureChanges = entry.getValue();
+			collectChanges(changed, sourceCodeChanges, featureChanges, sm, streamRootNode);
 		}
 		for(SourceCodeChange change : sourceCodeChanges) {
 			add(change);
 		}
+	}
+	
+	private void collectChanges(EObject changed, List<SourceCodeChange> changes, EList<FeatureChange> featureChanges, SubMonitor sm, InputStreamProvider streamRootNode) {
+		EObject existingEntry = utility.findEntry(changed, rootContents);
+		SourceCodeChange scc = new SourceCodeChange(utility, existingEntry, changed, featureChanges);
+		if(scc.isEmpty()) {
+			changed = changed.eContainer();
+			collectChanges(changed, changes, featureChanges, sm, streamRootNode);
+			return;
+		}
+		try {
+			InputStreamProvider currentStream = InputStreamProvider.getInstance(scc.getDiffNode());
+			if(ByteStreams.equal(streamRootNode, currentStream)) {
+				markAsSynthetic();
+				changes.add(0, scc);
+				sm.worked(1);
+				return;
+			}
+		} catch(IOException exception) {
+			RefactoringPlugin.log(exception.getMessage(), exception);
+		}
+		changes.add(scc);
+		sm.worked(1);
 	}
 }
