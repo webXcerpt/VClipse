@@ -160,7 +160,6 @@ public class SourceCodeChanges extends CompositeChange {
 		previewNode.setLeft(new EObjectTypedElement(rootOriginal, serializer));
 	}
 	
-
 	@Override
 	public Object getModifiedElement() {
 		return rootCopy;

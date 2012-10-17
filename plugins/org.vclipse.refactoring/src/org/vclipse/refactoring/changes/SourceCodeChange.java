@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.EValidator.Registry;
 import org.eclipse.emf.ecore.change.ChangeKind;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.ListChange;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
 import org.eclipse.xtext.diagnostics.AbstractDiagnostic;
@@ -119,7 +120,7 @@ public class SourceCodeChange extends NoChange {
 									originalEntries.remove(index);									
 								} else if(ChangeKind.ADD_LITERAL == listChange.getKind()) {
 									EObject entry = refactoredEntries.get(index);								
-									originalEntries.add(entry);
+									originalEntries.add(EcoreUtil.copy(entry));
 								} else if(ChangeKind.MOVE_LITERAL == listChange.getKind()) {
 									EObject entry = originalEntries.get(index);								
 									originalEntries.set(index, entry);
