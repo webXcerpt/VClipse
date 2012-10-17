@@ -147,13 +147,14 @@ public class SourceCodeChanges extends CompositeChange {
 		} catch(Exception exception) {
 			resource = resourceSet.getResource(uri, true);
 		}
-		resource.getContents().clear();
+		EList<EObject> contents = resource.getContents();
+		contents.clear();
 		rootCopy = parseResult.getRootASTElement();
 		copyContents = Lists.newArrayList(rootCopy.eAllContents());
 		copyContents.add(0, rootCopy);
-		resource.getContents().add(rootCopy);
-		
+		contents.add(rootCopy);		
 		linker.linkModel(rootCopy, new ListBasedDiagnosticConsumer());
+		EcoreUtil.resolveAll(resource);
 		
 		previewNode = new DiffNode(Differencer.CHANGE);
 		previewNode.setLeft(new EObjectTypedElement(rootOriginal, serializer));
