@@ -154,7 +154,7 @@ public class SourceCodeChange extends NoChange {
 	
 	@Override
 	public String getName() {
-		return "Re-factoring for " + getName(utility, original);
+		return "Re-factoring on " + getName(utility, original);
 	}
 	
 	private String getName(RefactoringUtility utility, EObject object) {
