@@ -110,8 +110,7 @@ public class RefactoringTask extends Refactoring {
 	@Override
 	public RefactoringStatus checkFinalConditions(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		if(modelChange == null) {
-			return RefactoringStatus.createFatalErrorStatus("Could not execute validation. Refactored model is null.");
-		} else {
+			createChange(pm);
 			StringBuffer taskBuffer = new StringBuffer("Checking final conditions for re-factoring ").append(context.getLabel());
 			SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 10);
 			Object modified = modelChange.getModifiedElement();
