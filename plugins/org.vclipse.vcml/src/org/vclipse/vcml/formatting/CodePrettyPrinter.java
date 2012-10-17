@@ -11,11 +11,8 @@
 package org.vclipse.vcml.formatting;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.linking.ILinkingService;
-import org.eclipse.xtext.naming.QualifiedName;
 import org.vclipse.vcml.naming.CrossRefExtractingSimpleNameProvider;
 import org.vclipse.vcml.vcml.Assignment;
 import org.vclipse.vcml.vcml.BinaryCondition;
@@ -39,19 +36,13 @@ import org.vclipse.vcml.vcml.SymbolicLiteral;
 import org.vclipse.vcml.vcml.Table;
 import org.vclipse.vcml.vcml.UnaryCondition;
 import org.vclipse.vcml.vcml.UnaryExpression;
-import org.vclipse.vcml.vcml.VcmlPackage;
-import org.vclipse.vcml.vcml.util.VcmlSwitch;
 
 import com.google.inject.Inject;
 
 import de.uka.ilkd.pp.DataLayouter;
 import de.uka.ilkd.pp.NoExceptions;
-import de.uka.ilkd.pp.StringBackend;
 
-/**
- * 
- */
-public abstract class CodePrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
+public abstract class CodePrettyPrinter extends DefaultPrettyPrinter {
 	
 	@Inject
 	protected ILinkingService linkingService;
@@ -72,23 +63,11 @@ public abstract class CodePrettyPrinter extends VcmlSwitch<DataLayouter<NoExcept
 	
 	protected int precedenceLevel;
 
-	protected static final int LINE_WIDTH = 70; // 72 is allowed in SAP, we reduce by 1 to be able to append punctuation
-	protected static final int INDENTATION = 2;
-	
-	protected DataLayouter<NoExceptions> layouter;
-	
-	protected static VcmlPackage VCMLPACKAGE = VcmlPackage.eINSTANCE;
-	
-	/**
-	 * @param o
-	 * @return
-	 */
-	public String prettyPrint(EObject o) {
-		StringBuilder sb = new StringBuilder();
-		layouter = new DataLayouter<NoExceptions>(new StringBackend(sb, LINE_WIDTH), INDENTATION);
-		doSwitch(o);
+	public String prettyPrint(EObject object) {
+		initialize();
+		doSwitch(object);
 		layouter.close();
-		return sb.toString();
+		return stringBuilder.toString();
 	}
 	
 	/**
@@ -127,7 +106,8 @@ public abstract class CodePrettyPrinter extends VcmlSwitch<DataLayouter<NoExcept
 	@Override
 	public DataLayouter<NoExceptions> caseAssignment(Assignment object) {
 		layouter.beginI(0);
-		layouter.print("$self." + getCrossReference(object, VCMLPACKAGE.getAssignment_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
+		layouter.print("$self.");
+		printCrossReference(object, VCMLPACKAGE.getAssignment_Characteristic(), VCMLPACKAGE.getVCObject_Name());
 		layouter.brk().print("=").brk();
 		if(object.getExpression() != null) {
 			precedenceLevel = PREC_MAX;
@@ -143,12 +123,12 @@ public abstract class CodePrettyPrinter extends VcmlSwitch<DataLayouter<NoExcept
 	@Override
 	public DataLayouter<NoExceptions> caseFunction(Function object) {
 		layouter.print("function ");
-		layouter.print(getCrossReference(object, VCMLPACKAGE.getFunction_Function(), VCMLPACKAGE.getVCObject_Name()));
+		printCrossReference(object, VCMLPACKAGE.getFunction_Function(), VCMLPACKAGE.getVCObject_Name());
 		layouter.print("(");
 		EList<Characteristic> cstics = object.getCharacteristics();
 		EList<Literal> literals = object.getValues();
 		for(int i=0, size=cstics.size()-1; i<=size; i++) {
-			layouter.print(getCrossReference(object, cstics.get(i), VCMLPACKAGE.getFunction_Characteristics(), VCMLPACKAGE.getVCObject_Name()));
+			printCrossReference(object, cstics.get(i), VCMLPACKAGE.getFunction_Characteristics(), VCMLPACKAGE.getVCObject_Name());
 			layouter.print(" = ");
 			doSwitch(literals.get(i));
 			if(i<size) {
@@ -163,7 +143,8 @@ public abstract class CodePrettyPrinter extends VcmlSwitch<DataLayouter<NoExcept
 	 */
 	@Override
 	public DataLayouter<NoExceptions> caseIsInvisible(IsInvisible object) {
-		layouter.print("$self." + getCrossReference(object, VCMLPACKAGE.getIsInvisible_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
+		layouter.print("$self.");
+		printCrossReference(object, VCMLPACKAGE.getIsInvisible_Characteristic(), VCMLPACKAGE.getVCObject_Name());
 		return layouter.print(" is").print(" invisible");
 	}
 
@@ -448,28 +429,5 @@ public abstract class CodePrettyPrinter extends VcmlSwitch<DataLayouter<NoExcept
 		}
 		layouter.brk();
 		return super.doSwitch(theEObject);
-	}
-	
-	protected void printNullsafe(Object object) {
-		layouter.print(object==null ? "null" : object);
-	}
-
-	protected String getCrossReference(EObject context, EReference ref, EAttribute att) {
-		return getCrossReference(context, (EObject)context.eGet(ref), ref, att);
-	}
-
-	protected String getCrossReference(final EObject context, final EObject object, final EReference ref, final EAttribute att) {
-		if (object==null) {
-			return "###NULL###";
-		}
-		String linkText = "";		
-		Object o = object.eGet(att);
-		if (o!=null) {
-			linkText = o.toString();
-		} else {
-			QualifiedName qualifiedName = crossRefNameProvider.getFullyQualifiedName(context);
-			linkText = qualifiedName == null ? "###UNKNOWN###" : qualifiedName.getLastSegment();
-		}
-		return linkText;
 	}
 }

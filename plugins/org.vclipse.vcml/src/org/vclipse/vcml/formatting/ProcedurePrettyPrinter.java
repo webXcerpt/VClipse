@@ -32,14 +32,8 @@ import org.vclipse.vcml.vcml.TypeOf;
 import de.uka.ilkd.pp.DataLayouter;
 import de.uka.ilkd.pp.NoExceptions;
 
-/**
- * 
- */
 public class ProcedurePrettyPrinter extends CodePrettyPrinter {
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseConditionSource(org.vclipse.vcml.vcml.ConditionSource)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseConditionSource(ConditionSource object) {
 		precedenceLevel = PREC_MAX;
@@ -47,19 +41,17 @@ public class ProcedurePrettyPrinter extends CodePrettyPrinter {
 		doSwitch(object.getCondition()).print(".");
 		return layouter.end();
 	}
-
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseIsInvisible(org.vclipse.vcml.vcml.IsInvisible)
-	 */
+	
 	@Override
 	public DataLayouter<NoExceptions> caseIsInvisible(IsInvisible object) {
-		layouter.print("$self." + getCrossReference(object, VCMLPACKAGE.getIsInvisible_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
+		layouter.print("$self.");
+		printCrossReference(object, VCMLPACKAGE.getIsInvisible_Characteristic(), VCMLPACKAGE.getVCObject_Name());
 		return layouter.print(" is").print(" invisible");
 	}
 
 	public DataLayouter<NoExceptions> casePFunction(PFunction object) {
 		layouter.beginC().print("pfunction ");
-		layouter.print(getCrossReference(object, VCMLPACKAGE.getPFunction_Function(), VCMLPACKAGE.getVCObject_Name()));
+		printCrossReference(object, VCMLPACKAGE.getPFunction_Function(), VCMLPACKAGE.getVCObject_Name());
 		layouter.print(" (").brk();
 		EList<Characteristic> cstics = object.getCharacteristics();
 		EList<Literal> literals = object.getValues();
@@ -71,7 +63,7 @@ public class ProcedurePrettyPrinter extends CodePrettyPrinter {
 				layouter.print(",").brk();
 			}
 			layouter.beginI();
-			layouter.print(getCrossReference(object, cstics.get(i), VCMLPACKAGE.getPFunction_Characteristics(), VCMLPACKAGE.getVCObject_Name()));
+			printCrossReference(object, cstics.get(i), VCMLPACKAGE.getPFunction_Characteristics(), VCMLPACKAGE.getVCObject_Name());
 			layouter.brk().print("=").brk();
 			doSwitch(literals.get(i));
 			layouter.end();
@@ -79,28 +71,23 @@ public class ProcedurePrettyPrinter extends CodePrettyPrinter {
 		return layouter.brk(1,-INDENTATION).print(")").end();
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseDelDefault(org.vclipse.vcml.vcml.DelDefault)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseDelDefault(DelDefault object) {
 		layouter.beginC();
 		layouter.print("$del_default").print("(").print("$self,").brk();
-		layouter.print(getCrossReference(object, VCMLPACKAGE.getSetOrDelDefault_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
+		printCrossReference(object, VCMLPACKAGE.getSetOrDelDefault_Characteristic(), VCMLPACKAGE.getVCObject_Name());
 		layouter.print(",").brk();
 		precedenceLevel = PREC_MAX;
 		doSwitch(object.getExpression());
 		layouter.print(")");
 		return layouter.end();
 	}
-
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseSetDefault(org.vclipse.vcml.vcml.SetDefault)
-	 */
+	
 	@Override
 	public DataLayouter<NoExceptions> caseSetDefault(SetDefault object) {
 		layouter.beginC();
-		layouter.print("$self." + getCrossReference(object, VCMLPACKAGE.getSetOrDelDefault_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
+		layouter.print("$self.");
+		printCrossReference(object, VCMLPACKAGE.getSetOrDelDefault_Characteristic(), VCMLPACKAGE.getVCObject_Name());
 		layouter.brk();
 		layouter.print("?=");
 		layouter.brk();
@@ -110,15 +97,12 @@ public class ProcedurePrettyPrinter extends CodePrettyPrinter {
 		return layouter;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseSetPricingFactor(org.vclipse.vcml.vcml.SetPricingFactor)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseSetPricingFactor(SetPricingFactor object) {
 		layouter.print("$set_pricing_factor (");
 		printNullsafe(object.getLocation().getName());
 		layouter.print(", ");
-		layouter.print(getCrossReference(object, VCMLPACKAGE.getSetPricingFactor_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
+		printCrossReference(object, VCMLPACKAGE.getSetPricingFactor_Characteristic(), VCMLPACKAGE.getVCObject_Name());
 		layouter.print(", ");
 		precedenceLevel = PREC_MAX;
 		doSwitch(object.getArg1());
@@ -128,9 +112,6 @@ public class ProcedurePrettyPrinter extends CodePrettyPrinter {
 		return layouter.print(")");
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseProcedureSource(org.vclipse.vcml.vcml.ProcedureSource)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseProcedureSource(ProcedureSource object) {
 		EList<Statement> statements = object.getStatements();
@@ -149,18 +130,12 @@ public class ProcedurePrettyPrinter extends CodePrettyPrinter {
 		return layouter;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseCountParts(org.vclipse.vcml.vcml.CountParts)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseCountParts(CountParts object) {
 		return layouter.brk().print("$count_parts (").print(
 				object.getLocation().getLiteral().toUpperCase()).print(")");
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseSumParts(org.vclipse.vcml.vcml.SumParts)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseSumParts(SumParts object) {
 		layouter.print("$sum_parts").print("(").print(object.getLocation().getLiteral().toUpperCase()).print(", ");
@@ -168,9 +143,6 @@ public class ProcedurePrettyPrinter extends CodePrettyPrinter {
 		return layouter.print(")");
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseMDataCharacteristic_P(org.vclipse.vcml.vcml.MDataCharacteristic_P)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseMDataCharacteristic_P(MDataCharacteristic_P object) {
 		layouter.print("mdata ");
@@ -178,9 +150,6 @@ public class ProcedurePrettyPrinter extends CodePrettyPrinter {
 		return layouter;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseInCondition_P(org.vclipse.vcml.vcml.InCondition_P)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseInCondition_P(InCondition_P object) {
 		layouter.beginI();
@@ -190,9 +159,6 @@ public class ProcedurePrettyPrinter extends CodePrettyPrinter {
 		return layouter.end();
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseIsSpecified_P(org.vclipse.vcml.vcml.IsSpecified_P)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseIsSpecified_P(IsSpecified_P object) {
 		layouter.print("specified ");
@@ -200,24 +166,18 @@ public class ProcedurePrettyPrinter extends CodePrettyPrinter {
 		return layouter;
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseCharacteristicReference_P(org.vclipse.vcml.vcml.CharacteristicReference_P)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseCharacteristicReference_P(CharacteristicReference_P object) {
 		String locationPrefix = object.getLocation() != null ? object.getLocation().getLiteral() + "." : "";
-		layouter.print(locationPrefix + getCrossReference(object, VCMLPACKAGE.getCharacteristicReference_P_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
+		layouter.print(locationPrefix);
+		printCrossReference(object, VCMLPACKAGE.getCharacteristicReference_P_Characteristic(), VCMLPACKAGE.getVCObject_Name());
 		return layouter;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseTypeOf(org.vclipse.vcml.vcml.TypeOf)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseTypeOf(TypeOf object) {
 		layouter.print("type_of(").print(object.getLocation().getLiteral().toUpperCase());
 		doSwitch(object.getVariantclass());
 		return layouter.print(")");
 	}
-	
 }

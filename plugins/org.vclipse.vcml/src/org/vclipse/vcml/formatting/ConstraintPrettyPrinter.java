@@ -39,9 +39,6 @@ import de.uka.ilkd.pp.NoExceptions;
  */
 public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseConstraintSource(org.vclipse.vcml.vcml.ConstraintSource)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseConstraintSource(ConstraintSource object) {
 		layouter.beginC(0);
@@ -92,15 +89,12 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 		return layouter.end();
 	}
 	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseConstraintClass(org.vclipse.vcml.vcml.ConstraintClass)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseConstraintClass(ConstraintClass object) {
 		layouter.beginC();
 		printNullsafe(object.getName());
 		layouter.print(" is_a "); // TODO improve this
-		layouter.print(getCrossReference(object, VCMLPACKAGE.getConstraintClass_Class(), VCMLPACKAGE.getVCObject_Name()));
+		printCrossReference(object, VCMLPACKAGE.getConstraintClass_Class(), VCMLPACKAGE.getVCObject_Name());
 		EList<ShortVarDefinition> shortVars = object.getShortVars();
 		if(!shortVars.isEmpty()) {
 			layouter.print(" where").brk();
@@ -108,7 +102,7 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 				ShortVarDefinition cur = shortVars.get(i);
 				printNullsafe(cur.getName());
 				layouter.print(" = ");
-				layouter.print(getCrossReference(cur, VCMLPACKAGE.getShortVarDefinition_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
+				printCrossReference(cur, VCMLPACKAGE.getShortVarDefinition_Characteristic(), VCMLPACKAGE.getVCObject_Name());
 				if(i<size) {
 					layouter.print(";").brk();
 				}
@@ -117,9 +111,6 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 		return layouter.brk(1, -INDENTATION).end();
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseConstraintMaterial(org.vclipse.vcml.vcml.ConstraintMaterial)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseConstraintMaterial(ConstraintMaterial object) {
 		layouter.beginC();
@@ -142,7 +133,7 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 				ShortVarDefinition definition = shortVars.get(i);
 				printNullsafe(definition.getName());
 				layouter.print(" = ");
-				layouter.print(getCrossReference(definition, VCMLPACKAGE.getShortVarDefinition_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
+				printCrossReference(definition, VCMLPACKAGE.getShortVarDefinition_Characteristic(), VCMLPACKAGE.getVCObject_Name());
 				if(i<size) {
 					layouter.print(";");
 				}
@@ -152,9 +143,6 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 		return layouter.end();
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseInCondition_C(org.vclipse.vcml.vcml.InCondition_C)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseInCondition_C(InCondition_C object) {
 		doSwitch(object.getCharacteristic());
@@ -163,9 +151,6 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 		return layouter;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseMDataCharacteristic_C(org.vclipse.vcml.vcml.MDataCharacteristic_C)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseMDataCharacteristic_C(MDataCharacteristic_C object) {
 		layouter.print("mdata ");
@@ -173,20 +158,13 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 		return layouter;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseIsSpecified_C(org.vclipse.vcml.vcml.IsSpecified_C)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseIsSpecified_C(IsSpecified_C object) {
 		layouter.print("specified ");
 		doSwitch(object.getCharacteristic());
 		return layouter;
 	}
-	
-	/**
-	 * @param object
-	 * @return
-	 */
+
 	@Override
 	public DataLayouter<NoExceptions> caseNegatedConstraintRestrictionLHS(NegatedConstraintRestrictionLHS object) {
 		int parentPrec = precedenceLevel;
@@ -203,27 +181,19 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 		return layouter;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseObjectCharacteristicReference(org.vclipse.vcml.vcml.ObjectCharacteristicReference)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseObjectCharacteristicReference(ObjectCharacteristicReference object) {
-		printNullsafe(object.getLocation().getName() + "." + getCrossReference(object, VCMLPACKAGE.getObjectCharacteristicReference_Characteristic(), VCMLPACKAGE.getVCObject_Name()));
+		printNullsafe(object.getLocation().getName() + ".");
+		printCrossReference(object, VCMLPACKAGE.getObjectCharacteristicReference_Characteristic(), VCMLPACKAGE.getVCObject_Name());
 		return layouter;
 	}
-	
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseShortVarReference(org.vclipse.vcml.vcml.ShortVarReference)
-	 */
+
 	@Override
 	public DataLayouter<NoExceptions> caseShortVarReference(ShortVarReference object) {
 		printNullsafe(object.getRef().getName());
 		return layouter;
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#casePartOfCondition(org.vclipse.vcml.vcml.PartOfCondition)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> casePartOfCondition(PartOfCondition object) {
 		layouter.print("part_of").print("(");
@@ -233,9 +203,6 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 		return layouter.print(")");
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseSubpartOfCondition(org.vclipse.vcml.vcml.SubpartOfCondition)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseSubpartOfCondition(SubpartOfCondition object) {
 		layouter.print("subpart_of").print("(");
@@ -245,9 +212,6 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 		return layouter.print(")");
 	}
 
-	/**
-	 * @see org.vclipse.vcml.vcml.util.VcmlSwitch#caseObjectType(org.vclipse.vcml.vcml.ObjectType)
-	 */
 	@Override
 	public DataLayouter<NoExceptions> caseObjectType(ObjectType object) {
 		layouter.print("(" + object.getType() + ")" + object.getClassType());
@@ -266,19 +230,16 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 	}
 
 	@Override
-	public DataLayouter<NoExceptions> caseConstraintRestrictionFalse(
-			final ConstraintRestrictionFalse object) {
+	public DataLayouter<NoExceptions> caseConstraintRestrictionFalse(final ConstraintRestrictionFalse object) {
 		return layouter.print("false");
 	}
 
 	@Override
-	public DataLayouter<NoExceptions> caseConditionalConstraintRestriction(
-			final ConditionalConstraintRestriction object) {
+	public DataLayouter<NoExceptions> caseConditionalConstraintRestriction(final ConditionalConstraintRestriction object) {
 		layouter.beginI();
 		doSwitch(object.getRestriction());
 		layouter.brk().print("if").brk();;
 		doSwitch(object.getCondition());
 		return layouter.end();
 	}
-
 }

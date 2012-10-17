@@ -11,22 +11,15 @@
 package org.vclipse.vcml.formatting;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.regex.Pattern;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.vclipse.base.VClipseStrings;
-import org.vclipse.vcml.VCMLPlugin;
 import org.vclipse.vcml.utils.DependencySourceUtils;
-import org.vclipse.vcml.utils.ISapConstants;
 import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Characteristic;
@@ -77,31 +70,15 @@ import org.vclipse.vcml.vcml.VariantFunctionArgument;
 import org.vclipse.vcml.vcml.VariantTable;
 import org.vclipse.vcml.vcml.VariantTableArgument;
 import org.vclipse.vcml.vcml.VariantTableContent;
-import org.vclipse.vcml.vcml.VcmlFactory;
 import org.vclipse.vcml.vcml.VcmlModel;
-import org.vclipse.vcml.vcml.VcmlPackage;
-import org.vclipse.vcml.vcml.util.VcmlSwitch;
 
 import com.google.inject.Inject;
 
 import de.uka.ilkd.pp.DataLayouter;
 import de.uka.ilkd.pp.NoExceptions;
-import de.uka.ilkd.pp.StringBackend;
 
-/**
- * 
- */
-public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
-	
-	private static final int INDENTATION = 2;
-	
-	private DataLayouter<NoExceptions> layouter;
-	
-	private static VcmlPackage VCMLPACKAGE = VcmlPackage.eINSTANCE;
-	private static VcmlFactory VCML = VcmlFactory.eINSTANCE;
-	
-	private int lineLength = 70;
-	
+public class VCMLPrettyPrinter extends DefaultPrettyPrinter {
+
 	@Inject(optional=true)
 	private DependencySourceUtils sourceUtils;
 	
@@ -113,14 +90,10 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 	}
 	
 	public String prettyPrint(EObject object) {
-		final StringBuilder sb = new StringBuilder();
-		if(Platform.getPreferencesService() != null) {
-			lineLength = Platform.getPreferencesService().getInt(VCMLPlugin.PREFERENCES_ID, ISapConstants.PP_LINE_LENGTH, 70, null);
-		}
-		layouter = new DataLayouter<NoExceptions>(new StringBackend(sb, lineLength), INDENTATION);
+		initialize();
 		doSwitch(object);
 		layouter.close();
-		return sb.toString();
+		return stringBuilder.toString();
 	}
 	
 	@Override
@@ -817,76 +790,6 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		return super.doSwitch(theEObject);
 	}
 	
-	// TODO the following methods could be refined
-	private boolean hasBody(Characteristic object) {
-		return object.getDescription()!=null
-		|| object.getDocumentation()!=null;
-	}
-	
-	private boolean hasBody(CharacteristicValue object) {
-		return object.getDescription() != null 
-		|| object.getDocumentation() != null
-		|| object.getDependencies() != null;
-	}
-
-	private boolean hasBody(NumericCharacteristicValue object) {
-		return object.getDocumentation() != null
-		|| object.getDependencies() != null;
-	}
-
-	private boolean hasBody(DateCharacteristicValue object) {
-		return object.getDocumentation() != null
-		|| object.getDependencies() != null;
-	}
-
-	private boolean hasBody(Class object) {
-		return object.getDescription()!=null;
-	}
-	
-	private boolean hasBody(Constraint object) {
-		return object.getDescription()!=null
-		|| object.getDocumentation()!=null;
-	}
-	
-	private boolean hasBody(DependencyNet object) {
-		return object.getDescription()!=null
-		|| object.getDocumentation()!=null;
-	}
-	
-	private boolean hasBody(Material object) {
-		return object.getDescription()!=null
-		|| !object.getBillofmaterials().isEmpty()
-		|| !object.getClassifications().isEmpty()
-		|| !object.getConfigurationprofiles().isEmpty();
-	}
-	
-	private boolean hasBody(Precondition object) {
-		return object.getDescription()!=null
-		|| object.getDocumentation()!=null;
-	}
-	
-	private boolean hasBody(Procedure object) {
-		return object.getDescription()!=null
-		|| object.getDocumentation()!=null;
-	}
-	
-	private boolean hasBody(SelectionCondition object) {
-		return object.getDescription()!=null
-		|| object.getDocumentation()!=null;
-	}
-	
-	private boolean hasBody(VariantFunction object) {
-		return object.getDescription()!=null;
-	}
-	
-	private boolean hasBody(VariantTable object) {
-		return object.getDescription()!=null;
-	}
-	
-	private boolean hasBody(InterfaceDesign object) {
-		return !object.getCharacteristicGroups().isEmpty();
-	}
-	
 	private String doublequote(final String string) {
 		return "\"" + VClipseStrings.convertToJavaString(string) + "\"";
 	}
@@ -901,61 +804,8 @@ public class VCMLPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions>> {
 		layouter.brk().print("status ").print(status.getLiteral());
 	}
 	
-	private void printNullsafe(Object object) {
-		layouter.print(object==null ? "null" : object);
-	}
-
-	public static Pattern idPattern = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9]*");
-	
-	public static String asSymbol(String theString) {
-		if(theString == null) {
-			return null;
-		} else if (idPattern.matcher(theString).matches()) {
-			return theString;
-		} else {
-			return symbolName(theString);
-		}
-	}
-	
-	public static String symbolName(String theString) {
-		return "'" + theString + "'";
-	}
-	
 	private void printName(VCObject object) {
 		printNullsafe(asSymbol(object.getName()));
-	}
-
-	private void printCrossReference(EObject context, EReference ref, EAttribute att) {
-		printCrossReference(context, (EObject)context.eGet(ref), ref, att);
-	}
-
-	private void printCrossReference(EObject context, EObject object, EReference reference, EAttribute attribute) {
-		if(object == null) {
-			if(context == null) {
-				printNullsafe("###UNKNOWN###");				
-			} else {
-				Object value = context.eGet(reference);
-				if(value instanceof EObject) {
-					printNullsafe(value);
-				} else if(value instanceof List<?>) {
-					for(Object entry : (List<?>)value) {
-						printNullsafe(entry);
-					}
-				}
-			}
-		} else {
-			Object value = object.eGet(attribute);
-			if(value == null) {
-				printNullsafe("###UNKNOWN###");
-			} else {
-				String linkText = value.toString();
-				if(VcmlPackage.Literals.CLASS == reference.getEReferenceType()) {
-					printNullsafe(linkText);
-				} else {
-					printNullsafe(asSymbol(linkText));
-				}
-			}
-		}
 	}
 
 	private void writeSourceCode(Dependency object, EObject sourceCode) {
