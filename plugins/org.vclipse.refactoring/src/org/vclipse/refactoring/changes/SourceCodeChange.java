@@ -168,7 +168,11 @@ public class SourceCodeChange extends NoChange {
 	
 	@Override
 	public String getName() {
-		return "Re-factoring on " + getName(utility, original == null ? refactored == null ? originalContainer : refactored : original);
+		EObject refactoringOnObject = original == null ? refactored == null ? originalContainer : refactored : original;
+		StringBuffer labelBuffer = new StringBuffer(refactoringOnObject.eClass().getName());
+		labelBuffer.append(" ");
+		labelBuffer.append(getName(utility, refactoringOnObject));
+		return "Re-factoring on " + labelBuffer.toString();
 	}
 	
 	private String getName(RefactoringUtility utility, EObject object) {
