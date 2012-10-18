@@ -250,12 +250,12 @@ public class SourceCodeChanges extends CompositeChange {
 							Object object = ((List<?>)value).get(index);
 							if(object instanceof EObject) {
 								SourceCodeChange scc = new SourceCodeChange(utility);
-								scc.setDeletedChange(existingEntry, (EObject)object, feature);
+								scc.deleteChange(existingEntry, (EObject)object, feature);
 								add(scc);
 							}
 						} else {
 							SourceCodeChange scc = new SourceCodeChange(utility);
-							scc.setAdditionChange(existingEntry, null, feature);
+							scc.addChange(existingEntry, null, feature);
 							add(scc);							
 						}
 					} else if(ChangeKind.REMOVE_LITERAL == listChange.getKind()) {
@@ -264,14 +264,14 @@ public class SourceCodeChanges extends CompositeChange {
 							Object object = ((List<?>)value).get(index);
 							if(object instanceof EObject) {
 								SourceCodeChange scc = new SourceCodeChange(utility);
-								scc.setAdditionChange(existingEntry, (EObject)object, feature);
+								scc.addChange(existingEntry, (EObject)object, feature);
 								add(scc);
 							}
 						}
 					}
 				} else {
 					SourceCodeChange scc = new SourceCodeChange(utility);
-					scc.setEntryChange(existingEntry, changed, feature);
+					scc.entryChange(existingEntry, changed, feature);
 					add(scc);
 				}
 			}

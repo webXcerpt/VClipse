@@ -57,21 +57,21 @@ public class SourceCodeChange extends NoChange {
 		this.utility = utility;
 	}
 	
-	public void setDeletedChange(EObject container, EObject existing, EStructuralFeature feature) {
+	public void deleteChange(EObject container, EObject existing, EStructuralFeature feature) {
 		this.originalContainer = container;
 		this.original = existing;
 		this.feature = feature;
 		init();
 	}
 	
-	public void setAdditionChange(EObject container, EObject refactored, EStructuralFeature feature) {
+	public void addChange(EObject container, EObject refactored, EStructuralFeature feature) {
 		this.originalContainer = container;
 		this.refactored = refactored;
 		this.feature = feature;
 		init();
 	}
 	
-	public void setEntryChange(EObject original, EObject refactored, EStructuralFeature feature) {
+	public void entryChange(EObject original, EObject refactored, EStructuralFeature feature) {
 		this.original = original;
 		this.refactored = refactored;
 		this.feature = feature;
