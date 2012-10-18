@@ -99,33 +99,42 @@ public class RefactoringUtility {
 	
 	public EObject findEntry(EObject object, List<EObject> entries) {
 		IQualifiedNameProvider nameProvider = getInstance(IQualifiedNameProvider.class, object);
-		
-		// search by name and type
-		EObject existingEntry = null;
-		EClass eclass = object.eClass();
 		QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(object);
+		EClass searchForType = object.eClass();
 		if(qualifiedName == null) {
-			Iterator<EObject> iterator = getEntry(eclass, entries).iterator();
-			if(iterator.hasNext()) {
-				existingEntry = iterator.next();
+			EObject container = object.eContainer();
+			if(container == null) {
+				return getEntry(searchForType, entries).iterator().next();
+			} else {
+				EObject containerEntry = findEntry(container, entries);
+				Object value = containerEntry.eGet(object.eContainmentFeature());
+				return value instanceof EObject ? (EObject)value : null;
 			}
 		} else {
-			String segment = qualifiedName.getLastSegment();
-			existingEntry = findEntry(segment, eclass, entries);
-		}
-
-		// search by type and container type
-		if(existingEntry == null) {
-			Iterator<EObject> iterator = getEntry(eclass, entries).iterator();
-			while(iterator.hasNext()) {
-				EObject next = iterator.next();
-				if(equalTypeWithContainerType(next, object)) {
-					existingEntry = next;
-					break;
+			EObject entry = findEntry(qualifiedName.getLastSegment(), searchForType, entries);
+			if(entry == null) {
+				EObject container = object.eContainer();
+				EObject containerEntry = findEntry(container, entries);
+				Object value = containerEntry.eGet(object.eContainmentFeature());
+				return value instanceof EObject ? (EObject)value : null;
+			} else {
+				if(equallyTypedContainer(object, entry)) {
+					EObject container = entry.eContainer();
+					if(sameContainer(object, entry)) {
+						return entry;
+					}
+					QualifiedName containerQualifiedName = nameProvider.getFullyQualifiedName(container);
+					if(containerQualifiedName == null) {
+						return entry;
+					} else {
+						List<EObject> entriesCopy = Lists.newArrayList(entries);
+						entriesCopy.remove(entry);
+						return findEntry(object, entriesCopy);
+					}
 				}
-			}								
+			}
+			return entry;
 		}
-		return existingEntry;
 	}
 	
 	public EObject findEntry(String name, EClass type, List<EObject> entries) {
@@ -185,15 +194,45 @@ public class RefactoringUtility {
 		return new BasicEList<EObject>(EcoreUtil2.copyAll(elements));
 	}
 	
-	public boolean equalTypeWithContainerType(EObject first, EObject second) {
-		EClass firstType = first.eClass();
-		EClass secondType = second.eClass();
-		if(first.eContainer() == null || second.eContainer() == null) {
-			return firstType == secondType;
+	public boolean sameContainer(EObject first, EObject second) {
+		return equallyTypedContainer(first, second) && equallyNamedContainer(first, second);
+	}
+	
+	public boolean equallyNamedContainer(EObject first, EObject second) {
+		if(first == null || second == null) {
+			return false;
+		} else {
+			EObject firstContainer = first.eContainer();
+			EObject secondContainer = second.eContainer();
+			if(firstContainer == null || secondContainer == null) {
+				return false;
+			} else {
+				IQualifiedNameProvider nameProvider = getInstance(IQualifiedNameProvider.class, firstContainer);
+				QualifiedName firstName = nameProvider.getFullyQualifiedName(firstContainer);
+				QualifiedName secondName = nameProvider.getFullyQualifiedName(secondContainer);
+				if(firstName == null || secondName == null) {
+					return false;
+				} else {
+					return firstName.getLastSegment().equals(secondName.getLastSegment());
+				}
+			}
 		}
-		EClass firstContainerType = first.eContainer().eClass();
-		EClass secondContainerType = second.eContainer().eClass();
-		return firstType == secondType && firstContainerType == secondContainerType;
+	}
+	
+	public boolean equallyTypedContainer(EObject first, EObject second) {
+		if(first == null || second == null) {
+			return false;
+		} else {
+			EObject firstContainer = first.eContainer();
+			EObject secondContainer = second.eContainer();
+			if(firstContainer == null || secondContainer == null) {
+				return false;
+			} else {
+				EClass firstContainerType = firstContainer.eClass();
+				EClass secondContainerType = secondContainer.eClass();
+				return firstContainerType == secondContainerType;
+			}
+		}
 	}
 	
 	private void appendToBuffer(StringBuffer buffer, String text, boolean handleLastIndex) {
