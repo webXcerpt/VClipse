@@ -97,6 +97,7 @@ public class RefactoringUtility {
 		return text;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public EObject findEntry(EObject object, List<EObject> entries) {
 		IQualifiedNameProvider nameProvider = getInstance(IQualifiedNameProvider.class, object);
 		QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(object);
@@ -111,12 +112,18 @@ public class RefactoringUtility {
 				return value instanceof EObject ? (EObject)value : null;
 			}
 		} else {
-			EObject entry = findEntry(qualifiedName.getLastSegment(), searchForType, entries);
+			String searchForName = qualifiedName.getLastSegment();
+			EObject entry = findEntry(searchForName, searchForType, entries);
 			if(entry == null) {
 				EObject container = object.eContainer();
 				EObject containerEntry = findEntry(container, entries);
 				Object value = containerEntry.eGet(object.eContainmentFeature());
-				return value instanceof EObject ? (EObject)value : null;
+				if(value instanceof EObject) {
+					return (EObject)value;
+				} else {
+					EList<EObject> valueEntries = (EList<EObject>)value;
+					return findEntry(searchForName, searchForType, valueEntries);
+				}
 			} else {
 				if(equallyTypedContainer(object, entry)) {
 					EObject container = entry.eContainer();
