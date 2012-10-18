@@ -21,11 +21,13 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.EValidator.Registry;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
 import org.eclipse.xtext.diagnostics.AbstractDiagnostic;
@@ -117,30 +119,42 @@ public class SourceCodeChange extends NoChange {
 	@SuppressWarnings("unchecked")
 	public RefactoringStatus refactor(IProgressMonitor pm) throws CoreException {
 		if(isEnabled()) {
-			EObject refactorWithObject = original == null ? originalContainer : original;
-			StringBuffer taskBuffer = new StringBuffer("Executing re-factoring for ").append(getName(utility, refactorWithObject));
+			EObject handleObject = original == null ? originalContainer : original;
+			StringBuffer taskBuffer = new StringBuffer("Executing re-factoring for ").append(getName(utility, handleObject));
 			SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), IProgressMonitor.UNKNOWN);
-			
-			// handle container change
-			if(originalContainer != null) {
-				if(refactored != null) {
-					if(feature.isMany()) {
-						Object value = originalContainer.eGet(feature);
-						if(value instanceof List<?>) {
-							List<EObject> entries = (List<EObject>)value;
-							entries.add(refactored);
+			if(originalContainer != null && refactored != null) {
+				if(feature.isMany()) {
+					Object value = originalContainer.eGet(feature);
+					if(value instanceof List<?>) {
+						List<EObject> entries = (List<EObject>)value;
+						entries.clear();
+						EObject refactoredContainer = refactored.eContainer();
+						Object refactoredValues = refactoredContainer.eGet(feature);
+						if(refactoredValues instanceof EObject) {
+							entries.add((EObject)refactoredValues);
+						} else {
+							entries.addAll((List<EObject>)refactoredValues);														
 						}
-					} else {
-						originalContainer.eSet(feature, refactored);
-					}					
-				}
-			} else {
-				// handle the simple value change
-				Object value = refactored.eGet(feature);
-				if(value instanceof EObject) {
-					original.eSet(feature, value);					
+					}
 				} else {
-					System.err.println("only single valued features are to handle");
+					originalContainer.eSet(feature, refactored);
+				}
+			} else if(originalContainer != null && original != null) {
+				if(feature.isMany()) {
+					List<EObject> entries = (List<EObject>)originalContainer.eGet(feature);
+					entries.remove(original);
+				} else {
+					originalContainer.eSet(feature, null);
+				}
+			} else if(original != null && refactored != null) {
+				if(feature.isMany()) {
+					EObject container = original.eContainer();
+					EList<EObject> entries = (EList<EObject>)container.eGet(feature);
+					entries.remove(original);
+					entries.add(EcoreUtil.copy(refactored));
+				} else {
+					Object value = refactored.eGet(feature);
+					original.eSet(feature, value == null ? null : EcoreUtil.copy((EObject)value));												
 				}
 			}
 			sm.worked(1);
