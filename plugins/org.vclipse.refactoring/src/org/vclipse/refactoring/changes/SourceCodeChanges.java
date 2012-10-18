@@ -10,9 +10,6 @@
  ******************************************************************************/
 package org.vclipse.refactoring.changes;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +25,11 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.change.ChangeDescription;
+import org.eclipse.emf.ecore.change.ChangeKind;
 import org.eclipse.emf.ecore.change.FeatureChange;
+import org.eclipse.emf.ecore.change.ListChange;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -55,8 +55,6 @@ import org.vclipse.refactoring.utils.RefactoringUtility;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.io.ByteStreams;
-import com.google.common.io.InputSupplier;
 
 public class SourceCodeChanges extends CompositeChange {
 	
@@ -75,41 +73,6 @@ public class SourceCodeChanges extends CompositeChange {
 	private final ISerializer serializer;
 	
 	private boolean performed = false;
-	
-	static class InputStreamProvider implements InputSupplier<InputStream> {
-
-		private DiffNode diffNode;
-		
-		static InputStreamProvider getEmpty() {
-			return new InputStreamProvider();
-		}
-		
-		static InputStreamProvider getInstance(DiffNode diffNode) {
-			return new InputStreamProvider(diffNode);
-		}	
-		
-		public InputStreamProvider(DiffNode diffNode) {
-			this.diffNode = diffNode;
-		}
-		
-		public InputStreamProvider() {
-			
-		}
-		
-		@Override
-		public InputStream getInput() throws IOException {
-			if(diffNode == null) {
-				return new ByteArrayInputStream("".getBytes());
-			}
-			try {
-				EObjectTypedElement left = (EObjectTypedElement)diffNode.getLeft();
-				InputStream contents = left.getContents();
-				return contents;
-			} catch(CoreException exception) {
-				return null;
-			}
-		}
-	}
 	
 	static String getChangeLabel(IRefactoringUIContext context) {
 		EObject element = context.getSourceElement();
@@ -267,8 +230,6 @@ public class SourceCodeChanges extends CompositeChange {
 		StringBuffer taskBuffer = new StringBuffer("Recording source code changes for re-factoring ").append(previewContext.getLabel());
 		EMap<EObject, EList<FeatureChange>> objectChanges = runner.getChangeRecorder().endRecording().getObjectChanges();
 		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), objectChanges.size());
-		List<SourceCodeChange> sourceCodeChanges = Lists.newArrayList();
-		InputStreamProvider streamRootNode = InputStreamProvider.getInstance(previewNode);
 		for(Entry<EObject, EList<FeatureChange>> entry : objectChanges.entrySet()) {
 			EObject changed = entry.getKey();
 			if(changed.eContainer() instanceof ChangeDescription) {
@@ -276,33 +237,44 @@ public class SourceCodeChanges extends CompositeChange {
 				continue;
 			}
 			EList<FeatureChange> featureChanges = entry.getValue();
-			collectChanges(changed, sourceCodeChanges, featureChanges, sm, streamRootNode);
-		}
-		for(SourceCodeChange change : sourceCodeChanges) {
-			add(change);
-		}
-	}
-	
-	private void collectChanges(EObject changed, List<SourceCodeChange> changes, EList<FeatureChange> featureChanges, SubMonitor sm, InputStreamProvider streamRootNode) {
-		EObject existingEntry = utility.findEntry(changed, rootContents);
-		SourceCodeChange scc = new SourceCodeChange(utility, existingEntry, changed, featureChanges);
-		if(scc.isEmpty()) {
-			changed = changed.eContainer();
-			collectChanges(changed, changes, featureChanges, sm, streamRootNode);
-			return;
-		}
-		try {
-			InputStreamProvider currentStream = InputStreamProvider.getInstance(scc.getDiffNode());
-			if(ByteStreams.equal(streamRootNode, currentStream)) {
-				markAsSynthetic();
-				changes.add(0, scc);
-				sm.worked(1);
-				return;
+			for(FeatureChange featureChange : featureChanges) {
+				EStructuralFeature feature = featureChange.getFeature();
+				EObject existingEntry = utility.findEntry(changed, rootContents);
+				if(feature.isMany()) {
+					ListChange listChange = featureChange.getListChanges().get(0);
+					ChangeKind kindOfChange = listChange.getKind();
+					int index = listChange.getIndex();
+					if(ChangeKind.ADD_LITERAL == kindOfChange) {
+						Object value = existingEntry.eGet(feature);
+						if(value instanceof List<?>) {
+							Object object = ((List<?>)value).get(index);
+							if(object instanceof EObject) {
+								SourceCodeChange scc = new SourceCodeChange(utility);
+								scc.setDeletedChange(existingEntry, (EObject)object, feature);
+								add(scc);
+							}
+						} else {
+							SourceCodeChange scc = new SourceCodeChange(utility);
+							scc.setAdditionChange(existingEntry, null, feature);
+							add(scc);							
+						}
+					} else if(ChangeKind.REMOVE_LITERAL == listChange.getKind()) {
+						Object value = changed.eGet(feature);
+						if(value instanceof List<?>) {
+							Object object = ((List<?>)value).get(index);
+							if(object instanceof EObject) {
+								SourceCodeChange scc = new SourceCodeChange(utility);
+								scc.setAdditionChange(existingEntry, (EObject)object, feature);
+								add(scc);
+							}
+						}
+					}
+				} else {
+					SourceCodeChange scc = new SourceCodeChange(utility);
+					scc.setEntryChange(existingEntry, changed, feature);
+					add(scc);
+				}
 			}
-		} catch(IOException exception) {
-			RefactoringPlugin.log(exception.getMessage(), exception);
 		}
-		changes.add(scc);
-		sm.worked(1);
 	}
 }
