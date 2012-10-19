@@ -24,6 +24,7 @@ import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.EValidator.Registry;
@@ -60,13 +61,6 @@ public class SourceCodeChange extends NoChange {
 		this.utility = utility;
 	}
 	
-	public void deleteChange(EObject container, EObject existing, EStructuralFeature feature) {
-		this.originalContainer = container;
-		this.original = existing;
-		this.feature = feature;
-		init();
-	}
-	
 	public void addChange(EObject container, EObject refactored, EStructuralFeature feature) {
 		this.originalContainer = container;
 		this.refactored = refactored;
@@ -77,6 +71,13 @@ public class SourceCodeChange extends NoChange {
 	public void entryChange(EObject original, EObject refactored, EStructuralFeature feature) {
 		this.original = original;
 		this.refactored = refactored;
+		this.feature = feature;
+		init();
+	}
+	
+	public void deleteChange(EObject container, EObject existing, EStructuralFeature feature) {
+		this.originalContainer = container;
+		this.original = existing;
 		this.feature = feature;
 		init();
 	}
@@ -163,11 +164,26 @@ public class SourceCodeChange extends NoChange {
 		return RefactoringStatus.create(Status.OK_STATUS);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public DiffNode getDiffNode() {		
 		diffNode = new DiffNode(Differencer.CHANGE);
-		
-		EObject objectLeft = original == null ?  null : original;
-		EObjectTypedElement typedLeft = objectLeft == null ? EObjectTypedElement.getEmpty() : new EObjectTypedElement(objectLeft, serializer, nameProvider);
+		if(original == null) {
+			EReference containment = refactored.eContainmentFeature();
+			Object entryObject = refactored.eContainer().eGet(containment);
+			if(entryObject instanceof List<?>) {
+				List<EObject> entries = (List<EObject>)entryObject;
+				int index = entries.indexOf(refactored);
+				Object value = originalContainer.eGet(feature);
+				if(value instanceof List<?>) {
+					original = ((List<EObject>)value).get(index);
+				}
+			} else {
+				original = (EObject)originalContainer.eGet(containment);
+			}
+		}
+		EObjectTypedElement typedLeft = original == null ? 
+				EObjectTypedElement.getEmpty() : new EObjectTypedElement(original, serializer, nameProvider);
+				
 		diffNode.setLeft(typedLeft);
 		
 		EObject objectRight = refactored == null ? null : refactored;
