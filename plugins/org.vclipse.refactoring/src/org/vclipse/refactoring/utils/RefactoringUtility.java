@@ -105,11 +105,13 @@ public class RefactoringUtility {
 		if(qualifiedName == null) {
 			EObject container = object.eContainer();
 			if(container == null) {
-				return getEntry(searchForType, entries).iterator().next();
+				EObject entry = getEntry(searchForType, entries).iterator().next();
+				return entry;
 			} else {
 				EObject containerEntry = findEntry(container, entries);
 				Object value = containerEntry.eGet(object.eContainmentFeature());
-				return value instanceof EObject ? (EObject)value : null;
+				EObject entry = value instanceof EObject ? (EObject)value : null;
+				return entry;
 			}
 		} else {
 			String searchForName = qualifiedName.getLastSegment();
@@ -119,10 +121,12 @@ public class RefactoringUtility {
 				EObject containerEntry = findEntry(container, entries);
 				Object value = containerEntry.eGet(object.eContainmentFeature());
 				if(value instanceof EObject) {
-					return (EObject)value;
+					entry = (EObject)value;
+					return entry;
 				} else {
 					EList<EObject> valueEntries = (EList<EObject>)value;
-					return findEntry(searchForName, searchForType, valueEntries);
+					entry = findEntry(searchForName, searchForType, valueEntries);
+					return entry;
 				}
 			} else {
 				if(equallyTypedContainer(object, entry)) {
@@ -134,14 +138,20 @@ public class RefactoringUtility {
 					if(containerQualifiedName == null) {
 						return entry;
 					} else {
-						List<EObject> entriesCopy = Lists.newArrayList(entries);
-						entriesCopy.remove(entry);
-						return findEntry(object, entriesCopy);
+						return findNextEntry(object, entries, entry);
 					}
+				} else {
+					return findNextEntry(object, entries, entry);
 				}
-			}
-			return entry;
+			} 
 		}
+	}
+
+	private EObject findNextEntry(EObject object, List<EObject> entries, EObject entry) {
+		List<EObject> entriesCopy = Lists.newArrayList(entries);
+		entriesCopy.remove(entry);
+		EObject findEntry = findEntry(object, entriesCopy);
+		return findEntry;
 	}
 	
 	public EObject findEntry(String name, EClass type, List<EObject> entries) {
