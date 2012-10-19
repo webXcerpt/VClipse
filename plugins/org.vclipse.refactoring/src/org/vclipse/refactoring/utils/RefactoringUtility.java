@@ -147,10 +147,10 @@ public class RefactoringUtility {
 		}
 	}
 
-	private EObject findNextEntry(EObject object, List<EObject> entries, EObject entry) {
+	private EObject findNextEntry(EObject targetObject, List<EObject> entries, EObject previousEntry) {
 		List<EObject> entriesCopy = Lists.newArrayList(entries);
-		entriesCopy.remove(entry);
-		EObject findEntry = findEntry(object, entriesCopy);
+		entriesCopy.remove(previousEntry);
+		EObject findEntry = findEntry(targetObject, entriesCopy);
 		return findEntry;
 	}
 	
