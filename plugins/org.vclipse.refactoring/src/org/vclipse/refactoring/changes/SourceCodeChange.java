@@ -34,6 +34,7 @@ import org.eclipse.xtext.diagnostics.AbstractDiagnostic;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.serializer.ISerializer;
+import org.vclipse.base.VClipseStrings;
 import org.vclipse.base.ui.compare.EObjectTypedElement;
 import org.vclipse.refactoring.core.DiffNode;
 import org.vclipse.refactoring.utils.RefactoringUtility;
@@ -184,13 +185,16 @@ public class SourceCodeChange extends NoChange {
 	public String getName() {
 		EObject refactoringOnObject = original == null ? refactored == null ? originalContainer : refactored : original;
 		String refactoringOnType = refactoringOnObject.eClass().getName();
-		StringBuffer labelBuffer = new StringBuffer(refactoringOnType);
-		String objectName = getName(utility, refactoringOnObject);
-		if(!refactoringOnType.equals(objectName)) {
-			labelBuffer.append(" ");
-			labelBuffer.append(objectName);			
+		List<String> parts = VClipseStrings.splitCamelCase(refactoringOnType);
+		StringBuffer labelBuffer = new StringBuffer("Re-factoring on ");
+		int size = parts.size() - 1;
+		for(String part : parts) {
+			labelBuffer.append(part.toLowerCase());
+			if(parts.indexOf(part) != size) {
+				labelBuffer.append(" ");
+			}
 		}
-		return "Re-factoring on " + labelBuffer.toString();
+		return labelBuffer.toString();
 	}
 	
 	private String getName(RefactoringUtility utility, EObject object) {
