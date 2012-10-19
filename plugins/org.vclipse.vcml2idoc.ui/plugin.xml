@@ -103,14 +103,12 @@
          point="org.eclipse.ui.commands">
       <command
             categoryId="org.vclipse.ui.commands"
-            defaultHandler="org.vclipse.vcml2idoc.injection.ExecutableExtensionFactory:org.vclipse.vcml2idoc.actions.TransformantionHandler"
             description="Transforms selected vcml files to idoc files."
             id="org.vclipse.commands.transformation.vcml2idoc"
             name="Transform VCML file to IDoc file">
       </command>
       <command
             categoryId="org.vclipse.ui.commands"
-            defaultHandler="org.vclipse.vcml2idoc.actions.AddRemoveVcmlNatureHandler"
             description="Adds a VCML nature to a project or removes it from it."
             id="org.vclipse.commands.addVcmlNature"
             name="Add /Remove Vcml Nature">

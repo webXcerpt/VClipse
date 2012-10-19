@@ -63,7 +63,6 @@
          point="org.eclipse.ui.commands">
       <command
             categoryId="org.vclipse.ui.commands"
-            defaultHandler="org.vclipse.vcml.diff.injection.ExtensionFactory:org.vclipse.vcml.diff.ui.ExportDifferencesHandler"
             id="org.vclipse.commands.exportDiffs"
             name="Create delta of VCML files">
       </command>

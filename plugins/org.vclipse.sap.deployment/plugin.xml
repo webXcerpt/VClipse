@@ -67,13 +67,11 @@
        point="org.eclipse.ui.commands">
     <command
           categoryId="org.vclipse.ui.commands"
-          defaultHandler="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.ConvertAndSendHandler"
           id="org.vclipse.commands.vcml2idoc.convertAndSend"
           name="Create and send ALE distribution packet">
     </command>
     <command
           categoryId="org.vclipse.ui.commands"
-          defaultHandler="org.vclipse.sap.deployment.injection.ExtensionFactory:org.vclipse.sap.deployment.ComputeDeltaAndSendHandler"
           id="org.vclipse.commands.computeDeltaAndSend"
           name="Create and send ALE distribution packet of delta">
     </command>
