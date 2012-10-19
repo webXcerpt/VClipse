@@ -166,7 +166,7 @@ public class SourceCodeChange extends NoChange {
 	public DiffNode getDiffNode() {		
 		diffNode = new DiffNode(Differencer.CHANGE);
 		
-		EObject objectLeft = original == null ? originalContainer == null ? null : originalContainer : original;
+		EObject objectLeft = original == null ?  null : original;
 		EObjectTypedElement typedLeft = objectLeft == null ? EObjectTypedElement.getEmpty() : new EObjectTypedElement(objectLeft, serializer, nameProvider);
 		diffNode.setLeft(typedLeft);
 		
