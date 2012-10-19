@@ -165,20 +165,21 @@ public class SourceCodeChange extends NoChange {
 	
 	public DiffNode getDiffNode() {		
 		diffNode = new DiffNode(Differencer.CHANGE);
-		EObjectTypedElement left = original == 
-				null ? EObjectTypedElement.getEmpty() : 
-					new EObjectTypedElement(original, serializer, nameProvider);
-		diffNode.setLeft(left);
-		EObjectTypedElement right = refactored == 
-				null ? EObjectTypedElement.getEmpty() :
-					new EObjectTypedElement(refactored, serializer, nameProvider);
-		diffNode.setRight(right);
+		
+		EObject objectLeft = original == null ? originalContainer == null ? null : originalContainer : original;
+		EObjectTypedElement typedLeft = objectLeft == null ? EObjectTypedElement.getEmpty() : new EObjectTypedElement(objectLeft, serializer, nameProvider);
+		diffNode.setLeft(typedLeft);
+		
+		EObject objectRight = refactored == null ? null : refactored;
+		EObjectTypedElement typedRight = objectRight == null ? EObjectTypedElement.getEmpty() : new EObjectTypedElement(refactored, serializer, nameProvider);
+		diffNode.setRight(typedRight);
+		
 		return diffNode;
 	}
 	
 	@Override
 	public Object getModifiedElement() {
-		return original;
+		return original == null ? originalContainer : original;
 	}
 	
 	@Override
