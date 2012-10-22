@@ -12,7 +12,6 @@ package org.vclipse.refactoring.ui;
 
 import java.util.List;
 
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -34,10 +33,11 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.utils.EditorUtils;
 import org.vclipse.base.ui.util.EditorUtilsExtensions;
+import org.vclipse.refactoring.ConfigurationProvider;
+import org.vclipse.refactoring.IRefactoringConfiguration;
+import org.vclipse.refactoring.IRefactoringUIConfiguration;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
-import org.vclipse.refactoring.configuration.ConfigurationProvider;
-import org.vclipse.refactoring.core.RefactoringCustomisation;
 import org.vclipse.refactoring.core.RefactoringRunner;
 import org.vclipse.refactoring.core.RefactoringTask;
 import org.vclipse.refactoring.core.RefactoringType;
@@ -84,16 +84,17 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 					EObject elementAt = offsetHelper.resolveContainedElementAt(xtextResource, textSelection.getOffset());
 					EObject container = elementAt.eContainer();
 					EObject rootContainer = EcoreUtil.getRootContainer(elementAt);
-					RefactoringCustomisation customisation = configuration.getCustomisation().get(rootContainer.eClass());
-					if(elementAt != null && customisation != null) {
+					IRefactoringConfiguration configuration = refactoringUtility.getInstance(IRefactoringConfiguration.class, rootContainer);
+					if(elementAt != null && configuration != null) {
 						for(RefactoringType type : RefactoringType.values()) { 
 							IRefactoringUIContext context = contextProvider.get();
 							context.setSourceElement(elementAt);
 							context.setType(type);
-							for(EStructuralFeature feature : customisation.features(context)) {
+							List<? extends EStructuralFeature> interestedInFeatures = configuration.provideFeatures(context);
+							for(EStructuralFeature interestingFeature : interestedInFeatures) {
 								context = ((UIRefactoringContext)context).copy();
-								context.setStructuralFeature(feature);
-								if(customisation.init(context)) {
+								context.setStructuralFeature(interestingFeature);
+								if(configuration.initialize(context)) {
 									context.setDocument(editor.getDocument());
 									if(refactoringRunner.isRefactoringAvailable(context)) {
 										MenuItem item = new MenuItem(menu, SWT.PUSH);
@@ -129,10 +130,9 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 			try {
 				EObject sourceElement = context.getSourceElement();
 				EObject rootContainer = EcoreUtil.getRootContainer(sourceElement);
-				EClass rootType = rootContainer.eClass();
-				RefactoringUICustomisation uicustomisation = configuration.getUICustomisation().get(rootType);
+				IRefactoringUIConfiguration uiConfiguration = refactoringUtility.getInstance(IRefactoringUIConfiguration.class, rootContainer);
 				List<? extends UserInputWizardPage> pages = Lists.newArrayList();
-				pages = uicustomisation.getPages(context);
+				pages = uiConfiguration.provideWizardPages(context);
 				RefactoringTask refactoring = new RefactoringTask(context, refactoringRunner, refactoringUtility);
 				context.setRefactoring(refactoring);
 				RefactoringWizard wizard = new RefactoringWizard(pages, refactoring, RefactoringWizard.DIALOG_BASED_USER_INTERFACE);

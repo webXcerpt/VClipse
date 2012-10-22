@@ -6,7 +6,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.vclipse.refactoring.IRefactoringContext;
-import org.vclipse.refactoring.core.RefactoringCustomisation;
+import org.vclipse.refactoring.core.RefactoringConfiguration;
 import org.vclipse.vcml.vcml.CharacteristicReference_P;
 import org.vclipse.vcml.vcml.ConditionalConstraintRestriction;
 import org.vclipse.vcml.vcml.ConstraintRestriction;
@@ -19,7 +19,7 @@ import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.google.inject.Inject;
 
-public class VCMLCustomisation extends RefactoringCustomisation {
+public class VCMLCustomisation extends RefactoringConfiguration {
 	
 	@Inject
 	private VCMLRefactoring vcmlRefactoring;
@@ -45,7 +45,7 @@ public class VCMLCustomisation extends RefactoringCustomisation {
 		return get(VCML_PACKAGE.getPFunction_Values());
 	}
 	
-	public boolean init_Replace_objects(IRefactoringContext context) {
+	public boolean initialize_Replace_objects(IRefactoringContext context) {
 		EObject element = context.getSourceElement();
 		context.setLabel("Delete " + element.eClass().getName().toLowerCase());
 		return Boolean.TRUE;
@@ -54,7 +54,7 @@ public class VCMLCustomisation extends RefactoringCustomisation {
 	/**
 	 * 
 	 */
-	public boolean init_Extract_ConstraintSource(IRefactoringContext context, ConstraintSource source) {
+	public boolean initialize_Extract_ConstraintSource(IRefactoringContext context, ConstraintSource source) {
 		context.setLabel("Extract common conditions from restrictions");
 		EList<ConstraintRestriction> restrictions = source.getRestrictions();
 		if(restrictions.size() > 1) {
@@ -67,7 +67,7 @@ public class VCMLCustomisation extends RefactoringCustomisation {
 		return Boolean.FALSE;
 	}
 	
-	public boolean init_Inline_ConstraintSource(IRefactoringContext context, ConstraintSource source) {
+	public boolean initialize_Inline_ConstraintSource(IRefactoringContext context, ConstraintSource source) {
 		context.setLabel("Inline conditions for each restriction");
 		if(source.getCondition() != null) {
 			return Boolean.TRUE;		
@@ -75,12 +75,12 @@ public class VCMLCustomisation extends RefactoringCustomisation {
 		return Boolean.FALSE;
 	}
 	
-	public boolean init_Extract_InCondition_C_list(IRefactoringContext context, InCondition_C reference) {
+	public boolean initialize_Extract_InCondition_C_list(IRefactoringContext context, InCondition_C reference) {
 		context.setLabel("Extract to conditional or expresssion");
 		return Boolean.TRUE;
 	}
 	
-	public boolean init_Replace_PFunction_values(IRefactoringContext context, PFunction pfunction) {
+	public boolean initialize_Replace_PFunction_values(IRefactoringContext context, PFunction pfunction) {
 		EList<Literal> values = pfunction.getValues();
 		for(Literal literal : values) {
 			if(literal instanceof MDataCharacteristic_P || literal instanceof CharacteristicReference_P) {

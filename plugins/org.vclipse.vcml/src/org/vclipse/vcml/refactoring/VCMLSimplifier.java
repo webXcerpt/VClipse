@@ -1,9 +1,12 @@
 package org.vclipse.vcml.refactoring;
 
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
 import org.vclipse.refactoring.IRefactoringContext;
@@ -17,11 +20,20 @@ import org.vclipse.vcml.vcml.VcmlFactory;
 import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 public class VCMLSimplifier extends RefactoringExecuter {
  
 	protected final VcmlFactory VCML_FACTORY = VcmlFactory.eINSTANCE;
 	protected final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
+	
+	public EPackage getPackage() {
+		return VCML_PACKAGE;
+	}
+
+	public Set<EClass> getTopLevelTypes() {
+		return Sets.newHashSet(VCML_PACKAGE.getVcmlModel());
+	}
 	
 	/*
 	 * Re-factoring: extracts common conditions from restrictions to a 

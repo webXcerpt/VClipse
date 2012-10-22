@@ -8,11 +8,10 @@
  * Contributors:
  *     webXcerpt Software GmbH - initial creator
  ******************************************************************************/
-package org.vclipse.refactoring.configuration;
+package org.vclipse.refactoring;
 
 import org.eclipse.xtext.ui.guice.AbstractGuiceAwareExecutableExtensionFactory;
 import org.osgi.framework.Bundle;
-import org.vclipse.refactoring.RefactoringPlugin;
 
 import com.google.inject.Injector;
 

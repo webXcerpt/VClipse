@@ -14,27 +14,30 @@ import java.util.List;
 
 import org.eclipse.ltk.ui.refactoring.UserInputWizardPage;
 import org.vclipse.refactoring.IRefactoringContext;
+import org.vclipse.refactoring.IRefactoringUIConfiguration;
 import org.vclipse.refactoring.IRefactoringUIContext;
-import org.vclipse.refactoring.core.RefactoringCustomisation;
+import org.vclipse.refactoring.core.RefactoringConfiguration;
 
 import com.google.common.collect.Lists;
 
 @SuppressWarnings("unchecked")
-public class RefactoringUICustomisation extends RefactoringCustomisation {
+public class RefactoringUIConfiguration extends RefactoringConfiguration implements IRefactoringUIConfiguration {
 
 	public static final String PAGES_PREFIX = "pages_";
 	public static final String SWITCH_WIDGETS_PREFIX = "switch_widgets_";
 	
-	public RefactoringUICustomisation() {
+	public RefactoringUIConfiguration() {
 		collect(1, IRefactoringUIContext.class);
 		collect(2);
 	}
 	
-	public void switchWidgets(IRefactoringContext context) {
+	@Override
+	public void configureWidgets(IRefactoringContext context) {
 		invoke(context, SWITCH_WIDGETS_PREFIX);
 	}
-	
-	public List<? extends UserInputWizardPage> getPages(IRefactoringContext context) {
+
+	@Override
+	public List<? extends UserInputWizardPage> provideWizardPages(IRefactoringContext context) {
 		Object result = invoke(context, PAGES_PREFIX);
 		return result instanceof List ? (List<? extends UserInputWizardPage>)result : Lists.<UserInputWizardPage>newArrayList();
 	}

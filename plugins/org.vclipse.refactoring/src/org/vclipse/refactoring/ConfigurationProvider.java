@@ -1,0 +1,107 @@
+/*******************************************************************************
+ * Copyright (c) 2012 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *     webXcerpt Software GmbH - initial creator
+ ******************************************************************************/
+package org.vclipse.refactoring;
+
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import org.eclipse.core.internal.registry.osgi.OSGIUtils;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.xtext.ui.guice.AbstractGuiceAwareExecutableExtensionFactory;
+import org.osgi.framework.Bundle;
+
+import com.google.common.collect.Maps;
+import com.google.inject.Injector;
+import com.google.inject.Singleton;
+
+@Singleton
+public class ConfigurationProvider {
+
+	private static final String ID = "org.vclipse.refactoring";
+	
+	private static final String ELEMENT_REFACTORING = "refactoring";
+	private static final String ATTRIBUTE_EXECUTER = "executer";
+	
+	private Map<EClassifier, Injector> injectors;
+	
+	public Map<EClassifier, Injector> getInjector() {
+		if(injectors == null) {
+			readExtensions();
+		}
+		return Collections.unmodifiableMap(injectors);
+	}
+	
+	public Map<EClassifier, IRefactoringExecuter> getRefactorings() {
+		if(injectors == null) {
+			readExtensions();
+		}
+		Map<EClassifier, IRefactoringExecuter> executers = Maps.newHashMap();
+		for(Entry<EClassifier, Injector> entry : injectors.entrySet()) {
+			EClassifier type = entry.getKey();
+			Injector injector = entry.getValue();
+			IRefactoringExecuter executer = injector.getInstance(IRefactoringExecuter.class);
+			executers.put(type, executer);
+		}
+		return executers;
+	}
+
+	private void readExtensions() {
+		injectors = Maps.newHashMap();
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IExtensionPoint point = registry.getExtensionPoint(ID);
+		for(IExtension extension : point.getExtensions()) {
+			for(IConfigurationElement element : extension.getConfigurationElements()) {
+				String name = element.getContributor().getName();
+				Bundle bundle = OSGIUtils.getDefault().getBundle(name);
+				if(ELEMENT_REFACTORING.equals(element.getName())) {
+					try {
+						Object executableExtension = element.createExecutableExtension(ATTRIBUTE_EXECUTER);
+						if(executableExtension instanceof IRefactoringExecuter) {
+							IRefactoringExecuter executer = (IRefactoringExecuter)executableExtension;
+							Set<EClass> topLevelTypes = executer.getTopLevelTypes();
+							String executerPath = element.getAttribute(ATTRIBUTE_EXECUTER);
+							String[] parts = executerPath.split(":");
+							if(parts.length != 2) {
+								RefactoringStatus status = RefactoringStatus.getConfigurationError();
+								RefactoringPlugin.log(status);
+								continue;
+							} else {
+								Class<?> loadClass = bundle.loadClass(parts[0]);
+								Object instance = loadClass.newInstance();
+								for(EClass eclass : topLevelTypes) {
+									if(instance instanceof AbstractGuiceAwareExecutableExtensionFactory) {
+										AbstractGuiceAwareExecutableExtensionFactory extensionFactory = (AbstractGuiceAwareExecutableExtensionFactory)instance;
+										Method method = extensionFactory.getClass().getDeclaredMethod("getInjector");
+										method.setAccessible(true);
+										injectors.put(eclass, (Injector)method.invoke(extensionFactory));
+									}
+								}
+							}
+						}
+					} catch(Exception exception) {
+						RefactoringStatus status = RefactoringStatus.getConfigurationError();
+						RefactoringPlugin.log(status);
+						continue;
+					}
+				}
+			}
+		}
+	}
+}

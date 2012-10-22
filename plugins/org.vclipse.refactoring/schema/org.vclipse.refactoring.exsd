@@ -49,50 +49,13 @@
 
    <element name="refactoring">
       <complexType>
-         <attribute name="package" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="class" type="string" use="required">
+         <attribute name="executer" type="string">
             <annotation>
                <documentation>
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.emf.ecore.EObject"/>
-               </appinfo>
-            </annotation>
-         </attribute>
-         <attribute name="executer" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appinfo>
-                  <meta.attribute kind="java" basedOn="org.vclipse.refactoring.Refactoring:"/>
-               </appinfo>
-            </annotation>
-         </attribute>
-         <attribute name="customisation" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appinfo>
-                  <meta.attribute kind="java" basedOn="org.vclipse.refactoring.core.RefactoringCustomisation:"/>
-               </appinfo>
-            </annotation>
-         </attribute>
-         <attribute name="uicustomisation" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appinfo>
-                  <meta.attribute kind="java" basedOn="org.vclipse.refactoring.ui.RefactoringUICustomisation:"/>
+                  <meta.attribute kind="java" basedOn="org.vclipse.refactoring.core.RefactoringExecuter:org.vclipse.refactoring.IRefactoringExecuter"/>
                </appinfo>
             </annotation>
          </attribute>

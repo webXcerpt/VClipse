@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -45,9 +44,9 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.impl.ListBasedDiagnosticConsumer;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
-import org.vclipse.base.ui.compare.EObjectTypedElement;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
+import org.vclipse.refactoring.compare.MultipleEntriesTypedElement;
 import org.vclipse.refactoring.core.DiffNode;
 import org.vclipse.refactoring.core.RefactoringRunner;
 import org.vclipse.refactoring.ui.UIRefactoringContext;
@@ -119,8 +118,8 @@ public class SourceCodeChanges extends CompositeChange {
 		linker.linkModel(rootCopy, new ListBasedDiagnosticConsumer());
 		EcoreUtil.resolveAll(resource);
 		
-		previewNode = new DiffNode(Differencer.CHANGE);
-		previewNode.setLeft(new EObjectTypedElement(rootOriginal, serializer));
+		previewNode = new DiffNode();
+		previewNode.setLeft(new MultipleEntriesTypedElement(serializer, new EObject[]{rootOriginal}));
 	}
 	
 	@Override
@@ -164,7 +163,7 @@ public class SourceCodeChanges extends CompositeChange {
 					throw new CoreException(status);
 				}
 				
-				previewNode.setRight(new EObjectTypedElement(rootCopy, serializer));
+				previewNode.setRight(new MultipleEntriesTypedElement(serializer, new EObject[]{rootCopy}));
 				sm.worked(10);
 				
 				recordSourceCodeChanges(sm, refactoringContext);
@@ -249,29 +248,37 @@ public class SourceCodeChanges extends CompositeChange {
 						if(value instanceof List<?>) {
 							Object object = ((List<?>)value).get(index);
 							if(object instanceof EObject) {
-								SourceCodeChange scc = new SourceCodeChange(utility);
-								scc.deleteChange(existingEntry, (EObject)object, feature);
+								SourceCodeChange scc = new SourceCodeChange(utility, existingEntry.eContainer(), existingEntry, (EObject)object, feature);
 								add(scc);
 							}
 						} else {
-							SourceCodeChange scc = new SourceCodeChange(utility);
-							scc.addChange(existingEntry, null, feature);
+							SourceCodeChange scc = new SourceCodeChange(utility, existingEntry, null, feature);
 							add(scc);							
 						}
 					} else if(ChangeKind.REMOVE_LITERAL == listChange.getKind()) {
-						Object value = changed.eGet(feature);
-						if(value instanceof List<?>) {
-							Object object = ((List<?>)value).get(index);
-							if(object instanceof EObject) {
-								SourceCodeChange scc = new SourceCodeChange(utility);
-								scc.addChange(existingEntry, (EObject)object, feature);
-								add(scc);
+						EObject container = changed.eContainer();
+						if(container != null) { 
+							container = container.eContainer();
+						}
+						if(container == null) {
+							Object value = changed.eGet(feature);
+							if(value instanceof List<?>) {
+								Object object = ((List<?>)value).get(index);
+								if(object instanceof EObject) {
+									EObject eobject = (EObject)object;
+									existingEntry = utility.findEntry(eobject, rootContents);
+									SourceCodeChange scc = new SourceCodeChange(utility, changed, existingEntry, (EObject)object, feature);
+									add(scc);
+								}
 							}
+						} else {
+							EObject refactoredEntry = utility.findEntry(changed, copyContents);
+							SourceCodeChange scc = new SourceCodeChange(utility, existingEntry.eContainer(), existingEntry, refactoredEntry, feature);
+							add(scc);
 						}
 					}
 				} else {
-					SourceCodeChange scc = new SourceCodeChange(utility);
-					scc.entryChange(existingEntry, changed, feature);
+					SourceCodeChange scc = new SourceCodeChange(utility, existingEntry, changed, feature);
 					add(scc);
 				}
 			}

@@ -290,16 +290,11 @@
             extensions="cons,sapconstraint">
     </provider>
   </extension>
-  
-   <extension
+  <extension
         point="org.vclipse.refactoring">
      <refactoring
-           class="org.vclipse.vcml.vcml.ConstraintSource"
-           customisation="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.vclipse.vcml.refactoring.VCMLCustomisation"
-           executer="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.vclipse.vcml.refactoring.VCMLRefactoring"
-           package="http://www.vclipse.org/vcml"
-           uicustomisation="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.vclipse.vcml.ui.refactoring.VCMLUICustomisation">
-     </refactoring>
+           executer="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.vclipse.constraint.ui.refactoring.ConstraintRefactoring"></refactoring>
   </extension>
+  
 
 </plugin>

@@ -15,9 +15,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.vclipse.refactoring.ConfigurationProvider;
 import org.vclipse.refactoring.IRefactoringContext;
+import org.vclipse.refactoring.IRefactoringExecuter;
 import org.vclipse.refactoring.RefactoringStatus;
-import org.vclipse.refactoring.configuration.ConfigurationProvider;
 
 import com.google.inject.Inject;
 
@@ -32,7 +33,7 @@ public class RefactoringRunner {
 		EObject element = context.getSourceElement();
 		EObject container = EcoreUtil.getRootContainer(element);
 		changeRecorder = new ChangeRecorder(container);
-		RefactoringExecuter refactoring = getRefactoring(element);
+		IRefactoringExecuter refactoring = getRefactoring(element);
 		if(refactoring == null) {
 			EStructuralFeature feature = context.getStructuralFeature();
 			RefactoringStatus status = RefactoringStatus.getExcuterNotAvailable(element, feature);
@@ -43,15 +44,15 @@ public class RefactoringRunner {
 	}
 	
 	public boolean isRefactoringAvailable(IRefactoringContext context) {
-		RefactoringExecuter executerExists = getRefactoring(context.getSourceElement());
-		return executerExists.getRefactoring(context) != null;
+		EObject element = context.getSourceElement();
+		return getRefactoring(element) != null;
 	}
 	
 	public ChangeRecorder getChangeRecorder() {
 		return changeRecorder;
 	}
 	
-	private RefactoringExecuter getRefactoring(EObject object) {
+	private IRefactoringExecuter getRefactoring(EObject object) {
 		EObject rootContainer = EcoreUtil.getRootContainer(object);
 		return configuration.getRefactorings().get(rootContainer.eClass());
 	}

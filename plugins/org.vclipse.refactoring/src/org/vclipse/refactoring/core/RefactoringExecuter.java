@@ -21,17 +21,18 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.util.Pair;
+import org.vclipse.refactoring.ConfigurationProvider;
 import org.vclipse.refactoring.IRefactoringContext;
+import org.vclipse.refactoring.IRefactoringExecuter;
 import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.RefactoringStatus;
-import org.vclipse.refactoring.configuration.ConfigurationProvider;
 import org.vclipse.refactoring.utils.RefactoringUtility;
 import org.vclipse.refactoring.utils.ReferenceFinderExtension;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
-public abstract class RefactoringExecuter extends MethodCollector {
+public abstract class RefactoringExecuter extends MethodCollector implements IRefactoringExecuter {
 
 	public static String BUTTON_STATE = "button_state";
 	public static String TEXT_FIELD_ENTRY = "text_field_entry";
@@ -56,8 +57,8 @@ public abstract class RefactoringExecuter extends MethodCollector {
 		EObject element = context.getSourceElement();
 		EObject rootContainer = EcoreUtil.getRootContainer(element);
 		EClass containerType = rootContainer.eClass();
-		Map<EClassifier, RefactoringExecuter> refactorings = configuration.getRefactorings();
-		RefactoringExecuter executer = refactorings.get(containerType);
+		Map<EClassifier, IRefactoringExecuter> refactorings = configuration.getRefactorings();
+		IRefactoringExecuter executer = refactorings.get(containerType);
 		if(executer == null) {
 			EStructuralFeature feature = context.getStructuralFeature();
 			RefactoringStatus status = RefactoringStatus.getExcuterNotAvailable(element, feature);

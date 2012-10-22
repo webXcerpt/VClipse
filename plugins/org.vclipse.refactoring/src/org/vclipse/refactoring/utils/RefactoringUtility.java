@@ -22,9 +22,9 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.vclipse.base.VClipseStrings;
+import org.vclipse.refactoring.ConfigurationProvider;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
-import org.vclipse.refactoring.configuration.ConfigurationProvider;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -105,7 +105,11 @@ public class RefactoringUtility {
 		if(qualifiedName == null) {
 			EObject container = object.eContainer();
 			if(container == null) {
-				EObject entry = getEntry(searchForType, entries).iterator().next();
+				Iterable<EObject> iterable = getEntries(searchForType, entries);
+				if(iterable == null || !iterable.iterator().hasNext()) {
+					return null;
+				}
+				EObject entry = iterable.iterator().next();
 				return entry;
 			} else {
 				EObject containerEntry = findEntry(container, entries);
@@ -119,6 +123,9 @@ public class RefactoringUtility {
 			if(entry == null) {
 				EObject container = object.eContainer();
 				EObject containerEntry = findEntry(container, entries);
+				if(containerEntry == null) {
+					return null;
+				}
 				Object value = containerEntry.eGet(object.eContainmentFeature());
 				if(value instanceof EObject) {
 					entry = (EObject)value;
@@ -159,21 +166,25 @@ public class RefactoringUtility {
 			if(name == null) {
 				return null;
 			} else {
-				Iterator<EObject> namedResults = getEntry(name, entries).iterator();
+				Iterator<EObject> namedResults = getEntries(name, entries).iterator();
 				return namedResults.hasNext() ? namedResults.next() : null;
 			}
 		} else {
-			Iterator<EObject> iterator = getEntry(type, entries).iterator();
+			Iterator<EObject> iterator = getEntries(type, entries).iterator();
 			if(name == null) {
 				return iterator == null ? null : iterator.hasNext() ? iterator.next() : null;
 			} else {
-				iterator = getEntry(name, Lists.newArrayList(iterator)).iterator();
-				return iterator == null ? null : iterator.hasNext() ? iterator.next() : null;
+				Iterable<EObject> iterable = getEntries(name, Lists.newArrayList(iterator));
+				if(iterable == null) {
+					return null;
+				}
+				iterator = iterable.iterator();
+				return iterator.hasNext() ? iterator.next() : null;
 			}
 		}
 	}
 	
-	public Iterable<EObject> getEntry(final String name, Iterable<EObject> entries) {
+	public Iterable<EObject> getEntries(final String name, Iterable<EObject> entries) {
 		Iterator<EObject> iterator = entries.iterator();
 		if(!iterator.hasNext() || name == null || name.isEmpty()) {
 			return null;
@@ -190,7 +201,7 @@ public class RefactoringUtility {
 		return Lists.newArrayList();
 	}
 	
-	public Iterable<EObject> getEntry(final EClass type, Iterable<EObject> entries) {
+	public Iterable<EObject> getEntries(final EClass type, Iterable<EObject> entries) {
 		Iterator<EObject> iterator = entries.iterator();
 		if(!iterator.hasNext() || type == null) {
 			return null;

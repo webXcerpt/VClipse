@@ -17,31 +17,36 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.vclipse.refactoring.IRefactoringConfiguration;
 import org.vclipse.refactoring.IRefactoringContext;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 @SuppressWarnings("unchecked")
-public class RefactoringCustomisation extends MethodCollector {
+public class RefactoringConfiguration extends MethodCollector implements IRefactoringConfiguration {
 	
-	public RefactoringCustomisation() {
+	protected static final String INIT_PREFIX = "initialize_";
+	
+	protected static final String FEATURES_PREFIX = "features_";
+	
+	public RefactoringConfiguration() {
 		collect(1, IRefactoringContext.class);
 		collect(2);
 	}
-	 
-	public boolean init(IRefactoringContext context) {
-		Object result = invoke(context, "init_");
-		return result instanceof Boolean ? (Boolean)result : Boolean.FALSE;
-	}
 	
-	public List<? extends EStructuralFeature> features(IRefactoringContext context) {
-		Object result = invoke(context, "features_");
+	public List<? extends EStructuralFeature> provideFeatures(IRefactoringContext context) {
+		Object result = invoke(context, FEATURES_PREFIX);
 		if(result instanceof List) {
 			return (List<EStructuralFeature>)result;
 		} else {
 			return getFeatures(context.getSourceElement());
 		}
+	}
+	
+	public boolean initialize(IRefactoringContext context) {
+		Object result = invoke(context, INIT_PREFIX);
+		return result instanceof Boolean ? (Boolean)result : Boolean.FALSE;
 	}
 	
 	protected List<EStructuralFeature> getFeatures(EObject object) {

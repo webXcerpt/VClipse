@@ -12,7 +12,6 @@ package org.vclipse.refactoring.changes;
 
 import java.util.List;
 
-import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -24,7 +23,6 @@ import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.EValidator.Registry;
@@ -36,7 +34,7 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.vclipse.base.VClipseStrings;
-import org.vclipse.base.ui.compare.EObjectTypedElement;
+import org.vclipse.refactoring.compare.MultipleEntriesTypedElement;
 import org.vclipse.refactoring.core.DiffNode;
 import org.vclipse.refactoring.utils.RefactoringUtility;
 
@@ -51,38 +49,24 @@ public class SourceCodeChange extends NoChange {
 	private EObject refactored;
 	private EStructuralFeature feature;
 		
-	private DiffNode diffNode;
-	
 	private EValidator validator;
 	private IQualifiedNameProvider nameProvider;
 	private ISerializer serializer;
 	
-	public SourceCodeChange(RefactoringUtility utility) {
+	public SourceCodeChange(RefactoringUtility utility, EObject originalContainer, EObject refactored, EStructuralFeature feature) {
+		this(utility, originalContainer, null, refactored, feature);
+	}
+	
+	public SourceCodeChange(RefactoringUtility utility, EObject originalContainer, EObject original, EObject refactored, EStructuralFeature feature) {
 		this.utility = utility;
-	}
-	
-	public void addChange(EObject container, EObject refactored, EStructuralFeature feature) {
-		this.originalContainer = container;
-		this.refactored = refactored;
-		this.feature = feature;
-		init();
-	}
-	
-	public void entryChange(EObject original, EObject refactored, EStructuralFeature feature) {
 		this.original = original;
+		if(original != null) {
+			originalContainer = original.eContainer();
+		}
+		this.originalContainer = originalContainer;
 		this.refactored = refactored;
 		this.feature = feature;
-		init();
-	}
-	
-	public void deleteChange(EObject container, EObject existing, EStructuralFeature feature) {
-		this.originalContainer = container;
-		this.original = existing;
-		this.feature = feature;
-		init();
-	}
-	
-	protected void init() {
+		
 		EObject initObject = original == null ? originalContainer : original;
 		Registry registry = utility.getInstance(EValidator.Registry.class, initObject);
 		EPackage epackage = initObject.eClass().getEPackage();
@@ -164,32 +148,22 @@ public class SourceCodeChange extends NoChange {
 		return RefactoringStatus.create(Status.OK_STATUS);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public DiffNode getDiffNode() {		
-		diffNode = new DiffNode(Differencer.CHANGE);
+		DiffNode diffNode = new DiffNode();
 		if(original == null) {
-			EReference containment = refactored.eContainmentFeature();
-			Object entryObject = refactored.eContainer().eGet(containment);
-			if(entryObject instanceof List<?>) {
-				List<EObject> entries = (List<EObject>)entryObject;
-				int index = entries.indexOf(refactored);
-				Object value = originalContainer.eGet(feature);
-				if(value instanceof List<?>) {
-					original = ((List<EObject>)value).get(index);
-				}
-			} else {
-				original = (EObject)originalContainer.eGet(containment);
-			}
+			MultipleEntriesTypedElement typedLeft = MultipleEntriesTypedElement.getDefault();
+			diffNode.setLeft(typedLeft);
+		} else {
+			MultipleEntriesTypedElement typedElement = new MultipleEntriesTypedElement(serializer, nameProvider, new EObject[]{original});
+			diffNode.setLeft(typedElement);
 		}
-		EObjectTypedElement typedLeft = original == null ? 
-				EObjectTypedElement.getEmpty() : new EObjectTypedElement(original, serializer, nameProvider);
-				
-		diffNode.setLeft(typedLeft);
-		
-		EObject objectRight = refactored == null ? null : refactored;
-		EObjectTypedElement typedRight = objectRight == null ? EObjectTypedElement.getEmpty() : new EObjectTypedElement(refactored, serializer, nameProvider);
-		diffNode.setRight(typedRight);
-		
+		if(refactored == null) {
+			 MultipleEntriesTypedElement typedElement = MultipleEntriesTypedElement.getDefault();
+			 diffNode.setRight(typedElement);
+		} else {
+			MultipleEntriesTypedElement typedRight = new MultipleEntriesTypedElement(serializer, nameProvider, new EObject[]{refactored});
+			diffNode.setRight(typedRight);
+		}
 		return diffNode;
 	}
 	

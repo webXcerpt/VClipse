@@ -12,14 +12,14 @@ Require-Bundle: org.eclipse.ui;visibility:=reexport,
  org.eclipse.ltk.ui.refactoring;visibility:=reexport,
  org.eclipse.compare;visibility:=reexport,
  org.eclipse.xtext.ui;visibility:=reexport,
- org.vclipse.base.ui;visibility:=reexport
+ org.vclipse.base.ui;visibility:=reexport,
+ org.eclipse.ui.ide
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: com.google.common.io,
  org.apache.log4j
 Export-Package: org.vclipse.refactoring,
  org.vclipse.refactoring.changes,
- org.vclipse.refactoring.configuration,
  org.vclipse.refactoring.core,
  org.vclipse.refactoring.ui,
  org.vclipse.refactoring.utils

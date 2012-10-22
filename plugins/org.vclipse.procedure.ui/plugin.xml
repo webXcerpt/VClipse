@@ -293,11 +293,7 @@
   <extension
         point="org.vclipse.refactoring">
      <refactoring
-           class="org.vclipse.vcml.vcml.ProcedureSource"
-           customisation="org.vclipse.procedure.ui.ProcedureExecutableExtensionFactory:org.vclipse.vcml.refactoring.VCMLCustomisation"
-           executer="org.vclipse.procedure.ui.ProcedureExecutableExtensionFactory:org.vclipse.vcml.refactoring.VCMLRefactoring"
-           package="http://www.vclipse.org/vcml"
-           uicustomisation="org.vclipse.procedure.ui.ProcedureExecutableExtensionFactory:org.vclipse.vcml.ui.refactoring.VCMLUICustomisation">
+           executer="org.vclipse.procedure.ui.ProcedureExecutableExtensionFactory:org.vclipse.procedure.ui.refactoring.ProcedureRefactoring">
      </refactoring>
   </extension>
 

@@ -205,6 +205,7 @@ public class InputPage extends UserInputWizardPage {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 				context.addAttribute(RefactoringExecuter.BUTTON_STATE, button.getSelection());
+				validateWidgets();
 			}
 		});
 		button.setSelection(false);

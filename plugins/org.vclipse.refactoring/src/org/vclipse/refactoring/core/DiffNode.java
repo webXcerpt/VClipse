@@ -11,18 +11,19 @@
 package org.vclipse.refactoring.core;
 
 import org.eclipse.compare.ITypedElement;
-import org.vclipse.base.ui.compare.EObjectTypedElement;
+import org.eclipse.compare.structuremergeviewer.Differencer;
+import org.vclipse.refactoring.compare.MultipleEntriesTypedElement;
 
 public class DiffNode extends org.eclipse.compare.structuremergeviewer.DiffNode {
 	
-	public DiffNode(int kind) {
-		super(null, kind);
+	public DiffNode() {
+		super(null, Differencer.CHANGE);
 	}
 	
 	@Override
 	public String getName() {
 		ITypedElement left = getLeft();
-		if(left instanceof EObjectTypedElement) {
+		if(left instanceof MultipleEntriesTypedElement) {
 			return left.getName();
 		}
 		return super.getName();

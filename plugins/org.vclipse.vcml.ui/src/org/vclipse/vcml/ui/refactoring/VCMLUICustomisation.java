@@ -7,13 +7,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.ui.InputPage;
-import org.vclipse.refactoring.ui.RefactoringUICustomisation;
+import org.vclipse.refactoring.ui.RefactoringUIConfiguration;
 import org.vclipse.vcml.vcml.PFunction;
 import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.google.common.collect.Lists;
 
-public class VCMLUICustomisation extends RefactoringUICustomisation {
+public class VCMLUICustomisation extends RefactoringUIConfiguration {
 
 	private static final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
 	

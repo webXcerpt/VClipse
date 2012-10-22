@@ -34,11 +34,19 @@ import org.eclipse.xtext.ui.refactoring.ui.RenameRefactoringExecuter;
 import org.eclipse.xtext.ui.shared.Access;
 import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
 import org.vclipse.base.ui.util.IExtendedImageHelper;
+import org.vclipse.refactoring.IPreviewEntityComputer;
+import org.vclipse.refactoring.IRefactoringConfiguration;
+import org.vclipse.refactoring.IRefactoringExecuter;
+import org.vclipse.refactoring.IRefactoringUIConfiguration;
+import org.vclipse.vcml.refactoring.VCMLCustomisation;
+import org.vclipse.vcml.refactoring.VCMLRefactoring;
 import org.vclipse.vcml.ui.editor.hover.VCMLHoverProvider;
 import org.vclipse.vcml.ui.hyperlinks.VcmlHyperlinkHelper;
 import org.vclipse.vcml.ui.hyperlinks.VcmlHyperlinkLabelProvider;
 import org.vclipse.vcml.ui.outline.VCMLOutlinePage;
 import org.vclipse.vcml.ui.outline.VCMLOutlineTreeProvider;
+import org.vclipse.vcml.ui.refactoring.PreviewEntityComputer;
+import org.vclipse.vcml.ui.refactoring.VCMLUICustomisation;
 import org.vclipse.vcml.ui.refactoring.VcmlRenameRefactoringExecutor;
 import org.vclipse.vcml.ui.resources.VcmlResourcesStateProvider;
 import org.vclipse.vcml.ui.syntaxcoloring.VCMLAntlrTokenToAttributeIdMapper;
@@ -103,10 +111,29 @@ public class VCMLUiModule extends org.vclipse.vcml.ui.AbstractVCMLUiModule {
 	}
 	
 	/**
-	 * Refactoring
+	 * Extension of the re-name re-factoring
 	 */
 	public Provider<? extends RenameRefactoringExecuter> provideRenameRefactoringExecuter() {
 		return Access.provider(VcmlRenameRefactoringExecutor.class);
+	}
+	
+	/**
+	 * VCML Re-factoring
+	 */
+	public Class<? extends IPreviewEntityComputer> bindRelevantEntityComputer() {
+		return PreviewEntityComputer.class;
+	}
+	
+	public Class<? extends IRefactoringConfiguration> bindRefactoringConfiguration() {
+		return VCMLCustomisation.class;
+	}
+	
+	public Class<? extends IRefactoringUIConfiguration> bindRefactoringUIConfiguration() {
+		return VCMLUICustomisation.class;
+	}
+	
+	public Class<? extends IRefactoringExecuter> bindRefactoringExecuter() {
+		return VCMLRefactoring.class;
 	}
 	
 	/**
