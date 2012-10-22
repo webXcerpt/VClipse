@@ -1,6 +1,5 @@
 package org.vclipse.refactoring.core;
 
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
@@ -48,20 +47,6 @@ public class DefaultPreviewEObjectComputer implements IPreviewEObjectComputer {
 
 	@Override
 	public EObject getRefactored(EObject container, EObject original, EObject refactored, EStructuralFeature feature) {
-		if(original != null) {
-			EClass typeOriginal = original.eClass();
-			EClass typeRefactored = refactored.eClass();
-			if(typeOriginal == typeRefactored) {
-				return refactored;
-			} else {
-				Object value = original.eGet(feature);
-				if(value instanceof List<?>) {
-					EList<EObject> entries = (EList<EObject>)value;
-					EObject computePreviewObject = computePreviewObject(refactored, entries);
-					return computePreviewObject;
-				}
-			}
-		}
 		return computePreviewObject(refactored);
 	}
 	

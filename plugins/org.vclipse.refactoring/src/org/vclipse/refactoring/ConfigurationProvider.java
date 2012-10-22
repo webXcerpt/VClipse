@@ -41,7 +41,7 @@ public class ConfigurationProvider {
 	
 	private Map<EClassifier, Injector> injectors;
 	
-	public Map<EClassifier, Injector> getInjector() {
+	public Map<EClassifier, Injector> getInjectors() {
 		if(injectors == null) {
 			readExtensions();
 		}
@@ -90,7 +90,8 @@ public class ConfigurationProvider {
 										AbstractGuiceAwareExecutableExtensionFactory extensionFactory = (AbstractGuiceAwareExecutableExtensionFactory)instance;
 										Method method = extensionFactory.getClass().getDeclaredMethod("getInjector");
 										method.setAccessible(true);
-										injectors.put(eclass, (Injector)method.invoke(extensionFactory));
+										Injector injector = (Injector)method.invoke(extensionFactory);
+										injectors.put(eclass, injector);
 									}
 								}
 							}

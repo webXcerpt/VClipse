@@ -9,7 +9,7 @@ public class PreviewEntityComputer extends org.vclipse.vcml.ui.refactoring.Previ
 	@Override
 	public Set<EClass> getTypes() {
 		Set<EClass> types = super.getTypes();
-		types.add(VCML_PACKAGE.getProcedure());
+		types.add(VCML_PACKAGE.getProcedureSource());
 		return types;
 	}
 }

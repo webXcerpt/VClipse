@@ -5,13 +5,13 @@ package org.vclipse.condition.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
+import org.vclipse.condition.ui.refactoring.ConditionRefactoring;
 import org.vclipse.condition.ui.refactoring.PreviewEntityComputer;
 import org.vclipse.refactoring.IPreviewEObjectComputer;
 import org.vclipse.refactoring.IRefactoringConfiguration;
 import org.vclipse.refactoring.IRefactoringExecuter;
 import org.vclipse.refactoring.IRefactoringUIConfiguration;
 import org.vclipse.vcml.refactoring.VCMLCustomisation;
-import org.vclipse.vcml.refactoring.VCMLRefactoring;
 import org.vclipse.vcml.ui.refactoring.VCMLUICustomisation;
 import org.vclipse.vcml.ui.resources.VcmlResourcesStateProvider;
 
@@ -46,6 +46,6 @@ public class ConditionUiModule extends org.vclipse.condition.ui.AbstractConditio
 	}
 	
 	public Class<? extends IRefactoringExecuter> bindRefactoringExecuter() {
-		return VCMLRefactoring.class;
+		return ConditionRefactoring.class;
 	}
 }

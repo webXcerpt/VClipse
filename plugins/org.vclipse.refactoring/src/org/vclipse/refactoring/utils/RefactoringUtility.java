@@ -49,7 +49,7 @@ public class RefactoringUtility {
 		if(container == null) {
 			return null;
 		}
-		Injector injector = configuration.getInjector().get(container.eClass());
+		Injector injector = configuration.getInjectors().get(container.eClass());
 		return injector;
 	}
 	
