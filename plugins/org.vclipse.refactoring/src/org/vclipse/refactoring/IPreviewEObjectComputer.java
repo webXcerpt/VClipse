@@ -6,7 +6,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
-public interface IPreviewEntityComputer {
+public interface IPreviewEObjectComputer {
 
 	public Set<EClass> getTypes();
 	

@@ -8,14 +8,14 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
-import org.vclipse.refactoring.IPreviewEntityComputer;
+import org.vclipse.refactoring.IPreviewEObjectComputer;
 import org.vclipse.refactoring.utils.RefactoringUtility;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
 @SuppressWarnings("unchecked")
-public class DefaultPreviewEntityComputer implements IPreviewEntityComputer {
+public class DefaultPreviewEObjectComputer implements IPreviewEObjectComputer {
 
 	protected static final EcorePackage ECORE_PACKAGE = EcorePackage.eINSTANCE;
 

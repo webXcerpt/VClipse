@@ -6,7 +6,7 @@ package org.vclipse.condition.ui;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.vclipse.condition.ui.refactoring.PreviewEntityComputer;
-import org.vclipse.refactoring.IPreviewEntityComputer;
+import org.vclipse.refactoring.IPreviewEObjectComputer;
 import org.vclipse.refactoring.IRefactoringConfiguration;
 import org.vclipse.refactoring.IRefactoringExecuter;
 import org.vclipse.refactoring.IRefactoringUIConfiguration;
@@ -33,7 +33,7 @@ public class ConditionUiModule extends org.vclipse.condition.ui.AbstractConditio
 	/**
 	 * Vcml Re-factoring bindings
 	 */
-	public Class<? extends IPreviewEntityComputer> bindRelevantEntityComputer() {
+	public Class<? extends IPreviewEObjectComputer> bindRelevantEntityComputer() {
 		return PreviewEntityComputer.class;
 	}
 	
