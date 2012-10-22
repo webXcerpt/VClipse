@@ -123,7 +123,7 @@ public class SourceCodeChange extends NoChange {
 						}
 					}
 				} else {
-					originalContainer.eContainer().eSet(feature, refactored);
+					originalContainer.eSet(feature, refactored);
 				}
 			} else if(originalContainer != null && original != null) {
 				if(feature.isMany()) {
