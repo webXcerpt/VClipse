@@ -34,6 +34,7 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.vclipse.base.VClipseStrings;
+import org.vclipse.refactoring.IPreviewEObjectComputer;
 import org.vclipse.refactoring.compare.MultipleEntriesTypedElement;
 import org.vclipse.refactoring.core.DiffNode;
 import org.vclipse.refactoring.utils.RefactoringUtility;
@@ -150,18 +151,23 @@ public class SourceCodeChange extends NoChange {
 	
 	public DiffNode getDiffNode() {		
 		DiffNode diffNode = new DiffNode();
-		if(original == null) {
+		
+		IPreviewEObjectComputer previewEObjectComputer = utility.getInstance(IPreviewEObjectComputer.class, original == null ? originalContainer : original);
+		EObject previewExisting = previewEObjectComputer.getExisting(originalContainer, original, refactored, feature);
+		if(previewExisting == null) {
 			MultipleEntriesTypedElement typedLeft = MultipleEntriesTypedElement.getDefault();
 			diffNode.setLeft(typedLeft);
 		} else {
-			MultipleEntriesTypedElement typedElement = new MultipleEntriesTypedElement(serializer, nameProvider, new EObject[]{original});
+			MultipleEntriesTypedElement typedElement = new MultipleEntriesTypedElement(serializer, nameProvider, previewExisting);
 			diffNode.setLeft(typedElement);
 		}
-		if(refactored == null) {
+		
+		EObject previewRefactored = previewEObjectComputer.getRefactored(originalContainer, previewExisting, previewExisting, feature);
+		if(previewRefactored == null) {
 			 MultipleEntriesTypedElement typedElement = MultipleEntriesTypedElement.getDefault();
 			 diffNode.setRight(typedElement);
 		} else {
-			MultipleEntriesTypedElement typedRight = new MultipleEntriesTypedElement(serializer, nameProvider, new EObject[]{refactored});
+			MultipleEntriesTypedElement typedRight = new MultipleEntriesTypedElement(serializer, nameProvider, previewRefactored);
 			diffNode.setRight(typedRight);
 		}
 		return diffNode;
