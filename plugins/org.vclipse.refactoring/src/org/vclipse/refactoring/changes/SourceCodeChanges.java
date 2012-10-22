@@ -278,7 +278,7 @@ public class SourceCodeChanges extends CompositeChange {
 						}
 					}
 				} else {
-					SourceCodeChange scc = new SourceCodeChange(utility, existingEntry, changed, feature);
+					SourceCodeChange scc = new SourceCodeChange(utility, existingEntry.eContainer(), existingEntry, changed, feature);
 					add(scc);
 				}
 			}
