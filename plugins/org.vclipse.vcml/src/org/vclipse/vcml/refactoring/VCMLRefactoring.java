@@ -13,7 +13,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IReferenceDescription;
 import org.vclipse.refactoring.IRefactoringContext;
-import org.vclipse.refactoring.core.RefactoringExecuter;
+import org.vclipse.refactoring.core.AbstractRefactoringExecuter;
 import org.vclipse.vcml.vcml.BinaryCondition;
 import org.vclipse.vcml.vcml.CharacteristicReference_C;
 import org.vclipse.vcml.vcml.CharacteristicReference_P;
@@ -46,7 +46,7 @@ public class VCMLRefactoring extends VCMLSimplifier {
 				int index = context.getIndex();
 				if(index >= 0 && index < entries.size()) {
 					Map<?, ?> attributes = context.getAttributes();
-					Object buttonState = attributes.get(RefactoringExecuter.BUTTON_STATE);
+					Object buttonState = attributes.get(AbstractRefactoringExecuter.BUTTON_STATE);
 					if(buttonState instanceof Boolean && (Boolean)buttonState) {
 						EObject entry = entries.get(index);
 						Resource resource = entry.eResource();

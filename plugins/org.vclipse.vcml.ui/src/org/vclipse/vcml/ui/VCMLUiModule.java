@@ -34,7 +34,7 @@ import org.eclipse.xtext.ui.refactoring.ui.RenameRefactoringExecuter;
 import org.eclipse.xtext.ui.shared.Access;
 import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
 import org.vclipse.base.ui.util.IExtendedImageHelper;
-import org.vclipse.refactoring.IPreviewEObjectComputer;
+import org.vclipse.refactoring.IPreviewObjectComputer;
 import org.vclipse.refactoring.IRefactoringConfiguration;
 import org.vclipse.refactoring.IRefactoringExecuter;
 import org.vclipse.refactoring.IRefactoringUIConfiguration;
@@ -120,7 +120,7 @@ public class VCMLUiModule extends org.vclipse.vcml.ui.AbstractVCMLUiModule {
 	/**
 	 * VCML Re-factoring
 	 */
-	public Class<? extends IPreviewEObjectComputer> bindRelevantEntityComputer() {
+	public Class<? extends IPreviewObjectComputer> bindRelevantEntityComputer() {
 		return PreviewEntityComputer.class;
 	}
 	

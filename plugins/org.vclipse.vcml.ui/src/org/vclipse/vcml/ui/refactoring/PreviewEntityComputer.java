@@ -3,12 +3,12 @@ package org.vclipse.vcml.ui.refactoring;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EClass;
-import org.vclipse.refactoring.core.DefaultPreviewEObjectComputer;
+import org.vclipse.refactoring.core.AbstractPreviewObjectComputer;
 import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.google.common.collect.Sets;
 
-public class PreviewEntityComputer extends DefaultPreviewEObjectComputer {
+public class PreviewEntityComputer extends AbstractPreviewObjectComputer {
 
 	protected static final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
 

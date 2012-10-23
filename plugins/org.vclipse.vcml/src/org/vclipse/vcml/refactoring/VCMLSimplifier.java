@@ -10,7 +10,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
 import org.vclipse.refactoring.IRefactoringContext;
-import org.vclipse.refactoring.core.RefactoringExecuter;
+import org.vclipse.refactoring.core.AbstractRefactoringExecuter;
 import org.vclipse.vcml.vcml.Comparison;
 import org.vclipse.vcml.vcml.Condition;
 import org.vclipse.vcml.vcml.ConditionalConstraintRestriction;
@@ -22,7 +22,7 @@ import org.vclipse.vcml.vcml.VcmlPackage;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-public class VCMLSimplifier extends RefactoringExecuter {
+public class VCMLSimplifier extends AbstractRefactoringExecuter {
  
 	protected final VcmlFactory VCML_FACTORY = VcmlFactory.eINSTANCE;
 	protected final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
