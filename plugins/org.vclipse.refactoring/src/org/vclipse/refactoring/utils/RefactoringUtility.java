@@ -110,23 +110,23 @@ public class RefactoringUtility {
 		QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(object);
 		EClass searchForType = object.eClass();
 		if(qualifiedName == null) {
-			EObject container = object.eContainer();
-			if(container == null) {
-				Iterable<EObject> iterable = getEntries(searchForType, entries);
-				if(iterable == null || !iterable.iterator().hasNext()) {
+			Iterable<EObject> iterable = getEntries(searchForType, entries);
+			if(iterable == null || !iterable.iterator().hasNext()) {
+				EObject container = object.eContainer();
+				if(container == null) {
 					return null;
+				} else {
+					EObject containerEntry = findEntry(container, entries);
+					if(containerEntry == null) {
+						return null;
+					}
+					Object value = containerEntry.eGet(object.eContainmentFeature());
+					EObject entry = value instanceof EObject ? (EObject)value : null;
+					return entry;
 				}
-				EObject entry = iterable.iterator().next();
-				return entry;
-			} else {
-				EObject containerEntry = findEntry(container, entries);
-				if(containerEntry == null) {
-					return null;
-				}
-				Object value = containerEntry.eGet(object.eContainmentFeature());
-				EObject entry = value instanceof EObject ? (EObject)value : null;
-				return entry;
 			}
+			EObject entry = iterable.iterator().next();
+			return entry;
 		} else {
 			String searchForName = qualifiedName.getLastSegment();
 			EObject entry = findEntry(searchForName, searchForType, entries);
