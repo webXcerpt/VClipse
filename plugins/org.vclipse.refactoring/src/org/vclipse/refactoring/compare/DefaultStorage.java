@@ -13,9 +13,9 @@ import com.google.common.base.Charsets;
 
 public class DefaultStorage implements IEncodedStorage {
 
-	protected String DEFAULT_NAME = "no name";
-	protected String DEFAULT_CONTENT = "";
-	protected String DEFAULT_ENCODING = Charsets.UTF_8.name();
+	protected final String DEFAULT_NAME = "no name";
+	protected final String DEFAULT_CONTENT = "";
+	protected final String DEFAULT_ENCODING = Charsets.UTF_8.name();
 	
 	protected ISerializer serializer;
 	protected IQualifiedNameProvider nameProvider;

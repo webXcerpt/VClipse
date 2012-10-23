@@ -10,14 +10,14 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.ListChange;
-import org.vclipse.refactoring.IPreviewEObjectComputer;
+import org.vclipse.refactoring.IPreviewObjectComputer;
 import org.vclipse.refactoring.utils.RefactoringUtility;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
-public abstract class DefaultPreviewEObjectComputer implements IPreviewEObjectComputer {
+public abstract class AbstractPreviewObjectComputer implements IPreviewObjectComputer {
 
 	protected static final EcorePackage ECORE_PACKAGE = EcorePackage.eINSTANCE;
 
@@ -57,9 +57,9 @@ public abstract class DefaultPreviewEObjectComputer implements IPreviewEObjectCo
 					previewObjects.addAll((List<EObject>)value);
 					return previewObjects;
 				} else if(value instanceof EObject) {
-					object = (EObject)value;
-					if(containsType(object.eClass(), favoredTypes)) {
-						previewObjects.add(object);
+					EObject entry = (EObject)value;
+					if(containsType(entry.eClass(), favoredTypes)) {
+						previewObjects.add(entry);
 						return previewObjects;
 					}
 				} else {

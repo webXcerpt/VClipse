@@ -32,10 +32,10 @@ import org.vclipse.refactoring.utils.ReferenceFinderExtension;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
-public abstract class RefactoringExecuter extends MethodCollector implements IRefactoringExecuter {
+public abstract class AbstractRefactoringExecuter extends MethodCollector implements IRefactoringExecuter {
 
-	public static String BUTTON_STATE = "button_state";
-	public static String TEXT_FIELD_ENTRY = "text_field_entry";
+	public static final String BUTTON_STATE = "button_state";
+	public static final String TEXT_FIELD_ENTRY = "text_field_entry";
 	
 	public static final String REFACTORING_PREFIX = "refactoring_";
 	
@@ -48,7 +48,7 @@ public abstract class RefactoringExecuter extends MethodCollector implements IRe
 	@Inject
 	private ConfigurationProvider configuration;
 	
-	public RefactoringExecuter() {		
+	public AbstractRefactoringExecuter() {		
 		collect(1, IRefactoringContext.class);
 		collect(2);
 	}

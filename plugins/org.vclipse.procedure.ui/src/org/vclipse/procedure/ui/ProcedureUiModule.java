@@ -6,7 +6,7 @@ package org.vclipse.procedure.ui;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.vclipse.procedure.ui.refactoring.ProcedureRefactoring;
-import org.vclipse.refactoring.IPreviewEObjectComputer;
+import org.vclipse.refactoring.IPreviewObjectComputer;
 import org.vclipse.refactoring.IRefactoringConfiguration;
 import org.vclipse.refactoring.IRefactoringExecuter;
 import org.vclipse.refactoring.IRefactoringUIConfiguration;
@@ -32,7 +32,7 @@ public class ProcedureUiModule extends org.vclipse.procedure.ui.AbstractProcedur
 	/**
 	 * Vcml Re-factoring bindings
 	 */
-	public Class<? extends IPreviewEObjectComputer> bindRelevantEntityComputer() {
+	public Class<? extends IPreviewObjectComputer> bindRelevantEntityComputer() {
 		return org.vclipse.vcml.ui.refactoring.PreviewEntityComputer.class;
 	}
 	

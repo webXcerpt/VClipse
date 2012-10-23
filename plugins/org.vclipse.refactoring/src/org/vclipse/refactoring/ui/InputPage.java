@@ -42,7 +42,7 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
-import org.vclipse.refactoring.core.RefactoringExecuter;
+import org.vclipse.refactoring.core.AbstractRefactoringExecuter;
 import org.vclipse.refactoring.core.RefactoringTask;
 import org.vclipse.refactoring.utils.RefactoringUtility;
 
@@ -204,7 +204,7 @@ public class InputPage extends UserInputWizardPage {
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
-				context.addAttribute(RefactoringExecuter.BUTTON_STATE, button.getSelection());
+				context.addAttribute(AbstractRefactoringExecuter.BUTTON_STATE, button.getSelection());
 				validateWidgets();
 			}
 		});
@@ -231,7 +231,7 @@ public class InputPage extends UserInputWizardPage {
 				int index = combo.getSelectionIndex();
 				if(index > -1) {
 					final String item = combo.getItem(index);
-					context.addAttribute(RefactoringExecuter.TEXT_FIELD_ENTRY, item);
+					context.addAttribute(AbstractRefactoringExecuter.TEXT_FIELD_ENTRY, item);
 					EStructuralFeature feature = context.getStructuralFeature();
 					Object value = element.eGet(feature);
 					if(value instanceof List<?>) {
@@ -256,7 +256,7 @@ public class InputPage extends UserInputWizardPage {
 				} else {
 					String text = combo.getText();
 					if(text != null && !text.isEmpty()) { 
-						context.addAttribute(RefactoringExecuter.TEXT_FIELD_ENTRY, text);
+						context.addAttribute(AbstractRefactoringExecuter.TEXT_FIELD_ENTRY, text);
 						validateWidgets();
 					}
 				}
@@ -275,7 +275,7 @@ public class InputPage extends UserInputWizardPage {
 			public void modifyText(ModifyEvent event) {
 				String string = text.getText();
 				if(!string.isEmpty()) {
-					context.addAttribute(RefactoringExecuter.TEXT_FIELD_ENTRY, string);
+					context.addAttribute(AbstractRefactoringExecuter.TEXT_FIELD_ENTRY, string);
 				}
 				validateWidgets();
 			}

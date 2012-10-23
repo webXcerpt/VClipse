@@ -38,7 +38,7 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.vclipse.base.VClipseStrings;
-import org.vclipse.refactoring.IPreviewEObjectComputer;
+import org.vclipse.refactoring.IPreviewObjectComputer;
 import org.vclipse.refactoring.compare.MultipleEntriesTypedElement;
 import org.vclipse.refactoring.core.DiffNode;
 import org.vclipse.refactoring.utils.RefactoringUtility;
@@ -151,7 +151,7 @@ public class SourceCodeChange extends NoChange {
 	
 	public DiffNode getDiffNode() {		
 		DiffNode diffNode = new DiffNode();
-		IPreviewEObjectComputer previewComputer = utility.getInstance(IPreviewEObjectComputer.class, existing == null ? refactored : existing);
+		IPreviewObjectComputer previewComputer = utility.getInstance(IPreviewObjectComputer.class, existing == null ? refactored : existing);
 		List<EObject> existingPreview = previewComputer.getExisting(existing, refactored, featureChange);
 		if(existingPreview == null) {
 			MultipleEntriesTypedElement typedExisting = MultipleEntriesTypedElement.getDefault();

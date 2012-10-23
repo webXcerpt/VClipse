@@ -7,7 +7,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.FeatureChange;
 
-public interface IPreviewEObjectComputer {
+public interface IPreviewObjectComputer {
 
 	public Set<EClass> getFavoredTypes();
 	

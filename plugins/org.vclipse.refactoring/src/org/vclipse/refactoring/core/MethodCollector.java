@@ -36,9 +36,9 @@ public abstract class MethodCollector {
 	
 	protected Object invoke(IRefactoringContext context, String prefix) {
 		Object result = null;
-		prefix = prefix + context.getType();
+		String prefixWithType = prefix + context.getType();
 		EObject element = context.getSourceElement();
-		Pair<EObject, Method> pair = getMethod(element, context.getStructuralFeature(), prefix);
+		Pair<EObject, Method> pair = getMethod(element, context.getStructuralFeature(), prefixWithType);
 		if(pair != null) {
 			try {
 				Method method = pair.getSecond();
