@@ -183,17 +183,17 @@ public class InputPage extends UserInputWizardPage {
 			if(value instanceof EObject) {
 				createTextWidget(composite);
 			} else if(value instanceof List<?>) {
-				List<EObject> values = (List<EObject>)value;
-				if(values.size() == 1) {
-					createTextWidget(composite);
-				} else {
-					Set<String> names = refactoringUtility.getText(values);
-					if(names.isEmpty()) {
-						createTextWidget(composite);
-					} else {
-						createComboWidget(composite, names);					
-					}					
-				}
+				createTextWidget(composite);
+//				List<EObject> values = (List<EObject>)value;
+//				if(values.size() == 1) {
+//				} else {
+//					Set<String> names = refactoringUtility.getText(values);
+//					if(names.isEmpty()) {
+//						createTextWidget(composite);
+//					} else {
+//						createComboWidget(composite, names);					
+//					}					
+//				}
 			}
 		} else {
 			createTextWidget(composite);
