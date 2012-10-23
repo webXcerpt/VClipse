@@ -64,7 +64,7 @@ public class ConfigurationProvider {
 				RefactoringPlugin.log(exception.getMessage(), exception);
 			}
 		}
-		return executers;
+		return Collections.unmodifiableMap(executers);
 	}
 
 	private void readExtensions() {
