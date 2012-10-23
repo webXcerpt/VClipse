@@ -123,22 +123,13 @@ public class SourceCodeChange extends NoChange {
 				for(ListChange listChange : listChanges) {
 					ChangeKind kind = listChange.getKind();
 					int index = listChange.getIndex();
+					EList<EObject> originalEntries = (EList<EObject>)existing.eGet(feature);
+					EList<EObject> refactoredEntries = (EList<EObject>)refactored.eGet(feature);
 					if(ChangeKind.ADD_LITERAL == kind) {
-						EList<EObject> entries = (EList<EObject>)existing.eGet(feature);
-						if(index < entries.size()) {
-							entries.remove(index);							
-						} else {
-							System.err.println("index out of bound");
-						}
+						originalEntries.remove(index);							
 					} else if(ChangeKind.REMOVE_LITERAL == kind) {
-						EList<EObject> refactoredEntries = (EList<EObject>)refactored.eGet(feature);
-						EList<EObject> originalEntries = (EList<EObject>)existing.eGet(feature);
 						EObject entry = refactoredEntries.get(index);
-						if(index < originalEntries.size()) {
-							originalEntries.add(index, entry);
-						} else {
-							originalEntries.add(entry);
-						}
+						originalEntries.add(entry);
 					} else if(ChangeKind.MOVE_LITERAL == kind) {
 						System.err.println("move literal");
 					}
