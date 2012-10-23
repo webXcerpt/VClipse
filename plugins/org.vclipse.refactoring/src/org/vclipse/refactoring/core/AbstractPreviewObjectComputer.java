@@ -10,28 +10,18 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.ListChange;
-import org.vclipse.refactoring.IPreviewObjectComputer;
 import org.vclipse.refactoring.utils.RefactoringUtility;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
-public abstract class AbstractPreviewObjectComputer implements IPreviewObjectComputer {
+public abstract class AbstractPreviewObjectComputer extends DefaultPreviewObjectComputer {
 
 	protected static final EcorePackage ECORE_PACKAGE = EcorePackage.eINSTANCE;
 
 	@Inject
 	private RefactoringUtility utility;
 	
-	@Override
-	public abstract Set<EClass> getIgnoreTypes();
-	
-	@Override
-	public Set<EClass> getFavoredTypes() {
-		return Sets.newHashSet(ECORE_PACKAGE.getEObject());
-	}
-
 	@Override
 	public List<EObject> getExisting(EObject original, EObject refactored, FeatureChange featureChange) {
 		return getPreviewObjects(original, featureChange);

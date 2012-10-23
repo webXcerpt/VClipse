@@ -15,6 +15,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.service.AbstractGenericModule;
 import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
 import org.vclipse.base.ui.util.IExtendedImageHelper;
+import org.vclipse.refactoring.core.DefaultPreviewObjectComputer;
 
 public class RefactoringModule extends AbstractGenericModule {
 
@@ -34,5 +35,9 @@ public class RefactoringModule extends AbstractGenericModule {
 	
 	public Class<? extends IExtendedImageHelper> bindImageHelper() {
 		return ClasspathAwareImageHelper.class;
+	}
+	
+	public Class<? extends IPreviewObjectComputer> bindPreviewObjectComputer() {
+		return DefaultPreviewObjectComputer.class;
 	}
 }
