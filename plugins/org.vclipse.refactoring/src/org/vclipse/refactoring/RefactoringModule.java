@@ -16,6 +16,8 @@ import org.eclipse.xtext.service.AbstractGenericModule;
 import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
 import org.vclipse.base.ui.util.IExtendedImageHelper;
 import org.vclipse.refactoring.core.DefaultPreviewObjectComputer;
+import org.vclipse.refactoring.core.RefactoringConfiguration;
+import org.vclipse.refactoring.ui.RefactoringUIConfiguration;
 
 public class RefactoringModule extends AbstractGenericModule {
 
@@ -39,5 +41,13 @@ public class RefactoringModule extends AbstractGenericModule {
 	
 	public Class<? extends IPreviewObjectComputer> bindPreviewObjectComputer() {
 		return DefaultPreviewObjectComputer.class;
+	}
+	
+	public Class<? extends IRefactoringConfiguration> bindRefactoringConfiguration() {
+		return RefactoringConfiguration.class;
+	}
+	
+	public Class<? extends IRefactoringUIConfiguration> bindRefactoringUIConfiguration() {
+		return RefactoringUIConfiguration.class;
 	}
 }

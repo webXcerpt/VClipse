@@ -28,6 +28,7 @@ import org.eclipse.xtext.ui.guice.AbstractGuiceAwareExecutableExtensionFactory;
 import org.osgi.framework.Bundle;
 
 import com.google.common.collect.Maps;
+import com.google.inject.ConfigurationException;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
@@ -56,8 +57,12 @@ public class ConfigurationProvider {
 		for(Entry<EClassifier, Injector> entry : injectors.entrySet()) {
 			EClassifier type = entry.getKey();
 			Injector injector = entry.getValue();
-			IRefactoringExecuter executer = injector.getInstance(IRefactoringExecuter.class);
-			executers.put(type, executer);
+			try {
+				IRefactoringExecuter executer = injector.getInstance(IRefactoringExecuter.class);
+				executers.put(type, executer);				
+			} catch(ConfigurationException exception) {
+				RefactoringPlugin.log(exception.getMessage(), exception);
+			}
 		}
 		return executers;
 	}

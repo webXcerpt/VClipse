@@ -13,6 +13,7 @@ package org.vclipse.refactoring.core;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EClass;
@@ -30,9 +31,10 @@ import org.vclipse.refactoring.utils.RefactoringUtility;
 import org.vclipse.refactoring.utils.ReferenceFinderExtension;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
-public abstract class AbstractRefactoringExecuter extends MethodCollector implements IRefactoringExecuter {
+public class DefaultRefactoringExecuter extends MethodCollector implements IRefactoringExecuter {
 
 	public static final String BUTTON_STATE = "button_state";
 	public static final String TEXT_FIELD_ENTRY = "text_field_entry";
@@ -48,9 +50,14 @@ public abstract class AbstractRefactoringExecuter extends MethodCollector implem
 	@Inject
 	private ConfigurationProvider configuration;
 	
-	public AbstractRefactoringExecuter() {		
+	public DefaultRefactoringExecuter() {		
 		collect(1, IRefactoringContext.class);
 		collect(2);
+	}
+	
+	@Override
+	public Set<EClass> getTopLevelTypes() {
+		return Sets.newHashSet();
 	}
 	
 	public void refactor(IRefactoringContext context) throws CoreException {

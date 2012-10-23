@@ -56,10 +56,13 @@ public class RefactoringUtility {
 	public <T> T getInstance(Class<T> type, EObject object) {
 		try {
 			Injector injector = getInjector(object);
-			return injector == null ? null : injector.getInstance(type);
+			if(injector == null) {
+				injector = RefactoringPlugin.getInstance().getInjector();
+			}
+			return injector.getInstance(type);
 		} catch(ConfigurationException exception) {
 			RefactoringPlugin.log(exception.getMessage(), exception);
-			return null;
+			return RefactoringPlugin.getInstance().getInjector().getInstance(type);
 		}
 	}
 	
