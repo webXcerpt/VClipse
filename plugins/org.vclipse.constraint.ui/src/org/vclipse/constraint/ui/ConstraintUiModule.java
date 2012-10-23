@@ -6,7 +6,6 @@ package org.vclipse.constraint.ui;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.vclipse.constraint.ui.refactoring.ConstraintRefactoring;
-import org.vclipse.constraint.ui.refactoring.PreviewEntityComputer;
 import org.vclipse.refactoring.IPreviewEObjectComputer;
 import org.vclipse.refactoring.IRefactoringConfiguration;
 import org.vclipse.refactoring.IRefactoringExecuter;
@@ -34,7 +33,7 @@ public class ConstraintUiModule extends org.vclipse.constraint.ui.AbstractConstr
 	 * Vcml Re-factoring bindings
 	 */
 	public Class<? extends IPreviewEObjectComputer> bindRelevantEntityComputer() {
-		return PreviewEntityComputer.class;
+		return org.vclipse.vcml.ui.refactoring.PreviewEntityComputer.class;
 	}
 	
 	public Class<? extends IRefactoringConfiguration> bindRefactoringConfiguration() {

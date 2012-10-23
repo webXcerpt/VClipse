@@ -13,7 +13,12 @@ public class PreviewEntityComputer extends DefaultPreviewEObjectComputer {
 	protected static final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
 
 	@Override
-	public Set<EClass> getTypes() {
-		return Sets.newHashSet(VCML_PACKAGE.getVCObject());
+	public Set<EClass> getFavoredTypes() {
+		return Sets.newHashSet(VCML_PACKAGE.getVCObject(), VCML_PACKAGE.getCondition(), VCML_PACKAGE.getConstraint(), VCML_PACKAGE.getProcedure());
+	}
+
+	@Override
+	public Set<EClass> getIgnoreTypes() {
+		return Sets.newHashSet(VCML_PACKAGE.getVcmlModel(), VCML_PACKAGE.getConstraintSource(), VCML_PACKAGE.getProcedureSource(), VCML_PACKAGE.getConditionSource());
 	}
 }

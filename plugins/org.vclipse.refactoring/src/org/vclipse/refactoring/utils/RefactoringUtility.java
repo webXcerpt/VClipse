@@ -113,6 +113,9 @@ public class RefactoringUtility {
 				return entry;
 			} else {
 				EObject containerEntry = findEntry(container, entries);
+				if(containerEntry == null) {
+					return null;
+				}
 				Object value = containerEntry.eGet(object.eContainmentFeature());
 				EObject entry = value instanceof EObject ? (EObject)value : null;
 				return entry;

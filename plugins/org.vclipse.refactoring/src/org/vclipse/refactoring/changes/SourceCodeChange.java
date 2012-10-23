@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.vclipse.refactoring.changes;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -26,9 +27,12 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.EValidator.Registry;
-import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.change.ChangeKind;
+import org.eclipse.emf.ecore.change.FeatureChange;
+import org.eclipse.emf.ecore.change.ListChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.AbstractDiagnostic;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -45,30 +49,24 @@ public class SourceCodeChange extends NoChange {
 
 	private RefactoringUtility utility;
 	
-	private EObject originalContainer;
-	private EObject original;
-	private EObject refactored;
-	private EStructuralFeature feature;
-		
 	private EValidator validator;
 	private IQualifiedNameProvider nameProvider;
 	private ISerializer serializer;
 	
-	public SourceCodeChange(RefactoringUtility utility, EObject originalContainer, EObject refactored, EStructuralFeature feature) {
-		this(utility, originalContainer, null, refactored, feature);
+	private EObject existing;
+	private EObject refactored;
+	private FeatureChange featureChange;
+	
+	public SourceCodeChange(RefactoringUtility utility) {
+		this.utility = utility;
 	}
 	
-	public SourceCodeChange(RefactoringUtility utility, EObject originalContainer, EObject original, EObject refactored, EStructuralFeature feature) {
-		this.utility = utility;
-		this.original = original;
-		if(original != null) {
-			originalContainer = original.eContainer();
-		}
-		this.originalContainer = originalContainer;
+	public void addChange(EObject existing, EObject refactored, FeatureChange featureChange) {
+		this.existing = existing;
 		this.refactored = refactored;
-		this.feature = feature;
+		this.featureChange = featureChange;
 		
-		EObject initObject = original == null ? originalContainer : original;
+		EObject initObject = existing == null ? refactored : existing;
 		Registry registry = utility.getInstance(EValidator.Registry.class, initObject);
 		EPackage epackage = initObject.eClass().getEPackage();
 		validator = registry.getEValidator(epackage);
@@ -78,7 +76,7 @@ public class SourceCodeChange extends NoChange {
 	
 	@Override
 	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException, OperationCanceledException {
-		EObject handleWithObject = refactored == null ? original == null ? originalContainer : original : refactored;
+		EObject handleWithObject = existing == null ? refactored : existing;
 		StringBuffer taskBuffer = new StringBuffer("Validating change for ").append(getName(utility, handleWithObject));
 		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 10);
 		BasicDiagnostic diagnostics = new BasicDiagnostic();
@@ -106,42 +104,44 @@ public class SourceCodeChange extends NoChange {
 	@SuppressWarnings("unchecked")
 	public RefactoringStatus refactor(IProgressMonitor pm) throws CoreException {
 		if(isEnabled()) {
-			EObject handleObject = original == null ? originalContainer : original;
+			EObject handleObject = existing == null ? refactored : existing;
 			StringBuffer taskBuffer = new StringBuffer("Executing re-factoring for ").append(getName(utility, handleObject));
 			SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), IProgressMonitor.UNKNOWN);
-			if(originalContainer != null && refactored != null) {
-				if(feature.isMany()) {
-					Object value = originalContainer.eGet(feature);
-					if(value instanceof List<?>) {
-						List<EObject> entries = (List<EObject>)value;
-						entries.clear();
-						EObject refactoredContainer = refactored.eContainer();
-						Object refactoredValues = refactoredContainer.eGet(feature);
-						if(refactoredValues instanceof EObject) {
-							entries.add((EObject)refactoredValues);
+			EStructuralFeature feature = featureChange.getFeature();
+			EList<ListChange> listChanges = featureChange.getListChanges();
+			if(listChanges.isEmpty()) {
+				Object value = refactored.eGet(feature);
+				if(value instanceof EObject) {
+					existing.eSet(feature, EcoreUtil2.copy((EObject)value));					
+				} else if(value instanceof EList<?>) {
+					Collection<EObject> listCopy = EcoreUtil2.copyAll((EList<EObject>)value);
+					existing.eSet(feature, listCopy);
+				} else {
+					existing.eSet(feature, null);
+				}
+			} else {
+				for(ListChange listChange : listChanges) {
+					ChangeKind kind = listChange.getKind();
+					int index = listChange.getIndex();
+					if(ChangeKind.ADD_LITERAL == kind) {
+						EList<EObject> entries = (EList<EObject>)existing.eGet(feature);
+						if(index < entries.size()) {
+							entries.remove(index);							
 						} else {
-							entries.addAll((List<EObject>)refactoredValues);														
+							System.err.println("index out of bound");
 						}
+					} else if(ChangeKind.REMOVE_LITERAL == kind) {
+						EList<EObject> refactoredEntries = (EList<EObject>)refactored.eGet(feature);
+						EList<EObject> originalEntries = (EList<EObject>)existing.eGet(feature);
+						EObject entry = refactoredEntries.get(index);
+						if(index < originalEntries.size()) {
+							originalEntries.add(index, entry);
+						} else {
+							originalEntries.add(entry);
+						}
+					} else if(ChangeKind.MOVE_LITERAL == kind) {
+						System.err.println("move literal");
 					}
-				} else {
-					originalContainer.eSet(feature, refactored);
-				}
-			} else if(originalContainer != null && original != null) {
-				if(feature.isMany()) {
-					List<EObject> entries = (List<EObject>)originalContainer.eGet(feature);
-					entries.remove(original);
-				} else {
-					originalContainer.eSet(feature, null);
-				}
-			} else if(original != null && refactored != null) {
-				if(feature.isMany()) {
-					EObject container = original.eContainer();
-					EList<EObject> entries = (EList<EObject>)container.eGet(feature);
-					entries.remove(original);
-					entries.add(EcoreUtil.copy(refactored));
-				} else {
-					Object value = refactored.eGet(feature);
-					original.eSet(feature, value == null ? null : EcoreUtil.copy((EObject)value));												
 				}
 			}
 			sm.worked(1);
@@ -151,36 +151,36 @@ public class SourceCodeChange extends NoChange {
 	
 	public DiffNode getDiffNode() {		
 		DiffNode diffNode = new DiffNode();
-		
-		IPreviewEObjectComputer previewEObjectComputer = utility.getInstance(IPreviewEObjectComputer.class, original == null ? originalContainer : original);
-		EObject previewExisting = previewEObjectComputer.getExisting(originalContainer, original, refactored, feature);
-		if(previewExisting == null) {
-			MultipleEntriesTypedElement typedLeft = MultipleEntriesTypedElement.getDefault();
-			diffNode.setLeft(typedLeft);
+		IPreviewEObjectComputer previewComputer = utility.getInstance(IPreviewEObjectComputer.class, existing == null ? refactored : existing);
+		List<EObject> existingPreview = previewComputer.getExisting(existing, refactored, featureChange);
+		if(existingPreview == null) {
+			MultipleEntriesTypedElement typedExisting = MultipleEntriesTypedElement.getDefault();
+			diffNode.setLeft(typedExisting);
 		} else {
-			MultipleEntriesTypedElement typedElement = new MultipleEntriesTypedElement(serializer, nameProvider, previewExisting);
-			diffNode.setLeft(typedElement);
+			EObject[] elements = existingPreview.toArray(new EObject[existingPreview.size()]);
+			MultipleEntriesTypedElement typedExisting = new MultipleEntriesTypedElement(serializer, nameProvider, elements);
+			diffNode.setLeft(typedExisting);
 		}
-		
-		EObject previewRefactored = previewEObjectComputer.getRefactored(originalContainer, previewExisting, previewExisting, feature);
-		if(previewRefactored == null) {
-			 MultipleEntriesTypedElement typedElement = MultipleEntriesTypedElement.getDefault();
-			 diffNode.setRight(typedElement);
+		List<EObject> refactoredPreview = previewComputer.getRefactored(existing, refactored, featureChange);
+		if(refactoredPreview == null) {
+			MultipleEntriesTypedElement typedRefactored = MultipleEntriesTypedElement.getDefault();
+			diffNode.setRight(typedRefactored);
 		} else {
-			MultipleEntriesTypedElement typedRight = new MultipleEntriesTypedElement(serializer, nameProvider, previewRefactored);
-			diffNode.setRight(typedRight);
+			EObject[] elements = refactoredPreview.toArray(new EObject[refactoredPreview.size()]);
+			MultipleEntriesTypedElement typedRefactored = new MultipleEntriesTypedElement(serializer, nameProvider, elements);
+			diffNode.setRight(typedRefactored);
 		}
 		return diffNode;
 	}
 	
 	@Override
 	public Object getModifiedElement() {
-		return original == null ? originalContainer : original;
+		return existing == null ? refactored : existing;
 	}
 	
 	@Override
 	public String getName() {
-		EObject refactoringOnObject = original == null ? refactored == null ? originalContainer : refactored : original;
+		EObject refactoringOnObject = existing == null ? refactored : existing;
 		String refactoringOnType = refactoringOnObject.eClass().getName();
 		List<String> parts = VClipseStrings.splitCamelCase(refactoringOnType);
 		StringBuffer labelBuffer = new StringBuffer("Re-factoring on ");

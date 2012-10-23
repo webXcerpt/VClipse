@@ -24,11 +24,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.change.ChangeDescription;
-import org.eclipse.emf.ecore.change.ChangeKind;
 import org.eclipse.emf.ecore.change.FeatureChange;
-import org.eclipse.emf.ecore.change.ListChange;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -119,7 +116,7 @@ public class SourceCodeChanges extends CompositeChange {
 		EcoreUtil.resolveAll(resource);
 		
 		previewNode = new DiffNode();
-		previewNode.setLeft(new MultipleEntriesTypedElement(serializer, new EObject[]{rootOriginal}));
+		previewNode.setLeft(new MultipleEntriesTypedElement(serializer, rootOriginal));
 	}
 	
 	@Override
@@ -163,7 +160,7 @@ public class SourceCodeChanges extends CompositeChange {
 					throw new CoreException(status);
 				}
 				
-				previewNode.setRight(new MultipleEntriesTypedElement(serializer, new EObject[]{rootCopy}));
+				previewNode.setRight(new MultipleEntriesTypedElement(serializer, rootCopy));
 				sm.worked(10);
 				
 				recordSourceCodeChanges(sm, refactoringContext);
@@ -230,57 +227,17 @@ public class SourceCodeChanges extends CompositeChange {
 		EMap<EObject, EList<FeatureChange>> objectChanges = runner.getChangeRecorder().endRecording().getObjectChanges();
 		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), objectChanges.size());
 		for(Entry<EObject, EList<FeatureChange>> entry : objectChanges.entrySet()) {
-			EObject changed = entry.getKey();
-			if(changed.eContainer() instanceof ChangeDescription) {
+			EObject refactored = entry.getKey();
+			if(refactored.eContainer() instanceof ChangeDescription) {
 				sm.worked(1);
 				continue;
 			}
 			EList<FeatureChange> featureChanges = entry.getValue();
 			for(FeatureChange featureChange : featureChanges) {
-				EStructuralFeature feature = featureChange.getFeature();
-				EObject existingEntry = utility.findEntry(changed, rootContents);
-				if(feature.isMany()) {
-					ListChange listChange = featureChange.getListChanges().get(0);
-					ChangeKind kindOfChange = listChange.getKind();
-					int index = listChange.getIndex();
-					if(ChangeKind.ADD_LITERAL == kindOfChange) {
-						Object value = existingEntry.eGet(feature);
-						if(value instanceof List<?>) {
-							Object object = ((List<?>)value).get(index);
-							if(object instanceof EObject) {
-								SourceCodeChange scc = new SourceCodeChange(utility, existingEntry.eContainer(), existingEntry, (EObject)object, feature);
-								add(scc);
-							}
-						} else {
-							SourceCodeChange scc = new SourceCodeChange(utility, existingEntry, null, feature);
-							add(scc);							
-						}
-					} else if(ChangeKind.REMOVE_LITERAL == listChange.getKind()) {
-						EObject container = changed.eContainer();
-						if(container != null) { 
-							container = container.eContainer();
-						}
-						if(container == null) {
-							Object value = changed.eGet(feature);
-							if(value instanceof List<?>) {
-								Object object = ((List<?>)value).get(index);
-								if(object instanceof EObject) {
-									EObject eobject = (EObject)object;
-									existingEntry = utility.findEntry(eobject, rootContents);
-									SourceCodeChange scc = new SourceCodeChange(utility, changed, existingEntry, (EObject)object, feature);
-									add(scc);
-								}
-							}
-						} else {
-							EObject refactoredEntry = utility.findEntry(changed, copyContents);
-							SourceCodeChange scc = new SourceCodeChange(utility, existingEntry.eContainer(), existingEntry, refactoredEntry, feature);
-							add(scc);
-						}
-					}
-				} else {
-					SourceCodeChange scc = new SourceCodeChange(utility, existingEntry.eContainer(), existingEntry, changed, feature);
-					add(scc);
-				}
+				EObject existingEntry = utility.findEntry(refactored, rootContents);
+				SourceCodeChange scc = new SourceCodeChange(utility);
+				scc.addChange(existingEntry, refactored, featureChange);
+				add(scc);
 			}
 		}
 	}

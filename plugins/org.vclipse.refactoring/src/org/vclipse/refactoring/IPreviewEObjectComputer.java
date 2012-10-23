@@ -1,17 +1,20 @@
 package org.vclipse.refactoring;
 
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.change.FeatureChange;
 
 public interface IPreviewEObjectComputer {
 
-	public Set<EClass> getTypes();
+	public Set<EClass> getFavoredTypes();
 	
-	public EObject getExisting(EObject container, EObject original, EObject refactored, EStructuralFeature feature);
+	public Set<EClass> getIgnoreTypes();
 	
-	public EObject getRefactored(EObject container, EObject original, EObject refactored, EStructuralFeature feature);
+	public List<EObject> getExisting(EObject existing, EObject refactored, FeatureChange featureChange);
+	
+	public List<EObject> getRefactored(EObject existing, EObject refactored, FeatureChange featureChange);
 	
 }
