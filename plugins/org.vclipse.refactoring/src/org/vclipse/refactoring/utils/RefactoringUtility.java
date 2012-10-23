@@ -60,8 +60,13 @@ public class RefactoringUtility {
 			}
 			return injector.getInstance(type);
 		} catch(ConfigurationException exception) {
-			RefactoringPlugin.log(exception.getMessage(), exception);
-			return RefactoringPlugin.getInstance().getInjector().getInstance(type);
+			try {
+				T instance = RefactoringPlugin.getInstance().getInjector().getInstance(type);
+				return instance;
+			} catch(ConfigurationException nextConfiguration) {
+				RefactoringPlugin.log(exception.getMessage(), exception);
+				return null;
+			}
 		}
 	}
 	
