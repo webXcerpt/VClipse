@@ -246,13 +246,11 @@
 		</command>
   <command
         categoryId="org.vclipse.ui.commands"
-        defaultHandler="org.vclipse.configscan.vcmlt.ui.action.ConvertVcmlT2ConfigScanXmlHandler"
         id="org.vclipse.commands.configscan.convertVcmlT2ConfigScanXml"
         name="Convert VCMLT file to ConfigScan XML file">
   </command>
   <command
         categoryId="org.vclipse.ui.commands"
-        defaultHandler="org.vclipse.configscan.vcmlt.ui.action.StoreVcmlTInConfigScanHandler"
         id="org.vclipse.commands.configscan.storeVcmlT2ConfigScanXml"
         name="Store VCMLT test cases in ConfigScan">
   </command>

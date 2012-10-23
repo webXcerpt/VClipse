@@ -106,7 +106,6 @@
          point="org.eclipse.ui.commands">
       <command
             categoryId="org.vclipse.ui.commands"
-            defaultHandler="org.vclipse.configscan.actions.StoreXmlInConfigScanHandler"
             id="org.vclipse.commands.configscan.storeXmlInConfigScan"
             name="Store XML test cases in ConfigScan">
       </command>
