@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.service.AbstractGenericModule;
 import org.osgi.framework.BundleContext;
-import org.vclipse.base.ui.dialogs.ErrorDialog;
+import org.vclipse.base.ui.ErrorDialog;
 import org.vclipse.vcml.diff.injection.DiffModule;
 
 import com.google.inject.Guice;
