@@ -38,6 +38,7 @@ public class DefaultRefactoringExecuter extends MethodCollector implements IRefa
 
 	public static final String BUTTON_STATE = "button_state";
 	public static final String TEXT_FIELD_ENTRY = "text_field_entry";
+	public static final String EXISTING_ENTRY_SELECTED = "existing_entry_selected";
 	
 	public static final String REFACTORING_PREFIX = "refactoring_";
 	

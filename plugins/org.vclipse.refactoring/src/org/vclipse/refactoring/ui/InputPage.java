@@ -44,6 +44,7 @@ import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.core.DefaultRefactoringExecuter;
 import org.vclipse.refactoring.core.RefactoringTask;
+import org.vclipse.refactoring.core.RefactoringType;
 import org.vclipse.refactoring.utils.RefactoringUtility;
 
 import com.google.common.base.Predicate;
@@ -183,17 +184,18 @@ public class InputPage extends UserInputWizardPage {
 			if(value instanceof EObject) {
 				createTextWidget(composite);
 			} else if(value instanceof List<?>) {
-				createTextWidget(composite);
-//				List<EObject> values = (List<EObject>)value;
-//				if(values.size() == 1) {
-//				} else {
-//					Set<String> names = refactoringUtility.getText(values);
-//					if(names.isEmpty()) {
-//						createTextWidget(composite);
-//					} else {
-//						createComboWidget(composite, names);					
-//					}					
-//				}
+				List<EObject> values = (List<EObject>)value;
+				if(values.size() == 1) {
+					createTextWidget(composite);
+				} else {
+					String description = context.getDescription();
+					Set<String> names = refactoringUtility.getText(values);
+					if(description.contains(RefactoringType.Inline.name())) {
+						createComboWidget(composite, names);					
+					} else {
+						createTextWidget(composite);
+					}
+				}
 			}
 		} else {
 			createTextWidget(composite);
@@ -231,7 +233,7 @@ public class InputPage extends UserInputWizardPage {
 				int index = combo.getSelectionIndex();
 				if(index > -1) {
 					final String item = combo.getItem(index);
-					context.addAttribute(DefaultRefactoringExecuter.TEXT_FIELD_ENTRY, item);
+					context.addAttribute(DefaultRefactoringExecuter.EXISTING_ENTRY_SELECTED, item);
 					EStructuralFeature feature = context.getStructuralFeature();
 					Object value = element.eGet(feature);
 					if(value instanceof List<?>) {
@@ -253,6 +255,7 @@ public class InputPage extends UserInputWizardPage {
 							context.setIndex(entries.indexOf(next));
 						}
 					}
+					validateWidgets();
 				} else {
 					String text = combo.getText();
 					if(text != null && !text.isEmpty()) { 

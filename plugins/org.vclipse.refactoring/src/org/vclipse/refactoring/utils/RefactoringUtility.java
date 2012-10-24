@@ -12,6 +12,7 @@ package org.vclipse.refactoring.utils;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
@@ -27,6 +28,7 @@ import org.vclipse.refactoring.RefactoringPlugin;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.inject.ConfigurationException;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -240,6 +242,26 @@ public class RefactoringUtility {
 				return firstContainerType == secondContainerType;
 			}
 		}
+	}
+	
+	public Set<String> getText(List<EObject> values) {
+		Set<String> names = Sets.newHashSet();
+		if(!values.isEmpty()) {
+			EObject object = values.get(0);
+			IQualifiedNameProvider nameProvider = getInstance(IQualifiedNameProvider.class, object);
+			if(nameProvider != null) {
+				for(EObject value : values) {
+					QualifiedName qualifiedName = nameProvider.apply(value);
+					if(qualifiedName != null) {
+						String name = qualifiedName.getLastSegment();
+						if(name != null) {
+							names.add(name);						
+						}						
+					}
+				}
+			}
+		}
+		return names;
 	}
 	
 	private void appendToBuffer(StringBuffer buffer, String text, boolean handleLastIndex) {

@@ -129,7 +129,7 @@ public class SourceCodeChange extends NoChange {
 						originalEntries.remove(index);							
 					} else if(ChangeKind.REMOVE_LITERAL == kind) {
 						EObject entry = refactoredEntries.get(index);
-						originalEntries.add(entry);
+						originalEntries.add(EcoreUtil2.copy(entry));
 					} else if(ChangeKind.MOVE_LITERAL == kind) {
 						System.err.println("move literal");
 					}
