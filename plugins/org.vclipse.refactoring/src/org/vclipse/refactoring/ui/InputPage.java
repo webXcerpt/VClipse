@@ -188,13 +188,13 @@ public class InputPage extends UserInputWizardPage {
 				if(values.size() == 1) {
 					createTextWidget(composite);
 				} else {
-					String description = context.getDescription();
-					Set<String> names = refactoringUtility.getText(values);
-					if(description.contains(RefactoringType.Inline.name())) {
-						createComboWidget(composite, names, SWT.READ_ONLY);
-					} else {
+//					String description = context.getDescription();
+//					Set<String> names = refactoringUtility.getText(values);
+//					if(description.contains(RefactoringType.Inline.name())) {
+//						createComboWidget(composite, names, SWT.READ_ONLY);
+//					} else {
 						createTextWidget(composite);
-					}
+//					}
 				}
 			}
 		} else {
