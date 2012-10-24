@@ -44,7 +44,6 @@ import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.core.DefaultRefactoringExecuter;
 import org.vclipse.refactoring.core.RefactoringTask;
-import org.vclipse.refactoring.core.RefactoringType;
 import org.vclipse.refactoring.utils.RefactoringUtility;
 
 import com.google.common.base.Predicate;
@@ -164,7 +163,6 @@ public class InputPage extends UserInputWizardPage {
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
 	public void createControl(Composite parent) {
 		EObject element = context.getSourceElement();
 		EStructuralFeature feature = context.getStructuralFeature();
@@ -180,26 +178,24 @@ public class InputPage extends UserInputWizardPage {
 		widgets.add(label);
 
 		if(element.eClass().getEAllStructuralFeatures().contains(feature)) {
-			createTextWidget(composite);
-			
-//			Object value = element.eGet(feature);
-//			if(value instanceof EObject) {
-//				createTextWidget(composite);
-//			} else if(value instanceof List<?>) {
+			Object value = element.eGet(feature);
+			if(value instanceof EObject) {
+				createTextWidget(composite);
+			} else if(value instanceof List<?>) {
+				createTextWidget(composite);
 //				List<EObject> values = (List<EObject>)value;
 //				if(values.size() == 1) {
 //				} else {
-////					String description = context.getDescription();
-////					Set<String> names = refactoringUtility.getText(values);
-////					if(description.contains(RefactoringType.Inline.name())) {
-////						createComboWidget(composite, names, SWT.READ_ONLY);
-////					} else {
+//					Set<String> names = refactoringUtility.getText(values);
+//					if(names.isEmpty()) {
 //						createTextWidget(composite);
-////					}
+//					} else {
+//						createComboWidget(composite, names);					
+//					}					
 //				}
-//			}
-//		} else {
-//			createTextWidget(composite);
+			}
+		} else {
+			createTextWidget(composite);
 		}
 
 		final Button button = new Button(composite, SWT.CHECK);
@@ -223,8 +219,8 @@ public class InputPage extends UserInputWizardPage {
 		widgets = Lists.newArrayList();
 	}
 	
-	private Combo createComboWidget(Composite composite, Set<String> names, int style) {
-		final Combo combo = new Combo(composite, style);
+	private Combo createComboWidget(Composite composite, Set<String> names) {
+		final Combo combo = new Combo(composite, SWT.NONE);
 		combo.setFont(composite.getFont());
 		combo.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, false));
 		combo.addModifyListener(new ModifyListener() {
@@ -234,7 +230,7 @@ public class InputPage extends UserInputWizardPage {
 				int index = combo.getSelectionIndex();
 				if(index > -1) {
 					final String item = combo.getItem(index);
-					context.addAttribute(DefaultRefactoringExecuter.EXISTING_ENTRY_SELECTED, item);
+					context.addAttribute(DefaultRefactoringExecuter.TEXT_FIELD_ENTRY, item);
 					EStructuralFeature feature = context.getStructuralFeature();
 					Object value = element.eGet(feature);
 					if(value instanceof List<?>) {
@@ -256,7 +252,6 @@ public class InputPage extends UserInputWizardPage {
 							context.setIndex(entries.indexOf(next));
 						}
 					}
-					validateWidgets();
 				} else {
 					String text = combo.getText();
 					if(text != null && !text.isEmpty()) { 
