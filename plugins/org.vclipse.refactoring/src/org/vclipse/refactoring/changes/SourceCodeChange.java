@@ -120,16 +120,20 @@ public class SourceCodeChange extends NoChange {
 					existing.eSet(feature, null);
 				}
 			} else {
+				int decrement = 0;
 				for(ListChange listChange : listChanges) {
 					ChangeKind kind = listChange.getKind();
 					int index = listChange.getIndex();
+					index = index == 0 ? index : (index - decrement);
 					EList<EObject> originalEntries = (EList<EObject>)existing.eGet(feature);
 					EList<EObject> refactoredEntries = (EList<EObject>)refactored.eGet(feature);
 					if(ChangeKind.ADD_LITERAL == kind) {
+						decrement += 1;
 						originalEntries.remove(index);							
 					} else if(ChangeKind.REMOVE_LITERAL == kind) {
+						decrement = 0;
 						EObject entry = refactoredEntries.get(index);
-						originalEntries.add(EcoreUtil2.copy(entry));
+						originalEntries.add(entry);
 					} else if(ChangeKind.MOVE_LITERAL == kind) {
 						System.err.println("move literal");
 					}
