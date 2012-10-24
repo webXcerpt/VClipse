@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2012 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *     webXcerpt Software GmbH - initial creator
+ ******************************************************************************/
 package org.vclipse.refactoring.core;
 
 import java.util.List;
@@ -7,7 +17,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.ListChange;
 import org.vclipse.refactoring.utils.RefactoringUtility;
@@ -16,8 +25,6 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 public abstract class AbstractPreviewObjectComputer extends DefaultPreviewObjectComputer {
-
-	protected static final EcorePackage ECORE_PACKAGE = EcorePackage.eINSTANCE;
 
 	@Inject
 	private RefactoringUtility utility;
