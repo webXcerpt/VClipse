@@ -191,7 +191,7 @@ public class InputPage extends UserInputWizardPage {
 					String description = context.getDescription();
 					Set<String> names = refactoringUtility.getText(values);
 					if(description.contains(RefactoringType.Inline.name())) {
-						createComboWidget(composite, names);					
+						createComboWidget(composite, names, SWT.READ_ONLY);
 					} else {
 						createTextWidget(composite);
 					}
@@ -222,8 +222,8 @@ public class InputPage extends UserInputWizardPage {
 		widgets = Lists.newArrayList();
 	}
 	
-	private Combo createComboWidget(Composite composite, Set<String> names) {
-		final Combo combo = new Combo(composite, SWT.NONE);
+	private Combo createComboWidget(Composite composite, Set<String> names, int style) {
+		final Combo combo = new Combo(composite, style);
 		combo.setFont(composite.getFont());
 		combo.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING, true, false));
 		combo.addModifyListener(new ModifyListener() {
