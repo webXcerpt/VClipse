@@ -180,25 +180,26 @@ public class InputPage extends UserInputWizardPage {
 		widgets.add(label);
 
 		if(element.eClass().getEAllStructuralFeatures().contains(feature)) {
-			Object value = element.eGet(feature);
-			if(value instanceof EObject) {
-				createTextWidget(composite);
-			} else if(value instanceof List<?>) {
-				List<EObject> values = (List<EObject>)value;
-				if(values.size() == 1) {
-					createTextWidget(composite);
-				} else {
-//					String description = context.getDescription();
-//					Set<String> names = refactoringUtility.getText(values);
-//					if(description.contains(RefactoringType.Inline.name())) {
-//						createComboWidget(composite, names, SWT.READ_ONLY);
-//					} else {
-						createTextWidget(composite);
-//					}
-				}
-			}
-		} else {
 			createTextWidget(composite);
+			
+//			Object value = element.eGet(feature);
+//			if(value instanceof EObject) {
+//				createTextWidget(composite);
+//			} else if(value instanceof List<?>) {
+//				List<EObject> values = (List<EObject>)value;
+//				if(values.size() == 1) {
+//				} else {
+////					String description = context.getDescription();
+////					Set<String> names = refactoringUtility.getText(values);
+////					if(description.contains(RefactoringType.Inline.name())) {
+////						createComboWidget(composite, names, SWT.READ_ONLY);
+////					} else {
+//						createTextWidget(composite);
+////					}
+//				}
+//			}
+//		} else {
+//			createTextWidget(composite);
 		}
 
 		final Button button = new Button(composite, SWT.CHECK);
