@@ -136,8 +136,6 @@ public class SourceCodeChange extends NoChange {
 						decrement = 0;
 						EObject entry = refactoredEntries.get(index);
 						originalEntries.add(EcoreUtil2.copy(entry));
-					} else if(ChangeKind.MOVE_LITERAL == kind) {
-						System.err.println("move literal");
 					}
 				}
 			}

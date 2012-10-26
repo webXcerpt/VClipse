@@ -75,9 +75,6 @@ public class SourceCodeChanges extends CompositeChange {
 	static String getChangeLabel(IRefactoringUIContext context) {
 		EObject element = context.getSourceElement();
 		Resource resource = element.eResource();
-		if(resource == null) {
-			System.err.println("resource = null");
-		}
 		return resource.getURI().lastSegment();
 	}
 	
