@@ -18,11 +18,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ltk.ui.refactoring.UserInputWizardPage;
 import org.eclipse.xtext.ui.editor.model.IXtextDocument;
-import org.vclipse.refactoring.ConfigurationProvider;
 import org.vclipse.refactoring.IRefactoringUIConfiguration;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.core.RefactoringContext;
 import org.vclipse.refactoring.core.RefactoringTask;
+import org.vclipse.refactoring.utils.Configuration;
 import org.vclipse.refactoring.utils.Extensions;
 
 import com.google.common.collect.Lists;
@@ -35,7 +35,7 @@ public class UIRefactoringContext extends RefactoringContext implements IRefacto
 	private Provider<UIRefactoringContext> contextProvider;
 	
 	@Inject
-	private ConfigurationProvider configuration;
+	private Configuration configuration;
 	
 	@Inject
 	private Extensions extensions;

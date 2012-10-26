@@ -8,13 +8,17 @@
  * Contributors:
  *     webXcerpt Software GmbH - initial creator
  ******************************************************************************/
-package org.vclipse.refactoring;
+package org.vclipse.refactoring.guice;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.service.AbstractGenericModule;
 import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
 import org.vclipse.base.ui.util.IExtendedImageHelper;
+import org.vclipse.refactoring.IPreviewObjectComputer;
+import org.vclipse.refactoring.IRefactoringConfiguration;
+import org.vclipse.refactoring.IRefactoringUIConfiguration;
+import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.core.DefaultPreviewObjectComputer;
 import org.vclipse.refactoring.core.RefactoringConfiguration;
 import org.vclipse.refactoring.ui.RefactoringUIConfiguration;

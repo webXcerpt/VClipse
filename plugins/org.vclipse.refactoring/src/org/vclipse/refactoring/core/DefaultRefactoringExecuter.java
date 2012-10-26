@@ -22,11 +22,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.util.Pair;
-import org.vclipse.refactoring.ConfigurationProvider;
 import org.vclipse.refactoring.IRefactoringContext;
 import org.vclipse.refactoring.IRefactoringExecuter;
 import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.RefactoringStatus;
+import org.vclipse.refactoring.utils.Configuration;
 import org.vclipse.refactoring.utils.EntrySearch;
 import org.vclipse.refactoring.utils.References;
 
@@ -49,7 +49,7 @@ public class DefaultRefactoringExecuter extends MethodCollector implements IRefa
 	protected EntrySearch search;
 	
 	@Inject
-	private ConfigurationProvider configuration;
+	private Configuration configuration;
 	
 	public DefaultRefactoringExecuter() {		
 		collect(1, IRefactoringContext.class);

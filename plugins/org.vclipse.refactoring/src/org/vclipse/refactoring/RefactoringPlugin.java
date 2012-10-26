@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.vclipse.refactoring.guice.RefactoringModule;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

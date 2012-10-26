@@ -2,7 +2,6 @@ package org.vclipse.refactoring.utils;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
-import org.vclipse.refactoring.ConfigurationProvider;
 import org.vclipse.refactoring.RefactoringPlugin;
 
 import com.google.inject.ConfigurationException;
@@ -14,7 +13,7 @@ import com.google.inject.Singleton;
 public class Extensions {
 
 	@Inject
-	private ConfigurationProvider configuration;
+	private Configuration configuration;
 	
 	public Injector getInjector(EObject object) {
 		if(object == null) {

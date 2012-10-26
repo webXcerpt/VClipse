@@ -15,17 +15,17 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.vclipse.refactoring.ConfigurationProvider;
 import org.vclipse.refactoring.IRefactoringContext;
 import org.vclipse.refactoring.IRefactoringExecuter;
 import org.vclipse.refactoring.RefactoringStatus;
+import org.vclipse.refactoring.utils.Configuration;
 
 import com.google.inject.Inject;
 
 public class RefactoringRunner {
 
 	@Inject
-	private ConfigurationProvider configuration;
+	private Configuration configuration;
 	
 	private ChangeRecorder changeRecorder;
 	

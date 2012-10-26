@@ -8,7 +8,7 @@
  * Contributors:
  *     webXcerpt Software GmbH - initial creator
  ******************************************************************************/
-package org.vclipse.refactoring;
+package org.vclipse.refactoring.utils;
 
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -26,6 +26,9 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.xtext.ui.guice.AbstractGuiceAwareExecutableExtensionFactory;
 import org.osgi.framework.Bundle;
+import org.vclipse.refactoring.IRefactoringExecuter;
+import org.vclipse.refactoring.RefactoringPlugin;
+import org.vclipse.refactoring.RefactoringStatus;
 
 import com.google.common.collect.Maps;
 import com.google.inject.ConfigurationException;
@@ -33,7 +36,7 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
 @Singleton
-public class ConfigurationProvider {
+public class Configuration {
 
 	private static final String ID = "org.vclipse.refactoring";
 	
