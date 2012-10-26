@@ -2,13 +2,13 @@ package org.vclipse.vcml.tests;
 
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.junit4.InjectWith;
-import org.eclipselabs.xtext.utils.unittesting.XtextRunner2;
+import org.eclipse.xtext.junit4.XtextRunner;
 import org.eclipselabs.xtext.utils.unittesting.XtextTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.vclipse.vcml.VCMLInjectorProvider;
 
-@RunWith(value = XtextRunner2.class)
+@RunWith(value = XtextRunner.class)
 @InjectWith(value = VCMLInjectorProvider.class)
 @SuppressWarnings("all")
 public class VcmlTest extends XtextTest {

@@ -1,15 +1,15 @@
 package org.vclipse.vcml.tests
 
-import org.junit.Test
 import org.eclipse.xtext.junit4.InjectWith
+import org.junit.Test
 import org.junit.runner.RunWith
-import org.eclipselabs.xtext.utils.unittesting.XtextRunner2
 import org.vclipse.constraint.ConstraintInjectorProvider
-import org.junit.Ignore
+
+import org.eclipse.xtext.junit4.XtextRunner
 
 
 @InjectWith(typeof(ConstraintInjectorProvider))
-@RunWith(typeof(XtextRunner2))
+@RunWith(typeof(XtextRunner))
 
 class ConstraintTest extends DependencyTest {
 

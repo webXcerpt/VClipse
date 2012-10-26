@@ -1,14 +1,13 @@
 package org.vclipse.vcml.tests
 
 import org.eclipse.xtext.junit4.InjectWith
-import org.eclipselabs.xtext.utils.unittesting.XtextRunner2
+import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipselabs.xtext.utils.unittesting.XtextTest
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.vclipse.vcml.VCMLInjectorProvider
-import java.net.URL
 
-@RunWith(typeof(XtextRunner2))
+@RunWith(typeof(XtextRunner))
 @InjectWith(typeof(VCMLInjectorProvider))
 
 class VcmlTest extends XtextTest {

@@ -2,14 +2,14 @@ package org.vclipse.vcml.tests;
 
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.junit4.InjectWith;
-import org.eclipselabs.xtext.utils.unittesting.XtextRunner2;
+import org.eclipse.xtext.junit4.XtextRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.vclipse.constraint.ConstraintInjectorProvider;
 import org.vclipse.vcml.tests.DependencyTest;
 
 @InjectWith(value = ConstraintInjectorProvider.class)
-@RunWith(value = XtextRunner2.class)
+@RunWith(value = XtextRunner.class)
 @SuppressWarnings("all")
 public class ConstraintTest extends DependencyTest {
   @Test

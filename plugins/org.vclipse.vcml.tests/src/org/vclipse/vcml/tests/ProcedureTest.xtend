@@ -1,13 +1,14 @@
 package org.vclipse.vcml.tests
 
+import org.eclipse.xtext.junit4.XtextRunner
+
 import org.eclipse.xtext.junit4.InjectWith
-import org.eclipselabs.xtext.utils.unittesting.XtextRunner2
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.vclipse.procedure.ProcedureInjectorProvider
 
 @InjectWith(typeof(ProcedureInjectorProvider))
-@RunWith(typeof(XtextRunner2))
+@RunWith(typeof(XtextRunner))
 
 class ProcedureTest extends DependencyTest {
 	
