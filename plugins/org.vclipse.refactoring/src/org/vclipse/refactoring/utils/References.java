@@ -30,7 +30,7 @@ import org.vclipse.base.ui.util.EditorUtilsExtensions;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
-public class ReferenceFinderExtension {
+public class References {
 
 	@Inject
 	private IReferenceFinder finder;

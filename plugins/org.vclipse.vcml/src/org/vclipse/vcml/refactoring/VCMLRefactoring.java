@@ -57,7 +57,7 @@ public class VCMLRefactoring extends VCMLSimplifier {
 							EReference reference = curReference.getEReference();
 							if(reference.isMany()) {
 								EList<EObject> referencedEntries = (EList<EObject>)eobject.eGet(reference);
-								EObject foundEntry = refactoringUtility.findEntry(element, referencedEntries);
+								EObject foundEntry = search.findEntry(element, referencedEntries);
 								if(foundEntry != null) {
 									int entryIndex = referencedEntries.indexOf(foundEntry);
 									if(entryIndex > -1 && entryIndex < referencedEntries.size()) {

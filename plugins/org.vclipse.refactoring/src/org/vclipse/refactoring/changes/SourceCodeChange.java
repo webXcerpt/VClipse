@@ -41,13 +41,13 @@ import org.vclipse.base.VClipseStrings;
 import org.vclipse.refactoring.IPreviewObjectComputer;
 import org.vclipse.refactoring.compare.MultipleEntriesTypedElement;
 import org.vclipse.refactoring.core.DiffNode;
-import org.vclipse.refactoring.utils.RefactoringUtility;
+import org.vclipse.refactoring.utils.Extensions;
 
 import com.google.common.collect.Maps;
 
 public class SourceCodeChange extends NoChange {
 
-	private RefactoringUtility utility;
+	private Extensions extensions;
 	
 	private EValidator validator;
 	private IQualifiedNameProvider nameProvider;
@@ -57,8 +57,8 @@ public class SourceCodeChange extends NoChange {
 	private EObject refactored;
 	private FeatureChange featureChange;
 	
-	public SourceCodeChange(RefactoringUtility utility) {
-		this.utility = utility;
+	public SourceCodeChange(Extensions extensions) {
+		this.extensions = extensions;
 	}
 	
 	public void addChange(EObject existing, EObject refactored, FeatureChange featureChange) {
@@ -67,17 +67,18 @@ public class SourceCodeChange extends NoChange {
 		this.featureChange = featureChange;
 		
 		EObject initObject = existing == null ? refactored : existing;
-		Registry registry = utility.getInstance(EValidator.Registry.class, initObject);
+		Registry registry = extensions.getInstance(EValidator.Registry.class, initObject);
 		EPackage epackage = initObject.eClass().getEPackage();
 		validator = registry.getEValidator(epackage);
-		nameProvider = utility.getInstance(IQualifiedNameProvider.class, initObject);
-		serializer = utility.getInstance(ISerializer.class, initObject);
+		nameProvider = extensions.getInstance(IQualifiedNameProvider.class, initObject);
+		serializer = extensions.getInstance(ISerializer.class, initObject);
 	}
 	
 	@Override
 	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		EObject handleWithObject = existing == null ? refactored : existing;
-		StringBuffer taskBuffer = new StringBuffer("Validating change for ").append(getName(utility, handleWithObject));
+		String name = getName(extensions, handleWithObject);
+		StringBuffer taskBuffer = new StringBuffer("Validating change for ").append(name);
 		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 10);
 		BasicDiagnostic diagnostics = new BasicDiagnostic();
 		validator.validate(handleWithObject, diagnostics, Maps.newHashMap());
@@ -104,8 +105,9 @@ public class SourceCodeChange extends NoChange {
 	@SuppressWarnings("unchecked")
 	public RefactoringStatus refactor(IProgressMonitor pm) throws CoreException {
 		if(isEnabled()) {
-			EObject handleObject = existing == null ? refactored : existing;
-			StringBuffer taskBuffer = new StringBuffer("Executing re-factoring for ").append(getName(utility, handleObject));
+			EObject handleWithObject = existing == null ? refactored : existing;
+			String name = getName(extensions, handleWithObject);
+			StringBuffer taskBuffer = new StringBuffer("Executing re-factoring for ").append(name);
 			SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), IProgressMonitor.UNKNOWN);
 			EStructuralFeature feature = featureChange.getFeature();
 			EList<ListChange> listChanges = featureChange.getListChanges();
@@ -146,7 +148,8 @@ public class SourceCodeChange extends NoChange {
 	
 	public DiffNode getDiffNode() {		
 		DiffNode diffNode = new DiffNode();
-		IPreviewObjectComputer previewComputer = utility.getInstance(IPreviewObjectComputer.class, existing == null ? refactored : existing);	
+		EObject handleWithObject = existing == null ? refactored : existing;
+		IPreviewObjectComputer previewComputer = extensions.getInstance(IPreviewObjectComputer.class, handleWithObject);	
 		List<EObject> existingPreview = previewComputer.getExisting(existing, refactored, featureChange);
 		if(existingPreview == null) {
 			MultipleEntriesTypedElement typedExisting = MultipleEntriesTypedElement.getDefault();
@@ -189,8 +192,8 @@ public class SourceCodeChange extends NoChange {
 		return labelBuffer.toString();
 	}
 	
-	private String getName(RefactoringUtility utility, EObject object) {
-		IQualifiedNameProvider nameProvider = utility.getInstance(IQualifiedNameProvider.class, object);
+	private String getName(Extensions extensions, EObject object) {
+		IQualifiedNameProvider nameProvider = extensions.getInstance(IQualifiedNameProvider.class, object);
 		QualifiedName qualifiedName = nameProvider == null ? QualifiedName.create("") : nameProvider.getFullyQualifiedName(object);
 		return qualifiedName == null ? object.eClass().getName() : qualifiedName.getLastSegment();
 	}

@@ -1,92 +1,29 @@
-/*******************************************************************************
- * Copyright (c) 2012 webXcerpt Software GmbH.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *  
- * Contributors:
- *     webXcerpt Software GmbH - initial creator
- ******************************************************************************/
 package org.vclipse.refactoring.utils;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
-import org.vclipse.base.VClipseStrings;
-import org.vclipse.refactoring.ConfigurationProvider;
-import org.vclipse.refactoring.IRefactoringUIContext;
-import org.vclipse.refactoring.RefactoringPlugin;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.google.inject.ConfigurationException;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
 @Singleton
-public class RefactoringUtility {
+public class EntrySearch {
 
 	@Inject
-	private ConfigurationProvider configuration;
-	
-	public Injector getInjector(EObject object) {
-		if(object == null) {
-			return null;
-		}
-		EObject container = EcoreUtil2.getRootContainer(object);
-		if(container == null) {
-			return null;
-		}
-		Injector injector = configuration.getInjectors().get(container.eClass());
-		return injector;
-	}
-	
-	public <T> T getInstance(Class<T> type, EObject object) {
-		try {
-			Injector injector = getInjector(object);
-			if(injector == null) {
-				injector = RefactoringPlugin.getInstance().getInjector();
-			}
-			return injector.getInstance(type);
-		} catch(ConfigurationException exception) {
-			try {
-				T instance = RefactoringPlugin.getInstance().getInjector().getInstance(type);
-				return instance;
-			} catch(ConfigurationException nextConfiguration) {
-				RefactoringPlugin.log(exception.getMessage(), exception);
-				return null;
-			}
-		}
-	}
-	
-	public String getRefactoringText(IRefactoringUIContext context) {
-		String text = context.getLabel();
-		if(text == null || text.isEmpty()) {
-			StringBuffer buffer = new StringBuffer();
-			buffer.append(context.getType().name() + " ");
-			if(context.getStructuralFeature() != null) {
-				appendToBuffer(buffer, context.getStructuralFeature().getName(), true);
-			}
-			appendToBuffer(buffer, context.getSourceElement().eClass().getName(), false);
-			return buffer.toString();
-		}
-		return text;
-	}
+	private Extensions extensions;
 	
 	@SuppressWarnings("unchecked")
 	public EObject findEntry(EObject object, List<EObject> entries) {
-		IQualifiedNameProvider nameProvider = getInstance(IQualifiedNameProvider.class, object);
+		IQualifiedNameProvider nameProvider = extensions.getInstance(IQualifiedNameProvider.class, object);
 		QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(object);
 		EClass searchForType = object.eClass();
 		if(qualifiedName == null) {
@@ -144,13 +81,6 @@ public class RefactoringUtility {
 		}
 	}
 
-	private EObject findNextEntry(EObject targetObject, List<EObject> entries, EObject previousEntry) {
-		List<EObject> entriesCopy = Lists.newArrayList(entries);
-		entriesCopy.remove(previousEntry);
-		EObject findEntry = findEntry(targetObject, entriesCopy);
-		return findEntry;
-	}
-	
 	public EObject findEntry(String name, EClass type, List<EObject> entries) {
 		if(type == null) {
 			if(name == null) {
@@ -179,7 +109,7 @@ public class RefactoringUtility {
 		if(!iterator.hasNext() || name == null || name.isEmpty()) {
 			return null;
 		}
-		final IQualifiedNameProvider nameProvider = getInstance(IQualifiedNameProvider.class, iterator.next());
+		final IQualifiedNameProvider nameProvider = extensions.getInstance(IQualifiedNameProvider.class, iterator.next());
 		if(nameProvider != null) {
 			return Iterables.filter(entries, new Predicate<EObject>() {
 				public boolean apply(EObject eobject) {
@@ -216,7 +146,7 @@ public class RefactoringUtility {
 			if(firstContainer == null || secondContainer == null) {
 				return false;
 			} else {
-				IQualifiedNameProvider nameProvider = getInstance(IQualifiedNameProvider.class, firstContainer);
+				IQualifiedNameProvider nameProvider = extensions.getInstance(IQualifiedNameProvider.class, firstContainer);
 				QualifiedName firstName = nameProvider.getFullyQualifiedName(firstContainer);
 				QualifiedName secondName = nameProvider.getFullyQualifiedName(secondContainer);
 				if(firstName == null || secondName == null) {
@@ -244,37 +174,10 @@ public class RefactoringUtility {
 		}
 	}
 	
-	public Set<String> getText(List<EObject> values) {
-		Set<String> names = Sets.newHashSet();
-		if(!values.isEmpty()) {
-			EObject object = values.get(0);
-			IQualifiedNameProvider nameProvider = getInstance(IQualifiedNameProvider.class, object);
-			if(nameProvider != null) {
-				for(EObject value : values) {
-					QualifiedName qualifiedName = nameProvider.apply(value);
-					if(qualifiedName != null) {
-						String name = qualifiedName.getLastSegment();
-						if(name != null) {
-							names.add(name);						
-						}						
-					}
-				}
-			}
-		}
-		return names;
-	}
-	
-	private void appendToBuffer(StringBuffer buffer, String text, boolean handleLastIndex) {
-		List<String> parts = VClipseStrings.splitCamelCase(text);
-		for(String part : parts) {
-			buffer.append(part.toLowerCase());
-			int indexOf = parts.indexOf(part);
-			if(indexOf < parts.size()) {
-				buffer.append(" ");
-			}
-			if(handleLastIndex && (indexOf == parts.size() - 1)) {
-				buffer.append(" for ");
-			}
-		}
+	protected EObject findNextEntry(EObject targetObject, List<EObject> entries, EObject previousEntry) {
+		List<EObject> entriesCopy = Lists.newArrayList(entries);
+		entriesCopy.remove(previousEntry);
+		EObject findEntry = findEntry(targetObject, entriesCopy);
+		return findEntry;
 	}
 }

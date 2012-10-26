@@ -27,8 +27,8 @@ import org.vclipse.refactoring.IRefactoringContext;
 import org.vclipse.refactoring.IRefactoringExecuter;
 import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.RefactoringStatus;
-import org.vclipse.refactoring.utils.RefactoringUtility;
-import org.vclipse.refactoring.utils.ReferenceFinderExtension;
+import org.vclipse.refactoring.utils.EntrySearch;
+import org.vclipse.refactoring.utils.References;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -43,10 +43,10 @@ public class DefaultRefactoringExecuter extends MethodCollector implements IRefa
 	public static final String REFACTORING_PREFIX = "refactoring_";
 	
 	@Inject
-	protected ReferenceFinderExtension referencesFinder;
+	protected References referencesFinder;
 	
 	@Inject
-	protected RefactoringUtility refactoringUtility;
+	protected EntrySearch search;
 	
 	@Inject
 	private ConfigurationProvider configuration;

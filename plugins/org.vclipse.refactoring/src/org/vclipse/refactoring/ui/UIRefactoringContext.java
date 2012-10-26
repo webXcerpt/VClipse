@@ -21,14 +21,12 @@ import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.vclipse.refactoring.ConfigurationProvider;
 import org.vclipse.refactoring.IRefactoringUIConfiguration;
 import org.vclipse.refactoring.IRefactoringUIContext;
-import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.core.RefactoringContext;
 import org.vclipse.refactoring.core.RefactoringTask;
-import org.vclipse.refactoring.utils.RefactoringUtility;
+import org.vclipse.refactoring.utils.Extensions;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Provider;
 
 public class UIRefactoringContext extends RefactoringContext implements IRefactoringUIContext {
@@ -38,6 +36,9 @@ public class UIRefactoringContext extends RefactoringContext implements IRefacto
 	
 	@Inject
 	private ConfigurationProvider configuration;
+	
+	@Inject
+	private Extensions extensions;
 	
 	private IXtextDocument document;
 	
@@ -66,9 +67,7 @@ public class UIRefactoringContext extends RefactoringContext implements IRefacto
 	@Override
 	public void configureWidgets() {
 		EObject rootContainer = EcoreUtil.getRootContainer(getSourceElement());
-		Injector injector = RefactoringPlugin.getInstance().getInjector();
-		RefactoringUtility utility = injector.getInstance(RefactoringUtility.class);
-		IRefactoringUIConfiguration uiConfiguration = utility.getInstance(IRefactoringUIConfiguration.class, rootContainer);
+		IRefactoringUIConfiguration uiConfiguration = extensions.getInstance(IRefactoringUIConfiguration.class, rootContainer);
 		uiConfiguration.configureWidgets(this);
 	}
 	

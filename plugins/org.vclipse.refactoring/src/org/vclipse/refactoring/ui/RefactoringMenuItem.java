@@ -33,7 +33,6 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.utils.EditorUtils;
 import org.vclipse.base.ui.util.EditorUtilsExtensions;
-import org.vclipse.refactoring.ConfigurationProvider;
 import org.vclipse.refactoring.IRefactoringConfiguration;
 import org.vclipse.refactoring.IRefactoringUIConfiguration;
 import org.vclipse.refactoring.IRefactoringUIContext;
@@ -41,7 +40,8 @@ import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.core.RefactoringRunner;
 import org.vclipse.refactoring.core.RefactoringTask;
 import org.vclipse.refactoring.core.RefactoringType;
-import org.vclipse.refactoring.utils.RefactoringUtility;
+import org.vclipse.refactoring.utils.Extensions;
+import org.vclipse.refactoring.utils.Labels;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -55,16 +55,19 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 	private Provider<IRefactoringUIContext> contextProvider;
 	
 	@Inject
+	private Provider<RefactoringTask> taskProvider;
+	
+	@Inject
 	private RefactoringRunner refactoringRunner;
 	
 	@Inject
 	private EObjectAtOffsetHelper offsetHelper;
 	
 	@Inject
-	private ConfigurationProvider configuration;
+	private Extensions extensions;
 	
 	@Inject
-	private RefactoringUtility refactoringUtility;
+	private Labels labels;
 	
 	public RefactoringMenuItem() {
 		super("com.webxcerpt.cm.nsn.cml.ui.refactoring.menuCreator");
@@ -84,7 +87,7 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 					EObject elementAt = offsetHelper.resolveContainedElementAt(xtextResource, textSelection.getOffset());
 					EObject container = elementAt.eContainer();
 					EObject rootContainer = EcoreUtil.getRootContainer(elementAt);
-					IRefactoringConfiguration configuration = refactoringUtility.getInstance(IRefactoringConfiguration.class, rootContainer);
+					IRefactoringConfiguration configuration = extensions.getInstance(IRefactoringConfiguration.class, rootContainer);
 					if(elementAt != null && configuration != null) {
 						for(RefactoringType type : RefactoringType.values()) { 
 							IRefactoringUIContext context = contextProvider.get();
@@ -107,7 +110,7 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 											context.setIndex(indexOf);
 										}
 										
-										String refactoringText = refactoringUtility.getRefactoringText(context);
+										String refactoringText = labels.getUILabel(context);
 										item.setText(refactoringText);
 										item.addSelectionListener(this);
 										item.setData(CONTEXT, context);
@@ -130,14 +133,15 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 			try {
 				EObject sourceElement = context.getSourceElement();
 				EObject rootContainer = EcoreUtil.getRootContainer(sourceElement);
-				IRefactoringUIConfiguration uiConfiguration = refactoringUtility.getInstance(IRefactoringUIConfiguration.class, rootContainer);
+				IRefactoringUIConfiguration uiConfiguration = extensions.getInstance(IRefactoringUIConfiguration.class, rootContainer);
 				List<? extends UserInputWizardPage> pages = Lists.newArrayList();
 				pages = uiConfiguration.provideWizardPages(context);
-				RefactoringTask refactoring = new RefactoringTask(context, refactoringRunner, refactoringUtility);
-				context.setRefactoring(refactoring);
-				RefactoringWizard wizard = new RefactoringWizard(pages, refactoring, RefactoringWizard.DIALOG_BASED_USER_INTERFACE);
+				RefactoringTask refactoringTask = taskProvider.get();
+				refactoringTask.setContext(context);
+				context.setRefactoring(refactoringTask);
+				RefactoringWizard wizard = new RefactoringWizard(pages, refactoringTask, RefactoringWizard.DIALOG_BASED_USER_INTERFACE);
 				Shell activeShell = Display.getDefault().getActiveShell();
-				new RefactoringWizardOpenOperation(wizard).run(activeShell, refactoringUtility.getRefactoringText(context));
+				new RefactoringWizardOpenOperation(wizard).run(activeShell, labels.getUILabel(context));
 			} catch(InterruptedException exception) {
 				String message = exception.getMessage();
 				RefactoringPlugin.log(message, exception);

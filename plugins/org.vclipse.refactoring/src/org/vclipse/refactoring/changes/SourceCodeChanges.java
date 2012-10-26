@@ -47,7 +47,8 @@ import org.vclipse.refactoring.compare.MultipleEntriesTypedElement;
 import org.vclipse.refactoring.core.DiffNode;
 import org.vclipse.refactoring.core.RefactoringRunner;
 import org.vclipse.refactoring.ui.UIRefactoringContext;
-import org.vclipse.refactoring.utils.RefactoringUtility;
+import org.vclipse.refactoring.utils.EntrySearch;
+import org.vclipse.refactoring.utils.Extensions;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -55,7 +56,8 @@ import com.google.common.collect.Maps;
 public class SourceCodeChanges extends CompositeChange {
 	
 	private RefactoringRunner runner;
-	private RefactoringUtility utility;
+	private EntrySearch search;
+	private Extensions extensions;
 	
 	private EObject rootOriginal;
 	private EObject rootCopy;
@@ -79,11 +81,12 @@ public class SourceCodeChanges extends CompositeChange {
 		return resource.getURI().lastSegment();
 	}
 	
-	public SourceCodeChanges(IRefactoringUIContext context, RefactoringRunner runner, RefactoringUtility utility) {
+	public SourceCodeChanges(IRefactoringUIContext context, RefactoringRunner runner, Extensions extensions, EntrySearch search) {
  		super("Changes in " + getChangeLabel(context));
 		this.context = context;
 		this.runner = runner;
-		this.utility = utility;
+		this.search = search;
+		this.extensions = extensions;
 		
 		EObject element = this.context.getSourceElement();
 		rootOriginal = EcoreUtil.getRootContainer(element);
@@ -91,9 +94,9 @@ public class SourceCodeChanges extends CompositeChange {
 		rootContents = Lists.newArrayList(rootOriginal.eAllContents());
 		rootContents.add(0, rootOriginal);
 		
-		serializer = utility.getInstance(ISerializer.class, rootOriginal);
-		IParser parser = utility.getInstance(IParser.class, rootOriginal);
-		ILinker linker = utility.getInstance(ILinker.class, rootOriginal);
+		serializer = extensions.getInstance(ISerializer.class, rootOriginal);
+		IParser parser = extensions.getInstance(IParser.class, rootOriginal);
+		ILinker linker = extensions.getInstance(ILinker.class, rootOriginal);
 
 		String string = serializer.serialize(rootOriginal);		
 		IParseResult parseResult = parser.parse(new StringReader(string));
@@ -140,7 +143,7 @@ public class SourceCodeChanges extends CompositeChange {
 
 			// creates a copy of a model and sets the source element to an equal one in the copied model
 			EObject element = context.getSourceElement();
-			EObject entry = utility.findEntry(element, copyContents);
+			EObject entry = search.findEntry(element, copyContents);
 			if(entry != null) {
 				UIRefactoringContext uicontext = (UIRefactoringContext)context;
 				final IRefactoringUIContext refactoringContext = uicontext.copy();
@@ -234,8 +237,8 @@ public class SourceCodeChanges extends CompositeChange {
 			}
 			EList<FeatureChange> featureChanges = entry.getValue();
 			for(FeatureChange featureChange : featureChanges) {
-				EObject existingEntry = utility.findEntry(refactored, rootContents);
-				SourceCodeChange scc = new SourceCodeChange(utility);
+				EObject existingEntry = search.findEntry(refactored, rootContents);
+				SourceCodeChange scc = new SourceCodeChange(extensions);
 				scc.addChange(existingEntry, refactored, featureChange);
 				add(scc);
 			}

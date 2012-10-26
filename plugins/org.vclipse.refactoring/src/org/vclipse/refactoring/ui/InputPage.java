@@ -44,7 +44,8 @@ import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.core.DefaultRefactoringExecuter;
 import org.vclipse.refactoring.core.RefactoringTask;
-import org.vclipse.refactoring.utils.RefactoringUtility;
+import org.vclipse.refactoring.utils.Extensions;
+import org.vclipse.refactoring.utils.Labels;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -55,7 +56,10 @@ import com.google.inject.Injector;
 public class InputPage extends UserInputWizardPage {
 	
 	@Inject
-	private RefactoringUtility refactoringUtility;
+	private Labels refactoringUtility;
+	
+	@Inject
+	private Extensions extensions;
 	
 	private List<Widget> widgets;
 	
@@ -226,7 +230,7 @@ public class InputPage extends UserInputWizardPage {
 		combo.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent event) {
 				EObject element = context.getSourceElement();
-				final IQualifiedNameProvider nameProvider = refactoringUtility.getInstance(IQualifiedNameProvider.class, element);
+				final IQualifiedNameProvider nameProvider = extensions.getInstance(IQualifiedNameProvider.class, element);
 				int index = combo.getSelectionIndex();
 				if(index > -1) {
 					final String item = combo.getItem(index);

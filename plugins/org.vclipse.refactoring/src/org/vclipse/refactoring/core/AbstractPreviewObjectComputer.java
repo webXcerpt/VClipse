@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.ListChange;
-import org.vclipse.refactoring.utils.RefactoringUtility;
+import org.vclipse.refactoring.utils.Labels;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -27,7 +27,7 @@ import com.google.inject.Inject;
 public abstract class AbstractPreviewObjectComputer extends DefaultPreviewObjectComputer {
 
 	@Inject
-	private RefactoringUtility utility;
+	private Labels utility;
 	
 	@Override
 	public List<EObject> getExisting(EObject original, EObject refactored, FeatureChange featureChange) {

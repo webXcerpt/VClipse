@@ -31,7 +31,9 @@ import org.eclipse.xtext.validation.FeatureBasedDiagnostic;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.changes.SourceCodeChanges;
-import org.vclipse.refactoring.utils.RefactoringUtility;
+import org.vclipse.refactoring.utils.EntrySearch;
+import org.vclipse.refactoring.utils.Extensions;
+import org.vclipse.refactoring.utils.Labels;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -44,17 +46,21 @@ public class RefactoringTask extends Refactoring {
 	private IRefactoringUIContext context;
 	
 	@Inject
-	private RefactoringUtility utility;
+	private Labels utility;
 	
 	@Inject 
 	private RefactoringRunner runner;
 	
-	public RefactoringTask(IRefactoringUIContext context, RefactoringRunner runner, RefactoringUtility utility) {
-		this.context = context;
-		this.runner = runner;
-		this.utility = utility;
-	}
+	@Inject
+	private Extensions extensions;
 	
+	@Inject
+	private EntrySearch search;
+	
+	public void setContext(IRefactoringUIContext context) {
+		this.context = context;
+	}
+
 	public SourceCodeChanges getChange(IProgressMonitor pm) throws CoreException {
 		if(modelChange == null) {
 			StringBuffer taksBuffer = new StringBuffer("Creating a change description for ").append(context.getLabel());
@@ -91,7 +97,7 @@ public class RefactoringTask extends Refactoring {
 			if(sm.isCanceled()) {
 				return modelChange;
 			}
-			modelChange = new SourceCodeChanges(context, runner, utility);
+			modelChange = new SourceCodeChanges(context, runner, extensions, search);
 			sm.worked(10);
 			if(sm.isCanceled()) {
 				return modelChange;
@@ -134,7 +140,7 @@ public class RefactoringTask extends Refactoring {
 	}
 	
 	private RefactoringStatus validate(IProgressMonitor pm, EObject object) {
-		EValidator.Registry validatorRegistry = utility.getInstance(EValidator.Registry.class, object);
+		EValidator.Registry validatorRegistry = extensions.getInstance(EValidator.Registry.class, object);
 		EPackage epackage = object.eClass().getEPackage();
 		EValidator validator = validatorRegistry.getEValidator(epackage);
 		BasicDiagnostic diagnostics = new BasicDiagnostic();

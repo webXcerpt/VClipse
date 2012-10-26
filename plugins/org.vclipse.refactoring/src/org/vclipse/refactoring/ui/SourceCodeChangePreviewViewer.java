@@ -23,14 +23,18 @@ import org.eclipse.xtext.ui.compare.InjectableViewerCreator;
 import org.vclipse.refactoring.changes.SourceCodeChange;
 import org.vclipse.refactoring.changes.SourceCodeChanges;
 import org.vclipse.refactoring.core.DiffNode;
-import org.vclipse.refactoring.utils.RefactoringUtility;
+import org.vclipse.refactoring.utils.Extensions;
+import org.vclipse.refactoring.utils.Labels;
 
 import com.google.inject.Inject;
 
 public class SourceCodeChangePreviewViewer implements IChangePreviewViewer {
 
 	@Inject
-	private RefactoringUtility refactoringUtility;
+	private Labels refactoringUtility;
+	
+	@Inject
+	private Extensions extensions;
 	
 	private Viewer viewer;
 	
@@ -48,7 +52,7 @@ public class SourceCodeChangePreviewViewer implements IChangePreviewViewer {
 		Object modifiedElement = change.getModifiedElement();
 		if(viewer instanceof NullViewer && modifiedElement instanceof EObject) {
 			EObject modifiedEObject = (EObject)modifiedElement;
-			InjectableViewerCreator instance = refactoringUtility.getInstance(InjectableViewerCreator.class, modifiedEObject);
+			InjectableViewerCreator instance = extensions.getInstance(InjectableViewerCreator.class, modifiedEObject);
 			if(instance != null) {
 				viewer = instance.createViewer(composite, new CompareConfiguration());					
 			}
