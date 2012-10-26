@@ -33,7 +33,6 @@ import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.changes.SourceCodeChanges;
 import org.vclipse.refactoring.utils.EntrySearch;
 import org.vclipse.refactoring.utils.Extensions;
-import org.vclipse.refactoring.utils.Labels;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -44,9 +43,6 @@ public class RefactoringTask extends Refactoring {
 
 	private SourceCodeChanges modelChange;
 	private IRefactoringUIContext context;
-	
-	@Inject
-	private Labels utility;
 	
 	@Inject 
 	private RefactoringRunner runner;

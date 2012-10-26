@@ -22,7 +22,6 @@ import org.vclipse.refactoring.IRefactoringUIConfiguration;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.core.RefactoringContext;
 import org.vclipse.refactoring.core.RefactoringTask;
-import org.vclipse.refactoring.utils.Configuration;
 import org.vclipse.refactoring.utils.Extensions;
 
 import com.google.common.collect.Lists;
@@ -33,9 +32,6 @@ public class UIRefactoringContext extends RefactoringContext implements IRefacto
 
 	@Inject
 	private Provider<UIRefactoringContext> contextProvider;
-	
-	@Inject
-	private Configuration configuration;
 	
 	@Inject
 	private Extensions extensions;

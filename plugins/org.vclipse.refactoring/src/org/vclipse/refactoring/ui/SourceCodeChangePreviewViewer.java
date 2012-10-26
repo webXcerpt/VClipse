@@ -24,14 +24,10 @@ import org.vclipse.refactoring.changes.SourceCodeChange;
 import org.vclipse.refactoring.changes.SourceCodeChanges;
 import org.vclipse.refactoring.core.DiffNode;
 import org.vclipse.refactoring.utils.Extensions;
-import org.vclipse.refactoring.utils.Labels;
 
 import com.google.inject.Inject;
 
 public class SourceCodeChangePreviewViewer implements IChangePreviewViewer {
-
-	@Inject
-	private Labels refactoringUtility;
 	
 	@Inject
 	private Extensions extensions;
