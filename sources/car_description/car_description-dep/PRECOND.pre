@@ -1,0 +1,3 @@
+$SELF.GEAR in ('4-gear', '4-gear automatic') 
+and 
+$ROOT.ENGINE IN ('1500', '1800') 
