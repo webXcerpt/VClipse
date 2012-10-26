@@ -17,7 +17,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.vclipse.base.VClipseStrings;
-import org.vclipse.refactoring.IRefactoringUIContext;
+import org.vclipse.refactoring.IRefactoringContext;
+import org.vclipse.refactoring.core.RefactoringType;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
@@ -32,18 +33,21 @@ public class Labels {
 	/*
 	 * Text shown in the menu
 	 */
-	public String getUILabel(IRefactoringUIContext context) {
-		String text = context.getLabel();
-		if(text == null || text.isEmpty()) {
-			StringBuffer buffer = new StringBuffer();
-			buffer.append(context.getType().name() + " ");
-			if(context.getStructuralFeature() != null) {
-				appendToBuffer(buffer, context.getStructuralFeature().getName(), true);
-			}
-			appendToBuffer(buffer, context.getSourceElement().eClass().getName(), false);
-			return buffer.toString();
+	public String getUILabel(IRefactoringContext context) {
+		StringBuffer buffer = new StringBuffer();
+		RefactoringType type = context.getType();
+		buffer.append(type.name());
+		buffer.append(" ");
+		if(context.getStructuralFeature() != null) {
+			String featureName = context.getStructuralFeature().getName();
+			appendToBuffer(buffer, featureName, true);
 		}
-		return text;
+		if(RefactoringType.Replace == type) {
+			buffer.append(" by ");
+			String typeName = context.getSourceElement().eClass().getName();
+			appendToBuffer(buffer, typeName, false);
+		}
+		return buffer.toString();
 	}
 	
 	public Set<String> namesForEntries(List<EObject> entries) {
@@ -73,9 +77,6 @@ public class Labels {
 			int indexOf = parts.indexOf(part);
 			if(indexOf < parts.size()) {
 				buffer.append(" ");
-			}
-			if(handleLastIndex && (indexOf == parts.size() - 1)) {
-				buffer.append(" for ");
 			}
 		}
 	}

@@ -11,15 +11,16 @@
 package org.vclipse.refactoring.core;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.vclipse.base.VClipseStrings;
 import org.vclipse.refactoring.IRefactoringContext;
+import org.vclipse.refactoring.utils.Labels;
 
 import com.google.common.collect.Maps;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 public class RefactoringContext implements IRefactoringContext {
 
@@ -32,8 +33,14 @@ public class RefactoringContext implements IRefactoringContext {
 
 	private String text;
 	
+	@Inject
+	private static Provider<RefactoringContext> contextProvider;
+	
+	@Inject
+	private Labels labels;
+	
 	public static RefactoringContext getEmpty() {
-		return new RefactoringContext();
+		return contextProvider.get();
 	}
 	
 	public static RefactoringContext create(EObject object, EStructuralFeature feature, RefactoringType type) {
@@ -50,28 +57,7 @@ public class RefactoringContext implements IRefactoringContext {
 	
 	public String getLabel() {
 		if(text == null) {
-			StringBuffer buffer = new StringBuffer();
-			buffer.append(type.name());
-			buffer.append(" ");
-			if(RefactoringType.Replace == type) {
-				String name = object.eClass().getName();
-				List<String> parts = VClipseStrings.splitCamelCase(name);
-				for(String part : parts) {
-					buffer.append(part.toLowerCase());
-					buffer.append(parts.indexOf(part) == (parts.size() - 1) ? "" : " ");
-				}
-			} else {
-				if(feature != null) {
-					String featureName = feature.getName();
-					List<String> parts = VClipseStrings.splitCamelCase(featureName);
-					for(String part : parts) {
-						part = part.toLowerCase();
-						buffer.append(part);
-						buffer.append(" ");
-					}
-				}
-			}
-			return buffer.toString();
+			return labels.getUILabel(this);
 		}
 		return text;
 	}

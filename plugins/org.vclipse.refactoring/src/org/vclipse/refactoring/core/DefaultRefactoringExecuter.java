@@ -33,6 +33,7 @@ import org.vclipse.refactoring.utils.References;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 public class DefaultRefactoringExecuter extends MethodCollector implements IRefactoringExecuter {
 
@@ -50,6 +51,9 @@ public class DefaultRefactoringExecuter extends MethodCollector implements IRefa
 	
 	@Inject
 	private Configuration configuration;
+	
+	@Inject
+	private Provider<RefactoringContext> contextProvider;
 	
 	public DefaultRefactoringExecuter() {		
 		collect(1, IRefactoringContext.class);
@@ -96,8 +100,10 @@ public class DefaultRefactoringExecuter extends MethodCollector implements IRefa
 	}
 	
 	public void refactor(EObject object) throws CoreException {
-		RefactoringContext replaceContext = RefactoringContext.create(object, null, RefactoringType.Replace);
-		refactor(replaceContext);
+		RefactoringContext context = contextProvider.get();
+		context.setSourceElement(object);
+		context.setType(RefactoringType.Replace);
+		refactor(context);
 	}
 	
 	public Pair<EObject, Method> getRefactoring(IRefactoringContext context) {
