@@ -17,7 +17,7 @@
                </reference>
             </visibleWhen>
             <dynamic
-                  class="org.vclipse.refactoring.ExtensionFactory:org.vclipse.refactoring.ui.RefactoringMenuItem"
+                  class="org.vclipse.refactoring.guice.ExtensionFactory:org.vclipse.refactoring.ui.RefactoringMenuItem"
                   id="org.vclipse.refactoring.ui.menuCreator">
             </dynamic>
          </menu>
@@ -26,7 +26,7 @@
    <extension
          point="org.eclipse.ltk.ui.refactoring.changePreviewViewers">
       <changePreviewViewer 
-            class="org.vclipse.refactoring.ExtensionFactory:org.vclipse.refactoring.ui.SourceCodeChangePreviewViewer"
+            class="org.vclipse.refactoring.guice.ExtensionFactory:org.vclipse.refactoring.ui.SourceCodeChangePreviewViewer"
             id="org.vclipse.refactoring.ui.changePreviewViewer">
          <enablement>
             <or>
