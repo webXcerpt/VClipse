@@ -5,7 +5,6 @@ import java.util.HashMap;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.junit4.InjectWith;
-import org.eclipselabs.xtext.utils.unittesting.XtextRunner2;
 import org.eclipselabs.xtext.utils.unittesting.XtextTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +17,9 @@ import org.w3c.dom.Element;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
-@RunWith(XtextRunner2.class)
+import org.eclipse.xtext.junit4.XtextRunner;
+
+@RunWith(XtextRunner.class)
 @InjectWith(VcmlTInjectorProviderWithVCML.class)
 public class VcmlTConfigScanXMLProviderTest extends XtextTest {
 
