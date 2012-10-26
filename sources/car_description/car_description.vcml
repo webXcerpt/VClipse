@@ -47,11 +47,24 @@ varianttable VAR_TAB {
   status inPreparation
   arguments {
         key INTERIOR
-        COLOUR
+        COLOR
   }
 }
 
-characteristic COLOUR
+characteristic COLOR {
+	description "description"
+	documentation "documentation"
+	symbolic { numberOfChars 30 [ ]
+		values {
+			'BLACK' 
+			'WHITE'
+			'RED'
+		}
+	}
+	status released
+	group "group"
+	[ ]
+}
 
 characteristic FUELCONSUMPTION
 
