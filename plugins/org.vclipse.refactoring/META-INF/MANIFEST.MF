@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.ltk.ui.refactoring;visibility:=reexport,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.vclipse.refactoring,
- org.vclipse.refactoring.changes,
+ org.vclipse.refactoring.compare,
  org.vclipse.refactoring.core,
+ org.vclipse.refactoring.guice,
  org.vclipse.refactoring.ui,
  org.vclipse.refactoring.utils

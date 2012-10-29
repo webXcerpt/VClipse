@@ -28,8 +28,12 @@ import com.google.inject.Singleton;
 @Singleton
 public class EntrySearch {
 
-	@Inject
 	private Extensions extensions;
+	
+	@Inject
+	public EntrySearch(Extensions extensions) {
+		this.extensions = extensions;
+	}
 	
 	@SuppressWarnings("unchecked")
 	public EObject findEntry(EObject object, List<EObject> entries) {

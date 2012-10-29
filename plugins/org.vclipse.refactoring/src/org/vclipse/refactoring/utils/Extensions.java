@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.vclipse.refactoring.utils;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
 import org.vclipse.refactoring.RefactoringPlugin;
@@ -22,8 +23,12 @@ import com.google.inject.Singleton;
 @Singleton
 public class Extensions {
 
-	@Inject
 	private Configuration configuration;
+	
+	@Inject
+	public Extensions(Configuration configuration) {
+		this.configuration = configuration;
+	}
 	
 	public Injector getInjector(EObject object) {
 		if(object == null) {
@@ -33,8 +38,8 @@ public class Extensions {
 		if(container == null) {
 			return null;
 		}
-		Injector injector = configuration.getInjectors().get(container.eClass());
-		return injector;
+		EClass type = container.eClass();
+		return configuration == null ? null : configuration.getInjectors().get(type);
 	}
 	
 	public <T> T getInstance(Class<T> type, EObject object) {
