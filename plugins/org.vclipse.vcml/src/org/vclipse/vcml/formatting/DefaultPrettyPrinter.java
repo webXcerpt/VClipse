@@ -63,56 +63,75 @@ abstract class DefaultPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions
 		layouter = new DataLayouter<NoExceptions>(stringBackend, INDENTATION);
 	}
 	
-	public boolean hasBody(EObject object) {
-		if(object instanceof VariantFunction || object instanceof VariantTable || object instanceof Class) {
-			return hasBody(object, VCMLPACKAGE.getVCObject_Description());
-		} else if(object instanceof Characteristic) {
-			return hasBody(object, VCMLPACKAGE.getVCObject_Description(), VCMLPACKAGE.getCharacteristic_Documentation());
-		} else if(object instanceof CharacteristicValue) {
-			return hasBody(object, VCMLPACKAGE.getCharacteristicValue_Description(), VCMLPACKAGE.getCharacteristicValue_Documentation(), VCMLPACKAGE.getCharacteristicValue_Dependencies());
-		} else if(object instanceof NumericCharacteristicValue) {
-			return hasBody(object, VCMLPACKAGE.getNumericCharacteristicValue_Documentation(), VCMLPACKAGE.getNumericCharacteristicValue_Dependencies());
-		} else if(object instanceof DateCharacteristicValue) {
-			return hasBody(object, VCMLPACKAGE.getDateCharacteristicValue_Dependencies(), VCMLPACKAGE.getDateCharacteristicValue_Documentation());
-		} else if(object instanceof Constraint) {
-			return hasBody(object, VCMLPACKAGE.getConstraint_Documentation(), VCMLPACKAGE.getVCObject_Description());
-		} else if(object instanceof DependencyNet) {
-			return hasBody(object, VCMLPACKAGE.getVCObject_Description(), VCMLPACKAGE.getDependencyNet_Documentation());
-		} else if(object instanceof Material) {
-			return hasBody(object, VCMLPACKAGE.getVCObject_Description(), VCMLPACKAGE.getMaterial_Billofmaterials(), VCMLPACKAGE.getMaterial_Classifications(), VCMLPACKAGE.getMaterial_Configurationprofiles());
-		} else if(object instanceof Precondition) {
-			return hasBody(object, VCMLPACKAGE.getVCObject_Description(), VCMLPACKAGE.getPrecondition_Documentation());
-		} else if(object instanceof Procedure) {
-			return hasBody(object, VCMLPACKAGE.getVCObject_Description(), VCMLPACKAGE.getProcedure_Documentation());
-		} else if(object instanceof SelectionCondition) {
-			return hasBody(object, VCMLPACKAGE.getVCObject_Description(), VCMLPACKAGE.getSelectionCondition_Documentation());
-		} else if(object instanceof InterfaceDesign) {
-			return hasBody(object, VCMLPACKAGE.getInterfaceDesign_CharacteristicGroups());
-		}
-		return false;
+	protected boolean hasBody(Characteristic object) {
+		return object.getDescription()!=null
+		|| object.getDocumentation()!=null;
 	}
 	
-	public boolean hasBody(EObject object, EStructuralFeature ... testFeatures) {
-		EClass type = object.eClass();
-		EList<EStructuralFeature> features = type.getEAllStructuralFeatures();
-		boolean hasBody = true;
-		for(EStructuralFeature feature : testFeatures) {
-			if(features.contains(feature)) {
-				if(feature.isMany()) {
-					EList<?> entries = (EList<?>)object.eGet(feature);
-					return entries.isEmpty();
-				} else {
-					Object value = object.eGet(feature);
-					if(value == null) {
-						return false;
-					}
-				}
-			} else {
-				return false;
-			}
-		}
-		return hasBody;
+	protected boolean hasBody(CharacteristicValue object) {
+		return object.getDescription() != null 
+		|| object.getDocumentation() != null
+		|| object.getDependencies() != null;
 	}
+
+	protected boolean hasBody(NumericCharacteristicValue object) {
+		return object.getDocumentation() != null
+		|| object.getDependencies() != null;
+	}
+
+	protected boolean hasBody(DateCharacteristicValue object) {
+		return object.getDocumentation() != null
+		|| object.getDependencies() != null;
+	}
+
+	protected boolean hasBody(Class object) {
+		return object.getDescription()!=null;
+	}
+	
+	protected boolean hasBody(Constraint object) {
+		return object.getDescription()!=null
+		|| object.getDocumentation()!=null;
+	}
+	
+	protected boolean hasBody(DependencyNet object) {
+		return object.getDescription()!=null
+		|| object.getDocumentation()!=null;
+	}
+	
+	protected boolean hasBody(Material object) {
+		return object.getDescription()!=null
+		|| !object.getBillofmaterials().isEmpty()
+		|| !object.getClassifications().isEmpty()
+		|| !object.getConfigurationprofiles().isEmpty();
+	}
+	
+	protected boolean hasBody(Precondition object) {
+		return object.getDescription()!=null
+		|| object.getDocumentation()!=null;
+	}
+	
+	protected boolean hasBody(Procedure object) {
+		return object.getDescription()!=null
+		|| object.getDocumentation()!=null;
+	}
+	
+	protected boolean hasBody(SelectionCondition object) {
+		return object.getDescription()!=null
+		|| object.getDocumentation()!=null;
+	}
+	
+	protected boolean hasBody(VariantFunction object) {
+		return object.getDescription()!=null;
+	}
+	
+	protected boolean hasBody(VariantTable object) {
+		return object.getDescription()!=null;
+	}
+	
+	protected boolean hasBody(InterfaceDesign object) {
+		return !object.getCharacteristicGroups().isEmpty();
+	}
+	
 	
 	public void printNullsafe(Object object) {
 		layouter.print(object==null ? "null" : object);
