@@ -27,8 +27,12 @@ import com.google.inject.Singleton;
 @Singleton
 public class Labels {
 
-	@Inject
 	private Extensions extensions;
+	
+	@Inject
+	public Labels(Extensions extensions) {
+		this.extensions = extensions;
+	}
 	
 	/*
 	 * Text shown in the menu

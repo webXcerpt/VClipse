@@ -32,8 +32,12 @@ import com.google.inject.Inject;
 
 public class References {
 
-	@Inject
 	private IReferenceFinder finder;
+	
+	@Inject
+	public References(IReferenceFinder finder) {
+		this.finder = finder;
+	}
 
 	public List<IReferenceDescription> getReferences(EObject target, boolean allReferences) {
 		final List<IReferenceDescription> references = Lists.newArrayList();
