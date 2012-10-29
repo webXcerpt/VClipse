@@ -1,3 +1,7 @@
+/*
+ * modified version for tests
+ */
+
 characteristic ENGINE
 
 class (300)CAR {
