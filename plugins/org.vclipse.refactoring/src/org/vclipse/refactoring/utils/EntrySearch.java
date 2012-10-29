@@ -38,61 +38,64 @@ public class EntrySearch {
 	@SuppressWarnings("unchecked")
 	public EObject findEntry(EObject object, List<EObject> entries) {
 		IQualifiedNameProvider nameProvider = extensions.getInstance(IQualifiedNameProvider.class, object);
-		QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(object);
-		EClass searchForType = object.eClass();
-		if(qualifiedName == null) {
-			Iterable<EObject> iterable = getEntries(searchForType, entries);
-			if(iterable == null || !iterable.iterator().hasNext()) {
-				EObject container = object.eContainer();
-				if(container == null) {
-					return null;
-				} else {
+		if(nameProvider != null) {
+			QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(object);
+			EClass searchForType = object.eClass();
+			if(qualifiedName == null) {
+				Iterable<EObject> iterable = getEntries(searchForType, entries);
+				if(iterable == null || !iterable.iterator().hasNext()) {
+					EObject container = object.eContainer();
+					if(container == null) {
+						return null;
+					} else {
+						EObject containerEntry = findEntry(container, entries);
+						if(containerEntry == null) {
+							return null;
+						}
+						Object value = containerEntry.eGet(object.eContainmentFeature());
+						EObject entry = value instanceof EObject ? (EObject)value : null;
+						return entry;
+					}
+				}
+				EObject entry = iterable.iterator().next();
+				return entry;
+			} else {
+				String searchForName = qualifiedName.getLastSegment();
+				EObject entry = findEntry(searchForName, searchForType, entries);
+				if(entry == null) {
+					EObject container = object.eContainer();
 					EObject containerEntry = findEntry(container, entries);
 					if(containerEntry == null) {
 						return null;
 					}
 					Object value = containerEntry.eGet(object.eContainmentFeature());
-					EObject entry = value instanceof EObject ? (EObject)value : null;
-					return entry;
-				}
-			}
-			EObject entry = iterable.iterator().next();
-			return entry;
-		} else {
-			String searchForName = qualifiedName.getLastSegment();
-			EObject entry = findEntry(searchForName, searchForType, entries);
-			if(entry == null) {
-				EObject container = object.eContainer();
-				EObject containerEntry = findEntry(container, entries);
-				if(containerEntry == null) {
-					return null;
-				}
-				Object value = containerEntry.eGet(object.eContainmentFeature());
-				if(value instanceof EObject) {
-					entry = (EObject)value;
-					return entry;
-				} else {
-					EList<EObject> valueEntries = (EList<EObject>)value;
-					entry = findEntry(searchForName, searchForType, valueEntries);
-					return entry;
-				}
-			} else {
-				if(equallyTypedContainer(object, entry)) {
-					EObject container = entry.eContainer();
-					if(sameContainer(object, entry)) {
+					if(value instanceof EObject) {
+						entry = (EObject)value;
+						return entry;
+					} else {
+						EList<EObject> valueEntries = (EList<EObject>)value;
+						entry = findEntry(searchForName, searchForType, valueEntries);
 						return entry;
 					}
-					QualifiedName containerQualifiedName = nameProvider.getFullyQualifiedName(container);
-					if(containerQualifiedName == null) {
-						return entry;
+				} else {
+					if(equallyTypedContainer(object, entry)) {
+						EObject container = entry.eContainer();
+						if(sameContainer(object, entry)) {
+							return entry;
+						}
+						QualifiedName containerQualifiedName = nameProvider.getFullyQualifiedName(container);
+						if(containerQualifiedName == null) {
+							return entry;
+						} else {
+							return findNextEntry(object, entries, entry);
+						}
 					} else {
 						return findNextEntry(object, entries, entry);
 					}
-				} else {
-					return findNextEntry(object, entries, entry);
-				}
-			} 
+				} 
+			}
 		}
+		return null;
 	}
 
 	public EObject findEntry(String name, EClass type, List<EObject> entries) {
