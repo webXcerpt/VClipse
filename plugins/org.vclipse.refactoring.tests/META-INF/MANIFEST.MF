@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Refactoring Tests
+Bundle-SymbolicName: org.vclipse.refactoring.tests;singleton:=true
+Bundle-Version: 0.5.0.qualifier
+Bundle-Vendor: webXcerpt SW GmbH, Munich, Germany
+Fragment-Host: org.vclipse.refactoring;bundle-version="0.5.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipselabs.xtext.utils.unittesting,
+ org.eclipse.xtext.junit,
+ org.eclipse.xtext.junit4,
+ org.eclipse.xtext.ui.junit,
+ org.vclipse.vcml.mm,
+ org.apache.commons.logging,
+ org.vclipse.vcml,
+ org.vclipse.vcml.ui,
+ org.vclipse.vcml.tests

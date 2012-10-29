@@ -1,0 +1,9 @@
+objects: 
+    CAR IS_A (300)CAR
+condition: 
+    CAR.ENGINE = '1500'
+restrictions: 
+    CAR.COLOR = 'BLACK' if 
+        CAR.INTERIOR in ('01', '02')
+inferences:
+    CAR.COLOR

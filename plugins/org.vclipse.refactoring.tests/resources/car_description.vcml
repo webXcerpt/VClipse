@@ -1,0 +1,104 @@
+characteristic ENGINE
+
+class (300)CAR {
+  description "this is the class for the car"
+  status released
+  group "PRODUCTS_CAR"
+  characteristics { ENGINE }
+}
+
+constraint CS_CAR1
+
+precondition PRECOND {
+  description "description"
+  documentation "documentation"
+  status released
+  group "group"
+}
+
+procedure PROC {
+  description "set interior quantity"
+  documentation "documentation"
+  status released
+  group "PRODUCTS_CAR"
+}
+
+selectioncondition SEL_COND {
+  description "description"
+  documentation "documentation"
+  status released
+  group "group"
+}
+
+characteristic SEL_COND
+
+characteristic SEL_COND_
+
+characteristic SEL_COND_
+
+variantfunction VAR_FUNC {
+  description "description"
+  group "group"
+  status locked
+  arguments {
+        in ENGINE 
+        in GEAR 
+        FUELCONSUMPTION   
+  }
+}
+
+varianttable VAR_TAB {
+  description "description"
+  group "group"
+  status inPreparation
+  arguments {
+        key INTERIOR
+        COLOR
+  }
+}
+
+characteristic COLOR {
+	description "description"
+	documentation "documentation"
+	symbolic { numberOfChars 30 [ ]
+		values {
+			'BLACK' 
+			'WHITE'
+			'RED'
+		}
+	}
+	status released
+	group "group"
+	[ ]
+}
+
+characteristic FUELCONSUMPTION
+
+billofmaterial CAR {
+  material CAR
+  items { 10 ENGINE_1500 40 ENGINE_2400 }
+}
+
+configurationprofile PROFILE_CAR { bomapplication SD02 }
+
+material ENGINE_1500 { description "Small engine" type ZHAW }
+
+material ENGINE_2400 { description "Big engine" type ZHAW }
+
+material CAR
+
+dependencynet DEP_NET {
+  description "This is a constraint net for the car"
+  documentation "documentation"
+  status released
+  group "PRODUCTS_CAR"
+}
+
+interfacedesign INT_DESIGN { }
+
+characteristic GEAR
+
+characteristic INTERIOR
+
+characteristic C_QUANT
+
