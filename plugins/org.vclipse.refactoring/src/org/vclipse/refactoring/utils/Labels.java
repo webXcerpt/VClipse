@@ -44,12 +44,12 @@ public class Labels {
 		buffer.append(" ");
 		if(context.getStructuralFeature() != null) {
 			String featureName = context.getStructuralFeature().getName();
-			appendToBuffer(buffer, featureName, true);
+			appendToBuffer(buffer, featureName);
 		}
 		if(RefactoringType.Replace == type) {
 			buffer.append(" by ");
 			String typeName = context.getSourceElement().eClass().getName();
-			appendToBuffer(buffer, typeName, false);
+			appendToBuffer(buffer, typeName);
 		}
 		return buffer.toString();
 	}
@@ -74,7 +74,7 @@ public class Labels {
 		return names;
 	}
 	
-	protected void appendToBuffer(StringBuffer buffer, String text, boolean handleLastIndex) {
+	protected void appendToBuffer(StringBuffer buffer, String text) {
 		List<String> parts = VClipseStrings.splitCamelCase(text);
 		for(String part : parts) {
 			buffer.append(part.toLowerCase());
