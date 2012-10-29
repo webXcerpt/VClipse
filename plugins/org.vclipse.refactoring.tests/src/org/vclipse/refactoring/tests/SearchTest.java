@@ -4,30 +4,23 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcoreFactory;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.junit4.InjectWith;
 import org.eclipse.xtext.junit4.XtextRunner;
-import org.eclipselabs.xtext.utils.unittesting.XtextTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.vclipse.refactoring.utils.Configuration;
 import org.vclipse.refactoring.utils.EntrySearch;
 import org.vclipse.refactoring.utils.Extensions;
 import org.vclipse.vcml.VCMLInjectorProvider;
-import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.google.common.collect.Lists;
 
 @RunWith(XtextRunner.class)
 @InjectWith(VCMLInjectorProvider.class)
-public class SearchTest extends XtextTest {
+public class SearchTest extends RefactoringTest {
 
-	private static final VcmlPackage VCML = VcmlPackage.eINSTANCE;
-	
 	private EntrySearch search;
 	
 	public SearchTest() {
@@ -90,18 +83,5 @@ public class SearchTest extends XtextTest {
 		Assert.assertEquals("Amount of classes", 1, classes.size());
 		List<EObject> cstics = Lists.newArrayList(search.getEntries(VCML.getCharacteristic(), contents));
 		Assert.assertEquals("Amount of cstics", 9, cstics.size());
-	}
-	
-	protected void loadContents(String filename, List<EObject> contents) {
-		String path = "org.vclipse.refactoring.tests/resources/" + filename;
-		URI uri = URI.createPlatformPluginURI(path, true);
-		Resource resource = resourceSet.getResource(uri, true);
-		EList<EObject> resourceContents = resource.getContents();
-		if(!resourceContents.isEmpty()) {
-			EObject object = resourceContents.get(0);
-			contents.add(object);
-			List<EObject> entries = Lists.newArrayList(object.eAllContents());
-			contents.addAll(entries);
-		}
 	}
 }

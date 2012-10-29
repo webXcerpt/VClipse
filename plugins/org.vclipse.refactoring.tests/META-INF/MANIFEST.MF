@@ -16,4 +16,5 @@ Require-Bundle: org.eclipse.ui,
  org.apache.commons.logging,
  org.vclipse.vcml,
  org.vclipse.vcml.ui,
- org.vclipse.vcml.tests
+ org.vclipse.vcml.tests,
+ org.eclipse.xtext.ui.shared
