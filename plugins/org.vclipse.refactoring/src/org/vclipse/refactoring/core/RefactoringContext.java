@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.xtext.ui.shared.Access;
 import org.vclipse.refactoring.IRefactoringContext;
 import org.vclipse.refactoring.utils.Labels;
 
@@ -40,6 +41,9 @@ public class RefactoringContext implements IRefactoringContext {
 	private Labels labels;
 	
 	public static RefactoringContext getEmpty() {
+		if(contextProvider == null) {
+			contextProvider = Access.provider(RefactoringContext.class);
+		}
 		return contextProvider.get();
 	}
 	
