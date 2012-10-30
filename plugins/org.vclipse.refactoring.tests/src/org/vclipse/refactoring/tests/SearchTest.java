@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2012 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *     webXcerpt Software GmbH - initial creator
+ ******************************************************************************/
 package org.vclipse.refactoring.tests;
 
 import java.util.List;
@@ -10,10 +20,9 @@ import org.eclipse.xtext.junit4.InjectWith;
 import org.eclipse.xtext.junit4.XtextRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.vclipse.refactoring.utils.Configuration;
 import org.vclipse.refactoring.utils.EntrySearch;
-import org.vclipse.refactoring.utils.Extensions;
 import org.vclipse.vcml.VCMLInjectorProvider;
+import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.google.common.collect.Lists;
 
@@ -21,19 +30,16 @@ import com.google.common.collect.Lists;
 @InjectWith(VCMLInjectorProvider.class)
 public class SearchTest extends RefactoringTest {
 
+	protected static final VcmlPackage VCML = VcmlPackage.eINSTANCE;
+	
 	private EntrySearch search;
 	
 	public SearchTest() {
 		super(SearchTest.class.getName());
-		Configuration configuration = new Configuration();
-		Extensions extensions = new Extensions(configuration);
-		search = new EntrySearch(extensions);
 	}
 
 	@Test
 	public void testFindObject() {
-		List<EObject> contents = Lists.newArrayList();
-		loadContents("car_description.vcml", contents);
 		Assert.assertTrue(!contents.isEmpty());
 		int size = contents.size();
 		EObject entry = contents.get((size / 2) + 1);
@@ -47,8 +53,6 @@ public class SearchTest extends RefactoringTest {
 	
 	@Test
 	public void testFindByTypeAndName() {
-		List<EObject> contents = Lists.newArrayList();
-		loadContents("car_description.vcml", contents);
 		Assert.assertTrue(!contents.isEmpty());
 		EObject findEntry = search.findEntry("SEL_COND", VCML.getSelectionCondition(), contents);
 		Assert.assertNotNull(findEntry);
@@ -66,8 +70,6 @@ public class SearchTest extends RefactoringTest {
 	
 	@Test
 	public void testSearchByName() {
-		List<EObject> contents = Lists.newArrayList();
-		loadContents("car_description.vcml", contents);
 		Assert.assertTrue(!contents.isEmpty());
 		Iterable<EObject> namedIterable = search.getEntries("DEP_NET", contents);
 		Assert.assertNotNull(namedIterable);
@@ -77,8 +79,6 @@ public class SearchTest extends RefactoringTest {
 
 	@Test
 	public void testSearchByType() {
-		List<EObject> contents = Lists.newArrayList();
-		loadContents("car_description.vcml", contents);
 		List<EObject> classes = Lists.newArrayList(search.getEntries(VCML.getClass_(), contents));
 		Assert.assertEquals("Amount of classes", 1, classes.size());
 		List<EObject> cstics = Lists.newArrayList(search.getEntries(VCML.getCharacteristic(), contents));

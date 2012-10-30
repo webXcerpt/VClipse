@@ -1,9 +1,17 @@
+/*******************************************************************************
+ * Copyright (c) 2012 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *     webXcerpt Software GmbH - initial creator
+ ******************************************************************************/
 package org.vclipse.refactoring.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
-import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.junit4.InjectWith;
@@ -12,33 +20,21 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.vclipse.refactoring.core.RefactoringContext;
 import org.vclipse.refactoring.core.RefactoringType;
-import org.vclipse.refactoring.utils.Configuration;
-import org.vclipse.refactoring.utils.EntrySearch;
-import org.vclipse.refactoring.utils.Extensions;
-import org.vclipse.refactoring.utils.Labels;
 import org.vclipse.vcml.VCMLInjectorProvider;
-
-import com.google.common.collect.Lists;
+import org.vclipse.vcml.vcml.VcmlPackage;
 
 @RunWith(XtextRunner.class)
 @InjectWith(VCMLInjectorProvider.class)
 public class LabelsTests extends RefactoringTest {
 
-	private Labels labels;
-	private EntrySearch search;
+	protected static final VcmlPackage VCML = VcmlPackage.eINSTANCE;
 	
 	public LabelsTests() {
 		super(LabelsTests.class.getName());
-		Configuration configuration = new Configuration();
-		Extensions extensions = new Extensions(configuration);
-		labels = new Labels(extensions);
-		search = new EntrySearch(extensions);
 	}
 	
 	@Test
 	public void testUILabelProvider() {
-		List<EObject> contents = Lists.newArrayList();
-		loadContents("car_description.vcml", contents);
 		EObject findEntry = search.findEntry("(300)CAR", VCML.getClass_(), contents);
 		assertNotNull(findEntry);
 		
