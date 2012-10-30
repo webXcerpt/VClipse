@@ -130,8 +130,12 @@ public class SourceCodeChange extends NoChange {
 				if(search.equallyTypedContainer(existing, refactored)) {
 					EObject existingContainer = existing.eContainer();
 					EReference existingContainment = existing.eContainmentFeature();
-					EObject refactoredCopy = EcoreUtil2.copy(refactored);
-					existingContainer.eSet(existingContainment, refactoredCopy);
+					if(existingContainment.isMany()) {
+						List<EObject> entries = (List<EObject>)existingContainer.eGet(existingContainment);
+						entries.remove(existing);
+					} else {
+						existingContainer.eSet(existingContainment, refactored);						
+					}
 				} else if(existing.eContainer() == null && refactored.eContainer() == null) {
 					existing.eSet(feature, refactored.eGet(feature));
 				} else {

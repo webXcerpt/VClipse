@@ -19,7 +19,7 @@ import org.vclipse.refactoring.IPreviewObjectComputer;
 import org.vclipse.refactoring.IRefactoringConfiguration;
 import org.vclipse.refactoring.IRefactoringUIConfiguration;
 import org.vclipse.refactoring.RefactoringPlugin;
-import org.vclipse.refactoring.core.DefaultPreviewObjectComputer;
+import org.vclipse.refactoring.core.DefaultPreviewContainerComputer;
 import org.vclipse.refactoring.core.RefactoringConfiguration;
 import org.vclipse.refactoring.ui.RefactoringUIConfiguration;
 
@@ -44,7 +44,7 @@ public class RefactoringModule extends AbstractGenericModule {
 	}
 	
 	public Class<? extends IPreviewObjectComputer> bindPreviewObjectComputer() {
-		return DefaultPreviewObjectComputer.class;
+		return DefaultPreviewContainerComputer.class;
 	}
 	
 	public Class<? extends IRefactoringConfiguration> bindRefactoringConfiguration() {

@@ -21,7 +21,7 @@ import org.vclipse.refactoring.IPreviewObjectComputer;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-public class DefaultPreviewObjectComputer implements IPreviewObjectComputer {
+public class DefaultPreviewContainerComputer implements IPreviewObjectComputer {
 
 	@Override
 	public Set<EClass> getFavoredTypes() {
