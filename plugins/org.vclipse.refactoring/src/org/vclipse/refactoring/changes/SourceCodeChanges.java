@@ -87,9 +87,7 @@ public class SourceCodeChanges extends CompositeChange {
 		
 		EObject element = this.context.getSourceElement();
 		rootOriginal = EcoreUtil.getRootContainer(element);
-		
-		rootContents = Lists.newArrayList(rootOriginal.eAllContents());
-		rootContents.add(0, rootOriginal);
+		rootContents = search.getContents(rootOriginal);
 		
 		serializer = extensions.getInstance(ISerializer.class, rootOriginal);
 		IParser parser = extensions.getInstance(IParser.class, rootOriginal);
@@ -109,8 +107,7 @@ public class SourceCodeChanges extends CompositeChange {
 		EList<EObject> contents = resource.getContents();
 		contents.clear();
 		rootRefactored = parseResult.getRootASTElement();
-		copyContents = Lists.newArrayList(rootRefactored.eAllContents());
-		copyContents.add(0, rootRefactored);
+		copyContents = search.getContents(rootRefactored);
 		contents.add(rootRefactored);		
 		linker.linkModel(rootRefactored, new ListBasedDiagnosticConsumer());
 		EcoreUtil.resolveAll(resource);
