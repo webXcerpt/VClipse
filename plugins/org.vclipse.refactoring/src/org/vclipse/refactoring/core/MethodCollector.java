@@ -14,6 +14,8 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -151,7 +153,19 @@ public abstract class MethodCollector {
 	}
 	
 	protected boolean hasFeature(EObject object, EStructuralFeature feature) {
-		return object.eClass().getEAllStructuralFeatures().contains(feature);
+		EClass type = object.eClass();
+		if(object.eClass().getEAllStructuralFeatures().contains(feature)) {
+			return Boolean.TRUE;
+		}
+		EList<EClass> superTypes = type.getEAllSuperTypes();
+		for(EClass superType : superTypes) {
+			EList<EStructuralFeature> superFeatures = superType.getEAllStructuralFeatures();
+			if(superFeatures.contains(feature)) {
+				return Boolean.TRUE;
+			}
+			
+		}
+		return Boolean.FALSE;
 	}
 
 	private boolean equal(List<Class<?>> signature_one, List<Class<?>> signature_two) {

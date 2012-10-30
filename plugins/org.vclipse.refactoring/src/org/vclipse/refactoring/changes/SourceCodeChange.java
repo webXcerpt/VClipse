@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.vclipse.refactoring.changes;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -24,6 +23,7 @@ import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.EValidator.Registry;
@@ -41,13 +41,16 @@ import org.vclipse.base.VClipseStrings;
 import org.vclipse.refactoring.IPreviewObjectComputer;
 import org.vclipse.refactoring.compare.MultipleEntriesTypedElement;
 import org.vclipse.refactoring.core.DiffNode;
+import org.vclipse.refactoring.utils.EntrySearch;
 import org.vclipse.refactoring.utils.Extensions;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public class SourceCodeChange extends NoChange {
 
 	private Extensions extensions;
+	private EntrySearch search;
 	
 	private EValidator validator;
 	private IQualifiedNameProvider nameProvider;
@@ -57,8 +60,9 @@ public class SourceCodeChange extends NoChange {
 	private EObject refactored;
 	private FeatureChange featureChange;
 	
-	public SourceCodeChange(Extensions extensions) {
+	public SourceCodeChange(Extensions extensions, EntrySearch search) {
 		this.extensions = extensions;
+		this.search = search;
 	}
 	
 	public void addChange(EObject existing, EObject refactored, FeatureChange featureChange) {
@@ -112,14 +116,20 @@ public class SourceCodeChange extends NoChange {
 			EStructuralFeature feature = featureChange.getFeature();
 			EList<ListChange> listChanges = featureChange.getListChanges();
 			if(listChanges.isEmpty()) {
-				Object value = refactored.eGet(feature);
-				if(value instanceof EObject) {
-					existing.eSet(feature, EcoreUtil2.copy((EObject)value));					
-				} else if(value instanceof EList<?>) {
-					Collection<EObject> listCopy = EcoreUtil2.copyAll((EList<EObject>)value);
-					existing.eSet(feature, listCopy);
+				if(search.equallyTypedContainer(existing, refactored)) {
+					EObject existingContainer = existing.eContainer();
+					EReference existingContainment = existing.eContainmentFeature();
+					EObject refactoredCopy = EcoreUtil2.copy(refactored);
+					existingContainer.eSet(existingContainment, refactoredCopy);
+				} else if(existing.eContainer() == null && refactored.eContainer() == null) {
+					existing.eSet(feature, refactored.eGet(feature));
 				} else {
-					existing.eSet(feature, null);
+					EObject refactoredContainer = refactored.eContainer();
+					EObject rootContainer = EcoreUtil2.getRootContainer(existing);
+					List<EObject> entries = Lists.newArrayList(rootContainer.eAllContents());
+					entries.add(0, rootContainer);
+					EObject foundEntry = search.findEntry(refactoredContainer == null ? refactored : refactoredContainer, entries);
+					foundEntry.eSet(refactored.eContainmentFeature(), EcoreUtil2.copy(refactored));						
 				}
 			} else {
 				int decrement = 0;

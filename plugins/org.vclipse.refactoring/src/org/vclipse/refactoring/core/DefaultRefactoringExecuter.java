@@ -89,11 +89,13 @@ public class DefaultRefactoringExecuter extends MethodCollector implements IRefa
 						params.add(context);
 					} else if(method.getParameterTypes().length == 2) {
 						params.add(context);
-						params.add(refactoringMethod.getFirst());
+						EObject invokeOn = refactoringMethod.getFirst();
+						params.add(invokeOn);
 					}
-					refactoringMethod.getSecond().invoke(executer, params.toArray());
+					method.invoke(executer, params.toArray());
 				} catch (Exception exception) {
-					RefactoringPlugin.log(exception.getMessage(), exception);
+					String message = exception.getMessage();
+					RefactoringPlugin.log(message, exception);
 				}
 			}
 		}
@@ -108,6 +110,8 @@ public class DefaultRefactoringExecuter extends MethodCollector implements IRefa
 	
 	public Pair<EObject, Method> getRefactoring(IRefactoringContext context) {
 		String prefix = REFACTORING_PREFIX + context.getType();
-		return getMethod(context.getSourceElement(), context.getStructuralFeature(), prefix);
+		EObject element = context.getSourceElement();
+		EStructuralFeature feature = context.getStructuralFeature();
+		return getMethod(element, feature, prefix);
 	}
 }

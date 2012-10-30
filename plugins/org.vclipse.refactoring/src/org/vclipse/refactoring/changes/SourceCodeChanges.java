@@ -235,7 +235,7 @@ public class SourceCodeChanges extends CompositeChange {
 			EList<FeatureChange> featureChanges = entry.getValue();
 			for(FeatureChange featureChange : featureChanges) {
 				EObject existingEntry = search.findEntry(refactored, rootContents);
-				SourceCodeChange scc = new SourceCodeChange(extensions);
+				SourceCodeChange scc = new SourceCodeChange(extensions, search);
 				scc.addChange(existingEntry, refactored, featureChange);
 				add(scc);
 			}
