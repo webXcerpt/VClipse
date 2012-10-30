@@ -44,7 +44,6 @@ import org.vclipse.refactoring.core.DiffNode;
 import org.vclipse.refactoring.utils.EntrySearch;
 import org.vclipse.refactoring.utils.Extensions;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public class SourceCodeChange extends NoChange {
@@ -60,9 +59,21 @@ public class SourceCodeChange extends NoChange {
 	private EObject refactored;
 	private FeatureChange featureChange;
 	
-	public SourceCodeChange(Extensions extensions, EntrySearch search) {
+	private EObject rootOriginal;
+	private EObject rootRefactored;
+	
+	private List<EObject> rootContents;
+	private List<EObject> refactoredContents;
+	
+	public SourceCodeChange(EObject rootOriginal, EObject rootRefactored, Extensions extensions, EntrySearch search) {
 		this.extensions = extensions;
 		this.search = search;
+		
+		this.rootOriginal = rootOriginal;
+		this.rootRefactored = rootRefactored;
+		
+		rootContents = search.getContents(rootOriginal);
+		refactoredContents = search.getContents(rootRefactored);
 	}
 	
 	public void addChange(EObject existing, EObject refactored, FeatureChange featureChange) {
@@ -125,10 +136,7 @@ public class SourceCodeChange extends NoChange {
 					existing.eSet(feature, refactored.eGet(feature));
 				} else {
 					EObject refactoredContainer = refactored.eContainer();
-					EObject rootContainer = EcoreUtil2.getRootContainer(existing);
-					List<EObject> entries = Lists.newArrayList(rootContainer.eAllContents());
-					entries.add(0, rootContainer);
-					EObject foundEntry = search.findEntry(refactoredContainer == null ? refactored : refactoredContainer, entries);
+					EObject foundEntry = search.findEntry(refactoredContainer == null ? refactored : refactoredContainer, rootContents);
 					foundEntry.eSet(refactored.eContainmentFeature(), EcoreUtil2.copy(refactored));						
 				}
 			} else {

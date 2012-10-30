@@ -60,7 +60,7 @@ public class SourceCodeChanges extends CompositeChange {
 	private Extensions extensions;
 	
 	private EObject rootOriginal;
-	private EObject rootCopy;
+	private EObject rootRefactored;
 	
 	private DiffNode previewNode;
 	private IRefactoringUIContext context;
@@ -108,11 +108,11 @@ public class SourceCodeChanges extends CompositeChange {
 		}
 		EList<EObject> contents = resource.getContents();
 		contents.clear();
-		rootCopy = parseResult.getRootASTElement();
-		copyContents = Lists.newArrayList(rootCopy.eAllContents());
-		copyContents.add(0, rootCopy);
-		contents.add(rootCopy);		
-		linker.linkModel(rootCopy, new ListBasedDiagnosticConsumer());
+		rootRefactored = parseResult.getRootASTElement();
+		copyContents = Lists.newArrayList(rootRefactored.eAllContents());
+		copyContents.add(0, rootRefactored);
+		contents.add(rootRefactored);		
+		linker.linkModel(rootRefactored, new ListBasedDiagnosticConsumer());
 		EcoreUtil.resolveAll(resource);
 		
 		previewNode = new DiffNode();
@@ -121,7 +121,7 @@ public class SourceCodeChanges extends CompositeChange {
 	
 	@Override
 	public Object getModifiedElement() {
-		return rootCopy;
+		return rootRefactored;
 	}
 	
 	public DiffNode getDiffNode() {
@@ -160,7 +160,7 @@ public class SourceCodeChanges extends CompositeChange {
 					throw new CoreException(status);
 				}
 				
-				previewNode.setRight(new MultipleEntriesTypedElement(serializer, rootCopy));
+				previewNode.setRight(new MultipleEntriesTypedElement(serializer, rootRefactored));
 				sm.worked(10);
 				
 				recordSourceCodeChanges(sm, refactoringContext);
@@ -235,7 +235,7 @@ public class SourceCodeChanges extends CompositeChange {
 			EList<FeatureChange> featureChanges = entry.getValue();
 			for(FeatureChange featureChange : featureChanges) {
 				EObject existingEntry = search.findEntry(refactored, rootContents);
-				SourceCodeChange scc = new SourceCodeChange(extensions, search);
+				SourceCodeChange scc = new SourceCodeChange(rootOriginal, rootRefactored, extensions, search);
 				scc.addChange(existingEntry, refactored, featureChange);
 				add(scc);
 			}

@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 
@@ -33,6 +34,13 @@ public class EntrySearch {
 	@Inject
 	public EntrySearch(Extensions extensions) {
 		this.extensions = extensions;
+	}
+	
+	public List<EObject> getContents(EObject object) {
+		EObject rootContainer = EcoreUtil.getRootContainer(object);
+		List<EObject> entries = Lists.newArrayList(object.eAllContents());
+		entries.add(0, rootContainer);
+		return entries;
 	}
 	
 	@SuppressWarnings("unchecked")
