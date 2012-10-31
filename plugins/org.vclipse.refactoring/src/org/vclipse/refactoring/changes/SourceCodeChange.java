@@ -104,14 +104,12 @@ public class SourceCodeChange extends NoChange {
 				EObject refactoredContainer = refactored.eContainer();
 				if(existingContainer == refactoredContainer) {
 					existing.eSet(feature, refactored.eGet(feature));
-				} else {
-					if(search.equallyTyped(existing, refactored) && search.equallyNamed(existing, refactored)) {
-						Object value = refactored.eGet(feature);
-						existing.eSet(feature, value);
-					} else if(search.equallyTyped(existingContainer, refactoredContainer) && search.equallyNamed(existingContainer, refactoredContainer)) {
-						Object value = refactored.eGet(feature);
-						existing.eSet(feature, value);
-					}
+				} else if(search.equallyTyped(existing, refactored) && search.equallyNamed(existing, refactored)) {
+					Object value = refactored.eGet(feature);
+					existing.eSet(feature, value);
+				} else if(search.equallyTyped(existingContainer, refactoredContainer) && search.equallyNamed(existingContainer, refactoredContainer)) {
+					Object value = refactored.eGet(feature);
+					existing.eSet(feature, value);
 				}
 			} else {
 				int decrement = 0;
