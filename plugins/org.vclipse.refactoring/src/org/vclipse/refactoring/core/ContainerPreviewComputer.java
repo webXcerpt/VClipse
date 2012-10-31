@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.change.ListChange;
 
 import com.google.common.collect.Lists;
 
-public abstract class ContainerPreviewComputer extends DefaultPreviewContainerComputer {
+public class ContainerPreviewComputer extends DefaultContainerPreviewComputer {
 
 	@Override
 	public List<EObject> getExisting(EObject original, EObject refactored, FeatureChange featureChange) {
