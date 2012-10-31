@@ -23,14 +23,12 @@ import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.EValidator.Registry;
 import org.eclipse.emf.ecore.change.ChangeKind;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.ListChange;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
 import org.eclipse.xtext.diagnostics.AbstractDiagnostic;
@@ -59,34 +57,9 @@ public class SourceCodeChange extends NoChange {
 	private EObject refactored;
 	private FeatureChange featureChange;
 	
-	private EObject rootOriginal;
-	private EObject rootRefactored;
-	
-	private List<EObject> rootContents;
-	private List<EObject> refactoredContents;
-	
 	public SourceCodeChange(EObject rootOriginal, EObject rootRefactored, Extensions extensions, EntrySearch search) {
 		this.extensions = extensions;
 		this.search = search;
-		
-		this.rootOriginal = rootOriginal;
-		this.rootRefactored = rootRefactored;
-		
-		rootContents = search.getContents(rootOriginal);
-		refactoredContents = search.getContents(rootRefactored);
-	}
-	
-	public void addChange(EObject existing, EObject refactored, FeatureChange featureChange) {
-		this.existing = existing;
-		this.refactored = refactored;
-		this.featureChange = featureChange;
-		
-		EObject initObject = existing == null ? refactored : existing;
-		Registry registry = extensions.getInstance(EValidator.Registry.class, initObject);
-		EPackage epackage = initObject.eClass().getEPackage();
-		validator = registry.getEValidator(epackage);
-		nameProvider = extensions.getInstance(IQualifiedNameProvider.class, initObject);
-		serializer = extensions.getInstance(ISerializer.class, initObject);
 	}
 	
 	@Override
@@ -127,28 +100,17 @@ public class SourceCodeChange extends NoChange {
 			EStructuralFeature feature = featureChange.getFeature();
 			EList<ListChange> listChanges = featureChange.getListChanges();
 			if(listChanges.isEmpty()) {
-				if(search.equallyTypedContainer(existing, refactored)) {
-					if(search.equallyTyped(existing, refactored)) {
-						mergeEquallyTyped();
-					} else {
-						EObject existingContainer = existing.eContainer();
-						EReference existingContainment = existing.eContainmentFeature();
-						if(existingContainment.isMany()) {
-							List<EObject> entries = (List<EObject>)existingContainer.eGet(existingContainment);
-							entries.remove(existing);
-						} else {
-							existingContainer.eSet(existingContainment, refactored);						
-						}	
-					}
-				} else if(existing.eContainer() == null && refactored.eContainer() == null) {
+				EObject existingContainer = existing.eContainer();
+				EObject refactoredContainer = refactored.eContainer();
+				if(existingContainer == refactoredContainer) {
 					existing.eSet(feature, refactored.eGet(feature));
 				} else {
-					if(search.equallyTyped(existing, refactored)) {
-						mergeEquallyTyped();
-					} else {
-						EObject refactoredContainer = refactored.eContainer();
-						EObject foundEntry = search.findEntry(refactoredContainer == null ? refactored : refactoredContainer, rootContents);
-						foundEntry.eSet(refactored.eContainmentFeature(), refactored);
+					if(search.equallyTyped(existing, refactored) && search.equallyNamed(existing, refactored)) {
+						Object value = refactored.eGet(feature);
+						existing.eSet(feature, value);
+					} else if(search.equallyTyped(existingContainer, refactoredContainer) && search.equallyNamed(existingContainer, refactoredContainer)) {
+						Object value = refactored.eGet(feature);
+						existing.eSet(feature, value);
 					}
 				}
 			} else {
@@ -210,8 +172,8 @@ public class SourceCodeChange extends NoChange {
 	
 	@Override
 	public String getName() {
-		EObject refactoringOnObject = existing == null ? refactored : existing;
-		String refactoringOnType = refactoringOnObject.eClass().getName();
+		EObject computeOn = existing == null ? refactored : existing;
+		String refactoringOnType = computeOn.eClass().getName();
 		List<String> parts = VClipseStrings.splitCamelCase(refactoringOnType);
 		StringBuffer labelBuffer = new StringBuffer("Re-factoring on ");
 		int size = parts.size() - 1;
@@ -224,23 +186,22 @@ public class SourceCodeChange extends NoChange {
 		return labelBuffer.toString();
 	}
 	
+	public void addChange(EObject existing, EObject refactored, FeatureChange featureChange) {
+		this.existing = existing;
+		this.refactored = refactored;
+		this.featureChange = featureChange;
+		
+		EObject initObject = existing == null ? refactored : existing;
+		Registry registry = extensions.getInstance(EValidator.Registry.class, initObject);
+		EPackage epackage = initObject.eClass().getEPackage();
+		validator = registry.getEValidator(epackage);
+		nameProvider = extensions.getInstance(IQualifiedNameProvider.class, initObject);
+		serializer = extensions.getInstance(ISerializer.class, initObject);
+	}
+	
 	private String getName(Extensions extensions, EObject object) {
 		IQualifiedNameProvider nameProvider = extensions.getInstance(IQualifiedNameProvider.class, object);
 		QualifiedName qualifiedName = nameProvider == null ? QualifiedName.create("") : nameProvider.getFullyQualifiedName(object);
 		return qualifiedName == null ? object.eClass().getName() : qualifiedName.getLastSegment();
-	}
-
-	@SuppressWarnings("unchecked")
-	private void mergeEquallyTyped() {
-		EObject container = existing.eContainer();
-		EStructuralFeature containment = existing.eContainmentFeature();
-		if(containment.isMany()) {
-			List<EObject> entries = (List<EObject>)container.eGet(containment);
-			int index = entries.indexOf(existing);
-			entries.remove(existing);
-			entries.add(index, refactored);
-		} else {
-			container.eSet(containment, EcoreUtil.copy(refactored));							
-		}
 	}
 }
