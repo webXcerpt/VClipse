@@ -17,6 +17,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.change.ChangeDescription;
 import org.eclipse.emf.ecore.change.ChangeKind;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.ListChange;
@@ -27,16 +28,16 @@ public class ContainerPreviewComputer extends DefaultContainerPreviewComputer {
 
 	@Override
 	public List<EObject> getExisting(EObject original, EObject refactored, FeatureChange featureChange) {
-		return getPreviewObjects(original, featureChange);
+		return getPreviewObjects(original, featureChange, false);
 	}
 	
 	@Override
 	public List<EObject> getRefactored(EObject original, EObject refactored, FeatureChange featureChange) {
-		return getPreviewObjects(refactored, featureChange);
+		return getPreviewObjects(refactored, featureChange, true);
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected List<EObject> getPreviewObjects(EObject object, FeatureChange featureChange) {
+	protected List<EObject> getPreviewObjects(EObject object, FeatureChange featureChange, boolean ignoreChangeDescriptions) {
 		List<EObject> previewObjects = Lists.newArrayList();
 		EClass type = object.eClass();		
 		Set<EClass> ignoreTypes = getIgnoreTypes();
@@ -63,7 +64,12 @@ public class ContainerPreviewComputer extends DefaultContainerPreviewComputer {
 					ChangeKind changeType = listChange.getKind();
 					if(ChangeKind.ADD_LITERAL == changeType) {
 						EList<EObject> values = listChange.getReferenceValues();
-						previewObjects.addAll(values);
+						for(EObject current : values) {
+							if(ignoreChangeDescriptions && current.eContainer() instanceof ChangeDescription) {
+								continue;
+							}
+							previewObjects.add(current);					
+						}
 					} else if(ChangeKind.REMOVE_LITERAL == changeType || ChangeKind.MOVE_LITERAL == changeType) {
 						if(value instanceof List<?>) {
 							previewObjects.addAll((List<EObject>)value);

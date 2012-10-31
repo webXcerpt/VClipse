@@ -19,8 +19,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.change.ChangeDescription;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
+import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.SaveOptions.Builder;
 import org.eclipse.xtext.serializer.ISerializer;
@@ -41,7 +43,17 @@ public class MultipleEntriesStorage extends DefaultStorage {
 		SaveOptions options = saveOptionsBuilder.noValidation().format().getOptions();
 		StringBuffer contentsBuffer = new StringBuffer();
 		for(int i=0, size=entries.length-1; i<=size; i++) {
-			String content = serializer.serialize(entries[i], options);
+			EObject entry = entries[i];
+			if(entry.eContainer() instanceof ChangeDescription) {
+				if(nameProvider != null) {
+					QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(entry);
+					if(qualifiedName != null) {
+						contentsBuffer.append("deleted object: " + qualifiedName.getLastSegment());
+						continue;
+					}
+				}
+			}
+			String content = serializer.serialize(entry, options);
 			contentsBuffer.append(content.trim());
 			if(i != size) {
 				contentsBuffer.append("\n");
