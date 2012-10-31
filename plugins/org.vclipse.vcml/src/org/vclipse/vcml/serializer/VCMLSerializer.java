@@ -70,7 +70,8 @@ public class VCMLSerializer extends Serializer {
 				buffer.append(content);
 				buffer.append(",");
 			} else {
-				content = procedurePrinter.prettyPrint(object);				
+				content = procedurePrinter.prettyPrint(object);	
+				buffer.append(content);
 			}
 			return buffer.toString();
 		}
