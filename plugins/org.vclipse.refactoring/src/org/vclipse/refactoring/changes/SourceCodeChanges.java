@@ -176,31 +176,44 @@ public class SourceCodeChanges extends CompositeChange {
 	public RefactoringStatus refactor(final IProgressMonitor pm) throws CoreException {
 		RefactoringStatus refactoringStatus = RefactoringStatus.create(Status.OK_STATUS);
 		if(isEnabled()) {
-			StringBuffer taskBuffer = new StringBuffer("Executing re-factoring:").append(context.getLabel());
+			StringBuffer taskBuffer = new StringBuffer("Executing re-factoring:");
+			taskBuffer.append(context.getLabel());
 			final List<Change> changes = Lists.newArrayList(getChildren());
 			final SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), changes.size());
 			final Map<SourceCodeChange, CoreException> exceptions = Maps.newHashMap();
 			context.getDocument().modify(new IUnitOfWork<EObject, XtextResource>() {
 				@Override
 				public EObject exec(XtextResource resource) throws Exception {
-					boolean allEnabled = true;
+					boolean applyAllChanges = true;
 					for(Change change : changes) {
 						if(change instanceof SourceCodeChange) {
-							allEnabled &= ((SourceCodeChange)change).isEnabled();
+							applyAllChanges &= ((SourceCodeChange)change).isEnabled();
+							if(!applyAllChanges) {
+								break;
+							}
 							sm.worked(1);
 						}
 					}
-					if(allEnabled) {
+					if(applyAllChanges) {
 						EList<EObject> contents = resource.getContents();
 						contents.clear();
 						contents.add(rootRefactored);
+					} else {
+						for(Change change : changes) {
+							if(change instanceof SourceCodeChange) {
+								SourceCodeChange scc = (SourceCodeChange)change;
+								scc.applyRefactoring(pm);
+								sm.worked(1);
+							}
+						}
 					}
 					return null;
 				}
 			});
 			
 			if(!exceptions.isEmpty()) {
-				taskBuffer = new StringBuffer("Collecting errors for ").append(context.getLabel());
+				taskBuffer = new StringBuffer("Collecting errors for ");
+				taskBuffer.append(context.getLabel());
 				SubMonitor sm_exceptions = SubMonitor.convert(pm, taskBuffer.toString(), exceptions.size());
 				for(Entry<SourceCodeChange, CoreException> exception : exceptions.entrySet()) {
 					final SourceCodeChange scc = exception.getKey();
