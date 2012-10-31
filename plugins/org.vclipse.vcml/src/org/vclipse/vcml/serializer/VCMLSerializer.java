@@ -59,10 +59,20 @@ public class VCMLSerializer extends Serializer {
 		EObject rootContainer = EcoreUtil.getRootContainer(object);
 		if(object instanceof ConstraintSource || rootContainer instanceof ConstraintSource) {
 			return constraintPrinter.prettyPrint(object);
-		} else if(object instanceof ConditionSource || rootContainer instanceof ConditionSource || 
-					object instanceof ProcedureSource || rootContainer instanceof ProcedureSource) {
+		} else if(object instanceof ConditionSource || rootContainer instanceof ConditionSource) {
 			return procedurePrinter.prettyPrint(object);
+		} else if(object instanceof ProcedureSource || rootContainer instanceof ProcedureSource) {
+			return procedurePrinter.prettyPrint(object);
+		} else {
+			StringBuffer buffer = new StringBuffer();
+			String content = constraintPrinter.prettyPrint(object);
+			if(!content.isEmpty()) {
+				buffer.append(content);
+				buffer.append(",");
+			} else {
+				content = procedurePrinter.prettyPrint(object);				
+			}
+			return buffer.toString();
 		}
-		return "";
 	}
 }
