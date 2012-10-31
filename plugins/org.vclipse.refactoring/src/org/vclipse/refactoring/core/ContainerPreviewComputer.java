@@ -17,6 +17,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.change.ChangeKind;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.ListChange;
 
@@ -58,14 +59,19 @@ public class ContainerPreviewComputer extends DefaultContainerPreviewComputer {
 					return previewObjects;
 				}
 			} else {
-				ListChange listChange = listChanges.get(0);
-				int index = listChange.getIndex();
-				EList<EObject> entries = (EList<EObject>)value;
-				if(index < entries.size()) {
-					EObject entry = entries.get(index);
-					previewObjects.add(entry);
-					return previewObjects;
+				for(ListChange listChange : listChanges) {
+					ChangeKind changeType = listChange.getKind();
+					if(ChangeKind.ADD_LITERAL == changeType) {
+						EList<EObject> values = listChange.getReferenceValues();
+						previewObjects.addAll(values);
+					} else if(ChangeKind.REMOVE_LITERAL == changeType || ChangeKind.MOVE_LITERAL == changeType) {
+						if(value instanceof List<?>) {
+							previewObjects.addAll((List<EObject>)value);
+							break;
+						}
+					}
 				}
+				return previewObjects;
 			}
 		} else {
 			EObject bottomUp = bottomUp(object);
