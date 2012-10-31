@@ -63,7 +63,11 @@ public class ContainerPreviewComputer extends DefaultContainerPreviewComputer {
 					ChangeKind changeType = listChange.getKind();
 					if(ChangeKind.ADD_LITERAL == changeType) {
 						EList<EObject> values = listChange.getReferenceValues();
-						previewObjects.addAll(values);
+						for(EObject current : values) {
+							if(!(current.eContainer() instanceof EObject)) {
+								previewObjects.add(current);								
+							}
+						}
 					} else if(ChangeKind.REMOVE_LITERAL == changeType || ChangeKind.MOVE_LITERAL == changeType) {
 						if(value instanceof List<?>) {
 							previewObjects.addAll((List<EObject>)value);
