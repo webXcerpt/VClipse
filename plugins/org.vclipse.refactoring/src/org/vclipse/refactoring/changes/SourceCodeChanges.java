@@ -182,19 +182,18 @@ public class SourceCodeChanges extends CompositeChange {
 			final Map<SourceCodeChange, CoreException> exceptions = Maps.newHashMap();
 			context.getDocument().modify(new IUnitOfWork<EObject, XtextResource>() {
 				@Override
-				public EObject exec(XtextResource state) throws Exception {
+				public EObject exec(XtextResource resource) throws Exception {
+					boolean allEnabled = true;
 					for(Change change : changes) {
 						if(change instanceof SourceCodeChange) {
-							SourceCodeChange scc = (SourceCodeChange)change;
-							if(scc.isEnabled()) {
-								try {
-									scc.refactor(sm);							
-								} catch(CoreException exception) {
-									exceptions.put(scc, exception);
-								}
-							}
+							allEnabled &= ((SourceCodeChange)change).isEnabled();
 							sm.worked(1);
 						}
+					}
+					if(allEnabled) {
+						EList<EObject> contents = resource.getContents();
+						contents.clear();
+						contents.add(rootRefactored);
 					}
 					return null;
 				}

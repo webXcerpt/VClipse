@@ -30,9 +30,9 @@ import org.eclipse.emf.ecore.EValidator.Registry;
 import org.eclipse.emf.ecore.change.ChangeKind;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.ListChange;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
-import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.AbstractDiagnostic;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -118,7 +118,7 @@ public class SourceCodeChange extends NoChange {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public RefactoringStatus refactor(IProgressMonitor pm) throws CoreException {
+	public RefactoringStatus applyRefactoring(IProgressMonitor pm) throws CoreException {
 		if(isEnabled()) {
 			EObject handleWithObject = existing == null ? refactored : existing;
 			String name = getName(extensions, handleWithObject);
@@ -128,20 +128,28 @@ public class SourceCodeChange extends NoChange {
 			EList<ListChange> listChanges = featureChange.getListChanges();
 			if(listChanges.isEmpty()) {
 				if(search.equallyTypedContainer(existing, refactored)) {
-					EObject existingContainer = existing.eContainer();
-					EReference existingContainment = existing.eContainmentFeature();
-					if(existingContainment.isMany()) {
-						List<EObject> entries = (List<EObject>)existingContainer.eGet(existingContainment);
-						entries.remove(existing);
+					if(search.equallyTyped(existing, refactored)) {
+						mergeEquallyTyped();
 					} else {
-						existingContainer.eSet(existingContainment, refactored);						
+						EObject existingContainer = existing.eContainer();
+						EReference existingContainment = existing.eContainmentFeature();
+						if(existingContainment.isMany()) {
+							List<EObject> entries = (List<EObject>)existingContainer.eGet(existingContainment);
+							entries.remove(existing);
+						} else {
+							existingContainer.eSet(existingContainment, refactored);						
+						}	
 					}
 				} else if(existing.eContainer() == null && refactored.eContainer() == null) {
 					existing.eSet(feature, refactored.eGet(feature));
 				} else {
-					EObject refactoredContainer = refactored.eContainer();
-					EObject foundEntry = search.findEntry(refactoredContainer == null ? refactored : refactoredContainer, rootContents);
-					foundEntry.eSet(refactored.eContainmentFeature(), EcoreUtil2.copy(refactored));						
+					if(search.equallyTyped(existing, refactored)) {
+						mergeEquallyTyped();
+					} else {
+						EObject refactoredContainer = refactored.eContainer();
+						EObject foundEntry = search.findEntry(refactoredContainer == null ? refactored : refactoredContainer, rootContents);
+						foundEntry.eSet(refactored.eContainmentFeature(), refactored);
+					}
 				}
 			} else {
 				int decrement = 0;
@@ -158,6 +166,10 @@ public class SourceCodeChange extends NoChange {
 						decrement = 0;
 						EObject entry = refactoredEntries.get(index);
 						originalEntries.add(entry);
+					} else {
+						EObject moved = refactoredEntries.get(index);
+						EObject found = search.findEntry(moved, originalEntries);
+						originalEntries.move(index, found);
 					}
 				}
 			}
@@ -216,5 +228,19 @@ public class SourceCodeChange extends NoChange {
 		IQualifiedNameProvider nameProvider = extensions.getInstance(IQualifiedNameProvider.class, object);
 		QualifiedName qualifiedName = nameProvider == null ? QualifiedName.create("") : nameProvider.getFullyQualifiedName(object);
 		return qualifiedName == null ? object.eClass().getName() : qualifiedName.getLastSegment();
+	}
+
+	@SuppressWarnings("unchecked")
+	private void mergeEquallyTyped() {
+		EObject container = existing.eContainer();
+		EStructuralFeature containment = existing.eContainmentFeature();
+		if(containment.isMany()) {
+			List<EObject> entries = (List<EObject>)container.eGet(containment);
+			int index = entries.indexOf(existing);
+			entries.remove(existing);
+			entries.add(index, refactored);
+		} else {
+			container.eSet(containment, EcoreUtil.copy(refactored));							
+		}
 	}
 }

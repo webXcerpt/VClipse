@@ -199,6 +199,31 @@ public class EntrySearch {
 		}
 	}
 	
+	public boolean equallyTyped(EObject first, EObject second) {
+		if(first == null || second == null) {
+			return Boolean.FALSE;
+		} else {
+			EClass typefirst = first.eClass();
+			EClass typesecond = second.eClass();
+			return typefirst == typesecond;
+		}
+	}
+	
+	public boolean equallyNamed(EObject first, EObject second) {
+		if(first == null || second == null) {
+			return Boolean.FALSE;
+		} else {
+			IQualifiedNameProvider nameProvider = extensions.getInstance(IQualifiedNameProvider.class, first);
+			QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(first);
+			QualifiedName qualifiedName2 = nameProvider.getFullyQualifiedName(second);
+			if(qualifiedName == null || qualifiedName2 == null) {
+				return Boolean.FALSE;
+			} else {
+				return qualifiedName.getLastSegment().equals(qualifiedName2.getLastSegment());
+			}
+		}
+	}
+	
 	protected EObject findNextEntry(EObject targetObject, List<EObject> entries, EObject previousEntry) {
 		List<EObject> entriesCopy = Lists.newArrayList(entries);
 		entriesCopy.remove(previousEntry);

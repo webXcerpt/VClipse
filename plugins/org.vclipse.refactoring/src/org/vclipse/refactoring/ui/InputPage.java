@@ -87,6 +87,9 @@ public class InputPage extends UserInputWizardPage {
 			final RefactoringTask refactoring = context.getRefactoring();
 			IWizardContainer container = this.inputPage.getContainer();
 			try {
+				if(container == null) {
+					return;
+				}
 				container.run(true, true, new IRunnableWithProgress() {
 					@Override
 					public void run(final IProgressMonitor pm) throws InvocationTargetException, InterruptedException {
