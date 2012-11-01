@@ -54,7 +54,7 @@ public class CharacteristicReader extends BAPIUtils {
 	public static final SimpleDateFormat DATEFORMAT_SAP = new SimpleDateFormat("yyyyMMdd");
 	public static final SimpleDateFormat DATEFORMAT_VCML = new SimpleDateFormat("dd.MM.yyyy");
 
-	public Characteristic read(String csticName, VcmlModel vcmlModel, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public Characteristic read(String csticName, VcmlModel vcmlModel, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		if(csticName == null || monitor.isCanceled()) {
 			return null;			
 		}
@@ -69,7 +69,7 @@ public class CharacteristicReader extends BAPIUtils {
 		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue("CHARACTNAME", csticName);
 		
-		handleOptions2(options, ipl, null, "KEYDATE");
+		handleOptions2(object.getOptions(), globalOptions, ipl, null, "KEYDATE");
 		
 		execute(function, monitor, csticName);
 		if(processReturnTable(function)) {

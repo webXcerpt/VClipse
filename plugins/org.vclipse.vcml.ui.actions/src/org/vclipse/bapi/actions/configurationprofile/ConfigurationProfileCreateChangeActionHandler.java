@@ -41,7 +41,7 @@ public class ConfigurationProfileCreateChangeActionHandler extends BAPIUtils imp
 	}
 
 	@Override
-	public void run(ConfigurationProfile object, Resource resource,	IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
+	public void run(ConfigurationProfile object, Resource resource,	IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions) throws JCoException {
 		Material material = object.getMaterial();
 		if(material == null) {
 			return;
@@ -55,8 +55,7 @@ public class ConfigurationProfileCreateChangeActionHandler extends BAPIUtils imp
 		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue("OBJECT_TYPE", "MARA");
 		
-		
-		handleOptions(options, ipl, null, null);
+		handleOptions(object.getOptions(), globalOptions, ipl, null, null);
 		
 		JCoParameterList tpl = function.getTableParameterList();
 		JCoTable conObjectKey = tpl.getTable("CON_OBJECT_KEY");

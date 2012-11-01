@@ -39,7 +39,7 @@ public class VariantFunctionReader extends BAPIUtils {
 	@Inject
 	private CharacteristicReader csticReader;
 	
-	public VariantFunction read(String variantFunctionName, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public VariantFunction read(String variantFunctionName, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		if(variantFunctionName == null || monitor.isCanceled()) {
 			return null;
 		}
@@ -56,7 +56,7 @@ public class VariantFunctionReader extends BAPIUtils {
 		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue("FUNCTION_NAME", variantFunctionName);
 		
-		handleOptions(options, ipl, null, "DATE");
+		handleOptions(object.getOptions(), globalOptions, ipl, null, "DATE");
 		
 		try {
 			execute(function, monitor, variantFunctionName);
@@ -78,7 +78,7 @@ public class VariantFunctionReader extends BAPIUtils {
 					if(monitor.isCanceled()) {
 						return null;
 					}
-					cstic = csticReader.read(csticName, vcmlModel, monitor, seenObjects, options, recurse);
+					cstic = csticReader.read(csticName, vcmlModel, monitor, seenObjects, globalOptions, recurse);
 				}
 				if (cstic==null) {
 					cstic = VCMLProxyFactory.createCharacteristicProxy(vcmlModel.eResource(), csticName);

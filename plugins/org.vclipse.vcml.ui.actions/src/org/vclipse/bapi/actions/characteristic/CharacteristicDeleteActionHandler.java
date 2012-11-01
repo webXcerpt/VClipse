@@ -31,13 +31,13 @@ public class CharacteristicDeleteActionHandler extends BAPIUtils implements IBAP
 		return isConnected();
 	}
 
-	public void run(Characteristic object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
+	public void run(Characteristic object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions) throws JCoException {
 		beginTransaction();
 		JCoFunction function = getJCoFunction("BAPI_CHARACT_DELETE", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue("CHARACTNAME", object.getName());
 		
-		handleOptions(options, ipl, "CHANGENUMBER", "KEYDATE");
+		handleOptions(object.getOptions(), globalOptions, ipl, "CHANGENUMBER", "KEYDATE");
 		
 		execute(function, monitor, object.getName());
 		if (processReturnTable(function)) {

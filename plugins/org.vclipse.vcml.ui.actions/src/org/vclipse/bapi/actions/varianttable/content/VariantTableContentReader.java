@@ -36,7 +36,7 @@ public class VariantTableContentReader extends VariantTableContentDeleteActionHa
 	@Inject
 	private VariantTableReader variantTableReader;
 	
-	public VariantTableContent read(String variantTableName, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public VariantTableContent read(String variantTableName, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		if(variantTableName == null || monitor.isCanceled()) {
 			return null;
 		}
@@ -47,7 +47,7 @@ public class VariantTableContentReader extends VariantTableContentDeleteActionHa
 		}
 		VariantTable variantTable = null;
 		if(recurse) {
-			variantTable = variantTableReader.read(variantTableName, vcmlModel, monitor, seenObjects, options, recurse);
+			variantTable = variantTableReader.read(variantTableName, vcmlModel, monitor, seenObjects, globalOptions, recurse);
 		} else {
 			Iterator<VariantTable> iterator = getObjectsByNameAndType(variantTableName, vcmlModel, VariantTable.class).iterator();
 			if(iterator.hasNext()) {
@@ -63,7 +63,7 @@ public class VariantTableContentReader extends VariantTableContentDeleteActionHa
 		vcmlModel.getObjects().add(content);
 		JCoFunction function = getJCoFunction("CARD_TABLE_READ_ENTRIES", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
-		handleOptions(options, ipl, "CHANGE_NO", "DATE");
+		handleOptions(content.getOptions(), globalOptions, ipl, "CHANGE_NO", "DATE");
 		ipl.setValue("VAR_TABLE", variantTableName.toUpperCase());
 		try {
 			execute(function, monitor, variantTableName);

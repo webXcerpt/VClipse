@@ -31,7 +31,7 @@ import com.sap.conn.jco.JCoStructure;
 
 public class ProcedureReader extends BAPIUtils {
 
-	public Procedure read(String procedureName, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public Procedure read(String procedureName, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		if(procedureName == null || monitor.isCanceled()) {
 			return null;
 		}
@@ -49,7 +49,7 @@ public class ProcedureReader extends BAPIUtils {
 		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue("DEPENDENCY", procedureName);
 		
-		handleOptions(options, ipl, "CHANGE_NO", "DATE");
+		handleOptions(object.getOptions(), globalOptions, ipl, "CHANGE_NO", "DATE");
 		
 		// if the following flags are not checked, then the function performs just an existence check
 		ipl.setValue("FL_WITH_BASIC_DATA", "X");
@@ -71,7 +71,7 @@ public class ProcedureReader extends BAPIUtils {
 			
 			ProcedureSource procedureSource = sourceUtils.getProcedureSource(object);
 			if(procedureSource!=null && recurse) {
-				sourceCrossReferenceExtractor.extractFromSource(procedureSource, vcmlModel, monitor, seenObjects, options);
+				sourceCrossReferenceExtractor.extractFromSource(procedureSource, vcmlModel, monitor, seenObjects, globalOptions);
 			}
 		} catch (AbapException e) {
 			handleAbapException(e);

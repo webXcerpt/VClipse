@@ -35,7 +35,7 @@ public class BillOfMaterialChangeActionHandler extends BAPIUtils implements IBAP
 		return isConnected();
 	}
 
-	public void run(BillOfMaterial billOfMaterial, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
+	public void run(BillOfMaterial billOfMaterial, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions) throws JCoException {
 		Material material = billOfMaterial.getMaterial();
 		if(material == null) {
 			return;
@@ -48,7 +48,7 @@ public class BillOfMaterialChangeActionHandler extends BAPIUtils implements IBAP
 		JCoFunction function = getJCoFunction("CSAP_MAT_BOM_MAINTAIN", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		
-		handleOptions(options, ipl, "CHANGE_NO", "VALID_FROM");
+		handleOptions(billOfMaterial.getOptions(), globalOptions, ipl, "CHANGE_NO", "VALID_FROM");
 		
 		ipl.setValue("MATERIAL", materialNumber);
 		ipl.setValue("PLANT", plant);

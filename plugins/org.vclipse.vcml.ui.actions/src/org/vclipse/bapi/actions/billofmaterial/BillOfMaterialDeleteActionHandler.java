@@ -32,7 +32,7 @@ public class BillOfMaterialDeleteActionHandler extends BillOfMaterialReader impl
 		return isConnected();
 	}
 
-	public void run(BillOfMaterial billOfMaterial, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
+	public void run(BillOfMaterial billOfMaterial, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions) throws JCoException {
 		JCoFunction function = getJCoFunction("CSAP_MAT_BOM_DELETE", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		Material material = billOfMaterial.getMaterial();
@@ -43,7 +43,7 @@ public class BillOfMaterialDeleteActionHandler extends BillOfMaterialReader impl
 		String plant = getPlant();
 		String bomUsage = getBomUsage();
 		
-		handleOptions(options, ipl, "CHANGE_NO", "VALID_FROM");
+		handleOptions(billOfMaterial.getOptions(), globalOptions, ipl, "CHANGE_NO", "VALID_FROM");
 		
 		ipl.setValue("MATERIAL", materialNumber);
 		ipl.setValue("PLANT", plant);

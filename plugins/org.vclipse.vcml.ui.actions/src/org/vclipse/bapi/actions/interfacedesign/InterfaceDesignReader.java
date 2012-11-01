@@ -41,7 +41,7 @@ public class InterfaceDesignReader extends BAPIUtils {
 	@Inject
 	private CharacteristicReader csticReader;
 	
-	public InterfaceDesign read(String interfaceDesignName, VcmlModel model, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public InterfaceDesign read(String interfaceDesignName, VcmlModel model, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		if (interfaceDesignName == null || monitor.isCanceled()) {
 			return null;
 		}
@@ -170,7 +170,7 @@ FRAME_TEXT
 			JCoFunction function = getJCoFunction("BAPI_UI_GETDETAIL", monitor);	
 			JCoParameterList ipl = function.getImportParameterList();
 			
-			handleOptions(options, ipl, null, null);
+			handleOptions(object.getOptions(), globalOptions, ipl, null, null);
 			
 			ipl.setValue("DESIGNNAME", interfaceDesignName);
 			execute(function, monitor, interfaceDesignName);
@@ -221,7 +221,7 @@ FRAME_TEXT
 								if(monitor.isCanceled()) {
 									return null;
 								}
-								cstic = csticReader.read(csticName, model, monitor, seenObjects, options, recurse);
+								cstic = csticReader.read(csticName, model, monitor, seenObjects, globalOptions, recurse);
 							}
 							if (cstic==null) {
 								cstic = VCMLProxyFactory.createCharacteristicProxy(model.eResource(), csticName);

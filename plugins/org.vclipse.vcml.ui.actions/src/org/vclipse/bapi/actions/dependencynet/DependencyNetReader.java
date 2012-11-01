@@ -38,7 +38,7 @@ public class DependencyNetReader extends BAPIUtils {
 	@Inject
 	private ConstraintReader constraintReader;
 
-	public DependencyNet read(String depNetName, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public DependencyNet read(String depNetName, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		if(depNetName == null) {
 			return null;
 		}
@@ -54,7 +54,7 @@ public class DependencyNetReader extends BAPIUtils {
 		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue("CONSTRAINT_NET", depNetName);
 		
-		handleOptions(options, ipl, "CHANGE_NO", "DATE");
+		handleOptions(object.getOptions(), globalOptions, ipl, "CHANGE_NO", "DATE");
 		
 		try {
 			execute(function, monitor, depNetName);
@@ -78,7 +78,7 @@ public class DependencyNetReader extends BAPIUtils {
 						if(monitor.isCanceled()) {
 							return null;
 						}
-						constraint = constraintReader.read(constraintName, vcmlModel.eResource(), monitor, seenObjects, options, recurse);
+						constraint = constraintReader.read(constraintName, vcmlModel.eResource(), monitor, seenObjects, globalOptions, recurse);
 					}
 					if (constraint==null) {
 						constraint = VCMLProxyFactory.createConstraintProxy(vcmlModel.eResource(), constraintName);

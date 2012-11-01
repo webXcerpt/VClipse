@@ -47,7 +47,7 @@ public class MaterialReader extends BAPIUtils {
 	@Inject
 	private BillOfMaterialReader bomReader;
 	
-	public Material read(String materialName, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public Material read(String materialName, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		if(materialName == null || monitor.isCanceled() ) {
 			return null;
 		}
@@ -64,7 +64,7 @@ public class MaterialReader extends BAPIUtils {
 		JCoFunction function = getJCoFunction("BAPI_MATERIAL_GET_DETAIL", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		
-		handleOptions(options, ipl, null, null);
+		handleOptions(object.getOptions(), globalOptions, ipl, null, null);
 		
 		ipl.setValue("MATERIAL", materialName);
 		ipl.setValue("PLANT", getPlant());
@@ -83,13 +83,13 @@ public class MaterialReader extends BAPIUtils {
 		if(monitor.isCanceled()) {
 			return null;
 		}
-		configurationProfileReader.read(object, null /* all profiles */, resource, monitor, seenObjects, options, recurse);
+		configurationProfileReader.read(object, null /* all profiles */, resource, monitor, seenObjects, globalOptions, recurse);
 
 		if(monitor.isCanceled()) {
 			return null;
 		}
 		// BAPI_MAT_BOM_EXISTENCE_CHECK
-		bomReader.read(object, resource, monitor, seenObjects, options, recurse);
+		bomReader.read(object, resource, monitor, seenObjects, globalOptions, recurse);
 
 		JCoFunction functionGetClasses = getJCoFunction("BAPI_OBJCL_GETCLASSES", monitor); // BAPI_OBJCL_GET_KEY_OF_OBJECT
 		JCoParameterList iplGetClasses = functionGetClasses.getImportParameterList();
@@ -109,7 +109,7 @@ public class MaterialReader extends BAPIUtils {
 						if(monitor.isCanceled()) {
 							return null;
 						}
-						cls = classReader.read(className, model, monitor, seenObjects, options, recurse);
+						cls = classReader.read(className, model, monitor, seenObjects, globalOptions, recurse);
 					}
 					if (cls==null) {
 						cls = VCMLProxyFactory.createClassProxy(resource, className);

@@ -34,13 +34,13 @@ public class PreconditionCreateChangeActionHandler extends BAPIUtils implements 
 		return isConnected() && hasBody(object);
 	}
 
-	public void run(Precondition object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
+	public void run(Precondition object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions) throws JCoException {
 		beginTransaction();
 		JCoFunction function = getJCoFunction("CAMA_DEPENDENCY_MAINTAIN", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue("DEPENDENCY", object.getName());
 		
-		handleOptions(options, ipl, "CHANGE_NO", null);
+		handleOptions(object.getOptions(), globalOptions, ipl, "CHANGE_NO", null);
 		
 		JCoStructure dependencyData = ipl.getStructure("DEPENDENCY_DATA");
 		dependencyData.setValue("DEP_TYPE", "PRE");

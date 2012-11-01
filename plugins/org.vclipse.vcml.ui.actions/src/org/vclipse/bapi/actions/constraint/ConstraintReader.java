@@ -31,7 +31,7 @@ import com.sap.conn.jco.JCoStructure;
 
 public class ConstraintReader extends BAPIUtils {
 
-	public Constraint read(String constraintName, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public Constraint read(String constraintName, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		if(constraintName == null || monitor.isCanceled()) {
 			return null;
 		}
@@ -49,7 +49,7 @@ public class ConstraintReader extends BAPIUtils {
 		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue("CONSTRAINT", constraintName);
 		
-		handleOptions(options, ipl, "CHANGE_NO", "DATE");
+		handleOptions(object.getOptions(), globalOptions, ipl, "CHANGE_NO", "DATE");
 		
 		try {
 			execute(function, monitor, constraintName);
@@ -64,7 +64,7 @@ public class ConstraintReader extends BAPIUtils {
 			
 			ConstraintSource constraintSource = sourceUtils.getConstraintSource(object);
 			if(constraintSource!=null) {
-				sourceCrossReferenceExtractor.extractFromSource(constraintSource, model, monitor, seenObjects, options);
+				sourceCrossReferenceExtractor.extractFromSource(constraintSource, model, monitor, seenObjects, globalOptions);
 			}
 		} catch (AbapException e) {
 			handleAbapException(e);

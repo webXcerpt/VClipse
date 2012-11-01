@@ -38,7 +38,7 @@ public class ConstraintCreateChangeActionHandler extends BAPIUtils implements IB
 		return isConnected() && hasBody(object);
 	}
 
-	public void run(Constraint object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
+	public void run(Constraint object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions) throws JCoException {
 		
 		// determine name of containing dependencyNet
 		// TODO implement finding containing dependency net with ECoreUtils
@@ -56,7 +56,7 @@ public class ConstraintCreateChangeActionHandler extends BAPIUtils implements IB
 		JCoFunction function = getJCoFunction("CAMA_CNET_CONSTRAINT_MAINTAIN", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		
-		handleOptions(options, ipl, "CHANGE_NO", null);
+		handleOptions(object.getOptions(), globalOptions, ipl, "CHANGE_NO", null);
 		
 		ipl.setValue("CONSTRAINT", object.getName());
 		if (dependencyNet!=null) {

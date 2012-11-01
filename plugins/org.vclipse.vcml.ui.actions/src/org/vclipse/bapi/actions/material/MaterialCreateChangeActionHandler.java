@@ -35,12 +35,12 @@ public class MaterialCreateChangeActionHandler extends BAPIUtils implements IBAP
 		return isConnected() && hasBody(object);
 	}
 	
-	public void run(Material object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
+	public void run(Material object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions) throws JCoException {
 		beginTransaction();
 		JCoFunction function = getJCoFunction("BAPI_MATERIAL_SAVEDATA", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		
-		handleOptions(options, ipl, null, null);
+		handleOptions(object.getOptions(), globalOptions, ipl, null, null);
 		
 		JCoStructure headData = ipl.getStructure("HEADDATA");
 		headData.setValue("MATERIAL", object.getName());

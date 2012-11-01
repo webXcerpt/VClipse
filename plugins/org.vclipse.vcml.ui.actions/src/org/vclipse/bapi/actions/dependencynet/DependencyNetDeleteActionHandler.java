@@ -32,11 +32,11 @@ public class DependencyNetDeleteActionHandler extends BAPIUtils implements IBAPI
 		return isConnected();
 	}
 
-	public void run(DependencyNet object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
+	public void run(DependencyNet object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions) throws JCoException {
 		JCoFunction function = getJCoFunction("CAMA_CONSTRAINT_NET_MAINTAIN", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		
-		handleOptions(options, ipl, "CHANGE_NO", null);
+		handleOptions(object.getOptions(), globalOptions, ipl, "CHANGE_NO", null);
 		
 		ipl.setValue("CONSTRAINT_NET", object.getName());
 		ipl.setValue("DELETE_FLAG", "X");

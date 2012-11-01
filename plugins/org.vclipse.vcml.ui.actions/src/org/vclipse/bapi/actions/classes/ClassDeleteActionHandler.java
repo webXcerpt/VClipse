@@ -32,7 +32,7 @@ public class ClassDeleteActionHandler extends BAPIUtils implements IBAPIActionRu
 		return isConnected();
 	}
 
-	public void run(Class object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
+	public void run(Class object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions) throws JCoException {
 		beginTransaction();
 		JCoFunction function = getJCoFunction("BAPI_CLASS_DELETE", monitor);	
 		JCoParameterList ipl = function.getImportParameterList();
@@ -40,7 +40,7 @@ public class ClassDeleteActionHandler extends BAPIUtils implements IBAPIActionRu
 		String className = VcmlUtils.getClassName(classSpec);
 		int classType = VcmlUtils.getClassType(classSpec);
 		
-		handleOptions(options, ipl, "CHANGENUMBER", null);
+		handleOptions(object.getOptions(), globalOptions, ipl, "CHANGENUMBER", null);
 		
 		ipl.setValue("CLASSNUM", className);
 		ipl.setValue("CLASSTYPE", classType);

@@ -504,24 +504,36 @@ public class BAPIUtils extends BAPIActionHandler {
 
 	}
 	
-	protected void handleOptions(List<Option> options, JCoParameterList ipl, String ecmName, String keyDateName) {
-		String ecm = getECM(options);
+	protected void handleOptions(List<Option> globalOptions, List<Option> localOptions, JCoParameterList ipl, String ecmName, String keyDateName) {
+		String ecm = getECM(localOptions);
+		if (ecm == null) {
+			ecm = getECM(globalOptions);
+		}
 		if (ecmName!=null && ecm!=null) {
 			ipl.setValue(ecmName, ecm);
 		} else {
-			String keyDate = getKeyDate(options);
+			String keyDate = getKeyDate(localOptions);
+			if (keyDate == null) {
+				keyDate = getKeyDate(globalOptions);
+			}
 			if (keyDateName!=null && keyDate != null) {
 				ipl.setValue(keyDateName, keyDate);
 			}
 		}
 	}
 
-	protected void handleOptions2(List<Option> options, JCoParameterList ipl, String ecmName, String keyDateName) {
-		String ecm = getECM(options);
+	protected void handleOptions2(List<Option> globalOptions, List<Option> localOptions, JCoParameterList ipl, String ecmName, String keyDateName) {
+		String ecm = getECM(localOptions);
+		if (ecm == null) {
+			ecm = getECM(globalOptions);
+		}
 		if (ecmName!=null && ecm!=null) {
 			ipl.setValue(ecmName, ecm);
 		} else {
-			String keyDate = getKeyDate2(options);
+			String keyDate = getKeyDate2(localOptions);
+			if (keyDate == null) {
+				keyDate = getKeyDate(globalOptions);
+			}
 			if (keyDateName!=null && keyDate != null) {
 				ipl.setValue(keyDateName, keyDate);
 			}

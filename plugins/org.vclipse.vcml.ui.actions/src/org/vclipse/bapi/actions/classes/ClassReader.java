@@ -36,7 +36,7 @@ public class ClassReader extends BAPIUtils {
 	@Inject
 	private CharacteristicReader csticReader;
 	
-	public Class read(String classSpec, VcmlModel model, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public Class read(String classSpec, VcmlModel model, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		int classType = VcmlUtils.getClassType(classSpec);
 		String className = VcmlUtils.getClassName(classSpec);
 		String newClassSpec = "(" + classType + ")" + className;
@@ -53,7 +53,7 @@ public class ClassReader extends BAPIUtils {
 			JCoFunction function = getJCoFunction("BAPI_CLASS_GETDETAIL", monitor);
 			JCoParameterList ipl = function.getImportParameterList();
 			
-			handleOptions2(options, ipl, null, "KEYDATE");
+			handleOptions2(object.getOptions(), globalOptions, ipl, null, "KEYDATE");
 			
 			ipl.setValue("CLASSTYPE", classType);
 			ipl.setValue("CLASSNUM", className);
@@ -77,7 +77,7 @@ public class ClassReader extends BAPIUtils {
 								if(monitor.isCanceled()) {
 									return null;
 								}
-								cstic = csticReader.read(csticName, model, monitor, seenObjects, options, recurse);
+								cstic = csticReader.read(csticName, model, monitor, seenObjects, globalOptions, recurse);
 							}
 							if (cstic==null) {
 								cstic = VCMLProxyFactory.createCharacteristicProxy(model.eResource(), csticName);
@@ -107,7 +107,7 @@ public class ClassReader extends BAPIUtils {
 						if(monitor.isCanceled()) {
 							return null;
 						}
-						superclass = read(superclassSpec, model, monitor, seenObjects, options, recurse);
+						superclass = read(superclassSpec, model, monitor, seenObjects, globalOptions, recurse);
 					}
 					if (superclass==null) {
 						superclass = VCMLProxyFactory.createClassProxy(model.eResource(), superclassSpec);

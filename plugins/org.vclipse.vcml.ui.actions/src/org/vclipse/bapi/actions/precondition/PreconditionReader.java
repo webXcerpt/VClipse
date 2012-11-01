@@ -31,7 +31,7 @@ import com.sap.conn.jco.JCoStructure;
 
 public class PreconditionReader extends BAPIUtils {
 	
-	public Precondition read(String preconditionName, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public Precondition read(String preconditionName, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		if(preconditionName == null || monitor.isCanceled()) {
 			return null;
 		}
@@ -48,7 +48,7 @@ public class PreconditionReader extends BAPIUtils {
 		JCoFunction function = getJCoFunction("CARD_DEPENDENCY_READ", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		
-		handleOptions(options, ipl, "CHANGE_NO", "DATE");
+		handleOptions(object.getOptions(), globalOptions, ipl, "CHANGE_NO", "DATE");
 		
 		ipl.setValue("DEPENDENCY", preconditionName);
 		// if the following flags are not checked, then the function performs just an existence check
@@ -71,7 +71,7 @@ public class PreconditionReader extends BAPIUtils {
 			
 			ConditionSource conditionSource = sourceUtils.getPreconditionSource(object);
 			if(conditionSource!=null && recurse) {
-				sourceCrossReferenceExtractor.extractFromSource(conditionSource, model, monitor, seenObjects, options);
+				sourceCrossReferenceExtractor.extractFromSource(conditionSource, model, monitor, seenObjects, globalOptions);
 			}
 		} catch (AbapException e) {
 			handleAbapException(e);

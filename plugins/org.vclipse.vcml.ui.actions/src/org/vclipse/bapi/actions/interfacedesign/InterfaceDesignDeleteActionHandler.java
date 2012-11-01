@@ -31,12 +31,12 @@ public class InterfaceDesignDeleteActionHandler extends BAPIUtils implements IBA
 		return isConnected();
 	}
 
-	public void run(InterfaceDesign object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
+	public void run(InterfaceDesign object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions) throws JCoException {
 		JCoFunction function = getJCoFunction("BAPI_UI_DELETE", monitor);	
 		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue("DESIGNNAME", object.getName());
 		
-		handleOptions(options, ipl, null, null);
+		handleOptions(object.getOptions(), globalOptions, ipl, null, null);
 		
 		execute(function, monitor, object.getName());
 		if (processReturnStructure(function)) {

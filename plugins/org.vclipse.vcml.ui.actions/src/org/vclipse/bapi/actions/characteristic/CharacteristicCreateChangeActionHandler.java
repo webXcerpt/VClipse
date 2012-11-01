@@ -48,14 +48,14 @@ import com.sap.conn.jco.JCoTable;
 
 public class CharacteristicCreateChangeActionHandler extends BAPIUtils implements IBAPIActionRunner<Characteristic> {
 	
-	public void run(final Characteristic object, Resource resource, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
+	public void run(final Characteristic object, Resource resource, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions) throws JCoException {
 		final DocumentationHandler documentationHandler = new DocumentationHandler(monitor);
 		beginTransaction();
 		final JCoFunction function = getJCoFunction("BAPI_CHARACT_CHANGE", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue("CHARACTNAME", object.getName());
 		
-		handleOptions(options, ipl, "CHANGENUMBER", "KEYDATE");
+		handleOptions(object.getOptions(), globalOptions, ipl, "CHANGENUMBER", "KEYDATE");
 		
 		final JCoParameterList tpl = function.getTableParameterList();
 		final JCoTable charactDetail = tpl.getTable("CHARACTDETAILNEW");

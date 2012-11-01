@@ -34,11 +34,11 @@ public class DependencyNetCreateChangeActionHandler extends BAPIUtils implements
 		return isConnected() && hasBody(object);
 	}
 
-	public void run(DependencyNet object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options) throws JCoException {
+	public void run(DependencyNet object, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions) throws JCoException {
 		JCoFunction function = getJCoFunction("CAMA_CONSTRAINT_NET_MAINTAIN", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		
-		handleOptions(options, ipl, "CHANGE_NO", null);
+		handleOptions(object.getOptions(), globalOptions, ipl, "CHANGE_NO", null);
 		
 		ipl.setValue("CONSTRAINT_NET", object.getName());
 		JCoStructure constraintNetData = ipl.getStructure("CONSTRAINT_NET_DATA");

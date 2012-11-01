@@ -34,12 +34,12 @@ public class VariantTableContentDeleteActionHandler extends BAPIUtils implements
 		executeTransaction(monitor, "DELETE " + name, function);
 	}
 
-	protected JCoFunction maintainEntries(VariantTableContent content, IProgressMonitor monitor, List<Option> options, boolean delete) throws JCoException {
+	protected JCoFunction maintainEntries(VariantTableContent content, IProgressMonitor monitor, List<Option> globalOptions, boolean delete) throws JCoException {
 		beginTransaction();
 		VariantTable table = content.getTable();
 		JCoFunction function = getJCoFunction("CAMA_TABLE_MAINTAIN_ENTRIES", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
-		handleOptions(options, ipl, "CHANGE_NO", "DATE");
+		handleOptions(content.getOptions(), globalOptions, ipl, "CHANGE_NO", "DATE");
 		ipl.setValue("VAR_TABLE", table.getName().toUpperCase());
 		if(delete) {
 			ipl.setValue("FLDELETE", "X");			

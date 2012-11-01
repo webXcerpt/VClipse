@@ -55,7 +55,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 	@Inject
 	private InterfaceDesignReader interfaceDesignReader;
 
-	public List<ConfigurationProfile> read(Material containerMaterial, String profileName, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public List<ConfigurationProfile> read(Material containerMaterial, String profileName, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		VcmlModel model = (VcmlModel)resource.getContents().get(0);
 		String materialName = containerMaterial.getName();
 		if(materialName == null) {
@@ -75,7 +75,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue("OBJECT_TYPE", "MARA");
 		
-		handleOptions(options, ipl, "CHANGE_NO", "DATE");
+		handleOptions(containerMaterial.getOptions(), globalOptions, ipl, "CHANGE_NO", "DATE");
 		
 		JCoParameterList tpl = function.getTableParameterList();
 		JCoTable conObjectKey = tpl.getTable("CON_OBJECT_KEY");
@@ -112,7 +112,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 						if(monitor.isCanceled()) {
 							return profiles;
 						}
-						interfaceDesign = interfaceDesignReader.read(design, model, monitor, seenObjects, options, recurse);
+						interfaceDesign = interfaceDesignReader.read(design, model, monitor, seenObjects, globalOptions, recurse);
 					}
 					if (interfaceDesign==null) {
 						interfaceDesign = VCMLProxyFactory.createInterfaceDesignProxy(resource, design);
@@ -145,7 +145,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 						if(monitor.isCanceled()) {
 							return profiles;
 						}
-						procedure = procedureReader.read(depName, resource, monitor, seenObjects, options, recurse);
+						procedure = procedureReader.read(depName, resource, monitor, seenObjects, globalOptions, recurse);
 					}
 					if (procedure==null) {
 						procedure = VCMLProxyFactory.createProcedureProxy(resource, depName);
@@ -158,7 +158,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 						if(monitor.isCanceled()) {
 							return profiles;
 						}
-						dependencyNet = dependencyNetReader.read(depName, model, monitor, seenObjects, options, recurse);
+						dependencyNet = dependencyNetReader.read(depName, model, monitor, seenObjects, globalOptions, recurse);
 					}
 					if (dependencyNet==null) {
 						dependencyNet = VCMLProxyFactory.createDependencyNetProxy(resource, depName);

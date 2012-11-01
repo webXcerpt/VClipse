@@ -43,7 +43,7 @@ public class VariantTableReader extends BAPIUtils {
 	@Inject
 	private VariantTableContentReader contentReader;
 	
-	public VariantTable read(String variantTableName, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> options, boolean recurse) throws JCoException {
+	public VariantTable read(String variantTableName, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		if(variantTableName == null || monitor.isCanceled()) {
 			return null;
 		}
@@ -59,7 +59,7 @@ public class VariantTableReader extends BAPIUtils {
 		JCoFunction function = getJCoFunction("CARD_TABLE_READ_STRUCTURE", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		
-		handleOptions(options, ipl, "CHANGE_NO", "DATE");
+		handleOptions(object.getOptions(), globalOptions, ipl, "CHANGE_NO", "DATE");
 		
 		ipl.setValue("VAR_TAB", variantTableName.toUpperCase());
 		try {
@@ -82,7 +82,7 @@ public class VariantTableReader extends BAPIUtils {
 					if(monitor.isCanceled()) {
 						return null;
 					}
-					cstic = csicReader.read(csticName, vcmlModel, monitor, seenObjects, options, recurse);
+					cstic = csicReader.read(csticName, vcmlModel, monitor, seenObjects, globalOptions, recurse);
 				}
 				if (cstic==null) {
 					cstic = VCMLProxyFactory.createCharacteristicProxy(vcmlModel.eResource(), csticName);
@@ -99,7 +99,7 @@ public class VariantTableReader extends BAPIUtils {
 				}
 			}
 			if(recurse) {
-				contentReader.read(variantTableName, vcmlModel, monitor, seenObjects, options, false);
+				contentReader.read(variantTableName, vcmlModel, monitor, seenObjects, globalOptions, false);
 			}
 		} catch (AbapException e) {
 			handleAbapException(e);
