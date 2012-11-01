@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
@@ -134,7 +135,8 @@ public class VcmlCompare {
 			}
 		}
 	
-		diffModelSwitch.extractDifferences(DiffService.doDiff(matchModel), resultModel, changedModel, monitor);
+		DiffModel diffModel = DiffService.doDiff(matchModel);
+		diffModelSwitch.extractDifferences(diffModel, resultModel, changedModel, monitor);
 		
 		// compute the import uri -> the old file should be imported by the result file
 		Import importStatement = VCML_FACTORY.createImport();

@@ -43,6 +43,10 @@ public class DependencySourceUtils {
 
 	public static final String SUFFIX_SOURCEFOLDER = "-dep";
 
+	public boolean hasBody(Dependency object) {
+		return ((VCObject)object).getDescription() != null;
+	}
+	
 	public EObject getSource(Dependency object) {
 		Resource resource = object.eResource();
 		if(resource == null) {

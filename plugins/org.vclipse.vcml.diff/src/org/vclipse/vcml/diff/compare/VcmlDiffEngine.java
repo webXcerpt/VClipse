@@ -64,7 +64,7 @@ public class VcmlDiffEngine extends GenericDiffEngine {
 	protected void checkForDiffs(DiffGroup current, Match2Elements match) throws FactoryException {
 		EObject leftElement = match.getLeftElement();
 		EObject rightElement = match.getRightElement();
-		if(leftElement instanceof Dependency && rightElement instanceof Dependency) {
+		if(leftElement instanceof Dependency && rightElement instanceof Dependency && sourceUtils.hasBody((Dependency)leftElement) && sourceUtils.hasBody((Dependency)rightElement)) {
 			try {
 				Dependency leftDependency = (Dependency)leftElement;
 				InputStream streamLeft = sourceUtils.getInputStream(leftDependency);
