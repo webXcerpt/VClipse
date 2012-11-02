@@ -3,12 +3,17 @@
  */
 package org.vclipse.constraint.scoping;
 
+import java.util.Collections;
+
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import org.vclipse.dependency.scoping.DependencyScopeProvider;
+import org.vclipse.vcml.vcml.Class;
+import org.vclipse.vcml.vcml.ConstraintClass;
 import org.vclipse.vcml.vcml.ConstraintObject;
 import org.vclipse.vcml.vcml.ConstraintSource;
+import org.vclipse.vcml.vcml.ObjectCharacteristicReference;
 import org.vclipse.vcml.vcml.ShortVarDefinition;
 
 import com.google.common.base.Function;
@@ -38,6 +43,25 @@ public class ConstraintScopeProvider extends DependencyScopeProvider {
 							}
 						}
 				)));
+	}
+	
+	IScope scope_ObjectCharacteristicReference_characteristic(ObjectCharacteristicReference context, EReference ref) {
+		ConstraintObject constraintObject = context.getLocation();
+		if (constraintObject instanceof ConstraintClass) {
+			ConstraintClass cc = (ConstraintClass)constraintObject;
+			return createCsticScope(Collections.singletonList(cc.getClass_()));
+		}
+		return null;
+	}
+
+	private IScope createCsticScope(Iterable<Class> classes) {
+		Class cls = Iterables.getFirst(classes, null);
+		Iterable<Class> restClasses = Iterables.skip(classes, 1);
+		if (cls.getSuperClasses().isEmpty() && Iterables.isEmpty(restClasses)) {
+			return Scopes.scopeFor(cls.getCharacteristics());
+		} else {
+			return Scopes.scopeFor(cls.getCharacteristics(), createCsticScope(Iterables.concat(cls.getSuperClasses(), restClasses)));
+		}
 	}
 	
 }
