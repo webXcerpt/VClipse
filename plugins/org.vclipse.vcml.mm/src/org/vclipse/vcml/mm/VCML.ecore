@@ -349,7 +349,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PartialKey">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="material" eType="#//Material"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ShortVarDefinition">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

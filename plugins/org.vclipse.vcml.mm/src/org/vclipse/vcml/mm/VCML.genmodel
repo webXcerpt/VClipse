@@ -334,7 +334,7 @@
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//PartialKey">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//PartialKey/key"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//PartialKey/value"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference VCML.ecore#//PartialKey/material"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//ShortVarDefinition">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//ShortVarDefinition/name"/>

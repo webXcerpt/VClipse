@@ -67,7 +67,7 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 			doSwitch(restrictions.get(i));
 			layouter.end();
 			if(i<size) {
-				layouter.print(",").brk();
+				layouter.brk().print(",").brk();
 			} else {
 				layouter.print(".");
 			}
@@ -122,7 +122,7 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 		for (PartialKey pKey : objectType.getAttrs()) {
 			printNullsafe(pKey.getKey());
 			layouter.print("=");
-			layouter.print("'" + pKey.getValue() + "'");
+			layouter.print("'" + pKey.getMaterial().getName() + "'");
 			// TODO insert commas and brk()
 		}
 		layouter.print(")");
@@ -224,7 +224,9 @@ public class ConstraintPrettyPrinter extends CodePrettyPrinter {
 			}
 			printNullsafe(key.getKey());
 			layouter.print(" = ");
-			printNullsafe(key.getValue());
+			layouter.print("'");
+			printNullsafe(key.getMaterial().getName());
+			layouter.print("'");
 		}
 		return layouter;
 	}

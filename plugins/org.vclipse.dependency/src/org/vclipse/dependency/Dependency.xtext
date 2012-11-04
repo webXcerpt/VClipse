@@ -112,7 +112,7 @@ ObjectType
 
  // TODO how to handle cross references?
 PartialKey
-	:	key='nr' '=' value=SYMBOL
+	:	key='nr' '=' material=[Material|SYMBOL]
 	;
 
 ///////////////////////////////////////////////////////////////////////////////
