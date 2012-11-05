@@ -113,19 +113,19 @@ public class RefactoringTask extends Refactoring {
 	public RefactoringStatus checkFinalConditions(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		if(modelChange == null) {
 			createChange(pm);
-			StringBuffer taskBuffer = new StringBuffer("Checking final conditions for re-factoring ").append(context.getLabel());
-			SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 10);
-			Object modified = modelChange.getModifiedElement();
-			if(modified instanceof EObject) {
-				EObject modifiedEObject = (EObject)modified;
-				EObject container = EcoreUtil.getRootContainer(modifiedEObject);
-				if(sm.isCanceled()) {
-					return RefactoringStatus.create(Status.CANCEL_STATUS);
-				}
-				RefactoringStatus status = validate(sm, container);
-				sm.worked(10);
-				return status;				
+		}
+		StringBuffer taskBuffer = new StringBuffer("Checking final conditions for re-factoring ").append(context.getLabel());
+		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 10);
+		Object modified = modelChange.getModifiedElement();
+		if(modified instanceof EObject) {
+			EObject modifiedEObject = (EObject)modified;
+			EObject container = EcoreUtil.getRootContainer(modifiedEObject);
+			if(sm.isCanceled()) {
+				return RefactoringStatus.create(Status.CANCEL_STATUS);
 			}
+			RefactoringStatus status = validate(sm, container);
+			sm.worked(10);
+			return status;				
 		}
 		return RefactoringStatus.create(Status.OK_STATUS);
 	}
