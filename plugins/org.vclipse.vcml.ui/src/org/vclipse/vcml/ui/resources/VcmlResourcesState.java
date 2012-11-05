@@ -63,27 +63,21 @@ public class VcmlResourcesState extends AbstractAllContainersState {
 	protected List<String> doInitVisibleHandles(String handle) {
 		List<String> visibleContainerHandles = Lists.newArrayList(handle);
 		if(handle.endsWith(VCML_EXTENSION)) {
-			URI createURI = URI.createURI(handle);
+			URI baseURI = URI.createURI(handle);
 			ResourceSetImpl resourceSetImpl = new ResourceSetImpl();
 			Resource resource = null;
 			try {
-				resource = resourceSetImpl.getResource(createURI, true);
+				resource = resourceSetImpl.getResource(baseURI, true);
 			} catch(Exception exception) {
-				resource = resourceSetImpl.createResource(createURI);
+				resource = resourceSetImpl.createResource(baseURI);
 			}
 			if(resource != null) {
 				EList<EObject> contents = resource.getContents();
 				if(!contents.isEmpty()) {
 					EObject topObject = contents.get(0);
 					if(topObject instanceof VcmlModel) {
-						VcmlModel vcmlModel = (VcmlModel)topObject;
-						for(Import immport : vcmlModel.getImports()) {
-							String[] parts = immport.getImportURI().split("/");
-							URI importedUri = URI.createURI(handle).trimSegments(parts.length - 1);
-							for(int i=1; i<parts.length; i++) {
-								importedUri = importedUri.appendSegment(parts[i]);
-							}
-							visibleContainerHandles.add(importedUri.toString());
+						for(Import i : ((VcmlModel)topObject).getImports()) {
+							visibleContainerHandles.add(URI.createURI(i.getImportURI()).resolve(baseURI, false).toString());
 						}
 					}
 				}
