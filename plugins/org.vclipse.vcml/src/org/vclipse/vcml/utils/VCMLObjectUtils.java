@@ -124,7 +124,7 @@ public class VCMLObjectUtils {
 		return object;
 	}
 
-	static public ConstraintMaterial mkConstraintMaterial(final String name, final String material) {
+	static public ConstraintMaterial mkConstraintMaterial(final String name, final Material material) {
 		final ConstraintMaterial object = VCML.createConstraintMaterial();
 		object.setName(name);
 		final ObjectType objectType = VCML.createObjectType();
@@ -135,7 +135,7 @@ public class VCMLObjectUtils {
 		final PartialKey partialKey = VCML.createPartialKey();
 		attrs.add(partialKey);
 		partialKey.setKey("nr");
-		partialKey.setValue(material);
+		partialKey.setMaterial(material);
 		return object;
 	}
 
