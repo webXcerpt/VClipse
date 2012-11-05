@@ -10,11 +10,13 @@
  ******************************************************************************/
 package org.vclipse.refactoring;
 
+import java.lang.reflect.Method;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.util.Pair;
 
 public interface IRefactoringExecuter {
 
@@ -24,4 +26,5 @@ public interface IRefactoringExecuter {
 	
 	public void refactor(EObject object) throws CoreException;
 	
+	public Pair<EObject, Method> getRefactoring(IRefactoringContext context);
 }

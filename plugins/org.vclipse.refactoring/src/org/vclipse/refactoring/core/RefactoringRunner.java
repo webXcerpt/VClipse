@@ -10,11 +10,17 @@
  ******************************************************************************/
 package org.vclipse.refactoring.core;
 
+import java.lang.reflect.Method;
+import java.util.Map;
+
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtext.util.Pair;
 import org.vclipse.refactoring.IRefactoringContext;
 import org.vclipse.refactoring.IRefactoringExecuter;
 import org.vclipse.refactoring.RefactoringStatus;
@@ -45,7 +51,9 @@ public class RefactoringRunner {
 	
 	public boolean isRefactoringAvailable(IRefactoringContext context) {
 		EObject element = context.getSourceElement();
-		return getRefactoring(element) != null;
+		IRefactoringExecuter executer = getRefactoring(element);
+		Pair<EObject, Method> executerForContext = executer.getRefactoring(context);
+		return executerForContext != null;
 	}
 	
 	public ChangeRecorder getChangeRecorder() {
@@ -54,6 +62,9 @@ public class RefactoringRunner {
 	
 	private IRefactoringExecuter getRefactoring(EObject object) {
 		EObject rootContainer = EcoreUtil.getRootContainer(object);
-		return configuration.getRefactorings().get(rootContainer.eClass());
+		Map<EClassifier, IRefactoringExecuter> refactorings = configuration.getRefactorings();
+		EClass rootType = rootContainer.eClass();
+		IRefactoringExecuter executer = refactorings.get(rootType);
+		return executer;
 	}
 }
