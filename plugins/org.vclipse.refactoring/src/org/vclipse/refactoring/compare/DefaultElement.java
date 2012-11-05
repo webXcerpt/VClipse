@@ -13,6 +13,7 @@ package org.vclipse.refactoring.compare;
 import java.io.InputStream;
 
 import org.eclipse.compare.IEncodedStreamContentAccessor;
+import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.Differencer;
 import org.eclipse.compare.structuremergeviewer.IDiffContainer;
 import org.eclipse.compare.structuremergeviewer.IDiffElement;
@@ -56,7 +57,7 @@ public class DefaultElement implements IDiffElement, IEncodedStreamContentAccess
 
 	@Override
 	public String getType() {
-		return null;
+		return ITypedElement.UNKNOWN_TYPE;
 	}
 
 	@Override

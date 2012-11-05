@@ -12,11 +12,8 @@ package org.vclipse.refactoring.compare;
 
 import java.io.InputStream;
 
-import org.eclipse.compare.CompareUI;
-import org.eclipse.compare.ITypedElement;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.vclipse.refactoring.RefactoringPlugin;
@@ -68,16 +65,5 @@ public class MultipleEntriesTypedElement extends DefaultElement {
 			}
 		}
 		return buffer.getName();
-	}
-
-	@Override
-	public Image getImage() {
-		String type = getType();
-		return CompareUI.getImage(type);
-	}
-
-	@Override
-	public String getType() {
-		return ITypedElement.UNKNOWN_TYPE;
 	}
 }
