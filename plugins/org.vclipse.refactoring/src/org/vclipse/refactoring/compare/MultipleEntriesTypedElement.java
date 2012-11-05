@@ -78,15 +78,6 @@ public class MultipleEntriesTypedElement extends DefaultElement {
 
 	@Override
 	public String getType() {
-		String name = getName();
-		if (name != null) {
-			int index = name.lastIndexOf('.');
-			if (index == -1)
-				return ""; //$NON-NLS-1$
-			if (index == (name.length() - 1))
-				return ""; //$NON-NLS-1$
-			return name.substring(index + 1);
-		}
-		return ITypedElement.FOLDER_TYPE;
+		return ITypedElement.UNKNOWN_TYPE;
 	}
 }
