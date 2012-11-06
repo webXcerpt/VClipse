@@ -32,6 +32,8 @@ public class MultipleEntriesStorage extends DefaultStorage {
 
 	private EObject[] entries;
 	
+	private static final String DELETED_OBJECT_MESSAGE = "deleted object: ";
+	
 	public MultipleEntriesStorage(ISerializer serializer, IQualifiedNameProvider nameProvider, EObject ... objects) {
 		super(serializer, nameProvider);
 		entries = objects;
@@ -48,7 +50,7 @@ public class MultipleEntriesStorage extends DefaultStorage {
 				if(nameProvider != null) {
 					QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(entry);
 					if(qualifiedName != null) {
-						contentsBuffer.append("deleted object: " + qualifiedName.getLastSegment());
+						contentsBuffer.append(DELETED_OBJECT_MESSAGE + qualifiedName.getLastSegment());
 						continue;
 					}
 				}
