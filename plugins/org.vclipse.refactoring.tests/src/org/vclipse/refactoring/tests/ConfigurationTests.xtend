@@ -37,7 +37,7 @@ class ConfigurationTests extends RefactoringTest {
 			Assert::assertEquals("context initialized", true, initialize)
 		
 			val features = configuration.provideFeatures(context)
-			Assert::assertTrue(!features.isEmpty())
+			Assert::assertTrue(!features.empty)
 			Assert::assertTrue(features.contains(VCML_PACKAGE.vcmlModel_Objects))
 		}
 	}

@@ -28,9 +28,9 @@ class RefactoringTest extends XtextTest {
  	}
  
 	def getResourceRoot(String path) {
-		val uri = URI::createPlatformPluginURI(RefactoringPlugin::ID + path, true);
-		val resource = resourceSet.getResource(uri, true);
-		val contents = resource.getContents();
+		val uri = URI::createPlatformPluginURI(RefactoringPlugin::ID + path, true)
+		val resource = resourceSet.getResource(uri, true)
+		val contents = resource.contents
 		if(contents.empty) {
 			return null
 		} else {

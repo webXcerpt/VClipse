@@ -18,10 +18,10 @@ import org.junit.Test
 class LabelsTests extends RefactoringTest {
 	
 	@Inject
-	private EntrySearch search;
+	private EntrySearch search
 	
 	@Inject
-	private Labels labels;
+	private Labels labels
 	
 	new() {
 		super(typeof(LabelsTests).simpleName)
@@ -29,15 +29,15 @@ class LabelsTests extends RefactoringTest {
 	
 	@Test
 	def test_UILabelProvider() {
-		val findEntry = search.findEntry("(300)CAR", VCML_PACKAGE.getClass_(), entries);
-		Assert::assertNotNull(findEntry);
+		val findEntry = search.findEntry("(300)CAR", VCML_PACKAGE.getClass_(), entries)
+		Assert::assertNotNull(findEntry)
 	
-		var context = RefactoringContext::create(findEntry, null, RefactoringType::Extract);
-		var uiLabel = labels.getUILabel(context);
-		Assert::assertEquals("Extract ", uiLabel);
+		var context = RefactoringContext::create(findEntry, null, RefactoringType::Extract)
+		var uiLabel = labels.getUILabel(context)
+		Assert::assertEquals("Extract ", uiLabel)
 			
-		context = RefactoringContext::create(findEntry, VCML_PACKAGE.getClass_Characteristics(), RefactoringType::Extract);
-		uiLabel = labels.getUILabel(context);
-		Assert::assertEquals("Extract characteristics ", uiLabel);
+		context = RefactoringContext::create(findEntry, VCML_PACKAGE.getClass_Characteristics(), RefactoringType::Extract)
+		uiLabel = labels.getUILabel(context)
+		Assert::assertEquals("Extract characteristics ", uiLabel)
 	}
 }

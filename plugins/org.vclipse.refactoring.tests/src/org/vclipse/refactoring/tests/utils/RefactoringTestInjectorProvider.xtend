@@ -9,7 +9,7 @@ class RefactoringTestInjectorProvider implements IInjectorProvider {
 	override getInjector() {
 		val refactoringModule = new RefactoringTestModule
 		val vcmlRuntimeModule = new VCMLRuntimeModule
-		val injector = Guice::createInjector(refactoringModule, vcmlRuntimeModule);
-		return injector;
+		val injector = Guice::createInjector(refactoringModule, vcmlRuntimeModule)
+		return injector
 	}
 }
