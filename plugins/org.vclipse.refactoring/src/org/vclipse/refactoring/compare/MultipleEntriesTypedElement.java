@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.serializer.ISerializer;
-import org.vclipse.refactoring.RefactoringPlugin;
 
 public class MultipleEntriesTypedElement extends DefaultElement {
 
@@ -51,18 +50,17 @@ public class MultipleEntriesTypedElement extends DefaultElement {
 			return super.getContents();
 		} else {
 			buffer = new MultipleEntriesStorage(serializer, nameProvider, elements);
+			return buffer.getContents();
 		}
-		return buffer.getContents();
 	}
 
 	@Override
 	public String getName() {
 		if(buffer == null) {
-			try {
-				getContents();
-			} catch(CoreException exception) {
-				RefactoringPlugin.log(exception.getMessage(), exception);
+			if(serializer == null || elements.length == 0) {
+				return super.getName();
 			}
+			buffer = new MultipleEntriesStorage(serializer, nameProvider, elements);
 		}
 		return buffer.getName();
 	}
