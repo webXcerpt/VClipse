@@ -1,22 +1,15 @@
 package org.vclipse.refactoring.tests.utils
 
+import com.google.common.collect.Lists
 import java.util.List
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipselabs.xtext.utils.unittesting.XtextTest
-import org.junit.Assert
-import org.junit.runner.RunWith
 import org.vclipse.refactoring.RefactoringPlugin
-import com.google.common.collect.Lists
-import org.vclipse.vcml.vcml.VcmlPackage
 import org.vclipse.vcml.vcml.VcmlFactory
+import org.vclipse.vcml.vcml.VcmlPackage
 
-@RunWith(typeof(XtextRunner))
-@InjectWith(typeof(RefactoringTestInjectorProvider))
-public class RefactoringTest extends XtextTest {
+class RefactoringTest extends XtextTest {
 	
 	protected String CAR_DESCRIPTION = "/CarDescription/car_description.vcml"
 	
@@ -54,19 +47,5 @@ public class RefactoringTest extends XtextTest {
 			contents.add(0, root)
 			return contents
 		}
-	}
-
-	def assertEquals(String message, EObject object_one, EObject object_two) {
-		Assert::assertTrue(
-			"\n" + " Expected " + object_one + "\n"  + " Existing " + object_two + "\n", 
-				EcoreUtil::equals(object_one, object_two))
-	}
-	 
-	def String removeNoise(String string, List<String> remove) {
-		var output = if(remove.empty) string  else  ""
-		for(part : remove) {
-			output = string.replace(part, "")
-		}
-		return output.replace("\r", "").replace("\n", "").replace("\t", "").replace(" ", "").trim()
 	}
 }
