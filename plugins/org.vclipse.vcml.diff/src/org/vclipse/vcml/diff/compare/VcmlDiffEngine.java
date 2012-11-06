@@ -14,7 +14,7 @@ import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
 import org.eclipse.emf.compare.match.metamodel.Match2Elements;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.ecore.EObject;
-import org.vclipse.base.BasePlugin;
+import org.vclipse.vcml.diff.VcmlDiffPlugin;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.vcml.Dependency;
 
@@ -78,7 +78,7 @@ public class VcmlDiffEngine extends GenericDiffEngine {
 				}
 			} catch(IOException exception) {
 				logger.error("Error during diff engine execution. " + exception.getMessage());
-				BasePlugin.log(exception.getMessage(), exception);
+				VcmlDiffPlugin.log(exception.getMessage(), exception);
 			}
 		}
 		super.checkForDiffs(current, match);

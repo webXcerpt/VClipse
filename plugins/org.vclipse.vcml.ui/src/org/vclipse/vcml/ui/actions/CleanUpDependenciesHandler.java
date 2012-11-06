@@ -11,6 +11,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -27,7 +28,8 @@ import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.utils.EditorUtils;
-import org.vclipse.base.ui.BaseUiPlugin;
+import org.vclipse.vcml.ui.VCMLUiPlugin;
+import org.vclipse.vcml.ui.internal.VCMLActivator;
 import org.vclipse.vcml.ui.resources.VcmlResourcesState;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.vcml.Dependency;
@@ -131,7 +133,10 @@ public class CleanUpDependenciesHandler extends AbstractHandler {
 								resourceToDelete.delete(SaveOptions.defaultOptions().toOptionsMap());
 							} catch(IOException exception) {
 								LOGGER.error(exception.getMessage());
-								BaseUiPlugin.log(exception.getMessage(), exception);
+								VCMLActivator instance = VCMLActivator.getInstance();
+								ILog log = instance.getLog();
+								String pluginid = VCMLActivator.ORG_VCLIPSE_VCML_VCML.replace("Vcml", ".ui");
+								log.log(new Status(IStatus.ERROR, pluginid, exception.getMessage()));
 							}
 						}
 					}
@@ -148,7 +153,7 @@ public class CleanUpDependenciesHandler extends AbstractHandler {
 					resource.delete(SaveOptions.defaultOptions().toOptionsMap());
 				} catch(IOException exception) {
 					LOGGER.error(exception.getMessage());
-					BaseUiPlugin.log(exception.getMessage(), exception);
+					VCMLUiPlugin.log(exception.getMessage(), exception);
 				}
 			}
 		}

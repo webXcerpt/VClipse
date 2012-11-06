@@ -35,7 +35,7 @@ public class IDoc2JCoIDocModule extends AbstractGenericModule {
 	public void configure(Binder binder) {
 		super.configure(binder);
 		
-		Injector vcmlInjector = VCMLUiPlugin.getDefault().getInjector();
+		Injector vcmlInjector = VCMLUiPlugin.getInjector();
 		Injector vcml2IDocInjector = VCML2IDocPlugin.getDefault().getInjector();
 		Injector connectionInjector = VClipseConnectionPlugin.getDefault().getInjector();
 		

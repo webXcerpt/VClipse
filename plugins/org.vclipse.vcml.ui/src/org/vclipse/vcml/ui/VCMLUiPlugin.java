@@ -19,15 +19,8 @@ import org.vclipse.vcml.ui.internal.VCMLActivator;
 
 import com.google.inject.Injector;
 
-
-/**
- * 
- */
 public class VCMLUiPlugin extends VCMLActivator {
 
-	/**
-	 * 
-	 */
 	public static final String ID = "org.vclipse.vcml.ui";
 
 	private static VCMLUiPlugin plugin;
@@ -39,46 +32,28 @@ public class VCMLUiPlugin extends VCMLActivator {
 		return plugin;
 	}
 	
-	public Injector getInjector() {
+	public static Injector getInjector() {
 		return getInstance().getInjector("org.vclipse.vcml.VCML");
 	}
 	
-	/**
-	 * @param status
-	 */
 	public static void log(final IStatus status) {
 		getInstance().getLog().log(status);
 	}
-	
-	/**
-	 * @param message
-	 * @param thr
-	 */
+
 	public static void log(final String message, final Throwable thr) {
 		log(new Status(IStatus.ERROR, ID, IStatus.ERROR, message, thr));		
 	}
 	
-	/**
-	 * @param deleteEnabledImage
-	 * @return
-	 */
 	public static ImageDescriptor getImageDescriptor(String key) {
 		return getInstance().getImageRegistry().getDescriptor(key);
 	}
-	
-	/**
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#initializeImageRegistry(org.eclipse.jface.resource.ImageRegistry)
-	 */
+
 	@Override
 	protected void initializeImageRegistry(ImageRegistry reg) {
 		addImage(IUiConstants.DOC_HIERARCHY_IMAGE, "icons/actions/doc_hierarchy.png");
 		addImage(IUiConstants.SAP_HIERARCHY_IMAGE, "icons/actions/sap_hierarchy.png");
 	}
 
-	/**
-	 * @param name
-	 * @param path
-	 */
 	private void addImage(String name, String path) {
 		Image image = imageDescriptorFromPlugin(ID, path).createImage();
 		getInstance().getImageRegistry().put(name, image);

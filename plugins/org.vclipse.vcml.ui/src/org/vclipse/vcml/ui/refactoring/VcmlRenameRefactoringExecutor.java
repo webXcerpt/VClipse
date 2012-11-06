@@ -15,7 +15,7 @@ import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.refactoring.impl.RenameElementProcessor;
 import org.eclipse.xtext.ui.util.ResourceUtil;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
-import org.vclipse.base.ui.BaseUiPlugin;
+import org.vclipse.vcml.ui.VCMLUiPlugin;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.vcml.Dependency;
 
@@ -51,7 +51,7 @@ public class VcmlRenameRefactoringExecutor extends org.eclipse.xtext.ui.refactor
 								String fileName = rep.getNewName() + "." + file.getFileExtension();
 								new RenameResourceChange(file.getFullPath(), fileName).perform(new NullProgressMonitor());
 							} catch (CoreException exception) {
-								BaseUiPlugin.log(exception.getMessage(), exception);
+								VCMLUiPlugin.log(exception.getMessage(), exception);
 							}
 						} else {
 							logger.error("Rename refactoring: dependency source utility returned null for " + sourceObjectUri.toString());

@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.xtext.ui.containers.AbstractAllContainersState;
-import org.vclipse.base.ui.BaseUiPlugin;
+import org.vclipse.vcml.ui.VCMLUiPlugin;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.vcml.Import;
 import org.vclipse.vcml.vcml.VcmlModel;
@@ -126,7 +126,7 @@ public class VcmlResourcesState extends AbstractAllContainersState {
 						}
 					});
 				} catch(CoreException exception) {
-					BaseUiPlugin.log(exception.getMessage(), exception);
+					VCMLUiPlugin.log(exception.getMessage(), exception);
 				}
 			}
 		}
@@ -161,7 +161,7 @@ public class VcmlResourcesState extends AbstractAllContainersState {
 							}
 						});
 					} catch(CoreException exception) {
-						BaseUiPlugin.log(exception.getMessage(), exception);
+						VCMLUiPlugin.log(exception.getMessage(), exception);
 					}
 					for(String containerhandle : vcmlcontainers) {
 						cache_visibleContainerHandles.remove(containerhandle);

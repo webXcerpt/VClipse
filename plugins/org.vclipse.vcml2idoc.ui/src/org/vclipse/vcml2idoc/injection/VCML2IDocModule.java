@@ -26,7 +26,7 @@ public class VCML2IDocModule extends AbstractGenericModule {
 	@Override
 	public void configure(Binder binder) {
 		super.configure(binder);
-		IPreferenceStore vcmlUiPreferenceStore = VCMLUiPlugin.getDefault().getInjector().getInstance(IPreferenceStore.class);
+		IPreferenceStore vcmlUiPreferenceStore = VCMLUiPlugin.getInjector().getInstance(IPreferenceStore.class);
 		binder.bind(IPreferenceStore.class).annotatedWith(Names.named(VCMLUiPlugin.ID)).toInstance(vcmlUiPreferenceStore);
         binder.bind(IPreferenceStore.class).annotatedWith(Names.named(VCML2IDocPlugin.ID)).toInstance(plugin.getPreferenceStore());
 	}

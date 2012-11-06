@@ -15,7 +15,7 @@ import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.vclipse.base.ui.BaseUiPlugin;
+import org.vclipse.vcml.ui.VCMLUiPlugin;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlPackage;
@@ -71,7 +71,7 @@ public class VcmlRenameDependencyParticipant extends RenameParticipant {
 				try {
 					dependency.eResource().save(SaveOptions.newBuilder().format().getOptions().toOptionsMap());
 				} catch(IOException exception) {
-					BaseUiPlugin.log(exception.getMessage(), exception);
+					VCMLUiPlugin.log(exception.getMessage(), exception);
 				}				
 			}
 		}

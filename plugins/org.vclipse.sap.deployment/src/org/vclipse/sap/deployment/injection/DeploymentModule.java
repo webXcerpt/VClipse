@@ -47,7 +47,7 @@ public class DeploymentModule extends VCMLRuntimeModule {
 		Injector connectionInjector = VClipseConnectionPlugin.getDefault().getInjector();
 		binder.bind(IConnectionHandler.class).toInstance(connectionInjector.getInstance(IConnectionHandler.class));
 		
-		Injector vcmlInjector = VCMLUiPlugin.getDefault().getInjector();
+		Injector vcmlInjector = VCMLUiPlugin.getInjector();
 		binder.bind(IPreferenceStore.class).annotatedWith(Names.named(VCMLUiPlugin.ID)).
 			toInstance(vcmlInjector.getInstance(IPreferenceStore.class));
 		
