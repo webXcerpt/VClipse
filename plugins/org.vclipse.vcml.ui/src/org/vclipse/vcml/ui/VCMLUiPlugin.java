@@ -16,16 +16,16 @@ import org.vclipse.vcml.ui.internal.VCMLActivator;
 
 import com.google.inject.Injector;
 
-public class VCMLUiPlugin extends VCMLActivator {
+public class VCMLUiPlugin {
 
 	public static final String ID = "org.vclipse.vcml.ui";
 
 	public static Injector getInjector() {
-		return getInstance().getInjector(VCMLActivator.ORG_VCLIPSE_VCML_VCML);
+		return VCMLActivator.getInstance().getInjector(VCMLActivator.ORG_VCLIPSE_VCML_VCML);
 	}
 	
 	public static void log(final IStatus status) {
-		getInstance().getLog().log(status);
+		VCMLActivator.getInstance().getLog().log(status);
 	}
 
 	public static void log(final String message, final Throwable thr) {
