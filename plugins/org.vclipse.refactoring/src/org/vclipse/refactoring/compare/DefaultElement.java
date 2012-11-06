@@ -47,7 +47,7 @@ public class DefaultElement implements IDiffElement, IEncodedStreamContentAccess
 	
 	@Override
 	public String getName() {
-		return null;
+		return DefaultStorage.DEFAULT_NAME;
 	}
 
 	@Override
