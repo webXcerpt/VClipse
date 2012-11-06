@@ -20,9 +20,7 @@ import org.eclipse.xtext.serializer.ISerializer;
 public class MultipleEntriesTypedElement extends DefaultElement {
 
 	private final EObject[] elements;
-	private final ISerializer serializer;
-	private final IQualifiedNameProvider nameProvider;
-
+	
 	public static MultipleEntriesTypedElement getDefault() {
 		return new MultipleEntriesTypedElement();
 	}
@@ -34,8 +32,6 @@ public class MultipleEntriesTypedElement extends DefaultElement {
 	public MultipleEntriesTypedElement(ISerializer serializer, IQualifiedNameProvider nameProvider, EObject ... elements) {
 		super(serializer, nameProvider);
 		this.elements = elements;
-		this.serializer = serializer;
-		this.nameProvider = nameProvider;
 	}
 	
 	private MultipleEntriesTypedElement() {
