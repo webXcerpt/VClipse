@@ -12,9 +12,6 @@ package org.vclipse.vcml.ui;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.swt.graphics.Image;
 import org.vclipse.vcml.ui.internal.VCMLActivator;
 
 import com.google.inject.Injector;
@@ -23,17 +20,8 @@ public class VCMLUiPlugin extends VCMLActivator {
 
 	public static final String ID = "org.vclipse.vcml.ui";
 
-	private static VCMLUiPlugin plugin;
-	
-	public static VCMLUiPlugin getDefault() {
-		if(plugin == null) {
-			plugin = new VCMLUiPlugin();
-		}
-		return plugin;
-	}
-	
 	public static Injector getInjector() {
-		return getInstance().getInjector("org.vclipse.vcml.VCML");
+		return getInstance().getInjector(VCMLActivator.ORG_VCLIPSE_VCML_VCML);
 	}
 	
 	public static void log(final IStatus status) {
@@ -42,20 +30,5 @@ public class VCMLUiPlugin extends VCMLActivator {
 
 	public static void log(final String message, final Throwable thr) {
 		log(new Status(IStatus.ERROR, ID, IStatus.ERROR, message, thr));		
-	}
-	
-	public static ImageDescriptor getImageDescriptor(String key) {
-		return getInstance().getImageRegistry().getDescriptor(key);
-	}
-
-	@Override
-	protected void initializeImageRegistry(ImageRegistry reg) {
-		addImage(IUiConstants.DOC_HIERARCHY_IMAGE, "icons/actions/doc_hierarchy.png");
-		addImage(IUiConstants.SAP_HIERARCHY_IMAGE, "icons/actions/sap_hierarchy.png");
-	}
-
-	private void addImage(String name, String path) {
-		Image image = imageDescriptorFromPlugin(ID, path).createImage();
-		getInstance().getImageRegistry().put(name, image);
 	}
 }

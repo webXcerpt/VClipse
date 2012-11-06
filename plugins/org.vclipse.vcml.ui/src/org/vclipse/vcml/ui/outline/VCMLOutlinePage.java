@@ -91,8 +91,8 @@ public class VCMLOutlinePage extends OutlinePage implements IPropertyChangeListe
 	}
 
 	private void createHierarchySwitchAction(IToolBarManager toolBarManager) {
-		final ImageDescriptor sapImageDescriptor = imageHelper.getImageDescriptor(IUiConstants.SAP_HIERARCHY_IMAGE);
-		final ImageDescriptor docImageDescriptior = imageHelper.getImageDescriptor(IUiConstants.DOC_HIERARCHY_IMAGE);
+		final ImageDescriptor sapImageDescriptor = imageHelper.getImageDescriptor("doc_hierarchy.png");
+		final ImageDescriptor docImageDescriptior = imageHelper.getImageDescriptor("sap_hierarchy.png");
 		
 		// create an action for hierarchy switching
 		final Action action = new Action() {

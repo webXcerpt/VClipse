@@ -161,7 +161,7 @@
         </separator>
         <command
               commandId="org.vclipse.ui.commands.cleanUpDepedencyCode"
-              icon="icons/actions/delete.png"
+              icon="icons/delete.png"
               label="Clean Up Dependency Code"
               style="push">
            <visibleWhen
