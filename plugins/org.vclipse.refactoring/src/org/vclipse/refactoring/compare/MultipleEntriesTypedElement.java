@@ -48,10 +48,10 @@ public class MultipleEntriesTypedElement extends DefaultElement {
 	public InputStream getContents() throws CoreException {
 		if(serializer == null) {
 			return super.getContents();
-		} else {
+		} else if(buffer == null) {
 			buffer = new MultipleEntriesStorage(serializer, nameProvider, elements);
-			return buffer.getContents();
 		}
+		return buffer.getContents();
 	}
 
 	@Override
