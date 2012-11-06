@@ -19,7 +19,9 @@ Require-Bundle: org.eclipse.ui,
  org.vclipse.vcml.tests,
  org.eclipse.xtext.ui.shared,
  org.eclipse.xtext.xtext.ui,
- com.webxcerpt.cm.nsn.cml.mm
+ com.webxcerpt.cm.nsn.cml.mm,
+ org.vclipse.nsn.vcml,
+ org.eclipse.xtext.xbase,
+ org.eclipse.xtext.xbase.lib
 Export-Package: org.vclipse.refactoring.tests
-Bundle-ClassPath: resources/,
- .
+Bundle-ClassPath: .
