@@ -88,8 +88,10 @@ public class ConstraintOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	}
 	
 	void _createNode(IOutlineNode parentNode, ConditionalConstraintRestriction restriction) {
-		createNode(parentNode, restriction.getRestriction());
-		createNode(parentNode, restriction.getCondition());
+		if(restriction != null) {
+			createNode(parentNode, restriction.getRestriction());
+			createNode(parentNode, restriction.getCondition());			
+		}
 	}
 	
 	boolean _isLeaf(ConditionalConstraintRestriction restriction) {
