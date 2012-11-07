@@ -113,9 +113,17 @@ public class DependencyQuickfixProvider extends DefaultQuickfixProvider {
 				VcmlFactory vcml = VcmlFactory.eINSTANCE;
 				Object result = vcml.getClass().getMethod("create" + referenceType).invoke(vcml);
 				if(result instanceof VCObject) {
-					VCObject vcobject = (VCObject)result;
+					final VCObject vcobject = (VCObject)result;
 					vcobject.setName(linkText);
-					vcmlModel.getObjects().add(vcobject);
+					EList<VCObject> objects = vcmlModel.getObjects();
+					Iterator<VCObject> vciterator = Iterables.filter(objects, new Predicate<VCObject>() {
+						public boolean apply(VCObject object) {
+							return vcobject.eClass() == object.eClass() && object.getName().equals(vcobject.getName());
+						}
+					}).iterator();
+					if(!vciterator.hasNext()) {
+						objects.add(vcobject);						
+					} 
 	
 					if(locationContext != null) {
 						EClass type = locationContext.eClass();
