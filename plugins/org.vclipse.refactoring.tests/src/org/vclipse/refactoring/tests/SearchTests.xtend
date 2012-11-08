@@ -30,7 +30,7 @@ class SearchTests extends RefactoringTest {
 		var findEntry = search.findEntry(entry, entries)
 		Assert::assertNotNull(findEntry)
 		
-		val jft = EcoreFactory::eINSTANCE.createEObject()
+		val jft = EcoreFactory::eINSTANCE.createEObject
 		findEntry = search.findEntry(jft, entries)
 		Assert::assertNull(findEntry)
 	}
@@ -38,34 +38,26 @@ class SearchTests extends RefactoringTest {
 	@Test
 	def testFindByTypeAndName() {
 		Assert::assertTrue(!entries.empty)
-		var findEntry = search.findEntry("SEL_COND", VCML_PACKAGE.getSelectionCondition(), entries)
+		var findEntry = search.findEntry("SEL_COND", VCML_PACKAGE.getSelectionCondition, entries)
 		Assert::assertNotNull(findEntry)
-		findEntry = search.findEntry("SEL_COND", VCML_PACKAGE.getCharacteristic(), entries)
+		findEntry = search.findEntry("SEL_COND", VCML_PACKAGE.getCharacteristic, entries)
 		Assert::assertNotNull(findEntry)
-		findEntry = search.findEntry("(300)CAR", VCML_PACKAGE.getClass_(), entries)
+		findEntry = search.findEntry("(300)CAR", VCML_PACKAGE.getClass_, entries)
 		Assert::assertNotNull(findEntry)
-		findEntry = search.findEntry("ENGINE_2400", VCML_PACKAGE.getMaterial(), entries)
+		findEntry = search.findEntry("ENGINE_2400", VCML_PACKAGE.getMaterial, entries)
 		Assert::assertNotNull(findEntry)
-		findEntry = search.findEntry("ENGINE_2400", VCML_PACKAGE.getCharacteristic(), entries)
+		findEntry = search.findEntry("ENGINE_2400", VCML_PACKAGE.getCharacteristic, entries)
 		Assert::assertNull(findEntry);
-		findEntry = search.findEntry("FUELCONSUMPTION", VCML_PACKAGE.getMaterial(), entries)
+		findEntry = search.findEntry("FUELCONSUMPTION", VCML_PACKAGE.getMaterial, entries)
 		Assert::assertNull(findEntry)
 	}
 	
 	@Test
 	def testSearchByName() {
 		Assert::assertTrue(!entries.empty)
-		val namedIterable = search.getEntries("DEP_NET", entries)
-		Assert::assertNotNull(namedIterable)
-		val namedEntries = Lists::newArrayList(namedIterable)
+		val entry = search.findEntry("DEP_NET", VCML_PACKAGE.dependencyNet, entries)
+		Assert::assertNotNull(entry)
+		val namedEntries = Lists::newArrayList(entry)
 		Assert::assertEquals(1, namedEntries.size)
-	}
-
-	@Test
-	def testSearchByType() {
-		val classes = Lists::newArrayList(search.getEntries(VCML_PACKAGE.getClass_(), entries))
-		Assert::assertEquals("Amount of classes", 1, classes.size)
-		val cstics = Lists::newArrayList(search.getEntries(VCML_PACKAGE.getCharacteristic(), entries))
-		Assert::assertEquals("Amount of cstics", 9, cstics.size)
 	}
 }
