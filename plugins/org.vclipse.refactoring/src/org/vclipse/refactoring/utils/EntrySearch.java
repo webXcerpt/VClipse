@@ -73,9 +73,6 @@ public class EntrySearch {
 						if(NOT_MATCHING == similarity) {
 							EObject firstContainer = first.eContainer();
 							EObject secondContainer = second.eContainer();
-							if(firstContainer == secondContainer) {
-								return true;
-							}
 							similarity = firstContainer == null ? NOT_MATCHING : nameSimilarity(firstContainer, secondContainer);
 							if(NOT_MATCHING == similarity) {
 								return equallyTyped(firstContainer, secondContainer);
@@ -120,12 +117,14 @@ public class EntrySearch {
 	}
 
 	public boolean equallyTyped(EObject first, EObject second) {
-		if(first == null || second == null) {
+		if(first == null && second != null) {
 			return Boolean.FALSE;
+		} else if(second == null && first != null) {
+			return Boolean.FALSE;
+		} else if(first == null && second == null) {
+			return Boolean.TRUE;			
 		} else {
-			EClass typefirst = first.eClass();
-			EClass typesecond = second.eClass();
-			return typefirst == typesecond;
+			return first.eClass() == second.eClass();
 		}
 	}
 	
