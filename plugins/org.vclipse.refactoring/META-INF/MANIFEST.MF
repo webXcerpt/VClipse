@@ -5,7 +5,9 @@ Bundle-SymbolicName: org.vclipse.refactoring;singleton:=true
 Bundle-Version: 0.5.0.qualifier
 Bundle-Activator: org.vclipse.refactoring.RefactoringPlugin
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
-Require-Bundle: org.eclipse.ltk.ui.refactoring;visibility:=reexport,
+Require-Bundle: org.eclipse.emf.compare.match,
+ org.eclipse.emf.compare,
+ org.eclipse.ltk.ui.refactoring;visibility:=reexport,
  org.eclipse.xtext.ui.shared,
  org.eclipse.compare;visibility:=reexport,
  org.eclipse.xtext.ui;visibility:=reexport,

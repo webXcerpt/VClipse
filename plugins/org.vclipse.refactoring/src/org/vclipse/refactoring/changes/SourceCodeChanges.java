@@ -87,7 +87,7 @@ public class SourceCodeChanges extends CompositeChange {
 		
 		EObject element = this.context.getSourceElement();
 		rootOriginal = EcoreUtil.getRootContainer(element);
-		rootContents = search.getContents(rootOriginal);
+		rootContents = search.getEntries(rootOriginal);
 		
 		serializer = extensions.getInstance(ISerializer.class, rootOriginal);
 		IParser parser = extensions.getInstance(IParser.class, rootOriginal);
@@ -107,7 +107,7 @@ public class SourceCodeChanges extends CompositeChange {
 		EList<EObject> contents = resource.getContents();
 		contents.clear();
 		rootRefactored = parseResult.getRootASTElement();
-		copyContents = search.getContents(rootRefactored);
+		copyContents = search.getEntries(rootRefactored);
 		contents.add(rootRefactored);		
 		linker.linkModel(rootRefactored, new ListBasedDiagnosticConsumer());
 		EcoreUtil.resolveAll(resource);
@@ -132,7 +132,8 @@ public class SourceCodeChanges extends CompositeChange {
 	@Override
  	public Change perform(IProgressMonitor pm) throws CoreException {
 		if(!performed) {
-			StringBuffer taskBuffer = new StringBuffer("Initialising re-factoring operation for ").append(context.getLabel());
+			StringBuffer taskBuffer = new StringBuffer("Initialising re-factoring operation for ");
+			taskBuffer.append(context.getLabel());
 			final SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 60);
 
 			// creates a copy of a model and sets the source element to an equal one in the copied model
@@ -232,7 +233,8 @@ public class SourceCodeChanges extends CompositeChange {
 	}
 	
 	private void recordSourceCodeChanges(IProgressMonitor pm, IRefactoringUIContext previewContext) {
-		StringBuffer taskBuffer = new StringBuffer("Recording source code changes for re-factoring ").append(previewContext.getLabel());
+		StringBuffer taskBuffer = new StringBuffer("Recording source code changes for re-factoring ");
+		taskBuffer.append(previewContext.getLabel());
 		EMap<EObject, EList<FeatureChange>> objectChanges = runner.getChangeRecorder().endRecording().getObjectChanges();
 		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), objectChanges.size());
 		for(Entry<EObject, EList<FeatureChange>> entry : objectChanges.entrySet()) {
@@ -242,12 +244,14 @@ public class SourceCodeChanges extends CompositeChange {
 				continue;
 			}
 			EList<FeatureChange> featureChanges = entry.getValue();
+			search.refactoringConditions(true);
 			for(FeatureChange featureChange : featureChanges) {
 				EObject existingEntry = search.findEntry(refactored, rootContents);
 				SourceCodeChange scc = new SourceCodeChange(rootOriginal, rootRefactored, extensions, search);
 				scc.addChange(existingEntry, refactored, featureChange);
 				add(scc);
 			}
+			search.refactoringConditions(false);
 		}
 	}
 }

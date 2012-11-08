@@ -8,6 +8,8 @@
 			<accessrule kind="accessible" pattern="**/xtext/ui/compare/**"/>
 			<accessrule kind="accessible" pattern="**/compare/internal/**"/>
 			<accessrule kind="accessible" pattern="**/ltk/internal/ui/refactoring/**"/>
+			<accessrule kind="accessible" pattern="**/emf/compare/match/engine/internal/**"/>
+			<accessrule kind="accessible" pattern="**/emf/compare/match/internal/statistic/**"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>

@@ -39,6 +39,9 @@ public class ContainerPreviewComputer extends DefaultContainerPreviewComputer {
 	@SuppressWarnings("unchecked")
 	protected List<EObject> getPreviewObjects(EObject object, FeatureChange featureChange, boolean ignoreChangeDescriptions) {
 		List<EObject> previewObjects = Lists.newArrayList();
+		if(object == null) {
+			return previewObjects;
+		}
 		EClass type = object.eClass();		
 		Set<EClass> ignoreTypes = getIgnoreTypes();
 		Set<EClass> favoredTypes = getFavoredTypes();
