@@ -38,6 +38,7 @@ public class EntrySearch {
 	private DistinctEcoreSimilarityChecker checker;
 	
 	private static final double MATCHING = 1.0;
+	private static final double MIDDLE = 0.5;
 	private static final double NOT_MATCHING = 0.0;
 	
 	private boolean refactoringConditions;
@@ -72,14 +73,17 @@ public class EntrySearch {
 						if(NOT_MATCHING == similarity) {
 							EObject firstContainer = first.eContainer();
 							EObject secondContainer = second.eContainer();
+							if(firstContainer == secondContainer) {
+								return true;
+							}
 							similarity = firstContainer == null ? NOT_MATCHING : nameSimilarity(firstContainer, secondContainer);
 							if(NOT_MATCHING == similarity) {
 								return equallyTyped(firstContainer, secondContainer);
 							}
-						} else if(MATCHING == similarity) {
+						} else if(MIDDLE <= similarity && similarity <= MATCHING) {
 							similarity = nameSimilarity(first, second);
 						}
-						return refactoringConditions && similarity >= 0.5;
+						return refactoringConditions && similarity >= MIDDLE;
 					}
 				}
 			};
@@ -117,7 +121,7 @@ public class EntrySearch {
 
 	public boolean equallyTyped(EObject first, EObject second) {
 		if(first == null || second == null) {
-			return Boolean.TRUE;
+			return Boolean.FALSE;
 		} else {
 			EClass typefirst = first.eClass();
 			EClass typesecond = second.eClass();

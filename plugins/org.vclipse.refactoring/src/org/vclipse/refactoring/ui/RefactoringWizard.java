@@ -54,7 +54,8 @@ public class RefactoringWizard extends org.eclipse.ltk.ui.refactoring.Refactorin
 						try {
 							SourceCodeChanges changes = modelRefactoring.getChange(pm);
 							Change[] children = changes.getChildren();
-							StringBuffer labelBuffer = new StringBuffer("Executing re-factoring for ").append(changes.getContext().getLabel());
+							StringBuffer labelBuffer = new StringBuffer("Executing re-factoring for ");
+							labelBuffer.append(changes.getContext().getLabel());
 							pm.beginTask(labelBuffer.toString(), children.length);
 							changes.refactor(pm);
 							changes.dispose();
