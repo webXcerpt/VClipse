@@ -165,7 +165,12 @@ public class VcmlCompare {
 					logger.error("The source element for " + nameProvider.getFullyQualifiedName(changedDependency).getLastSegment() + " was null.");
 					continue;
 				}
-				Resource newSourceResource = resourceSet.createResource(sourceURI);
+				Resource newSourceResource = null;
+				try {
+					newSourceResource = resourceSet.getResource(sourceURI, true);
+				} catch(Exception exception) {
+					newSourceResource = resourceSet.getResource(sourceURI, true);
+				}
 				newSourceResource.getContents().add(EcoreUtil.copy(source));
 				newSourceResource.save(SaveOptions.defaultOptions().toOptionsMap());
 			}
