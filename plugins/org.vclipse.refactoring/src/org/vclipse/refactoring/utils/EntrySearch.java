@@ -133,12 +133,12 @@ public class EntrySearch {
 			return Boolean.FALSE;
 		} else {
 			IQualifiedNameProvider nameProvider = extensions.getInstance(IQualifiedNameProvider.class, first);
-			QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(first);
-			QualifiedName qualifiedName2 = nameProvider.getFullyQualifiedName(second);
-			if(qualifiedName == null || qualifiedName2 == null) {
+			QualifiedName firstName = nameProvider.getFullyQualifiedName(first);
+			QualifiedName secondName = nameProvider.getFullyQualifiedName(second);
+			if(firstName == null || secondName == null) {
 				return Boolean.FALSE;
 			} else {
-				return qualifiedName.getLastSegment().equals(qualifiedName2.getLastSegment());
+				return firstName.getLastSegment().equals(secondName.getLastSegment());
 			}
 		}
 	}
@@ -206,6 +206,7 @@ public class EntrySearch {
 			}
 		};
 	}
+	
 	
 	protected MetamodelFilter getMetamodelFilter(EObject object) {
 		MetamodelFilter filter = extensions.getInstance(MetamodelFilter.class, object);
