@@ -203,6 +203,7 @@ public class SourceCodeChanges extends CompositeChange {
 						for(Change change : changes) {
 							if(change instanceof SourceCodeChange) {
 								SourceCodeChange scc = (SourceCodeChange)change;
+								scc.isValid(pm);
 								scc.applyRefactoring(pm);
 								sm.worked(1);
 							}
@@ -247,8 +248,9 @@ public class SourceCodeChanges extends CompositeChange {
 			search.refactoringConditions(true);
 			for(FeatureChange featureChange : featureChanges) {
 				EObject existingEntry = search.findEntry(refactored, rootContents);
-				SourceCodeChange scc = new SourceCodeChange(rootOriginal, rootRefactored, extensions, search);
+				SourceCodeChange scc = new SourceCodeChange(extensions);
 				scc.addChange(existingEntry, refactored, featureChange);
+				scc.initializeValidationData(pm);
 				add(scc);
 			}
 			search.refactoringConditions(false);

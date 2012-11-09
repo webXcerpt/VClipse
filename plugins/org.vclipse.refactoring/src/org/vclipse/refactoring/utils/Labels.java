@@ -54,6 +54,28 @@ public class Labels {
 		return buffer.toString();
 	}
 	
+	/*
+	 * Label for a tree entry in the preview page
+	 */
+	public String getPreviewLabel(EObject object) {
+		StringBuffer labelBuffer = new StringBuffer("Re-factoring on ");
+		String refactoringOnType = object.eClass().getName();
+		appendToBuffer(labelBuffer, refactoringOnType);
+		return labelBuffer.toString();
+	}
+	
+	/*
+	 * Returns the qualified name or the type name if there is no one
+	 */
+	public String getSimpleName(EObject object) {
+		IQualifiedNameProvider nameProvider = extensions.getInstance(IQualifiedNameProvider.class, object);
+		QualifiedName qualifiedName = nameProvider == null ? QualifiedName.create("") : nameProvider.getFullyQualifiedName(object);
+		return qualifiedName == null ? object.eClass().getName() : qualifiedName.getLastSegment();
+	}
+	
+	/*
+	 * Returns a set of names for a collection of objects
+	 */
 	public Set<String> namesForEntries(List<EObject> entries) {
 		Set<String> names = Sets.newHashSet();
 		if(!entries.isEmpty()) {

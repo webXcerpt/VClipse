@@ -141,7 +141,8 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 				context.setRefactoring(refactoringTask);
 				RefactoringWizard wizard = new RefactoringWizard(pages, refactoringTask, RefactoringWizard.DIALOG_BASED_USER_INTERFACE);
 				Shell activeShell = Display.getDefault().getActiveShell();
-				new RefactoringWizardOpenOperation(wizard).run(activeShell, labels.getUILabel(context));
+				RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wizard);
+				operation.run(activeShell, labels.getUILabel(context));
 			} catch(InterruptedException exception) {
 				String message = exception.getMessage();
 				RefactoringPlugin.log(message, exception);

@@ -33,14 +33,13 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
 import org.eclipse.xtext.diagnostics.AbstractDiagnostic;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
-import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.serializer.ISerializer;
-import org.vclipse.base.VClipseStrings;
 import org.vclipse.refactoring.IPreviewObjectComputer;
 import org.vclipse.refactoring.compare.MultipleEntriesTypedElement;
 import org.vclipse.refactoring.core.DiffNode;
 import org.vclipse.refactoring.utils.EntrySearch;
 import org.vclipse.refactoring.utils.Extensions;
+import org.vclipse.refactoring.utils.Labels;
 
 import com.google.common.collect.Maps;
 
@@ -48,6 +47,7 @@ public class SourceCodeChange extends NoChange {
 
 	private Extensions extensions;
 	private EntrySearch search;
+	private Labels labels;
 	
 	private EValidator validator;
 	private IQualifiedNameProvider nameProvider;
@@ -57,15 +57,43 @@ public class SourceCodeChange extends NoChange {
 	private EObject refactored;
 	private FeatureChange featureChange;
 	
-	public SourceCodeChange(EObject rootOriginal, EObject rootRefactored, Extensions extensions, EntrySearch search) {
+	public SourceCodeChange(Extensions extensions) {
 		this.extensions = extensions;
-		this.search = search;
+		this.search = extensions.getInstance(EntrySearch.class);
+		this.labels = extensions.getInstance(Labels.class);
+	}
+	
+	public void addChange(EObject existing, EObject refactored, FeatureChange featureChange) {
+		this.existing = existing;
+		this.refactored = refactored;
+		this.featureChange = featureChange;
 	}
 	
 	@Override
+	public void initializeValidationData(IProgressMonitor pm) {
+		EObject handleWithObject = existing == null ? refactored : existing;
+		if(handleWithObject == null) {
+			StringBuffer errorBuffer = new StringBuffer("Can not initialize validation data for a change. ");
+			errorBuffer.append("Both existing and refactored objects are null.");
+			throw new IllegalArgumentException(errorBuffer.toString());
+		}
+		String name = labels.getSimpleName(handleWithObject);
+		StringBuffer taskBuffer = new StringBuffer("Initializing change for ");
+		taskBuffer.append(name);
+		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), IProgressMonitor.UNKNOWN);
+		sm.beginTask(taskBuffer.toString(), IProgressMonitor.UNKNOWN);
+		Registry registry = extensions.getInstance(EValidator.Registry.class, handleWithObject);
+		EPackage epackage = handleWithObject.eClass().getEPackage();
+		validator = registry.getEValidator(epackage);
+		nameProvider = extensions.getInstance(IQualifiedNameProvider.class, handleWithObject);
+		serializer = extensions.getInstance(ISerializer.class, handleWithObject);
+		sm.done();
+	}
+
+	@Override
 	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		EObject handleWithObject = existing == null ? refactored : existing;
-		String name = getName(extensions, handleWithObject);
+		String name = labels.getSimpleName(handleWithObject);
 		StringBuffer taskBuffer = new StringBuffer("Validating change for ").append(name);
 		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 10);
 		BasicDiagnostic diagnostics = new BasicDiagnostic();
@@ -94,7 +122,7 @@ public class SourceCodeChange extends NoChange {
 	public RefactoringStatus applyRefactoring(IProgressMonitor pm) throws CoreException {
 		if(isEnabled()) {
 			EObject handleWithObject = existing == null ? refactored : existing;
-			String name = getName(extensions, handleWithObject);
+			String name = labels.getSimpleName(handleWithObject);
 			StringBuffer taskBuffer = new StringBuffer("Executing re-factoring for ").append(name);
 			SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), IProgressMonitor.UNKNOWN);
 			EStructuralFeature feature = featureChange.getFeature();
@@ -107,7 +135,8 @@ public class SourceCodeChange extends NoChange {
 				} else if(search.equallyTyped(existing, refactored) && search.equallyNamed(existing, refactored)) {
 					Object value = refactored.eGet(feature);
 					existing.eSet(feature, value);
-				} else if(search.equallyTyped(existingContainer, refactoredContainer) && search.equallyNamed(existingContainer, refactoredContainer)) {
+				} else if(search.equallyTyped(existingContainer, refactoredContainer) && 
+						search.equallyNamed(existingContainer, refactoredContainer)) {
 					Object value = refactored.eGet(feature);
 					existing.eSet(feature, value);
 				}
@@ -170,36 +199,6 @@ public class SourceCodeChange extends NoChange {
 	
 	@Override
 	public String getName() {
-		EObject computeOn = existing == null ? refactored : existing;
-		String refactoringOnType = computeOn.eClass().getName();
-		List<String> parts = VClipseStrings.splitCamelCase(refactoringOnType);
-		StringBuffer labelBuffer = new StringBuffer("Re-factoring on ");
-		int size = parts.size() - 1;
-		for(String part : parts) {
-			labelBuffer.append(part.toLowerCase());
-			if(parts.indexOf(part) != size) {
-				labelBuffer.append(" ");
-			}
-		}
-		return labelBuffer.toString();
-	}
-	
-	public void addChange(EObject existing, EObject refactored, FeatureChange featureChange) {
-		this.existing = existing;
-		this.refactored = refactored;
-		this.featureChange = featureChange;
-		
-		EObject initObject = existing == null ? refactored : existing;
-		Registry registry = extensions.getInstance(EValidator.Registry.class, initObject);
-		EPackage epackage = initObject.eClass().getEPackage();
-		validator = registry.getEValidator(epackage);
-		nameProvider = extensions.getInstance(IQualifiedNameProvider.class, initObject);
-		serializer = extensions.getInstance(ISerializer.class, initObject);
-	}
-	
-	private String getName(Extensions extensions, EObject object) {
-		IQualifiedNameProvider nameProvider = extensions.getInstance(IQualifiedNameProvider.class, object);
-		QualifiedName qualifiedName = nameProvider == null ? QualifiedName.create("") : nameProvider.getFullyQualifiedName(object);
-		return qualifiedName == null ? object.eClass().getName() : qualifiedName.getLastSegment();
+		return labels.getPreviewLabel(existing == null ? refactored : existing);
 	}
 }
