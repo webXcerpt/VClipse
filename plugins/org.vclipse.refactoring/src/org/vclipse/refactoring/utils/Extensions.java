@@ -43,20 +43,22 @@ public class Extensions {
 	}
 	
 	public <T> T getInstance(Class<T> type, EObject object) {
+		Injector injector = getInjector(object);
+		if(injector == null) {
+			return getInstance(type);
+		}
+		return injector.getInstance(type);
+	}
+	
+	public <T> T getInstance(Class<T> type) {
 		try {
-			Injector injector = getInjector(object);
-			if(injector == null) {
-				injector = RefactoringPlugin.getInstance().getInjector();
-			}
-			return injector.getInstance(type);
+			RefactoringPlugin plugin = RefactoringPlugin.getInstance();
+			Injector refactoringInjector = plugin.getInjector();
+			T instance = refactoringInjector.getInstance(type);
+			return instance;
 		} catch(ConfigurationException exception) {
-			try {
-				T instance = RefactoringPlugin.getInstance().getInjector().getInstance(type);
-				return instance;
-			} catch(ConfigurationException nextConfiguration) {
-				RefactoringPlugin.log(exception.getMessage(), exception);
-				return null;
-			}
+			RefactoringPlugin.log(exception.getMessage(), exception);
+			return null;
 		}
 	}
 }
