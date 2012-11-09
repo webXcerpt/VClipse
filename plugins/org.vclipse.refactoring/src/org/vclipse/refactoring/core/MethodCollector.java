@@ -76,7 +76,7 @@ public abstract class MethodCollector {
 	
 	protected void collect(int paramCount, Class<?> ... paramTypes) {
 		if(paramCount != paramTypes.length) {
-			throw new IllegalArgumentException("paramCount should be equalt to paramTypes length");
+			throw new IllegalArgumentException("paramCount should be equal to paramTypes length");
 		} else {
 			List<Class<?>> requiredSignature = Lists.newArrayList(paramTypes);
 			for(Method method : getClass().getMethods()) {

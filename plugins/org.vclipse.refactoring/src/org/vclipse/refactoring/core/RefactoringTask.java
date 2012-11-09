@@ -59,7 +59,8 @@ public class RefactoringTask extends Refactoring {
 
 	public SourceCodeChanges getChange(IProgressMonitor pm) throws CoreException {
 		if(modelChange == null) {
-			StringBuffer taksBuffer = new StringBuffer("Creating a change description for ").append(context.getLabel());
+			StringBuffer taksBuffer = new StringBuffer("Creating a change description for ");
+			taksBuffer.append(context.getLabel());
 			SubMonitor sm = SubMonitor.convert(pm, taksBuffer.toString(), 10);
 			try {
 				createChange(pm);
@@ -74,7 +75,8 @@ public class RefactoringTask extends Refactoring {
 	
 	@Override
 	public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws CoreException, OperationCanceledException {
-		StringBuffer taskBuffer = new StringBuffer("Checking initial conditions for ").append(context.getLabel());
+		StringBuffer taskBuffer = new StringBuffer("Checking initial conditions for ");
+		taskBuffer.append(context.getLabel());
 		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 10);
 		EObject element = context.getSourceElement();
 		EObject container = EcoreUtil.getRootContainer(element);
@@ -114,7 +116,8 @@ public class RefactoringTask extends Refactoring {
 		if(modelChange == null) {
 			createChange(pm);
 		}
-		StringBuffer taskBuffer = new StringBuffer("Checking final conditions for re-factoring ").append(context.getLabel());
+		StringBuffer taskBuffer = new StringBuffer("Checking final conditions for re-factoring ");
+		taskBuffer.append(context.getLabel());
 		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 10);
 		Object modified = modelChange.getModifiedElement();
 		if(modified instanceof EObject) {
@@ -133,6 +136,11 @@ public class RefactoringTask extends Refactoring {
 	@Override
 	public String getName() {
 		return getClass().getName();
+	}
+	
+	public void dispose() {
+		modelChange = null;
+		context = null;
 	}
 	
 	private RefactoringStatus validate(IProgressMonitor pm, EObject object) {
@@ -159,10 +167,5 @@ public class RefactoringTask extends Refactoring {
 			return RefactoringStatus.createFatalErrorStatus(diagnostic.getMessage());
 		}
 		return RefactoringStatus.create(Status.OK_STATUS);
-	}
-
-	public void dispose() {
-		modelChange = null;
-		context = null;
 	}
 }

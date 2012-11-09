@@ -207,7 +207,6 @@ public class EntrySearch {
 		};
 	}
 	
-	
 	protected MetamodelFilter getMetamodelFilter(EObject object) {
 		MetamodelFilter filter = extensions.getInstance(MetamodelFilter.class, object);
 		if(filter == null) {
