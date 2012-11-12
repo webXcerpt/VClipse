@@ -95,14 +95,12 @@ public class RefactoringTask extends Refactoring {
 			if(sm.isCanceled()) {
 				return modelChange;
 			}
-			if(modelChange == null) {
-				modelChange = new SourceCodeChanges(context, runner, extensions);				
-				modelChange.perform(pm);
-			}
+			modelChange = new SourceCodeChanges(context, runner, extensions);				
 			sm.worked(10);
 			if(sm.isCanceled()) {
 				return modelChange;
 			}
+			modelChange.perform(pm);
 		} catch(CoreException exception) {
 			RefactoringPlugin.log(exception.getMessage(), exception);
 			modelChange = null;
