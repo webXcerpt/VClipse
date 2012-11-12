@@ -70,16 +70,23 @@ public class EntrySearch {
 						return super.isSimilar(first, second);						
 					} else {
 						double similarity = contentSimilarity(first, second);
-						if(NOT_MATCHING == similarity) {
+						if(similarity == NOT_MATCHING) {
 							EObject firstContainer = first.eContainer();
 							EObject secondContainer = second.eContainer();
 							similarity = firstContainer == null ? NOT_MATCHING : nameSimilarity(firstContainer, secondContainer);
 							if(NOT_MATCHING == similarity) {
 								return equallyTyped(firstContainer, secondContainer);
 							}
-						} else if(MIDDLE <= similarity && similarity <= MATCHING) {
-							similarity += nameSimilarity(first, second);
-						}
+						} else if(similarity == MIDDLE) {
+							return true;
+						} else {
+							double nameSimilarity = nameSimilarity(first, second);
+							if(MATCHING == nameSimilarity) {
+								similarity += nameSimilarity;
+							} else {
+								similarity = nameSimilarity;
+							}
+						} 
 						return refactoringConditions && similarity >= MIDDLE;
 					}
 				}
