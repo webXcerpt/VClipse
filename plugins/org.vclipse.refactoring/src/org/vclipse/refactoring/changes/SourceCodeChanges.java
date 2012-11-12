@@ -55,9 +55,9 @@ import com.google.common.collect.Maps;
 
 public class SourceCodeChanges extends CompositeChange {
 	
-	private RefactoringRunner runner;
-	private EntrySearch search;
-	private Extensions extensions;
+	private final RefactoringRunner runner;
+	private final EntrySearch search;
+	private final Extensions extensions;
 	
 	private EObject rootOriginal;
 	private EObject rootRefactored;
@@ -78,11 +78,11 @@ public class SourceCodeChanges extends CompositeChange {
 		return resource.getURI().lastSegment();
 	}
 	
-	public SourceCodeChanges(IRefactoringUIContext context, RefactoringRunner runner, Extensions extensions, EntrySearch search) {
+	public SourceCodeChanges(IRefactoringUIContext context, RefactoringRunner runner, Extensions extensions) {
  		super("Changes in " + getChangeLabel(context));
 		this.context = context;
 		this.runner = runner;
-		this.search = search;
+		this.search = extensions.getInstance(EntrySearch.class);
 		this.extensions = extensions;
 		
 		EObject element = this.context.getSourceElement();

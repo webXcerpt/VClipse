@@ -95,7 +95,7 @@ public class RefactoringTask extends Refactoring {
 			if(sm.isCanceled()) {
 				return modelChange;
 			}
-			modelChange = new SourceCodeChanges(context, runner, extensions, search);
+			modelChange = new SourceCodeChanges(context, runner, extensions);
 			sm.worked(10);
 			if(sm.isCanceled()) {
 				return modelChange;

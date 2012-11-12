@@ -137,7 +137,7 @@ public class InputPage extends UserInputWizardPage {
 						}
 					}
 				});							
-			} catch(final InvocationTargetException exception) {
+			} catch(final Exception exception) {
 				Display.getDefault().syncExec(new Runnable() {
 					@Override
 					public void run() {
@@ -145,8 +145,6 @@ public class InputPage extends UserInputWizardPage {
 						inputPage.setErrorMessage(exception.getMessage());
 					}
 				});
-			} catch(final InterruptedException exception) {
-				
 			}
 			container.updateButtons();
 		}
@@ -301,8 +299,9 @@ public class InputPage extends UserInputWizardPage {
 		} else {
 			if(validationThread == null) {
 				validationThread = new ValidationThread(this, context);
+			} else if(!validationThread.isAlive()) {
+				Display.getDefault().timerExec(1000, validationThread);
 			}
-			Display.getDefault().timerExec(1000, validationThread);
 		}
 	}
 	
