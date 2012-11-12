@@ -78,7 +78,7 @@ public class EntrySearch {
 								return equallyTyped(firstContainer, secondContainer);
 							}
 						} else if(MIDDLE <= similarity && similarity <= MATCHING) {
-							similarity = nameSimilarity(first, second);
+							similarity += nameSimilarity(first, second);
 						}
 						return refactoringConditions && similarity >= MIDDLE;
 					}
