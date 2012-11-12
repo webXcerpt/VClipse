@@ -38,6 +38,7 @@ public class EntrySearch {
 	private DistinctEcoreSimilarityChecker checker;
 	
 	private static final double MATCHING = 1.0;
+	private static final double MIDDLE = 0.5;
 	private static final double NOT_MATCHING = 0.0;
 	
 	private boolean refactoringConditions;
@@ -66,14 +67,22 @@ public class EntrySearch {
 				@Override
 				public boolean isSimilar(EObject first, EObject second) throws FactoryException {
 					if(!refactoringConditions) {
-						return super.isSimilar(first, second) && MATCHING == nameSimilarity(first, second);
+						double nameSimilarity = nameSimilarity(first, second);
+						double contentSimilarity = contentSimilarity(first, second);
+						double absoluteMetric = absoluteMetric(first, second);
+						boolean isSimilar = super.isSimilar(first, second);
+						return isSimilar && (absoluteMetric < 0.2 ? MATCHING == nameSimilarity : MATCHING == contentSimilarity);
 					} else {
 						double nameSimilarity = nameSimilarity(first, second);
 						if(MATCHING == nameSimilarity) {
 							return Boolean.TRUE;
 						} else {
 							double contentSimilarity = contentSimilarity(first, second);
-							if(NOT_MATCHING == contentSimilarity) {
+							if(absoluteMetric(first, second) > 0.2) {
+								return Boolean.FALSE;
+							} else if(contentSimilarity >= MIDDLE && contentSimilarity <= MATCHING) {
+								return Boolean.TRUE && equallyTyped(first.eContainer(), second.eContainer());
+							} else if(NOT_MATCHING == contentSimilarity) {
 								return first.eContainer() == second.eContainer() && equallyTyped(first, second);
 							}
 							return MATCHING == contentSimilarity;
