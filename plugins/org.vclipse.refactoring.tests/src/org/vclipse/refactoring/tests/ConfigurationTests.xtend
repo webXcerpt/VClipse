@@ -3,24 +3,30 @@ package org.vclipse.refactoring.tests
 import com.google.inject.Inject
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
-import org.junit.Assert
+import org.eclipselabs.xtext.utils.unittesting.XtextTest
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.vclipse.refactoring.IRefactoringConfiguration
-import org.vclipse.refactoring.core.RefactoringContext
-import org.vclipse.refactoring.core.RefactoringType
-import org.vclipse.refactoring.tests.utils.RefactoringTest
+import org.vclipse.refactoring.tests.utils.RefactoringResourcesLoader
 import org.vclipse.refactoring.tests.utils.RefactoringTestInjectorProvider
 import org.vclipse.refactoring.utils.Extensions
-import com.google.common.collect.Iterables
 import org.vclipse.vcml.vcml.Characteristic
+
+import static com.google.common.collect.Iterables.*
+import static org.junit.Assert.*
+import static org.vclipse.refactoring.core.RefactoringContext.*
+import static org.vclipse.refactoring.core.RefactoringType.*
+import static org.vclipse.refactoring.tests.utils.RefactoringResourcesLoader.*
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(RefactoringTestInjectorProvider))
-class ConfigurationTests extends RefactoringTest {
+class ConfigurationTests extends XtextTest {
 	
 	@Inject
 	private Extensions extensions
+	
+	@Inject
+	private RefactoringResourcesLoader resourcesLoader
 	
 	new() {
 		super(typeof(ConfigurationTests).simpleName)
@@ -28,17 +34,18 @@ class ConfigurationTests extends RefactoringTest {
 	
 	@Test
 	def testRefactoringConfiguration() {
-		val iterator = Iterables::filter(entries, typeof(Characteristic)).iterator
+		val entries = resourcesLoader.getResourceContents(CAR_DESCRIPTION)
+		val iterator = filter(entries, typeof(Characteristic)).iterator
 		if(iterator.hasNext) {
 			val entry = iterator.next
 			val configuration = extensions.getInstance(typeof(IRefactoringConfiguration), entry)
-			val context = RefactoringContext::create(entry, VCML_PACKAGE.vcmlModel_Objects, RefactoringType::Replace)
+			val context = create(entry, VCML_PACKAGE.vcmlModel_Objects, Replace)
 			val initialize = configuration.initialize(context)
-			Assert::assertEquals("context initialized", true, initialize)
+			assertEquals("context initialized", true, initialize)
 		
 			val features = configuration.provideFeatures(context)
-			Assert::assertTrue(!features.empty)
-			Assert::assertTrue(features.contains(VCML_PACKAGE.vcmlModel_Objects))
+			assertTrue(!features.empty)
+			assertTrue(features.contains(VCML_PACKAGE.vcmlModel_Objects))
 		}
 	}
 }

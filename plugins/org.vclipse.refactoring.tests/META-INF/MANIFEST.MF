@@ -6,22 +6,10 @@ Bundle-Version: 0.5.0.qualifier
 Bundle-Vendor: webXcerpt SW GmbH, Munich, Germany
 Fragment-Host: org.vclipse.refactoring;bundle-version="0.5.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.eclipselabs.xtext.utils.unittesting,
- org.eclipse.xtext.junit,
+Require-Bundle: org.eclipselabs.xtext.utils.unittesting,
  org.eclipse.xtext.junit4,
  org.eclipse.xtext.ui.junit,
- org.vclipse.vcml.mm,
- org.apache.commons.logging,
  org.vclipse.vcml,
- org.vclipse.vcml.ui,
- org.vclipse.vcml.tests,
- org.eclipse.xtext.ui.shared,
- org.eclipse.xtext.xtext.ui,
- com.webxcerpt.cm.nsn.cml.mm,
- org.vclipse.nsn.vcml,
- org.eclipse.xtext.xbase,
  org.eclipse.xtext.xbase.lib
 Export-Package: org.vclipse.refactoring.tests
 Bundle-ClassPath: .
