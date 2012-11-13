@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
@@ -171,6 +172,7 @@ public class InputPage extends UserInputWizardPage {
 	public void createControl(Composite parent) {
 		EObject element = context.getSourceElement();
 		EStructuralFeature feature = context.getStructuralFeature();
+
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -202,18 +204,38 @@ public class InputPage extends UserInputWizardPage {
 		} else {
 			createTextWidget(composite);
 		}
-
-		final Button button = new Button(composite, SWT.CHECK);
-		button.setText("Replace all occurences");
-		button.addSelectionListener(new SelectionAdapter() {
+		
+		Group optionsGroup = new Group(composite, SWT.NONE);
+		optionsGroup.setLayout(new GridLayout());
+		GridData gridData = new GridData(GridData.FILL_BOTH);
+		gridData.horizontalSpan = 2;
+		optionsGroup.setLayoutData(gridData);
+		optionsGroup.setText(" Options ");
+		
+		final Button occurencesButton = new Button(optionsGroup, SWT.CHECK);
+		occurencesButton.setText("Replace all occurences");
+		occurencesButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
-				context.addAttribute(DefaultRefactoringExecuter.BUTTON_STATE, button.getSelection());
+				context.addAttribute(DefaultRefactoringExecuter.BUTTON_STATE, occurencesButton.getSelection());
 				validateWidgets();
 			}
 		});
-		button.setSelection(false);
-		widgets.add(button);
+		occurencesButton.setSelection(false);
+		widgets.add(occurencesButton);
+		
+		final Button removeExistingEObject = new Button(optionsGroup, SWT.CHECK);
+		removeExistingEObject.setText("Remove existing source");
+		removeExistingEObject.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				context.addAttribute(DefaultRefactoringExecuter.REMOVE_EXISTING_EOBJECT, removeExistingEObject.getSelection());
+				validateWidgets();
+			}
+		});
+		removeExistingEObject.setSelection(false);
+		widgets.add(removeExistingEObject);
+		
 		context.configureWidgets();
 		validateWidgets();
 		setControl(composite);
