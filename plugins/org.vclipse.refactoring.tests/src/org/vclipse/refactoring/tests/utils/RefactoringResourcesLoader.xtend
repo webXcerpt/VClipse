@@ -10,6 +10,7 @@ import static org.eclipse.emf.common.util.URI.*
 import static org.junit.Assert.*
 import static org.vclipse.refactoring.RefactoringPlugin.*
 import static org.vclipse.refactoring.tests.utils.RefactoringResourcesLoader.*
+import org.eclipse.xtext.EcoreUtil2
 
 class RefactoringResourcesLoader extends XtextTest {
 	
@@ -22,9 +23,16 @@ class RefactoringResourcesLoader extends XtextTest {
 	public static String DEPENDENCY_PRE = DEPENDENCIES_PREFIX + "PRECOND.pre"
 	public static String DEPENDENCY_PROC = DEPENDENCIES_PREFIX + "PROC.proc"
 	public static String DEPENDENCY_SEL = DEPENDENCIES_PREFIX + "SEL_COND.sel"
-
+ 
 	public static VcmlPackage VCML_PACKAGE = VcmlPackage::eINSTANCE
 	public static VcmlFactory VCML_FACTORY = VcmlFactory::eINSTANCE
+	
+	def getAllEntries(EObject entry) {
+		val rootContainer = EcoreUtil2::getRootContainer(entry)
+		val entries = newArrayList(rootContainer.eAllContents)
+		entries.add(0, rootContainer)
+		entries
+	}
 	
  	def getResource(String path) {
  		getResourceRoot(path).eResource
