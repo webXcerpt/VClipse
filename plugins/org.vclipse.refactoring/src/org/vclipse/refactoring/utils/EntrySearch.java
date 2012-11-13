@@ -63,27 +63,28 @@ public class EntrySearch {
 	public EObject findEntry(EObject object, List<EObject> entries) {
 		if(checker == null) {
 			MetamodelFilter filter = getMetamodelFilter(object);
-			GenericMatchEngineToCheckerBridge bridge = getMatchEngineBridge(object);
-			checker = new DistinctEcoreSimilarityChecker(filter, bridge) {
+			checker = new DistinctEcoreSimilarityChecker(filter, getMatchEngineBridge(object)) {
 				@Override
 				public boolean isSimilar(EObject first, EObject second) throws FactoryException {
+					double absoluteSimilarity = absoluteMetric(first, second);
+					double contentSimilarity = contentSimilarity(first, second);
+					double nameSimilarity = nameSimilarity(first, second);
 					if(!refactoringConditions) {
-						double absoluteSimilarity = absoluteMetric(first, second);
-						boolean nameMatching = MATCHING == nameSimilarity(first, second);
-						boolean contentMatching = MATCHING == contentSimilarity(first, second);
-						return super.isSimilar(first, second) && (absoluteSimilarity < THRESHOLD_0_2 || absoluteSimilarity > THRESHOLD_0_5 ? nameMatching : contentMatching);
+						return super.isSimilar(first, second) && (absoluteSimilarity < THRESHOLD_0_2 || absoluteSimilarity > THRESHOLD_0_5 ? MATCHING == nameSimilarity : MATCHING == contentSimilarity);
 					} else {
-						double nameSimilarity = nameSimilarity(first, second);
 						if(MATCHING == nameSimilarity) {
 							return Boolean.TRUE;
 						} else {
-							double contentSimilarity = contentSimilarity(first, second);
-							if(absoluteMetric(first, second) > 0.2) {
+							EObject firstContainer = first.eContainer();
+							EObject secondContainer = second.eContainer();
+							if(absoluteSimilarity > THRESHOLD_0_2) {
 								return Boolean.FALSE;
 							} else if(contentSimilarity >= THRESHOLD_0_5 && contentSimilarity <= MATCHING) {
-								return Boolean.TRUE && equallyTyped(first.eContainer(), second.eContainer());
-							} else if(NOT_MATCHING == contentSimilarity) {
-								return first.eContainer() == second.eContainer() && equallyTyped(first, second);
+								return Boolean.TRUE && equallyTyped(firstContainer, secondContainer);
+							} else if(NOT_MATCHING == contentSimilarity && firstContainer == secondContainer) {
+								return equallyTyped(first, second);
+							} else if(absoluteSimilarity < THRESHOLD_0_2) {
+								return MATCHING == nameSimilarity(firstContainer, secondContainer);
 							}
 							return MATCHING == contentSimilarity;
 						} 
