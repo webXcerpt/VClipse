@@ -69,11 +69,9 @@ public class EntrySearch {
 				public boolean isSimilar(EObject first, EObject second) throws FactoryException {
 					if(!refactoringConditions) {
 						double absoluteSimilarity = absoluteMetric(first, second);
-						boolean theySaySimilar = super.isSimilar(first, second);
 						boolean nameMatching = MATCHING == nameSimilarity(first, second);
 						boolean contentMatching = MATCHING == contentSimilarity(first, second);
-						boolean needABycicle = absoluteSimilarity < THRESHOLD_0_2 || absoluteSimilarity > THRESHOLD_0_5 ? nameMatching : contentMatching;
-						return theySaySimilar && needABycicle;
+						return super.isSimilar(first, second) && (absoluteSimilarity < THRESHOLD_0_2 || absoluteSimilarity > THRESHOLD_0_5 ? nameMatching : contentMatching);
 					} else {
 						double nameSimilarity = nameSimilarity(first, second);
 						if(MATCHING == nameSimilarity) {
