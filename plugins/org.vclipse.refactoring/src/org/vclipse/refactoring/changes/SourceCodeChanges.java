@@ -89,20 +89,21 @@ public class SourceCodeChanges extends CompositeChange {
 		rootOriginal = EcoreUtil.getRootContainer(element);
 		rootContents = search.getEntries(rootOriginal);
 		
+		Resource resource = rootOriginal.eResource();
+		
 		serializer = extensions.getInstance(ISerializer.class, rootOriginal);
 		IParser parser = extensions.getInstance(IParser.class, rootOriginal);
 		ILinker linker = extensions.getInstance(ILinker.class, rootOriginal);
 
 		String string = serializer.serialize(rootOriginal);		
 		IParseResult parseResult = parser.parse(new StringReader(string));
-		Resource resource = rootOriginal.eResource();
 		ResourceSet resourceSet = resource.getResourceSet();
 		URI uri = resource.getURI();
 		uri = URI.createURI(uri.trimFileExtension().toString() + ".refactored." + uri.fileExtension());
 		try {
 			resource = resourceSet.getResource(uri, true);
 		} catch(Exception exception) {
-			resource = resourceSet.getResource(uri, true);
+			resource = resourceSet.createResource(uri);
 		}
 		EList<EObject> contents = resource.getContents();
 		contents.clear();

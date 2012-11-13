@@ -39,7 +39,7 @@ public class References {
 		this.finder = finder;
 	}
 
-	public List<IReferenceDescription> getReferences(EObject target, boolean allReferences) {
+	public Iterable<IReferenceDescription> getReferences(EObject target, boolean allReferences) {
 		final List<IReferenceDescription> references = Lists.newArrayList();
 		Resource resource = target.eResource();
 		if(resource != null) {

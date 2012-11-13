@@ -50,7 +50,7 @@ public class VCMLRefactoring extends VCMLSimplifier {
 					if(buttonState instanceof Boolean && (Boolean)buttonState) {
 						EObject entry = entries.get(index);
 						Resource resource = entry.eResource();
-						List<IReferenceDescription> references = referencesFinder.getReferences(entry, false);
+						Iterable<IReferenceDescription> references = referencesFinder.getReferences(entry, true);
 						for(IReferenceDescription curReference : references) {
 							URI uri = curReference.getSourceEObjectUri();
 							EObject eobject = resource.getEObject(uri.fragment());
