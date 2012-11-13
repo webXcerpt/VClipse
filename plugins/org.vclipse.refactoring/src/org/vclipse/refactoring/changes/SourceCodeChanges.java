@@ -103,7 +103,7 @@ public class SourceCodeChanges extends CompositeChange {
 		try {
 			resource = resourceSet.getResource(uri, true);
 		} catch(Exception exception) {
-			resource = resourceSet.createResource(uri);
+			resource = resourceSet.getResource(uri, true);
 		}
 		EList<EObject> contents = resource.getContents();
 		contents.clear();
