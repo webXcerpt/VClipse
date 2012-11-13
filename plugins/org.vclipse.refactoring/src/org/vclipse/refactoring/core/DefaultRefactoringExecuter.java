@@ -41,6 +41,9 @@ public class DefaultRefactoringExecuter extends MethodCollector implements IRefa
 	public static final String TEXT_FIELD_ENTRY = "text_field_entry";
 	public static final String EXISTING_ENTRY_SELECTED = "existing_entry_selected";
 	
+	public static final String REMOVE_EXISTING_EOBJECT = "remove_existing_object";
+	public static final String TRACE_REFERENCES_RECURSIVELY = "trace_references_recursively";
+	
 	public static final String REFACTORING_PREFIX = "refactoring_";
 	
 	@Inject

@@ -38,7 +38,8 @@ public class EntrySearch {
 	private DistinctEcoreSimilarityChecker checker;
 	
 	private static final double MATCHING = 1.0;
-	private static final double MIDDLE = 0.5;
+	private static final double THRESHOLD_0_5 = 0.5;
+	private static final double THRESHOLD_0_2 = 0.2;
 	private static final double NOT_MATCHING = 0.0;
 	
 	private boolean refactoringConditions;
@@ -67,11 +68,12 @@ public class EntrySearch {
 				@Override
 				public boolean isSimilar(EObject first, EObject second) throws FactoryException {
 					if(!refactoringConditions) {
-						double nameSimilarity = nameSimilarity(first, second);
-						double contentSimilarity = contentSimilarity(first, second);
-						double absoluteMetric = absoluteMetric(first, second);
-						boolean isSimilar = super.isSimilar(first, second);
-						return isSimilar && (absoluteMetric < 0.2 ? MATCHING == nameSimilarity : MATCHING == contentSimilarity);
+						double absoluteSimilarity = absoluteMetric(first, second);
+						boolean theySaySimilar = super.isSimilar(first, second);
+						boolean nameMatching = MATCHING == nameSimilarity(first, second);
+						boolean contentMatching = MATCHING == contentSimilarity(first, second);
+						boolean needABycicle = absoluteSimilarity < THRESHOLD_0_2 || absoluteSimilarity > THRESHOLD_0_5 ? nameMatching : contentMatching;
+						return theySaySimilar && needABycicle;
 					} else {
 						double nameSimilarity = nameSimilarity(first, second);
 						if(MATCHING == nameSimilarity) {
@@ -80,7 +82,7 @@ public class EntrySearch {
 							double contentSimilarity = contentSimilarity(first, second);
 							if(absoluteMetric(first, second) > 0.2) {
 								return Boolean.FALSE;
-							} else if(contentSimilarity >= MIDDLE && contentSimilarity <= MATCHING) {
+							} else if(contentSimilarity >= THRESHOLD_0_5 && contentSimilarity <= MATCHING) {
 								return Boolean.TRUE && equallyTyped(first.eContainer(), second.eContainer());
 							} else if(NOT_MATCHING == contentSimilarity) {
 								return first.eContainer() == second.eContainer() && equallyTyped(first, second);
@@ -110,14 +112,16 @@ public class EntrySearch {
 		if(iterator.hasNext()) {
 			EObject entry = iterator.next();
 			final IQualifiedNameProvider nameProvider = extensions.getInstance(IQualifiedNameProvider.class, entry);
-			Iterator<? extends EObject> typedAndNamed = Iterables.filter(entries, new Predicate<EObject>() {
-				public boolean apply(EObject object) {
-					QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(object);
-					return qualifiedName == null ? false : qualifiedName.getLastSegment().equals(name) && object.eClass() == type;
+			if(nameProvider != null) {
+				Iterator<? extends EObject> typedAndNamed = Iterables.filter(entries, new Predicate<EObject>() {
+					public boolean apply(EObject object) {
+						QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(object);
+						return qualifiedName == null ? false : qualifiedName.getLastSegment().equals(name) && object.eClass() == type;
+					}
+				}).iterator();
+				if(typedAndNamed.hasNext()) {
+					return typedAndNamed.next();
 				}
-			}).iterator();
-			if(typedAndNamed.hasNext()) {
-				return typedAndNamed.next();
 			}
 		}
 		return null;
