@@ -50,7 +50,7 @@ public class VCMLRefactoring extends VCMLSimplifier {
 					if(buttonState instanceof Boolean && (Boolean)buttonState) {
 						EObject entry = entries.get(index);
 						Resource resource = entry.eResource();
-						Iterable<IReferenceDescription> references = referencesFinder.getReferences(entry, true);
+						Iterable<IReferenceDescription> references = referencesFinder.getReferences(entry);
 						for(IReferenceDescription curReference : references) {
 							URI uri = curReference.getSourceEObjectUri();
 							EObject eobject = resource.getEObject(uri.fragment());
@@ -155,7 +155,7 @@ public class VCMLRefactoring extends VCMLSimplifier {
 					EObject element = context.getSourceElement();
 					URI contextUri = element.eResource().getURI();
 					String contextSegment = contextUri.lastSegment();
-					for(IReferenceDescription description :  referencesFinder.getReferences(cstic_p.getCharacteristic(), true)) {
+					for(IReferenceDescription description :  referencesFinder.getReferences(cstic_p.getCharacteristic())) {
 						URI uri = description.getSourceEObjectUri();
 						String fileName = uri.trimFileExtension().lastSegment();
 						if(contextSegment.contains(fileName)) {

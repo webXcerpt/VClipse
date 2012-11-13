@@ -39,12 +39,11 @@ public class References {
 		this.finder = finder;
 	}
 
-	public Iterable<IReferenceDescription> getReferences(EObject target, boolean allReferences) {
+	public Iterable<IReferenceDescription> getReferences(EObject target) {
 		final List<IReferenceDescription> references = Lists.newArrayList();
 		Resource resource = target.eResource();
 		if(resource != null) {
 			IProgressMonitor pm = EditorUtilsExtensions.getProgressMonitor();
-			pm = pm == null ? new NullProgressMonitor() : pm;
 			ResourceSet resourceSet = resource.getResourceSet();
 			SimpleLocalResourceAccess access = new SimpleLocalResourceAccess(resourceSet);
 			IAcceptor<IReferenceDescription> acceptor = new IAcceptor<IReferenceDescription>() {
@@ -52,14 +51,9 @@ public class References {
 					references.add(reference);
 				}
 			};
-			Set<URI> resourceuris = Collections.singleton(resource.getURI());
 			Set<URI> objecturis = Collections.singleton(EcoreUtil2.getNormalizedURI(target));
 			pm.beginTask("Looking for references.", IProgressMonitor.UNKNOWN);
-			if(allReferences) {
-				finder.findAllReferences(objecturis, access, acceptor, new NullProgressMonitor());
-			} else {
-				finder.findReferences(objecturis, resourceuris, access, acceptor, new NullProgressMonitor());
-			}			
+			finder.findAllReferences(objecturis, access, acceptor, new NullProgressMonitor());	
 			pm.done();
 		}
 		return references;
