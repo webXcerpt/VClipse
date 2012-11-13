@@ -234,6 +234,7 @@ public class InputPage extends UserInputWizardPage {
 			}
 		});
 		removeExistingEObject.setSelection(false);
+		removeExistingEObject.setEnabled(false);
 		widgets.add(removeExistingEObject);
 		
 		context.configureWidgets();
