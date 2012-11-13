@@ -299,7 +299,8 @@ public class InputPage extends UserInputWizardPage {
 		} else {
 			if(validationThread == null) {
 				validationThread = new ValidationThread(this, context);
-			} else if(!validationThread.isAlive()) {
+			} 
+			if(!validationThread.isAlive()) {
 				Display.getDefault().timerExec(1000, validationThread);
 			}
 		}
