@@ -36,7 +36,7 @@ class LabelsTests extends XtextTest {
 	@Test
 	def test_UILabelProvider() {
 		val entries = resourcesLoader.getResourceContents(CAR_DESCRIPTION)
-		val findEntry = search.findEntry("(300)CAR", VCML_PACKAGE.class_, entries)
+		var findEntry = search.findEntry("(300)CAR", VCML_PACKAGE.class_, entries)
 		assertNotNull(findEntry)
 	
 		var context = create(findEntry, null, Extract)
@@ -46,5 +46,11 @@ class LabelsTests extends XtextTest {
 		context = create(findEntry, VCML_PACKAGE.class_Characteristics, Extract)
 		uiLabel = labels.getUILabel(context)
 		assertEquals("Extract characteristics ", uiLabel)
+		
+		findEntry = search.findEntry("PRECOND", VCML_PACKAGE.precondition, entries)
+		assertNotNull("precondition PRECOND not found", findEntry)
+		context = create(findEntry, VCML_PACKAGE.VCObject_Description, Replace)
+		uiLabel = context.label
+		assertEquals("Replace description with a new value", uiLabel)
 	}
 }

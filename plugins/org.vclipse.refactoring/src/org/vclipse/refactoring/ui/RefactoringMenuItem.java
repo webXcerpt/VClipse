@@ -110,7 +110,7 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 											context.setIndex(indexOf);
 										}
 										
-										String refactoringText = labels.getUILabel(context);
+										String refactoringText = context.getLabel();
 										item.setText(refactoringText);
 										item.addSelectionListener(this);
 										item.setData(CONTEXT, context);
