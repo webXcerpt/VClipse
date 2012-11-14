@@ -38,25 +38,20 @@ public class Labels {
 	 * Text shown in the menu
 	 */
 	public String getUILabel(IRefactoringContext context) {
-		String label = context.getLabel();
-		if(label.isEmpty() || label == null) {
-			StringBuffer buffer = new StringBuffer();
-			RefactoringType type = context.getType();
-			buffer.append(type.name());
-			buffer.append(" ");
-			if(context.getStructuralFeature() != null) {
-				String featureName = context.getStructuralFeature().getName();
-				appendToBuffer(buffer, featureName);
-			}
-			if(RefactoringType.Replace == type) {
-				buffer.append(" by ");
-				String typeName = context.getSourceElement().eClass().getName();
-				appendToBuffer(buffer, typeName);
-			}			
-			return buffer.toString();
-		} else {
-			return label;
+		StringBuffer buffer = new StringBuffer();
+		RefactoringType type = context.getType();
+		buffer.append(type.name());
+		buffer.append(" ");
+		if(context.getStructuralFeature() != null) {
+			String featureName = context.getStructuralFeature().getName();
+			appendToBuffer(buffer, featureName);
 		}
+		if(RefactoringType.Replace == type) {
+			buffer.append(" by ");
+			String typeName = context.getSourceElement().eClass().getName();
+			appendToBuffer(buffer, typeName);
+		}			
+		return buffer.toString();
 	}
 	
 	/*
