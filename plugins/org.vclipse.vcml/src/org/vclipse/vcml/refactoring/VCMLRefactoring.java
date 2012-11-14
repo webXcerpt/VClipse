@@ -10,12 +10,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IReferenceDescription;
 import org.vclipse.refactoring.IRefactoringContext;
 import org.vclipse.refactoring.core.DefaultRefactoringExecuter;
 import org.vclipse.vcml.vcml.SimpleDescription;
-import org.vclipse.vcml.vcml.VCObject;
 
 public class VCMLRefactoring extends DependenciesRefactorings {
 
@@ -63,7 +61,7 @@ public class VCMLRefactoring extends DependenciesRefactorings {
 		}
 	}
 	
-	public void refactoring_Replace_SimpleDescription_description(IRefactoringContext context) {
+	public void refactoring_Replace_SimpleDescription(IRefactoringContext context) {
 		Map<?, ?> attributes = context.getAttributes();
 		Boolean replaceOccurences = (Boolean)attributes.get(DefaultRefactoringExecuter.BUTTON_STATE);
 		String newDescription = (String)attributes.get(DefaultRefactoringExecuter.TEXT_FIELD_ENTRY);
