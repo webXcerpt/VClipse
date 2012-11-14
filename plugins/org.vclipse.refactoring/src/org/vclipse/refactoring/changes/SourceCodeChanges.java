@@ -144,27 +144,11 @@ public class SourceCodeChanges extends CompositeChange {
 				UIRefactoringContext uicontext = (UIRefactoringContext)context;
 				final IRefactoringUIContext refactoringContext = uicontext.copy();
 				refactoringContext.setSourceElement(entry);
-				try {
-					// executes re-factoring on the copy of the model
-					context.getDocument().modify(new IUnitOfWork<Void, XtextResource>() {
-						@Override
-						public java.lang.Void exec(XtextResource resource) throws Exception {
-							runner.refactor(refactoringContext);
-							sm.worked(20);
-							return null;
-						}
-					});
-				} catch(Exception exception) {
-					IStatus status = new Status(IStatus.ERROR, RefactoringPlugin.ID, exception.getMessage(), exception);
-					throw new CoreException(status);
-				}
-				
+				runner.refactor(refactoringContext);
 				previewNode.setRight(new MultipleEntriesTypedElement(serializer, rootRefactored));
 				sm.worked(10);
-				
 				recordSourceCodeChanges(sm, refactoringContext);
 				sm.worked(20);
-				
 				if(getChildren().length == 0) {
 					add(new NoChange(null));
 				}
@@ -183,31 +167,17 @@ public class SourceCodeChanges extends CompositeChange {
 			final List<Change> changes = Lists.newArrayList(getChildren());
 			final SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), changes.size());
 			final Map<SourceCodeChange, CoreException> exceptions = Maps.newHashMap();
-			context.getDocument().modify(new IUnitOfWork<EObject, XtextResource>() {
+			context.getDocument().modify(new IUnitOfWork<Object, XtextResource>() {
 				@Override
-				public EObject exec(XtextResource resource) throws Exception {
-					boolean applyAllChanges = true;
+				public Object exec(XtextResource state) throws Exception {
 					for(Change change : changes) {
-						if(change instanceof SourceCodeChange) {
-							applyAllChanges &= ((SourceCodeChange)change).isEnabled();
-							if(!applyAllChanges) {
-								break;
-							}
-							sm.worked(1);
-						}
-					}
-					if(applyAllChanges) {
-						EList<EObject> contents = resource.getContents();
-						contents.clear();
-						contents.add(rootRefactored);
-					} else {
-						for(Change change : changes) {
+						if(change.isEnabled()) {
 							if(change instanceof SourceCodeChange) {
 								SourceCodeChange scc = (SourceCodeChange)change;
 								scc.isValid(pm);
 								scc.applyRefactoring(pm);
 								sm.worked(1);
-							}
+							}							
 						}
 					}
 					return null;

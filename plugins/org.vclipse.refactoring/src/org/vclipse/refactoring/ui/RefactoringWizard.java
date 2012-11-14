@@ -64,10 +64,7 @@ public class RefactoringWizard extends org.eclipse.ltk.ui.refactoring.Refactorin
 						}
 					}
 				});
-			} catch(InvocationTargetException exception) {
-				Throwable cause = exception.getCause();
-				RefactoringPlugin.log(cause.getMessage(), cause);
-			} catch(InterruptedException exception) {
+			} catch(Exception exception) {
 				Throwable cause = exception.getCause();
 				RefactoringPlugin.log(cause.getMessage(), cause);
 			}

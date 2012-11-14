@@ -65,7 +65,7 @@ public class EntrySearch {
 		try {
 			Iterable<? extends EObject> typedFilter = Iterables.filter(entries, object.getClass());
 			for(EObject entry : typedFilter) {
-				boolean similar = checker.isSimilar(object, entry);
+				boolean similar = checker.isSimilar(entry, object);
 				if(similar) {
 					return entry;
 				}
@@ -83,7 +83,7 @@ public class EntrySearch {
 			Iterable<EObject> entries = getEntries(object);
 			Iterable<? extends EObject> typedFilter = Iterables.filter(entries, object.getClass());
 			for(EObject entry : typedFilter) {
-				boolean similar = checker.isSimilar(object, entry);
+				boolean similar = checker.isSimilar(entry, object);
 				if(similar) {
 					foundEntries.add(entry);
 				}
@@ -236,7 +236,7 @@ public class EntrySearch {
 								return Boolean.TRUE && equallyTyped(firstContainer, secondContainer);
 							} else if(NOT_MATCHING == contentSimilarity && firstContainer == secondContainer) {
 								return equallyTyped(first, second);
-							} else if(absoluteSimilarity < THRESHOLD_0_2) {
+							} else if(absoluteSimilarity <= THRESHOLD_0_2) {
 								return MATCHING == nameSimilarity(firstContainer, secondContainer);
 							}
 							return MATCHING == contentSimilarity;
