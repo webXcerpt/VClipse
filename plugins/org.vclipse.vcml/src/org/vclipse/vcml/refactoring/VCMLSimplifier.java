@@ -3,6 +3,7 @@ package org.vclipse.vcml.refactoring;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -57,10 +58,11 @@ public class VCMLSimplifier extends DefaultRefactoringExecuter {
 	public void extract_Condition(ConstraintSource source) {
 		ConditionalConstraintRestriction ccr = cre.canExtractCommonConditions(source);
 		if(ccr != null) {
+			EList<ConstraintRestriction> restrictions = source.getRestrictions();
 			Condition condition = EcoreUtil.copy(ccr.getCondition());
 			source.setCondition(condition);			
-			List<ConstraintRestriction> newRestrictions = Lists.newArrayList();
-			for(ConstraintRestriction restriction : source.getRestrictions()) {
+			BasicEList<ConstraintRestriction> newRestrictions = new BasicEList<ConstraintRestriction>();
+			for(ConstraintRestriction restriction : restrictions) {
 				ConditionalConstraintRestriction restriction3 = (ConditionalConstraintRestriction)restriction;
 				ConstraintRestriction restriction2 = restriction3.getRestriction();
 				ConstraintRestriction copy = EcoreUtil.copy(restriction2);

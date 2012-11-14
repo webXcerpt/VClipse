@@ -17,6 +17,20 @@ import org.vclipse.vcml.vcml.SimpleDescription;
 
 public class VCMLRefactoring extends DependenciesRefactorings {
 
+	public void refactoring_Replace_SimpleDescription(IRefactoringContext context) {
+		Map<?, ?> attributes = context.getAttributes();
+		Boolean replaceOccurences = (Boolean)attributes.get(DefaultRefactoringExecuter.BUTTON_STATE);
+		String newDescription = (String)attributes.get(DefaultRefactoringExecuter.TEXT_FIELD_ENTRY);
+		SimpleDescription sd = (SimpleDescription)context.getSourceElement();
+		if(replaceOccurences != null && replaceOccurences) {
+			Iterator<EObject> foundEntries = search.findEntries(sd).iterator();
+			while(foundEntries.hasNext()) {
+				SimpleDescription next = (SimpleDescription)foundEntries.next();
+				next.setValue(newDescription);
+			}
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	public void refactoring_Replace_objects(IRefactoringContext context) {
 		EObject element = context.getSourceElement();
@@ -57,19 +71,6 @@ public class VCMLRefactoring extends DependenciesRefactorings {
 						entries.remove(index);						
 					}
 				}
-			}
-		}
-	}
-	
-	public void refactoring_Replace_SimpleDescription(IRefactoringContext context) {
-		Map<?, ?> attributes = context.getAttributes();
-		Boolean replaceOccurences = (Boolean)attributes.get(DefaultRefactoringExecuter.BUTTON_STATE);
-		String newDescription = (String)attributes.get(DefaultRefactoringExecuter.TEXT_FIELD_ENTRY);
-		SimpleDescription sd = (SimpleDescription)context.getSourceElement();
-		if(replaceOccurences != null && replaceOccurences) {
-			Iterator<EObject> foundEntries = search.findEntries(sd).iterator();
-			while(foundEntries.hasNext()) {
-				((SimpleDescription)foundEntries.next()).setValue(newDescription);
 			}
 		}
 	}

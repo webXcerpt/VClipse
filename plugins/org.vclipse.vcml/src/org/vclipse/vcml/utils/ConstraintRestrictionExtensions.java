@@ -8,6 +8,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.util.PolymorphicDispatcher;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.Comparison;
+import org.vclipse.vcml.vcml.Condition;
 import org.vclipse.vcml.vcml.ConditionalConstraintRestriction;
 import org.vclipse.vcml.vcml.ConstraintRestriction;
 import org.vclipse.vcml.vcml.ConstraintSource;
@@ -45,7 +46,9 @@ public class ConstraintRestrictionExtensions {
 			}
 			if(restriction instanceof ConditionalConstraintRestriction) {
 				ConditionalConstraintRestriction current = (ConditionalConstraintRestriction)restriction;
-				if(EcoreUtil.equals(forReturn.getCondition(), current.getCondition())) {
+				Condition condition = forReturn.getCondition();
+				Condition condition2 = current.getCondition();
+				if(EcoreUtil.equals(condition, condition2)) {
 					forReturn = current;
 				} else {
 					forReturn = null;

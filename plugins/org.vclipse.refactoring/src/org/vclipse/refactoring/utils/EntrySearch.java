@@ -14,8 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.compare.FactoryException;
-import org.eclipse.emf.compare.match.engine.internal.DistinctEcoreSimilarityChecker;
-import org.eclipse.emf.compare.match.engine.internal.GenericMatchEngineToCheckerBridge;
 import org.eclipse.emf.compare.match.statistic.MetamodelFilter;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -35,33 +33,50 @@ public class EntrySearch {
 
 	private final Extensions extensions;
 	
-	private DistinctEcoreSimilarityChecker checker;
-	
-	private static final double MATCHING = 1.0;
-	private static final double THRESHOLD_0_5 = 0.5;
-	private static final double THRESHOLD_0_2 = 0.2;
-	private static final double NOT_MATCHING = 0.0;
-	
-	private boolean refactoringConditions;
+	private final RefactoringSimilarityChecker checker;
 	
 	@Inject
 	public EntrySearch(Extensions extensions) {
 		this.extensions = extensions;
+		MetamodelFilter filter = extensions.getInstance(MetamodelFilter.class);
+		filter = filter == null ? new MetamodelFilter() : filter;
+		RefactoringMatchEngine matchEngine = extensions.getInstance(RefactoringMatchEngine.class);
+		matchEngine = matchEngine == null ? new RefactoringMatchEngine(extensions) : matchEngine;
+		checker = new RefactoringSimilarityChecker(this, filter, matchEngine);
 	}
 	
 	public void refactoringConditions(boolean enable) {
-		this.refactoringConditions = enable;
+		this.checker.refactoringExecuted(enable);
 	}
 	
-	public List<EObject> getEntries(EObject object) {
+	public List<EObject> getRootContents(EObject object) {
 		EObject rootContainer = EcoreUtil.getRootContainer(object);
 		List<EObject> entries = Lists.newArrayList(rootContainer.eAllContents());
 		entries.add(0, rootContainer);
 		return entries;
 	}
 	
-	public EObject findEntry(EObject object, List<EObject> entries) {
-		initChecker(object);
+	public EObject findEntry(final String name, final EClass type, Iterable<EObject> entries) {
+		Iterator<EObject> iterator = entries.iterator();
+		if(iterator.hasNext()) {
+			EObject entry = iterator.next();
+			final IQualifiedNameProvider nameProvider = extensions.getInstance(IQualifiedNameProvider.class, entry);
+			if(nameProvider != null) {
+				Iterator<EObject> typedAndNamed = Iterables.filter(entries, new Predicate<EObject>() {
+					public boolean apply(EObject object) {
+						QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(object);
+						return qualifiedName == null ? false : qualifiedName.getLastSegment().equals(name) && object.eClass() == type;
+					}
+				}).iterator();
+				if(typedAndNamed.hasNext()) {
+					return typedAndNamed.next();
+				}
+			}
+		}
+		return null;
+	}
+	
+	public EObject findEntry(EObject object, Iterable<EObject> entries) {
 		try {
 			Iterable<? extends EObject> typedFilter = Iterables.filter(entries, object.getClass());
 			for(EObject entry : typedFilter) {
@@ -77,10 +92,9 @@ public class EntrySearch {
 	}
 	
 	public Iterable<EObject> findEntries(EObject object) {
-		initChecker(object);
 		List<EObject> foundEntries = Lists.newArrayList();
 		try {
-			Iterable<EObject> entries = getEntries(object);
+			Iterable<EObject> entries = getRootContents(object);
 			Iterable<? extends EObject> typedFilter = Iterables.filter(entries, object.getClass());
 			for(EObject entry : typedFilter) {
 				boolean similar = checker.isSimilar(entry, object);
@@ -94,156 +108,25 @@ public class EntrySearch {
 		return foundEntries;
 	}
 	
-	public EObject findEntry(final String name, final EClass type, Iterable<? extends EObject> entries) {
-		Iterator<? extends EObject> iterator = entries.iterator();
-		if(iterator.hasNext()) {
-			EObject entry = iterator.next();
-			final IQualifiedNameProvider nameProvider = extensions.getInstance(IQualifiedNameProvider.class, entry);
-			if(nameProvider != null) {
-				Iterator<? extends EObject> typedAndNamed = Iterables.filter(entries, new Predicate<EObject>() {
-					public boolean apply(EObject object) {
-						QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(object);
-						return qualifiedName == null ? false : qualifiedName.getLastSegment().equals(name) && object.eClass() == type;
-					}
-				}).iterator();
-				if(typedAndNamed.hasNext()) {
-					return typedAndNamed.next();
-				}
-			}
-		}
-		return null;
-	}
-
 	public boolean equallyTyped(EObject first, EObject second) {
-		if(first == null && second != null) {
-			return Boolean.FALSE;
-		} else if(second == null && first != null) {
-			return Boolean.FALSE;
-		} else if(first == null && second == null) {
-			return Boolean.TRUE;			
-		} else {
-			return first.eClass() == second.eClass();
-		}
+		if(first == null && second == null) {
+			return true;
+		} 
+		if(first == null && second != null || first != null && second == null) {
+			return false;
+		} 
+		return first.eClass() == second.eClass();
 	}
 	
 	public boolean equallyNamed(EObject first, EObject second) {
-		if(first == null || second == null) {
-			return Boolean.FALSE;
-		} else {
+		if(equallyTyped(first, second)) {
 			IQualifiedNameProvider nameProvider = extensions.getInstance(IQualifiedNameProvider.class, first);
 			QualifiedName firstName = nameProvider.getFullyQualifiedName(first);
 			QualifiedName secondName = nameProvider.getFullyQualifiedName(second);
-			if(firstName == null || secondName == null) {
-				return Boolean.FALSE;
-			} else {
+			if(firstName != null && secondName != null) {
 				return firstName.getLastSegment().equals(secondName.getLastSegment());
 			}
 		}
-	}
-	
-	protected GenericMatchEngineToCheckerBridge getMatchEngineBridge(EObject object) {
-		final IQualifiedNameProvider nameProvider = extensions.getInstance(IQualifiedNameProvider.class, object);
-		return new GenericMatchEngineToCheckerBridge() {
-			@Override
-			public double nameSimilarity(EObject first, EObject second) {
-				if(nameProvider == null) {
-					return NOT_MATCHING;
-				}
-				QualifiedName qualifiedNameFirst = nameProvider.getFullyQualifiedName(first);
-				QualifiedName qulifiedNameSecond = nameProvider.getFullyQualifiedName(second);
-				if(qualifiedNameFirst == null || qulifiedNameSecond == null) {
-					return NOT_MATCHING;
-				} else {
-					String firstLastSegment = qualifiedNameFirst.getLastSegment();
-					if(firstLastSegment == null) {
-						return NOT_MATCHING;
-					}
-					String secondLastSegment = qulifiedNameSecond.getLastSegment();
-					return firstLastSegment.equals(secondLastSegment) ? MATCHING : NOT_MATCHING;
-				}
-			}
-			
-			@Override
-			public double contentSimilarity(EObject first, EObject second) throws FactoryException {
-				return compareEObjects(first, second);
-			}
-			
-			private double compareEObjects(EObject first, EObject second) throws FactoryException {
-				List<EObject> firstParts = Lists.newArrayList(first.eContents());
-				List<EObject> secondParts = Lists.newArrayList(second.eContents());
-				if(firstParts.isEmpty()) {
-					firstParts = Lists.newArrayList(first.eCrossReferences());
-					secondParts = Lists.newArrayList(second.eCrossReferences());
-				}
-				if(firstParts.isEmpty()) {
-					firstParts = Lists.newArrayList(first);
-					secondParts = Lists.newArrayList(second);
-				}
-				double compareLists = compareLists(firstParts, secondParts);
-				return compareLists;
-			}
-			
-			private double compareLists(List<EObject> first, List<EObject> second) throws FactoryException {
-				int firstSize = first.size();
-				int secondSize = second.size();
-				if(firstSize != secondSize) {
-					return NOT_MATCHING;
-				} else if(firstSize == 1) {
-					EObject firstEntry = first.get(0);
-					EObject secondEntry = second.get(0);
-					return EcoreUtil.equals(firstEntry, secondEntry) ? MATCHING : NOT_MATCHING;
-				} else {
-					double similarity = NOT_MATCHING;
-					for(int i=0; i<firstSize; i++) {
-						EObject firstEntry = first.get(i);
-						EObject secondEntry = second.get(i);
-						similarity += compareEObjects(firstEntry, secondEntry);
-					}
-					return similarity / firstSize;
-				}
-			}
-		};
-	}
-	
-	protected MetamodelFilter getMetamodelFilter(EObject object) {
-		MetamodelFilter filter = extensions.getInstance(MetamodelFilter.class, object);
-		if(filter == null) {
-			filter = new MetamodelFilter();
-		}
-		return filter;
-	}
-	
-	protected void initChecker(EObject object) {
-		if(checker == null) {
-			MetamodelFilter filter = getMetamodelFilter(object);
-			checker = new DistinctEcoreSimilarityChecker(filter, getMatchEngineBridge(object)) {
-				@Override
-				public boolean isSimilar(EObject first, EObject second) throws FactoryException {
-					if(!refactoringConditions) {
-						return EcoreUtil.equals(first, second);
-					} else {
-						double absoluteSimilarity = absoluteMetric(first, second);
-						double contentSimilarity = contentSimilarity(first, second);
-						double nameSimilarity = nameSimilarity(first, second);
-						if(MATCHING == nameSimilarity) {
-							return Boolean.TRUE;
-						} else {
-							EObject firstContainer = first.eContainer();
-							EObject secondContainer = second.eContainer();
-							if(absoluteSimilarity > THRESHOLD_0_2) {
-								return Boolean.FALSE;
-							} else if(contentSimilarity >= THRESHOLD_0_5 && contentSimilarity <= MATCHING) {
-								return Boolean.TRUE && equallyTyped(firstContainer, secondContainer);
-							} else if(NOT_MATCHING == contentSimilarity && firstContainer == secondContainer) {
-								return equallyTyped(first, second);
-							} else if(absoluteSimilarity <= THRESHOLD_0_2) {
-								return MATCHING == nameSimilarity(firstContainer, secondContainer);
-							}
-							return MATCHING == contentSimilarity;
-						} 
-					}
-				}
-			};
-		}
+		return false;
 	}
 }

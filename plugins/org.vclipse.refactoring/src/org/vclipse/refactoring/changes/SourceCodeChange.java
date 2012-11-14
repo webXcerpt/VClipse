@@ -135,8 +135,7 @@ public class SourceCodeChange extends NoChange {
 				} else if(search.equallyTyped(existing, refactored) && search.equallyNamed(existing, refactored)) {
 					Object value = refactored.eGet(feature);
 					existing.eSet(feature, value);
-				} else if(search.equallyTyped(existingContainer, refactoredContainer) && 
-						search.equallyNamed(existingContainer, refactoredContainer)) {
+				} else if(search.equallyTyped(existingContainer, refactoredContainer) || search.equallyNamed(existingContainer, refactoredContainer)) {
 					Object value = refactored.eGet(feature);
 					existing.eSet(feature, value);
 				}

@@ -75,6 +75,9 @@ public class SourceCodeChanges extends CompositeChange {
 	static String getChangeLabel(IRefactoringUIContext context) {
 		EObject element = context.getSourceElement();
 		Resource resource = element.eResource();
+		if(resource == null) {
+			throw new IllegalArgumentException("Resource should not be null.");
+		}
 		return resource.getURI().lastSegment();
 	}
 	
@@ -87,7 +90,7 @@ public class SourceCodeChanges extends CompositeChange {
 		
 		EObject element = this.context.getSourceElement();
 		rootOriginal = EcoreUtil.getRootContainer(element);
-		rootContents = search.getEntries(rootOriginal);
+		rootContents = search.getRootContents(rootOriginal);
 		
 		Resource resource = rootOriginal.eResource();
 		
@@ -108,7 +111,7 @@ public class SourceCodeChanges extends CompositeChange {
 		EList<EObject> contents = resource.getContents();
 		contents.clear();
 		rootRefactored = parseResult.getRootASTElement();
-		copyContents = search.getEntries(rootRefactored);
+		copyContents = search.getRootContents(rootRefactored);
 		contents.add(rootRefactored);		
 		linker.linkModel(rootRefactored, new ListBasedDiagnosticConsumer());
 		EcoreUtil.resolveAll(resource);
