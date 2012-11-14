@@ -66,12 +66,12 @@ public class EntrySearch {
 			checker = new DistinctEcoreSimilarityChecker(filter, getMatchEngineBridge(object)) {
 				@Override
 				public boolean isSimilar(EObject first, EObject second) throws FactoryException {
-					double absoluteSimilarity = absoluteMetric(first, second);
-					double contentSimilarity = contentSimilarity(first, second);
-					double nameSimilarity = nameSimilarity(first, second);
 					if(!refactoringConditions) {
-						return super.isSimilar(first, second) && (absoluteSimilarity < THRESHOLD_0_2 || absoluteSimilarity > THRESHOLD_0_5 ? MATCHING == nameSimilarity : MATCHING == contentSimilarity);
+						return EcoreUtil.equals(first, second);
 					} else {
+						double absoluteSimilarity = absoluteMetric(first, second);
+						double contentSimilarity = contentSimilarity(first, second);
+						double nameSimilarity = nameSimilarity(first, second);
 						if(MATCHING == nameSimilarity) {
 							return Boolean.TRUE;
 						} else {
