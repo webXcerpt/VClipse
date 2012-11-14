@@ -4,10 +4,13 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.util.PolymorphicDispatcher;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.Comparison;
 import org.vclipse.vcml.vcml.ConditionalConstraintRestriction;
+import org.vclipse.vcml.vcml.ConstraintRestriction;
+import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.Function;
 import org.vclipse.vcml.vcml.InCondition_C;
 import org.vclipse.vcml.vcml.IsSpecified_C;
@@ -29,6 +32,29 @@ public class ConstraintRestrictionExtensions {
 			return Lists.newArrayList();
 		}
 	};
+	
+	public ConditionalConstraintRestriction canExtractCommonConditions(ConstraintSource source) {
+		ConditionalConstraintRestriction forReturn = null;
+		for(ConstraintRestriction restriction : source.getRestrictions()) {
+			if(forReturn == null) {
+				if(!(restriction instanceof ConditionalConstraintRestriction)) {
+					break;
+				}
+				forReturn = (ConditionalConstraintRestriction)restriction;
+				continue;
+			}
+			if(restriction instanceof ConditionalConstraintRestriction) {
+				ConditionalConstraintRestriction current = (ConditionalConstraintRestriction)restriction;
+				if(EcoreUtil.equals(forReturn.getCondition(), current.getCondition())) {
+					forReturn = current;
+				} else {
+					forReturn = null;
+					break;
+				}
+			}
+		}
+		return forReturn;
+	}
 	
 	public List<Characteristic> getUsedCharacteristics(EObject object) {
 		return csticExtractor.invoke(object);

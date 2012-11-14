@@ -7,9 +7,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.vclipse.refactoring.IRefactoringContext;
 import org.vclipse.refactoring.core.RefactoringConfiguration;
+import org.vclipse.vcml.utils.ConstraintRestrictionExtensions;
 import org.vclipse.vcml.vcml.CharacteristicReference_P;
-import org.vclipse.vcml.vcml.ConditionalConstraintRestriction;
-import org.vclipse.vcml.vcml.ConstraintRestriction;
 import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.InCondition_C;
 import org.vclipse.vcml.vcml.Literal;
@@ -23,6 +22,9 @@ public class VCMLCustomisation extends RefactoringConfiguration {
 	
 	@Inject
 	private VCMLRefactoring vcmlRefactoring;
+	
+	@Inject
+	private ConstraintRestrictionExtensions cre;
 	
 	protected static VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
 	
@@ -60,20 +62,9 @@ public class VCMLCustomisation extends RefactoringConfiguration {
 		return Boolean.FALSE;
 	}
 	
-	/**
-	 * 
-	 */
 	public boolean initialize_Extract_ConstraintSource(IRefactoringContext context, ConstraintSource source) {
 		context.setLabel("Extract common conditions from restrictions");
-		EList<ConstraintRestriction> restrictions = source.getRestrictions();
-		if(restrictions.size() > 1) {
-			for(ConstraintRestriction restriction : restrictions) {
-				if(restriction instanceof ConditionalConstraintRestriction) {
-					return Boolean.TRUE;
-				}
-			}			
-		}
-		return Boolean.FALSE;
+		return cre.canExtractCommonConditions(source) != null;
 	}
 	
 	public boolean initialize_Inline_ConstraintSource(IRefactoringContext context, ConstraintSource source) {

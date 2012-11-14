@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
 import org.vclipse.refactoring.IRefactoringContext;
 import org.vclipse.refactoring.core.DefaultRefactoringExecuter;
+import org.vclipse.vcml.utils.ConstraintRestrictionExtensions;
 import org.vclipse.vcml.vcml.Comparison;
 import org.vclipse.vcml.vcml.Condition;
 import org.vclipse.vcml.vcml.ConditionalConstraintRestriction;
@@ -21,9 +22,13 @@ import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.inject.Inject;
 
 public class VCMLSimplifier extends DefaultRefactoringExecuter {
  
+	@Inject
+	private ConstraintRestrictionExtensions cre;
+	
 	protected final VcmlFactory VCML_FACTORY = VcmlFactory.eINSTANCE;
 	protected final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
 	
@@ -50,34 +55,16 @@ public class VCMLSimplifier extends DefaultRefactoringExecuter {
 	}
 	
 	public void extract_Condition(ConstraintSource source) {
-		ConditionalConstraintRestriction previous = null; 
-		EList<ConstraintRestriction> restrictions = source.getRestrictions();
-		for(ConstraintRestriction restriction : restrictions) {
-			if(previous == null) {
-				if(!(restriction instanceof ConditionalConstraintRestriction)) {
-					break;
-				}
-				previous = (ConditionalConstraintRestriction)restriction;
-				continue;
-			} 
-			if(restriction instanceof ConditionalConstraintRestriction) {
-				ConditionalConstraintRestriction ccr = (ConditionalConstraintRestriction)restriction;
-				if(EcoreUtil.equals(previous.getCondition(), ccr.getCondition())) {
-					previous = ccr;
-				} else {
-					previous = null;
-					break;
-				}
-			}
-		}
-		if(previous != null) {
-			Condition condition = EcoreUtil.copy(previous.getCondition());
+		ConditionalConstraintRestriction ccr = cre.canExtractCommonConditions(source);
+		if(ccr != null) {
+			Condition condition = EcoreUtil.copy(ccr.getCondition());
 			source.setCondition(condition);			
 			List<ConstraintRestriction> newRestrictions = Lists.newArrayList();
-			for(ConstraintRestriction restriction : restrictions) {
-				ConditionalConstraintRestriction ccr = (ConditionalConstraintRestriction)restriction;
-				ConstraintRestriction entry = ccr.getRestriction();
-				newRestrictions.add(EcoreUtil.copy(entry));
+			for(ConstraintRestriction restriction : source.getRestrictions()) {
+				ConditionalConstraintRestriction restriction3 = (ConditionalConstraintRestriction)restriction;
+				ConstraintRestriction restriction2 = restriction3.getRestriction();
+				ConstraintRestriction copy = EcoreUtil.copy(restriction2);
+				newRestrictions.add(copy);
 			}
 			source.getRestrictions().clear();
 			source.getRestrictions().addAll(newRestrictions);
