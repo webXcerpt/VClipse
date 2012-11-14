@@ -55,43 +55,13 @@ public class EntrySearch {
 	
 	public List<EObject> getEntries(EObject object) {
 		EObject rootContainer = EcoreUtil.getRootContainer(object);
-		List<EObject> entries = Lists.newArrayList(object.eAllContents());
+		List<EObject> entries = Lists.newArrayList(rootContainer.eAllContents());
 		entries.add(0, rootContainer);
 		return entries;
 	}
 	
 	public EObject findEntry(EObject object, List<EObject> entries) {
-		if(checker == null) {
-			MetamodelFilter filter = getMetamodelFilter(object);
-			checker = new DistinctEcoreSimilarityChecker(filter, getMatchEngineBridge(object)) {
-				@Override
-				public boolean isSimilar(EObject first, EObject second) throws FactoryException {
-					if(!refactoringConditions) {
-						return EcoreUtil.equals(first, second);
-					} else {
-						double absoluteSimilarity = absoluteMetric(first, second);
-						double contentSimilarity = contentSimilarity(first, second);
-						double nameSimilarity = nameSimilarity(first, second);
-						if(MATCHING == nameSimilarity) {
-							return Boolean.TRUE;
-						} else {
-							EObject firstContainer = first.eContainer();
-							EObject secondContainer = second.eContainer();
-							if(absoluteSimilarity > THRESHOLD_0_2) {
-								return Boolean.FALSE;
-							} else if(contentSimilarity >= THRESHOLD_0_5 && contentSimilarity <= MATCHING) {
-								return Boolean.TRUE && equallyTyped(firstContainer, secondContainer);
-							} else if(NOT_MATCHING == contentSimilarity && firstContainer == secondContainer) {
-								return equallyTyped(first, second);
-							} else if(absoluteSimilarity < THRESHOLD_0_2) {
-								return MATCHING == nameSimilarity(firstContainer, secondContainer);
-							}
-							return MATCHING == contentSimilarity;
-						} 
-					}
-				}
-			};
-		}
+		initChecker(object);
 		try {
 			Iterable<? extends EObject> typedFilter = Iterables.filter(entries, object.getClass());
 			for(EObject entry : typedFilter) {
@@ -104,6 +74,24 @@ public class EntrySearch {
 			RefactoringPlugin.log(exception.getMessage(), exception);
 		}
 		return null;
+	}
+	
+	public Iterable<EObject> findEntries(EObject object) {
+		initChecker(object);
+		List<EObject> foundEntries = Lists.newArrayList();
+		try {
+			Iterable<EObject> entries = getEntries(object);
+			Iterable<? extends EObject> typedFilter = Iterables.filter(entries, object.getClass());
+			for(EObject entry : typedFilter) {
+				boolean similar = checker.isSimilar(object, entry);
+				if(similar) {
+					foundEntries.add(entry);
+				}
+			}
+		} catch(FactoryException exception) {
+			RefactoringPlugin.log(exception.getMessage(), exception);
+		}
+		return foundEntries;
 	}
 	
 	public EObject findEntry(final String name, final EClass type, Iterable<? extends EObject> entries) {
@@ -223,5 +211,39 @@ public class EntrySearch {
 			filter = new MetamodelFilter();
 		}
 		return filter;
+	}
+	
+	protected void initChecker(EObject object) {
+		if(checker == null) {
+			MetamodelFilter filter = getMetamodelFilter(object);
+			checker = new DistinctEcoreSimilarityChecker(filter, getMatchEngineBridge(object)) {
+				@Override
+				public boolean isSimilar(EObject first, EObject second) throws FactoryException {
+					if(!refactoringConditions) {
+						return EcoreUtil.equals(first, second);
+					} else {
+						double absoluteSimilarity = absoluteMetric(first, second);
+						double contentSimilarity = contentSimilarity(first, second);
+						double nameSimilarity = nameSimilarity(first, second);
+						if(MATCHING == nameSimilarity) {
+							return Boolean.TRUE;
+						} else {
+							EObject firstContainer = first.eContainer();
+							EObject secondContainer = second.eContainer();
+							if(absoluteSimilarity > THRESHOLD_0_2) {
+								return Boolean.FALSE;
+							} else if(contentSimilarity >= THRESHOLD_0_5 && contentSimilarity <= MATCHING) {
+								return Boolean.TRUE && equallyTyped(firstContainer, secondContainer);
+							} else if(NOT_MATCHING == contentSimilarity && firstContainer == secondContainer) {
+								return equallyTyped(first, second);
+							} else if(absoluteSimilarity < THRESHOLD_0_2) {
+								return MATCHING == nameSimilarity(firstContainer, secondContainer);
+							}
+							return MATCHING == contentSimilarity;
+						} 
+					}
+				}
+			};
+		}
 	}
 }
