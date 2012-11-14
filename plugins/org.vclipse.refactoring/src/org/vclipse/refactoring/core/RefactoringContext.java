@@ -60,7 +60,7 @@ public class RefactoringContext implements IRefactoringContext {
 	}
 	
 	public String getLabel() {
-		if(text.isEmpty() || text == null) {
+		if(text == null || text.isEmpty()) {
 			return labels.getUILabel(this);			
 		}
 		return text;
