@@ -62,7 +62,7 @@ class RefactoringResourcesLoader extends XtextTest {
 	
 	def <T> assertNotEmpty(Iterable<T> entries) {
 		if(entries.empty) {
-			fail("not entries in the iterable.")
+			fail("no entries in the iterable.")
 		}
 	}
 }
