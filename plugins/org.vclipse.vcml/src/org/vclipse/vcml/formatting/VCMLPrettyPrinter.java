@@ -89,9 +89,17 @@ public class VCMLPrettyPrinter extends DefaultPrettyPrinter {
 		return optionsProvider;
 	}
 	
+	// workaround for object pretty printing without context 
+	// 	-> for example call of the pretty printer on a simple description directly
 	public String prettyPrint(EObject object) {
 		initialize();
+		if (!(object instanceof VCObject)) {
+			layouter.beginC();
+		}
 		doSwitch(object);
+		if (!(object instanceof VCObject)) {
+			layouter.end();
+		}
 		layouter.close();
 		return stringBuilder.toString();
 	}
