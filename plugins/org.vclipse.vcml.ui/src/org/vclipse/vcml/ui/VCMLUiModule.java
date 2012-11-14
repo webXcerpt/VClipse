@@ -47,7 +47,7 @@ import org.vclipse.vcml.ui.outline.VCMLOutlinePage;
 import org.vclipse.vcml.ui.outline.VCMLOutlineTreeProvider;
 import org.vclipse.vcml.ui.refactoring.PreviewEntityComputer;
 import org.vclipse.vcml.ui.refactoring.VCMLUICustomisation;
-import org.vclipse.vcml.ui.refactoring.VcmlRenameRefactoringExecutor;
+import org.vclipse.vcml.ui.refactoring.VcmlRenameRefactoringExecuter;
 import org.vclipse.vcml.ui.resources.VcmlResourcesStateProvider;
 import org.vclipse.vcml.ui.syntaxcoloring.VCMLAntlrTokenToAttributeIdMapper;
 import org.vclipse.vcml.ui.templates.VcmlTemplateContextType;
@@ -114,7 +114,7 @@ public class VCMLUiModule extends org.vclipse.vcml.ui.AbstractVCMLUiModule {
 	 * Extension of the re-name re-factoring
 	 */
 	public Provider<? extends RenameRefactoringExecuter> provideRenameRefactoringExecuter() {
-		return Access.provider(VcmlRenameRefactoringExecutor.class);
+		return Access.provider(VcmlRenameRefactoringExecuter.class);
 	}
 	
 	/**
