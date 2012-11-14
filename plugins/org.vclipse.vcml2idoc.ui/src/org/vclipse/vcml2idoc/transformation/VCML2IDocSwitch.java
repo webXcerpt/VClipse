@@ -1135,12 +1135,6 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 			result.add(iDoc);
 		}
 		result.addAll(getIDocsCLFMAS(material));
-		for(final ConfigurationProfile cp : material.getConfigurationprofiles()) {
-			result.addAll(doSwitch(cp));
-		}
-		for(final BillOfMaterial bom : material.getBillofmaterials()) {
-			result.addAll(doSwitch(bom));
-		}
 		return result;
 	}
 
