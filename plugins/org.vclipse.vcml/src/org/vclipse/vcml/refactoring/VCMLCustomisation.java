@@ -51,6 +51,15 @@ public class VCMLCustomisation extends RefactoringConfiguration {
 		return Boolean.TRUE;
 	}
 	
+	public boolean initialize_Replace_description(IRefactoringContext context) {
+		EStructuralFeature feature = context.getStructuralFeature();
+		if(VCML_PACKAGE.getVCObject_Description() == feature) {
+			context.setLabel("Replace description with a new value");
+			return context.getSourceElement() instanceof EObject;
+		}
+		return Boolean.FALSE;
+	}
+	
 	/**
 	 * 
 	 */
