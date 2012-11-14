@@ -68,13 +68,11 @@ public class VCMLRefactoring extends DependenciesRefactorings {
 		Boolean replaceOccurences = (Boolean)attributes.get(DefaultRefactoringExecuter.BUTTON_STATE);
 		String newDescription = (String)attributes.get(DefaultRefactoringExecuter.TEXT_FIELD_ENTRY);
 		SimpleDescription sd = (SimpleDescription)context.getSourceElement();
-		if(replaceOccurences) {
+		if(replaceOccurences != null && replaceOccurences) {
 			Iterator<EObject> foundEntries = search.findEntries(sd).iterator();
 			while(foundEntries.hasNext()) {
 				((SimpleDescription)foundEntries.next()).setValue(newDescription);
 			}
 		}
-		EObject container = EcoreUtil2.getContainerOfType(sd, VCObject.class);
-		context.setSourceElement(container);
 	}
 }
