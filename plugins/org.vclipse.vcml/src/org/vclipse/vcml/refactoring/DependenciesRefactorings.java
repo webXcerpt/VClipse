@@ -30,7 +30,7 @@ import org.vclipse.vcml.vcml.SymbolicLiteral;
 
 import com.google.common.collect.Lists;
 
-public class DependenciesRefactorings extends VCMLSimplifier {
+public class DependenciesRefactorings extends ConstraintRefactorings {
 
 	/*
 	 * Each value in the list is replaced through an equality expression

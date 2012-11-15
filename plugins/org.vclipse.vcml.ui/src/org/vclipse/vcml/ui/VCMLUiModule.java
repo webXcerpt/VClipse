@@ -38,7 +38,7 @@ import org.vclipse.refactoring.IPreviewObjectComputer;
 import org.vclipse.refactoring.IRefactoringConfiguration;
 import org.vclipse.refactoring.IRefactoringExecuter;
 import org.vclipse.refactoring.IRefactoringUIConfiguration;
-import org.vclipse.vcml.refactoring.VCMLCustomisation;
+import org.vclipse.vcml.refactoring.VCMLConfiguration;
 import org.vclipse.vcml.refactoring.VCMLRefactoring;
 import org.vclipse.vcml.ui.editor.hover.VCMLHoverProvider;
 import org.vclipse.vcml.ui.hyperlinks.VcmlHyperlinkHelper;
@@ -125,7 +125,7 @@ public class VCMLUiModule extends org.vclipse.vcml.ui.AbstractVCMLUiModule {
 	}
 	
 	public Class<? extends IRefactoringConfiguration> bindRefactoringConfiguration() {
-		return VCMLCustomisation.class;
+		return VCMLConfiguration.class;
 	}
 	
 	public Class<? extends IRefactoringUIConfiguration> bindRefactoringUIConfiguration() {

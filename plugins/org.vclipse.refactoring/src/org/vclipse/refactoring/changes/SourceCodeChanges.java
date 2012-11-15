@@ -27,7 +27,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.ChangeDescription;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.URIConverter;
+import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
@@ -35,7 +36,6 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusContext;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
 import org.eclipse.xtext.linking.ILinker;
-import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.parser.IParser;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.impl.ListBasedDiagnosticConsumer;
@@ -72,6 +72,8 @@ public class SourceCodeChanges extends CompositeChange {
 	
 	private boolean performed = false;
 	
+	private URIConverter uriConverter;
+	
 	static String getChangeLabel(IRefactoringUIContext context) {
 		EObject element = context.getSourceElement();
 		Resource resource = element.eResource();
@@ -88,6 +90,8 @@ public class SourceCodeChanges extends CompositeChange {
 		this.search = extensions.getInstance(EntrySearch.class);
 		this.extensions = extensions;
 		
+		uriConverter = new ExtensibleURIConverterImpl();
+		
 		EObject element = this.context.getSourceElement();
 		rootOriginal = EcoreUtil.getRootContainer(element);
 		rootContents = search.getRootContents(rootOriginal);
@@ -97,27 +101,33 @@ public class SourceCodeChanges extends CompositeChange {
 		serializer = extensions.getInstance(ISerializer.class, rootOriginal);
 		IParser parser = extensions.getInstance(IParser.class, rootOriginal);
 		ILinker linker = extensions.getInstance(ILinker.class, rootOriginal);
-
+		
 		String string = serializer.serialize(rootOriginal);		
-		IParseResult parseResult = parser.parse(new StringReader(string));
-		ResourceSet resourceSet = resource.getResourceSet();
 		URI uri = resource.getURI();
-		uri = URI.createURI(uri.trimFileExtension().toString() + ".refactored." + uri.fileExtension());
+		StringBuffer uriBuffer = new StringBuffer(uri.trimFileExtension().toString()).append(".refactored.").append(uri.fileExtension());
+		URI uriRefactoring = URI.createURI(uriBuffer.toString());
+		Map<URI, URI> uriMap = uriConverter.getURIMap();
+		uriMap.put(uri, uriRefactoring);
+		uriMap.put(uriRefactoring, uri);
 		try {
-			resource = resourceSet.getResource(uri, true);
+			resource = resource.getResourceSet().getResource(uriRefactoring, true);
 		} catch(Exception exception) {
-			resource = resourceSet.getResource(uri, true);
+			resource = resource.getResourceSet().getResource(uriRefactoring, true);
 		}
 		EList<EObject> contents = resource.getContents();
 		contents.clear();
-		rootRefactored = parseResult.getRootASTElement();
+		rootRefactored = parser.parse(new StringReader(string)).getRootASTElement();
 		copyContents = search.getRootContents(rootRefactored);
-		contents.add(rootRefactored);		
+		contents.add(rootRefactored);	
 		linker.linkModel(rootRefactored, new ListBasedDiagnosticConsumer());
 		EcoreUtil.resolveAll(resource);
 		
 		previewNode = new DiffNode();
 		previewNode.setLeft(new MultipleEntriesTypedElement(serializer, rootOriginal));
+	}
+	
+	public URIConverter getURIConverter() {
+		return uriConverter;
 	}
 	
 	@Override

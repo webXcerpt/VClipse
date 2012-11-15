@@ -15,6 +15,7 @@ Require-Bundle: org.eclipse.emf.compare.match,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.vclipse.refactoring,
+ org.vclipse.refactoring.changes,
  org.vclipse.refactoring.compare,
  org.vclipse.refactoring.core,
  org.vclipse.refactoring.guice,

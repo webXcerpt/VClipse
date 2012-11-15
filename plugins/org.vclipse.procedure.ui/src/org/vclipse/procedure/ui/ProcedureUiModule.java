@@ -10,7 +10,7 @@ import org.vclipse.refactoring.IPreviewObjectComputer;
 import org.vclipse.refactoring.IRefactoringConfiguration;
 import org.vclipse.refactoring.IRefactoringExecuter;
 import org.vclipse.refactoring.IRefactoringUIConfiguration;
-import org.vclipse.vcml.refactoring.VCMLCustomisation;
+import org.vclipse.vcml.refactoring.VCMLConfiguration;
 import org.vclipse.vcml.ui.refactoring.VCMLUICustomisation;
 import org.vclipse.vcml.ui.resources.VcmlResourcesStateProvider;
 
@@ -37,7 +37,7 @@ public class ProcedureUiModule extends org.vclipse.procedure.ui.AbstractProcedur
 	}
 	
 	public Class<? extends IRefactoringConfiguration> bindRefactoringConfiguration() {
-		return VCMLCustomisation.class;
+		return VCMLConfiguration.class;
 	}
 	
 	public Class<? extends IRefactoringUIConfiguration> bindRefactoringUIConfiguration() {

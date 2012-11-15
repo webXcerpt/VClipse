@@ -38,7 +38,9 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class RefactoringTask extends Refactoring {
 
 	private SourceCodeChanges modelChange;

@@ -8,35 +8,40 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.vclipse.refactoring.IRefactoringContext;
 import org.vclipse.refactoring.core.RefactoringConfiguration;
 import org.vclipse.vcml.utils.ConstraintRestrictionExtensions;
+import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.vcml.CharacteristicReference_P;
+import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.InCondition_C;
 import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.MDataCharacteristic_P;
 import org.vclipse.vcml.vcml.PFunction;
+import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlPackage;
+
+import static org.vclipse.vcml.refactoring.ConstraintRefactorings.*;
 
 import com.google.inject.Inject;
 
-public class VCMLCustomisation extends RefactoringConfiguration {
-	
-	@Inject
-	private VCMLRefactoring vcmlRefactoring;
+public class VCMLConfiguration extends RefactoringConfiguration {
 	
 	@Inject
 	private ConstraintRestrictionExtensions cre;
+	
+	@Inject
+	private DependencySourceUtils sourceUtils;
 	
 	protected static VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
 	
 	/**
 	 * Features
 	 */
-	public List<? extends EStructuralFeature> features_Inline_ConstraintSource(IRefactoringContext context) {
-		return features_Extract_ConstraintSource(context);
+	public List<? extends EStructuralFeature> features_Inline_ConstraintSource(IRefactoringContext context, ConstraintSource source) {
+		return features_Extract_ConstraintSource(context, source);
 	}
 	
-	public List<? extends EStructuralFeature> features_Extract_ConstraintSource(IRefactoringContext context) {
-		return get(VCML_PACKAGE.getConstraintSource_Restrictions());
+	public List<? extends EStructuralFeature> features_Extract_ConstraintSource(IRefactoringContext context, ConstraintSource source) {
+		return get(VCML_PACKAGE.getConstraint_Source(), VCML_PACKAGE.getConstraintSource_Restrictions());
 	}
 	
 	public List<? extends EStructuralFeature> features_Extract_InCondition_C(IRefactoringContext context) {
@@ -63,8 +68,19 @@ public class VCMLCustomisation extends RefactoringConfiguration {
 	}
 	
 	public boolean initialize_Extract_ConstraintSource(IRefactoringContext context, ConstraintSource source) {
-		context.setLabel("Extract common conditions from restrictions");
-		return cre.canExtractCommonConditions(source) != null;
+		EStructuralFeature feature = context.getStructuralFeature();
+		if(VCML_PACKAGE.getConstraint_Source() == feature) {
+			VCObject vcobject = sourceUtils.getDependency(source);
+			if(vcobject instanceof Constraint && source.getRestrictions().size() / RESTRICTIONS_AMOUNT >= MINIMUM_SUBLISTS) {
+				context.setLabel("Divide constraint source");
+				return true;
+			}
+		}
+		if(VCML_PACKAGE.getConstraintSource_Restrictions() == feature) {
+			context.setLabel("Extract common conditions from restrictions");
+			return cre.canExtractCommonConditions(source) != null;
+		}
+		return false;
 	}
 	
 	public boolean initialize_Inline_ConstraintSource(IRefactoringContext context, ConstraintSource source) {

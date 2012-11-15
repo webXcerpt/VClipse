@@ -55,7 +55,7 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 	private Provider<IRefactoringUIContext> contextProvider;
 	
 	@Inject
-	private Provider<RefactoringTask> taskProvider;
+	private RefactoringTask refactoringTask;
 	
 	@Inject
 	private RefactoringRunner refactoringRunner;
@@ -136,7 +136,6 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 				IRefactoringUIConfiguration uiConfiguration = extensions.getInstance(IRefactoringUIConfiguration.class, rootContainer);
 				List<? extends UserInputWizardPage> pages = Lists.newArrayList();
 				pages = uiConfiguration.provideWizardPages(context);
-				RefactoringTask refactoringTask = taskProvider.get();
 				refactoringTask.setContext(context);
 				context.setRefactoring(refactoringTask);
 				RefactoringWizard wizard = new RefactoringWizard(pages, refactoringTask, RefactoringWizard.DIALOG_BASED_USER_INTERFACE);

@@ -28,6 +28,7 @@ import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.RefactoringStatus;
 import org.vclipse.refactoring.utils.Configuration;
 import org.vclipse.refactoring.utils.EntrySearch;
+import org.vclipse.refactoring.utils.Extensions;
 import org.vclipse.refactoring.utils.References;
 
 import com.google.common.collect.Lists;
@@ -53,6 +54,9 @@ public class DefaultRefactoringExecuter extends MethodCollector implements IRefa
 	
 	@Inject
 	private Configuration configuration;
+	
+	@Inject
+	protected Extensions extensions;
 	
 	@Inject
 	private Provider<RefactoringContext> contextProvider;
