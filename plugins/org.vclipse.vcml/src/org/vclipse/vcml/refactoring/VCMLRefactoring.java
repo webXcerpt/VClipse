@@ -12,15 +12,14 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.resource.IReferenceDescription;
 import org.vclipse.refactoring.IRefactoringContext;
-import org.vclipse.refactoring.core.DefaultRefactoringExecuter;
 import org.vclipse.vcml.vcml.SimpleDescription;
 
 public class VCMLRefactoring extends DependenciesRefactorings {
 
 	public void refactoring_Replace_SimpleDescription(IRefactoringContext context) {
 		Map<?, ?> attributes = context.getAttributes();
-		Boolean replaceOccurences = (Boolean)attributes.get(DefaultRefactoringExecuter.BUTTON_STATE);
-		String newDescription = (String)attributes.get(DefaultRefactoringExecuter.TEXT_FIELD_ENTRY);
+		Boolean replaceOccurences = (Boolean)attributes.get(BUTTON_STATE);
+		String newDescription = (String)attributes.get(TEXT_FIELD_ENTRY);
 		SimpleDescription sd = (SimpleDescription)context.getSourceElement();
 		if(replaceOccurences != null && replaceOccurences) {
 			Iterator<EObject> foundEntries = search.findEntries(sd).iterator();
@@ -44,7 +43,7 @@ public class VCMLRefactoring extends DependenciesRefactorings {
 				int index = context.getIndex();
 				if(index >= 0 && index < entries.size()) {
 					Map<?, ?> attributes = context.getAttributes();
-					Object buttonState = attributes.get(DefaultRefactoringExecuter.BUTTON_STATE);
+					Object buttonState = attributes.get(BUTTON_STATE);
 					if(buttonState instanceof Boolean && (Boolean)buttonState) {
 						EObject entry = entries.get(index);
 						Resource resource = entry.eResource();
