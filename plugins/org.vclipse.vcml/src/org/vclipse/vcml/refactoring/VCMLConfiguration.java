@@ -84,11 +84,11 @@ public class VCMLConfiguration extends RefactoringConfiguration {
 	}
 	
 	public boolean initialize_Inline_ConstraintSource(IRefactoringContext context, ConstraintSource source) {
-		context.setLabel("Inline conditions for each restriction");
-		if(source.getCondition() != null) {
-			return Boolean.TRUE;		
+		if(VCML_PACKAGE.getConstraintSource_Restrictions() == context.getStructuralFeature()) {
+			context.setLabel("Inline conditions for each restriction");
+			return source.getCondition() != null;
 		}
-		return Boolean.FALSE;
+		return false;
 	}
 	
 	public boolean initialize_Extract_InCondition_C_list(IRefactoringContext context, InCondition_C reference) {
