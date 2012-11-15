@@ -224,18 +224,18 @@ public class InputPage extends UserInputWizardPage {
 		occurencesButton.setSelection(false);
 		widgets.add(occurencesButton);
 		
-		final Button removeExistingEObject = new Button(optionsGroup, SWT.CHECK);
-		removeExistingEObject.setText("Remove existing source");
-		removeExistingEObject.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent event) {
-				context.addAttribute(DefaultRefactoringExecuter.REMOVE_EXISTING_EOBJECT, removeExistingEObject.getSelection());
-				validateWidgets();
-			}
-		});
-		removeExistingEObject.setSelection(false);
-		removeExistingEObject.setEnabled(false);
-		widgets.add(removeExistingEObject);
+//		final Button removeExistingEObject = new Button(optionsGroup, SWT.CHECK);
+//		removeExistingEObject.setText("Remove existing source");
+//		removeExistingEObject.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent event) {
+//				context.addAttribute(DefaultRefactoringExecuter.REMOVE_EXISTING_EOBJECT, removeExistingEObject.getSelection());
+//				validateWidgets();
+//			}
+//		});
+//		removeExistingEObject.setSelection(false);
+//		removeExistingEObject.setEnabled(false);
+//		widgets.add(removeExistingEObject);
 		
 		context.configureWidgets();
 		validateWidgets();
