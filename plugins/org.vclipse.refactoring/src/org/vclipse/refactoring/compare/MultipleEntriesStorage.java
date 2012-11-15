@@ -11,6 +11,7 @@
 package org.vclipse.refactoring.compare;
 
 import java.io.InputStream;
+import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -28,6 +29,8 @@ import org.eclipse.xtext.resource.SaveOptions.Builder;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.util.StringInputStream;
 
+import com.google.common.collect.Lists;
+
 public class MultipleEntriesStorage extends DefaultStorage {
 
 	private EObject[] entries;
@@ -44,14 +47,18 @@ public class MultipleEntriesStorage extends DefaultStorage {
 		Builder saveOptionsBuilder = SaveOptions.newBuilder();
 		SaveOptions options = saveOptionsBuilder.noValidation().format().getOptions();
 		StringBuffer contentsBuffer = new StringBuffer();
+		List<String> seenNames = Lists.newArrayList();
 		for(int i=0, size=entries.length-1; i<=size; i++) {
 			EObject entry = entries[i];
 			if(entry.eContainer() instanceof ChangeDescription) {
 				if(nameProvider != null) {
 					QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(entry);
 					if(qualifiedName != null) {
-						contentsBuffer.append(DELETED_OBJECT_MESSAGE + qualifiedName.getLastSegment());
-						continue;
+						String lastSegment = qualifiedName.getLastSegment();
+						if(seenNames.contains(lastSegment)) {
+							continue;
+						}
+						contentsBuffer.append(DELETED_OBJECT_MESSAGE + lastSegment);
 					}
 				}
 			}
