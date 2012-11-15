@@ -122,6 +122,9 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 				endIndex = tempStartIndex < size ? tempStartIndex : size;
 				List<ConstraintRestriction> subList = restrictions.subList(startIndex, endIndex);
 				ConstraintSource newConstraintSource = createConstraintSource(objects, condition, subList, inferences);
+				if(newConstraintSource.getRestrictions().isEmpty()) {
+					continue;
+				}
 				StringBuffer uriBuffer = new StringBuffer(newUriPart).append("_").append(index).append(".").append(fileExtension);
 				URI uri = URI.createURI(uriBuffer.toString());
 				Resource newConstraintResource = null;
