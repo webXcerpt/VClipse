@@ -137,7 +137,9 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 			List<Characteristic> referenced = Lists.newArrayList();
 			for(int index=restrictions.size()-1; index>=0; index--) {
 				if(RESTRICTIONS_AMOUNT > index) {
-					referenced.addAll(cre.getUsedCharacteristics(restrictions.get(index)));
+					ConstraintRestriction cr = restrictions.get(index);
+					List<Characteristic> cstics = cre.getUsedCharacteristics(cr);
+					referenced.addAll(cstics);
 				} else {
 					restrictions.remove(index);
 				}
@@ -150,11 +152,12 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 				} else if(cstic_ref_c instanceof ObjectCharacteristicReference) {
 					currentlyUsed = ((ObjectCharacteristicReference)cstic_ref_c).getCharacteristic();
 				}
-				if(!referenced.contains(currentlyUsed)) {
+				if(referenced.contains(currentlyUsed)) {
 					newInferences.add(cstic_ref_c);
 				}
 			}
 			inferences.clear();
+			inferences.addAll(newInferences);
 		}
 	}
 	
