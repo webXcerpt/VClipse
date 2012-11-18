@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -172,7 +173,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 			final List<IDoc> idocs = iDocModel.getIdocs();
 			IDoc upsIDoc = null;
 			if (haveUPS()) {
-				upsIDoc = addUPS(iDocModel);
+				upsIDoc = addUPS(iDocModel, vcmlModel);
 			}
 			for(final VCObject vcObject : vcmlModel.getObjects()) {
 				if(vcObject != null && !vcObject.eIsProxy()) {
@@ -206,7 +207,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		sublev_BOMMAT = 1;
 	}
 
-	private IDoc addUPS(final org.vclipse.idoc.iDoc.Model iDocModel) {
+	private IDoc addUPS(final org.vclipse.idoc.iDoc.Model iDocModel, final VcmlModel vcmlModel) {
 		// construct serialization
 		// group IDocs by IDoc type
 		final Map<String, List<IDoc>> groupedIDocs = new HashMap<String, List<IDoc>>();
@@ -226,6 +227,8 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		// UPSNAM // will be filled later
 		setValue(segmentE1UPSHDR, "UPSTYP", getUPSTYP());
 		setValue(segmentE1UPSHDR, "UPSMODE", "O"); // letter O (original packet or correction packet) instead of number 0 !!!
+		setValue(segmentE1UPSHDR, "TEXT", vcmlModel.eResource().getURI().lastSegment() + "  " + System.getProperty("user.name") + "  " + DateFormat.getDateTimeInstance().format(new Date()));
+
 		containerUPSITM = segmentE1UPSHDR;
 
 		/* predecessor is not used
