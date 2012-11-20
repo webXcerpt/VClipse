@@ -201,17 +201,17 @@ public abstract class CodePrettyPrinter extends DefaultPrettyPrinter {
 		// TODO missing CONCAT
 		boolean parentheses = haveParentheses(parentPrec, leftPrec, rightPrec);
 		if(parentheses) {
-			layouter.print("(");
+			layouter.brk(0).print("(").brk(0);
 		}
 		layouter.beginI(0);
 		precedenceLevel = leftPrec;
 		doSwitch(object.getLeft());
-		layouter.brk().print(" ").print(operator).brk(); // no brk before operator since then * could go on first column which is a syntax error
+		layouter.brk(0).print(" ").print(operator).brk(); // no brk before operator since then * could go on first column which is a syntax error
 		precedenceLevel = rightPrec;
 		doSwitch(object.getRight());
 		layouter.end();
 		if(parentheses) {
-			layouter.print(")");
+			layouter.brk(0).print(")").brk(0);
 		}
 		return layouter;
 	}
