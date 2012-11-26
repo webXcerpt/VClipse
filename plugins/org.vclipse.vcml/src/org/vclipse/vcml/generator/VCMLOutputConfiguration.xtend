@@ -20,7 +20,7 @@ class VCMLOutputConfigurationProvider extends OutputConfigurationProvider {
 	}
 	
 	def getCompileOutput() {
-		// we assume vcml configuration is the first one
+		// we assume the vcml configuration is the first one
 		return getOutputConfigurations().iterator().next();
 	}
 	
