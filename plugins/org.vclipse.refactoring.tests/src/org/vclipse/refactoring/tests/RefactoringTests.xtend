@@ -25,42 +25,39 @@ import static org.junit.Assert.*
 import static org.vclipse.refactoring.core.RefactoringContext.*
 import static org.vclipse.refactoring.core.RefactoringType.*
 import static org.vclipse.refactoring.tests.utils.RefactoringResourcesLoader.*
+import org.vclipse.vcml.refactoring.VCMLRefactoring
+import org.vclipse.refactoring.utils.Extensions
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(RefactoringTestInjectorProvider))
-class LabelsTests extends XtextTest {
-	
+class RefactoringTests extends XtextTest {
+
 	@Inject
 	private EntrySearch search
-	
+
 	@Inject
 	private Labels labels
-	
+
 	@Inject
 	private RefactoringResourcesLoader resourcesLoader
-	
+
+	@Inject
+	private Extensions extensions
+
 	new() {
-		super(typeof(LabelsTests).simpleName)
+		super(typeof(RefactoringTests).simpleName)
 	}
-	
+
 	@Test
-	def test_UILabelProvider() {
-		val entries = resourcesLoader.getResourceContents(CAR_DESCRIPTION)
-		var findEntry = search.findEntry("(300)CAR", VCML_PACKAGE.class_, entries)
-		assertNotNull(findEntry)
-	
-		var context = create(findEntry, null, Extract)
-		var uiLabel = labels.getUILabel(context)
-		assertEquals("Extract ", uiLabel)
-			
-		context = create(findEntry, VCML_PACKAGE.class_Characteristics, Extract)
-		uiLabel = labels.getUILabel(context)
-		assertEquals("Extract characteristics ", uiLabel)
+	def refactoring_Divide() {
+		var entries = resourcesLoader.getResourceContents(CAR_DESCRIPTION)
+		var firstEntry = entries.get(0)
+		val resource = firstEntry.eResource
+		val refactoringExecuter = extensions.getInstance(typeof(VCMLRefactoring), firstEntry)
+		if(refactoringExecuter == null) {
+			fail("Can not find re-factoring executer for " + firstEntry)
+		}
 		
-		findEntry = search.findEntry("PRECOND", VCML_PACKAGE.precondition, entries)
-		assertNotNull("precondition PRECOND not found", findEntry)
-		context = create(findEntry, VCML_PACKAGE.VCObject_Description, Replace)
-		uiLabel = context.label
-		assertEquals("Replace description with a new value", uiLabel)
+		
 	}
 }
