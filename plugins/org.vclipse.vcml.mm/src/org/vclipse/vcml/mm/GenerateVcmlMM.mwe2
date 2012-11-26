@@ -4,30 +4,24 @@ import org.eclipse.emf.mwe.utils.*
 import org.eclipse.xtext.generator.*
 import org.eclipse.xtext.ui.generator.*
 
+var projectName = "org.vclipse.vcml.mm"
+var platformPrefix = "platform:/resource/${projectName}"
+var projectPrefix = "../${projectName}"
+
 Workflow {
+	 
 	bean = StandaloneSetup {
 		scanClassPath = true
-		platformUri = ".."
-	
-		uriMap = {
-			from = "platform:/plugin/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore"
-			to = "platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.ecore"
-		}
-		
-		uriMap = {
-			from = "platform:/plugin/org.eclipse.xtext.common.types/model/JavaVMTypes.genmodel"
-			to = "platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.genmodel"
-		}
-		
-		registerGenModelFile = "platform:/resource/org.vclipse.vcml.mm/src/org/vclipse/vcml/mm/VCML.genmodel"
-	}
-
-	component = DirectoryCleaner {
-		directory="emf-gen"
+		platformUri = "${projectPrefix}/.."
+		registerGenModelFile = "${platformPrefix}/src/org/vclipse/vcml/mm/VCML.genmodel"
 	}
 	
 	component = org.eclipse.emf.mwe2.ecore.EcoreGenerator {
-		genModel = "platform:/resource/org.vclipse.vcml.mm/src/org/vclipse/vcml/mm/VCML.genmodel"
-		srcPath = "platform:/resource/org.vclipse.vcml.mm/src"
+		genModel = "${platformPrefix}/src/org/vclipse/vcml/mm/VCML.genmodel"
+		srcPath = "${platformPrefix}/src"
 	}
+
+//	component = DirectoryCleaner {
+//		directory = "emf-gen"
+//	}
 }
