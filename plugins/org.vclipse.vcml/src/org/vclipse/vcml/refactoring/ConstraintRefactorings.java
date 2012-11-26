@@ -26,12 +26,12 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.resource.SaveOptions;
 import org.vclipse.base.ui.util.EditorUtilsExtensions;
 import org.vclipse.refactoring.IRefactoringContext;
 import org.vclipse.refactoring.changes.SourceCodeChanges;
 import org.vclipse.refactoring.core.DefaultRefactoringExecuter;
 import org.vclipse.refactoring.core.RefactoringTask;
+import org.vclipse.refactoring.core.RefactoringWorkDelegate;
 import org.vclipse.vcml.utils.ConstraintRestrictionExtensions;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.utils.VCMLObjectUtils;
@@ -61,6 +61,9 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 	
 	@Inject
 	private DependencySourceUtils sourceUtils;
+	
+	@Inject
+	private RefactoringWorkDelegate workDelegate;
 	
 	protected final VcmlFactory VCML_FACTORY = VcmlFactory.eINSTANCE;
 	protected final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
@@ -113,28 +116,28 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 			ResourceSet resourceSet = resource.getResourceSet();
 			String newUriPart = sourceUri.trimFileExtension().toString();
 			String fileExtension = resource.getURI().fileExtension();
-			Map<Object, Object> optionsMap = SaveOptions.defaultOptions().toOptionsMap();
 			for(int index=1, endIndex=0, size=restrictions.size(); index<=restrictions.size() / RESTRICTIONS_AMOUNT; index++) { 
 				StringBuffer nameBuffer = new StringBuffer(constraint.getName()).append("_").append(index);
-				vcobjects.add(VCMLObjectUtils.mkConstraint(nameBuffer.toString(), constraint.getDescription()));
 				int startIndex = endIndex == 0 ? index * RESTRICTIONS_AMOUNT : endIndex;
 				int tempStartIndex = startIndex * MINIMUM_SUBLISTS;
 				endIndex = tempStartIndex < size ? tempStartIndex : size;
+				
 				List<ConstraintRestriction> subList = restrictions.subList(startIndex, endIndex);
 				ConstraintSource newConstraintSource = createConstraintSource(objects, condition, subList, inferences);
 				if(newConstraintSource.getRestrictions().isEmpty()) {
 					continue;
 				}
+				
+				String newConstraintName = nameBuffer.toString();
+				VCObject foundEntry = search.findEntry(newConstraintName, VCML_PACKAGE.getConstraint(), vcobjects);
+				if(foundEntry == null) {
+					Constraint newConstraint = VCMLObjectUtils.mkConstraint(nameBuffer.toString(), constraint.getDescription());
+					vcobjects.add(newConstraint);					
+				}
+				 
 				StringBuffer uriBuffer = new StringBuffer(newUriPart).append("_").append(index).append(".").append(fileExtension);
 				URI uri = URI.createURI(uriBuffer.toString());
-				Resource newConstraintResource = null;
-				try {
-					newConstraintResource = resourceSet.getResource(uri, true);
-				} catch(Exception exception) {
-					newConstraintResource = resourceSet.getResource(uri, true);
-				}
-				newConstraintResource.getContents().add(newConstraintSource);
-				newConstraintResource.save(optionsMap);					
+				workDelegate.createResource(resourceSet, uri, newConstraintSource, true);				
 			}
 			
 			List<Characteristic> referenced = Lists.newArrayList();
@@ -161,6 +164,7 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 			}
 			inferences.clear();
 			inferences.addAll(newInferences);
+			workDelegate.saveResource(constraint.eResource());
 		}
 	}
 	
