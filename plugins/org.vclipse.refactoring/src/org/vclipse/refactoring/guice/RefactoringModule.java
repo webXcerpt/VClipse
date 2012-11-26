@@ -21,6 +21,7 @@ import org.vclipse.refactoring.IRefactoringUIConfiguration;
 import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.core.DefaultContainerPreviewComputer;
 import org.vclipse.refactoring.core.RefactoringConfiguration;
+import org.vclipse.refactoring.core.RefactoringWorkDelegate;
 import org.vclipse.refactoring.ui.RefactoringUIConfiguration;
 
 public class RefactoringModule extends AbstractGenericModule {
@@ -53,5 +54,9 @@ public class RefactoringModule extends AbstractGenericModule {
 	
 	public Class<? extends IRefactoringUIConfiguration> bindRefactoringUIConfiguration() {
 		return RefactoringUIConfiguration.class;
+	}
+	
+	public Class<? extends RefactoringWorkDelegate> bindRefactoringWorkDelegate() {
+		return RefactoringWorkDelegate.class;
 	}
 }
