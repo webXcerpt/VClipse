@@ -5,8 +5,8 @@ Bundle-SymbolicName: org.vclipse.vcml.mm;singleton:=true
 Bundle-Version: 0.5.0.qualifier
 Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.eclipse.emf.ecore;visibility:=reexport,
- org.eclipse.emf.mwe2.launch,
- org.eclipse.emf.mwe2.lib
+ org.eclipse.emf.mwe2.launch;visibility:=reexport,
+ org.eclipse.emf.mwe2.lib;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
