@@ -56,14 +56,14 @@ public class EntrySearch {
 		return entries;
 	}
 	
-	public EObject findEntry(final String name, final EClass type, Iterable<EObject> entries) {
-		Iterator<EObject> iterator = entries.iterator();
+	public <T extends EObject> T findEntry(final String name, final EClass type, Iterable<T> entries) {
+		Iterator<T> iterator = entries.iterator();
 		if(iterator.hasNext()) {
 			EObject entry = iterator.next();
 			final IQualifiedNameProvider nameProvider = extensions.getInstance(IQualifiedNameProvider.class, entry);
 			if(nameProvider != null) {
-				Iterator<EObject> typedAndNamed = Iterables.filter(entries, new Predicate<EObject>() {
-					public boolean apply(EObject object) {
+				Iterator<T> typedAndNamed = Iterables.filter(entries, new Predicate<T>() {
+					public boolean apply(T object) {
 						QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(object);
 						return qualifiedName == null ? false : qualifiedName.getLastSegment().equals(name) && object.eClass() == type;
 					}
