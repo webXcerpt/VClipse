@@ -5,7 +5,7 @@ import org.eclipse.xtext.generator.*
 import org.eclipse.xtext.ui.generator.*
 
 var projectName = "org.vclipse.vcml.mm"
-var platformPrefix = "platform:/resource/${projectName}"
+var platformPrefix = "platform:/resource/${projectName}/src"
 var projectPrefix = "../${projectName}"
 
 Workflow {
@@ -13,15 +13,15 @@ Workflow {
 	bean = StandaloneSetup {
 		scanClassPath = true
 		platformUri = "${projectPrefix}/.."
-		registerGenModelFile = "${platformPrefix}/src/org/vclipse/vcml/mm/VCML.genmodel"
+		registerGenModelFile = "${platformPrefix}/org/vclipse/vcml/mm/VCML.genmodel"
+	}
+	
+	component = DirectoryCleaner {
+		directory = "emf-gen"
 	}
 	
 	component = org.eclipse.emf.mwe2.ecore.EcoreGenerator {
-		genModel = "${platformPrefix}/src/org/vclipse/vcml/mm/VCML.genmodel"
-		srcPath = "${platformPrefix}/src"
+		genModel = "${platformPrefix}/org/vclipse/vcml/mm/VCML.genmodel"
+		srcPath = "${platformPrefix}"
 	}
-
-//	component = DirectoryCleaner {
-//		directory = "emf-gen"
-//	}
 }
