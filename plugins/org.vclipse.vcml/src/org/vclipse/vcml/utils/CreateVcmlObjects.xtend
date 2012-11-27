@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.vclipse.vcml.utils
 
+import org.eclipse.emf.ecore.resource.Resource
 import org.vclipse.vcml.vcml.BillOfMaterial
 import org.vclipse.vcml.vcml.Characteristic
 import org.vclipse.vcml.vcml.CharacteristicType
@@ -20,21 +21,21 @@ import org.vclipse.vcml.vcml.VcmlPackage
 
 import static org.vclipse.vcml.utils.CreateVcmlObjects.*
 import static org.vclipse.vcml.utils.VCMLObjectUtils.*
-import org.eclipse.emf.ecore.resource.Resource
+import org.vclipse.vcml.conversion.VCMLValueConverter
+import com.google.inject.Inject
 
 class CreateVcmlObjects extends VCMLObjectUtils {
 	
 	protected static VcmlFactory VCML_FACTORY = VcmlFactory::eINSTANCE
 	protected static VcmlPackage VCML_PACKAGE = VcmlPackage::eINSTANCE
 	
-	def genVCNamePrefix(Resource resource) {
-		resource.URI.trimFileExtension.lastSegment + "_"
-	}
+	@Inject
+	private VCMLValueConverter valueConverter
 	
 	def Material create it : VcmlFactory::eINSTANCE.createMaterial newMaterial(String name, String description, String type) {
 		it.name = name
 		it.description = mkSimpleDescription(description)
-		it.type = type
+		it.type = getExtendedIDString(type)
 	}
 	
 	def BillOfMaterial create it : VcmlFactory::eINSTANCE.createBillOfMaterial newBom(Material material, String description) {
@@ -67,5 +68,13 @@ class CreateVcmlObjects extends VCMLObjectUtils {
 		numericType.decimalPlaces = 3
 		numericType.negativeValuesAllowed = true
 		numericType
+	}
+	
+	def genVCNamePrefix(Resource resource) {
+		resource.URI.trimFileExtension.lastSegment + "_"
+	}
+	
+	def getExtendedIDString(String type) {
+		valueConverter.EXTENDED_ID.toString(type);
 	}
 }
