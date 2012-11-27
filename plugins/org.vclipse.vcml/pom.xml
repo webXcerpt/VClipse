@@ -11,11 +11,10 @@
 		<relativePath>../org.vclipse.releng/pom.xml</relativePath>
 	</parent>
 
-	<groupId>org.vclipse</groupId>
 	<artifactId>org.vclipse.vcml</artifactId>
 	<packaging>eclipse-plugin</packaging>
-
 	<version>0.5.0.qualifier</version>
+	
 	<build>
 		<resources>
 			<resource>
@@ -48,40 +47,6 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-clean-plugin</artifactId>
-				<configuration>
-					<filesets>
-						<fileset>
-							<directory>src-gen</directory>
-							<includes>
-								<include>**</include>
-							</includes>
-							<excludes>
-								<exclude>.gitignore</exclude>
-							</excludes>
-						</fileset>
-						<fileset>
-							<directory>../${project.artifactId}.ui/src-gen</directory>
-							<includes>
-								<include>**</include>
-							</includes>
-							<excludes>
-								<exclude>.gitignore</exclude>
-							</excludes>
-						</fileset>
-						<fileset>
-							<directory>../${project.artifactId}.tests/src-gen</directory>
-							<includes>
-								<include>**</include>
-							</includes>
-							<excludes>
-								<exclude>.gitignore</exclude>
-							</excludes>
-						</fileset>
-					</filesets>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.fornax.toolsupport</groupId>
