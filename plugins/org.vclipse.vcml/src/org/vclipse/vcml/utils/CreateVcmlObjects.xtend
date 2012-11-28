@@ -23,6 +23,9 @@ import static org.vclipse.vcml.utils.CreateVcmlObjects.*
 import static org.vclipse.vcml.utils.VCMLObjectUtils.*
 import org.vclipse.vcml.conversion.VCMLValueConverter
 import com.google.inject.Inject
+import org.vclipse.vcml.vcml.BOMItem
+import org.vclipse.vcml.vcml.SelectionCondition
+import org.vclipse.vcml.vcml.ConfigurationProfileEntry
 
 class CreateVcmlObjects extends VCMLObjectUtils {
 	
@@ -41,6 +44,17 @@ class CreateVcmlObjects extends VCMLObjectUtils {
 	def BillOfMaterial create it : VcmlFactory::eINSTANCE.createBillOfMaterial newBom(Material material, String description) {
 		it.material = material
 		it.description = mkSimpleDescription(description)
+	}
+	
+	def BOMItem create it : VcmlFactory::eINSTANCE.createBOMItem newBOMItem(int number, Material material) {
+		it.material = material
+		it.itemnumber = number
+	}
+	
+	def BOMItem create it : VcmlFactory::eINSTANCE.createBOMItem newBOMItem(int number, Material material, SelectionCondition condition, Iterable<ConfigurationProfileEntry> entries) {
+		val newBomItem = newBOMItem(number, material)
+		newBomItem.selectionCondition = condition
+		newBomItem.entries.addAll(entries)
 	}
 	
 	def Characteristic create it : VcmlFactory::eINSTANCE.createCharacteristic newNumericCharacteristic(String name, String description) {
