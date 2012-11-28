@@ -50,6 +50,10 @@ class CreateVcmlObjects extends VCMLObjectUtils {
 		it.description = mkSimpleDescription(description)
 	}
 	
+	def org.vclipse.vcml.vcml.Classification create it : VcmlFactory::eINSTANCE.createClassification newClassification(org.vclipse.vcml.vcml.Class class_) {
+		it.cls = class_
+	}
+	
 	def BillOfMaterial create it : VcmlFactory::eINSTANCE.createBillOfMaterial newBom(Material material, String description) {
 		it.name = material.name
 		it.material = material

@@ -15,6 +15,7 @@ import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicType;
+import org.vclipse.vcml.vcml.Classification;
 import org.vclipse.vcml.vcml.ConfigurationProfileEntry;
 import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.NumericType;
@@ -85,6 +86,27 @@ public class CreateVcmlObjects extends VCMLObjectUtils {
     it.setName(name);
     SimpleDescription _mkSimpleDescription = VCMLObjectUtils.mkSimpleDescription(description);
     it.setDescription(_mkSimpleDescription);
+  }
+  
+  public Classification newClassification(final org.vclipse.vcml.vcml.Class class_) {
+    final ArrayList<?>_cacheKey = CollectionLiterals.newArrayList(class_);
+    final Classification _result;
+    synchronized (_createCache_newClassification) {
+      if (_createCache_newClassification.containsKey(_cacheKey)) {
+        return _createCache_newClassification.get(_cacheKey);
+      }
+      Classification _createClassification = VcmlFactory.eINSTANCE.createClassification();
+      _result = _createClassification;
+      _createCache_newClassification.put(_cacheKey, _result);
+    }
+    _init_newClassification(_result, class_);
+    return _result;
+  }
+  
+  private final HashMap<ArrayList<? extends Object>,Classification> _createCache_newClassification = CollectionLiterals.newHashMap();
+  
+  private void _init_newClassification(final Classification it, final org.vclipse.vcml.vcml.Class class_) {
+    it.setCls(class_);
   }
   
   public BillOfMaterial newBom(final Material material, final String description) {
