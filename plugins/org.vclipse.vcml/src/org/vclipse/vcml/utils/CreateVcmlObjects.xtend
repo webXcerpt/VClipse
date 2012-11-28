@@ -36,7 +36,7 @@ class CreateVcmlObjects extends VCMLObjectUtils {
 	private VCMLValueConverter valueConverter
 	
 	def org.vclipse.vcml.vcml.Class newConfigurableClass(String name, String description, Iterable<Characteristic> cstics) {
-		newClass("300", name, description, cstics) 
+		newClass("(300)" + name, description, cstics)   
 	}
 	
 	def Material create it : VcmlFactory::eINSTANCE.createMaterial newMaterial(String name, String description, String type) {
@@ -45,8 +45,8 @@ class CreateVcmlObjects extends VCMLObjectUtils {
 		it.type = getExtendedIDString(type)
 	}
 	
-	def org.vclipse.vcml.vcml.Class create it : VcmlFactory::eINSTANCE.createClass newClass(String name, String type, String description, Iterable<Characteristic> cstics) {
-		it.name = type + name
+	def org.vclipse.vcml.vcml.Class create it : VcmlFactory::eINSTANCE.createClass newClass(String name, String description, Iterable<Characteristic> cstics) {
+		it.name = name
 		it.description = mkSimpleDescription(description)
 		it.characteristics.addAll(cstics)
 	}
@@ -56,7 +56,7 @@ class CreateVcmlObjects extends VCMLObjectUtils {
 		it.material = material
 		it.description = mkSimpleDescription(description)
 	}
-	
+	 
 	def BOMItem create it : VcmlFactory::eINSTANCE.createBOMItem newBOMItem(int number, Material material) {
 		it.material = material
 		it.itemnumber = number
