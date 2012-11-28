@@ -42,6 +42,7 @@ class CreateVcmlObjects extends VCMLObjectUtils {
 	}
 	
 	def BillOfMaterial create it : VcmlFactory::eINSTANCE.createBillOfMaterial newBom(Material material, String description) {
+		it.name = material.name
 		it.material = material
 		it.description = mkSimpleDescription(description)
 	}
