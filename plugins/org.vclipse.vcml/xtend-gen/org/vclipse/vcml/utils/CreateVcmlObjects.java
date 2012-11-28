@@ -33,9 +33,9 @@ public class CreateVcmlObjects extends VCMLObjectUtils {
   @Inject
   private VCMLValueConverter valueConverter;
   
-  public org.vclipse.vcml.vcml.Class newConfigurableClass(final String name, final String description, final Iterable<Characteristic> cstics) {
+  public org.vclipse.vcml.vcml.Class newConfigurableClass(final String name, final String description) {
     String _plus = ("(300)" + name);
-    org.vclipse.vcml.vcml.Class _newClass = this.newClass(_plus, description, cstics);
+    org.vclipse.vcml.vcml.Class _newClass = this.newClass(_plus, description);
     return _newClass;
   }
   
@@ -64,8 +64,8 @@ public class CreateVcmlObjects extends VCMLObjectUtils {
     it.setType(_extendedIDString);
   }
   
-  public org.vclipse.vcml.vcml.Class newClass(final String name, final String description, final Iterable<Characteristic> cstics) {
-    final ArrayList<?>_cacheKey = CollectionLiterals.newArrayList(name, description, cstics);
+  public org.vclipse.vcml.vcml.Class newClass(final String name, final String description) {
+    final ArrayList<?>_cacheKey = CollectionLiterals.newArrayList(name, description);
     final org.vclipse.vcml.vcml.Class _result;
     synchronized (_createCache_newClass) {
       if (_createCache_newClass.containsKey(_cacheKey)) {
@@ -75,18 +75,16 @@ public class CreateVcmlObjects extends VCMLObjectUtils {
       _result = _createClass;
       _createCache_newClass.put(_cacheKey, _result);
     }
-    _init_newClass(_result, name, description, cstics);
+    _init_newClass(_result, name, description);
     return _result;
   }
   
   private final HashMap<ArrayList<? extends Object>,org.vclipse.vcml.vcml.Class> _createCache_newClass = CollectionLiterals.newHashMap();
   
-  private void _init_newClass(final org.vclipse.vcml.vcml.Class it, final String name, final String description, final Iterable<Characteristic> cstics) {
+  private void _init_newClass(final org.vclipse.vcml.vcml.Class it, final String name, final String description) {
     it.setName(name);
     SimpleDescription _mkSimpleDescription = VCMLObjectUtils.mkSimpleDescription(description);
     it.setDescription(_mkSimpleDescription);
-    EList<Characteristic> _characteristics = it.getCharacteristics();
-    Iterables.<Characteristic>addAll(_characteristics, cstics);
   }
   
   public BillOfMaterial newBom(final Material material, final String description) {
