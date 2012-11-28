@@ -27,7 +27,7 @@ import org.vclipse.vcml.vcml.BOMItem
 import org.vclipse.vcml.vcml.SelectionCondition
 import org.vclipse.vcml.vcml.ConfigurationProfileEntry
 import java.util.Map
-import com.google.common.collect.Maps
+import static com.google.common.collect.Maps.*
 
 class CreateVcmlObjects extends VCMLObjectUtils {
 	
@@ -40,7 +40,7 @@ class CreateVcmlObjects extends VCMLObjectUtils {
 	private Map<String, String> name2Prefix
 	
 	new() {
-		name2Prefix = Maps::newHashMap
+		name2Prefix = newHashMap
 	}
 	
 	def addPrefixMapping(String name, String prefix) {
