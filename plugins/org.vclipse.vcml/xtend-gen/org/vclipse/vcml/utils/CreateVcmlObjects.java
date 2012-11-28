@@ -1,9 +1,11 @@
 package org.vclipse.vcml.utils;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -34,6 +36,22 @@ public class CreateVcmlObjects extends VCMLObjectUtils {
   @Inject
   private VCMLValueConverter valueConverter;
   
+  private Map<String,String> name2Prefix;
+  
+  public CreateVcmlObjects() {
+    HashMap<String,String> _newHashMap = Maps.<String, String>newHashMap();
+    this.name2Prefix = _newHashMap;
+  }
+  
+  public String addPrefixMapping(final String name, final String prefix) {
+    String _put = this.name2Prefix.put(name, prefix);
+    return _put;
+  }
+  
+  public void clear() {
+    this.name2Prefix.clear();
+  }
+  
   public org.vclipse.vcml.vcml.Class newConfigurableClass(final String name, final String description) {
     String _plus = ("(300)" + name);
     org.vclipse.vcml.vcml.Class _newClass = this.newClass(_plus, description);
@@ -58,7 +76,8 @@ public class CreateVcmlObjects extends VCMLObjectUtils {
   private final HashMap<ArrayList<? extends Object>,Material> _createCache_newMaterial = CollectionLiterals.newHashMap();
   
   private void _init_newMaterial(final Material it, final String name, final String description, final String type) {
-    it.setName(name);
+    String _nameWithPrefix = this.getNameWithPrefix(name);
+    it.setName(_nameWithPrefix);
     SimpleDescription _mkSimpleDescription = VCMLObjectUtils.mkSimpleDescription(description);
     it.setDescription(_mkSimpleDescription);
     String _extendedIDString = this.getExtendedIDString(type);
@@ -128,7 +147,8 @@ public class CreateVcmlObjects extends VCMLObjectUtils {
   
   private void _init_newBom(final BillOfMaterial it, final Material material, final String description) {
     String _name = material.getName();
-    it.setName(_name);
+    String _nameWithPrefix = this.getNameWithPrefix(_name);
+    it.setName(_nameWithPrefix);
     it.setMaterial(material);
     SimpleDescription _mkSimpleDescription = VCMLObjectUtils.mkSimpleDescription(description);
     it.setDescription(_mkSimpleDescription);
@@ -198,7 +218,8 @@ public class CreateVcmlObjects extends VCMLObjectUtils {
   private final HashMap<ArrayList<? extends Object>,Characteristic> _createCache_newNumericCharacteristic = CollectionLiterals.newHashMap();
   
   private void _init_newNumericCharacteristic(final Characteristic it, final String name, final String description) {
-    it.setName(name);
+    String _nameWithPrefix = this.getNameWithPrefix(name);
+    it.setName(_nameWithPrefix);
     SimpleDescription _mkSimpleDescription = VCMLObjectUtils.mkSimpleDescription(description);
     it.setDescription(_mkSimpleDescription);
     NumericType _newNumericTypeInstance = this.newNumericTypeInstance();
@@ -223,7 +244,8 @@ public class CreateVcmlObjects extends VCMLObjectUtils {
   private final HashMap<ArrayList<? extends Object>,Characteristic> _createCache_newSymbolicCharacteristic = CollectionLiterals.newHashMap();
   
   private void _init_newSymbolicCharacteristic(final Characteristic it, final String name, final String description) {
-    it.setName(name);
+    String _nameWithPrefix = this.getNameWithPrefix(name);
+    it.setName(_nameWithPrefix);
     SimpleDescription _mkSimpleDescription = VCMLObjectUtils.mkSimpleDescription(description);
     it.setDescription(_mkSimpleDescription);
     CharacteristicType _newSymbolicTypeInstance = this.newSymbolicTypeInstance();
@@ -265,5 +287,18 @@ public class CreateVcmlObjects extends VCMLObjectUtils {
     IValueConverter<String> _EXTENDED_ID = this.valueConverter.EXTENDED_ID();
     String _string = _EXTENDED_ID.toString(type);
     return _string;
+  }
+  
+  private String getNameWithPrefix(final String name) {
+    String _xblockexpression = null;
+    {
+      boolean _containsKey = this.name2Prefix.containsKey(name);
+      if (_containsKey) {
+        String _get = this.name2Prefix.get(name);
+        return (_get + name);
+      }
+      _xblockexpression = (name);
+    }
+    return _xblockexpression;
   }
 }
