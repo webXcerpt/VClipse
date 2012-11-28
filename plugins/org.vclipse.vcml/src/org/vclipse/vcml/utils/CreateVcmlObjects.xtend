@@ -26,6 +26,8 @@ import com.google.inject.Inject
 import org.vclipse.vcml.vcml.BOMItem
 import org.vclipse.vcml.vcml.SelectionCondition
 import org.vclipse.vcml.vcml.ConfigurationProfileEntry
+import java.util.Map
+import com.google.common.collect.Maps
 
 class CreateVcmlObjects extends VCMLObjectUtils {
 	
@@ -35,12 +37,26 @@ class CreateVcmlObjects extends VCMLObjectUtils {
 	@Inject
 	private VCMLValueConverter valueConverter
 	
+	private Map<String, String> name2Prefix
+	
+	new() {
+		name2Prefix = Maps::newHashMap
+	}
+	
+	def addPrefixMapping(String name, String prefix) {
+		name2Prefix.put(name, prefix)
+	}
+	
+	def clear() {
+		name2Prefix.clear
+	}
+	
 	def org.vclipse.vcml.vcml.Class newConfigurableClass(String name, String description) {
 		newClass("(300)" + name, description)   
 	}
 	
 	def Material create it : VcmlFactory::eINSTANCE.createMaterial newMaterial(String name, String description, String type) {
-		it.name = name
+		it.name = getNameWithPrefix(name)
 		it.description = mkSimpleDescription(description)
 		it.type = getExtendedIDString(type)
 	}
@@ -55,7 +71,7 @@ class CreateVcmlObjects extends VCMLObjectUtils {
 	}
 	
 	def BillOfMaterial create it : VcmlFactory::eINSTANCE.createBillOfMaterial newBom(Material material, String description) {
-		it.name = material.name
+		it.name = getNameWithPrefix(material.name)
 		it.material = material
 		it.description = mkSimpleDescription(description)
 	}
@@ -72,13 +88,13 @@ class CreateVcmlObjects extends VCMLObjectUtils {
 	}
 	
 	def Characteristic create it : VcmlFactory::eINSTANCE.createCharacteristic newNumericCharacteristic(String name, String description) {
-		it.name = name
+		it.name = getNameWithPrefix(name)
 		it.description = mkSimpleDescription(description)
 		it.type = newNumericTypeInstance
 	}
 	 
 	def Characteristic create it : VcmlFactory::eINSTANCE.createCharacteristic newSymbolicCharacteristic(String name, String description) {
-		it.name = name
+		it.name = getNameWithPrefix(name)
 		it.description = mkSimpleDescription(description)
 		it.type = newSymbolicTypeInstance
 	}
@@ -104,5 +120,12 @@ class CreateVcmlObjects extends VCMLObjectUtils {
 	
 	def getExtendedIDString(String type) {
 		valueConverter.EXTENDED_ID.toString(type);
+	}
+	
+	def private getNameWithPrefix(String name) {
+		if(name2Prefix.containsKey(name)) {
+			return name2Prefix.get(name) + name  
+		}
+		name
 	}
 }
