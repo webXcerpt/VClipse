@@ -33,6 +33,7 @@ import org.vclipse.refactoring.core.DefaultRefactoringExecuter;
 import org.vclipse.refactoring.core.RefactoringTask;
 import org.vclipse.refactoring.core.RefactoringWorkDelegate;
 import org.vclipse.vcml.utils.ConstraintRestrictionExtensions;
+import org.vclipse.vcml.utils.CreateVcmlObjects;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.utils.VCMLObjectUtils;
 import org.vclipse.vcml.vcml.Characteristic;
@@ -44,8 +45,10 @@ import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.ConstraintObject;
 import org.vclipse.vcml.vcml.ConstraintRestriction;
 import org.vclipse.vcml.vcml.ConstraintSource;
+import org.vclipse.vcml.vcml.Description;
 import org.vclipse.vcml.vcml.ObjectCharacteristicReference;
 import org.vclipse.vcml.vcml.ShortVarReference;
+import org.vclipse.vcml.vcml.SimpleDescription;
 import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlFactory;
 import org.vclipse.vcml.vcml.VcmlPackage;
@@ -64,6 +67,9 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 	
 	@Inject
 	private RefactoringWorkDelegate workDelegate;
+	
+	@Inject
+	private CreateVcmlObjects vcmlCreator;
 	
 	protected final VcmlFactory VCML_FACTORY = VcmlFactory.eINSTANCE;
 	protected final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
@@ -131,8 +137,13 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 				String newConstraintName = nameBuffer.toString();
 				VCObject foundEntry = search.findEntry(newConstraintName, VCML_PACKAGE.getConstraint(), vcobjects);
 				if(foundEntry == null) {
-					Constraint newConstraint = VCMLObjectUtils.mkConstraint(nameBuffer.toString(), constraint.getDescription());
-					vcobjects.add(newConstraint);					
+					Description description = constraint.getDescription();
+					if(description instanceof SimpleDescription) {
+						String simpleDescription = ((SimpleDescription)description).getValue();
+						Constraint newConstraint = vcmlCreator.newConstraint(nameBuffer.toString(), simpleDescription);
+						vcobjects.add(newConstraint);											
+					}
+					// TODO behavior undefined for MultiLanguageDescriptions
 				}
 				 
 				StringBuffer uriBuffer = new StringBuffer(newUriPart).append("_").append(index).append(".").append(fileExtension);

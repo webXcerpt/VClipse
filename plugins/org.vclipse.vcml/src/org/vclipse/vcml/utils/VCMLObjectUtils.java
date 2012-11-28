@@ -109,6 +109,7 @@ public class VCMLObjectUtils {
 		return object;
 	}
 
+	// TODO delete - implemented in the vcml object creator
 	static public Constraint mkConstraint(final String name, final Description description) {
 		final Constraint object = VCML.createConstraint();
 		object.setName(name);

@@ -19,6 +19,8 @@ import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicType;
 import org.vclipse.vcml.vcml.Classification;
 import org.vclipse.vcml.vcml.ConfigurationProfileEntry;
+import org.vclipse.vcml.vcml.Constraint;
+import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.SelectionCondition;
@@ -250,6 +252,41 @@ public class CreateVcmlObjects extends VCMLObjectUtils {
     it.setDescription(_mkSimpleDescription);
     CharacteristicType _newSymbolicTypeInstance = this.newSymbolicTypeInstance();
     it.setType(_newSymbolicTypeInstance);
+  }
+  
+  public Constraint newConstraint(final String name, final String description) {
+    final ArrayList<?>_cacheKey = CollectionLiterals.newArrayList(name, description);
+    final Constraint _result;
+    synchronized (_createCache_newConstraint) {
+      if (_createCache_newConstraint.containsKey(_cacheKey)) {
+        return _createCache_newConstraint.get(_cacheKey);
+      }
+      Constraint _createConstraint = VcmlFactory.eINSTANCE.createConstraint();
+      _result = _createConstraint;
+      _createCache_newConstraint.put(_cacheKey, _result);
+    }
+    _init_newConstraint(_result, name, description);
+    return _result;
+  }
+  
+  private final HashMap<ArrayList<? extends Object>,Constraint> _createCache_newConstraint = CollectionLiterals.newHashMap();
+  
+  private void _init_newConstraint(final Constraint it, final String name, final String description) {
+    it.setName(name);
+    SimpleDescription _newSimpleDescription = this.newSimpleDescription(description);
+    it.setDescription(_newSimpleDescription);
+    ConstraintSource _createConstraintSource = CreateVcmlObjects.VCML_FACTORY.createConstraintSource();
+    it.setSource(_createConstraintSource);
+  }
+  
+  public SimpleDescription newSimpleDescription(final String description) {
+    SimpleDescription _xblockexpression = null;
+    {
+      final SimpleDescription desc = CreateVcmlObjects.VCML_FACTORY.createSimpleDescription();
+      desc.setValue(description);
+      _xblockexpression = (desc);
+    }
+    return _xblockexpression;
   }
   
   public CharacteristicType newSymbolicTypeInstance() {

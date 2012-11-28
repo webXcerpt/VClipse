@@ -28,6 +28,7 @@ import org.vclipse.vcml.vcml.SelectionCondition
 import org.vclipse.vcml.vcml.ConfigurationProfileEntry
 import java.util.Map
 import static com.google.common.collect.Maps.*
+import org.vclipse.vcml.vcml.Constraint
 
 class CreateVcmlObjects extends VCMLObjectUtils {
 	
@@ -97,6 +98,18 @@ class CreateVcmlObjects extends VCMLObjectUtils {
 		it.name = getNameWithPrefix(name)
 		it.description = mkSimpleDescription(description)
 		it.type = newSymbolicTypeInstance
+	}
+	
+	def Constraint create it : VcmlFactory::eINSTANCE.createConstraint newConstraint(String name, String description) {
+		it.name = name
+		it.description = newSimpleDescription(description)
+		it.source = VCML_FACTORY.createConstraintSource
+	}
+
+	def newSimpleDescription(String description) {
+		val desc = VCML_FACTORY.createSimpleDescription
+		desc.setValue(description)
+		desc
 	}
 
 	def CharacteristicType newSymbolicTypeInstance() {
