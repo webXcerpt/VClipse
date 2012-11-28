@@ -35,10 +35,20 @@ class CreateVcmlObjects extends VCMLObjectUtils {
 	@Inject
 	private VCMLValueConverter valueConverter
 	
+	def org.vclipse.vcml.vcml.Class newConfigurableClass(String name, String description, Iterable<Characteristic> cstics) {
+		newClass("300", name, description, cstics) 
+	}
+	
 	def Material create it : VcmlFactory::eINSTANCE.createMaterial newMaterial(String name, String description, String type) {
 		it.name = name
 		it.description = mkSimpleDescription(description)
 		it.type = getExtendedIDString(type)
+	}
+	
+	def org.vclipse.vcml.vcml.Class create it : VcmlFactory::eINSTANCE.createClass newClass(String name, String type, String description, Iterable<Characteristic> cstics) {
+		it.name = type + name
+		it.description = mkSimpleDescription(description)
+		it.characteristics.addAll(cstics)
 	}
 	
 	def BillOfMaterial create it : VcmlFactory::eINSTANCE.createBillOfMaterial newBom(Material material, String description) {
