@@ -25,7 +25,6 @@ import org.vclipse.vcml.conversion.VCMLValueConverter
 import com.google.inject.Inject
 import org.vclipse.vcml.vcml.BOMItem
 import org.vclipse.vcml.vcml.SelectionCondition
-import org.vclipse.vcml.vcml.ConfigurationProfileEntry
 import java.util.Map
 import static com.google.common.collect.Maps.*
 import org.vclipse.vcml.vcml.Constraint
@@ -82,10 +81,9 @@ class CreateVcmlObjects extends VCMLObjectUtils {
 		it.itemnumber = number
 	}
 	
-	def BOMItem create it : VcmlFactory::eINSTANCE.createBOMItem newBOMItem(int number, Material material, SelectionCondition condition, Iterable<ConfigurationProfileEntry> entries) {
+	def BOMItem create it : VcmlFactory::eINSTANCE.createBOMItem newBOMItem(int number, Material material, SelectionCondition condition) {
 		val newBomItem = newBOMItem(number, material)
 		newBomItem.selectionCondition = condition
-		newBomItem.entries.addAll(entries)
 	}
 	
 	def Characteristic create it : VcmlFactory::eINSTANCE.createCharacteristic newNumericCharacteristic(String name, String description) {

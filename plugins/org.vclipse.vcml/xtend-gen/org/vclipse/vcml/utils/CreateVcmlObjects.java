@@ -1,12 +1,10 @@
 package org.vclipse.vcml.utils;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.conversion.IValueConverter;
@@ -18,7 +16,6 @@ import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicType;
 import org.vclipse.vcml.vcml.Classification;
-import org.vclipse.vcml.vcml.ConfigurationProfileEntry;
 import org.vclipse.vcml.vcml.Constraint;
 import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.Material;
@@ -178,8 +175,8 @@ public class CreateVcmlObjects extends VCMLObjectUtils {
     it.setItemnumber(number);
   }
   
-  public BOMItem newBOMItem(final int number, final Material material, final SelectionCondition condition, final Iterable<ConfigurationProfileEntry> entries) {
-    final ArrayList<?>_cacheKey = CollectionLiterals.newArrayList(number, material, condition, entries);
+  public BOMItem newBOMItem(final int number, final Material material, final SelectionCondition condition) {
+    final ArrayList<?>_cacheKey = CollectionLiterals.newArrayList(number, material, condition);
     final BOMItem _result;
     synchronized (_createCache_newBOMItem_1) {
       if (_createCache_newBOMItem_1.containsKey(_cacheKey)) {
@@ -189,17 +186,15 @@ public class CreateVcmlObjects extends VCMLObjectUtils {
       _result = _createBOMItem;
       _createCache_newBOMItem_1.put(_cacheKey, _result);
     }
-    _init_newBOMItem(_result, number, material, condition, entries);
+    _init_newBOMItem(_result, number, material, condition);
     return _result;
   }
   
   private final HashMap<ArrayList<? extends Object>,BOMItem> _createCache_newBOMItem_1 = CollectionLiterals.newHashMap();
   
-  private void _init_newBOMItem(final BOMItem it, final int number, final Material material, final SelectionCondition condition, final Iterable<ConfigurationProfileEntry> entries) {
+  private void _init_newBOMItem(final BOMItem it, final int number, final Material material, final SelectionCondition condition) {
     final BOMItem newBomItem = this.newBOMItem(number, material);
     newBomItem.setSelectionCondition(condition);
-    EList<ConfigurationProfileEntry> _entries = newBomItem.getEntries();
-    Iterables.<ConfigurationProfileEntry>addAll(_entries, entries);
   }
   
   public Characteristic newNumericCharacteristic(final String name, final String description) {
