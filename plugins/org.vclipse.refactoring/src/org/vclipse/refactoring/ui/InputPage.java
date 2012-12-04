@@ -51,6 +51,8 @@ import com.google.inject.Injector;
 
 public class InputPage extends UserInputWizardPage {
 	
+	public static final String OCCURENCES_BUTTON = "occurencesButton";
+	public static final String MAIN_BACKGROUND = "mainBackground";
 	public static final String NAME_LABEL = "nameLabel";
 	public static final String TEXT_INPUT = DefaultRefactoringExecuter.TEXT_FIELD_ENTRY;
 	public static final String OPTIONS_GROUP = "optionsGroup";
@@ -95,7 +97,7 @@ public class InputPage extends UserInputWizardPage {
 		composite.setLayout(new GridLayout(2, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		composite.setFont(parent.getFont());
-		widgets.put("mainBackground", composite);
+		widgets.put(MAIN_BACKGROUND, composite);
 
 		Label label = new Label(composite, SWT.NONE);
 		label.setText("New name: ");
@@ -141,7 +143,7 @@ public class InputPage extends UserInputWizardPage {
 			}
 		});
 		occurencesButton.setSelection(false);
-		widgets.put("occurencesButton", occurencesButton);
+		widgets.put(OCCURENCES_BUTTON, occurencesButton);
 		
 //		final Button removeExistingEObject = new Button(optionsGroup, SWT.CHECK);
 //		removeExistingEObject.setText("Remove existing source");
