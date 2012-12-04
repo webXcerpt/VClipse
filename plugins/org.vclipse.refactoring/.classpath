@@ -10,6 +10,7 @@
 			<accessrule kind="accessible" pattern="**/ltk/internal/ui/refactoring/**"/>
 			<accessrule kind="accessible" pattern="**/emf/compare/match/engine/internal/**"/>
 			<accessrule kind="accessible" pattern="**/emf/compare/match/internal/statistic/**"/>
+			<accessrule kind="accessible" pattern="**/swt/internal/**"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>

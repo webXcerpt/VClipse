@@ -74,7 +74,7 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 	protected final VcmlFactory VCML_FACTORY = VcmlFactory.eINSTANCE;
 	protected final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
 	
-	public static final int RESTRICTIONS_AMOUNT = 3;
+	public static final int MIN_CONSTRAINTS_AMOUNT = 10;
 	public static final int MINIMUM_SUBLISTS = 2;
 	
 	public EPackage getPackage() {
@@ -122,60 +122,73 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 			ResourceSet resourceSet = resource.getResourceSet();
 			String newUriPart = sourceUri.trimFileExtension().toString();
 			String fileExtension = resource.getURI().fileExtension();
-			for(int index=1, endIndex=0, size=restrictions.size(); index<=restrictions.size() / RESTRICTIONS_AMOUNT; index++) { 
-				StringBuffer nameBuffer = new StringBuffer(constraint.getName()).append("_").append(index);
-				int startIndex = endIndex == 0 ? index * RESTRICTIONS_AMOUNT : endIndex;
-				int tempStartIndex = startIndex * MINIMUM_SUBLISTS;
-				endIndex = tempStartIndex < size ? tempStartIndex : size;
-				
-				List<ConstraintRestriction> subList = restrictions.subList(startIndex, endIndex);
-				ConstraintSource newConstraintSource = createConstraintSource(objects, condition, subList, inferences);
-				if(newConstraintSource.getRestrictions().isEmpty()) {
-					continue;
-				}
-				
-				String newConstraintName = nameBuffer.toString();
-				VCObject foundEntry = search.findEntry(newConstraintName, VCML_PACKAGE.getConstraint(), vcobjects);
-				if(foundEntry == null) {
-					Description description = constraint.getDescription();
-					if(description instanceof SimpleDescription) {
-						String simpleDescription = ((SimpleDescription)description).getValue();
-						Constraint newConstraint = vcmlCreator.newConstraint(nameBuffer.toString(), simpleDescription);
-						vcobjects.add(newConstraint);											
+
+			Map<?, ?> attributes = context.getAttributes();
+			Object object = attributes.get(DefaultRefactoringExecuter.TEXT_FIELD_ENTRY);
+			if(object instanceof String) {
+				try {
+					Integer constraintsAmount = Integer.parseInt((String)object);
+					Collection<ConstraintRestriction> restrictionsCopy = EcoreUtil.copyAll(restrictions);
+					for(int index=1, endIndex=0, loops=restrictionsCopy.size() / constraintsAmount, size=restrictionsCopy.size(); index<=loops; index++) { 
+						StringBuffer nameBuffer = new StringBuffer(constraint.getName()).append("_").append(index);
+						int startIndex = endIndex == 0 ? index * constraintsAmount : endIndex;
+						int tempStartIndex = startIndex * MINIMUM_SUBLISTS;
+						endIndex = tempStartIndex < size ? tempStartIndex : size;
+						
+						List<ConstraintRestriction> subList = restrictions.subList(startIndex, endIndex);
+						ConstraintSource newConstraintSource = createConstraintSource(objects, condition, subList, inferences);
+						restrictionsCopy.removeAll(subList);
+						if(newConstraintSource.getRestrictions().isEmpty()) {
+							continue;
+						}
+						
+						String newConstraintName = nameBuffer.toString();
+						VCObject foundEntry = search.findEntry(newConstraintName, VCML_PACKAGE.getConstraint(), vcobjects);
+						if(foundEntry == null) {
+							Description description = constraint.getDescription();
+							if(description instanceof SimpleDescription) {
+								String simpleDescription = ((SimpleDescription)description).getValue();
+								Constraint newConstraint = vcmlCreator.newConstraint(nameBuffer.toString(), simpleDescription);
+								vcobjects.add(newConstraint);											
+							}
+							// TODO behavior undefined for MultiLanguageDescriptions
+						}
+						 
+						StringBuffer uriBuffer = new StringBuffer(newUriPart).append("_").append(index).append(".").append(fileExtension);
+						URI uri = URI.createURI(uriBuffer.toString());
+						workDelegate.createResource(resourceSet, uri, newConstraintSource, true);				
 					}
-					// TODO behavior undefined for MultiLanguageDescriptions
+					restrictions.clear();
+					restrictions.addAll(restrictionsCopy);
+					List<Characteristic> referenced = Lists.newArrayList();
+					for(int index=restrictions.size()-1; index>=0; index--) {
+						if(constraintsAmount > index) {
+							ConstraintRestriction cr = restrictions.get(index);
+							List<Characteristic> cstics = cre.getUsedCharacteristics(cr);
+							referenced.addAll(cstics);
+						} else {
+							restrictions.remove(index);
+						}
+					}
+					BasicEList<CharacteristicReference_C> newInferences = new BasicEList<CharacteristicReference_C>();
+					for(CharacteristicReference_C cstic_ref_c : inferences) {
+						Characteristic currentlyUsed = null;
+						if(cstic_ref_c instanceof ShortVarReference) {
+							currentlyUsed = ((ShortVarReference)cstic_ref_c).getRef().getCharacteristic();
+						} else if(cstic_ref_c instanceof ObjectCharacteristicReference) {
+							currentlyUsed = ((ObjectCharacteristicReference)cstic_ref_c).getCharacteristic();
+						}
+						if(referenced.contains(currentlyUsed)) {
+							newInferences.add(cstic_ref_c);
+						}
+					}
+					inferences.clear();
+					inferences.addAll(newInferences);
+					workDelegate.saveResource(constraint.eResource());
+				} catch(NumberFormatException exception) {
+					throw exception;
 				}
-				 
-				StringBuffer uriBuffer = new StringBuffer(newUriPart).append("_").append(index).append(".").append(fileExtension);
-				URI uri = URI.createURI(uriBuffer.toString());
-				workDelegate.createResource(resourceSet, uri, newConstraintSource, true);				
 			}
-			
-			List<Characteristic> referenced = Lists.newArrayList();
-			for(int index=restrictions.size()-1; index>=0; index--) {
-				if(RESTRICTIONS_AMOUNT > index) {
-					ConstraintRestriction cr = restrictions.get(index);
-					List<Characteristic> cstics = cre.getUsedCharacteristics(cr);
-					referenced.addAll(cstics);
-				} else {
-					restrictions.remove(index);
-				}
-			}
-			BasicEList<CharacteristicReference_C> newInferences = new BasicEList<CharacteristicReference_C>();
-			for(CharacteristicReference_C cstic_ref_c : inferences) {
-				Characteristic currentlyUsed = null;
-				if(cstic_ref_c instanceof ShortVarReference) {
-					currentlyUsed = ((ShortVarReference)cstic_ref_c).getRef().getCharacteristic();
-				} else if(cstic_ref_c instanceof ObjectCharacteristicReference) {
-					currentlyUsed = ((ObjectCharacteristicReference)cstic_ref_c).getCharacteristic();
-				}
-				if(referenced.contains(currentlyUsed)) {
-					newInferences.add(cstic_ref_c);
-				}
-			}
-			inferences.clear();
-			inferences.addAll(newInferences);
-			workDelegate.saveResource(constraint.eResource());
 		}
 	}
 	
@@ -246,9 +259,9 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 		List<Characteristic> referenced = Lists.newArrayList();
 		EList<ConstraintRestriction> newRestrictions = constraintSource.getRestrictions();
 		for(ConstraintRestriction cr : restrictions) {
-			ConstraintRestriction copy = EcoreUtil.copy(cr);
-			referenced.addAll(cre.getUsedCharacteristics(copy));
-			newRestrictions.add(copy);
+			ConstraintRestriction crc = EcoreUtil.copy(cr);
+			referenced.addAll(cre.getUsedCharacteristics(crc));
+			newRestrictions.add(crc);
 		}
 		
 		EList<CharacteristicReference_C> newInferences = constraintSource.getInferences();

@@ -19,9 +19,9 @@ import org.vclipse.vcml.vcml.PFunction;
 import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlPackage;
 
-import static org.vclipse.vcml.refactoring.ConstraintRefactorings.*;
-
 import com.google.inject.Inject;
+
+import static org.vclipse.vcml.refactoring.ConstraintRefactorings.*;
 
 public class VCMLConfiguration extends RefactoringConfiguration {
 	
@@ -71,8 +71,8 @@ public class VCMLConfiguration extends RefactoringConfiguration {
 		EStructuralFeature feature = context.getStructuralFeature();
 		if(VCML_PACKAGE.getConstraint_Source() == feature) {
 			VCObject vcobject = sourceUtils.getDependency(source);
-			if(vcobject instanceof Constraint && source.getRestrictions().size() / RESTRICTIONS_AMOUNT >= MINIMUM_SUBLISTS) {
-				context.setLabel("Divide constraint source");
+			if(vcobject instanceof Constraint && source.getRestrictions().size() > MIN_CONSTRAINTS_AMOUNT) {
+				context.setLabel("Split constraint source");
 				return true;
 			}
 		}

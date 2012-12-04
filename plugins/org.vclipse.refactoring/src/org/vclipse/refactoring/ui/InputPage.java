@@ -10,19 +10,14 @@
  ******************************************************************************/
 package org.vclipse.refactoring.ui;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardContainer;
-import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.ui.refactoring.UserInputWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -44,17 +39,21 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.core.DefaultRefactoringExecuter;
-import org.vclipse.refactoring.core.RefactoringTask;
 import org.vclipse.refactoring.utils.Extensions;
 import org.vclipse.refactoring.utils.Labels;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 public class InputPage extends UserInputWizardPage {
+	
+	public static final String NAME_LABEL = "nameLabel";
+	public static final String TEXT_INPUT = DefaultRefactoringExecuter.TEXT_FIELD_ENTRY;
+	public static final String OPTIONS_GROUP = "optionsGroup";
 	
 	@Inject
 	private Labels refactoringUtility;
@@ -62,94 +61,13 @@ public class InputPage extends UserInputWizardPage {
 	@Inject
 	private Extensions extensions;
 	
-	private List<Widget> widgets;
+	private Map<String, Widget> widgets;
 	
-	private ValidationThread validationThread;
+	private InputValidation validationThread;
 	
 	private IRefactoringUIContext context;
 	
 	private boolean validate = true;
-	
-	private class ValidationThread extends Thread {
-
-		private final IRefactoringUIContext context;
-		private final InputPage inputPage;
-		
-		public ValidationThread(InputPage page, IRefactoringUIContext context) {
-			this.context = context;
-			this.inputPage = page;
-			
-			this.inputPage.setErrorMessage(null);
-			this.inputPage.setPageComplete(false);
-		}
-		
-		@Override
-		public void run() {
-			final RefactoringTask refactoring = context.getRefactoring();
-			IWizardContainer container = this.inputPage.getContainer();
-			try {
-				if(container == null) {
-					return;
-				}
-				container.run(true, true, new IRunnableWithProgress() {
-					@Override
-					public void run(final IProgressMonitor pm) throws InvocationTargetException, InterruptedException {
-						StringBuffer taskBuffer = new StringBuffer("Validating re-factoring :").append(context.getLabel());
-						pm.beginTask(taskBuffer.toString(), 100);
-						try {
-							if(pm.isCanceled()) {
-								pm.done();
-								return;
-							}
-							// checking initial conditions
-							final RefactoringStatus initialStatus = refactoring.checkInitialConditions(pm);
-							if(pm.isCanceled()) {
-								pm.done();
-								return;
-							}
-							// executing re-factoring 
-							refactoring.createChange(pm);								
-							if(pm.isCanceled()) {
-								pm.done();
-								return;
-							}
-							// checking final conditions
-							final RefactoringStatus finalStatus = refactoring.checkFinalConditions(pm);
-							Display.getDefault().syncExec(new Runnable() {
-								@Override
-								public void run() {
-									if(initialStatus.isOK() && finalStatus.isOK()) {
-										inputPage.setPageComplete(true);
-										inputPage.setErrorMessage(null);
-									} else {
-										String errorMessage = initialStatus.getMessageMatchingSeverity(IStatus.ERROR);
-										if(errorMessage == null) {
-											errorMessage = finalStatus.getMessageMatchingSeverity(IStatus.ERROR);
-										}
-										inputPage.setErrorMessage(errorMessage);
-										inputPage.setPageComplete(false);				
-									}
-								}
-							});
-							pm.done();
-						} catch(final CoreException exception) {
-							pm.done();
-							throw new InvocationTargetException(exception);
-						}
-					}
-				});							
-			} catch(final Exception exception) {
-				Display.getDefault().syncExec(new Runnable() {
-					@Override
-					public void run() {
-						inputPage.setPageComplete(false);
-						inputPage.setErrorMessage(exception.getMessage());
-					}
-				});
-			}
-			container.updateButtons();
-		}
-	}
 	
 	public static InputPage getInstance(IRefactoringUIContext context) {
 		Injector injector = RefactoringPlugin.getInstance().getInjector();
@@ -157,19 +75,19 @@ public class InputPage extends UserInputWizardPage {
 		instance.setContext(context);
 		return instance;
 	}
-	
-	public void setContext(IRefactoringUIContext context) {
-		this.context = context;
-		this.context.setPages(Lists.newArrayList(this));
-	}
 
-	public <T extends Widget> T getWidget(Class<T> type) {
-		Iterator<T> iterator = Iterables.filter(widgets, type).iterator();
-		return iterator.hasNext() ? iterator.next() : null;
+	@SuppressWarnings("unchecked")
+	public <T extends  Widget> T getWidget(final String name, final Class<T> type) {
+		Iterator<Widget> iterator = Iterables.filter(widgets.values(), new Predicate<Widget>() {
+			public boolean apply(Widget widget) {
+				return widget.getClass() == type && widgets.get(name) == widget;
+			}
+		}).iterator();
+		return iterator.hasNext() ? (T)iterator.next() : null;
 	}
 	
 	@Override
-	public void createControl(Composite parent) {
+ 	public void createControl(Composite parent) {
 		EObject element = context.getSourceElement();
 		EStructuralFeature feature = context.getStructuralFeature();
 
@@ -177,12 +95,12 @@ public class InputPage extends UserInputWizardPage {
 		composite.setLayout(new GridLayout(2, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		composite.setFont(parent.getFont());
-		widgets.add(composite);
+		widgets.put("mainBackground", composite);
 
 		Label label = new Label(composite, SWT.NONE);
 		label.setText("New name: ");
 		label.setLayoutData(new GridData());
-		widgets.add(label);
+		widgets.put(NAME_LABEL, label);
 
 		if(element.eClass().getEAllStructuralFeatures().contains(feature)) {
 			Object value = element.eGet(feature);
@@ -211,6 +129,7 @@ public class InputPage extends UserInputWizardPage {
 		gridData.horizontalSpan = 2;
 		optionsGroup.setLayoutData(gridData);
 		optionsGroup.setText(" Options ");
+		widgets.put(OPTIONS_GROUP, optionsGroup);
 		
 		final Button occurencesButton = new Button(optionsGroup, SWT.CHECK);
 		occurencesButton.setText("Replace all occurences");
@@ -222,7 +141,7 @@ public class InputPage extends UserInputWizardPage {
 			}
 		});
 		occurencesButton.setSelection(false);
-		widgets.add(occurencesButton);
+		widgets.put("occurencesButton", occurencesButton);
 		
 //		final Button removeExistingEObject = new Button(optionsGroup, SWT.CHECK);
 //		removeExistingEObject.setText("Remove existing source");
@@ -241,12 +160,25 @@ public class InputPage extends UserInputWizardPage {
 		validateWidgets();
 		setControl(composite);
 	}
-
+	
 	protected InputPage() {
 		super("name");
-		widgets = Lists.newArrayList();
+		widgets = Maps.newHashMap();
 	}
 	
+	protected void setContext(IRefactoringUIContext context) {
+		this.context = context;
+		this.context.setPages(Lists.newArrayList(this));
+	}
+	
+	protected IRefactoringUIContext getContext() {
+		return context;
+	}
+	
+	protected IWizardContainer getContainer() {
+		return super.getContainer();
+	}
+
 	private Combo createComboWidget(Composite composite, Set<String> names) {
 		final Combo combo = new Combo(composite, SWT.NONE);
 		combo.setFont(composite.getFont());
@@ -290,7 +222,7 @@ public class InputPage extends UserInputWizardPage {
 			}
 		});
 		combo.setItems(names.toArray(new String[names.size()]));
-		widgets.add(combo);
+		widgets.put("selectionCombo", combo);
 		return combo;
 	}
 
@@ -307,7 +239,7 @@ public class InputPage extends UserInputWizardPage {
 				validateWidgets();
 			}
 		});
-		widgets.add(text);
+		widgets.put(DefaultRefactoringExecuter.TEXT_FIELD_ENTRY, text);
 		return text;
 	}
 
@@ -321,7 +253,7 @@ public class InputPage extends UserInputWizardPage {
 			setPageComplete(false);
 		} else {
 			if(validationThread == null) {
-				validationThread = new ValidationThread(this, context);
+				validationThread = new InputValidation(this);
 			} 
 			if(!validationThread.isAlive()) {
 				Display.getDefault().timerExec(1000, validationThread);
@@ -330,22 +262,19 @@ public class InputPage extends UserInputWizardPage {
 	}
 	
 	private String getCurrentInput() {
-		Iterator<Text> textIterator = Iterables.filter(widgets, Text.class).iterator();
-		if(textIterator.hasNext()) {
-			Text text = textIterator.next();
+		Text text = getWidget(DefaultRefactoringExecuter.TEXT_FIELD_ENTRY, Text.class);
+		if(text != null) {
 			if(!text.isEnabled()) {
-				validate = false;
+				validate = false;				
 			}
 			return text.getText();
-		} else {
-			Iterator<Combo> comboIterator = Iterables.filter(widgets, Combo.class).iterator();
-			if(comboIterator.hasNext()) {
-				Combo combo = comboIterator.next();
-				if(!combo.isEnabled()) {
-					validate = false;
-				}
-				return combo.getText();
+		}
+		Combo combo = getWidget(DefaultRefactoringExecuter.TEXT_FIELD_ENTRY, Combo.class);
+		if(combo != null) {
+			if(combo.isEnabled()) {
+				validate = false;
 			}
+			return combo.getText();
 		}
 		return "";
 	}

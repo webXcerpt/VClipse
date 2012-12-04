@@ -13,6 +13,9 @@ package org.vclipse.refactoring.ui;
 import java.util.List;
 
 import org.eclipse.ltk.ui.refactoring.UserInputWizardPage;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Text;
 import org.vclipse.refactoring.IRefactoringContext;
 import org.vclipse.refactoring.IRefactoringUIConfiguration;
 import org.vclipse.refactoring.IRefactoringUIContext;
@@ -40,5 +43,14 @@ public class RefactoringUIConfiguration extends RefactoringConfiguration impleme
 	public List<? extends UserInputWizardPage> provideWizardPages(IRefactoringContext context) {
 		Object result = invoke(context, PAGES_PREFIX);
 		return result instanceof List ? (List<? extends UserInputWizardPage>)result : Lists.<UserInputWizardPage>newArrayList();
+	}
+	 
+	protected void addModifyListener(Text text, ModifyListenerDelegate newListener) {
+		Listener[] listeners = text.getListeners(SWT.Modify);
+		for(Listener listener : listeners) {
+			text.removeListener(SWT.Modify, listener);			
+		}
+		newListener.handleAndDelegateTo(listeners);
+		text.addModifyListener(newListener);
 	}
 }
