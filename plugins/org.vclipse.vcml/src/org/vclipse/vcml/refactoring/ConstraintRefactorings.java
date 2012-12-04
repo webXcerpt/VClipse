@@ -99,9 +99,7 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 		}
 	}
 	
-	/*
-	 * Re-factoring: 
-	 */
+	// TODO look at the re-factoring one more time and re-implement
 	@SuppressWarnings("unchecked")
 	public void refactoring_Extract_ConstraintSource(IRefactoringContext context, ConstraintSource source) throws Exception {
 		EList<ConstraintRestriction> restrictions = source.getRestrictions();
