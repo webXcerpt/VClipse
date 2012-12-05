@@ -19,8 +19,6 @@ import java.util.Set;
 import org.eclipse.core.internal.registry.osgi.OSGIUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
@@ -72,18 +70,12 @@ public class Configuration {
 
 	private void readExtensions() {
 		injectors = Maps.newHashMap();
-		IExtensionRegistry registry = Platform.getExtensionRegistry();
-		IExtensionPoint point = registry.getExtensionPoint(ID);
-		for(IExtension extension : point.getExtensions()) {
+		for(IExtension extension : Platform.getExtensionRegistry().getExtensionPoint(ID).getExtensions()) {
 			for(IConfigurationElement element : extension.getConfigurationElements()) {
-				String name = element.getContributor().getName();
-				Bundle bundle = OSGIUtils.getDefault().getBundle(name);
 				if(ELEMENT_REFACTORING.equals(element.getName())) {
 					try {
 						Object executableExtension = element.createExecutableExtension(ATTRIBUTE_EXECUTER);
 						if(executableExtension instanceof IRefactoringExecuter) {
-							IRefactoringExecuter executer = (IRefactoringExecuter)executableExtension;
-							Set<EClass> topLevelTypes = executer.getTopLevelTypes();
 							String executerPath = element.getAttribute(ATTRIBUTE_EXECUTER);
 							String[] parts = executerPath.split(":");
 							if(parts.length != 2) {
@@ -91,8 +83,12 @@ public class Configuration {
 								RefactoringPlugin.log(status);
 								continue;
 							} else {
+								String name = element.getContributor().getName();
+								Bundle bundle = OSGIUtils.getDefault().getBundle(name);
 								Class<?> loadClass = bundle.loadClass(parts[0]);
 								Object instance = loadClass.newInstance();
+								IRefactoringExecuter executer = (IRefactoringExecuter)executableExtension;
+								Set<EClass> topLevelTypes = executer.getTopLevelTypes();
 								for(EClass eclass : topLevelTypes) {
 									if(instance instanceof AbstractGuiceAwareExecutableExtensionFactory) {
 										AbstractGuiceAwareExecutableExtensionFactory extensionFactory = (AbstractGuiceAwareExecutableExtensionFactory)instance;

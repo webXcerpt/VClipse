@@ -31,10 +31,13 @@
          <enablement>
             <or>
                <instanceof
-                     value="org.vclipse.refactoring.changes.SourceCodeChange">
+                     value="org.vclipse.refactoring.changes.RootChange">
                </instanceof>
                <instanceof
-                     value="org.vclipse.refactoring.changes.SourceCodeChanges">
+                     value="org.vclipse.refactoring.changes.ModelChange">
+               </instanceof>
+               <instanceof
+                     value="org.vclipse.refactoring.changes.ModelChangeEntry">
                </instanceof>
             </or>
         </enablement>

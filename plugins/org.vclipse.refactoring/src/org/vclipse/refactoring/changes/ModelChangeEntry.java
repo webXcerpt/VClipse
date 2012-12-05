@@ -29,12 +29,14 @@ import org.eclipse.emf.ecore.EValidator.Registry;
 import org.eclipse.emf.ecore.change.ChangeKind;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.ListChange;
+import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
 import org.eclipse.xtext.diagnostics.AbstractDiagnostic;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.serializer.ISerializer;
 import org.vclipse.refactoring.IPreviewObjectComputer;
+import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.compare.MultipleEntriesTypedElement;
 import org.vclipse.refactoring.core.DiffNode;
 import org.vclipse.refactoring.utils.EntrySearch;
@@ -42,9 +44,13 @@ import org.vclipse.refactoring.utils.Extensions;
 import org.vclipse.refactoring.utils.Labels;
 
 import com.google.common.collect.Maps;
+import com.google.inject.Injector;
 
-public class SourceCodeChange extends NoChange {
+public class ModelChangeEntry extends Change {
 
+	private EObject existing, refactored;
+	private FeatureChange change;
+	
 	private Extensions extensions;
 	private EntrySearch search;
 	private Labels labels;
@@ -53,20 +59,62 @@ public class SourceCodeChange extends NoChange {
 	private IQualifiedNameProvider nameProvider;
 	private ISerializer serializer;
 	
-	private EObject existing;
-	private EObject refactored;
-	private FeatureChange featureChange;
-	
-	public SourceCodeChange(Extensions extensions) {
-		this.extensions = extensions;
-		this.search = extensions.getInstance(EntrySearch.class);
-		this.labels = extensions.getInstance(Labels.class);
-	}
-	
-	public void addChange(EObject existing, EObject refactored, FeatureChange featureChange) {
+	public void addChange(EObject existing, EObject refactored, FeatureChange change) {
+		if(extensions == null) {
+			init();
+		}
 		this.existing = existing;
 		this.refactored = refactored;
-		this.featureChange = featureChange;
+		this.change = change;
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public Change perform(IProgressMonitor pm) throws CoreException {
+		if(isEnabled()) {
+			EObject handleWithObject = existing == null ? refactored : existing;
+			String name = labels.getSimpleName(handleWithObject);
+			StringBuffer taskBuffer = new StringBuffer("Executing re-factoring for ").append(name);
+			SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), IProgressMonitor.UNKNOWN);
+			EStructuralFeature feature = change.getFeature();
+			EList<ListChange> listChanges = change.getListChanges();
+			if(listChanges.isEmpty()) {
+				EObject existingContainer = existing.eContainer();
+				EObject refactoredContainer = refactored.eContainer();
+				if(existingContainer == refactoredContainer) {
+					existing.eSet(feature, refactored.eGet(feature));
+				} else if(search.equallyTyped(existing, refactored) && search.equallyNamed(existing, refactored)) {
+					Object value = refactored.eGet(feature);
+					existing.eSet(feature, value);
+				} else if(search.equallyTyped(existingContainer, refactoredContainer) || search.equallyNamed(existingContainer, refactoredContainer)) {
+					Object value = refactored.eGet(feature);
+					existing.eSet(feature, value);
+				}
+			} else {
+				int decrement = 0;
+				for(ListChange listChange : listChanges) {
+					ChangeKind kind = listChange.getKind();
+					int index = listChange.getIndex();
+					index = index == 0 ? index : (index - decrement);
+					EList<EObject> originalEntries = (EList<EObject>)existing.eGet(feature);
+					EList<EObject> refactoredEntries = (EList<EObject>)refactored.eGet(feature);
+					if(ChangeKind.ADD_LITERAL == kind) {
+						decrement += 1;
+						originalEntries.remove(index);							
+					} else if(ChangeKind.REMOVE_LITERAL == kind) {
+						decrement = 0;
+						EObject entry = refactoredEntries.get(index);
+						originalEntries.add(entry);
+					} else {
+						EObject moved = refactoredEntries.get(index);
+						EObject found = search.findEntry(moved, originalEntries);
+						originalEntries.move(index, found);
+					}
+				}
+			}
+			sm.worked(1);
+		}
+		return null;
 	}
 	
 	@Override
@@ -118,59 +166,11 @@ public class SourceCodeChange extends NoChange {
 		return RefactoringStatus.create(Status.OK_STATUS);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public RefactoringStatus applyRefactoring(IProgressMonitor pm) throws CoreException {
-		if(isEnabled()) {
-			EObject handleWithObject = existing == null ? refactored : existing;
-			String name = labels.getSimpleName(handleWithObject);
-			StringBuffer taskBuffer = new StringBuffer("Executing re-factoring for ").append(name);
-			SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), IProgressMonitor.UNKNOWN);
-			EStructuralFeature feature = featureChange.getFeature();
-			EList<ListChange> listChanges = featureChange.getListChanges();
-			if(listChanges.isEmpty()) {
-				EObject existingContainer = existing.eContainer();
-				EObject refactoredContainer = refactored.eContainer();
-				if(existingContainer == refactoredContainer) {
-					existing.eSet(feature, refactored.eGet(feature));
-				} else if(search.equallyTyped(existing, refactored) && search.equallyNamed(existing, refactored)) {
-					Object value = refactored.eGet(feature);
-					existing.eSet(feature, value);
-				} else if(search.equallyTyped(existingContainer, refactoredContainer) || search.equallyNamed(existingContainer, refactoredContainer)) {
-					Object value = refactored.eGet(feature);
-					existing.eSet(feature, value);
-				}
-			} else {
-				int decrement = 0;
-				for(ListChange listChange : listChanges) {
-					ChangeKind kind = listChange.getKind();
-					int index = listChange.getIndex();
-					index = index == 0 ? index : (index - decrement);
-					EList<EObject> originalEntries = (EList<EObject>)existing.eGet(feature);
-					EList<EObject> refactoredEntries = (EList<EObject>)refactored.eGet(feature);
-					if(ChangeKind.ADD_LITERAL == kind) {
-						decrement += 1;
-						originalEntries.remove(index);							
-					} else if(ChangeKind.REMOVE_LITERAL == kind) {
-						decrement = 0;
-						EObject entry = refactoredEntries.get(index);
-						originalEntries.add(entry);
-					} else {
-						EObject moved = refactoredEntries.get(index);
-						EObject found = search.findEntry(moved, originalEntries);
-						originalEntries.move(index, found);
-					}
-				}
-			}
-			sm.worked(1);
-		}
-		return RefactoringStatus.create(Status.OK_STATUS);
-	}
-	
 	public DiffNode getDiffNode() {		
 		DiffNode diffNode = new DiffNode();
 		EObject handleWithObject = existing == null ? refactored : existing;
 		IPreviewObjectComputer previewComputer = extensions.getInstance(IPreviewObjectComputer.class, handleWithObject);	
-		List<EObject> existingPreview = previewComputer.getExisting(existing, refactored, featureChange);
+		List<EObject> existingPreview = previewComputer.getExisting(existing, refactored, change);
 		if(existingPreview == null) {
 			MultipleEntriesTypedElement typedExisting = MultipleEntriesTypedElement.getDefault();
 			diffNode.setLeft(typedExisting);
@@ -179,7 +179,7 @@ public class SourceCodeChange extends NoChange {
 			MultipleEntriesTypedElement typedExisting = new MultipleEntriesTypedElement(serializer, nameProvider, elements);
 			diffNode.setLeft(typedExisting);
 		}
-		List<EObject> refactoredPreview = previewComputer.getRefactored(existing, refactored, featureChange);
+		List<EObject> refactoredPreview = previewComputer.getRefactored(existing, refactored, change);
 		if(refactoredPreview == null) {
 			MultipleEntriesTypedElement typedRefactored = MultipleEntriesTypedElement.getDefault();
 			diffNode.setRight(typedRefactored);
@@ -199,5 +199,12 @@ public class SourceCodeChange extends NoChange {
 	@Override
 	public String getName() {
 		return labels.getPreviewLabel(existing == null ? refactored : existing);
+	}
+	
+	private void init() {
+		Injector injector = RefactoringPlugin.getInstance().getInjector();
+		extensions = injector.getInstance(Extensions.class);
+		search = injector.getInstance(EntrySearch.class);
+		labels = injector.getInstance(Labels.class);
 	}
 }

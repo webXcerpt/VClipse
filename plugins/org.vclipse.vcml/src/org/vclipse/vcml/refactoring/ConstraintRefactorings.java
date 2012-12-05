@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -28,10 +29,10 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.EcoreUtil2;
 import org.vclipse.base.ui.util.EditorUtilsExtensions;
 import org.vclipse.refactoring.IRefactoringContext;
-import org.vclipse.refactoring.changes.SourceCodeChanges;
+import org.vclipse.refactoring.changes.ModelChange;
+import org.vclipse.refactoring.changes.RootChange;
 import org.vclipse.refactoring.core.DefaultRefactoringExecuter;
 import org.vclipse.refactoring.core.RefactoringTask;
-import org.vclipse.refactoring.core.RefactoringWorkDelegate;
 import org.vclipse.vcml.utils.ConstraintRestrictionExtensions;
 import org.vclipse.vcml.utils.CreateVcmlObjects;
 import org.vclipse.vcml.utils.DependencySourceUtils;
@@ -64,9 +65,6 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 	
 	@Inject
 	private DependencySourceUtils sourceUtils;
-	
-	@Inject
-	private RefactoringWorkDelegate workDelegate;
 	
 	@Inject
 	private CreateVcmlObjects vcmlCreator;
@@ -105,8 +103,10 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 		EList<ConstraintRestriction> restrictions = source.getRestrictions();
 		URI refactoredUri = source.eResource().getURI();
 		RefactoringTask refactoringTask = extensions.getInstance(RefactoringTask.class);
-		SourceCodeChanges change = refactoringTask.getChange(EditorUtilsExtensions.getProgressMonitor());
-		URIConverter uriConverter = change.getURIConverter();
+		IProgressMonitor pm = EditorUtilsExtensions.getProgressMonitor();
+		RootChange change = refactoringTask.getChange(pm);
+		ModelChange modelChange = (ModelChange)change.getChildren()[0];
+		URIConverter uriConverter = modelChange.getURIConverter();
 		Map<URI, URI> uriMapping = uriConverter.getURIMap();
 		URI sourceUri = uriMapping.get(refactoredUri);
 		VCObject vcobject = sourceUtils.getDependency(sourceUri);
@@ -154,7 +154,14 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 						 
 						StringBuffer uriBuffer = new StringBuffer(newUriPart).append("_").append(index).append(".").append(fileExtension);
 						URI uri = URI.createURI(uriBuffer.toString());
-						workDelegate.createResource(resourceSet, uri, newConstraintSource, true);				
+						Resource newConstraintResource = null;
+						try {
+							newConstraintResource = resourceSet.getResource(uri, true);
+						} catch(Exception exception) {
+							newConstraintResource = resourceSet.getResource(uri, true);
+						}
+						EList<EObject> contents = newConstraintResource.getContents();
+						contents.add(newConstraintSource);				
 					}
 					restrictions.clear();
 					restrictions.addAll(restrictionsCopy);
@@ -182,7 +189,6 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 					}
 					inferences.clear();
 					inferences.addAll(newInferences);
-					workDelegate.saveResource(constraint.eResource());
 				} catch(NumberFormatException exception) {
 					throw exception;
 				}
@@ -191,7 +197,7 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 	}
 	
 	/*
-	 * Re-factoring: executes inline operation for each restriction 
+	 * Re-factoring: executes in-line operation for each restriction 
 	 */
 	public void refactoring_Inline_ConstraintSource(IRefactoringContext context) {
 		EObject element = context.getSourceElement();

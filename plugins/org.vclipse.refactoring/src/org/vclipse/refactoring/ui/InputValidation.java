@@ -14,8 +14,7 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.vclipse.refactoring.IRefactoringUIContext;
 
 /**
- * Background thread executing validation during input 
- * in the input dialog.
+ * Background thread executing validation during input in the input dialog.
  */
 public class InputValidation extends Thread {
 
@@ -32,11 +31,11 @@ public class InputValidation extends Thread {
 		IRefactoringUIContext context = page.getContext();
 		IWizardContainer container = page.getContainer();
 		if(container != null) {
-			InputValidationRunnable validationRunnable = new InputValidationRunnable(context);
+			InputValidationRunnable validation = new InputValidationRunnable(context);
 			try {
-				container.run(false, true, validationRunnable);
+				container.run(false, true, validation);
 				container.updateButtons();
-			} catch(final Exception exception) {
+			} catch(Exception exception) {
 				InputPageUpdate.update(page, exception);
 			}
 		}

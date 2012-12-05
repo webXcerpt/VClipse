@@ -47,7 +47,11 @@ public class ContainerPreviewComputer extends DefaultContainerPreviewComputer {
 		Set<EClass> favoredTypes = getFavoredTypes();
 		if(containsType(type, ignoreTypes)) {
 			EStructuralFeature feature = featureChange.getFeature();
-			Object value = object.eGet(feature);
+			if(feature == null) {
+				previewObjects.add(object);
+				return previewObjects;
+			}
+			Object value = feature == null ? object : object.eGet(feature);
 			EList<ListChange> listChanges = featureChange.getListChanges();
 			if(listChanges.isEmpty()) {
 				if(value instanceof List<?>) {

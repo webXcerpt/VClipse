@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.util.Pair;
 import org.vclipse.refactoring.IRefactoringContext;
@@ -37,8 +38,8 @@ public class RefactoringRunner {
 	
 	public void refactor(IRefactoringContext context) throws CoreException {
 		EObject element = context.getSourceElement();
-		EObject container = EcoreUtil.getRootContainer(element);
-		changeRecorder = new ChangeRecorder(container);
+		ResourceSet resourceSet = element.eResource().getResourceSet();
+		changeRecorder = new ChangeRecorder(resourceSet);
 		IRefactoringExecuter refactoring = getRefactoring(element);
 		if(refactoring == null) {
 			EStructuralFeature feature = context.getStructuralFeature();

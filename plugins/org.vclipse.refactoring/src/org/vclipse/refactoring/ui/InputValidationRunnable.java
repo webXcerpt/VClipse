@@ -17,14 +17,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
+import org.eclipse.ltk.core.refactoring.RefactoringTickProvider;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.core.RefactoringTask;
 
 import com.google.common.collect.Iterables;
 
 /**
- * {@link IRunnableWithProgress} implementation for the 
- * validation during input in the input dialog.
+ * {@link IRunnableWithProgress} implementation for the validation during input in the input dialog.
  */
 public class InputValidationRunnable implements IRunnableWithProgress {
 
@@ -38,9 +38,8 @@ public class InputValidationRunnable implements IRunnableWithProgress {
 	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 		StringBuffer buffer = new StringBuffer("Validating re-factoring: ");
 		buffer.append(context.getLabel());
-		monitor.beginTask(buffer.toString(), 100);
-		
-		// check if cancelled
+		RefactoringTickProvider tickProvider = context.getRefactoring().getRefactoringTickProvider();
+		monitor.beginTask(buffer.toString(), tickProvider.getCheckAllConditionsTicks());
 		if(monitor.isCanceled()) {
 			monitor.done();
 			return;
@@ -54,6 +53,7 @@ public class InputValidationRunnable implements IRunnableWithProgress {
 				monitor.done();
 				return;
 			}
+			monitor.worked(tickProvider.getCheckInitialConditionsTicks());
 			
 			// execute re-factoring
 			task.createChange(monitor);
@@ -61,9 +61,11 @@ public class InputValidationRunnable implements IRunnableWithProgress {
 				monitor.done();
 				return;
 			}
+			monitor.worked(tickProvider.getCreateChangeTicks());
 			
 			// check final conditions
 			RefactoringStatus finalStatus = task.checkFinalConditions(monitor);
+			monitor.worked(tickProvider.getCheckFinalConditionsTicks());
 			Iterator<InputPage> iterator = Iterables.filter(context.getPages(), InputPage.class).iterator();
 			if(iterator.hasNext()) {
 				InputPageUpdate.update(iterator.next(), initialStatus, finalStatus);				

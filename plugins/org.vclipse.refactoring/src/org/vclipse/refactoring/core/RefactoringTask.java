@@ -30,7 +30,7 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.xtext.validation.FeatureBasedDiagnostic;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
-import org.vclipse.refactoring.changes.SourceCodeChanges;
+import org.vclipse.refactoring.changes.RootChange;
 import org.vclipse.refactoring.utils.EntrySearch;
 import org.vclipse.refactoring.utils.Extensions;
 
@@ -43,7 +43,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class RefactoringTask extends Refactoring {
 
-	private SourceCodeChanges modelChange;
+	private RootChange modelChange;
 	private IRefactoringUIContext context;
 	
 	@Inject 
@@ -59,7 +59,7 @@ public class RefactoringTask extends Refactoring {
 		this.context = context;
 	}
 
-	public SourceCodeChanges getChange(IProgressMonitor pm) throws CoreException {
+	public RootChange getChange(IProgressMonitor pm) throws CoreException {
 		if(modelChange == null) {
 			StringBuffer taksBuffer = new StringBuffer("Creating a change description for ");
 			taksBuffer.append(context.getLabel());
@@ -94,14 +94,7 @@ public class RefactoringTask extends Refactoring {
 	public Change createChange(IProgressMonitor pm) throws CoreException, OperationCanceledException {
 		SubMonitor sm = SubMonitor.convert(pm, "Creating a change description.", 20);
 		try {
-			if(sm.isCanceled()) {
-				return modelChange;
-			}
-			modelChange = new SourceCodeChanges(context, runner, extensions);				
-			sm.worked(10);
-			if(sm.isCanceled()) {
-				return modelChange;
-			}
+			modelChange = new RootChange(context);				
 			modelChange.perform(pm);
 		} catch(CoreException exception) {
 			RefactoringPlugin.log(exception.getMessage(), exception);

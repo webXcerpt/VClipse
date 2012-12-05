@@ -12,45 +12,42 @@ package org.vclipse.refactoring.changes;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.ltk.core.refactoring.Change;
-import org.eclipse.ltk.core.refactoring.RefactoringStatus;
+import org.eclipse.ltk.core.refactoring.CompositeChange;
+import org.vclipse.refactoring.IRefactoringUIContext;
 
-class NoChange extends Change {
+public class RootChange extends CompositeChange {
 
-	private String label;
+	private boolean performed = false;
 	
-	public NoChange() {
-		
-	}
-	
-	public NoChange(String label) {
-		this.label = (label == null || label.isEmpty()) ? "no source code changes in this node" : label;
+	public RootChange(IRefactoringUIContext context) {
+		super("Changes during the re-factoring process.", new Change[0]);
+		ModelChange modelChange = new ModelChange(context);
+		add(modelChange);
 	}
 	
 	@Override
-	public void initializeValidationData(IProgressMonitor pm) {
-		
-	}
-
-	@Override
-	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException, OperationCanceledException {
-		return RefactoringStatus.create(Status.OK_STATUS);
-	}
-
-	@Override
-	public Change perform(IProgressMonitor pm) throws CoreException {
+ 	public Change perform(IProgressMonitor pm) throws CoreException {
+		if(!performed) {
+			for(Change change : getChildren()) {
+				change.perform(pm);
+			}
+			performed = true;
+		}
 		return null;
 	}
-
+	
 	@Override
 	public Object getModifiedElement() {
+		if(getChildren().length != 0) {
+			return getChildren()[0].getModifiedElement();
+		}
 		return null;
 	}
 	
 	@Override
-	public String getName() {
-		return label;
+	public void dispose() {
+		performed = false;
+		super.dispose();
 	}
 }
