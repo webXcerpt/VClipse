@@ -8,7 +8,7 @@
  * Contributors:
  *     webXcerpt Software GmbH - initial creator
  ******************************************************************************/
-package org.vclipse.refactoring.tests
+package org.vclipse.refactoring.tests.swtbot
 
 import com.google.inject.Inject
 import org.eclipse.xtext.junit4.InjectWith
@@ -49,7 +49,7 @@ class RefactoringTests extends XtextTest {
 	}
 
 	@Test
-	def refactoring_Divide() {
+	def refactoring_Split() {
 		var entries = resourcesLoader.getResourceContents(CAR_DESCRIPTION)
 		var firstEntry = entries.get(0)
 		val resource = firstEntry.eResource
