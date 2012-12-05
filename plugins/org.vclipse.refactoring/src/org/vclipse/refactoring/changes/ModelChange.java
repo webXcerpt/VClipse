@@ -180,12 +180,9 @@ public class ModelChange extends CompositeChange {
 					public Object exec(XtextResource state) throws Exception {
 						for(Change change : changes) {
 							if(change.isEnabled()) {
-								if(change instanceof ModelChangeEntry) {
-									ModelChangeEntry entryChange = (ModelChangeEntry)change;
-									entryChange.perform(pm);
-									entryChange.dispose();
-									sm.worked(1);
-								}							
+								change.perform(pm);
+								change.dispose();
+								sm.worked(1);							
 							}
 						}
 						return null;
