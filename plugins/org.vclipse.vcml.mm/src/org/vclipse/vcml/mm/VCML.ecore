@@ -92,6 +92,7 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="dependencies" eType="#//CharacteristicOrValueDependencies"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="default" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NumericCharacteristicValue">
     <eStructuralFeatures xsi:type="ecore:EReference" name="entry" eType="#//NumberListEntry"
@@ -100,6 +101,7 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="dependencies" eType="#//CharacteristicOrValueDependencies"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="default" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DateCharacteristicValue">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="from" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -108,6 +110,7 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="dependencies" eType="#//CharacteristicOrValueDependencies"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="default" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CharacteristicOrValueDependencies">
     <eStructuralFeatures xsi:type="ecore:EReference" name="dependencies" unique="false"
