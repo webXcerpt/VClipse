@@ -215,9 +215,12 @@ public class VCMLPrettyPrinter extends DefaultPrettyPrinter {
 			EList<NumericCharacteristicValue> values = object.getValues();
 			if(!values.isEmpty()) {
 				layouter.brk().beginC().print("values {").brk();
-				for(NumericCharacteristicValue value : object.getValues()) {
+				for(NumericCharacteristicValue value : values) {
 					layouter.brk();
 					NumberListEntry entry = value.getEntry();
+					if(value.isDefault()) {
+						layouter.print('*');
+					}
 					if (entry instanceof NumericInterval) { // parentheses only if intervals are used in value definitions
 						layouter.print("(");
 						doSwitch(entry);
@@ -265,7 +268,11 @@ public class VCMLPrettyPrinter extends DefaultPrettyPrinter {
 		if(!values.isEmpty()) {
 			layouter.brk().beginC().print("values {");
 			for(CharacteristicValue value : values) {
-				layouter.brk().beginC().print("'");
+				layouter.brk().beginC();
+				if(value.isDefault()) {
+					layouter.print("*");
+				}
+				layouter.print("'");
 				printNullsafe(value.getName());
 				layouter.print("'");
 				if(hasBody(value)) {
@@ -300,7 +307,11 @@ public class VCMLPrettyPrinter extends DefaultPrettyPrinter {
 				layouter.brk().beginC().print("values {").brk();
 				for(DateCharacteristicValue value : object.getValues()) {
 					layouter.brk();
-					layouter.beginC().print(value.getFrom());
+					layouter.beginC();
+					if(value.isDefault()) {
+						layouter.print("*");
+					}
+					layouter.print(value.getFrom());
 					if (value.getTo()!=null) {
 						layouter.brk().print("-").brk().print(value.getTo());
 					}
