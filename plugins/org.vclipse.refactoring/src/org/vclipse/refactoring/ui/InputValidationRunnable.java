@@ -70,6 +70,7 @@ public class InputValidationRunnable implements IRunnableWithProgress {
 			if(iterator.hasNext()) {
 				InputPageUpdate.update(iterator.next(), initialStatus, finalStatus);				
 			}
+			monitor.done();
 		} catch(CoreException exception) {
 			throw new InvocationTargetException(exception);
 		}

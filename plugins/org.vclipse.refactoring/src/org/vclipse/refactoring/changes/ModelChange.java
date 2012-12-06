@@ -149,9 +149,7 @@ public class ModelChange extends CompositeChange {
 		if(!performed) {
 			StringBuffer taskBuffer = new StringBuffer("Initialising re-factoring operation for ");
 			taskBuffer.append(context.getLabel());
-			final SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 60);
-
-			// creates a copy of a model and sets the source element to an equal one in the copied model
+			SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 20);
 			EObject element = context.getSourceElement();
 			EObject entry = search.findEntry(element, copyContents);
 			if(entry != null) {
@@ -162,13 +160,13 @@ public class ModelChange extends CompositeChange {
 				previewNode.setRight(new MultipleEntriesTypedElement(serializer, rootRefactored));
 				sm.worked(10);
 				recordSourceCodeChanges(sm, refactoringContext);
-				sm.worked(20);
+				sm.worked(10);
 				if(getChildren().length == 0) {
 					add(new DefaultChange());
 				}
-				sm.worked(10);
 			}
 			performed = true;
+			sm.done();
 		} else {
 			if(isEnabled()) {
 				StringBuffer taskBuffer = new StringBuffer("Executing re-factoring:");
@@ -188,8 +186,8 @@ public class ModelChange extends CompositeChange {
 						return null;
 					}
 				});	
+				sm.done();
 			}
-			pm.done();
 		}
 		return null;
 	}
@@ -199,31 +197,35 @@ public class ModelChange extends CompositeChange {
 		taskBuffer.append(previewContext.getLabel());
 		ChangeDescription changeDescription = runner.getChangeRecorder().endRecording();
 		EMap<EObject, EList<FeatureChange>> objectChanges = changeDescription.getObjectChanges();
-		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), objectChanges.size());
+		EList<ResourceChange> resourceChanges = changeDescription.getResourceChanges();
+		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), objectChanges.size() + resourceChanges.size());
 		for(Entry<EObject, EList<FeatureChange>> entry : objectChanges.entrySet()) {
 			EObject refactored = entry.getKey();
 			if(refactored.eContainer() instanceof ChangeDescription) {
 				sm.worked(1);
 				continue;
 			}
-			EList<FeatureChange> featureChanges = entry.getValue();
 			search.refactoringConditions(true);
-			for(FeatureChange featureChange : featureChanges) {
+			for(FeatureChange featureChange : entry.getValue()) {
 				EObject existingEntry = search.findEntry(refactored, rootContents);
 				ModelChangeEntry scc = new ModelChangeEntry();
 				scc.addChange(existingEntry, refactored, featureChange);
-				scc.initializeValidationData(pm);
+				scc.initializeValidationData(sm);
 				add(scc);
 			}
+			sm.worked(1);
 			search.refactoringConditions(false);
 		}
-		for(ResourceChange change : changeDescription.getResourceChanges()) {
-			org.vclipse.refactoring.changes.ResourceChange resourceChange = new org.vclipse.refactoring.changes.ResourceChange(change.getResource());
+		for(ResourceChange change : resourceChanges) {
+			org.vclipse.refactoring.changes.ResourceChange resourceChange 
+				= new org.vclipse.refactoring.changes.ResourceChange(change.getResource());
 			Change parent = getParent();
 			if(parent instanceof CompositeChange) {
 				CompositeChange compositeParent = (CompositeChange)parent;
 				compositeParent.add(resourceChange);
 			}
+			sm.worked(1);
 		}
+		sm.done();
 	}
 }

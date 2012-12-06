@@ -57,6 +57,7 @@ public class RefactoringWizard extends org.eclipse.ltk.ui.refactoring.Refactorin
 								change.dispose();
 							}
 							rootChange.dispose();
+							pm.done();
 						} catch(CoreException exception) {
 							throw new InvocationTargetException(exception);
 						}

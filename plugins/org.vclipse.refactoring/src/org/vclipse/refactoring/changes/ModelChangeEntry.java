@@ -112,7 +112,7 @@ public class ModelChangeEntry extends Change {
 					}
 				}
 			}
-			sm.worked(1);
+			sm.done();
 		}
 		return null;
 	}
@@ -140,30 +140,29 @@ public class ModelChangeEntry extends Change {
 
 	@Override
 	public RefactoringStatus isValid(IProgressMonitor pm) throws CoreException, OperationCanceledException {
+		RefactoringStatus refactoringStatus = RefactoringStatus.create(Status.OK_STATUS);
 		EObject handleWithObject = existing == null ? refactored : existing;
 		String name = labels.getSimpleName(handleWithObject);
 		StringBuffer taskBuffer = new StringBuffer("Validating change for ").append(name);
 		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 10);
 		BasicDiagnostic diagnostics = new BasicDiagnostic();
 		validator.validate(handleWithObject, diagnostics, Maps.newHashMap());
-		sm.worked(10);
+		sm.done();
 		
 		taskBuffer = new StringBuffer("Collecting errors after re-factoring.");
 		List<Diagnostic> errors = diagnostics.getChildren();
 		sm = SubMonitor.convert(pm, taskBuffer.toString(), errors.size());
 		if(!errors.isEmpty()) {
-			RefactoringStatus status = RefactoringStatus.create(Status.CANCEL_STATUS);
+			refactoringStatus = RefactoringStatus.create(Status.CANCEL_STATUS);
 			for(Diagnostic diagnostic : errors) {
 				if(diagnostic instanceof AbstractDiagnostic) {
-					status.addEntry(new RefactoringStatusEntry(IStatus.ERROR, diagnostic.getMessage()));					
+					refactoringStatus.addEntry(new RefactoringStatusEntry(IStatus.ERROR, diagnostic.getMessage()));					
 				} 
 				sm.worked(1);
 			}
-			if(status.getEntries().length > 0) {
-				return status;				
-			}
+			sm.done();
 		}
-		return RefactoringStatus.create(Status.OK_STATUS);
+		return refactoringStatus;
 	}
 	
 	public DiffNode getDiffNode() {		

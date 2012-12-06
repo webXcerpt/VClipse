@@ -11,7 +11,6 @@
 package org.vclipse.refactoring.core;
 
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -27,6 +26,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
+import org.eclipse.ltk.core.refactoring.RefactoringTickProvider;
 import org.eclipse.xtext.validation.FeatureBasedDiagnostic;
 import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
@@ -65,10 +65,10 @@ public class RefactoringTask extends Refactoring {
 			taksBuffer.append(context.getLabel());
 			SubMonitor sm = SubMonitor.convert(pm, taksBuffer.toString(), 10);
 			try {
-				createChange(pm);
-				sm.worked(10);
+				createChange(sm);
+				sm.done();
 			} catch(CoreException exception) {
-				sm.worked(10);
+				sm.done();
 				throw exception;
 			} 
 		}
@@ -77,17 +77,13 @@ public class RefactoringTask extends Refactoring {
 	
 	@Override
 	public RefactoringStatus checkInitialConditions(IProgressMonitor pm) throws CoreException, OperationCanceledException {
-		StringBuffer taskBuffer = new StringBuffer("Checking initial conditions for ");
-		taskBuffer.append(context.getLabel());
-		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 10);
+		RefactoringStatus refactoringStatus = RefactoringStatus.create(Status.OK_STATUS);
+		SubMonitor sm = SubMonitor.convert(pm, new StringBuffer("Checking initial conditions for ").append(context.getLabel()).toString(), 10);
 		EObject element = context.getSourceElement();
 		EObject container = EcoreUtil.getRootContainer(element);
-		if(pm.isCanceled()) {
-			return RefactoringStatus.create(Status.CANCEL_STATUS);
-		}
-		RefactoringStatus status = validate(sm, container);
-		sm.worked(10);
-		return status;
+		refactoringStatus = sm.isCanceled() ? RefactoringStatus.create(Status.CANCEL_STATUS) : validate(sm, container);
+		sm.done();
+		return refactoringStatus;
 	}
 	
 	@Override
@@ -96,10 +92,11 @@ public class RefactoringTask extends Refactoring {
 		try {
 			modelChange = new RootChange(context);				
 			modelChange.perform(pm);
+			sm.done();
 		} catch(CoreException exception) {
 			RefactoringPlugin.log(exception.getMessage(), exception);
 			modelChange = null;
-			sm.worked(20);
+			sm.done();
 			throw exception;
 		}
 		return modelChange;
@@ -107,24 +104,22 @@ public class RefactoringTask extends Refactoring {
 
 	@Override
 	public RefactoringStatus checkFinalConditions(IProgressMonitor pm) throws CoreException, OperationCanceledException {
+		RefactoringStatus refactoringStatus = RefactoringStatus.create(Status.OK_STATUS);
 		if(modelChange == null) {
 			createChange(pm);
 		}
+		RefactoringTickProvider tickProvider = getRefactoringTickProvider();
 		StringBuffer taskBuffer = new StringBuffer("Checking final conditions for re-factoring ");
 		taskBuffer.append(context.getLabel());
-		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), 10);
+		SubMonitor sm = SubMonitor.convert(pm, taskBuffer.toString(), tickProvider.getCheckFinalConditionsTicks());
 		Object modified = modelChange.getModifiedElement();
 		if(modified instanceof EObject) {
 			EObject modifiedEObject = (EObject)modified;
 			EObject container = EcoreUtil.getRootContainer(modifiedEObject);
-			if(sm.isCanceled()) {
-				return RefactoringStatus.create(Status.CANCEL_STATUS);
-			}
-			RefactoringStatus status = validate(sm, container);
-			sm.worked(10);
-			return status;				
+			refactoringStatus = pm.isCanceled() ? RefactoringStatus.create(Status.CANCEL_STATUS) : validate(pm, container);
 		}
-		return RefactoringStatus.create(Status.OK_STATUS);
+		sm.done();
+		return refactoringStatus;
 	}
 
 	@Override
@@ -138,28 +133,32 @@ public class RefactoringTask extends Refactoring {
 	}
 	
 	private RefactoringStatus validate(IProgressMonitor pm, EObject object) {
+		RefactoringStatus refactoringStatus = RefactoringStatus.create(Status.OK_STATUS);
 		EValidator.Registry validatorRegistry = extensions.getInstance(EValidator.Registry.class, object);
 		EPackage epackage = object.eClass().getEPackage();
 		EValidator validator = validatorRegistry.getEValidator(epackage);
 		BasicDiagnostic diagnostics = new BasicDiagnostic();
 		if(pm.isCanceled()) {
-			return RefactoringStatus.create(Status.CANCEL_STATUS);
-		}
-		validator.validate(object, diagnostics, Maps.newHashMap()); 
-		List<Diagnostic> foundDiagnostics = diagnostics.getChildren();
-		Iterator<Diagnostic> validationIterator = Iterables.filter(foundDiagnostics, new Predicate<Diagnostic>() {
-			@Override
-			public boolean apply(Diagnostic diagnostic) {
-				if(diagnostic instanceof FeatureBasedDiagnostic) {
-					return FeatureBasedDiagnostic.ERROR == ((FeatureBasedDiagnostic)diagnostic).getSeverity();
+			refactoringStatus = RefactoringStatus.create(Status.CANCEL_STATUS);
+			pm.done();
+		} else {
+			SubMonitor sm = SubMonitor.convert(pm, "Validating re-factoring.", IProgressMonitor.UNKNOWN);
+			validator.validate(object, diagnostics, Maps.newHashMap()); 
+			Iterator<Diagnostic> validationIterator = Iterables.filter(diagnostics.getChildren(), new Predicate<Diagnostic>() {
+				@Override
+				public boolean apply(Diagnostic diagnostic) {
+					if(diagnostic instanceof FeatureBasedDiagnostic) {
+						return FeatureBasedDiagnostic.ERROR == ((FeatureBasedDiagnostic)diagnostic).getSeverity();
+					}
+					return false;
 				}
-				return false;
+			}).iterator();
+			if(validationIterator.hasNext()) {
+				Diagnostic diagnostic = validationIterator.next();
+				refactoringStatus = RefactoringStatus.createFatalErrorStatus(diagnostic.getMessage());
 			}
-		}).iterator();
-		if(validationIterator.hasNext()) {
-			Diagnostic diagnostic = validationIterator.next();
-			return RefactoringStatus.createFatalErrorStatus(diagnostic.getMessage());
+			sm.done();
 		}
-		return RefactoringStatus.create(Status.OK_STATUS);
+		return refactoringStatus;
 	}
 }
