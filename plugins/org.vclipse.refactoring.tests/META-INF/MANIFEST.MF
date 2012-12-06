@@ -10,6 +10,18 @@ Require-Bundle: org.eclipselabs.xtext.utils.unittesting,
  org.eclipse.xtext.junit4,
  org.eclipse.xtext.ui.junit,
  org.vclipse.vcml,
- org.eclipse.xtext.xbase.lib
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.swtbot.eclipse.core;bundle-version="2.0.5",
+ org.eclipse.swtbot.eclipse.finder;bundle-version="2.0.5",
+ org.eclipse.swtbot.eclipse.gef.finder;bundle-version="2.0.5",
+ org.eclipse.swtbot.eclipse.junit3.headless;bundle-version="2.0.5",
+ org.eclipse.swtbot.eclipse.junit4.headless;bundle-version="2.0.5",
+ org.eclipse.swtbot.eclipse.spy;bundle-version="2.0.5",
+ org.eclipse.swtbot.eclipse.ui;bundle-version="2.0.5",
+ org.eclipse.swtbot.forms.finder;bundle-version="2.0.5",
+ org.eclipse.swtbot.go;bundle-version="2.0.5",
+ org.eclipse.swtbot.junit4_x;bundle-version="2.0.5",
+ org.eclipse.swtbot.swt.finder;bundle-version="2.0.5"
 Export-Package: org.vclipse.refactoring.tests
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ CarDescription/

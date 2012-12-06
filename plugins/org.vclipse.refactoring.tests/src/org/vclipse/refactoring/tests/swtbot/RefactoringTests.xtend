@@ -10,54 +10,122 @@
  ******************************************************************************/
 package org.vclipse.refactoring.tests.swtbot
 
-import com.google.inject.Inject
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.IProgressMonitor
+import org.eclipse.core.runtime.NullProgressMonitor
+import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner
+import org.eclipse.ui.IEditorSite
+import org.eclipse.ui.PlatformUI
 import org.eclipselabs.xtext.utils.unittesting.XtextTest
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.vclipse.refactoring.tests.utils.RefactoringResourcesLoader
-import org.vclipse.refactoring.tests.utils.RefactoringTestInjectorProvider
-import org.vclipse.refactoring.utils.EntrySearch
-import org.vclipse.refactoring.utils.Labels
-
-import static org.junit.Assert.*
-import static org.vclipse.refactoring.core.RefactoringContext.*
-import static org.vclipse.refactoring.core.RefactoringType.*
-import static org.vclipse.refactoring.tests.utils.RefactoringResourcesLoader.*
-import org.vclipse.vcml.refactoring.VCMLRefactoring
+import org.vclipse.refactoring.tests.utils.RefactoringTestModule
 import org.vclipse.refactoring.utils.Extensions
+import org.vclipse.vcml.VCMLRuntimeModule
+import org.vclipse.vcml.refactoring.VCMLRefactoring
 
-@RunWith(typeof(XtextRunner))
-@InjectWith(typeof(RefactoringTestInjectorProvider))
+import static com.google.inject.Guice.*
+
+@RunWith(typeof(SWTBotJunit4ClassRunner))
 class RefactoringTests extends XtextTest {
 
-	@Inject
-	private EntrySearch search
-
-	@Inject
-	private Labels labels
-
-	@Inject
 	private RefactoringResourcesLoader resourcesLoader
-
-	@Inject
 	private Extensions extensions
-
+	private VCMLRefactoring vcmlRefactoring
+	
+	private SWTWorkbenchBot bot
+	
 	new() {
 		super(typeof(RefactoringTests).simpleName)
 	}
-
-	@Test
-	def refactoring_Split() {
-		var entries = resourcesLoader.getResourceContents(CAR_DESCRIPTION)
-		var firstEntry = entries.get(0)
-		val resource = firstEntry.eResource
-		val refactoringExecuter = extensions.getInstance(typeof(VCMLRefactoring), firstEntry)
-		if(refactoringExecuter == null) {
-			fail("Can not find re-factoring executer for " + firstEntry)
+	
+	override before() {
+		super.before()
+		bot = new SWTWorkbenchBot();
+		bot.perspectiveByLabel("Java").activate();
+		
+		val welcomeView = bot.viewByTitle("Welcome");
+		if(welcomeView != null) {
+			welcomeView.close();
 		}
 		
+		val refactoringModule = new RefactoringTestModule
+		val vcmlRuntimeModule = new VCMLRuntimeModule
+		val injector = createInjector(refactoringModule, vcmlRuntimeModule)
 		
+		resourcesLoader = injector.getInstance(typeof(RefactoringResourcesLoader))
+		extensions = injector.getInstance(typeof(Extensions))
+		vcmlRefactoring = injector.getInstance(typeof(VCMLRefactoring))
+	}
+
+	override after() {
+		bot.sleep(1000);
+	}
+	
+	def private void loadResources() {
+		val root = ResourcesPlugin::workspace.root
+		var project = root.getProject("RefactoringTest")
+		var monitor = new NullProgressMonitor as IProgressMonitor
+		if(!project.accessible) {
+			val activeEditor = PlatformUI::workbench.activeWorkbenchWindow.activePage.activeEditor
+			if(activeEditor != null) {
+				val site = activeEditor.getSite();
+				if(site instanceof IEditorSite) {
+					val actionBars = (site as IEditorSite).getActionBars()
+					monitor = actionBars.statusLineManager.progressMonitor
+				}
+			}
+			project.create(monitor)
+			project.open(monitor)
+		}
+		
+		val folder = project.getFolder("car_description-dep")
+		if(!folder.accessible) {
+			folder.create(true, true, monitor)
+		}
+		
+		var file = project.getFile("car_description.vcml")
+		if(!file.accessible) {
+			val stream = resourcesLoader.getInputStream("car_description.vcml")
+			file.create(stream, true, monitor)
+		}
+		
+		file = folder.getFile("CS_CAR1.cons")
+		if(!file.accessible) {
+			val stream = resourcesLoader.getInputStream("CS_CAR1.cons")
+			file.create(stream, true, monitor)
+		}
+		
+		file = folder.getFile("PRECOND.pre")
+		if(!file.accessible) {
+			val stream = resourcesLoader.getInputStream("PRECOND.pre")
+			file.create(stream, true, monitor)
+		}
+		
+		file = folder.getFile("PROC.proc")
+		if(!file.accessible) {
+			val stream = resourcesLoader.getInputStream("PROC.proc")
+			file.create(stream, true, monitor)
+		}
+		
+		file = folder.getFile("SEL_COND.sel")
+		if(!file.accessible) {
+			val stream = resourcesLoader.getInputStream("SEL_COND.sel")
+			file.create(stream, true, monitor)
+		}
+	}
+	
+	@Test
+	def refactoring_Split() {
+		loadResources
+//		var entries = resourcesLoader.getResourceContents(CAR_DESCRIPTION)
+//		var firstEntry = entries.get(0)
+//		val resource = firstEntry.eResource
+//		val refactoringExecuter = extensions.getInstance(typeof(VCMLRefactoring), firstEntry)
+//		if(refactoringExecuter == null) {
+//			fail("Can not find re-factoring executer for " + firstEntry)
+//		}
 	}
 }

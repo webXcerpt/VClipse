@@ -11,6 +11,7 @@
 package org.vclipse.refactoring.tests.utils
 
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.EcoreUtil2
 import org.eclipselabs.xtext.utils.unittesting.XtextTest
 import org.vclipse.vcml.vcml.VcmlFactory
 import org.vclipse.vcml.vcml.VcmlPackage
@@ -20,7 +21,6 @@ import static org.eclipse.emf.common.util.URI.*
 import static org.junit.Assert.*
 import static org.vclipse.refactoring.RefactoringPlugin.*
 import static org.vclipse.refactoring.tests.utils.RefactoringResourcesLoader.*
-import org.eclipse.xtext.EcoreUtil2
 
 class RefactoringResourcesLoader extends XtextTest {
 	
@@ -57,6 +57,10 @@ class RefactoringResourcesLoader extends XtextTest {
 		} else {
 			contents.get(0)
 		}
+	}
+	
+	def getInputStream(String path) {
+		getClass().classLoader.getResourceAsStream(path)
 	}
 
 	def getResourceContents(String path) {

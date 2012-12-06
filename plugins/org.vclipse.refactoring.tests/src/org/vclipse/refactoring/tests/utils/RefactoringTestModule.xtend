@@ -18,4 +18,8 @@ class RefactoringTestModule extends RefactoringModule {
 	new() {
 		super(getInstance())
 	}
+	
+	def Class<? extends RefactoringResourcesLoader> bindRefactoringResourceLoader() {
+		typeof(RefactoringResourcesLoader)
+	}
 }
