@@ -39,18 +39,18 @@ public class ValueValidator extends AbstractDeclarativeValidator {
 			EList<EReference> references = object.eClass().getEAllReferences();
 			for(EReference reference : references) {
 				if(VALUES.equals(reference.getName())) {
-					List<EObject> withDefault = Lists.newArrayList();
+					List<EObject> defaultSet = Lists.newArrayList();
 					for(EObject entry : (EList<EObject>)object.eGet(reference)) {
 						for(EAttribute attribute : entry.eClass().getEAllAttributes()) {
 							if(DEFAULT.equals(attribute.getName()) && (Boolean)entry.eGet(attribute)) {
-								withDefault.add(entry);
+								defaultSet.add(entry);
 								break;
 							}							
 						}
 					}
-					if(withDefault.size() > 1) {
+					if(!defaultSet.isEmpty()) {
 						String message = "Only one default value is allowed.";
-						for(EObject entry : withDefault) {
+						for(EObject entry : defaultSet) {
 							for(EAttribute attribute : entry.eClass().getEAllAttributes()) {
 								error(message, entry, attribute, ValidationMessageAcceptor.INSIGNIFICANT_INDEX);								
 							}
