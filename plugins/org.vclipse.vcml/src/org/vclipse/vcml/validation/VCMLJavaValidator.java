@@ -60,7 +60,7 @@ import org.vclipse.vcml.vcml.VcmlPackage;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
-@ComposedChecks(validators= {VCMLJavaValidatorIssues.class})
+@ComposedChecks(validators= {VCMLJavaValidatorIssues.class, ValueValidator.class})
 public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 
 	@Inject
@@ -85,7 +85,7 @@ public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
      * @Check(CheckType.NORMAL) //upon save
      * @Check(CheckType.FAST) //while editig 
 	 */
-	
+		
 	/***
 	 ***	Name checks 
 	 ***/
