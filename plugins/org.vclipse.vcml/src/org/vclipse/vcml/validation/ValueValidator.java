@@ -8,10 +8,10 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
-import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.google.common.collect.Lists;
@@ -19,9 +19,10 @@ import com.google.common.collect.Sets;
 
 public class ValueValidator extends AbstractDeclarativeValidator {
 
-	protected static final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
-	protected static final String VALUES = "values";
-	protected static final String DEFAULT = "default";
+	public static final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
+	
+	public static final String VALUES = "values";
+	public static final String DEFAULT = "default";
 	
 	protected Set<EClass> getTypesToCheck() {
 		return Sets.newHashSet(VCML_PACKAGE.getSymbolicType(), VCML_PACKAGE.getNumericType(), VCML_PACKAGE.getDateType());
@@ -52,7 +53,9 @@ public class ValueValidator extends AbstractDeclarativeValidator {
 						String message = "Only one default value is allowed.";
 						for(EObject entry : defaultSet) {
 							for(EAttribute attribute : entry.eClass().getEAllAttributes()) {
-								error(message, entry, attribute, ValidationMessageAcceptor.INSIGNIFICANT_INDEX);								
+								String[] data = new String[]{"Remove the forbidden default attribute from the value.", EcoreUtil.getURI(entry).toString()};
+								error(message, entry, attribute, "Forbidden_default_attribute", data);	
+								break;
 							}
 						}
 					}

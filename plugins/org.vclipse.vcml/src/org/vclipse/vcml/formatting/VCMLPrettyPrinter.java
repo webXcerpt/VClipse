@@ -268,21 +268,7 @@ public class VCMLPrettyPrinter extends DefaultPrettyPrinter {
 		if(!values.isEmpty()) {
 			layouter.brk().beginC().print("values {");
 			for(CharacteristicValue value : values) {
-				layouter.brk().beginC();
-				if(value.isDefault()) {
-					layouter.print("*");
-				}
-				layouter.print("'");
-				printNullsafe(value.getName());
-				layouter.print("'");
-				if(hasBody(value)) {
-					layouter.print(" {");
-					doSwitch(value.getDescription());
-					doSwitch(value.getDocumentation());
-					doSwitch(value.getDependencies());
-					layouter.brk(1, -INDENTATION).print("}");
-				}
-				layouter.end();
+				doSwitch(value);
 			}
 			layouter.brk(1, -INDENTATION).print("}").end();   
 		}
@@ -330,14 +316,17 @@ public class VCMLPrettyPrinter extends DefaultPrettyPrinter {
 	}
 
 	@Override
-	public DataLayouter<NoExceptions> caseCharacteristicValue(CharacteristicValue object) {
+	public DataLayouter<NoExceptions> caseCharacteristicValue(CharacteristicValue value) {
 		layouter.brk().beginC();
-		printNullsafe(object.getName());
-		if(hasBody(object)) {
+		if(value.isDefault()) {
+			layouter.print("*");
+		}
+		layouter.print(asSymbol(value.getName()));
+		if(hasBody(value)) {
 			layouter.print(" {");
-			doSwitch(object.getDescription());
-			doSwitch(object.getDocumentation());
-			doSwitch(object.getDependencies());
+			doSwitch(value.getDescription());
+			doSwitch(value.getDocumentation());
+			doSwitch(value.getDependencies());
 			layouter.brk(1, -INDENTATION).print("}");
 		}
 		return layouter.end();

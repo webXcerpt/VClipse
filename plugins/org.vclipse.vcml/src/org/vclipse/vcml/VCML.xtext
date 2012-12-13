@@ -111,25 +111,25 @@ SymbolicType :
 	;
 
 CharacteristicValue :
-	(name=EXTENDED_ID
+	default?='*'?
+	name=EXTENDED_ID
 		(('{'
 	  	(	description=Description?
 	  	&	documentation=Documentation?
 	  	&	dependencies=CharacteristicOrValueDependencies?
 	 	)
 		'}')?
-	)
-	& (default?='*'?));
+	);
 
 NumericCharacteristicValue :
-	(entry=NumberListEntryForValues
+	default?='*'?
+	entry=NumberListEntryForValues
 		(('{'
 	 	 (	documentation=Documentation?
 	  	&	dependencies=CharacteristicOrValueDependencies?
 	  	)
 		'}')?
-	)
-	& (default?='*'?));
+	);
 
 DateType : 
 	{DateType}
@@ -143,14 +143,14 @@ DateType :
 	;
 	
 DateCharacteristicValue :
+	default?='*'?
 	(from=DATE ('-' to=DATE)?
 		(('{'
 	  	(	documentation=Documentation?
 	  	&	dependencies=CharacteristicOrValueDependencies?
 	  	)
 		'}')?
-	)
-	& (default?='*'?));
+	));
 
 DATE : INT '.' INT '.' INT;
 

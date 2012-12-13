@@ -29,7 +29,6 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.ui.editor.model.edit.IModificationContext;
 import org.eclipse.xtext.ui.editor.model.edit.ISemanticModification;
-import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider;
 import org.eclipse.xtext.ui.editor.quickfix.Fix;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolution;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor;
@@ -46,7 +45,7 @@ import org.vclipse.vcml.vcml.VcmlPackage;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
-public class VCMLQuickfixProvider extends DefaultQuickfixProvider {
+public class VCMLQuickfixProvider extends ValueQuickFixProvider {
 	
 	@Inject VCMLPrettyPrinter prettyPrinter;
 	@Inject IWorkspaceRoot workspaceRoot;
