@@ -48,7 +48,7 @@ public class ValueValidator extends AbstractDeclarativeValidator {
 							}							
 						}
 					}
-					if(!defaultSet.isEmpty()) {
+					if(defaultSet.size() > 1) {
 						String message = "Only one default value is allowed.";
 						for(EObject entry : defaultSet) {
 							for(EAttribute attribute : entry.eClass().getEAllAttributes()) {
