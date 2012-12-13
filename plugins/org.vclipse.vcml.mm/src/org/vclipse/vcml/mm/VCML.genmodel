@@ -170,17 +170,20 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//CharacteristicValue/description"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//CharacteristicValue/documentation"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//CharacteristicValue/dependencies"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//CharacteristicValue/default"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//NumericCharacteristicValue">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//NumericCharacteristicValue/entry"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//NumericCharacteristicValue/documentation"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//NumericCharacteristicValue/dependencies"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//NumericCharacteristicValue/default"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//DateCharacteristicValue">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//DateCharacteristicValue/from"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//DateCharacteristicValue/to"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//DateCharacteristicValue/documentation"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//DateCharacteristicValue/dependencies"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//DateCharacteristicValue/default"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//CharacteristicOrValueDependencies">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference VCML.ecore#//CharacteristicOrValueDependencies/dependencies"/>
