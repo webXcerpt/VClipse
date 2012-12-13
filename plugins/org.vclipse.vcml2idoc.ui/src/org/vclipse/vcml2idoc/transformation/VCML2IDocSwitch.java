@@ -510,6 +510,9 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		}
 		// documentation for characteristic values
 		addSegmentsForDocumentation(segmentE1CAWNM, "E1TXTL1", value.getDocumentation());
+		if(value.isDefault()) {
+			setValue(segmentE1CAWNM, "ATSTD", "X");			
+		}
 	}
 
 	/**
