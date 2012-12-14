@@ -13,6 +13,7 @@ package org.vclipse.refactoring.tests.swtbot
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.IProgressMonitor
 import org.eclipse.core.runtime.NullProgressMonitor
+import org.eclipse.jdt.core.JavaCore
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner
 import org.eclipse.ui.IEditorSite
@@ -22,11 +23,15 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.vclipse.refactoring.tests.utils.RefactoringResourcesLoader
 import org.vclipse.refactoring.tests.utils.RefactoringTestModule
+import org.vclipse.refactoring.utils.EntrySearch
 import org.vclipse.refactoring.utils.Extensions
 import org.vclipse.vcml.VCMLRuntimeModule
 import org.vclipse.vcml.refactoring.VCMLRefactoring
 
 import static com.google.inject.Guice.*
+import static junit.framework.Assert.*
+import static org.vclipse.refactoring.tests.swtbot.Strings.*
+import static org.vclipse.refactoring.tests.utils.RefactoringResourcesLoader.*
 
 @RunWith(typeof(SWTBotJunit4ClassRunner))
 class RefactoringTests extends XtextTest {
@@ -34,6 +39,7 @@ class RefactoringTests extends XtextTest {
 	private RefactoringResourcesLoader resourcesLoader
 	private Extensions extensions
 	private VCMLRefactoring vcmlRefactoring
+	private EntrySearch search
 	
 	private SWTWorkbenchBot bot
 	
@@ -58,6 +64,7 @@ class RefactoringTests extends XtextTest {
 		resourcesLoader = injector.getInstance(typeof(RefactoringResourcesLoader))
 		extensions = injector.getInstance(typeof(Extensions))
 		vcmlRefactoring = injector.getInstance(typeof(VCMLRefactoring))
+		search = injector.getInstance(typeof(EntrySearch))
 	}
 
 	override after() {
@@ -66,7 +73,7 @@ class RefactoringTests extends XtextTest {
 	
 	def private void loadResources() {
 		val root = ResourcesPlugin::workspace.root
-		var project = root.getProject("RefactoringTest")
+		var project = root.getProject("org.vclipse.refactoring")
 		var monitor = new NullProgressMonitor as IProgressMonitor
 		if(!project.accessible) {
 			val activeEditor = PlatformUI::workbench.activeWorkbenchWindow.activePage.activeEditor
@@ -80,6 +87,11 @@ class RefactoringTests extends XtextTest {
 			project.create(monitor)
 			project.open(monitor)
 		}
+		
+		val natures = create(JavaCore::NATURE_ID, "org.eclipse.pde.PluginNature")
+		val description = project.description
+		description.setNatureIds(natures)
+		project.setDescription(description, monitor)
 		
 		val folder = project.getFolder("car_description-dep")
 		if(!folder.accessible) {
@@ -120,12 +132,7 @@ class RefactoringTests extends XtextTest {
 	@Test
 	def refactoring_Split() {
 		loadResources
-//		var entries = resourcesLoader.getResourceContents(CAR_DESCRIPTION)
-//		var firstEntry = entries.get(0)
-//		val resource = firstEntry.eResource
-//		val refactoringExecuter = extensions.getInstance(typeof(VCMLRefactoring), firstEntry)
-//		if(refactoringExecuter == null) {
-//			fail("Can not find re-factoring executer for " + firstEntry)
-//		}
+		val description_root = resourcesLoader.getResourceRoot("/car_description.vcml")
+		assertNotNull(description_root)
 	}
 }

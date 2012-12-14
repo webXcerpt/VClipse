@@ -8,7 +8,7 @@ class (300)CAR {
   description "this is the class for the car"
   status released
   group "PRODUCTS_CAR"
-  characteristics { ENGINE }
+  characteristics { ENGINE COLOR INTERIOR }
 }
 
 constraint CS_CAR1
