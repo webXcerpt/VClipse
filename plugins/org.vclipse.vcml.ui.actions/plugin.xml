@@ -2307,72 +2307,67 @@
       <menuContribution
             allPopups="false"
             locationURI="popup:org.vclipse.ui.menus.popup?before=group.begin">
-         <menu
-               id="org.vclipse.ui.menus.sapactions"
-               label="SAP Actions"
-               tooltip="SAP Actions Menu">
-            <command
-                  commandId="org.vclipse.sap.commands.create"
-                  disabledIcon="icons/actions/create_disabled.png"
-                  icon="icons/actions/create_enabled.png"
-                  label="Create">
-               <visibleWhen
-                     checkEnabled="true">
-                  <reference
-                        definitionId="org.vclipse.vcml.VCML.Editor.opened">
-                  </reference>
-               </visibleWhen>
-            </command>
-            <command
-                  commandId="org.vclipse.sap.commands.change"
-                  disabledIcon="icons/actions/change_disabled.png"
-                  icon="icons/actions/change_enabled.png"
-                  label="Change">
-               <visibleWhen
-                     checkEnabled="true">
-                  <reference
-                        definitionId="org.vclipse.vcml.VCML.Editor.opened">
-                  </reference>
-               </visibleWhen>
-            </command>
-            <command
-                  commandId="org.vclipse.sap.commands.delete"
-                  disabledIcon="icons/actions/delete_disabled.png"
-                  icon="icons/actions/delete_enabled.png"
-                  label="Delete">
-               <visibleWhen
-                     checkEnabled="true">
-                  <reference
-                        definitionId="org.vclipse.vcml.VCML.Editor.opened">
-                  </reference>
-               </visibleWhen>
-            </command>
-            <command
-                  commandId="org.vclipse.sap.commands.display"
-                  disabledIcon="icons/actions/display_disabled.png"
-                  icon="icons/actions/display_enabled.png"
-                  label="Display">
-               <visibleWhen
-                     checkEnabled="true">
-                  <reference
-                        definitionId="org.vclipse.vcml.VCML.Editor.opened">
-                  </reference>
-               </visibleWhen>
-            </command>
-            <command
-                  commandId="org.vclipse.sap.commands.extract"
-                  disabledIcon="icons/actions/display_disabled.png"
-                  icon="icons/actions/display_enabled.png"
-                  label="Extract recursively"
-                  tooltip="Extract SAP objects recursively">
-               <visibleWhen
-                     checkEnabled="true">
-                  <reference
-                        definitionId="org.vclipse.vcml.VCML.Editor.opened">
-                  </reference>
-               </visibleWhen>
-            </command>
-         </menu>
+         <command
+               commandId="org.vclipse.sap.commands.create"
+               disabledIcon="icons/actions/create_disabled.png"
+               icon="icons/actions/create_enabled.png"
+               label="Create">
+            <visibleWhen
+                  checkEnabled="true">
+               <reference
+                     definitionId="org.vclipse.vcml.VCML.Editor.opened">
+               </reference>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.vclipse.sap.commands.change"
+               disabledIcon="icons/actions/change_disabled.png"
+               icon="icons/actions/change_enabled.png"
+               label="Change">
+            <visibleWhen
+                  checkEnabled="true">
+               <reference
+                     definitionId="org.vclipse.vcml.VCML.Editor.opened">
+               </reference>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.vclipse.sap.commands.delete"
+               disabledIcon="icons/actions/delete_disabled.png"
+               icon="icons/actions/delete_enabled.png"
+               label="Delete">
+            <visibleWhen
+                  checkEnabled="true">
+               <reference
+                     definitionId="org.vclipse.vcml.VCML.Editor.opened">
+               </reference>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.vclipse.sap.commands.display"
+               disabledIcon="icons/actions/display_disabled.png"
+               icon="icons/actions/display_enabled.png"
+               label="Display">
+            <visibleWhen
+                  checkEnabled="true">
+               <reference
+                     definitionId="org.vclipse.vcml.VCML.Editor.opened">
+               </reference>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.vclipse.sap.commands.extract"
+               disabledIcon="icons/actions/display_disabled.png"
+               icon="icons/actions/display_enabled.png"
+               label="Extract recursively"
+               tooltip="Extract SAP objects recursively">
+            <visibleWhen
+                  checkEnabled="true">
+               <reference
+                     definitionId="org.vclipse.vcml.VCML.Editor.opened">
+               </reference>
+            </visibleWhen>
+         </command>
       </menuContribution>
    </extension>
    <extension
