@@ -128,6 +128,9 @@ public class CharacteristicCreateChangeActionHandler extends BAPIUtils implement
 							charactValuesDescr.setValue("LANGUAGE_ISO", language.toString());
 						}
 					}.handleDescription(value.getDescription());
+					if(value.isDefault()) {
+						charactValuesChar.setValue("DEFAULT_VALUE", "X");
+					}
 				}
 				return this;
 			}

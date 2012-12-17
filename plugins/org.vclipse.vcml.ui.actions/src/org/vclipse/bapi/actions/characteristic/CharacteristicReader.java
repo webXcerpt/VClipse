@@ -131,6 +131,7 @@ public class CharacteristicReader extends BAPIUtils {
 							values.add(value);
 							value.setName(name);
 							seenValues.put(name, value);
+							value.setDefault("X".equals(charactValuesChar.getString("DEFAULT_VALUE")));
 						}
 					}
 				}
