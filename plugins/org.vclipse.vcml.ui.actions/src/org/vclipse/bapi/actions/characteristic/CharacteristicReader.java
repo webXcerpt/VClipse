@@ -205,6 +205,7 @@ public class CharacteristicReader extends BAPIUtils {
 						} catch (ParseException e) {
 							value.setFrom("00.00.0000");
 						}
+						value.setDefault("X".equals(charactValuesNum.getString("DEFAULT_VALUE")));
 						values.add(value);
 					}
 				}

@@ -166,6 +166,9 @@ public class CharacteristicCreateChangeActionHandler extends BAPIUtils implement
 						relation = "3"; // means GE LE
 					}
 					charactValuesNum.setValue("VALUE_RELATION", relation);
+					if(value.isDefault()) {
+						charactValuesNum.setValue("DEFAULT_VALUE", "X");
+					}
 					charactValuesNum.nextRow();
 				}
 				return this;
