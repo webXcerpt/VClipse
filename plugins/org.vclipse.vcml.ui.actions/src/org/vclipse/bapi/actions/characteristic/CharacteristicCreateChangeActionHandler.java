@@ -96,6 +96,9 @@ public class CharacteristicCreateChangeActionHandler extends BAPIUtils implement
 					charactValuesNum.setValue("UNIT_FROM", unit);
 					charactValuesNum.setValue("UNIT_TO", unit);
 					charactValuesNum.setValue("VALUE_RELATION", relation);
+					if(value.isDefault()) {
+						charactValuesNum.setValue("DEFAULT_VALUE", "X");
+					}
 					charactValuesNum.nextRow();
 				}
 				return this;
