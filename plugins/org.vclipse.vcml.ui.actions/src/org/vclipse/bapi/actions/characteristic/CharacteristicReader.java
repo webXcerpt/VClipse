@@ -96,6 +96,8 @@ public class CharacteristicReader extends BAPIUtils {
 						String from = charactValuesNum.getString("VALUE_FROM");
 						String to = charactValuesNum.getString("VALUE_TO");
 						String relation = charactValuesNum.getString("VALUE_RELATION");
+						String defaultString = charactValuesNum.getString("DEFAULT_VALUE");
+						value.setDefault("X".equals(defaultString));
 						if ("1".equals(relation)) {
 							NumericLiteral literal = VCML.createNumericLiteral();
 							literal.setValue(new BigDecimal(from).toPlainString());
