@@ -204,7 +204,7 @@ public class VCMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 	}
 
 	protected boolean _isLeaf(NumericCharacteristicValue modelElement) {
-		return hierarchical;
+		return true;
 	}
 
 	protected boolean _isLeaf(Precondition modelElement) {

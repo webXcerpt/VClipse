@@ -38,6 +38,10 @@ import org.vclipse.vcml.vcml.MultiLanguageDescription;
 import org.vclipse.vcml.vcml.MultiLanguageDescriptions;
 import org.vclipse.vcml.vcml.MultipleLanguageDocumentation;
 import org.vclipse.vcml.vcml.MultipleLanguageDocumentation_LanguageBlock;
+import org.vclipse.vcml.vcml.NumberListEntry;
+import org.vclipse.vcml.vcml.NumericCharacteristicValue;
+import org.vclipse.vcml.vcml.NumericInterval;
+import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.NumericType;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Precondition;
@@ -255,6 +259,18 @@ public class VCMLLabelProvider extends AbstractVClipseLabelProvider {
 
 	public String text(NumericType element) {
 		return "NUM " + element.getNumberOfChars() + "." + element.getDecimalPlaces();
+	}
+	
+	public String text(NumericCharacteristicValue value) {
+		NumberListEntry entry = value.getEntry();
+		if(entry instanceof NumericLiteral) {
+			return ((NumericLiteral)entry).getValue();
+		}
+		if(entry instanceof NumericInterval) {
+			NumericInterval interval = (NumericInterval)entry;
+			return interval.getLowerBound() + " ... " + interval.getUpperBound();
+		}
+		return "";
 	}
 
 	public StyledString text(Option option) {
