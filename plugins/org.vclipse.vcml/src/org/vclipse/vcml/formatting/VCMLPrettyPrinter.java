@@ -321,7 +321,7 @@ public class VCMLPrettyPrinter extends DefaultPrettyPrinter {
 		if(value.isDefault()) {
 			layouter.print("*");
 		}
-		layouter.print(asSymbol(value.getName()));
+		layouter.print("'" + value.getName() + "'");
 		if(hasBody(value)) {
 			layouter.print(" {");
 			doSwitch(value.getDescription());
