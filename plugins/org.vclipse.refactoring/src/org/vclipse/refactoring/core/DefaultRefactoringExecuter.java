@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.util.Pair;
 import org.vclipse.refactoring.IRefactoringContext;
 import org.vclipse.refactoring.IRefactoringExecuter;
+import org.vclipse.refactoring.IRefactoringUIContext;
 import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.RefactoringStatus;
 import org.vclipse.refactoring.utils.Configuration;
@@ -63,6 +64,7 @@ public class DefaultRefactoringExecuter extends MethodCollector implements IRefa
 	
 	public DefaultRefactoringExecuter() {		
 		collect(1, IRefactoringContext.class);
+		collect(1, IRefactoringUIContext.class);
 		collect(2);
 	}
 	
