@@ -47,7 +47,12 @@ public class Extensions {
 		if(injector == null) {
 			return getInstance(type);
 		}
-		return injector.getInstance(type);
+		try {
+			T instance = injector.getInstance(type);
+			return instance;
+		} catch(Exception exception) {
+			return getInstance(type);
+		}
 	}
 	
 	public <T> T getInstance(Class<T> type) {
