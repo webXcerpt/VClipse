@@ -133,9 +133,13 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 			try {
 				EObject sourceElement = context.getSourceElement();
 				EObject rootContainer = EcoreUtil.getRootContainer(sourceElement);
-				IRefactoringUIConfiguration uiConfiguration = extensions.getInstance(IRefactoringUIConfiguration.class, rootContainer);
 				List<? extends UserInputWizardPage> pages = Lists.newArrayList();
-				pages = uiConfiguration.provideWizardPages(context);
+				try {
+					IRefactoringUIConfiguration uiConfiguration = extensions.getInstance(IRefactoringUIConfiguration.class, rootContainer);
+					pages = uiConfiguration.provideWizardPages(context);
+				} catch(Exception exception) {
+					
+				}
 				refactoringTask.setContext(context);
 				context.setRefactoring(refactoringTask);
 				RefactoringWizard wizard = new RefactoringWizard(pages, refactoringTask, RefactoringWizard.DIALOG_BASED_USER_INTERFACE);
