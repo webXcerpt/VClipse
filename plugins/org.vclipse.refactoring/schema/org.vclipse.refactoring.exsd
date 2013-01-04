@@ -6,7 +6,7 @@
          <meta.schema plugin="org.vclipse.refactoring" id="org.vclipse.refactoring" name="Refactoring"/>
       </appinfo>
       <documentation>
-         [Enter description of this extension point.]
+         Refactoring executer extension point allows 
       </documentation>
    </annotation>
 
@@ -55,7 +55,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn="org.vclipse.refactoring.core.RefactoringExecuter:org.vclipse.refactoring.IRefactoringExecuter"/>
+                  <meta.attribute kind="java" basedOn="org.vclipse.refactoring.core.DefaultRefactoringExecuter:"/>
                </appinfo>
             </annotation>
          </attribute>
