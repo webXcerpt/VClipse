@@ -63,8 +63,8 @@ public class RefactoringMatchEngine extends GenericMatchEngineToCheckerBridge {
 	}
 
 	public double compare(EObject first, EObject second) throws FactoryException {
-		List<EObject> firstParts = Lists.newArrayList(first.eContents());
-		List<EObject> secondParts = Lists.newArrayList(second.eContents());
+		List<EObject> firstParts = Lists.newArrayList(first.eAllContents());
+		List<EObject> secondParts = Lists.newArrayList(second.eAllContents());
 		if(firstParts.isEmpty()) {
 			firstParts = Lists.newArrayList(first.eCrossReferences());
 			secondParts = Lists.newArrayList(second.eCrossReferences());
