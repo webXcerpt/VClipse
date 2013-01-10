@@ -13,7 +13,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.ui.editor.model.edit.IModificationContext;
 import org.eclipse.xtext.ui.editor.model.edit.ISemanticModification;
@@ -141,7 +140,7 @@ public class DependencyQuickfixProvider extends DefaultQuickfixProvider {
 										}
 									}).iterator();
 									if(!iterator.hasNext()) {
-										entries.add(EcoreUtil.copy(vcobject));										
+										entries.add(vcobject);									
 									}
 								}
 							}
