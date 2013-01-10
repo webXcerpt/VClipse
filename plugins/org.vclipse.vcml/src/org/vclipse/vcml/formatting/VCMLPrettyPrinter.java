@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.vclipse.base.VClipseStrings;
 import org.vclipse.vcml.utils.DependencySourceUtils;
+import org.vclipse.vcml.utils.VCMLObjectUtils;
 import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Characteristic;
@@ -375,6 +376,9 @@ public class VCMLPrettyPrinter extends DefaultPrettyPrinter {
 		if(hasBody(object)) {
 			layouter.print(" {");
 			{
+				if(object.getDescription() == null) {
+					object.setDescription(VCMLObjectUtils.mkSimpleDescription(""));
+				}
 				doSwitch(object.getDescription());
 				printStatus(object.getStatus());
 				printGroup(object.getGroup());
