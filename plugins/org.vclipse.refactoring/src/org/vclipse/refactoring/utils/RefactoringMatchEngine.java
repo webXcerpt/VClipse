@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.vclipse.refactoring.utils;
 
-import java.util.List;
+import java.util.Iterator;
 
 import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.engine.internal.GenericMatchEngineToCheckerBridge;
@@ -18,7 +18,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
@@ -63,32 +65,34 @@ public class RefactoringMatchEngine extends GenericMatchEngineToCheckerBridge {
 	}
 
 	public double compare(EObject first, EObject second) throws FactoryException {
-		List<EObject> firstParts = Lists.newArrayList(first.eAllContents());
-		List<EObject> secondParts = Lists.newArrayList(second.eAllContents());
-		if(firstParts.isEmpty()) {
+		Iterable<EObject> firstParts = IteratorExtensions.toIterable(first.eAllContents());
+		Iterable<EObject> secondParts = IteratorExtensions.toIterable(second.eAllContents());
+		if(Iterables.isEmpty(firstParts)) {
 			firstParts = Lists.newArrayList(first.eCrossReferences());
 			secondParts = Lists.newArrayList(second.eCrossReferences());
 		}
-		if(firstParts.isEmpty()) {
+		if(Iterables.isEmpty(firstParts)) {
 			firstParts = Lists.newArrayList(first);
 			secondParts = Lists.newArrayList(second);
 		}
 		return compare(firstParts, secondParts);
 	}
 	
-	public double compare(List<EObject> first, List<EObject> second) throws FactoryException {
-		int firstSize = first.size();
-		int secondSize = second.size();
+	public double compare(Iterable<EObject> first, Iterable<EObject> second) throws FactoryException {
+		int firstSize = Iterables.size(first);
+		int secondSize = Iterables.size(second);
 		if(firstSize != secondSize) {
 			return DIFFERENT;
 		} 
+		Iterator<EObject> firstIterator = first.iterator();
+		Iterator<EObject> secondIterator = second.iterator();
 		if(firstSize > 1) {
 			double similarity = DIFFERENT;
-			for(int i=0; i<firstSize; i++) {
-				similarity += compare(first.get(i), second.get(i));
+			while(firstIterator.hasNext() && secondIterator.hasNext()) {
+				similarity += compare(firstIterator.next(), secondIterator.next());
 			}
 			return similarity / firstSize;
 		}
-		return EcoreUtil.equals(first.get(0), second.get(0)) ? SIMILAR : DIFFERENT;
+		return EcoreUtil.equals(firstIterator.next(), secondIterator.next()) ? SIMILAR : DIFFERENT;
 	}
 }
