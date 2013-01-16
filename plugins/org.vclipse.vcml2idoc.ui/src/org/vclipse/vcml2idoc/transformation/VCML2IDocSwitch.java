@@ -249,6 +249,8 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 	}
 
 	private void setOptionsFromModel(final VcmlModel model) {
+		ecm = null;
+		ups = null;
 		for(final Option option : model.getOptions()) {
 			switch (option.getName()) {
 				case ECM: ecm = option.getValue(); break;
