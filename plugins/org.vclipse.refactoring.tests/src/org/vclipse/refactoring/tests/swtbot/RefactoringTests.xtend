@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.vclipse.refactoring.tests.swtbot
 
+import com.google.common.collect.Lists
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.IProgressMonitor
 import org.eclipse.core.runtime.NullProgressMonitor
@@ -30,10 +31,6 @@ import org.vclipse.vcml.refactoring.VCMLRefactoring
 
 import static com.google.inject.Guice.*
 import static junit.framework.Assert.*
-import static org.vclipse.refactoring.tests.swtbot.Strings.*
-import static org.vclipse.refactoring.tests.utils.RefactoringResourcesLoader.*
-
-import com.google.common.collect.Lists
 
 @RunWith(typeof(SWTBotJunit4ClassRunner))
 class RefactoringTests extends XtextTest {
@@ -90,8 +87,9 @@ class RefactoringTests extends XtextTest {
 			project.open(monitor)
 		}
 		
+		val natures = Lists::newArrayList(JavaCore::NATURE_ID, "org.eclipse.pde.PluginNature")
 		val description = project.description
-		description.setNatureIds(Lists::newArrayList(JavaCore::NATURE_ID, "org.eclipse.pde.PluginNature"))
+		description.setNatureIds(natures)
 		project.setDescription(description, monitor)
 		
 		val folder = project.getFolder("car_description-dep")
