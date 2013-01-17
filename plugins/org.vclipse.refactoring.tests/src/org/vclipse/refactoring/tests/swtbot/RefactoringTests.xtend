@@ -33,6 +33,8 @@ import static junit.framework.Assert.*
 import static org.vclipse.refactoring.tests.swtbot.Strings.*
 import static org.vclipse.refactoring.tests.utils.RefactoringResourcesLoader.*
 
+import com.google.common.collect.Lists
+
 @RunWith(typeof(SWTBotJunit4ClassRunner))
 class RefactoringTests extends XtextTest {
 
@@ -88,9 +90,8 @@ class RefactoringTests extends XtextTest {
 			project.open(monitor)
 		}
 		
-		val natures = create(JavaCore::NATURE_ID, "org.eclipse.pde.PluginNature")
 		val description = project.description
-		description.setNatureIds(natures)
+		description.setNatureIds(Lists::newArrayList(JavaCore::NATURE_ID, "org.eclipse.pde.PluginNature"))
 		project.setDescription(description, monitor)
 		
 		val folder = project.getFolder("car_description-dep")
