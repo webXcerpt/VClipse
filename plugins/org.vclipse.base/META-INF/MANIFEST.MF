@@ -4,8 +4,13 @@ Bundle-Name: VClipse Base Plug-In
 Bundle-SymbolicName: org.vclipse.base
 Bundle-Version: 0.5.0.qualifier
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
-Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
- org.eclipse.xtext;visibility:=reexport
+Require-Bundle: org.eclipse.core.resources,
+ org.eclipse.compare,
+ org.eclipse.core.runtime;visibility:=reexport,
+ org.eclipse.xtext;visibility:=reexport,
+ org.eclipse.swt,
+ org.eclipse.xtend.lib,
+ com.google.guava
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.apache.poi,
@@ -85,14 +90,8 @@ Export-Package: org.apache.poi,
  org.apache.poi.xwpf.extractor,
  org.apache.poi.xwpf.model,
  org.apache.poi.xwpf.usermodel,
- org.vclipse.base;
-  uses:="org.eclipse.emf.ecore.resource,
-   org.eclipse.core.runtime,
-   org.eclipse.emf.ecore,
-   org.eclipse.xtext.util,
-   org.osgi.framework,
-   org.eclipse.xtext.documentation",
+ org.vclipse.base; uses:="org.eclipse.emf.ecore.resource,  org.eclipse.core.runtime,  org.eclipse.emf.ecore,  org.eclipse.xtext.util,  org.osgi.framework,  org.eclipse.xtext.documentation",
+ org.vclipse.base.compare,
  org.vclipse.base.naming;uses:="org.eclipse.emf.ecore,org.eclipse.xtext.naming,com.google.common.base"
-Bundle-ClassPath: .,
- libs/poi-3.8-20120326.jar,
- libs/poi-ooxml-3.8-20120326.jar
+Bundle-ClassPath: .,libs/poi-3.8-20120326.jar,libs/poi-ooxml-3.8-20120326.jar
+

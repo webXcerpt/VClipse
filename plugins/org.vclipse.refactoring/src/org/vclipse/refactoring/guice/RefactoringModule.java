@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.vclipse.refactoring.guice;
 
+import org.eclipse.emf.compare.match.IEqualityHelperFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.service.AbstractGenericModule;
@@ -22,6 +23,7 @@ import org.vclipse.refactoring.RefactoringPlugin;
 import org.vclipse.refactoring.core.DefaultContainerPreviewComputer;
 import org.vclipse.refactoring.core.RefactoringConfiguration;
 import org.vclipse.refactoring.ui.RefactoringUIConfiguration;
+import org.vclipse.refactoring.utils.VcmlEqualityHelper;
 
 public class RefactoringModule extends AbstractGenericModule {
 
@@ -53,5 +55,9 @@ public class RefactoringModule extends AbstractGenericModule {
 	
 	public Class<? extends IRefactoringUIConfiguration> bindRefactoringUIConfiguration() {
 		return RefactoringUIConfiguration.class;
+	}
+	
+	public Class<? extends IEqualityHelperFactory> bindEqualityHelperFactory() {
+		return VcmlEqualityHelper.class;
 	}
 }

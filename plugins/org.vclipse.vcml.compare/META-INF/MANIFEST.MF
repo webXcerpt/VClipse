@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: VClipse Compare Plug-in
+Bundle-SymbolicName: org.vclipse.vcml.compare;singleton:=true
+Bundle-Version: 0.5.0.qualifier
+Bundle-Activator: org.vclipse.vcml.compare.VcmlComparePlugin
+Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany, www.webxcerpt.com
+Require-Bundle: org.vclipse.vcml,
+ org.vclipse.vcml.ui,
+ org.eclipse.ui.ide,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.xtext.ui.shared,
+ org.eclipse.emf.compare
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Import-Package: com.google.common.base
+Export-Package: org.vclipse.vcml.compare,
+ org.vclipse.vcml.compare.injection,
+ org.vclipse.vcml.compare.ui

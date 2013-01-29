@@ -1,0 +1,9 @@
+objects: ENGINE is_a (300)ENGINE . 
+condition:
+  ENGINE.CYLINDERS > 2 and ENGINE.CYLINDERS < 20 and
+  ENGINE.TYPE <> 'Wankel'. 
+
+restrictions:
+  ENGINE.TYPE = 'Inline' if ENGINE.CYLINDERS in (3,  4,  5) ,
+  ENGINE.TYPE = 'V-Type' if ENGINE.CYLINDERS in (6,  8) ,
+  ENGINE.TYPE = 'W-Type' if ENGINE.CYLINDERS > 8. 

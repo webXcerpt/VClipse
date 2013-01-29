@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
@@ -94,7 +95,7 @@ public class RefactoringTask extends Refactoring {
 			modelChange.perform(pm);
 			sm.done();
 		} catch(CoreException exception) {
-			RefactoringPlugin.log(exception.getMessage(), exception);
+			RefactoringPlugin.log(IStatus.ERROR, exception.getMessage());
 			modelChange = null;
 			sm.done();
 			throw exception;

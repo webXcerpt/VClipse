@@ -26,6 +26,7 @@ import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.ui.editor.model.edit.IModificationContext;
 import org.eclipse.xtext.ui.editor.model.edit.ISemanticModification;
@@ -33,7 +34,7 @@ import org.eclipse.xtext.ui.editor.quickfix.Fix;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolution;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor;
 import org.eclipse.xtext.validation.Issue;
-import org.vclipse.vcml.diff.storage.EObjectTypedElement;
+import org.vclipse.base.compare.MultipleEntriesTypedElement;
 import org.vclipse.vcml.formatting.VCMLPrettyPrinter;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.vcml.CharacteristicGroup;
@@ -47,9 +48,17 @@ import com.google.inject.Inject;
 
 public class VCMLQuickfixProvider extends ValueQuickFixProvider {
 	
-	@Inject VCMLPrettyPrinter prettyPrinter;
-	@Inject IWorkspaceRoot workspaceRoot;
-	@Inject DependencySourceUtils sourceUtils;
+	@Inject 
+	private VCMLPrettyPrinter prettyPrinter;
+	
+	@Inject 
+	private IWorkspaceRoot workspaceRoot;
+	
+	@Inject 
+	private DependencySourceUtils sourceUtils;
+	
+	@Inject
+	private ISerializer serializer;
 	
 	@Override
 	public List<IssueResolution> getResolutions(Issue issue) {
@@ -146,7 +155,7 @@ public class VCMLQuickfixProvider extends ValueQuickFixProvider {
 				new DefaultSemanticModification("variantfunction " + linkText));
 	}
 	
-	@Fix("Compare_Issue")
+	@Fix("Compare_Issue_Code")
 	public void fixCompareIssue(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Show change in compare editor", "Opens the compare editor for objects where the change is applied.", null, new ISemanticModification() {
 			public void apply(EObject element, IModificationContext context) throws Exception {
@@ -154,14 +163,12 @@ public class VCMLQuickfixProvider extends ValueQuickFixProvider {
 				XtextResourceSet resourceSet = new XtextResourceSet();
 				EObject leftObject = resourceSet.getEObject(URI.createURI(data[0]), true);
 				EObject rightObject = resourceSet.getEObject(URI.createURI(data[1]), true);
-				
-				IWorkbenchPage activePage = 
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-				
-				CompareUI.openCompareEditor(
-						new CompareFileRevisionEditorInput(
-							new EObjectTypedElement(leftObject, prettyPrinter, workspaceRoot), 
-								new EObjectTypedElement(rightObject, prettyPrinter, workspaceRoot), activePage), true);
+				IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+				MultipleEntriesTypedElement leftElement = new MultipleEntriesTypedElement(serializer, leftObject);
+				leftElement.addProperty("type", "vcml");
+				MultipleEntriesTypedElement rightElement = new MultipleEntriesTypedElement(serializer, rightObject);
+				rightElement.addProperty("type", "vcml");
+				CompareUI.openCompareEditor(new CompareFileRevisionEditorInput(leftElement, rightElement, activePage), true);
 			}
 		});
 	}

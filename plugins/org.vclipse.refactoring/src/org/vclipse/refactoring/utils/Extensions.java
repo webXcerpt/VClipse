@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.vclipse.refactoring.utils;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
@@ -57,7 +58,7 @@ public class Extensions {
 			T instance = refactoringInjector.getInstance(type);
 			return instance;
 		} catch(ConfigurationException exception) {
-			RefactoringPlugin.log(exception.getMessage(), exception);
+			RefactoringPlugin.log(IStatus.ERROR, exception.getMessage());
 			return null;
 		}
 	}

@@ -60,7 +60,7 @@ import org.vclipse.vcml.vcml.VcmlPackage;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
-@ComposedChecks(validators= {VCMLJavaValidatorIssues.class, ValueValidator.class})
+@ComposedChecks(validators= {ValueValidator.class})
 public class VCMLJavaValidator extends AbstractVCMLJavaValidator {
 
 	@Inject

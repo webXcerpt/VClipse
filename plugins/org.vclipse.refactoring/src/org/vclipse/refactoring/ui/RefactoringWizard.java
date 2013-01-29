@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.ltk.core.refactoring.Change;
@@ -65,7 +66,7 @@ public class RefactoringWizard extends org.eclipse.ltk.ui.refactoring.Refactorin
 				});
 			} catch(Exception exception) {
 				Throwable cause = exception.getCause();
-				RefactoringPlugin.log(cause.getMessage(), cause);
+				RefactoringPlugin.log(IStatus.ERROR, cause == null ? exception.getMessage() : cause.getMessage());
 			}
 		}
 		return true && super.performFinish();

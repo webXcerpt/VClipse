@@ -13,9 +13,14 @@ package org.vclipse.vcml.utils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
+import org.eclipse.xtext.naming.QualifiedName;
 import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Characteristic;
@@ -119,6 +124,7 @@ public class VCMLObjectUtils {
 		return object;
 	}
 
+	// TODO delete - implemented in the vcml object creator
 	static public Constraint mkConstraint(final String name, final Description description) {
 		final Constraint object = VCML.createConstraint();
 		object.setName(name);
@@ -302,5 +308,26 @@ public class VCMLObjectUtils {
 				});
 			}
 		}
+	}
+	
+	/*
+	 * Searches for an entry with a given type and name in an iterable. Returns the first match, null if there is no match.
+	 */
+	public static <T extends EObject> T findEntry(final String name, final EClass type, final Iterable<T> entries, final IQualifiedNameProvider nameProvider) {
+		Iterator<T> iterator = entries.iterator();
+		if(iterator.hasNext()) {
+			if(nameProvider != null) {
+				Iterator<T> typedAndNamed = Iterables.filter(entries, new Predicate<T>() {
+					public boolean apply(T object) {
+						QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(object);
+						return qualifiedName == null ? false : qualifiedName.toString().equals(name) && object.eClass() == type;
+					}
+				}).iterator();
+				if(typedAndNamed.hasNext()) {
+					return typedAndNamed.next();
+				}
+			}
+		}
+		return null;
 	}
 }

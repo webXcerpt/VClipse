@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.vclipse.refactoring;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -41,6 +40,9 @@ public class RefactoringPlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 	
+	/**
+	 * 
+	 */
 	public Injector getInjector() {
 		if(injector == null) {
 			RefactoringModule module = new RefactoringModule(this);
@@ -49,21 +51,17 @@ public class RefactoringPlugin extends AbstractUIPlugin {
 		return injector;
 	}
 	
-	public static void log(IStatus status) {
-		if(status != null) {
-			getInstance().getLog().log(status);			
-		}
+	/**
+	 * Log a message with a given status in the error log view.
+	 */
+	public static void log(int status, String message) {
+		getInstance().getLog().log(new Status(status, ID, message));
 	}
-	
-	public static void log(String message, int severity) {
-		log(message, severity, null);
-	}
-	
-	public static void log(String message, Throwable throwable) {
-		log(message, IStatus.ERROR, throwable);
-	}
-	
-	public static void log(String message, int severity, Throwable throwable) {
-		getInstance().getLog().log(throwable == null ? new Status(severity, ID, message) : new Status(severity, ID, IStatus.OK, message, throwable));
+
+	/**
+	 * Log a predefined status.
+	 */
+	public static void log(RefactoringStatus status) {
+		log(status.getSeverity(), status.getMessage());
 	}
 }

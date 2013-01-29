@@ -1,0 +1,23 @@
+class (300)ENGINE {
+	description ""
+	characteristics {
+		TYPE
+	}
+}
+
+characteristic TYPE {
+	description "engine type"
+	symbolic { numberOfChars 30 [ ]
+		values {
+			'Inline'
+			'V-Type'
+			'W-Type'
+			'Wankel'
+		}
+	}
+	status released
+	group "engine"
+	[
+		displayAllowedValues
+	]
+}

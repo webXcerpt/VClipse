@@ -1,0 +1,33 @@
+import "engine.vcml"
+
+characteristic NAME {
+	description "the name of an existing car"
+	symbolic { 
+		numberOfChars 30 [ ]
+		values {
+			'Mazda RX-7'
+			'Mazda RX-8'
+			'VW Passat 4.0L W-8'
+			'Bugatti Veyron'
+			'VW Golf 3'
+			'Chevy'
+		}
+	}
+	status released
+	group "car"
+	[ ]
+}
+
+class (300)CAR {
+  description ""
+  status released
+  characteristics { 
+  	NAME
+  }
+  group "car"
+} 
+
+constraint CAR_SELECTION {
+	description ""
+	group "car"
+}

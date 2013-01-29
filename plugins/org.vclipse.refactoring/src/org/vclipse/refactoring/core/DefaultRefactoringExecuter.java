@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
@@ -103,7 +104,7 @@ public class DefaultRefactoringExecuter extends MethodCollector implements IRefa
 					method.invoke(executer, params.toArray());
 				} catch (Exception exception) {
 					String message = exception.getMessage();
-					RefactoringPlugin.log(message, exception);
+					RefactoringPlugin.log(IStatus.ERROR, message);
 				}
 			}
 		}

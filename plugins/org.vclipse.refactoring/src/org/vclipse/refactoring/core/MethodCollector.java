@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -60,7 +61,7 @@ public abstract class MethodCollector {
 				}
 				result = pair.getSecond().invoke(this, params.toArray());
 			} catch(Exception exception) {
-				RefactoringPlugin.log(exception.getMessage(), exception);
+				RefactoringPlugin.log(IStatus.ERROR, exception.getMessage());
 			} 
 		}
 		return result;

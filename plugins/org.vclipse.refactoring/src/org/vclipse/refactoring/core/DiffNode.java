@@ -12,7 +12,7 @@ package org.vclipse.refactoring.core;
 
 import org.eclipse.compare.ITypedElement;
 import org.eclipse.compare.structuremergeviewer.Differencer;
-import org.vclipse.refactoring.compare.MultipleEntriesTypedElement;
+import org.vclipse.base.compare.MultipleEntriesTypedElement;
 
 public class DiffNode extends org.eclipse.compare.structuremergeviewer.DiffNode {
 	

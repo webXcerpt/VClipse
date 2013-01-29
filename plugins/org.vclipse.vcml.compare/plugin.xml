@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	<extension point="org.eclipse.compare.contentViewers">
+    <viewer id="org.vclipse.vcml.VCML.compare.contentViewers"
+            class="org.vclipse.vcml.compare.injection.VcmlCompareExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+            extensions="vcml">
+    </viewer>
+  </extension>
+  <extension point="org.eclipse.compare.contentMergeViewers">
+    <viewer id="org.vclipse.vcml.VCML.compare.contentMergeViewers"
+            class="org.vclipse.vcml.compare.injection.VcmlCompareExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+            extensions="vcml" label="VCML Compare">
+     </viewer>
+  </extension>
+  <extension point="org.eclipse.ui.editors.documentProviders">
+    <provider id="org.vclipse.vcml.VCML.editors.documentProviders"
+            class="org.vclipse.vcml.compare.injection.VcmlCompareExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
+            extensions="vcml">
+    </provider>
+  </extension>
+  	
+	<extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.vclipse.ui.menus.popup?after=group.begin">
+         <command
+               commandId="org.vclipse.commands.export.differences"
+               icon="icons/compare.png"
+               label="Create delta of VCML files"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <reference
+                     definitionId="org.vclipse.vcml.resources.files.vcml">
+               </reference>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.vclipse.vcml.compare.injection.VcmlCompareExtensionFactory:org.vclipse.vcml.compare.ui.VcmlCompareInvokeExportHandler"
+            commandId="org.vclipse.commands.export.differences">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="org.vclipse.ui.commands"
+            description="Creates a new file with objects from delta."
+            id="org.vclipse.commands.export.differences"
+            name="Create delta of VCML files">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.vclipse.vcml.compare.injection.VcmlCompareExtensionFactory:org.vclipse.vcml.compare.VcmlComparePreferencesInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.vclipse.preferences.pages.vclipse"
+            class="org.vclipse.vcml.compare.injection.VcmlCompareExtensionFactory:org.vclipse.vcml.compare.ui.VcmlComparePreferencePage"
+            id="org.vclipse.vcml.preferences.pages.compare"
+            name="Vcml Compare">
+      </page>
+   </extension>
+</plugin>

@@ -1,0 +1,41 @@
+class (300)ENGINE {
+	description ""
+	characteristics {
+		CYLINDERS
+		TYPE
+	}
+}
+
+characteristic CYLINDERS {
+	description "cylinder amount"
+	numeric { numberOfChars 15 decimalPlaces 3 [ negativeValuesAllowed ]
+		values { 
+			4 6 8 12 16
+		}
+	}
+	status released
+	group "engine"
+	[]
+}
+
+characteristic TYPE {
+	description "engine type"
+	symbolic { numberOfChars 30 [ ]
+		values {
+			'Inline'
+			'V-Type'
+			'W-Type'
+			'Wankel'
+		}
+	}
+	status released
+	group "engine"
+	[
+		displayAllowedValues
+	]
+}
+
+constraint TYPE_SELECTION {
+	description ""
+	group "engine"
+}

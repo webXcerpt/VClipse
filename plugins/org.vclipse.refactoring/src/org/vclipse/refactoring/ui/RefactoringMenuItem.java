@@ -12,6 +12,7 @@ package org.vclipse.refactoring.ui;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -147,8 +148,7 @@ public class RefactoringMenuItem extends ContributionItem implements SelectionLi
 				RefactoringWizardOpenOperation operation = new RefactoringWizardOpenOperation(wizard);
 				operation.run(activeShell, labels.getUILabel(context));
 			} catch(InterruptedException exception) {
-				String message = exception.getMessage();
-				RefactoringPlugin.log(message, exception);
+				RefactoringPlugin.log(IStatus.ERROR, exception.getMessage());
 			}
 		}
 	}

@@ -19,6 +19,7 @@ import java.util.Set;
 import org.eclipse.core.internal.registry.osgi.OSGIUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
@@ -62,7 +63,7 @@ public class Configuration {
 				IRefactoringExecuter executer = injector.getInstance(IRefactoringExecuter.class);
 				executers.put(type, executer);				
 			} catch(ConfigurationException exception) {
-				RefactoringPlugin.log(exception.getMessage(), exception);
+				RefactoringPlugin.log(IStatus.ERROR, exception.getMessage());
 			}
 		}
 		return Collections.unmodifiableMap(executers);

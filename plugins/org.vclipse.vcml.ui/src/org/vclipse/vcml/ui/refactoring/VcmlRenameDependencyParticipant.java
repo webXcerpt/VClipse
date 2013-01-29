@@ -11,6 +11,7 @@
 package org.vclipse.vcml.ui.refactoring;
 
 import java.io.IOException;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -33,21 +34,27 @@ import org.vclipse.vcml.vcml.VcmlPackage;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
+/**
+ *	Extension of the default "Resource re-name re-factoring" for vc objects of type Dependency.
+ *
+ *	Since these objects, living in a vcml file, could have a reference(file) containing dependency code, the rename
+ *	refactoring on them should also rename the referenced files. 
+ *
+ *	The rename refactoring on the dependency files should also rename the dependency objects.
+ */
 public class VcmlRenameDependencyParticipant extends RenameParticipant {
 
-	// private Logger logger = Logger.getLogger(VcmlRenameDependencyParticipant.class);
-	
 	@Inject
 	private DependencySourceUtils dependencySourceUtils;
 	
 	@Override
 	protected boolean initialize(Object object) {
-		return object instanceof IFile && 
-				Sets.newHashSet(DependencySourceUtils.EXTENSION_CONSTRAINT, 
-						DependencySourceUtils.EXTENSION_PRECONDITION, 
-							DependencySourceUtils.EXTENSION_PROCEDURE,
-								DependencySourceUtils.EXTENSION_SELECTIONCONDITION).
-									contains(((IFile)object).getFileExtension());
+		if(object instanceof IFile) {
+			IFile file = (IFile)object;
+			String extension = file.getFileExtension();
+			return getDependencyExtensions().contains(extension);
+		}
+		return false;
 	}
 
 	@Override
@@ -85,8 +92,18 @@ public class VcmlRenameDependencyParticipant extends RenameParticipant {
 				}				
 			}
 		}
-		// no change is required
-		// the default implementation for resource rename operation do it for us
 		return super.createPreChange(progressMonitor);
+	}
+	
+	/**
+	 * Returns a set with file extensions for this refactoring.
+	 */
+	protected Set<String> getDependencyExtensions() {
+		return Sets.newHashSet(
+				DependencySourceUtils.EXTENSION_CONSTRAINT, 
+				DependencySourceUtils.EXTENSION_PRECONDITION, 
+				DependencySourceUtils.EXTENSION_PROCEDURE,
+				DependencySourceUtils.EXTENSION_SELECTIONCONDITION
+		);
 	}
 }
