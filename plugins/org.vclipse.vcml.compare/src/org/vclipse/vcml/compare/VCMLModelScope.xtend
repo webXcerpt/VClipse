@@ -20,7 +20,7 @@ import org.vclipse.vcml.vcml.VCObject
 /**
  * This scope contains VCObject and Option objects.
  */
-class VcmlModelScope extends FilterComparisonScope {
+class VCMLModelScope extends FilterComparisonScope {
 	
 	/**
 	 * Constructor

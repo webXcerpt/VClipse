@@ -15,7 +15,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.ui.shared.internal.SharedModule;
 import org.eclipse.xtext.util.Modules2;
 import org.osgi.framework.BundleContext;
-import org.vclipse.vcml.compare.injection.VcmlCompareModule;
+import org.vclipse.vcml.compare.injection.VCMLCompareModule;
 import org.vclipse.vcml.ui.VCMLUiModule;
 
 import com.google.inject.Guice;
@@ -24,11 +24,11 @@ import com.google.inject.Injector;
 /**
  * 
  */
-public class VcmlComparePlugin extends AbstractUIPlugin {
+public class VCMLComparePlugin extends AbstractUIPlugin {
 
 	public static final String ID = "org.vclipse.vcml.compare"; //$NON-NLS-1$
 
-	private static VcmlComparePlugin plugin;
+	private static VCMLComparePlugin plugin;
 	
 	private Injector injector;
 	
@@ -45,7 +45,7 @@ public class VcmlComparePlugin extends AbstractUIPlugin {
 	/**
 	 * Return the shared instance.
 	 */
-	public static VcmlComparePlugin getInstance() {
+	public static VCMLComparePlugin getInstance() {
 		return plugin;
 	}
 
@@ -55,7 +55,7 @@ public class VcmlComparePlugin extends AbstractUIPlugin {
 	public Injector getInjector() {
 		if(injector == null) {
 			injector = Guice.createInjector(
-				Modules2.mixin(new VcmlCompareModule(this), new SharedModule(), new VCMLUiModule(this))
+				Modules2.mixin(new VCMLCompareModule(this), new SharedModule(), new VCMLUiModule(this))
 			);
 		}
 		return injector;

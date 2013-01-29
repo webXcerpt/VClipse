@@ -5,15 +5,15 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage
 import org.eclipse.jface.preference.IPreferenceStore
 import org.eclipse.ui.IWorkbench
 import org.eclipse.ui.IWorkbenchPreferencePage
-
-import static org.eclipse.jface.preference.FieldEditorPreferencePage.*
 import org.vclipse.vcml.compare.FeatureFilter
 import org.eclipse.jface.preference.BooleanFieldEditor
+
+import static org.eclipse.jface.preference.FieldEditorPreferencePage.*
 
 /*
  * Preference page allowing the user to match the values that should be ignored during compare operation.
  */
-class VcmlComparePreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+class VCMLComparePreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
 	private IPreferenceStore preferenceStore
 

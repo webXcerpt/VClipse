@@ -15,18 +15,17 @@ import com.google.inject.Inject
 import org.eclipse.core.commands.ExecutionEvent
 import org.eclipse.core.resources.IFile
 import org.vclipse.base.ui.FileListHandler
-import org.vclipse.vcml.compare.VcmlComparePlugin
-
+import org.vclipse.vcml.compare.VCMLComparePlugin
 import com.google.common.collect.Iterables
 import org.eclipse.core.runtime.IStatus
 
 /*
  * Invokes the validation of the selection made in the project explorer on vcml files and the call of the compare dialog.
  */
-class VcmlCompareInvokeExportHandler extends FileListHandler {
+class VCMLCompareInvokeExportHandler extends FileListHandler {
 
 	@Inject
-	private VcmlCompareExtractDifferencesDialog dialog
+	private VCMLCompareExtractDifferencesDialog dialog
 
 	/**
 	 * The selected files are combined to an iterable in the FileListHandler
@@ -34,7 +33,7 @@ class VcmlCompareInvokeExportHandler extends FileListHandler {
 	override void handleListVariable(Iterable<IFile> iterable, ExecutionEvent event) {
 		// can not compare more than 2 entries
 		if(Iterables::size(iterable) > 2) {
-			VcmlComparePlugin::log(IStatus::ERROR, "Only 2 files are allowed for this action.")
+			VCMLComparePlugin::log(IStatus::ERROR, "Only 2 files are allowed for this action.")
 			return
 		}
 			

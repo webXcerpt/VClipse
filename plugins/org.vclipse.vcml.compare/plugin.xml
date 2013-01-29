@@ -3,19 +3,19 @@
 <plugin>
 	<extension point="org.eclipse.compare.contentViewers">
     <viewer id="org.vclipse.vcml.VCML.compare.contentViewers"
-            class="org.vclipse.vcml.compare.injection.VcmlCompareExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+            class="org.vclipse.vcml.compare.injection.VCMLCompareExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
             extensions="vcml">
     </viewer>
   </extension>
   <extension point="org.eclipse.compare.contentMergeViewers">
     <viewer id="org.vclipse.vcml.VCML.compare.contentMergeViewers"
-            class="org.vclipse.vcml.compare.injection.VcmlCompareExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+            class="org.vclipse.vcml.compare.injection.VCMLCompareExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
             extensions="vcml" label="VCML Compare">
      </viewer>
   </extension>
   <extension point="org.eclipse.ui.editors.documentProviders">
     <provider id="org.vclipse.vcml.VCML.editors.documentProviders"
-            class="org.vclipse.vcml.compare.injection.VcmlCompareExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
+            class="org.vclipse.vcml.compare.injection.VCMLCompareExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
             extensions="vcml">
     </provider>
   </extension>
@@ -41,7 +41,7 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="org.vclipse.vcml.compare.injection.VcmlCompareExtensionFactory:org.vclipse.vcml.compare.ui.VcmlCompareInvokeExportHandler"
+            class="org.vclipse.vcml.compare.injection.VCMLCompareExtensionFactory:org.vclipse.vcml.compare.ui.VCMLCompareInvokeExportHandler"
             commandId="org.vclipse.commands.export.differences">
       </handler>
    </extension>
@@ -57,14 +57,14 @@
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
-            class="org.vclipse.vcml.compare.injection.VcmlCompareExtensionFactory:org.vclipse.vcml.compare.VcmlComparePreferencesInitializer">
+            class="org.vclipse.vcml.compare.injection.VCMLCompareExtensionFactory:org.vclipse.vcml.compare.VCMLComparePreferencesInitializer">
       </initializer>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
             category="org.vclipse.preferences.pages.vclipse"
-            class="org.vclipse.vcml.compare.injection.VcmlCompareExtensionFactory:org.vclipse.vcml.compare.ui.VcmlComparePreferencePage"
+            class="org.vclipse.vcml.compare.injection.VCMLCompareExtensionFactory:org.vclipse.vcml.compare.ui.VCMLComparePreferencePage"
             id="org.vclipse.vcml.preferences.pages.compare"
             name="Vcml Compare">
       </page>

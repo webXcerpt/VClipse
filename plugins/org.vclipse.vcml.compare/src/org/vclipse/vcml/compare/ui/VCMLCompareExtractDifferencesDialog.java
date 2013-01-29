@@ -38,7 +38,7 @@ import com.google.inject.Inject;
 /**
  * 
  */
-public class VcmlCompareExtractDifferencesDialog extends TitleAreaDialog {
+public class VCMLCompareExtractDifferencesDialog extends TitleAreaDialog {
 
 	private IFile oldFile;
 	private IFile newFile;
@@ -55,9 +55,9 @@ public class VcmlCompareExtractDifferencesDialog extends TitleAreaDialog {
 	private IWorkspaceRoot root;
 	
 	@Inject
-	private VcmlCompareExtractResultsJob job;
+	private VCMLCompareExtractResultsJob job;
 	
-	public VcmlCompareExtractDifferencesDialog() {
+	public VCMLCompareExtractDifferencesDialog() {
 		super(Display.getCurrent().getActiveShell());
 		this.root = ResourcesPlugin.getWorkspace().getRoot();
 	}
@@ -82,8 +82,8 @@ public class VcmlCompareExtractDifferencesDialog extends TitleAreaDialog {
 			throw new IllegalArgumentException("oldFile might not be null");
 		}
 		
-		final VcmlCompareFileSelectionDialog fileSelectionDialog = 
-				new VcmlCompareFileSelectionDialog(parent.getShell(), oldFile.getParent());
+		final VCMLCompareFileSelectionDialog fileSelectionDialog = 
+				new VCMLCompareFileSelectionDialog(parent.getShell(), oldFile.getParent());
 		fileSelectionDialog.setExtensions(new String[]{"*.vcml"});
 		
 		getShell().setText("Compare 2 files with each other");

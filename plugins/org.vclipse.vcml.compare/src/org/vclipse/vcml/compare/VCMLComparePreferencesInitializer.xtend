@@ -18,7 +18,7 @@ import com.google.inject.Inject
 /*
  * Default preferences initialization.
  */
-class VcmlComparePreferencesInitializer extends AbstractPreferenceInitializer {
+class VCMLComparePreferencesInitializer extends AbstractPreferenceInitializer {
 	
 	@Inject
 	private IPreferenceStore preferenceStore

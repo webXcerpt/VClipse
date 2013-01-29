@@ -14,7 +14,7 @@ package org.vclipse.vcml.compare
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.vclipse.vcml.vcml.VcmlPackage
 
-import static org.vclipse.vcml.compare.VcmlComparePlugin.*
+import static org.vclipse.vcml.compare.VCMLComparePlugin.*
 
 /**
  * 

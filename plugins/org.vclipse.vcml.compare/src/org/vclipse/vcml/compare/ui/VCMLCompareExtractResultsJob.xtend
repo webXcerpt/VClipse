@@ -17,8 +17,8 @@ import org.eclipse.core.runtime.CoreException
 import org.eclipse.core.runtime.IProgressMonitor
 import org.eclipse.emf.compare.DifferenceSource
 import org.eclipse.xtext.util.StringInputStream
-import org.vclipse.vcml.compare.VcmlCompareOperation
-import org.vclipse.vcml.compare.VcmlComparePlugin
+import org.vclipse.vcml.compare.VCMLCompareOperation
+import org.vclipse.vcml.compare.VCMLComparePlugin
 import org.eclipse.core.runtime.IStatus
 import org.eclipse.core.runtime.Status
 
@@ -28,16 +28,16 @@ import static org.eclipse.emf.compare.DifferenceSource.*
 /*
  * Job extracting the compare results.
  */
-class VcmlCompareExtractResultsJob extends WorkspaceJob {
+class VCMLCompareExtractResultsJob extends WorkspaceJob {
 	
-	private VcmlCompareOperation compareOperation
+	private VCMLCompareOperation compareOperation
 	
 	private IFile left
 	private IFile right
 	private IFile result
 	
 	@Inject
-	new(VcmlCompareOperation compareOperation) {
+	new(VCMLCompareOperation compareOperation) {
 		super("Job extracting differences between 2 vcml files.")
 		this.compareOperation = compareOperation
 	}
@@ -81,7 +81,7 @@ class VcmlCompareExtractResultsJob extends WorkspaceJob {
 		} catch(Exception exception) {
 			monitor.done
 			val message = exception.message
-			VcmlComparePlugin::log(IStatus::ERROR, 
+			VCMLComparePlugin::log(IStatus::ERROR, 
 				if (message == null || message.empty) exception.^class.simpleName else message
 			)
 			return Status::CANCEL_STATUS

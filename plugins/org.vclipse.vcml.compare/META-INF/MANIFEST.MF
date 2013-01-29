@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: VClipse Compare Plug-in
 Bundle-SymbolicName: org.vclipse.vcml.compare;singleton:=true
 Bundle-Version: 0.5.0.qualifier
-Bundle-Activator: org.vclipse.vcml.compare.VcmlComparePlugin
+Bundle-Activator: org.vclipse.vcml.compare.VCMLComparePlugin
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany, www.webxcerpt.com
 Require-Bundle: org.vclipse.vcml,
  org.vclipse.vcml.ui,

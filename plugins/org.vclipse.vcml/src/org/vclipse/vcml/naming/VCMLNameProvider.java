@@ -27,7 +27,7 @@ import com.google.inject.Inject;
 /**
  * Default implementation for VCML objects.
  */
-public class VcmlNameProvider extends INameProvider.AbstractImpl {
+public class VCMLNameProvider extends INameProvider.AbstractImpl {
 
 	@Inject
 	private IQualifiedNameProvider nameProvider;

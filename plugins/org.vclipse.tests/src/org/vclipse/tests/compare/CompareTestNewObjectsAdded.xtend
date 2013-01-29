@@ -12,13 +12,11 @@ package org.vclipse.tests.compare
 
 import org.eclipselabs.xtext.utils.unittesting.XtextTest
 import org.eclipse.xtext.junit4.XtextRunner
-
 import org.eclipse.xtext.junit4.InjectWith
 import org.junit.runner.RunWith
 import org.junit.Test
 import com.google.inject.Inject
-
-import org.vclipse.vcml.compare.VcmlCompareOperation
+import org.vclipse.vcml.compare.VCMLCompareOperation
 import org.vclipse.tests.VClipseTestResourceLoader
 import org.vclipse.vcml.vcml.VcmlFactory
 import org.eclipse.core.runtime.NullProgressMonitor
@@ -31,7 +29,7 @@ import static org.junit.Assert.*
 class CompareTestNewObjectsAdded extends XtextTest {
 	
 	@Inject
-	private VcmlCompareOperation compare
+	private VCMLCompareOperation compare
 	
 	@Inject
 	private VClipseTestResourceLoader resources

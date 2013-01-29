@@ -48,12 +48,12 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 import org.eclipse.ui.ide.IDE;
-import org.vclipse.vcml.compare.VcmlComparePlugin;
+import org.vclipse.vcml.compare.VCMLComparePlugin;
 
 /**
  * Allows select files for comparison on vcml level. 
  */
-public class VcmlCompareFileSelectionDialog extends TitleAreaDialog {
+public class VCMLCompareFileSelectionDialog extends TitleAreaDialog {
 
 	private IContainer preselectedContainer;
 
@@ -67,7 +67,7 @@ public class VcmlCompareFileSelectionDialog extends TitleAreaDialog {
 
 	private IFile selectedFile;
 	
-	public VcmlCompareFileSelectionDialog(Shell parent, IContainer container) {
+	public VCMLCompareFileSelectionDialog(Shell parent, IContainer container) {
 		super(parent);
 		preselectedContainer = container;
 	}
@@ -183,8 +183,8 @@ public class VcmlCompareFileSelectionDialog extends TitleAreaDialog {
 						resources = container.members();
 					} catch(CoreException exception) {
 						resources = new IResource[0];
-						Status status = new Status(IStatus.ERROR, VcmlComparePlugin.ID, exception.getMessage());
-						VcmlComparePlugin.getInstance().getLog().log(status);
+						Status status = new Status(IStatus.ERROR, VCMLComparePlugin.ID, exception.getMessage());
+						VCMLComparePlugin.getInstance().getLog().log(status);
 					}
 				} else {
 					resources = new IResource[0];

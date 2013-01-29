@@ -20,17 +20,17 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
 import org.vclipse.base.naming.INameProvider;
 import org.vclipse.vcml.VCMLRuntimeModule;
-import org.vclipse.vcml.compare.VcmlComparePlugin;
-import org.vclipse.vcml.naming.VcmlNameProvider;
+import org.vclipse.vcml.compare.VCMLComparePlugin;
+import org.vclipse.vcml.naming.VCMLNameProvider;
 
 /**
  * Dependency injection configuration for vcml compare plug-in.
  */
-public class VcmlCompareModule extends VCMLRuntimeModule {
+public class VCMLCompareModule extends VCMLRuntimeModule {
 
-	private VcmlComparePlugin plugin;
+	private VCMLComparePlugin plugin;
 	
-	public VcmlCompareModule(VcmlComparePlugin plugin) {
+	public VCMLCompareModule(VCMLComparePlugin plugin) {
 		this.plugin = plugin;
 	}
 	
@@ -51,7 +51,7 @@ public class VcmlCompareModule extends VCMLRuntimeModule {
 	}
 	
 	public Class<? extends INameProvider> bindVcmlIDComputation() {
-		return VcmlNameProvider.class;
+		return VCMLNameProvider.class;
 	}
 
 	public Class<? extends MarkerCreator> bindMarkerCreator() {

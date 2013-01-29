@@ -36,12 +36,12 @@ import static org.eclipse.core.runtime.IStatus.*
 import static org.eclipse.emf.common.util.BasicMonitor.*
 import static org.eclipse.emf.common.util.URI.*
 import static org.eclipse.xtext.resource.SaveOptions.*
-import static org.vclipse.vcml.compare.VcmlCompareOperation.*
+import static org.vclipse.vcml.compare.VCMLCompareOperation.*
 
 /*
  * 
  */
-class VcmlCompareOperation {
+class VCMLCompareOperation {
 	
 	public static String ERRORS_FILE_EXTENSION = "_errors.txt"
 	
@@ -132,7 +132,7 @@ class VcmlCompareOperation {
 		val comparisonFactory = new DefaultComparisonFactory(equalityHelperFactory)
 		val matchEngine = new DefaultMatchEngine(objectMatcher, comparisonFactory)
 		val emfMonitor = toMonitor(monitor)
-		val vcmlScope = new VcmlResourceScope(newModel, oldModel)
+		val vcmlScope = new VCMLResourceScope(newModel, oldModel)
 		
 		// compare the vcml models
 		compare(oldModel, newModel, resultModel, monitor)
@@ -156,7 +156,7 @@ class VcmlCompareOperation {
 		val comparisonFactory = new DefaultComparisonFactory(equalityHelperFactory)
 		val matchEngine = new DefaultMatchEngine(objectMatcher, comparisonFactory)
 		val emfMonitor = toMonitor(monitor)
-		val vcmlScope = new VcmlModelScope(newModel, oldModel)
+		val vcmlScope = new VCMLModelScope(newModel, oldModel)
 		modelDifferencesEngine.diff(matchEngine.match(vcmlScope, emfMonitor), emfMonitor)
 		submonitor.done
 	}
@@ -190,7 +190,7 @@ class VcmlCompareOperation {
 		val errors = modelChangesProcessor.errors
 		if(errors.size < peakForViewOutput) {
 			for(error : errors.get(ERROR)) {
-				VcmlComparePlugin::log(ERROR, error.message)
+				VCMLComparePlugin::log(ERROR, error.message)
 			}
 		} else {
 			val fileName = result.name.toString.replace(ModelChangesProcessor::DIFF_VCML_EXTENSION, ERRORS_FILE_EXTENSION)

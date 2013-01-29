@@ -12,22 +12,22 @@ package org.vclipse.vcml.compare.injection;
 
 import org.eclipse.xtext.ui.guice.AbstractGuiceAwareExecutableExtensionFactory;
 import org.osgi.framework.Bundle;
-import org.vclipse.vcml.compare.VcmlComparePlugin;
+import org.vclipse.vcml.compare.VCMLComparePlugin;
 
 import com.google.inject.Injector;
 
 /**
  * Default implementation for Vcml Compare Plug-in.
  */
-public class VcmlCompareExtensionFactory extends AbstractGuiceAwareExecutableExtensionFactory {
+public class VCMLCompareExtensionFactory extends AbstractGuiceAwareExecutableExtensionFactory {
 
 	@Override
 	protected Bundle getBundle() {
-		return VcmlComparePlugin.getInstance().getBundle();
+		return VCMLComparePlugin.getInstance().getBundle();
 	}
 
 	@Override
 	protected Injector getInjector() {
-		return VcmlComparePlugin.getInstance().getInjector();
+		return VCMLComparePlugin.getInstance().getInjector();
 	}
 }

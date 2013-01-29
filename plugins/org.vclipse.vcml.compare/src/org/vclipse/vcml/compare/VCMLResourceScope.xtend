@@ -21,7 +21,7 @@ import org.vclipse.vcml.vcml.VcmlModel
 /**
  * This scope contains Import and Dependency objects, VcmlModel objects at the resource level.
  */
-class VcmlResourceScope extends FilterComparisonScope {
+class VCMLResourceScope extends FilterComparisonScope {
 	
 	/**
 	 * Constructor
