@@ -34,7 +34,6 @@ import org.vclipse.refactoring.changes.RootChange;
 import org.vclipse.refactoring.core.DefaultRefactoringExecuter;
 import org.vclipse.refactoring.core.RefactoringTask;
 import org.vclipse.vcml.utils.ConstraintRestrictionExtensions;
-import org.vclipse.vcml.utils.CreateVcmlObjects;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.utils.VCMLObjectUtils;
 import org.vclipse.vcml.vcml.Characteristic;
@@ -65,9 +64,6 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 	
 	@Inject
 	private DependencySourceUtils sourceUtils;
-	
-	@Inject
-	private CreateVcmlObjects vcmlCreator;
 	
 	protected final VcmlFactory VCML_FACTORY = VcmlFactory.eINSTANCE;
 	protected final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
@@ -146,7 +142,8 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 							Description description = constraint.getDescription();
 							if(description instanceof SimpleDescription) {
 								String simpleDescription = ((SimpleDescription)description).getValue();
-								Constraint newConstraint = vcmlCreator.newConstraint(nameBuffer.toString(), simpleDescription);
+								Constraint newConstraint = VCMLObjectUtils.mkConstraint(nameBuffer.toString(), 
+										VCMLObjectUtils.mkSimpleDescription(simpleDescription));
 								vcobjects.add(newConstraint);											
 							}
 							// TODO behavior undefined for MultiLanguageDescriptions
