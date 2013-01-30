@@ -1,6 +1,5 @@
 package org.vclipse.sap.deployment;
 
-import java.io.IOException;
 import java.util.Iterator;
 
 import org.eclipse.core.commands.ExecutionEvent;
@@ -8,7 +7,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -36,19 +34,18 @@ import org.tigris.subversion.subclipse.core.SVNTeamProvider;
 import org.vclipse.base.ui.FileListHandler;
 import org.vclipse.idoc2jcoidoc.IDocSenderStatus;
 import org.vclipse.sap.deployment.preferences.PreferencesInitializer;
-import org.vclipse.vcml.diff.compare.VcmlCompare;
+import org.vclipse.vcml.compare.VCMLCompareOperation;
 import org.vclipse.vcml.vcml.VCObject;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
-import com.sap.conn.jco.JCoException;
 
 public class ComputeDeltaAndSendHandler extends FileListHandler {
 
 	private static final String SAP_CONTAINER = "SAP";
 	
 	@Inject
-	private VcmlCompare vcmlCompare;
+	private VCMLCompareOperation vcmlCompare;
 	
 	@Inject
 	private OneClickWorkflow workflow;
@@ -119,7 +116,7 @@ public class ComputeDeltaAndSendHandler extends FileListHandler {
 						if(preferenceStore.getBoolean(PreferencesInitializer.SAVE_DIFF_FILES)) {
 							diffResource.save(SaveOptions.newBuilder().format().getOptions().toOptionsMap());	
 							if(vcmlCompare.reportedProblems()) {
-								vcmlCompare.createMarkers(resultFile, diffResource);
+								vcmlCompare.createMarkers(diffResource);
 								Display.getDefault().asyncExec(new Runnable() {
 									@Override
 									public void run() {
@@ -173,16 +170,7 @@ public class ComputeDeltaAndSendHandler extends FileListHandler {
 						}
 						folder.refreshLocal(IResource.DEPTH_ONE, monitor);
 						return Status.OK_STATUS;
-					} catch (InterruptedException exception) {
-						DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
-						return Status.CANCEL_STATUS;
-					} catch (IOException exception) {
-						DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
-						return Status.CANCEL_STATUS;
-					} catch (CoreException exception) {
-						DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
-						return Status.CANCEL_STATUS;
-					} catch (JCoException exception) {
+					} catch(Exception exception) {
 						DeploymentPlugin.showErrorDialog(errorMessage, exception.getMessage(), Status.CANCEL_STATUS);
 						return Status.CANCEL_STATUS;
 					}
