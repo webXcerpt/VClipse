@@ -11,7 +11,8 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Import-Package: org.apache.commons.logging,
- org.apache.log4j
+ org.apache.log4j,
+ org.slf4j
 Export-Package: org.vclipse.vcml.mm,
  org.vclipse.vcml.vcml,
  org.vclipse.vcml.vcml.impl,
