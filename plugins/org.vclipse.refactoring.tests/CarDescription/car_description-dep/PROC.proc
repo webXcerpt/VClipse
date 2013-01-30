@@ -1,1 +1,0 @@
-$self.C_QUANT = 2 if $root.ENGINE = '1500'
