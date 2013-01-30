@@ -22,15 +22,16 @@ import org.vclipse.tests.VClipseTestResourceLoader
 import org.vclipse.vcml.compare.VCMLCompareOperation
 import org.vclipse.vcml.vcml.VcmlFactory
 import org.vclipse.vcml.vcml.VcmlModel
-
-import static org.junit.Assert.*
 import org.vclipse.vcml.vcml.VcmlPackage
 import org.vclipse.vcml.vcml.Characteristic
 import org.vclipse.vcml.vcml.NumericType
+import org.vclipse.vcml.vcml.SymbolicType
+
+import static org.junit.Assert.*
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(CompareInjectorProvider))
-class CompareTestNewObjectsAdded extends XtextTest {
+class VCMLCompareTests extends XtextTest {
 	
 	@Inject
 	private VCMLCompareOperation compare
@@ -76,16 +77,23 @@ class CompareTestNewObjectsAdded extends XtextTest {
 		val vcml = resources.getResourceRoot("/compare/changed_cstic_type/VCML/car.vcml")
 		val sap = resources.getResourceRoot("/compare/changed_cstic_type/SAP/car.vcml")
 		
-		val result = vcmlFactory.createVcmlModel
-		
+		var result = vcmlFactory.createVcmlModel
 		compare.compare(sap as VcmlModel, vcml as VcmlModel, result, monitor)
-		
 		assertFalse(result.objects.empty)
 		assertTrue(compare.reportedProblems)
-		
 		var entry = entrySearch.findEntry("NAME", vcmlPackage.characteristic, result.objects)
 		assertFalse(entry == null)
 		assertTrue((entry as Characteristic).type instanceof NumericType)
+		assertTrue(result.objects.size == 1)
+		
+		// should be possible in both directions 
+		result = vcmlFactory.createVcmlModel
+		compare.compare(vcml as VcmlModel, sap as VcmlModel, result, monitor)
+		assertFalse(result.objects.empty)
+		assertTrue(compare.reportedProblems)
+		entry = entrySearch.findEntry("NAME", vcmlPackage.characteristic, result.objects)
+		assertFalse(entry == null)
+		assertTrue("object: " + entry.eClass.name, (entry as Characteristic).type instanceof SymbolicType)
 		assertTrue(result.objects.size == 1)
 	}
 }
