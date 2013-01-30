@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *  
  * Contributors:
- *     webXcerpt Software GmbH - initial creator(www.webXcerpt.com)
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
  ******************************************************************************/
 package org.vclipse.tests.compare
 
@@ -20,17 +21,17 @@ import org.junit.runner.RunWith
 import org.vclipse.refactoring.utils.EntrySearch
 import org.vclipse.tests.VClipseTestResourceLoader
 import org.vclipse.vcml.compare.VCMLCompareOperation
-import org.vclipse.vcml.vcml.VcmlFactory
-import org.vclipse.vcml.vcml.VcmlModel
-import org.vclipse.vcml.vcml.VcmlPackage
 import org.vclipse.vcml.vcml.Characteristic
 import org.vclipse.vcml.vcml.NumericType
 import org.vclipse.vcml.vcml.SymbolicType
+import org.vclipse.vcml.vcml.VcmlFactory
+import org.vclipse.vcml.vcml.VcmlModel
+import org.vclipse.vcml.vcml.VcmlPackage
 
 import static org.junit.Assert.*
 
 @RunWith(typeof(XtextRunner))
-@InjectWith(typeof(CompareInjectorProvider))
+@InjectWith(typeof(VCMLCompareInjectorProvider))
 class VCMLCompareTests extends XtextTest {
 	
 	@Inject
@@ -59,24 +60,28 @@ class VCMLCompareTests extends XtextTest {
 		vcmlPackage = VcmlPackage::eINSTANCE
 	}
 	
+	/* if new vc objects are added to a vcml model, they should be extracted
+	 * during the compare operation.
+	 */
 	@Test
 	def testAddingVCObjects() {
 		val vcml = resources.getResourceRoot("/compare/added_vc_objects/VCML/engine.vcml")
 		val sap = resources.getResourceRoot("/compare/added_vc_objects/SAP/engine.vcml")
 		
 		val result = vcmlFactory.createVcmlModel
-		
 		compare.compare(sap as VcmlModel, vcml as VcmlModel, result, monitor)
-		
 		assertFalse(result.objects.empty)
 		assertFalse(compare.reportedProblems)
 	}
 	
+	/* type changes for existing characteristics are not allowed, the changed object 
+	 * is extracted and a marker is created for the characteristic type 
+	 */ 
 	@Test
 	def testChangedCsticType() {
 		val vcml = resources.getResourceRoot("/compare/changed_cstic_type/VCML/car.vcml")
 		val sap = resources.getResourceRoot("/compare/changed_cstic_type/SAP/car.vcml")
-		
+
 		var result = vcmlFactory.createVcmlModel
 		compare.compare(sap as VcmlModel, vcml as VcmlModel, result, monitor)
 		assertFalse(result.objects.empty)

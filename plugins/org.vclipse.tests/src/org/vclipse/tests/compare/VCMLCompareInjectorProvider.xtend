@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *  
  * Contributors:
- *     webXcerpt Software GmbH - initial creator
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
  ******************************************************************************/
 package org.vclipse.tests.compare
 
@@ -19,15 +20,17 @@ import org.vclipse.vcml.ui.internal.VCMLActivator
 import org.vclipse.vcml.compare.VCMLComparePlugin
 import org.eclipse.xtext.util.Modules2
 
-/*
- * Injector provider for 
+/**
+ * Injector provider for VCML Compare tests.
  */
-class CompareInjectorProvider implements IInjectorProvider {
+class VCMLCompareInjectorProvider implements IInjectorProvider {
  
 	override getInjector() {
 		Guice::createInjector(
 			Modules2::mixin(
-				new VCMLCompareModule(VCMLComparePlugin::getInstance), new VCMLUiModule(VCMLActivator::instance), new SharedModule
+				new VCMLCompareModule(VCMLComparePlugin::getInstance), 
+				new VCMLUiModule(VCMLActivator::instance), 
+				new SharedModule
 			)
 		)
 	}

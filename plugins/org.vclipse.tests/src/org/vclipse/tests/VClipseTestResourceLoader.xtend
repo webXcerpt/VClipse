@@ -6,9 +6,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *  
  * Contributors:
- *		webXcerpt Software GmbH - initial creator
- *		www.webxcerpt.com
- */
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
+ ******************************************************************************/
 package org.vclipse.tests
 
 import org.eclipse.emf.ecore.EObject

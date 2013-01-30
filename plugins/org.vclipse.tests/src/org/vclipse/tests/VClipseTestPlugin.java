@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2013 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
+ ******************************************************************************/
 package org.vclipse.tests;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -12,58 +23,46 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 /**
- * The activator class controls the plug-in life cycle
+ * Plug-in for JUnit tests being written for VClipse plug-ins.
+ * 
+ * This plug-in has an own injector, that is neither used elsewhere nor required until now.
+ * 
+ * Please note that each package in this plug-in contains tests for a particular VClipse plug-in. 
+ * They should have an own injector configured and provided by the interface @{link IInjectorProvider}.
+ * 
+ * The packages with extension swtbot contain tests for execution with SWTBot. Please consult the
+ * SWTBot Documentation for further information(@{link http://wiki.eclipse.org/SWTBot/UsersGuide }).
  */
 public class VClipseTestPlugin extends AbstractUIPlugin {
 
-	// The plug-in ID
-	public static final String ID = "org.vclipse.tests"; //$NON-NLS-1$
-
-	// The shared instance
+	public static final String ID = "org.vclipse.tests";
 	private static VClipseTestPlugin plugin;
-	
 	private Injector injector;
 	
-	/**
-	 * The constructor
-	 */
-	public VClipseTestPlugin() {
-	}
-
-	/**
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
-	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
 	}
 
-	/**
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
-	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
 	}
 
-	/**
-	 * @return shared instance
-	 */
 	public static VClipseTestPlugin getInstance() {
 		return plugin;
 	}
 
-	/**
-	 * @return configured injector for this plugin
-	 */
 	public Injector getInjector() {
 		if(injector == null) {
-			VCMLRuntimeModule vcmlRuntime = new VCMLRuntimeModule();
-			VCMLUiModule vcmlUiModule = new VCMLUiModule(VCMLActivator.getInstance());
-			SharedStateModule sharedModule = new SharedStateModule();
-			VClipseTestModule testModule = new VClipseTestModule(this);
-			injector = Guice.createInjector(
-					Modules2.mixin(testModule, vcmlRuntime, sharedModule, vcmlUiModule)
+			injector = 
+					Guice.createInjector(
+							Modules2.mixin(
+									new VClipseTestModule(this), 
+									new VCMLRuntimeModule(), 
+									new SharedStateModule(), 
+									new VCMLUiModule(VCMLActivator.getInstance()
+							))
 			);
 		}
 		return injector;
