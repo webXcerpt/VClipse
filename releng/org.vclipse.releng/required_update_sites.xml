@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bookmarks>
-   <site url="http://download.eclipse.org/technology/m2e/releases" selected="true" name="m2e releases repository"/>
-   <site url="http://subclipse.tigris.org/update_1.8.x" selected="true" name="Subclipse 1.8.x Update Site"/>
+   <site url="http://download.eclipse.org/modeling/emf/compare/updates/milestones/2.1/S201212180932/" selected="true" name="EMF Compare 2"/>
+   <site url="http://download.eclipse.org/technology/m2e/releases" selected="true" name="Maven"/>
+   <site url="http://subclipse.tigris.org/update_1.8.x" selected="true" name="Subclipse"/>
    <site url="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site" selected="true" name="SWTBot"/>
-   <site url="http://xtext-utils.eclipselabs.org.codespot.com/git.distribution/releases/unittesting-0.9.x/" selected="true" name="Unit Testing Utils"/>
    <site url="http://download.itemis.de/updates/" selected="true" name="Xtext Composite Update Site"/>
+   <site url="http://svn.codespot.com/a/eclipselabs.org/xtext-utils/updates/snapshots/" selected="true" name="Xtext Unit Test Utils"/>
 </bookmarks>
