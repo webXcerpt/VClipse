@@ -13,19 +13,15 @@ package org.vclipse.tests.refactoring
 
 import com.google.inject.Inject
 import org.eclipse.xtext.junit4.InjectWith
-import org.junit.Test
-import org.junit.runner.RunWith
 import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipselabs.xtext.utils.unittesting.XtextTest
-
+import org.junit.Assert
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.vclipse.refactoring.core.RefactoringContext
+import org.vclipse.refactoring.core.RefactoringType
 import org.vclipse.refactoring.utils.EntrySearch
 import org.vclipse.refactoring.utils.Labels
-
-import static org.junit.Assert.*
-import static org.vclipse.refactoring.core.RefactoringContext.*
-import static org.vclipse.refactoring.core.RefactoringType.*
-import static org.vclipse.tests.VClipseTestResourceLoader.*
-
 import org.vclipse.tests.VClipseTestResourceLoader
 
 @RunWith(typeof(XtextRunner))
@@ -47,22 +43,22 @@ class LabelsTests extends XtextTest {
 	
 	@Test
 	def test_UILabelProvider() {
-//		val entries = resourcesLoader.getResourceContents(CAR_DESCRIPTION)
-//		var findEntry = search.findEntry("(300)CAR", VCML_PACKAGE.class_, entries)
-//		assertNotNull(findEntry)
-//	
-//		var context = create(findEntry, null, Extract)
-//		var uiLabel = labels.getUILabel(context)
-//		assertEquals("Extract ", uiLabel)
-//			
-//		context = create(findEntry, VCML_PACKAGE.class_Characteristics, Extract)
-//		uiLabel = labels.getUILabel(context)
-//		assertEquals("Extract characteristics ", uiLabel)
-//		
-//		findEntry = search.findEntry("PRECOND", VCML_PACKAGE.precondition, entries)
-//		assertNotNull("precondition PRECOND not found", findEntry)
-//		context = create(findEntry, VCML_PACKAGE.VCObject_Description, Replace)
-//		uiLabel = context.label
-//		assertEquals("Replace description with a new value", uiLabel)
+		val entries = resourcesLoader.getResourceContents("/refactoring/Refactoring/car.vcml")
+		var findEntry = search.findEntry("(300)CAR", VClipseTestResourceLoader::VCML_PACKAGE.class_, entries)
+		Assert::assertNotNull(findEntry)
+	
+		var context = RefactoringContext::create(findEntry, null, RefactoringType::Extract)
+		var uiLabel = labels.getUILabel(context)
+		Assert::assertEquals("Extract ", uiLabel)
+			
+		context = RefactoringContext::create(findEntry, VClipseTestResourceLoader::VCML_PACKAGE.class_Characteristics, RefactoringType::Extract)
+		uiLabel = labels.getUILabel(context)
+		Assert::assertEquals("Extract characteristics ", uiLabel)
+		
+		findEntry = search.findEntry("PRECOND", VClipseTestResourceLoader::VCML_PACKAGE.precondition, entries)
+		Assert::assertNotNull("precondition PRECOND not found", findEntry)
+		context = RefactoringContext::create(findEntry, VClipseTestResourceLoader::VCML_PACKAGE.VCObject_Description, RefactoringType::Replace)
+		uiLabel = context.label
+		Assert::assertEquals("Replace description with a new value", uiLabel)
 	}
 }

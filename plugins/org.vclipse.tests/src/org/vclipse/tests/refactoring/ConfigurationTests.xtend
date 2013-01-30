@@ -11,23 +11,20 @@
  ******************************************************************************/
 package org.vclipse.tests.refactoring
 
-import org.junit.Test
+import com.google.common.collect.Iterables
 import com.google.inject.Inject
 import org.eclipse.xtext.junit4.InjectWith
-import org.junit.runner.RunWith
 import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipselabs.xtext.utils.unittesting.XtextTest
+import org.junit.Assert
+import org.junit.Test
+import org.junit.runner.RunWith
 import org.vclipse.refactoring.IRefactoringConfiguration
+import org.vclipse.refactoring.core.RefactoringContext
+import org.vclipse.refactoring.core.RefactoringType
 import org.vclipse.refactoring.utils.Extensions
-import org.vclipse.vcml.vcml.Characteristic
-
-import static com.google.common.collect.Iterables.*
-import static org.junit.Assert.*
-import static org.vclipse.refactoring.core.RefactoringContext.*
-import static org.vclipse.refactoring.core.RefactoringType.*
-import static org.vclipse.tests.VClipseTestResourceLoader.*
-
 import org.vclipse.tests.VClipseTestResourceLoader
+import org.vclipse.vcml.vcml.Characteristic
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(RefactoringInjectorProvider))
@@ -45,18 +42,18 @@ class ConfigurationTests extends XtextTest {
 	
 	@Test
 	def testRefactoringConfiguration() {
-//		val entries = resourcesLoader.getResourceContents(CAR_DESCRIPTION)
-//		val iterator = filter(entries, typeof(Characteristic)).iterator
-//		if(iterator.hasNext) {
-//			val entry = iterator.next
-//			val configuration = extensions.getInstance(typeof(IRefactoringConfiguration), entry)
-//			val context = create(entry, VCML_PACKAGE.vcmlModel_Objects, Replace)
-//			val initialize = configuration.initialize(context)
-//			assertEquals("context initialized", true, initialize)
-//		
-//			val features = configuration.provideFeatures(context)
-//			assertTrue(!features.empty)
-//			assertTrue(features.contains(VCML_PACKAGE.vcmlModel_Objects))
-//		}
+		val entries = resourcesLoader.getResourceContents("/refactoring/Refactoring/car.vcml")
+		val iterator = Iterables::filter(entries, typeof(Characteristic)).iterator
+		if(iterator.hasNext) {
+			val entry = iterator.next
+			val configuration = extensions.getInstance(typeof(IRefactoringConfiguration), entry)
+			val context = RefactoringContext::create(entry, VClipseTestResourceLoader::VCML_PACKAGE.vcmlModel_Objects, RefactoringType::Replace)
+			val initialize = configuration.initialize(context)
+			Assert::assertEquals("context initialized", true, initialize)
+		
+			val features = configuration.provideFeatures(context)
+			Assert::assertTrue(!features.empty)
+			Assert::assertTrue(features.contains(VClipseTestResourceLoader::VCML_PACKAGE.vcmlModel_Objects))
+		}
 	}
 }
