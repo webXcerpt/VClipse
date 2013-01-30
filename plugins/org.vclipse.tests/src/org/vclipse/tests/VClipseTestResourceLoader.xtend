@@ -26,16 +26,6 @@ import static org.vclipse.tests.VClipseTestResourceLoader.*
  */
 class VClipseTestResourceLoader extends XtextTest {
 	
-	public static String PREFIX = "/CarDescription/"
-	public static String DEPENDENCIES_PREFIX = PREFIX + "car_description-dep/"
-	
-	public static String CAR_DESCRIPTION = PREFIX + "car_description.vcml"
-	
-	public static String DEPENDENCY_CONS = DEPENDENCIES_PREFIX + "CS_CAR1.cons"
-	public static String DEPENDENCY_PRE = DEPENDENCIES_PREFIX + "PRECOND.pre"
-	public static String DEPENDENCY_PROC = DEPENDENCIES_PREFIX + "PROC.proc"
-	public static String DEPENDENCY_SEL = DEPENDENCIES_PREFIX + "SEL_COND.sel"
- 
 	public static VcmlPackage VCML_PACKAGE = VcmlPackage::eINSTANCE
 	public static VcmlFactory VCML_FACTORY = VcmlFactory::eINSTANCE
 	
