@@ -12,13 +12,12 @@
 package org.vclipse.tests.refactoring
 
 import org.eclipse.xtext.junit4.IInjectorProvider
-import org.vclipse.tests.VClipseTestPlugin
-import org.vclipse.tests.VClipseTestModule
+import org.eclipse.xtext.util.Modules2
+import org.vclipse.refactoring.RefactoringPlugin
+import org.vclipse.refactoring.guice.RefactoringModule
 import org.vclipse.vcml.VCMLRuntimeModule
 
 import static com.google.inject.Guice.*
-
-import org.eclipse.xtext.util.Modules2
 
 /*
  * Injector provider used by test classes being written for re-factoring plug-in
@@ -28,7 +27,7 @@ class RefactoringInjectorProvider implements IInjectorProvider {
 	override getInjector() {
 		val injector = createInjector(
 			Modules2::mixin(
-				new VClipseTestModule(VClipseTestPlugin::instance), 
+				new RefactoringModule(RefactoringPlugin::instance), 
 				new VCMLRuntimeModule
 			)
 		)
