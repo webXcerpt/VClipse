@@ -2,9 +2,16 @@ import "engine.vcml"
 
 characteristic NAME {
 	description "the name of an existing car"
-	numeric { 
-		numberOfChars 1 
-		decimalPlaces 1
+	symbolic { 
+		numberOfChars 30 [ ]
+		values {
+			'Mazda RX-7'
+			'Mazda RX-8'
+			'VW Passat 4.0L W-8'
+			'Bugatti Veyron'
+			'VW Golf 3'
+			'Chevy'
+		}
 	}
 	status released
 	group "car"

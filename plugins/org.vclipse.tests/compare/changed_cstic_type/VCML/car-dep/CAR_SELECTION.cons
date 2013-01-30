@@ -1,0 +1,8 @@
+objects :
+    CAR is_a (300)CAR, ENGINE is_a (300)ENGINE
+restrictions: 
+    ENGINE.TYPE = 'Wankel' if CAR.NAME in ('Mazda RX-7', 'Mazda RX-8'),
+    ENGINE.TYPE = 'W-Type' if CAR.NAME eq 'Bugatti Veyron' or CAR.NAME eq 'VW Passat 4.0L W-8'
+    
+* one can refactor the first restriction entry, please be sure you have built your workspace 
+* to get all references resolved
