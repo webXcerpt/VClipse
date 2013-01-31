@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2010 webXcerpt Software GmbH.
+ * Copyright (c) 2008 - 2013 webXcerpt Software GmbH.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *  
  * Contributors:
- *    webXcerpt Software GmbH - initial creator
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
  ******************************************************************************/
 package org.vclipse.base;
 
@@ -115,6 +116,9 @@ public class VClipseStrings extends org.eclipse.xtext.util.Strings {
 		return outBuffer.toString();
 	}
 
+	/**
+	 * 
+	 */
 	public static List<String> splitCamelCase(String string) {
 		List<Integer> indexes = Lists.newArrayList();
 		for(int i=0; i<string.length(); i++) {
@@ -144,6 +148,9 @@ public class VClipseStrings extends org.eclipse.xtext.util.Strings {
 		return parts;
 	}
 	
+	/**
+	 * 
+	 */
 	public static String appendTo(String string, List<String> parts, boolean changeToLower) {
 		StringBuilder builder = new StringBuilder(string);
 		for(String part : parts) {

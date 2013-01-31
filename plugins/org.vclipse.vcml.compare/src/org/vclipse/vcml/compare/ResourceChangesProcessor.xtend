@@ -30,7 +30,7 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.util.StringInputStream
-import org.vclipse.base.UriUtil
+import org.vclipse.base.ImportUriExtractor
 import org.vclipse.base.compare.DefaultInputSupplier
 import org.vclipse.vcml.utils.DependencySourceUtils
 import org.vclipse.vcml.vcml.Dependency
@@ -69,7 +69,7 @@ class ResourceChangesProcessor extends DiffBuilder {
 	private Multimap<Integer, Exception> compareErrors
 	
 	@Inject
-	protected UriUtil uriUtility // computation of the import path
+	protected ImportUriExtractor uriUtility // computation of the import path
 	
 	@Inject
 	protected DependencySourceUtils sourceUtils // provides stuff concerning the dependency files
@@ -129,7 +129,7 @@ class ResourceChangesProcessor extends DiffBuilder {
 				}
 				
 				// import the resource with new content
-				val importUri = uriUtility.computeImportUri(left.eResource, newVcmlModel.eResource)
+				val importUri = uriUtility.getImportUri(left.eResource, newVcmlModel.eResource)
 				if(!seenObjects.contains(vcmlPackage.^import.instanceClassName + importUri)) {
 					val importStmt = VcmlFactory::eINSTANCE.createImport
 					importStmt.setImportURI(importUri)
