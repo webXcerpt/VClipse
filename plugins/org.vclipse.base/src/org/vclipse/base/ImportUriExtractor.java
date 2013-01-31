@@ -34,13 +34,6 @@ public class ImportUriExtractor {
 			return EMPTY;
 		} 
 		
-		String targetDevice = targetResourceUri.device();
-		String importDevice = importResourceUri.device();
-		
-		if(importDevice != null && targetDevice != null && !importDevice.equals(targetDevice)) {
-			return EMPTY;
-		}
-		
 		return getImportUri(importResourceUri.toString(), targetResourceUri.toString());
 	}
 
