@@ -47,6 +47,9 @@ class ImportUriExtractorTest extends XtextTest {
 		var extracted = uriExtractor.getImportUri(resource_one, resource_two)
 		Assert::assertTrue(extracted, extracted.equals("car.vcml"))
 		
+		extracted = uriExtractor.getImportUri(resource_one, resource_one)
+		Assert::assertTrue(extracted, extracted.equals(""))
+		
 		extracted = uriExtractor.getImportUri(resource_two, resource_one)
 		Assert::assertTrue(extracted, extracted.equals("engine.vcml"))
 		
