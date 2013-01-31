@@ -21,7 +21,7 @@ public class TextSelectionPropertyTester extends BAPIActionPropertyTester {
 			XtextEditor xtextEditor = EditorUtils.getActiveXtextEditor();
 			ITextSelection selection = (ITextSelection)receiver;
 			if(xtextEditor != null) {
-				XtextResource resource = EditorUtilsExtensions.getResource(xtextEditor);
+				XtextResource resource = EditorUtilsExtensions.getXtextResource(xtextEditor);
 				VCObject vcObject = BAPIActionUtils.getVCObject(offsetHelper, selection, resource);
 				return super.test(vcObject, BAPIActionPropertyTester.HANDLER_AVAILABLE, args, expectedValue);
 			}

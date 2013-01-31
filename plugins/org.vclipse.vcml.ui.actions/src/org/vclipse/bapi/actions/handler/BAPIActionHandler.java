@@ -171,7 +171,7 @@ public class BAPIActionHandler extends AbstractHandler {
 					return (XtextResource)((VCObject)adapter).eResource();
 				}
 			} else if(entry instanceof ITextSelection) {
-				return EditorUtilsExtensions.getResource(HandlerUtil.getActiveEditor(event));
+				return EditorUtilsExtensions.getXtextResource(HandlerUtil.getActiveEditor(event));
 			} else if(entry instanceof VCObject) {
 				return (XtextResource)((VCObject)entry).eResource();
 			}
