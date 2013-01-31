@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2012 webXcerpt Software GmbH.
+ * Copyright (c) 2010 - 2013 webXcerpt Software GmbH.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *  
  * Contributors:
- *    webXcerpt Software GmbH - initial creator
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
  ******************************************************************************/
 package org.vclipse.vcml.ui.quickfix;
 
@@ -18,7 +19,7 @@ import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider;
 import org.eclipse.xtext.ui.editor.quickfix.Fix;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor;
 import org.eclipse.xtext.validation.Issue;
-import org.vclipse.vcml.validation.ValueValidator;
+import org.vclipse.vcml.validation.VCMLDefaultValueValidator;
 
 public class ValueQuickFixProvider extends DefaultQuickfixProvider {
 
@@ -28,7 +29,7 @@ public class ValueQuickFixProvider extends DefaultQuickfixProvider {
 		acceptor.accept(issue, label, label, null, new ISemanticModification() {
 			public void apply(EObject element, IModificationContext context) throws Exception {
 				for(EAttribute attribute : element.eClass().getEAllAttributes()) {
-					if(ValueValidator.DEFAULT.equals(attribute.getName())) {
+					if(VCMLDefaultValueValidator.DEFAULT.equals(attribute.getName())) {
 						element.eSet(attribute, false);
 						break;
 					}

@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2010 - 2013 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
+ ******************************************************************************/
 package org.vclipse.configscan.actions;
 
 import java.io.IOException;
@@ -8,6 +19,7 @@ import java.util.Iterator;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -47,9 +59,9 @@ public abstract class AbstractConfigScanXmlHandler extends FileListHandler {
 	@Override
 	public void handleListVariable(final Iterable<IFile> collection, ExecutionEvent event) {
 		final String extension = getFileExtension();
-		Job convertJob = new Job(extension + " file to ConfigScan XML file") {
+		Job convertJob = new WorkspaceJob(extension + " file to ConfigScan XML file") {
 			@Override
-			protected IStatus run(IProgressMonitor monitor) {
+			public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 				monitor.beginTask("Converting " + extension + " file to ConfigScan XML file", IProgressMonitor.UNKNOWN);
 				Iterator<IFile> iterator = collection.iterator();
 				IFile firstElement = null;

@@ -1,17 +1,25 @@
+/*******************************************************************************
+ * Copyright (c) 2010 - 2013 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
+ ******************************************************************************/
 package org.vclipse.idoc2jcoidoc.actions;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
@@ -33,7 +41,6 @@ import com.sap.conn.idoc.IDocDocument;
 import com.sap.conn.idoc.IDocXMLProcessor;
 import com.sap.conn.idoc.jco.JCoIDoc;
 import com.sap.conn.idoc.rt.xml.DefaultIDocXMLProcessor;
-import com.sap.conn.jco.JCoException;
 
 public class TransformIDoc2SapXmlHandler extends FileListHandler {
 
@@ -87,16 +94,7 @@ public class TransformIDoc2SapXmlHandler extends FileListHandler {
 									zipIFile.refreshLocal(IResource.DEPTH_ONE, monitor);
 								}
 							}
-						} catch (JCoException exception) {
-							IDoc2JCoIDocPlugin.log(exception.getMessage(), exception);
-							return Status.CANCEL_STATUS;
-						} catch (CoreException exception) {
-							IDoc2JCoIDocPlugin.log(exception.getMessage(), exception);
-							return Status.CANCEL_STATUS;
-						} catch (ZipException exception) {
-							IDoc2JCoIDocPlugin.log(exception.getMessage(), exception);
-							return Status.CANCEL_STATUS;
-						} catch (IOException exception) {
+						} catch (Exception exception) {
 							IDoc2JCoIDocPlugin.log(exception.getMessage(), exception);
 							return Status.CANCEL_STATUS;
 						}

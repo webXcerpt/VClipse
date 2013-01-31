@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Import wizard for vcml outline icons
 Bundle-SymbolicName: org.vclipse.vcml.ui.wizards.imports;singleton:=true
 Bundle-Version: 0.5.0.qualifier
-Bundle-Activator: org.vclipse.vcml.ui_outlineicons.Activator
+Bundle-Activator: org.vclipse.vcml.ui_outlineicons.ImportSapIconsPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.7.100",

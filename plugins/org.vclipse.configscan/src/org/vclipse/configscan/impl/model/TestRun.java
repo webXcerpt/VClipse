@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2010 - 2013 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
+ ******************************************************************************/
 package org.vclipse.configscan.impl.model;
 
 import java.util.Collections;
@@ -41,7 +52,6 @@ import org.w3c.dom.ProcessingInstruction;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
-import com.sap.conn.jco.JCoException;
 
 public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 
@@ -105,14 +115,13 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 			Object object = options.get("name");
 			if(object instanceof String) {
 				return (String)object;
-			} else {
-				return "Log results";
-			}
-		} else if(connection == null) {
+			} 
+			return "Log results";
+		} 
+		if(connection == null) {
 			return file.getName();
-		} else {
-			return file.getName() + " on " + connection.getDescription();
 		}
+		return file.getName() + " on " + connection.getDescription();
 	}
 
 	public void setTestModel(EObject testModel) {
@@ -225,9 +234,7 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 				testCaseFactory.setInputUriMap(input2Uri);
 				testCaseFactory.setLogInputMap(reverseXmlTransformation.computeConfigScanMap(logDocument, inputDocument));
 				addTestCase(testCaseFactory.buildTestCase(logDocument, this));					
-			} catch (JCoException exception) {
-				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
-			} catch (CoreException exception) {
+			} catch (Exception exception) {
 				ConfigScanPlugin.log(exception.getMessage(), IStatus.ERROR);
 			}
 		}
@@ -306,11 +313,11 @@ public class TestRun extends TestGroup implements IDeferredWorkbenchAdapter {
 	private String getLogFileNamePrefix() {
 		if(testModel != null) {
 			return ResourceUtil.getFile(testModel.eResource()).getName() + "." + connection.getDescription();
-		} else if(file != null) {
+		} 
+		if(file != null) {
 			return file.getName() + "." + connection.getDescription();
-		} else {
-			return "";
-		}
+		} 
+		return "";
 	}
 	
 	private void storeLogDocument(IProgressMonitor monitor, Document document, String fileName) throws CoreException {

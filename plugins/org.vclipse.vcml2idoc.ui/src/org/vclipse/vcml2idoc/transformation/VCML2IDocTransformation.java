@@ -1,20 +1,20 @@
 /*******************************************************************************
- * Copyright (c) 2010 webXcerpt Software GmbH.
+ * Copyright (c) 2010 - 2013 webXcerpt Software GmbH.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ *  
  * Contributors:
- *    webXcerpt Software GmbH - initial creator
- *******************************************************************************/
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
+ ******************************************************************************/
 package org.vclipse.vcml2idoc.transformation;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -24,7 +24,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.vclipse.idoc.iDoc.IDocFactory;
@@ -38,8 +37,6 @@ public class VCML2IDocTransformation implements IVCML2IDocTransformation {
 	private static final String IDOC_EXTENSION = "idoc";
 	private static final String VCML_EXTENSION = "vcml";
 
-	private static final Logger LOGGER = Logger.getLogger(VCML2IDocTransformation.class);
-	
 	@Inject
 	private VCML2IDocSwitch vcml2IDocSwitch;
 	
@@ -76,8 +73,6 @@ public class VCML2IDocTransformation implements IVCML2IDocTransformation {
 			} catch(CoreException exception) {
 				exception.printStackTrace();
 			}
-		} else {
-			LOGGER.error("Only vcml files can be transformed. Got " + vcmlFile.getName());
 		}
 	}
 	

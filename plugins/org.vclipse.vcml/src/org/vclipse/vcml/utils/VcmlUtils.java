@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2010 webXcerpt Software GmbH.
+ * Copyright (c) 2010 - 2013 webXcerpt Software GmbH.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *  
  * Contributors:
- *    webXcerpt Software GmbH - initial creator
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
  ******************************************************************************/
 package org.vclipse.vcml.utils;
 
@@ -17,6 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.emf.common.util.EList;
 import org.vclipse.vcml.VCMLPlugin;
 import org.vclipse.vcml.vcml.Assignment;
@@ -69,8 +71,6 @@ import org.vclipse.vcml.vcml.UnaryExpressionOperator;
 import org.vclipse.vcml.vcml.VariantFunction;
 import org.vclipse.vcml.vcml.VcmlFactory;
 import org.vclipse.vcml.vcml.VcmlModel;
-
-
 
 public class VcmlUtils {
 
@@ -198,7 +198,9 @@ public class VcmlUtils {
 	}
 	
 	public static Language getDefaultLanguage() {
-		return Language.get(Platform.getPreferencesService().getString(VCMLPlugin.PREFERENCES_ID, ISapConstants.DEFAULT_LANGUAGE, Language.EN.getLiteral(), null));
+		IPreferencesService preferencesService = Platform.getPreferencesService();
+		String string = preferencesService.getString(VCMLPlugin.PREFERENCES_ID, ISapConstants.DEFAULT_LANGUAGE, Language.EN.getLiteral(), null);
+		return Language.get(string);
 	}
 	
 	public static Status createStatusFromInt(int status) {

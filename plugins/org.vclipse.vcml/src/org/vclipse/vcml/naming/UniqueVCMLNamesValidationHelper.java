@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2010 - 2013 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
+ ******************************************************************************/
 package org.vclipse.vcml.naming;
 
 import java.util.Map;
@@ -12,7 +23,10 @@ import org.vclipse.vcml.vcml.VcmlPackage;
 
 import com.google.common.collect.Maps;
 
-public class UniqueNamesValidationHelper extends NamesAreUniqueValidationHelper {
+/**
+ * Extension of the default behavior returning null for types that should not be checked on name uniqueness.
+ */
+public class UniqueVCMLNamesValidationHelper extends NamesAreUniqueValidationHelper {
 
 	private static final VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
 

@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2010 - 2013 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
+ ******************************************************************************/
 package org.vclipse.configscan.utils;
 
 import java.util.Map;
@@ -105,27 +116,25 @@ public class TestCaseFactory {
 				testCase.setInputElement(inputNode);
 				testCase.setSourceURI(input2Uri.get(inputNode));
 				return testCase;
-			} else {
-				// create a test group
-				TestGroup testGroup = new TestGroup(parent);
-				testGroup.setLogElement(element);
-				Element inputNode = log2Input.get(element);
-				testGroup.setInputElement(inputNode);
-				testGroup.setSourceURI(input2Uri.get(inputNode));
-				
-				for(int i=0; i<nodeList.getLength(); i++) {
-					Node item = nodeList.item(i);
-					if(Node.ELEMENT_NODE == item.getNodeType()) {
-						TestCase childTestCase = buildTestCase((Element)item, testGroup);
-						if(childTestCase == null) {
-							break;
-						} else {
-							testGroup.addTestCase(childTestCase);
-						}
-					}
+			} 
+			// create a test group
+			TestGroup testGroup = new TestGroup(parent);
+			testGroup.setLogElement(element);
+			Element inputNode = log2Input.get(element);
+			testGroup.setInputElement(inputNode);
+			testGroup.setSourceURI(input2Uri.get(inputNode));
+
+			for(int i=0; i<nodeList.getLength(); i++) {
+				Node item = nodeList.item(i);
+				if(Node.ELEMENT_NODE == item.getNodeType()) {
+					TestCase childTestCase = buildTestCase((Element)item, testGroup);
+					if(childTestCase == null) {
+						break;
+					} 
+					testGroup.addTestCase(childTestCase);
 				}
-				return testGroup;
 			}
+			return testGroup;
 		}
 		return null;
 	}

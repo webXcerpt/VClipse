@@ -1,6 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2010 - 2013 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
+ ******************************************************************************/
 package org.vclipse.configscan.views.labeling;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -45,9 +55,8 @@ public class ExtensionsHandlingLabelProvider extends AbstractLabelProvider {
  	 	 			IBaseLabelProvider labelProvider = extensionPointReader.getLabelProvider(fileExtension);
  	 				extension2LabelProvider.put(fileExtension, labelProvider);
  	 				return labelProvider;
- 	 	 		} else {
- 	 	 			return extensionPointReader.getLabelProvider(fileExtension);
- 	 	 		}
+ 	 	 		} 
+ 	 	 		return extensionPointReader.getLabelProvider(fileExtension);
  			}
  		}
  		return null;
@@ -56,21 +65,12 @@ public class ExtensionsHandlingLabelProvider extends AbstractLabelProvider {
  	protected Object extensionCall(IBaseLabelProvider labelProvider, String methodName, Object object) {
 		if(labelProvider == null || object == null) {
 			return null;
-		} else {
-			try {
-				Method method = labelProvider.getClass().getMethod(methodName, Object.class);
-				return method.invoke(labelProvider, object);
-			} catch (SecurityException exception) {
-				return null;
-			} catch (NoSuchMethodException exception) {
-				return null;
-			} catch (IllegalArgumentException exception) {
-				return null;
-			} catch (IllegalAccessException exception) {
-				return null;
-			} catch (InvocationTargetException exception) {
-				return null;
-			}
+		} 
+		try {
+			Method method = labelProvider.getClass().getMethod(methodName, Object.class);
+			return method.invoke(labelProvider, object);
+		} catch (Exception exception) {
+			return null;
 		}
 	}
 }

@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2012 webXcerpt Software GmbH.
+ * Copyright (c) 2010 - 2013 webXcerpt Software GmbH.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *  
  * Contributors:
- *    webXcerpt Software GmbH - initial creator
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
  ******************************************************************************/
 package org.vclipse.configscan.views;
 
@@ -204,9 +205,7 @@ public final class ConfigScanView extends ViewPart {
 		
 		try {
 			history.load(plugin.getStateLocation().append(IConfigScanConfiguration.HISTORY_FILE_NAME).toString());
-		} catch (FileNotFoundException exception) {
-			ConfigScanPlugin.log("Could not load history. " + exception.getMessage(), IStatus.ERROR);
-		} catch (IllegalStateException exception) {
+		} catch (Exception exception) {
 			ConfigScanPlugin.log("Could not load history. " + exception.getMessage(), IStatus.ERROR);
 		}
 		disableActions();

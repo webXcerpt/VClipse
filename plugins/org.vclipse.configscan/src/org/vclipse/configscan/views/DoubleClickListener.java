@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2010 - 2013 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *  
+ * Contributors:
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
+ ******************************************************************************/
 package org.vclipse.configscan.views;
 
 import org.eclipse.core.runtime.IStatus;
@@ -35,7 +46,9 @@ public class DoubleClickListener implements IDoubleClickListener {
 			if(firstElement instanceof TestCase) {
 				select((TestCase)firstElement);
 			}
-		} else if(contentProvider instanceof ErrorBasedContentProvider) {
+			return;
+		} 
+		if(contentProvider instanceof ErrorBasedContentProvider) {
 			TreeItem[] items = viewer.getTree().getSelection();
 			if(items.length > 0) {
 				TreeItem treeItem = items[0];
@@ -44,32 +57,9 @@ public class DoubleClickListener implements IDoubleClickListener {
 					select((TestGroup)treeItemData);
 				} else if(treeItemData instanceof TestCase) {
 					select((TestCase)treeItemData);
-				} 
-//				else {
-//					TreeItem parentItem = treeItem.getParentItem();
-//					if(parentItem != null) {
-//						Object data = parentItem.getData();
-//						if(data instanceof TestCase) {
-//							final String searchFor = ((TestCase)data).getTitle();
-//							data = treeItem.getData();
-//							if(data instanceof TestGroup) {
-//								Iterator<TestCase> filteredTestCases = Iterables.filter(((TestGroup)data).getTestCases(), new  Predicate<TestCase>() {
-//									@Override
-//									public boolean apply(TestCase input) {
-//										return input.getTitle().equals(searchFor);
-//									}
-//								}).iterator();
-//								if(filteredTestCases.hasNext()) {
-//									select(filteredTestCases.next());
-//								}
-//							}
-//						}
-//					}
-//				}
+				}
 			}
-		} else {
-			// do nothing
-		}
+		} 
 	}
 	
 	protected void select(TestCase testCase) {
