@@ -21,6 +21,8 @@ import org.junit.runner.RunWith
 import org.vclipse.base.ImportUriExtractor
 import org.vclipse.tests.VClipseTestPlugin
 import org.vclipse.tests.VClipseTestResourceLoader
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
+import org.eclipse.emf.common.util.URI
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(VClipseTestPlugin))
@@ -39,7 +41,19 @@ class ImportUriExtractorTest extends XtextTest {
 	}
 	
 	@Test
-	def test_ImportUriComputation() {
+	def void test_ImportUriComputation_EMPTY() { // expecting an empty uri
+		val resourceSet = new ResourceSetImpl
+		val resource_one = resourceSet.createResource(URI::createURI("file:///c:/test.test"))
+		val resource_two = resourceSet.createResource(URI::createPlatformResourceURI("test2.test", true));
+		
+		var extracted = uriExtractor.getImportUri(resource_one, resource_two)
+		Assert::assertTrue(extracted, "".equals(extracted))
+		extracted = uriExtractor.getImportUri(resource_two, resource_one)
+		Assert::assertTrue(extracted, "".equals(extracted))
+	}
+	
+	@Test
+	def void test_ImportUriComputation_SAME_LENGTH() { // all tests should succeed
 		val resource_one = resourcesLoader.getResource("/compare/added_vc_objects/VCML/car.vcml")
 		val resource_two = resourcesLoader.getResource("/compare/added_vc_objects/VCML/engine.vcml")
 		val resource_three = resourcesLoader.getResource("/compare/added_vc_objects/SAP/car.vcml")
@@ -64,5 +78,17 @@ class ImportUriExtractorTest extends XtextTest {
 		
 		extracted = uriExtractor.getImportUri(resource_three, resource_two)
 		Assert::assertTrue(extracted, extracted.equals("../SAP/car.vcml"))
+	}
+	
+	@Test
+	def void test_ImportUriComputation_DIFFERENT_LENGTH() { // all tests should succeed(verified)
+		val resource_one = resourcesLoader.getResource("/compare/added_vc_objects/VCML/car.vcml")
+		val resource_two = resourcesLoader.getResource("/resources/VCML/car.vcml")
+		
+		var extracted = uriExtractor.getImportUri(resource_two, resource_one)
+		Assert::assertTrue(extracted, extracted.equals("../../../resources/VCML/car.vcml"))
+		
+		extracted = uriExtractor.getImportUri(resource_one, resource_two)
+		Assert::assertTrue(extracted, extracted.equals("../../compare/added_vc_objects/VCML/car.vcml"))
 	}
 }
