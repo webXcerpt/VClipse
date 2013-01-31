@@ -12,6 +12,7 @@
 package org.vclipse.tests;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.junit4.IInjectorProvider;
 import org.eclipse.xtext.ui.shared.SharedStateModule;
 import org.eclipse.xtext.util.Modules2;
 import org.osgi.framework.BundleContext;
@@ -33,7 +34,7 @@ import com.google.inject.Injector;
  * The packages with extension swtbot contain tests for execution with SWTBot. Please consult the
  * SWTBot Documentation for further information(@{link http://wiki.eclipse.org/SWTBot/UsersGuide }).
  */
-public class VClipseTestPlugin extends AbstractUIPlugin {
+public class VClipseTestPlugin extends AbstractUIPlugin implements IInjectorProvider {
 
 	public static final String ID = "org.vclipse.tests";
 	private static VClipseTestPlugin plugin;
@@ -53,6 +54,7 @@ public class VClipseTestPlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 
+	@Override
 	public Injector getInjector() {
 		if(injector == null) {
 			injector = 

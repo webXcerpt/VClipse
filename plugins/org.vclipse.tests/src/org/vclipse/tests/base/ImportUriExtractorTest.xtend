@@ -11,13 +11,26 @@
  ******************************************************************************/
 package org.vclipse.tests.base
 
+import com.google.inject.Inject
+import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipselabs.xtext.utils.unittesting.XtextTest
+import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.vclipse.base.ImportUriExtractor
+import org.vclipse.tests.VClipseTestPlugin
+import org.vclipse.tests.VClipseTestResourceLoader
 
 @RunWith(typeof(XtextRunner))
+@InjectWith(typeof(VClipseTestPlugin))
 class ImportUriExtractorTest extends XtextTest {
+	
+	@Inject
+	private VClipseTestResourceLoader resourcesLoader
+	
+	@Inject
+	private ImportUriExtractor uriExtractor
 	
 	new() {
 		super(
@@ -27,6 +40,26 @@ class ImportUriExtractorTest extends XtextTest {
 	
 	@Test
 	def test_ImportUriComputation() {
+		val resource_one = resourcesLoader.getResource("/compare/added_vc_objects/VCML/car.vcml")
+		val resource_two = resourcesLoader.getResource("/compare/added_vc_objects/VCML/engine.vcml")
+		val resource_three = resourcesLoader.getResource("/compare/added_vc_objects/SAP/car.vcml")
 		
+		var extracted = uriExtractor.getImportUri(resource_one, resource_two)
+		Assert::assertTrue(extracted, extracted.equals("car.vcml"))
+		
+		extracted = uriExtractor.getImportUri(resource_two, resource_one)
+		Assert::assertTrue(extracted, extracted.equals("engine.vcml"))
+		
+		extracted = uriExtractor.getImportUri(resource_one, resource_three)
+		Assert::assertTrue(extracted, extracted.equals("../VCML/car.vcml"))
+		
+		extracted = uriExtractor.getImportUri(resource_three, resource_one)
+		Assert::assertTrue(extracted, extracted.equals("../SAP/car.vcml"))
+		
+		extracted = uriExtractor.getImportUri(resource_two, resource_three)
+		Assert::assertTrue(extracted, extracted.equals("../VCML/engine.vcml"))
+		
+		extracted = uriExtractor.getImportUri(resource_three, resource_two)
+		Assert::assertTrue(extracted, extracted.equals("../SAP/car.vcml"))
 	}
 }
