@@ -26,7 +26,7 @@ import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.material.MaterialReader;
 import org.vclipse.bapi.actions.procedure.ProcedureReader;
 import org.vclipse.bapi.actions.selectioncondition.SelectionConditionReader;
-import org.vclipse.vcml.utils.VCMLProxyFactory;
+import org.vclipse.vcml.mm.VCMLProxyFactory;
 import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Material;

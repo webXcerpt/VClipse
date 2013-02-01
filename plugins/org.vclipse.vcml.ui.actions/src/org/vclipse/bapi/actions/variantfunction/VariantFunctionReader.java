@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.characteristic.CharacteristicReader;
-import org.vclipse.vcml.utils.VCMLProxyFactory;
+import org.vclipse.vcml.mm.VCMLProxyFactory;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.Option;
