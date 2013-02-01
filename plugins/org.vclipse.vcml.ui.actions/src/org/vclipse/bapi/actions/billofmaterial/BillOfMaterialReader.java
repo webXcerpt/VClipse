@@ -26,7 +26,6 @@ import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.material.MaterialReader;
 import org.vclipse.bapi.actions.procedure.ProcedureReader;
 import org.vclipse.bapi.actions.selectioncondition.SelectionConditionReader;
-import org.vclipse.vcml.mm.VCMLProxyFactory;
 import org.vclipse.vcml.vcml.BOMItem;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Material;
@@ -118,7 +117,7 @@ public class BillOfMaterialReader extends BAPIUtils {
 						bomMaterial = materialReader.read(component, resource, monitor, seenObjects, globalOptions, recurse);
 					}
 					if (bomMaterial==null) {
-						bomMaterial = VCMLProxyFactory.createMaterialProxy(resource, component);
+						bomMaterial = vcmlProxyFactory.materialProxy(component, resource);
 					}
 					bomItem.setMaterial(bomMaterial);
 					
@@ -137,7 +136,7 @@ public class BillOfMaterialReader extends BAPIUtils {
 									proc = procedureReader.read(depName, resource, monitor, seenObjects, globalOptions, recurse);
 								}
 								if (proc==null) {
-									proc = VCMLProxyFactory.createProcedureProxy(resource, depName);
+									proc = vcmlProxyFactory.procedureProxy(depName, resource);
 								}
 								int seq = getSequenceNumber(tT_DEP_ORDER, itemNode, depName);
 								bomItem.getEntries().add(mkConfigurationProfileEntry(seq, proc));
@@ -150,7 +149,7 @@ public class BillOfMaterialReader extends BAPIUtils {
 									cond = selectionConditionReader.read(depName, resource, monitor, seenObjects, globalOptions, recurse);
 								}
 								if (cond==null) {
-									cond = VCMLProxyFactory.createSelectionConditionProxy(resource, depName);
+									cond = vcmlProxyFactory.selectionConditionProxy(depName, resource);
 								}
 								bomItem.setSelectionCondition(cond);
 							} else {

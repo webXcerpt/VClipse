@@ -29,6 +29,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.util.Strings;
 import org.vclipse.bapi.actions.handler.BAPIActionHandler;
 import org.vclipse.connection.IConnectionHandler;
+import org.vclipse.vcml.mm.VCMLProxyFactory;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.utils.DescriptionHandler;
 import org.vclipse.vcml.utils.DocumentationHandler;
@@ -74,6 +75,9 @@ public class BAPIUtils extends BAPIActionHandler {
 
 	@Inject
 	protected SourceCrossReferenceExtractor sourceCrossReferenceExtractor;
+	
+	@Inject
+	protected VCMLProxyFactory vcmlProxyFactory;
 	
 	/**
 	 * @param function

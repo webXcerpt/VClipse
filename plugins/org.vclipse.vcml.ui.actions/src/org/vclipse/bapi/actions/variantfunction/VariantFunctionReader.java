@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.characteristic.CharacteristicReader;
-import org.vclipse.vcml.mm.VCMLProxyFactory;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.Option;
@@ -82,7 +81,7 @@ public class VariantFunctionReader extends BAPIUtils {
 					cstic = csticReader.read(csticName, vcmlModel, monitor, seenObjects, globalOptions, recurse);
 				}
 				if (cstic==null) {
-					cstic = VCMLProxyFactory.createCharacteristicProxy(vcmlModel.eResource(), csticName);
+					cstic = vcmlProxyFactory.characteristicProxy(csticName, vcmlModel.eResource());
 				}
 				VariantFunctionArgument variantFunctionArgument = VCML.createVariantFunctionArgument();
 				variantFunctionArgument.setCharacteristic(cstic);

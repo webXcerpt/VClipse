@@ -9,116 +9,76 @@
  *     	webXcerpt Software GmbH - initial creator
  * 		www.webxcerpt.com
  ******************************************************************************/
-package org.vclipse.vcml.mm;
+package org.vclipse.vcml.mm
 
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.vclipse.vcml.vcml.Characteristic;
-import org.vclipse.vcml.vcml.Class;
-import org.vclipse.vcml.vcml.Constraint;
-import org.vclipse.vcml.vcml.DependencyNet;
-import org.vclipse.vcml.vcml.InterfaceDesign;
-import org.vclipse.vcml.vcml.Material;
-import org.vclipse.vcml.vcml.Precondition;
-import org.vclipse.vcml.vcml.Procedure;
-import org.vclipse.vcml.vcml.VcmlFactory;
-import org.vclipse.vcml.vcml.SelectionCondition;
-import org.vclipse.vcml.vcml.VariantFunction;
-import org.vclipse.vcml.vcml.VariantTable;
-import org.vclipse.vcml.vcml.impl.VcmlFactoryImpl;
+import org.eclipse.emf.ecore.InternalEObject
+import org.eclipse.emf.ecore.resource.Resource
+import org.vclipse.vcml.vcml.Characteristic
+import org.vclipse.vcml.vcml.VcmlFactory
+import org.vclipse.vcml.vcml.VCObject
+import org.vclipse.vcml.vcml.Constraint
+import org.vclipse.vcml.vcml.VariantTable
+import org.vclipse.vcml.vcml.VariantFunction
+import org.vclipse.vcml.vcml.SelectionCondition
+import org.vclipse.vcml.vcml.Procedure
+import org.vclipse.vcml.vcml.Precondition
+import org.vclipse.vcml.vcml.Material
+import org.vclipse.vcml.vcml.InterfaceDesign
+import org.vclipse.vcml.vcml.DependencyNet
 
+/**
+ * Extensions of the VcmlFactory creating proxy objects with a given name in a given resource.
+ */
+public class VCMLProxyFactory {
 
-public class VCMLProxyFactory extends VcmlFactoryImpl {
-
-	protected static final VcmlFactory VCML = VcmlFactory.eINSTANCE;
+	def Characteristic create it : VcmlFactory::eINSTANCE.createCharacteristic characteristicProxy(String name, Resource resource) {
+		createProxy(it, name, resource)
+	}
 	
-	public static Characteristic createCharacteristicProxy(Resource resource, String name) {
-		Characteristic obj = VCML.createCharacteristic();
-		obj.setName(name);
-		URI uri = resource.getURI();
-		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
-		return obj;
+	def org.vclipse.vcml.vcml.Class create it : VcmlFactory::eINSTANCE.createClass classProxy(String name, Resource resource) {
+		createProxy(it, name, resource)
 	}
-
-	public static Class createClassProxy(Resource resource, String name) {
-		Class obj = VCML.createClass();
-		obj.setName(name);
-		URI uri = resource.getURI();
-		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
-		return obj;
+	
+	def Constraint create it : VcmlFactory::eINSTANCE.createConstraint constraintProxy(String name, Resource resource) {
+		createProxy(it, name, resource)
 	}
-
-	public static Constraint createConstraintProxy(Resource resource, String name) {
-		Constraint obj = VCML.createConstraint();
-		obj.setName(name);
-		URI uri = resource.getURI();
-		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
-		return obj;
+	
+	def VariantFunction create it : VcmlFactory::eINSTANCE.createVariantFunction variantFunctionProxy(String name, Resource resource) {
+		createProxy(it, name, resource)
 	}
-
-	public static DependencyNet createDependencyNetProxy(Resource resource, String name) {
-		DependencyNet obj = VCML.createDependencyNet();
-		obj.setName(name);
-		URI uri = resource.getURI();
-		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
-		return obj;
+	
+	def VariantTable create it : VcmlFactory::eINSTANCE.createVariantTable variantTableProxy(String name, Resource resource) {
+		createProxy(it, name, resource)
 	}
-
-	public static InterfaceDesign createInterfaceDesignProxy(Resource resource, String name) {
-		InterfaceDesign obj = VCML.createInterfaceDesign();
-		obj.setName(name);
-		URI uri = resource.getURI();
-		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
-		return obj;
+	
+	def SelectionCondition create it : VcmlFactory::eINSTANCE.createSelectionCondition selectionConditionProxy(String name, Resource resource) {
+		createProxy(it, name, resource)
 	}
-
-	public static Material createMaterialProxy(Resource resource, String name) {
-		Material obj = VCML.createMaterial();
-		obj.setName(name);
-		URI uri = resource.getURI();
-		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
-		return obj;
+	
+	def Procedure create it : VcmlFactory::eINSTANCE.createProcedure procedureProxy(String name, Resource resource) {
+		createProxy(it, name, resource)
 	}
-
-	public static Precondition createPreconditionProxy(Resource resource, String name) {
-		Precondition obj = VCML.createPrecondition();
-		obj.setName(name);
-		URI uri = resource.getURI();
-		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
-		return obj;
+	
+	def Precondition create it : VcmlFactory::eINSTANCE.createPrecondition preconditionProxy(String name, Resource resource) {
+		createProxy(it, name, resource)
 	}
-
-	public static Procedure createProcedureProxy(Resource resource, String name) {
-		Procedure obj = VCML.createProcedure();
-		obj.setName(name);
-		URI uri = resource.getURI();
-		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
-		return obj;
+	
+	def Material create it : VcmlFactory::eINSTANCE.createMaterial materialProxy(String name, Resource resource) {
+		createProxy(it, name, resource)
 	}
-
-	public static SelectionCondition createSelectionConditionProxy(Resource resource, String name) {
-		SelectionCondition obj = VCML.createSelectionCondition();
-		obj.setName(name);
-		URI uri = resource.getURI();
-		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
-		return obj;
+	
+	def InterfaceDesign create it : VcmlFactory::eINSTANCE.createInterfaceDesign interfaceDesignProxy(String name, Resource resource) {
+		createProxy(it, name, resource)
 	}
-
-	public static VariantFunction createVariantFunctionProxy(Resource resource, String name) {
-		VariantFunction obj = VCML.createVariantFunction();
-		obj.setName(name);
-		URI uri = resource.getURI();
-		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
-		return obj;
+	
+	def DependencyNet create it : VcmlFactory::eINSTANCE.createDependencyNet dependencyNetProxy(String name, Resource resource) {
+		createProxy(it, name, resource)
 	}
-
-	public static VariantTable createVariantTableProxy(Resource resource, String name) {
-		VariantTable obj = VCML.createVariantTable();
-		obj.setName(name);
-		URI uri = resource.getURI();
-		((InternalEObject)obj).eSetProxyURI(uri.appendFragment(name));
-		return obj;
+	
+	def protected <T extends VCObject> createProxy(T object, String name, Resource resource) {
+		object.name = name
+		val uri = resource.URI.appendFragment(name)
+		(object as InternalEObject).eSetProxyURI(uri)
+		object
 	}
-
 }

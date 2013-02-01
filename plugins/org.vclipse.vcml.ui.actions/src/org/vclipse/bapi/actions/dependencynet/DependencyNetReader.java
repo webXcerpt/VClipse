@@ -17,7 +17,6 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.constraint.ConstraintReader;
-import org.vclipse.vcml.mm.VCMLProxyFactory;
 import org.vclipse.vcml.utils.VCMLObjectUtils;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Constraint;
@@ -82,7 +81,7 @@ public class DependencyNetReader extends BAPIUtils {
 						constraint = constraintReader.read(constraintName, vcmlModel.eResource(), monitor, seenObjects, globalOptions, recurse);
 					}
 					if (constraint==null) {
-						constraint = VCMLProxyFactory.createConstraintProxy(vcmlModel.eResource(), constraintName);
+						constraint = vcmlProxyFactory.constraintProxy(constraintName, vcmlModel.eResource());
 					}
 					object.getConstraints().add(constraint);
 				}

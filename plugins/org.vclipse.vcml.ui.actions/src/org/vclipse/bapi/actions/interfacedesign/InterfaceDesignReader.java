@@ -19,7 +19,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.util.Strings;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.characteristic.CharacteristicReader;
-import org.vclipse.vcml.mm.VCMLProxyFactory;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicGroup;
@@ -225,7 +224,7 @@ FRAME_TEXT
 								cstic = csticReader.read(csticName, model, monitor, seenObjects, globalOptions, recurse);
 							}
 							if (cstic==null) {
-								cstic = VCMLProxyFactory.createCharacteristicProxy(model.eResource(), csticName);
+								cstic = vcmlProxyFactory.characteristicProxy(csticName, model.eResource());
 							}
 							characteristics.add(cstic);
 						}

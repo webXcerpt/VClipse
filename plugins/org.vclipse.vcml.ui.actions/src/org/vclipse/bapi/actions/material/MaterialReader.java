@@ -21,7 +21,6 @@ import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.billofmaterial.BillOfMaterialReader;
 import org.vclipse.bapi.actions.classes.ClassReader;
 import org.vclipse.bapi.actions.configurationprofile.ConfigurationProfileReader;
-import org.vclipse.vcml.mm.VCMLProxyFactory;
 import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.Classification;
 import org.vclipse.vcml.vcml.Material;
@@ -113,7 +112,7 @@ public class MaterialReader extends BAPIUtils {
 						cls = classReader.read(className, model, monitor, seenObjects, globalOptions, recurse);
 					}
 					if (cls==null) {
-						cls = VCMLProxyFactory.createClassProxy(resource, className);
+						cls = vcmlProxyFactory.classProxy(className, resource);
 					}
 					Classification classification = VCML.createClassification();
 					classification.setCls(cls);

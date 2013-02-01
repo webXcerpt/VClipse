@@ -24,7 +24,6 @@ import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.dependencynet.DependencyNetReader;
 import org.vclipse.bapi.actions.interfacedesign.InterfaceDesignReader;
 import org.vclipse.bapi.actions.procedure.ProcedureReader;
-import org.vclipse.vcml.mm.VCMLProxyFactory;
 import org.vclipse.vcml.utils.VCMLObjectUtils;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.ConfigurationProfile;
@@ -116,7 +115,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 						interfaceDesign = interfaceDesignReader.read(design, model, monitor, seenObjects, globalOptions, recurse);
 					}
 					if (interfaceDesign==null) {
-						interfaceDesign = VCMLProxyFactory.createInterfaceDesignProxy(resource, design);
+						interfaceDesign = vcmlProxyFactory.interfaceDesignProxy(design, resource);
 					}
 					object.setUidesign(interfaceDesign);
 				}
@@ -149,7 +148,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 						procedure = procedureReader.read(depName, resource, monitor, seenObjects, globalOptions, recurse);
 					}
 					if (procedure==null) {
-						procedure = VCMLProxyFactory.createProcedureProxy(resource, depName);
+						procedure = vcmlProxyFactory.procedureProxy(depName, resource);
 					}
 					entry.setSequence(getSequenceNumber(conProDependencyOrder, cProfile, depName));
 					entry.setDependency(procedure);
@@ -162,7 +161,7 @@ public class ConfigurationProfileReader extends BAPIUtils {
 						dependencyNet = dependencyNetReader.read(depName, model, monitor, seenObjects, globalOptions, recurse);
 					}
 					if (dependencyNet==null) {
-						dependencyNet = VCMLProxyFactory.createDependencyNetProxy(resource, depName);
+						dependencyNet = vcmlProxyFactory.dependencyNetProxy(depName, resource);
 					}
 					profile.getDependencyNets().add(dependencyNet);
 				} else {
