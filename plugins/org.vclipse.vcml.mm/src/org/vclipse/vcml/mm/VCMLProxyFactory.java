@@ -9,7 +9,7 @@
  *     	webXcerpt Software GmbH - initial creator
  * 		www.webxcerpt.com
  ******************************************************************************/
-package org.vclipse.vcml.utils;
+package org.vclipse.vcml.mm;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
