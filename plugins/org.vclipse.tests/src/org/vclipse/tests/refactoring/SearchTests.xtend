@@ -24,7 +24,7 @@ import org.vclipse.refactoring.core.RefactoringContext
 import org.vclipse.refactoring.core.RefactoringType
 import org.vclipse.refactoring.utils.EntrySearch
 import org.vclipse.refactoring.utils.Extensions
-import org.vclipse.tests.VClipseTestResourceLoader
+import org.vclipse.tests.VClipseTestUtilities
 import org.vclipse.vcml.refactoring.VCMLRefactoring
 
 @RunWith(typeof(XtextRunner))
@@ -35,7 +35,7 @@ class SearchTests extends XtextTest {
 	private EntrySearch search
 	
 	@Inject
-	private VClipseTestResourceLoader resourcesLoader
+	private VClipseTestUtilities resourcesLoader
 	
 	@Inject
 	private Extensions extensions
@@ -61,11 +61,11 @@ class SearchTests extends XtextTest {
 	def void testFindByTypeAndName() {
 		val entries = resourcesLoader.getResourceContents("/refactoring/Refactoring/car.vcml")
 		Assert::assertTrue(!entries.empty)
-		var findEntry = search.findEntry("CAR_SELECTION", VClipseTestResourceLoader::VCML_PACKAGE.constraint, entries)
+		var findEntry = search.findEntry("CAR_SELECTION", org::vclipse::tests::VClipseTestUtilities::VCML_PACKAGE.constraint, entries)
 		Assert::assertNotNull(findEntry)
-		findEntry = search.findEntry("NAME", VClipseTestResourceLoader::VCML_PACKAGE.getCharacteristic, entries)
+		findEntry = search.findEntry("NAME", org::vclipse::tests::VClipseTestUtilities::VCML_PACKAGE.getCharacteristic, entries)
 		Assert::assertNotNull(findEntry)
-		findEntry = search.findEntry("(300)CAR", VClipseTestResourceLoader::VCML_PACKAGE.getClass_, entries)
+		findEntry = search.findEntry("(300)CAR", org::vclipse::tests::VClipseTestUtilities::VCML_PACKAGE.getClass_, entries)
 		Assert::assertNotNull(findEntry)
 	}
 	
@@ -73,7 +73,7 @@ class SearchTests extends XtextTest {
 	def void testSearchByName() {
 		val entries = resourcesLoader.getResourceContents("/refactoring/Refactoring/car.vcml")
 		Assert::assertTrue(!entries.empty)
-		val entry = search.findEntry("DEPENDENCY_NET", VClipseTestResourceLoader::VCML_PACKAGE.dependencyNet, entries)
+		val entry = search.findEntry("DEPENDENCY_NET", org::vclipse::tests::VClipseTestUtilities::VCML_PACKAGE.dependencyNet, entries)
 		Assert::assertNull(entry)
 	}
 	
@@ -86,21 +86,21 @@ class SearchTests extends XtextTest {
 		if(refactoringExecuter == null) {
 			Assert::fail("can not find re-factoring executer for " + firstEntry)
 		}
-		var klass = search.findEntry("(300)CAR", VClipseTestResourceLoader::VCML_PACKAGE.class_, entries) as org.vclipse.vcml.vcml.Class
+		var klass = search.findEntry("(300)CAR", org::vclipse::tests::VClipseTestUtilities::VCML_PACKAGE.class_, entries) as org.vclipse.vcml.vcml.Class
 		Assert::assertNotNull(klass)
 		var mapped = klass.characteristics.toMap([current | current.name])
 		Assert::assertTrue(mapped.keySet.contains("NAME"))
 		 
-		var cstic = search.findEntry("NAME", VClipseTestResourceLoader::VCML_PACKAGE.characteristic, entries)
+		var cstic = search.findEntry("NAME", org::vclipse::tests::VClipseTestUtilities::VCML_PACKAGE.characteristic, entries)
 		Assert::assertNotNull(cstic)
-		val context = RefactoringContext::create(cstic, VClipseTestResourceLoader::VCML_PACKAGE.vcmlModel_Objects, RefactoringType::Replace)
+		val context = RefactoringContext::create(cstic, org::vclipse::tests::VClipseTestUtilities::VCML_PACKAGE.vcmlModel_Objects, RefactoringType::Replace)
 		context.addAttribute(DefaultRefactoringExecuter::BUTTON_STATE, true)
 		refactoringExecuter.refactoring_Replace_objects(context)
 		firstEntry = resource.contents.get(0)
 		entries = resourcesLoader.getAllEntries(firstEntry)
-		cstic = search.findEntry("NAME", VClipseTestResourceLoader::VCML_PACKAGE.characteristic, entries)
+		cstic = search.findEntry("NAME", org::vclipse::tests::VClipseTestUtilities::VCML_PACKAGE.characteristic, entries)
 		Assert::assertNull("not existent after re-factoring", cstic)
-		klass = search.findEntry("(300)CAR", VClipseTestResourceLoader::VCML_PACKAGE.class_, entries) as org.vclipse.vcml.vcml.Class
+		klass = search.findEntry("(300)CAR", org::vclipse::tests::VClipseTestUtilities::VCML_PACKAGE.class_, entries) as org.vclipse.vcml.vcml.Class
 		Assert::assertNotNull(klass)
 		mapped = klass.characteristics.toMap([current | current.name])
 		Assert::assertFalse(mapped.keySet.contains("NAME")) 

@@ -17,14 +17,14 @@ import org.junit.runner.RunWith
 import org.vclipse.refactoring.utils.EntrySearch
 import org.vclipse.refactoring.utils.Extensions
 import org.vclipse.tests.SWTBotWorkspaceWorker
-import org.vclipse.tests.VClipseTestResourceLoader
+import org.vclipse.tests.VClipseTestUtilities
 import org.vclipse.tests.refactoring.RefactoringInjectorProvider
 import org.vclipse.vcml.refactoring.VCMLRefactoring
 
 @RunWith(typeof(SWTBotJunit4ClassRunner))
 class RegressionRefactoringTest extends SWTBotWorkspaceWorker {
 
-	private VClipseTestResourceLoader resourcesLoader
+	private VClipseTestUtilities resourcesLoader
 	
 	private Extensions extensions
 	private VCMLRefactoring vcmlRefactoring
@@ -33,7 +33,7 @@ class RegressionRefactoringTest extends SWTBotWorkspaceWorker {
 	override before() {
 		super.before()
 		val injector = (new RefactoringInjectorProvider).injector
-		resourcesLoader = injector.getInstance(typeof(VClipseTestResourceLoader))
+		resourcesLoader = injector.getInstance(typeof(VClipseTestUtilities))
 		extensions = injector.getInstance(typeof(Extensions))
 		vcmlRefactoring = injector.getInstance(typeof(VCMLRefactoring))
 		search = injector.getInstance(typeof(EntrySearch))

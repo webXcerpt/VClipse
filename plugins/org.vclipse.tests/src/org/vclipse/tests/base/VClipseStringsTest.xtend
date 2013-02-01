@@ -11,14 +11,12 @@
  ******************************************************************************/
 package org.vclipse.tests.base
 
+import junit.framework.Assert
 import org.eclipse.xtext.junit4.XtextRunner
 import org.eclipselabs.xtext.utils.unittesting.XtextTest
 import org.junit.Test
 import org.junit.runner.RunWith
-
 import org.vclipse.base.VClipseStrings
-import org.vclipse.tests.VClipseTestResourceLoader
-import junit.framework.Assert
 import org.vclipse.vcml.vcml.VcmlPackage
 
 @RunWith(typeof(XtextRunner))
@@ -33,7 +31,7 @@ class VClipseStringTest extends XtextTest {
 	}
 	
 	override before() {
-		vcmlPackage = VClipseTestResourceLoader::VCML_PACKAGE
+		vcmlPackage = org::vclipse::tests::VClipseTestUtilities::VCML_PACKAGE
 	}
 	
 	@Test

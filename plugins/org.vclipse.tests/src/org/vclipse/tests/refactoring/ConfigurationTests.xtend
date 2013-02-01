@@ -23,7 +23,7 @@ import org.vclipse.refactoring.IRefactoringConfiguration
 import org.vclipse.refactoring.core.RefactoringContext
 import org.vclipse.refactoring.core.RefactoringType
 import org.vclipse.refactoring.utils.Extensions
-import org.vclipse.tests.VClipseTestResourceLoader
+import org.vclipse.tests.VClipseTestUtilities
 import org.vclipse.vcml.vcml.Characteristic
 
 @RunWith(typeof(XtextRunner))
@@ -34,7 +34,7 @@ class ConfigurationTests extends XtextTest {
 	private Extensions extensions
 	
 	@Inject
-	private VClipseTestResourceLoader resourcesLoader
+	private VClipseTestUtilities resourcesLoader
 	
 	new() {
 		super(typeof(ConfigurationTests).simpleName)
@@ -47,13 +47,13 @@ class ConfigurationTests extends XtextTest {
 		if(iterator.hasNext) {
 			val entry = iterator.next
 			val configuration = extensions.getInstance(typeof(IRefactoringConfiguration), entry)
-			val context = RefactoringContext::create(entry, VClipseTestResourceLoader::VCML_PACKAGE.vcmlModel_Objects, RefactoringType::Replace)
+			val context = RefactoringContext::create(entry, org::vclipse::tests::VClipseTestUtilities::VCML_PACKAGE.vcmlModel_Objects, RefactoringType::Replace)
 			val initialize = configuration.initialize(context)
 			Assert::assertEquals("context initialized", true, initialize)
 		
 			val features = configuration.provideFeatures(context)
 			Assert::assertTrue(!features.empty)
-			Assert::assertTrue(features.contains(VClipseTestResourceLoader::VCML_PACKAGE.vcmlModel_Objects))
+			Assert::assertTrue(features.contains(org::vclipse::tests::VClipseTestUtilities::VCML_PACKAGE.vcmlModel_Objects))
 		}
 	}
 }

@@ -20,7 +20,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.vclipse.base.ImportUriExtractor
 import org.vclipse.tests.VClipseTestPlugin
-import org.vclipse.tests.VClipseTestResourceLoader
+import org.vclipse.tests.VClipseTestUtilities
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.common.util.URI
 
@@ -29,7 +29,7 @@ import org.eclipse.emf.common.util.URI
 class ImportUriExtractorTest extends XtextTest {
 	
 	@Inject
-	private VClipseTestResourceLoader resourcesLoader
+	private VClipseTestUtilities resourcesLoader
 	
 	@Inject
 	private ImportUriExtractor uriExtractor

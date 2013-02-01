@@ -19,7 +19,7 @@ import org.eclipselabs.xtext.utils.unittesting.XtextTest
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.vclipse.refactoring.utils.EntrySearch
-import org.vclipse.tests.VClipseTestResourceLoader
+import org.vclipse.tests.VClipseTestUtilities
 import org.vclipse.vcml.compare.VCMLCompareOperation
 import org.vclipse.vcml.vcml.Characteristic
 import org.vclipse.vcml.vcml.NumericType
@@ -38,7 +38,7 @@ class VCMLCompareTests extends XtextTest {
 	private VCMLCompareOperation compare
 	
 	@Inject
-	private VClipseTestResourceLoader resources
+	private VClipseTestUtilities resources
 	
 	@Inject
 	private EntrySearch entrySearch

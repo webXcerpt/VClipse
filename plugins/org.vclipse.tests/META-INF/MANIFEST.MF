@@ -11,13 +11,13 @@ Require-Bundle: org.eclipselabs.xtext.utils.unittesting,
  org.vclipse.vcml,
  org.vclipse.vcml.ui,
  org.eclipse.xtext.junit4,
- org.eclipse.swtbot.eclipse.gef.finder;bundle-version="2.0.5",
- org.eclipse.swtbot.go;bundle-version="2.0.5",
+ org.eclipse.swtbot.eclipse.gef.finder,
+ org.eclipse.swtbot.go,
  org.eclipse.jdt.core,
- org.vclipse.vcml.compare;bundle-version="0.5.0"
+ org.vclipse.vcml.compare
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Import-Package: org.slf4j;version="1.6.4",
- org.slf4j.helpers;version="1.6.4",
- org.slf4j.spi;version="1.6.4"
+Import-Package: org.slf4j,
+ org.slf4j.helpers,
+ org.slf4j.spi
 

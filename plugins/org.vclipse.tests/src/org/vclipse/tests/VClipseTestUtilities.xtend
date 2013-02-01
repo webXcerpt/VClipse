@@ -19,18 +19,18 @@ import org.vclipse.vcml.vcml.VcmlPackage
 
 import static com.google.common.collect.Lists.*
 import static org.eclipse.emf.common.util.URI.*
-import static org.vclipse.tests.VClipseTestResourceLoader.*
+import static org.vclipse.tests.VClipseTestUtilities.*
 
-/*
- * 
+/**
+ * Utilities for VClipse tests.
  */
-class VClipseTestResourceLoader extends XtextTest {
+class VClipseTestUtilities extends XtextTest {
 	
 	public static VcmlPackage VCML_PACKAGE = VcmlPackage::eINSTANCE
 	public static VcmlFactory VCML_FACTORY = VcmlFactory::eINSTANCE
 	
 	/**
-	 * 
+	 * Returns all contents of an entries container.
 	 */
 	def getAllEntries(EObject entry) {
 		val rootContainer = EcoreUtil2::getRootContainer(entry)
@@ -40,14 +40,14 @@ class VClipseTestResourceLoader extends XtextTest {
 	}
 	
 	/**
-	 * 
+	 * Loads a resource for a particular location.
 	 */
  	def getResource(String location) {
  		getResourceRoot(location).eResource
  	}
  	
  	/*
- 	 * Returns the top level element from the resource lying on the location.
+ 	 * Returns the top level element for a resource on particular location.
  	 */
 	def getResourceRoot(String location) {
 		val uri = createPlatformPluginURI(VClipseTestPlugin::ID + location, true)
@@ -60,14 +60,14 @@ class VClipseTestResourceLoader extends XtextTest {
 	}
 	
 	/**
-	 * 
+	 * Provides an input stream for a particular location.
 	 */
 	def getInputStream(String location) {
 		getClass().classLoader.getResourceAsStream(location)
 	}
 	
 	/**
-	 * 
+	 * Loads all contents of a resource on a particular location.
 	 */
 	def getResourceContents(String location) {
 		val root = getResourceRoot(location)
@@ -77,5 +77,16 @@ class VClipseTestResourceLoader extends XtextTest {
 		val contents = <EObject>newArrayList(root.eAllContents)
 		contents.add(0, root)
 		return contents
+	}
+	
+	/**
+	 * Removes new lines, tabulators, white spaces and values in the remove argument from the string.
+	 */
+	def String removeNoise(String string, String ... remove) {
+		var output = if(remove.empty) string  else  ""
+		for(part : remove) {
+			output = string.replace(part, "")
+		}
+		return output.replace("\r", "").replace("\n", "").replace("\t", "").replace(" ", "").trim()
 	}
 }
