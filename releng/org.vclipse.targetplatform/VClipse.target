@@ -32,7 +32,7 @@
 <unit id="org.tigris.subversion.clientadapter.javahl.feature.feature.group" version="1.7.8.1"/>
 <unit id="org.tigris.subversion.clientadapter.feature.feature.group" version="1.8.3"/>
 <unit id="org.tigris.subversion.subclipse.feature.group" version="1.8.18"/>
-<unit id="com.collabnet.subversion.merge.feature.feature.group" version="3.0.12"/>
+<unit id="com.collabnet.subversion.merge.feature.feature.group" version="3.0.13"/>
 <unit id="net.java.dev.jna.feature.group" version="3.4.0.t20120117_1605"/>
 <unit id="org.tigris.subversion.clientadapter.svnkit.feature.feature.group" version="1.7.8.1"/>
 <unit id="org.tmatesoft.svnkit.feature.group" version="1.7.8.r9538_v20130107_2001"/>
