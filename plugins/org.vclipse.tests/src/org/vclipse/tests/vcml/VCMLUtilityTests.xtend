@@ -24,6 +24,8 @@ import org.vclipse.tests.VClipseTestUtilities
 import org.vclipse.vcml.mm.VCMLUtilities
 import org.vclipse.vcml.vcml.VCObject
 import org.vclipse.vcml.vcml.VcmlModel
+import org.vclipse.vcml.vcml.VcmlPackage
+import org.vclipse.base.naming.INameProvider
 
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(VClipseTestPlugin))
@@ -38,6 +40,11 @@ class VCMLUtilityTests extends XtextTest {
 	@Inject
 	private ISerializer vcmlSerializer
 	
+	@Inject
+	private INameProvider nameProvider
+	
+	private VcmlPackage vcmlPackage = VcmlPackage::eINSTANCE
+	
 	new() {
 		super(
 			typeof(VCMLUtilityTests).simpleName
@@ -45,7 +52,7 @@ class VCMLUtilityTests extends XtextTest {
 	}
 	
 	@Test
-	def void test_SortEObjectList() {
+	def void test_SortVCObjectsList() {
 		val car_vcml = testUtilities.getResource("/compare/added_vc_objects/VCML/car.vcml")
 		val vcml_model = car_vcml.contents.get(0) as VcmlModel
 		
@@ -56,5 +63,23 @@ class VCMLUtilityTests extends XtextTest {
 			])
 		val contents_after_sort = testUtilities.removeNoise(vcmlSerializer.serialize(vcml_model))
 		Assert::assertFalse("Sort algorithm does not have an effect.", contens_prior_sort.equals(contents_after_sort))
+	}
+	
+	@Test
+	def void test_FindEntries() {
+		val car_vcml = testUtilities.getResource("/compare/added_vc_objects/VCML/car.vcml")
+		val vcml_model = car_vcml.contents.get(0) as VcmlModel
+		
+		var found = vcmlUtility.findEntry("(300)CAR", vcmlPackage.class_, vcml_model.objects, nameProvider)
+		Assert::assertNotNull("Entry is existing an was found.", found)
+		
+		found = vcmlUtility.findEntry("NAME", vcmlPackage.characteristic, vcml_model.objects, nameProvider)
+		Assert::assertNotNull("Entry is existing an was found.", found)
+		
+		found = vcmlUtility.findEntry("NAME2", vcmlPackage.characteristic, vcml_model.objects, nameProvider)
+		Assert::assertNull("Entry does not exist.", found)
+		
+		found = vcmlUtility.findEntry("NAME", vcmlPackage.constraint, vcml_model.objects, nameProvider)
+		Assert::assertNull("Entry does not exist.", found)
 	}
 }

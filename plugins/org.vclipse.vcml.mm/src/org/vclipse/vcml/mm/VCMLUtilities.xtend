@@ -16,6 +16,10 @@ import java.util.Collections
 import java.util.Comparator
 import java.util.List
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EClass
+import org.vclipse.base.naming.INameProvider
+import com.google.common.base.Strings
+import com.google.common.collect.Iterables
 
 /**
  * Utilities for VCML Objects.
@@ -33,41 +37,27 @@ class VCMLUtilities {
 		return
 	}
 	
-//	static public <T extends VCObject> Iterable<T> getObjectsByNameAndType(final String name, vcmlModel vcmlModel, final java.lang.Class<T> type) { 
-//		if(vcmlModel == null || type == null) {
-//			return Lists.newArrayList();
-//		} else {
-//			Iterable<T> typeFilter = Iterables.filter(vcmlModel.getObjects(), type);
-//			if(name == null || name.isEmpty()) {
-//				return typeFilter;
-//			} else {
-//				return Iterables.filter(typeFilter, new Predicate<VCObject>() {
-//					public boolean apply(VCObject object) {
-//						return name.equals(object.getName()) && type.isAssignableFrom(object.getClass());
-//					}
-//				});
-//			}
-//		}
-//	}
-//	
-//	/*
-//	 * Searches for an entry with a given type and name in an iterable. Returns the first match, null if there is no match.
-//	 */
-//	public static <T extends EObject> T findEntry(final String name, final EClass type, final Iterable<T> entries, final IQualifiedNameProvider nameProvider) {
-//		Iterator<T> iterator = entries.iterator();
-//		if(iterator.hasNext()) {
-//			if(nameProvider != null) {
-//				Iterator<T> typedAndNamed = Iterables.filter(entries, new Predicate<T>() {
-//					public boolean apply(T object) {
-//						QualifiedName qualifiedName = nameProvider.getFullyQualifiedName(object);
-//						return qualifiedName == null ? false : qualifiedName.toString().equals(name) && object.eClass() == type;
-//					}
-//				}).iterator();
-//				if(typedAndNamed.hasNext()) {
-//					return typedAndNamed.next();
-//				}
-//			}
-//		}
-//		return null;
-//	}
+	/**
+	 * Searches for an entry with a given type and name in entries. 
+	 * Returns the first match, null if there is no match.
+	 */
+	def <T extends EObject> findEntry(String name, EClass type, Iterable<T> entries, INameProvider nameProvider) {
+		if(nameProvider == null) {
+			return null
+		}
+		val iterator = entries.iterator
+		if(iterator.hasNext) {
+			val typedAndNamed = Iterables::filter(entries, [
+				T entry |
+					val entryName = nameProvider.getName(entry)
+					if(Strings::isNullOrEmpty(entryName))
+						return false
+					return entryName.equals(name) && entry.eClass == type
+			]).iterator
+			if(typedAndNamed.hasNext) {
+				return typedAndNamed.next
+			}
+		}
+		return null
+	}
 }

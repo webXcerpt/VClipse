@@ -22,12 +22,14 @@ import org.eclipse.xtext.serializer.ISerializer;
 import org.eclipse.xtext.validation.CompositeEValidator;
 import org.eclipse.xtext.validation.INamesAreUniqueValidationHelper;
 import org.vclipse.base.naming.IClassNameProvider;
+import org.vclipse.base.naming.INameProvider;
 import org.vclipse.base.naming.NullQualifiedNameConverter;
 import org.vclipse.vcml.conversion.VCMLValueConverter;
 import org.vclipse.vcml.documentation.VCMLClassNameProvider;
 import org.vclipse.vcml.linking.VCMLLinker;
 import org.vclipse.vcml.naming.CrossRefExtractingSimpleNameProvider;
 import org.vclipse.vcml.naming.UniqueVCMLNamesValidationHelper;
+import org.vclipse.vcml.naming.VCMLNameProvider;
 import org.vclipse.vcml.resource.VCMLResourceDescriptionStrategy;
 import org.vclipse.vcml.serializer.VCMLCrossReferenceSerializer;
 import org.vclipse.vcml.serializer.VCMLSerializer;
@@ -93,5 +95,9 @@ public class VCMLRuntimeModule extends org.vclipse.vcml.AbstractVCMLRuntimeModul
 	
 	public Class<? extends IQualifiedNameProvider> bindIQualifiedNameProvider() {
 		return CrossRefExtractingSimpleNameProvider.class;
+	}
+	
+	public Class<? extends INameProvider> bindNameProvider() {
+		return VCMLNameProvider.class;
 	}
 }
