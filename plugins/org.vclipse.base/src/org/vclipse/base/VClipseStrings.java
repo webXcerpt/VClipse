@@ -120,10 +120,22 @@ public class VClipseStrings extends org.eclipse.xtext.util.Strings {
 	 * 
 	 */
 	public static List<String> splitCamelCase(String string) {
+		boolean upperCase = false;
 		List<Integer> indexes = Lists.newArrayList();
 		for(int i=0; i<string.length(); i++) {
 			if(Character.isUpperCase(string.charAt(i))) {
-				indexes.add(i);
+				if(!upperCase) {
+					indexes.add(i);
+					upperCase = true;
+				}
+			} else {
+				if(indexes.contains(i - 1)) {
+					upperCase = false;
+				}
+				if(upperCase && i > 0) {
+					indexes.add(i-1);
+					upperCase = false;
+				}
 			}
 		}
 		if(indexes.isEmpty()) {

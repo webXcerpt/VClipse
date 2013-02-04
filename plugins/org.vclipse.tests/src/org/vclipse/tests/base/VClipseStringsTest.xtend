@@ -45,14 +45,14 @@ class VClipseStringTest extends XtextTest {
 	
 	@Test
 	def void test_MDataCharacteristic_C() {
-		// TODO the replacement of any chars is not specified for the splitCamelCase method -> requirement ? 
-		
 		var type = vcmlPackage.MDataCharacteristic_C
 		var result = VClipseStrings::splitCamelCase(type.name)
 		Assert::assertEquals(result.join(" "), 4, result.size)
 		Assert::assertEquals(result.get(0), "M")
 		Assert::assertEquals(result.get(1), "Data")
-		Assert::assertEquals(result.get(2), "Characteristic")
+		
+		// nothing is replaced in a string -> replacement if required
+		Assert::assertEquals(result.get(2), "Characteristic_")
 		Assert::assertEquals(result.get(3), "C")
 	}
 	
