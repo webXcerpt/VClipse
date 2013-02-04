@@ -55,10 +55,10 @@ class LabelsTests extends XtextTest {
 		uiLabel = labels.getUILabel(context)
 		Assert::assertEquals("Extract characteristics ", uiLabel)
 		
-		findEntry = search.findEntry("PRECOND", org::vclipse::tests::VClipseTestUtilities::VCML_PACKAGE.precondition, entries)
-		Assert::assertNotNull("precondition PRECOND not found", findEntry)
-		context = RefactoringContext::create(findEntry, org::vclipse::tests::VClipseTestUtilities::VCML_PACKAGE.VCObject_Description, RefactoringType::Replace)
-		uiLabel = context.label
-		Assert::assertEquals("Replace description with a new value", uiLabel)
+//		findEntry = search.findEntry("PRECOND", org::vclipse::tests::VClipseTestUtilities::VCML_PACKAGE.precondition, entries)
+//		Assert::assertNotNull("precondition PRECOND not found", findEntry)
+//		context = RefactoringContext::create(findEntry, org::vclipse::tests::VClipseTestUtilities::VCML_PACKAGE.VCObject_Description, RefactoringType::Replace)
+//		uiLabel = context.label
+//		Assert::assertEquals("Replace description with a new value", uiLabel)
 	}
 }
