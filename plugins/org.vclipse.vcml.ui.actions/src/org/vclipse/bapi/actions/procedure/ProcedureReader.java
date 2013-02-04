@@ -77,6 +77,7 @@ public class ProcedureReader extends BAPIUtils {
 		} catch (AbapException e) {
 			handleAbapException(e);
 		}
+		vcmlModel.getObjects().add(object);
 		return object;
 	}
 

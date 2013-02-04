@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.WrappedException;
 import org.vclipse.bapi.actions.BAPIUtils;
+import org.vclipse.bapi.actions.characteristic.values.ReadCharacteristicValueDependency;
 import org.vclipse.vcml.utils.DescriptionHandler;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
@@ -44,6 +45,7 @@ import org.vclipse.vcml.vcml.SymbolicType;
 import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
+import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoParameterList;
@@ -54,6 +56,9 @@ public class CharacteristicReader extends BAPIUtils {
 
 	public static final SimpleDateFormat DATEFORMAT_SAP = new SimpleDateFormat("yyyyMMdd");
 	public static final SimpleDateFormat DATEFORMAT_VCML = new SimpleDateFormat("dd.MM.yyyy");
+	
+	@Inject
+	private ReadCharacteristicValueDependency valuesPreconditionReader;
 
 	public Characteristic read(String csticName, VcmlModel vcmlModel, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		if(csticName == null || monitor.isCanceled()) {
@@ -64,13 +69,13 @@ public class CharacteristicReader extends BAPIUtils {
 		if (seenObject instanceof Characteristic) {
 			return (Characteristic)seenObject;
 		}
-		final Characteristic object = VCML.createCharacteristic();
-		seenObjects.put(id, object);
+		final Characteristic newCstic = VCML.createCharacteristic();
+		seenObjects.put(id, newCstic);
 		JCoFunction function = getJCoFunction("BAPI_CHARACT_GETDETAIL", monitor);
 		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue("CHARACTNAME", csticName);
 		
-		handleOptions2(object.getOptions(), globalOptions, ipl, null, "KEYDATE");
+		handleOptions2(newCstic.getOptions(), globalOptions, ipl, null, "KEYDATE");
 		
 		execute(function, monitor, csticName);
 		if(processReturnTable(function)) {
@@ -78,11 +83,11 @@ public class CharacteristicReader extends BAPIUtils {
 			JCoParameterList tpl = function.getTableParameterList();
 
 			JCoStructure charactDetail = epl.getStructure("CHARACTDETAIL");
-			object.setName(charactDetail.getString("CHARACT_NAME"));
+			newCstic.setName(charactDetail.getString("CHARACT_NAME"));
 			String dataType = charactDetail.getString("DATA_TYPE");
 			if ("NUM".equals(dataType)) {
 				NumericType type = VCML.createNumericType();
-				object.setType(type);
+				newCstic.setType(type);
 				type.setNumberOfChars(charactDetail.getInt("LENGTH"));
 				type.setDecimalPlaces(charactDetail.getInt("DECIMALS"));
 				type.setNegativeValuesAllowed("X".equals(charactDetail.getString("WITH_SIGN")));
@@ -116,7 +121,7 @@ public class CharacteristicReader extends BAPIUtils {
 				}
 			} else if ("CHAR".equals(dataType)) {
 				SymbolicType type = VCML.createSymbolicType();
-				object.setType(type);
+				newCstic.setType(type);
 				type.setNumberOfChars(charactDetail.getInt("LENGTH"));
 				type.setCaseSensitive("X".equals(charactDetail.getValue("CASE_SENSITIV")));
 				EList<CharacteristicValue> values = type.getValues();
@@ -166,7 +171,7 @@ public class CharacteristicReader extends BAPIUtils {
 					final Description description = value.getDescription();
 					if (description==null) {
 						try {
-							MultipleLanguageDocumentation_LanguageBlock languageBlock = getLanguageBlock(object, value, null, monitor);
+							MultipleLanguageDocumentation_LanguageBlock languageBlock = getLanguageBlock(newCstic, value, null, monitor);
 							if (!languageBlock.getFormattedDocumentationBlocks().isEmpty())
 								languageBlocks.add(languageBlock);
 						} catch (JCoException e) {
@@ -177,7 +182,7 @@ public class CharacteristicReader extends BAPIUtils {
 							@Override
 							public void handleSingleDescription(Language language, String descriptionValue) {
 								try {
-									MultipleLanguageDocumentation_LanguageBlock languageBlock = getLanguageBlock(object, value, language, monitor);
+									MultipleLanguageDocumentation_LanguageBlock languageBlock = getLanguageBlock(newCstic, value, language, monitor);
 									if (!languageBlock.getFormattedDocumentationBlocks().isEmpty())
 										languageBlocks.add(languageBlock);
 								} catch (JCoException e) {
@@ -192,7 +197,7 @@ public class CharacteristicReader extends BAPIUtils {
 
 			} else if ("DATE".equals(dataType)) {
 				DateType type = VCML.createDateType();
-				object.setType(type);
+				newCstic.setType(type);
 				type.setIntervalValuesAllowed("X".equals(charactDetail.getString("INTERVAL_ALLOWED")));
 				EList<DateCharacteristicValue> values = type.getValues();
 				JCoTable charactValuesNum = tpl.getTable("CHARACTVALUESNUM");
@@ -213,15 +218,15 @@ public class CharacteristicReader extends BAPIUtils {
 			} else {
 				errorStream.println("error: illegal/unknown data type " + dataType);
 			}
-			object.setMultiValue("M".equals(charactDetail.getString("VALUE_ASSIGNMENT")));
-			object.setRequired("X".equals(charactDetail.getString("ENTRY_REQUIRED")));
-			object.setNoDisplay("X".equals(charactDetail.getString("NO_DISPLAY")));
-			object.setNotReadyForInput("X".equals(charactDetail.getString("NO_ENTRY")));
-			object.setAdditionalValues("X".equals(charactDetail.getString("ADDITIONAL_VALUES")));
-			object.setRestrictable("R".equals(charactDetail.getString("VALUE_ASSIGNMENT")));
-			object.setDisplayAllowedValues("X".equals(charactDetail.getString("DISPLAY_VALUES")));
-			object.setStatus(VcmlUtils.createStatusFromInt(charactDetail.getInt("STATUS")));
-			object.setGroup(nullIfEmpty(charactDetail.getString("CHARACT_GROUP")));
+			newCstic.setMultiValue("M".equals(charactDetail.getString("VALUE_ASSIGNMENT")));
+			newCstic.setRequired("X".equals(charactDetail.getString("ENTRY_REQUIRED")));
+			newCstic.setNoDisplay("X".equals(charactDetail.getString("NO_DISPLAY")));
+			newCstic.setNotReadyForInput("X".equals(charactDetail.getString("NO_ENTRY")));
+			newCstic.setAdditionalValues("X".equals(charactDetail.getString("ADDITIONAL_VALUES")));
+			newCstic.setRestrictable("R".equals(charactDetail.getString("VALUE_ASSIGNMENT")));
+			newCstic.setDisplayAllowedValues("X".equals(charactDetail.getString("DISPLAY_VALUES")));
+			newCstic.setStatus(VcmlUtils.createStatusFromInt(charactDetail.getInt("STATUS")));
+			newCstic.setGroup(nullIfEmpty(charactDetail.getString("CHARACT_GROUP")));
 			JCoTable charactDescr = tpl.getTable("CHARACTDESCR");
 			if (charactDescr!=null && charactDescr.getNumRows()>0) {
 				MultiLanguageDescriptions multiLanguageDescriptions = VCML.createMultiLanguageDescriptions();
@@ -237,31 +242,33 @@ public class CharacteristicReader extends BAPIUtils {
 					descriptions.add(multiLanguageDescription);
 					// problem: this extracts only the documentation for languages with description
 					// currently unknown whether there might be a documentation without description in SAP
-					MultipleLanguageDocumentation_LanguageBlock languageBlock = getLanguageBlock(object, null, language, monitor);
+					MultipleLanguageDocumentation_LanguageBlock languageBlock = getLanguageBlock(newCstic, null, language, monitor);
 					if (!languageBlock.getFormattedDocumentationBlocks().isEmpty())
 						languageBlocks.add(languageBlock);
 				}
 				if (!descriptions.isEmpty())
-					object.setDescription(simplifyDescription(multiLanguageDescriptions));
+					newCstic.setDescription(simplifyDescription(multiLanguageDescriptions));
 				if (!languageBlocks.isEmpty())
-					object.setDocumentation(multipleLanguageDocumentation);
+					newCstic.setDocumentation(multipleLanguageDocumentation);
 			}
 			JCoTable charactReferences= tpl.getTable("CHARACTREFERENCES");
 			switch (charactReferences.getNumRows()) {
 			case 0: break;
 			case 1: 
 				charactReferences.setRow(0);
-				object.setTable(charactReferences.getString("REFERENCE_TABLE"));
-				object.setField(charactReferences.getString("REFERENCE_FIELD"));
+				newCstic.setTable(charactReferences.getString("REFERENCE_TABLE"));
+				newCstic.setField(charactReferences.getString("REFERENCE_FIELD"));
 				break;
 			default: 
 				throw new IllegalArgumentException("table CHARACTREFERENCES has more than 1 row: " + charactReferences);
 			}
 		} else {
-			object.setName(csticName);
+			newCstic.setName(csticName);
 		}
-		vcmlModel.getObjects().add(object);
-		return object;
+		// TODO enable the following call
+		// valuesPreconditionReader.read(newCstic, vcmlModel, monitor, seenObjects, globalOptions, recurse);
+		vcmlModel.getObjects().add(newCstic);
+		return newCstic;
 	}
 		
 	private MultipleLanguageDocumentation_LanguageBlock getLanguageBlock(Characteristic cstic, CharacteristicValue value, Language language, IProgressMonitor monitor) throws JCoException {

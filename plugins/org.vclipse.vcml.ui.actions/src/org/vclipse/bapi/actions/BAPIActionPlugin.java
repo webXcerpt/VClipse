@@ -51,6 +51,10 @@ public class BAPIActionPlugin extends AbstractUIPlugin {
 		return injector;
 	}
 	
+	public static void log(int status, String message) {
+		getInstance().getLog().log(new Status(status, ID, message));
+	}
+	
 	public static void log(final IStatus status) {
 		getInstance().getLog().log(status);
 	}
