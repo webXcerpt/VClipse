@@ -11,17 +11,16 @@
  ******************************************************************************/
 package org.vclipse.vcml.mm
 
+import com.google.common.base.Strings
+import com.google.common.collect.Iterables
 import com.google.common.collect.Lists
 import java.util.Collections
 import java.util.Comparator
 import java.util.List
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EClass
+import org.eclipse.emf.ecore.EObject
 import org.vclipse.base.naming.INameProvider
-import com.google.common.base.Strings
-import com.google.common.collect.Iterables
 import org.vclipse.vcml.vcml.Option
-import org.eclipse.emf.common.util.EList
 import org.vclipse.vcml.vcml.OptionType
 
 /**
@@ -32,7 +31,7 @@ class VCMLUtilities {
 	/**
 	 * Returns an option with requested type, null if such an option does not exist as an entry.
 	 */
-	def Option getOption(EList<Option> options, OptionType type) {
+	def Option getOption(List<Option> options, OptionType type) {
 		for(option : options) {
 			if(option.name == type) {
 				return option
