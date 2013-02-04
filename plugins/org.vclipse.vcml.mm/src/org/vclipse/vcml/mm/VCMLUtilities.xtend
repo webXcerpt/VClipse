@@ -20,11 +20,26 @@ import org.eclipse.emf.ecore.EClass
 import org.vclipse.base.naming.INameProvider
 import com.google.common.base.Strings
 import com.google.common.collect.Iterables
+import org.vclipse.vcml.vcml.Option
+import org.eclipse.emf.common.util.EList
+import org.vclipse.vcml.vcml.OptionType
 
 /**
  * Utilities for VCML Objects.
  */
 class VCMLUtilities {
+	
+	/**
+	 * Returns an option with requested type, null if such an option does not exist as an entry.
+	 */
+	def Option getOption(EList<Option> options, OptionType type) {
+		for(option : options) {
+			if(option.name == type) {
+				return option
+			}
+		}
+		return null
+	}
 	
 	/**
 	 * Sorts a list with a comparator.
