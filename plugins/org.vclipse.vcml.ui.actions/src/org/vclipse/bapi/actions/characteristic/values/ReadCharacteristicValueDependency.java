@@ -82,6 +82,7 @@ public class ReadCharacteristicValueDependency extends BAPIUtils {
 			StringBuffer args = new StringBuffer(cstic.getName()).append(".").append(value);
 			execute(keysValueDependencies, monitor, args.toString());
 			JCoTable table = keysValueDependencies.getTableParameterList().getTable("DEP_ASSIGN");
+			// TODO how are intervalls handled by the sap system ?
 			CharacteristicValue csticValue = name2Value.get(value);
 			if(csticValue == null) { // does not exist
 				csticValue = factoryExtension.newCharacteristicValue(value);
