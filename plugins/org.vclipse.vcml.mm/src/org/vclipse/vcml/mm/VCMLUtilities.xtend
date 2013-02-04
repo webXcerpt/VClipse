@@ -14,14 +14,19 @@ package org.vclipse.vcml.mm
 import com.google.common.base.Strings
 import com.google.common.collect.Iterables
 import com.google.common.collect.Lists
+import com.google.common.collect.Maps
 import java.util.Collections
 import java.util.Comparator
 import java.util.List
+import java.util.Map
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
 import org.vclipse.base.naming.INameProvider
+import org.vclipse.vcml.vcml.Characteristic
+import org.vclipse.vcml.vcml.CharacteristicValue
 import org.vclipse.vcml.vcml.Option
 import org.vclipse.vcml.vcml.OptionType
+import org.vclipse.vcml.vcml.SymbolicType
 
 /**
  * Utilities for VCML Objects.
@@ -38,6 +43,20 @@ class VCMLUtilities {
 			}
 		}
 		return null
+	}
+	
+	/**
+	 * Returns a mapping name to value for a characteristic, only if its type is symbolic.
+	 */
+	def Map<String, CharacteristicValue> getCharacteristicValues(Characteristic cstic) {
+		val name2Value = Maps::<String, CharacteristicValue>newHashMap
+		val type = cstic.type
+		if(type instanceof SymbolicType) {
+			for(value : (type as SymbolicType).values) {
+				name2Value.put(value.name, value)
+			}	
+		}
+		return name2Value
 	}
 	
 	/**
