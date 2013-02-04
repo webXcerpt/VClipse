@@ -56,7 +56,11 @@ public class VCMLComparePlugin extends AbstractUIPlugin {
 	public Injector getInjector() {
 		if(injector == null) {
 			injector = Guice.createInjector(
-				Modules2.mixin(new VCMLCompareModule(this), new SharedModule(), new VCMLUiModule(this))
+				Modules2.mixin(
+						new VCMLCompareModule(this), 
+						new SharedModule(), 
+						new VCMLUiModule(this)
+				)
 			);
 		}
 		return injector;

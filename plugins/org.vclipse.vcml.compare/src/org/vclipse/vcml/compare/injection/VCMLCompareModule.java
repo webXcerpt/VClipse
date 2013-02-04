@@ -19,10 +19,8 @@ import org.eclipse.emf.compare.match.IEqualityHelperFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
-import org.vclipse.base.naming.INameProvider;
 import org.vclipse.vcml.VCMLRuntimeModule;
 import org.vclipse.vcml.compare.VCMLComparePlugin;
-import org.vclipse.vcml.naming.VCMLNameProvider;
 
 /**
  * Dependency injection configuration for vcml compare plug-in.
@@ -51,10 +49,6 @@ public class VCMLCompareModule extends VCMLRuntimeModule {
 		return ResourcesPlugin.getWorkspace().getRoot();
 	}
 	
-	public Class<? extends INameProvider> bindVcmlIDComputation() {
-		return VCMLNameProvider.class;
-	}
-
 	public Class<? extends MarkerCreator> bindMarkerCreator() {
 		return MarkerCreator.class;
 	}
