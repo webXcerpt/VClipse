@@ -29,6 +29,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.util.Strings;
 import org.vclipse.bapi.actions.handler.BAPIActionHandler;
 import org.vclipse.connection.IConnectionHandler;
+import org.vclipse.vcml.SAPFormattingUtility;
 import org.vclipse.vcml.VCMLProxyFactory;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.utils.DescriptionHandler;
@@ -555,9 +556,6 @@ public class BAPIUtils extends BAPIActionHandler {
 		return null;
 	}
 
-	final private SimpleDateFormat FORMAT_DDMMYYYY = new SimpleDateFormat("dd.MM.yyyy");
-	final private SimpleDateFormat FORMAT_YYYYMMDD = new SimpleDateFormat("yyyyMMdd");
-	
 	private String getKeyDate(List<Option> options) {
 		for(Option o : options) {
 			if(o.getName() == OptionType.KEY_DATE) {
@@ -571,7 +569,8 @@ public class BAPIUtils extends BAPIActionHandler {
 		for(Option o : options) {
 			if(o.getName() == OptionType.KEY_DATE) {
 				try {
-					return FORMAT_YYYYMMDD.format(FORMAT_DDMMYYYY.parse(o.getValue()));
+					Date date = SAPFormattingUtility.DATEFORMAT_SAP.parse(o.getValue());
+					return SAPFormattingUtility.DATEFORMAT_SAP.format(date);
 				} catch (ParseException e) {
 					return null;
 				}
