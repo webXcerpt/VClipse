@@ -39,7 +39,6 @@ import org.vclipse.vcml.vcml.VcmlModel;
 import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
-import com.sap.conn.jco.JCoParameterList;
 import com.sap.conn.jco.JCoStructure;
 import com.sap.conn.jco.JCoTable;
 
@@ -94,18 +93,11 @@ public class ReadCharacteristicValueDependency extends BAPIUtils {
 		Resource resource = vcmlModel.eResource();
 		StringBuffer messageBuffer = new StringBuffer("Extracting procedures for values of the characteristic ").append(cstic.getName());
 		SubMonitor submonitor = SubMonitor.convert(monitor, messageBuffer.toString(), IProgressMonitor.UNKNOWN);
-		JCoFunction keysValueDependencies = getJCoFunction(CARD_CHAR_VAL_READ_ALLOC, submonitor);
-		JCoParameterList ipl = keysValueDependencies.getImportParameterList();
-		ipl.setValue(JCoFunctionPerformer.CHARACTERISTIC, cstic.getName());
-		ipl.setValue("LIST_ALL_GLOBL", JCoFunctionPerformer.SELECTED);
-		ipl.setValue("LIST_ALL_LOCAL", JCoFunctionPerformer.SELECTED);
 		Map<String, EObject> name2Value = vcmlUtilities.getNameToValue(cstic.getType());
 		for(Entry<String, EObject> entries : name2Value.entrySet()) {
 			String value = entries.getKey();
-			ipl.setValue("VALUE", value);
-			StringBuffer args = new StringBuffer(cstic.getName()).append(".").append(value);
-			execute(keysValueDependencies, monitor, args.toString());
-			JCoTable table = keysValueDependencies.getTableParameterList().getTable(DEP_ASSIGN);
+			JCoFunction valueDependencies = functionPerformer.CARD_CHAR_VAL_READ_ALLOC(cstic.getName(), value, submonitor, cstic.getOptions(), globalOptions);
+			JCoTable table = valueDependencies.getTableParameterList().getTable(DEP_ASSIGN);
 			EObject csticValue = name2Value.get(value);
 			if(csticValue == null) { // does not exist
 				csticValue = factoryExtension.newCharacteristicValue(value);

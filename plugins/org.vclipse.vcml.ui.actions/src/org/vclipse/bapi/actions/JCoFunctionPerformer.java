@@ -30,7 +30,7 @@ public class JCoFunctionPerformer extends BAPIUtils {
 	public static final String CHARACTERISTIC = "CHARACTERISTIC";
 	
 	/**
-	 * 
+	 * Reads global available dependencies.
 	 */
 	public JCoFunction CARD_DEPENDENCY_READ(String dependencyName, IProgressMonitor monitor, List<Option> objectOptions, List<Option> modelOptions) throws JCoException {
 		JCoFunction function = getJCoFunction("CARD_DEPENDENCY_READ", monitor);
@@ -47,5 +47,21 @@ public class JCoFunctionPerformer extends BAPIUtils {
 		
 		execute(function, monitor, dependencyName);
 		return function;
+	}
+	
+	/**
+	 * Reads a dependency key for a characteristic value.
+	 */
+	public JCoFunction CARD_CHAR_VAL_READ_ALLOC(String csticName, String valueName, IProgressMonitor monitor, List<Option> objectOptions, List<Option> modelOptions) throws JCoException {
+		JCoFunction keysValueDependencies = getJCoFunction("CARD_CHAR_VAL_READ_ALLOC", monitor);
+		JCoParameterList ipl = keysValueDependencies.getImportParameterList();
+		
+		ipl.setValue(JCoFunctionPerformer.CHARACTERISTIC, csticName);
+		ipl.setValue("LIST_ALL_GLOBL", JCoFunctionPerformer.SELECTED);
+		ipl.setValue("LIST_ALL_LOCAL", JCoFunctionPerformer.SELECTED);
+		ipl.setValue("VALUE", valueName);
+		
+		execute(keysValueDependencies, monitor, new StringBuffer(csticName).append(".").append(valueName).toString());
+		return keysValueDependencies;
 	}
 }
