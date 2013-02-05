@@ -38,7 +38,7 @@ import com.sap.conn.jco.JCoParameterList;
 import com.sap.conn.jco.JCoTable;
 
 /**
- * Reads preconditions being used during the characteristic value sets.
+ * Reads procedures being used during the characteristic value sets.
  */
 public class ReadCharacteristicValueDependency extends BAPIUtils {
 	
@@ -62,7 +62,7 @@ public class ReadCharacteristicValueDependency extends BAPIUtils {
 	public String CARD_CHAR_VAL_READ_ALLOC = "CARD_CHAR_VAL_READ_ALLOC";
 	
 	/**
-	 * 
+	 * Table containing dependencies
 	 */
 	public static final String DEP_ASSIGN = "DEP_ASSIGN";
 	
@@ -70,8 +70,10 @@ public class ReadCharacteristicValueDependency extends BAPIUtils {
 	 * 
 	 */
 	public void read(Characteristic cstic, VcmlModel vcmlModel, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
-		StringBuffer messageBuffer = new StringBuffer("Extracting preconditions for values of the characteristic ");
-		messageBuffer.append(cstic.getName());
+		if(monitor.isCanceled()) {
+			return;
+		}
+		StringBuffer messageBuffer = new StringBuffer("Extracting procedures for values of the characteristic ").append(cstic.getName());
 		SubMonitor submonitor = SubMonitor.convert(monitor, messageBuffer.toString(), IProgressMonitor.UNKNOWN);
 		JCoFunction keysValueDependencies = getJCoFunction(CARD_CHAR_VAL_READ_ALLOC, submonitor);
 		JCoParameterList ipl = keysValueDependencies.getImportParameterList();
@@ -97,9 +99,16 @@ public class ReadCharacteristicValueDependency extends BAPIUtils {
 				String procedureName = (String)table.getValue("DEPENDENCY"); // only procedures are allowed for values
 				Procedure procedure = procedureReader.read(procedureName, vcmlModel.eResource(), submonitor, seenObjects, globalOptions, recurse);
 				csticDependencies.add(procedure);
+				if(submonitor.isCanceled()) {
+					// do not return in this case -> dependencies are not yet added
+					break;
+				}
 			}
 			if(!csticDependencies.isEmpty()) {
 				vcmlUtilities.processDependencies(csticValue, dependencies);				
+			}
+			if(submonitor.isCanceled()) {
+				break;
 			}
 		}
 		submonitor.done();

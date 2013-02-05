@@ -56,7 +56,7 @@ import com.sap.conn.jco.JCoTable;
 public class CharacteristicReader extends BAPIUtils {
 
 	@Inject
-	private ReadCharacteristicValueDependency dependenciesReader;
+	private ReadCharacteristicValueDependency valuesDependenciesReader;
 	
 	public Characteristic read(String csticName, VcmlModel vcmlModel, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		if(csticName == null || monitor.isCanceled()) {
@@ -272,7 +272,7 @@ public class CharacteristicReader extends BAPIUtils {
 		} else {
 			newCstic.setName(csticName);
 		}
-		dependenciesReader.read(newCstic, vcmlModel, monitor, seenObjects, globalOptions, recurse);
+		valuesDependenciesReader.read(newCstic, vcmlModel, monitor, seenObjects, globalOptions, recurse);
 		vcmlModel.getObjects().add(newCstic);
 		return newCstic;
 	}
