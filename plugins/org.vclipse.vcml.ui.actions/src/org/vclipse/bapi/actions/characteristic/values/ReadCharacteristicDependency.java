@@ -41,7 +41,7 @@ public class ReadCharacteristicDependency extends DependencyReader {
 			return;
 		}
 		Resource resource = vcmlModel.eResource();
-		StringBuffer messageBuffer = new StringBuffer("Extracting procedures for values of the characteristic ").append(cstic.getName());
+		StringBuffer messageBuffer = new StringBuffer("Extracting dependencies for the characteristic").append(cstic.getName());
 		SubMonitor submonitor = SubMonitor.convert(monitor, messageBuffer.toString(), IProgressMonitor.UNKNOWN);
 		
 		EReference csticDependenciesReference = factoryExtension.VCML_PACKAGE.getCharacteristic_Dependencies();

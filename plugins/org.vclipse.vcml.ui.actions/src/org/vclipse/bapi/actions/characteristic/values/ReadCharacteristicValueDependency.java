@@ -44,7 +44,7 @@ public class ReadCharacteristicValueDependency extends DependencyReader {
 		}
 		
 		Resource resource = vcmlModel.eResource();
-		StringBuffer messageBuffer = new StringBuffer("Extracting procedures for values of the characteristic ").append(cstic.getName());
+		StringBuffer messageBuffer = new StringBuffer("Extracting dependencies for the values of the characteristic").append(cstic.getName());
 		SubMonitor submonitor = SubMonitor.convert(monitor, messageBuffer.toString(), IProgressMonitor.UNKNOWN);
 		Map<String, EObject> name2Value = vcmlUtilities.getNameToValue(cstic.getType());
 		EReference valueDependenciesReference = factoryExtension.VCML_PACKAGE.getCharacteristicValue_Dependencies();
@@ -53,7 +53,7 @@ public class ReadCharacteristicValueDependency extends DependencyReader {
 			JCoFunction valueDependencies = functionPerformer.CARD_CHAR_VAL_READ_ALLOC(cstic.getName(), value, submonitor, cstic.getOptions(), globalOptions);
 			JCoTable table = valueDependencies.getTableParameterList().getTable(JCoFunctionPerformer.DEP_ASSIGN);
 			EObject csticValue = name2Value.get(value);
-			if(csticValue == null) { // does not exist
+			if(csticValue == null) { 
 				csticValue = factoryExtension.newCharacteristicValue(value);
 			}
 			
@@ -62,7 +62,7 @@ public class ReadCharacteristicValueDependency extends DependencyReader {
 			EList<Dependency> csticDependencies = dependencies.getDependencies();
 			for(int i=0; i<table.getNumRows(); i++) {
 				table.setRow(i);
-				String dependencyName = table.getString(JCoFunctionPerformer.DEPENDENCY); // only procedures are allowed for values
+				String dependencyName = table.getString(JCoFunctionPerformer.DEPENDENCY);
 				Dependency dependency = readDependency(dependencyName, submonitor, resource, seenObjects, cstic.getOptions(), globalOptions, recurse);
 				if(dependency != null) {
 					csticDependencies.add(dependency);					
