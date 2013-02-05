@@ -13,27 +13,24 @@ package org.vclipse.bapi.actions.characteristic.values;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.EList;
-import org.vclipse.bapi.actions.BAPIActionPlugin;
+import org.eclipse.emf.ecore.EObject;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.procedure.ProcedureReader;
 import org.vclipse.vcml.mm.VCMLFactoryExtension;
 import org.vclipse.vcml.mm.VCMLUtilities;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicOrValueDependencies;
-import org.vclipse.vcml.vcml.CharacteristicValue;
 import org.vclipse.vcml.vcml.Dependency;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.Procedure;
 import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
@@ -67,6 +64,11 @@ public class ReadCharacteristicValueDependency extends BAPIUtils {
 	/**
 	 * 
 	 */
+	public static final String DEP_ASSIGN = "DEP_ASSIGN";
+	
+	/**
+	 * 
+	 */
 	public void read(Characteristic cstic, VcmlModel vcmlModel, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		StringBuffer messageBuffer = new StringBuffer("Extracting preconditions for values of the characteristic ");
 		messageBuffer.append(cstic.getName());
@@ -76,56 +78,30 @@ public class ReadCharacteristicValueDependency extends BAPIUtils {
 		ipl.setValue("CHARACTERISTIC", cstic.getName());
 		ipl.setValue("LIST_ALL_GLOBL", "X");
 		ipl.setValue("LIST_ALL_LOCAL", "X");
-		Map<String, CharacteristicValue> name2Value = vcmlUtilities.getCharacteristicValues(cstic);
-		for(String value : getAllowedValues(cstic, monitor)) { // execute only for allowed values
+		Map<String, EObject> name2Value = vcmlUtilities.getNameToValue(cstic.getType());
+		for(Entry<String, EObject> entries : name2Value.entrySet()) { // execute only for allowed values
+			String value = entries.getKey();
 			ipl.setValue("VALUE", value);
 			StringBuffer args = new StringBuffer(cstic.getName()).append(".").append(value);
 			execute(keysValueDependencies, monitor, args.toString());
-			JCoTable table = keysValueDependencies.getTableParameterList().getTable("DEP_ASSIGN");
-			// TODO how are intervalls handled by the sap system ?
-			CharacteristicValue csticValue = name2Value.get(value);
+			JCoTable table = keysValueDependencies.getTableParameterList().getTable(DEP_ASSIGN);
+			EObject csticValue = name2Value.get(value);
 			if(csticValue == null) { // does not exist
 				csticValue = factoryExtension.newCharacteristicValue(value);
 			}
-			CharacteristicOrValueDependencies dependencies = csticValue.getDependencies();
+			CharacteristicOrValueDependencies dependencies = vcmlUtilities.processDependencies(csticValue, null);
 			dependencies = dependencies == null ? factoryExtension.VCML_FACTORY.createCharacteristicOrValueDependencies() : dependencies;
 			EList<Dependency> csticDependencies = dependencies.getDependencies();
 			for(int i=0; i<table.getNumRows(); i++) {
 				table.setRow(i);
-				String procedureName = (String)table.getValue("DEPENDENCY"); // only procedures are allowed on values
+				String procedureName = (String)table.getValue("DEPENDENCY"); // only procedures are allowed for values
 				Procedure procedure = procedureReader.read(procedureName, vcmlModel.eResource(), submonitor, seenObjects, globalOptions, recurse);
 				csticDependencies.add(procedure);
 			}
-			csticValue.setDependencies(dependencies);
+			if(!csticDependencies.isEmpty()) {
+				vcmlUtilities.processDependencies(csticValue, dependencies);				
+			}
 		}
 		submonitor.done();
-	}
-	
-	/**
-	 * Reads values allowed for the requested characteristic.
-	 */
-	protected List<String> getAllowedValues(Characteristic cstic, IProgressMonitor monitor) {
-		List<String> values = Lists.newArrayList();
-		try {
-			JCoFunction allowedCsticValues = getJCoFunction(CARD_CHARACTERISTIC_READ, monitor);
-			JCoParameterList ipl = allowedCsticValues.getImportParameterList();
-			ipl.setValue("CHARACTERISTIC", cstic.getName());
-			ipl.setValue("WITH_VALUES", "X");
-			execute(allowedCsticValues, monitor, cstic.getName());
-			JCoTable valuesTable = allowedCsticValues.getTableParameterList().getTable("ALLOWED_VALUES");
-			for(int i=0; i<valuesTable.getNumRows(); i++) {
-				valuesTable.setRow(i);
-				String currentValue = (String)valuesTable.getValue("VALUE");
-				if(Strings.isNullOrEmpty(currentValue)) {
-					// TODO better error report
-					errorStream.println("Error during function execution: " + allowedCsticValues);
-					continue;
-				}
-				values.add(currentValue);
-			}
-		} catch(JCoException exception) {
-			BAPIActionPlugin.log(IStatus.ERROR, exception.getMessage());
-		}
-		return values;
 	}
 }
