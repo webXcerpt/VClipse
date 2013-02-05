@@ -210,9 +210,11 @@ public class CharacteristicReader extends BAPIUtils {
 							value.setFrom(formatted);
 							
 							long valueTo = charactValuesNum.getLong("VALUE_TO");
-							date = SAPFormattingUtility.DATEFORMAT_SAP.parse(String.valueOf(valueTo));
-							formatted = SAPFormattingUtility.DATEFORMAT_VCML.format(date);
-							value.setTo(formatted);
+							if(valueTo != 0) { // is not an interval
+								date = SAPFormattingUtility.DATEFORMAT_SAP.parse(String.valueOf(valueTo));
+								formatted = SAPFormattingUtility.DATEFORMAT_VCML.format(date);
+								value.setTo(formatted);								
+							}
 						} catch (ParseException e) {
 							value.setFrom(SAPFormattingUtility.DEFAULT_DATE);
 						}
