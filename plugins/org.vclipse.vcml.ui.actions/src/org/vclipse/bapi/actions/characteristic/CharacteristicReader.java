@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.WrappedException;
 import org.vclipse.bapi.actions.BAPIUtils;
+import org.vclipse.bapi.actions.characteristic.values.ReadCharacteristicDependency;
 import org.vclipse.bapi.actions.characteristic.values.ReadCharacteristicValueDependency;
 import org.vclipse.vcml.SAPFormattingUtility;
 import org.vclipse.vcml.utils.DescriptionHandler;
@@ -57,6 +58,9 @@ public class CharacteristicReader extends BAPIUtils {
 
 	@Inject
 	private ReadCharacteristicValueDependency valuesDependenciesReader;
+	
+	@Inject
+	private ReadCharacteristicDependency csticDependenciesReader;
 	
 	public Characteristic read(String csticName, VcmlModel vcmlModel, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		if(csticName == null || monitor.isCanceled()) {
@@ -272,6 +276,9 @@ public class CharacteristicReader extends BAPIUtils {
 		} else {
 			newCstic.setName(csticName);
 		}
+		// read the dependencies used by the cstic
+		csticDependenciesReader.read(newCstic, vcmlModel, monitor, seenObjects, globalOptions, recurse);
+		// read the dependencies used by the cstics values
 		valuesDependenciesReader.read(newCstic, vcmlModel, monitor, seenObjects, globalOptions, recurse);
 		vcmlModel.getObjects().add(newCstic);
 		return newCstic;

@@ -50,7 +50,15 @@ public class JCoFunctionPerformer extends BAPIUtils {
 	}
 	
 	/**
-	 * Reads a dependency key for a characteristic value.
+	 * Reads dependency entries for a characteristic.
+	 */
+	public JCoFunction CARD_CHAR_READ_ALLOC(String csticName, IProgressMonitor monitor, List<Option> objectOptions, List<Option> modelOptions) throws JCoException {
+		JCoFunction function = getJCoFunction("CARD_CHAR_READ_ALLOC", monitor);
+		return function;
+	}
+	
+	/**
+	 * Reads dependency entries for a characteristic value.
 	 */
 	public JCoFunction CARD_CHAR_VAL_READ_ALLOC(String csticName, String valueName, IProgressMonitor monitor, List<Option> objectOptions, List<Option> modelOptions) throws JCoException {
 		JCoFunction keysValueDependencies = getJCoFunction("CARD_CHAR_VAL_READ_ALLOC", monitor);

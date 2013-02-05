@@ -20,9 +20,9 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.JCoFunctionPerformer;
 import org.vclipse.bapi.actions.constraint.ConstraintReader;
+import org.vclipse.bapi.actions.handler.BAPIActionHandler;
 import org.vclipse.bapi.actions.precondition.PreconditionReader;
 import org.vclipse.bapi.actions.procedure.ProcedureReader;
 import org.vclipse.bapi.actions.selectioncondition.SelectionConditionReader;
@@ -43,9 +43,9 @@ import com.sap.conn.jco.JCoStructure;
 import com.sap.conn.jco.JCoTable;
 
 /**
- * Reads procedures being used during the characteristic value sets.
+ * Reads dependency objects used by characteristic values.
  */
-public class ReadCharacteristicValueDependency extends BAPIUtils {
+public class ReadCharacteristicValueDependency extends BAPIActionHandler {
 	
 	@Inject
 	private ProcedureReader procedureReader;
