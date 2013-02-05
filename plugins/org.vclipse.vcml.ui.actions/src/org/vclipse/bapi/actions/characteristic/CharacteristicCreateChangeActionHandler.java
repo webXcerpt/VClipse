@@ -20,6 +20,7 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.IBAPIActionRunner;
+import org.vclipse.vcml.SAPFormattingUtility;
 import org.vclipse.vcml.utils.DescriptionHandler;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
@@ -148,7 +149,7 @@ public class CharacteristicCreateChangeActionHandler extends BAPIUtils implement
 					String from = value.getFrom();
 					String to = value.getTo();
 					try {
-						flv = CharacteristicReader.DATEFORMAT_SAP.format(CharacteristicReader.DATEFORMAT_VCML.parse(from));
+						flv = SAPFormattingUtility.DATEFORMAT_SAP.format(SAPFormattingUtility.DATEFORMAT_VCML.parse(from));
 					} catch (ParseException e) {
 						flv = "00.00.0000";
 					}
@@ -159,9 +160,9 @@ public class CharacteristicCreateChangeActionHandler extends BAPIUtils implement
 					} else {
 						String flb;
 						try {
-							flb = CharacteristicReader.DATEFORMAT_SAP.format(CharacteristicReader.DATEFORMAT_VCML.parse(to));
+							flb = SAPFormattingUtility.DATEFORMAT_SAP.format(SAPFormattingUtility.DATEFORMAT_VCML.parse(to));
 						} catch (ParseException e) {
-							flb = "00.00.0000";
+							flb = SAPFormattingUtility.DEFAULT_DATE;
 						}
 						charactValuesNum.setValue("VALUE_TO", flb);
 						relation = "3"; // means GE LE

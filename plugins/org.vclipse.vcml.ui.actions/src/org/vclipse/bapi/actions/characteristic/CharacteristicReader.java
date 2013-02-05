@@ -13,7 +13,6 @@ package org.vclipse.bapi.actions.characteristic;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +22,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.WrappedException;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.characteristic.values.ReadCharacteristicValueDependency;
+import org.vclipse.vcml.SAPFormattingUtility;
 import org.vclipse.vcml.utils.DescriptionHandler;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.Characteristic;
@@ -54,12 +54,9 @@ import com.sap.conn.jco.JCoTable;
 
 public class CharacteristicReader extends BAPIUtils {
 
-	public static final SimpleDateFormat DATEFORMAT_SAP = new SimpleDateFormat("yyyyMMdd");
-	public static final SimpleDateFormat DATEFORMAT_VCML = new SimpleDateFormat("dd.MM.yyyy");
-	
 	@Inject
 	private ReadCharacteristicValueDependency dependenciesReader;
-
+	
 	public Characteristic read(String csticName, VcmlModel vcmlModel, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		if(csticName == null || monitor.isCanceled()) {
 			return null;			
@@ -207,9 +204,9 @@ public class CharacteristicReader extends BAPIUtils {
 						DateCharacteristicValue value = VCML.createDateCharacteristicValue();
 						try {
 							// TODO handle intervals
-							value.setFrom(DATEFORMAT_VCML.format(DATEFORMAT_SAP.parse(new Long(charactValuesNum.getLong("VALUE_FROM")).toString())));
+							value.setFrom(SAPFormattingUtility.DATEFORMAT_VCML.format(SAPFormattingUtility.DATEFORMAT_SAP.parse(new Long(charactValuesNum.getLong("VALUE_FROM")).toString())));
 						} catch (ParseException e) {
-							value.setFrom("00.00.0000");
+							value.setFrom(SAPFormattingUtility.DEFAULT_DATE);
 						}
 						value.setDefault("X".equals(charactValuesNum.getString("DEFAULT_VALUE")));
 						values.add(value);

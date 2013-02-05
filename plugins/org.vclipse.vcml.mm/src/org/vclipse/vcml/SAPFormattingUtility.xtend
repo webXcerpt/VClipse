@@ -21,6 +21,7 @@ import org.vclipse.vcml.vcml.NumericLiteral
 import org.vclipse.vcml.vcml.NumericType
 import org.vclipse.vcml.vcml.DateType
 import org.vclipse.vcml.vcml.DateCharacteristicValue
+import java.text.SimpleDateFormat
 
 /**
  * 
@@ -34,6 +35,10 @@ class SAPFormattingUtility {
 	public static String COMMA = ","
 	public static String ZERO = "0"
 	public static String NUMBER_SIGN = "#"
+	
+	public static SimpleDateFormat DATEFORMAT_SAP = new SimpleDateFormat("yyyyMMdd");
+	public static SimpleDateFormat DATEFORMAT_VCML = new SimpleDateFormat("dd.MM.yyyy");
+	public static String DEFAULT_DATE = "00.00.0000"
 
 	/**
 	 * Returns string representation.
