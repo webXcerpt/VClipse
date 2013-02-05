@@ -30,6 +30,7 @@ import org.vclipse.vcml.vcml.NumericType
 import org.vclipse.vcml.vcml.Option
 import org.vclipse.vcml.vcml.OptionType
 import org.vclipse.vcml.vcml.SymbolicType
+import org.vclipse.vcml.vcml.DateType
 
 /**
  * Utilities for VCML Objects.
@@ -56,7 +57,7 @@ class VCMLUtilities {
 	}
 	
 	/**
-	 * Returns a mapping name to value for a characteristic.
+	 * Returns a mapping name to value for a characteristic with symbolic type.
 	 */
 	def dispatch Map<String, EObject> getNameToValue(SymbolicType type) {
 		val name2Value = Maps::<String, EObject>newHashMap
@@ -67,7 +68,7 @@ class VCMLUtilities {
 	}
 	
 	/**
-	 * Returns a mapping name to value for a characteristic.
+	 * Returns a mapping name to value for a characteristic with numeric type.
 	 */
 	def dispatch Map<String, EObject> getNameToValue(NumericType type) {
 		val name2Value = Maps::<String, EObject>newHashMap
@@ -78,6 +79,21 @@ class VCMLUtilities {
 			}
 			name2Value.put(string, value)
 		}	
+		return name2Value
+	}
+	
+	/**
+	 * Returns a mapping name to value for a characteristic with date type.
+	 */
+	def dispatch Map<String, EObject> getNameToValue(DateType type) {
+		val name2Value = Maps::<String, EObject>newHashMap
+		for(value : type.values) {
+			val string = sapFormattingUtility.toString(value)
+			if(string == null) {
+				throw new IllegalArgumentException("Result of the computation should not be null.")
+			}
+			name2Value.put(string, value)
+		}
 		return name2Value
 	}
 	

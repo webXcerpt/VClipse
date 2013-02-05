@@ -13,15 +13,17 @@ package org.vclipse.vcml
 
 import java.text.DecimalFormat
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
 import org.eclipse.xtext.EcoreUtil2
 import org.vclipse.vcml.vcml.CharacteristicType
+import org.vclipse.vcml.vcml.DateCharacteristicValue
+import org.vclipse.vcml.vcml.DateType
 import org.vclipse.vcml.vcml.NumericCharacteristicValue
 import org.vclipse.vcml.vcml.NumericInterval
 import org.vclipse.vcml.vcml.NumericLiteral
 import org.vclipse.vcml.vcml.NumericType
-import org.vclipse.vcml.vcml.DateType
-import org.vclipse.vcml.vcml.DateCharacteristicValue
-import java.text.SimpleDateFormat
+
+import static org.vclipse.vcml.SAPFormattingUtility.*
 
 /**
  * 
@@ -30,14 +32,14 @@ class SAPFormattingUtility {
 
 	public static String EMPTY = ""
 	public static String WHITESPACE = " "
-	public static String FROM_TO_BINDER = " - "
+	public static String INTERVAL_BINDER = " - "
 	public static String DOT = "."
 	public static String COMMA = ","
 	public static String ZERO = "0"
 	public static String NUMBER_SIGN = "#"
 	
-	public static SimpleDateFormat DATEFORMAT_SAP = new SimpleDateFormat("yyyyMMdd");
-	public static SimpleDateFormat DATEFORMAT_VCML = new SimpleDateFormat("dd.MM.yyyy");
+	public static SimpleDateFormat DATEFORMAT_SAP = new SimpleDateFormat("yyyyMMdd")
+	public static SimpleDateFormat DATEFORMAT_VCML = new SimpleDateFormat("dd.MM.yyyy")
 	public static String DEFAULT_DATE = "00.00.0000"
 
 	/**
@@ -52,7 +54,15 @@ class SAPFormattingUtility {
 	 * 
 	 */
 	def dispatch toString(DateCharacteristicValue value) {
-		
+		val resultBuffer = new StringBuffer
+		val fromDate = DATEFORMAT_VCML.parse(value.from)
+		resultBuffer.append(DATEFORMAT_VCML.format(fromDate))
+		if(value.to != null) {
+			val toDate = DATEFORMAT_VCML.parse(value.to)
+			resultBuffer.append(INTERVAL_BINDER)
+			resultBuffer.append(DATEFORMAT_VCML.format(toDate))
+		}
+		return resultBuffer.toString
 	}
 	
 	/**
@@ -63,7 +73,7 @@ class SAPFormattingUtility {
 		var doubleValue = new Double(interval.lowerBound)
 		var formatted = formatter.format(doubleValue)
 		resultBuffer.append(formatted)
-		resultBuffer.append(FROM_TO_BINDER)
+		resultBuffer.append(INTERVAL_BINDER)
 		doubleValue = new Double(interval.upperBound)
 		formatted = formatter.format(doubleValue)
 		resultBuffer.append(formatted)
