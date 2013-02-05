@@ -79,7 +79,7 @@ public class ReadCharacteristicValueDependency extends BAPIUtils {
 		ipl.setValue("LIST_ALL_GLOBL", "X");
 		ipl.setValue("LIST_ALL_LOCAL", "X");
 		Map<String, EObject> name2Value = vcmlUtilities.getNameToValue(cstic.getType());
-		for(Entry<String, EObject> entries : name2Value.entrySet()) { // execute only for allowed values
+		for(Entry<String, EObject> entries : name2Value.entrySet()) {
 			String value = entries.getKey();
 			ipl.setValue("VALUE", value);
 			StringBuffer args = new StringBuffer(cstic.getName()).append(".").append(value);
