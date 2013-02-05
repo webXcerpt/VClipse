@@ -20,12 +20,15 @@ import org.vclipse.vcml.vcml.NumericInterval
 import org.vclipse.vcml.vcml.NumericLiteral
 import org.vclipse.vcml.vcml.NumericType
 import org.vclipse.vcml.vcml.DateType
+import org.vclipse.vcml.vcml.DateCharacteristicValue
 
 /**
  * 
  */
 class SAPFormattingUtility {
 
+	public static String EMPTY = ""
+	public static String WHITESPACE = " "
 	public static String FROM_TO_BINDER = " - "
 	public static String DOT = "."
 	public static String COMMA = ","
@@ -35,9 +38,16 @@ class SAPFormattingUtility {
 	/**
 	 * Returns string representation.
 	 */
-	def String toString(NumericCharacteristicValue value) {
+	def dispatch toString(NumericCharacteristicValue value) {
 		val csticType = EcoreUtil2::getContainerOfType(value, typeof(CharacteristicType))
 		return format(value.entry, getFormatter(csticType), csticType as NumericType)
+	}
+	
+	/**
+	 * 
+	 */
+	def dispatch toString(DateCharacteristicValue value) {
+		
 	}
 	
 	/**
@@ -52,11 +62,11 @@ class SAPFormattingUtility {
 		doubleValue = new Double(interval.upperBound)
 		formatted = formatter.format(doubleValue)
 		resultBuffer.append(formatted)
-		resultBuffer.append(" ").append(type.unit.toLowerCase)
+		resultBuffer.append(WHITESPACE).append(type.unit.toLowerCase)
 			
 		var start = 0
 		while(start < resultBuffer.length) {
-			val _char = "" + resultBuffer.charAt(start)
+			val _char = EMPTY + resultBuffer.charAt(start)
 			if(COMMA.equals(_char)) {
 				resultBuffer.replace(start, start + 1, DOT)
 			} 
