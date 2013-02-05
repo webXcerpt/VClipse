@@ -19,77 +19,103 @@ import org.vclipse.vcml.vcml.NumericCharacteristicValue
 import org.vclipse.vcml.vcml.NumericInterval
 import org.vclipse.vcml.vcml.NumericLiteral
 import org.vclipse.vcml.vcml.NumericType
+import org.vclipse.vcml.vcml.DateType
 
 /**
  * 
  */
 class SAPFormattingUtility {
 
+	public static String FROM_TO_BINDER = " - "
+	public static String DOT = "."
+	public static String COMMA = ","
+	public static String ZERO = "0"
+	public static String NUMBER_SIGN = "#"
+
 	/**
 	 * Returns string representation.
 	 */
 	def String toString(NumericCharacteristicValue value) {
-		// values have to be formatted in the following way(the same format as in sap)
-		// one can not extract dependencies otherwise
-		var formatBuffer = new StringBuffer
 		val csticType = EcoreUtil2::getContainerOfType(value, typeof(CharacteristicType))
-		if(csticType instanceof NumericType) {
-			var format = NumberFormat::getNumberInstance()
-			val numericType = csticType as NumericType
-			var decimal = numericType.decimalPlaces
-			var numOfChars = numericType.numberOfChars
-			while(numOfChars > 0) {
-				formatBuffer.append("#")
-				numOfChars = numOfChars - 1
-				if(
-					// do not group numbers if decimal == 0 => should be tested
-					(decimal != 0) && (numOfChars % decimal == 0) && (numOfChars > 1)
-				) {
-					formatBuffer.append(",")
-				}
-			}
-			if(decimal == 0) {
-				formatBuffer.append(".")
-				formatBuffer.append("#")
-			}
-			if(decimal > 0) {
-				formatBuffer.append(".")
-				while(decimal > 0) {
-					formatBuffer.append("0")
-					decimal = decimal - 1
-				}
-				format = new DecimalFormat(formatBuffer.toString)
-			}
+		return format(value.entry, getFormatter(csticType), csticType as NumericType)
+	}
+	
+	/**
+	 * 
+	 */
+	def dispatch format(NumericInterval interval, NumberFormat formatter, NumericType type) {
+		val resultBuffer = new StringBuffer
+		var doubleValue = new Double(interval.lowerBound)
+		var formatted = formatter.format(doubleValue)
+		resultBuffer.append(formatted)
+		resultBuffer.append(FROM_TO_BINDER)
+		doubleValue = new Double(interval.upperBound)
+		formatted = formatter.format(doubleValue)
+		resultBuffer.append(formatted)
+		resultBuffer.append(" ").append(type.unit.toLowerCase)
 			
-			val resultBuffer = new StringBuffer()
-			val entry = value.entry
-			if(entry instanceof NumericLiteral) {
-				val numericLiteral = (entry as NumericLiteral).value
-				resultBuffer.append(format.format(new Double(numericLiteral)))
-				return resultBuffer.toString
+		var start = 0
+		while(start < resultBuffer.length) {
+			val _char = "" + resultBuffer.charAt(start)
+			if(COMMA.equals(_char)) {
+				resultBuffer.replace(start, start + 1, DOT)
+			} 
+			if(DOT.equals(_char)) {
+				resultBuffer.replace(start, start + 1, COMMA)
 			}
-			
-			if(entry instanceof NumericInterval) {
-				val interval = entry as NumericInterval
-				resultBuffer.append(format.format(new Double(interval.lowerBound)))
-				resultBuffer.append(" - ")
-				resultBuffer.append(format.format(new Double(interval.upperBound)))
-				resultBuffer.append(" ").append(numericType.unit.toLowerCase)
-			
-				var start = 0
-				while(start < resultBuffer.length) {
-					val _char = "" + resultBuffer.charAt(start)
-					if(",".equals(_char)) {
-						resultBuffer.replace(start, start + 1, ".")
-					} 
-					if(".".equals(_char)) {
-						resultBuffer.replace(start, start + 1, ",")
-					}
-					start = start + 1
-				}
-				return resultBuffer.toString
+			start = start + 1
+		}
+		return resultBuffer.toString
+	}
+	
+	/**
+	 * 
+	 */
+	def dispatch format(NumericLiteral literal, NumberFormat formatter, NumericType type) {
+		val resultBuffer = new StringBuffer
+		val doubleValue = new Double(literal.value)
+		val formatted = formatter.format(doubleValue)
+		resultBuffer.append(formatted)
+		return resultBuffer.toString
+	}
+	
+	/**
+	 * 
+	 */
+	def dispatch getFormatter(NumericType type) {
+		val formatBuffer = new StringBuffer
+		var format = NumberFormat::getNumberInstance
+		var decimal = type.decimalPlaces
+		var numOfChars = type.numberOfChars
+		while(numOfChars > 0) {
+			formatBuffer.append(NUMBER_SIGN)
+			numOfChars = numOfChars - 1
+			if(
+				// do not group numbers if decimal == 0 => should be tested
+				(decimal != 0) && (numOfChars % decimal == 0) && (numOfChars > 1)
+			) {
+				formatBuffer.append(COMMA)
 			}
 		}
-		return null
+		if(decimal == 0) {
+			formatBuffer.append(DOT)
+			formatBuffer.append(NUMBER_SIGN)
+		}
+		if(decimal > 0) {
+			formatBuffer.append(DOT)
+			while(decimal > 0) {
+				formatBuffer.append(ZERO)
+				decimal = decimal - 1
+			}
+			format = new DecimalFormat(formatBuffer.toString)
+		}
+		format
+	}
+	
+	/**
+	 * 
+	 */
+	def dispatch getFormatter(DateType type) {
+		
 	}
 }
