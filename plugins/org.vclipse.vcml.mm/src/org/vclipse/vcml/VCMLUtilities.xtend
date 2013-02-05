@@ -25,12 +25,13 @@ import org.eclipse.emf.ecore.EObject
 import org.vclipse.base.naming.INameProvider
 import org.vclipse.vcml.vcml.CharacteristicOrValueDependencies
 import org.vclipse.vcml.vcml.CharacteristicValue
+import org.vclipse.vcml.vcml.DateCharacteristicValue
+import org.vclipse.vcml.vcml.DateType
 import org.vclipse.vcml.vcml.NumericCharacteristicValue
 import org.vclipse.vcml.vcml.NumericType
 import org.vclipse.vcml.vcml.Option
 import org.vclipse.vcml.vcml.OptionType
 import org.vclipse.vcml.vcml.SymbolicType
-import org.vclipse.vcml.vcml.DateType
 
 /**
  * Utilities for VCML Objects.
@@ -111,6 +112,13 @@ class VCMLUtilities {
 	 * Dependencies of a value are set or returned.
 	 */
 	def dispatch CharacteristicOrValueDependencies processDependencies(NumericCharacteristicValue value, CharacteristicOrValueDependencies dependencies) {
+		if(dependencies == null) {
+			return value.dependencies
+		}
+		value.dependencies = dependencies
+	}
+	
+	def dispatch CharacteristicOrValueDependencies processDependencies(DateCharacteristicValue value, CharacteristicOrValueDependencies dependencies) {
 		if(dependencies == null) {
 			return value.dependencies
 		}
