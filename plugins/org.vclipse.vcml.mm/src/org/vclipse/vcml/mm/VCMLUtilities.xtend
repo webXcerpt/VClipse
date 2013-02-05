@@ -15,18 +15,27 @@ import com.google.common.base.Strings
 import com.google.common.collect.Iterables
 import com.google.common.collect.Lists
 import com.google.common.collect.Maps
+import java.text.DecimalFormat
 import java.util.Collections
 import java.util.Comparator
 import java.util.List
 import java.util.Map
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.EcoreUtil2
 import org.vclipse.base.naming.INameProvider
-import org.vclipse.vcml.vcml.Characteristic
+import org.vclipse.vcml.vcml.CharacteristicOrValueDependencies
+import org.vclipse.vcml.vcml.CharacteristicType
 import org.vclipse.vcml.vcml.CharacteristicValue
+import org.vclipse.vcml.vcml.NumericCharacteristicValue
+import org.vclipse.vcml.vcml.NumericInterval
+import org.vclipse.vcml.vcml.NumericLiteral
+import org.vclipse.vcml.vcml.NumericType
 import org.vclipse.vcml.vcml.Option
 import org.vclipse.vcml.vcml.OptionType
 import org.vclipse.vcml.vcml.SymbolicType
+
+import static java.lang.Character.*
 
 /**
  * Utilities for VCML Objects.
@@ -46,17 +55,103 @@ class VCMLUtilities {
 	}
 	
 	/**
-	 * Returns a mapping name to value for a characteristic, only if its type is symbolic.
+	 * Returns a mapping name to value for a characteristic.
 	 */
-	def Map<String, CharacteristicValue> getCharacteristicValues(Characteristic cstic) {
-		val name2Value = Maps::<String, CharacteristicValue>newHashMap
-		val type = cstic.type
-		if(type instanceof SymbolicType) {
-			for(value : (type as SymbolicType).values) {
-				name2Value.put(value.name, value)
-			}	
-		}
+	def dispatch Map<String, EObject> getNameToValue(SymbolicType type) {
+		val name2Value = Maps::<String, EObject>newHashMap
+		for(value : (type as SymbolicType).values) {
+			name2Value.put(value.name, value)
+		}	
 		return name2Value
+	}
+	
+	/**
+	 * Returns a mapping name to value for a characteristic.
+	 */
+	def dispatch Map<String, EObject> getNameToValue(NumericType type) {
+		val name2Value = Maps::<String, EObject>newHashMap
+		for(value : (type as NumericType).values) {
+			val string = toString(value)
+			if(string == null) {
+				throw new IllegalArgumentException("Result of the computation should not be null.")
+			}
+			name2Value.put(string, value)
+		}	
+		return name2Value
+	}
+	
+	/**
+	 * Returns string representation.
+	 */
+	def String toString(NumericCharacteristicValue value) {
+		val entry = value.entry
+		if(entry instanceof NumericLiteral) {
+			return (entry as NumericLiteral).value
+		}
+		// the interval values have to be formatted 
+		// one can not extract dependencies otherwise
+		var formatBuffer = new StringBuffer
+		val csticType = EcoreUtil2::getContainerOfType(value, typeof(CharacteristicType))
+		if(csticType instanceof NumericType) {
+			val numericType = csticType as NumericType
+			var decimal = numericType.decimalPlaces
+			var numOfChars = numericType.numberOfChars
+			while(numOfChars > 0) {
+				formatBuffer.append("#")
+				numOfChars = numOfChars - 1
+				if(numOfChars % decimal == 0 && numOfChars > 1) {
+					formatBuffer.append(",")
+				}
+			}
+			if(decimal > 0) {
+				formatBuffer.append(".")
+				while(decimal > 0) {
+					formatBuffer.append("0")
+					decimal = decimal - 1
+				}
+			}
+			
+			val interval = entry as NumericInterval
+			val resultBuffer = new StringBuffer()
+			val decimalFormat = new DecimalFormat(formatBuffer.toString)
+			resultBuffer.append(decimalFormat.format(new Double(interval.lowerBound)))
+			resultBuffer.append(" - ")
+			resultBuffer.append(decimalFormat.format(new Double(interval.upperBound)))
+			resultBuffer.append(" ").append(numericType.unit.toLowerCase)
+			var start = 0
+			while(start < resultBuffer.length) {
+				val _char = "" + resultBuffer.charAt(start)
+				if(",".equals(_char)) {
+					resultBuffer.replace(start, start + 1, ".")
+				} 
+				if(".".equals(_char)) {
+					resultBuffer.replace(start, start + 1, ",")
+				}
+				start = start + 1
+			}
+			return resultBuffer.toString
+		}
+		return null
+	}
+	
+	/**
+	 * Dependencies of a value are set or returned.
+	 */
+	def dispatch CharacteristicOrValueDependencies processDependencies(CharacteristicValue value, CharacteristicOrValueDependencies dependencies) {
+		if(dependencies == null) {
+			return value.dependencies
+		}
+		value.dependencies = dependencies
+	}
+	
+	/**
+	 * Dependencies of a value are set or returned.
+	 */
+	def dispatch CharacteristicOrValueDependencies processDependencies(NumericCharacteristicValue value, CharacteristicOrValueDependencies dependencies) {
+		if(dependencies == null) {
+			return value.dependencies
+		}
+		value.dependencies = dependencies
 	}
 	
 	/**
