@@ -9,7 +9,7 @@
  *     	webXcerpt Software GmbH - initial creator
  * 		www.webxcerpt.com
  ******************************************************************************/
-package org.vclipse.vcml.mm
+package org.vclipse.vcml
 
 import org.vclipse.vcml.vcml.CharacteristicValue
 import org.vclipse.vcml.vcml.SimpleDescription

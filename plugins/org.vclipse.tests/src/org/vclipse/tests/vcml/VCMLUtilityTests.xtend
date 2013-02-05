@@ -21,7 +21,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.vclipse.tests.VClipseTestPlugin
 import org.vclipse.tests.VClipseTestUtilities
-import org.vclipse.vcml.mm.VCMLUtilities
+import org.vclipse.vcml.VCMLUtilities
 import org.vclipse.vcml.vcml.VCObject
 import org.vclipse.vcml.vcml.VcmlModel
 import org.vclipse.vcml.vcml.VcmlPackage

@@ -266,7 +266,7 @@ public class CharacteristicReader extends BAPIUtils {
 			newCstic.setName(csticName);
 		}
 		// TODO enable the following call
-		// valuesPreconditionReader.read(newCstic, vcmlModel, monitor, seenObjects, globalOptions, recurse);
+		valuesPreconditionReader.read(newCstic, vcmlModel, monitor, seenObjects, globalOptions, recurse);
 		vcmlModel.getObjects().add(newCstic);
 		return newCstic;
 	}
