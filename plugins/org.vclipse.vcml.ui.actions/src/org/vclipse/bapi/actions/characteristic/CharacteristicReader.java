@@ -58,7 +58,7 @@ public class CharacteristicReader extends BAPIUtils {
 	public static final SimpleDateFormat DATEFORMAT_VCML = new SimpleDateFormat("dd.MM.yyyy");
 	
 	@Inject
-	private ReadCharacteristicValueDependency valuesPreconditionReader;
+	private ReadCharacteristicValueDependency dependenciesReader;
 
 	public Characteristic read(String csticName, VcmlModel vcmlModel, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		if(csticName == null || monitor.isCanceled()) {
@@ -265,8 +265,7 @@ public class CharacteristicReader extends BAPIUtils {
 		} else {
 			newCstic.setName(csticName);
 		}
-		// TODO enable the following call
-		valuesPreconditionReader.read(newCstic, vcmlModel, monitor, seenObjects, globalOptions, recurse);
+		dependenciesReader.read(newCstic, vcmlModel, monitor, seenObjects, globalOptions, recurse);
 		vcmlModel.getObjects().add(newCstic);
 		return newCstic;
 	}
