@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.util.Strings;
@@ -63,8 +62,6 @@ import com.sap.conn.jco.JCoStructure;
 import com.sap.conn.jco.JCoTable;
 
 public class BAPIUtils extends BAPIActionHandler {
-
-	private final Logger log = Logger.getLogger(BAPIUtils.class);
 
 	private JCoFunction currentFunction;
 	
@@ -456,9 +453,6 @@ public class BAPIUtils extends BAPIActionHandler {
 		monitor.subTask("executing " + function.getName() + " " + arguments);
 		task.println("// " + function.getName() + " " + arguments);
 		function.execute(connectionHandler.getJCoDestination());
-		if (log.isTraceEnabled()) {
-			log.trace(function.toXML());
-		};
 		monitor.worked(1);
 	}
 
