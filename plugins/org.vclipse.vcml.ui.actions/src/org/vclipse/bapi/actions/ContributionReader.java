@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 
 import com.google.common.collect.HashMultimap;
@@ -66,7 +67,7 @@ public class ContributionReader {
 								type2Action.put(handler.getClass().getName(), handler);
 							}
 						} catch (CoreException exception) {
-							BAPIActionPlugin.log(exception.getMessage(), exception);
+							BAPIActionPlugin.log(IStatus.ERROR, exception.getMessage());
 						}
 					}
 				}

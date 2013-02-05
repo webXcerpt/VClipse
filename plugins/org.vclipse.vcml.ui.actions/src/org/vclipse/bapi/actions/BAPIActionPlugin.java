@@ -11,7 +11,6 @@
  ******************************************************************************/
 package org.vclipse.bapi.actions;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -53,13 +52,5 @@ public class BAPIActionPlugin extends AbstractUIPlugin {
 	
 	public static void log(int status, String message) {
 		getInstance().getLog().log(new Status(status, ID, message));
-	}
-	
-	public static void log(final IStatus status) {
-		getInstance().getLog().log(status);
-	}
-	
-	public static void log(final String message, final Throwable thr) {
-		log(new Status(IStatus.ERROR, ID, IStatus.ERROR, message, thr));		
 	}
 }
