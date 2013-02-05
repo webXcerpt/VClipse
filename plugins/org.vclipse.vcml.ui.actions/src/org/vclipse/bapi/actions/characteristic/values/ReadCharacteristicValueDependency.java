@@ -69,21 +69,6 @@ public class ReadCharacteristicValueDependency extends BAPIUtils {
 	private JCoFunctionPerformer functionPerformer;
 	
 	/**
-	 * BAPI for reading allowed values for a characteristic
-	 */
-	public String CARD_CHARACTERISTIC_READ = "CARD_CHARACTERISTIC_READ";
-	
-	/**
-	 * BAPI for reading a dependency key for a characteristic value
-	 */
-	public String CARD_CHAR_VAL_READ_ALLOC = "CARD_CHAR_VAL_READ_ALLOC";
-	
-	/**
-	 * Table containing dependencies
-	 */
-	public static final String DEP_ASSIGN = "DEP_ASSIGN";
-	
-	/**
 	 * 
 	 */
 	public void read(Characteristic cstic, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
@@ -97,7 +82,7 @@ public class ReadCharacteristicValueDependency extends BAPIUtils {
 		for(Entry<String, EObject> entries : name2Value.entrySet()) {
 			String value = entries.getKey();
 			JCoFunction valueDependencies = functionPerformer.CARD_CHAR_VAL_READ_ALLOC(cstic.getName(), value, submonitor, cstic.getOptions(), globalOptions);
-			JCoTable table = valueDependencies.getTableParameterList().getTable(DEP_ASSIGN);
+			JCoTable table = valueDependencies.getTableParameterList().getTable("DEP_ASSIGN");
 			EObject csticValue = name2Value.get(value);
 			if(csticValue == null) { // does not exist
 				csticValue = factoryExtension.newCharacteristicValue(value);
