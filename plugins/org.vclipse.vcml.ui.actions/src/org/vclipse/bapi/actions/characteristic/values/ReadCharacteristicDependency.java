@@ -16,37 +16,56 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.bapi.actions.JCoFunctionPerformer;
-import org.vclipse.bapi.actions.handler.BAPIActionHandler;
+import org.vclipse.vcml.vcml.Characteristic;
+import org.vclipse.vcml.vcml.CharacteristicOrValueDependencies;
+import org.vclipse.vcml.vcml.Dependency;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
-import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
-
-import org.vclipse.vcml.vcml.Characteristic;
+import com.sap.conn.jco.JCoFunction;
+import com.sap.conn.jco.JCoTable;
 
 /**
  * Reads dependency objects used by characteristics.
  */
-public class ReadCharacteristicDependency extends BAPIActionHandler {
+public class ReadCharacteristicDependency extends DependencyReader {
 
-	@Inject
-	private JCoFunctionPerformer functionPerformer;
-	
-	/**
-	 * 
-	 */
 	public void read(Characteristic cstic, VcmlModel vcmlModel, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		if(monitor.isCanceled()) {
 			return;
 		}
+		Resource resource = vcmlModel.eResource();
 		StringBuffer messageBuffer = new StringBuffer("Extracting procedures for values of the characteristic ").append(cstic.getName());
 		SubMonitor submonitor = SubMonitor.convert(monitor, messageBuffer.toString(), IProgressMonitor.UNKNOWN);
 		
-		// TODO implement
+		EReference csticDependenciesReference = factoryExtension.VCML_PACKAGE.getCharacteristic_Dependencies();
+		CharacteristicOrValueDependencies dependencies = vcmlUtilities.processDependencies(cstic, csticDependenciesReference, null);
+		dependencies = dependencies == null ? factoryExtension.VCML_FACTORY.createCharacteristicOrValueDependencies() : dependencies;
+		EList<Dependency> csticDependencies = dependencies.getDependencies();
 		
+		JCoFunction function = functionPerformer.CARD_CHAR_READ_ALLOC(cstic.getName(), submonitor, cstic.getOptions(), vcmlModel.getOptions());
+		JCoTable table = function.getTableParameterList().getTable(JCoFunctionPerformer.DEP_ASSIGN);
+		for(int rowIndex=0; rowIndex<table.getNumRows(); rowIndex++) {
+			table.setRow(rowIndex);
+			String dependencyName = table.getString(JCoFunctionPerformer.DEPENDENCY);
+			Dependency dependency = readDependency(dependencyName, submonitor, resource, seenObjects, cstic.getOptions(), globalOptions, recurse);
+			if(dependency != null) {
+				csticDependencies.add(dependency);
+			}
+			if(submonitor.isCanceled()) {
+				// do not return in this case -> dependencies are not yet added
+				break;
+			}
+		}
+		if(!csticDependencies.isEmpty()) {
+			vcmlUtilities.processDependencies(cstic, csticDependenciesReference, dependencies);				
+		}
 		submonitor.done();
 	}
 }

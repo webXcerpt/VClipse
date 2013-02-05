@@ -15,6 +15,7 @@ import org.vclipse.vcml.vcml.CharacteristicValue
 import org.vclipse.vcml.vcml.SimpleDescription
 import org.vclipse.vcml.vcml.SimpleDocumentation
 import org.vclipse.vcml.vcml.VcmlFactory
+import org.vclipse.vcml.vcml.VcmlPackage
 
 /**
  * Extensions for {@link org.vclipse.vcml.vcml.VcmlFactory}.
@@ -24,9 +25,11 @@ import org.vclipse.vcml.vcml.VcmlFactory
 class VCMLFactoryExtension {
 	
 	public VcmlFactory VCML_FACTORY
+	public VcmlPackage VCML_PACKAGE
 	
 	new() {
 		VCML_FACTORY = VcmlFactory::eINSTANCE
+		VCML_PACKAGE = VcmlPackage::eINSTANCE
 	}
 	
 	def CharacteristicValue newCharacteristicValue(String name) {

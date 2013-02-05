@@ -27,7 +27,18 @@ public class JCoFunctionPerformer extends BAPIUtils {
 
 	public static final String SELECTED = "X";
 	
+	/**
+	 * Values
+	 */
 	public static final String CHARACTERISTIC = "CHARACTERISTIC";
+	public static final String DEPENDENCY = "DEPENDENCY";
+	public static final String DEP_TYPE = "DEP_TYPE";
+	public static final String DEPENDENCY_DATA = "DEPENDENCY_DATA";
+	
+	/**
+	 * Tables
+	 */
+	public static final String DEP_ASSIGN = "DEP_ASSIGN";
 	
 	/**
 	 * Reads global available dependencies.
@@ -54,6 +65,14 @@ public class JCoFunctionPerformer extends BAPIUtils {
 	 */
 	public JCoFunction CARD_CHAR_READ_ALLOC(String csticName, IProgressMonitor monitor, List<Option> objectOptions, List<Option> modelOptions) throws JCoException {
 		JCoFunction function = getJCoFunction("CARD_CHAR_READ_ALLOC", monitor);
+		JCoParameterList ipl = function.getImportParameterList();
+		
+		ipl.setValue(JCoFunctionPerformer.CHARACTERISTIC, csticName);
+		ipl.setValue("LIST_ALL_GLOBL", JCoFunctionPerformer.SELECTED);
+		ipl.setValue("LIST_ALL_LOCAL", JCoFunctionPerformer.SELECTED);
+				
+		handleOptions(modelOptions, objectOptions, ipl, "CHANGE_NO", "DATE");
+		execute(function, monitor, new StringBuffer(csticName).toString());
 		return function;
 	}
 	
@@ -61,15 +80,15 @@ public class JCoFunctionPerformer extends BAPIUtils {
 	 * Reads dependency entries for a characteristic value.
 	 */
 	public JCoFunction CARD_CHAR_VAL_READ_ALLOC(String csticName, String valueName, IProgressMonitor monitor, List<Option> objectOptions, List<Option> modelOptions) throws JCoException {
-		JCoFunction keysValueDependencies = getJCoFunction("CARD_CHAR_VAL_READ_ALLOC", monitor);
-		JCoParameterList ipl = keysValueDependencies.getImportParameterList();
-		
+		JCoFunction function = getJCoFunction("CARD_CHAR_VAL_READ_ALLOC", monitor);
+		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue(JCoFunctionPerformer.CHARACTERISTIC, csticName);
 		ipl.setValue("LIST_ALL_GLOBL", JCoFunctionPerformer.SELECTED);
 		ipl.setValue("LIST_ALL_LOCAL", JCoFunctionPerformer.SELECTED);
 		ipl.setValue("VALUE", valueName);
 		
-		execute(keysValueDependencies, monitor, new StringBuffer(csticName).append(".").append(valueName).toString());
-		return keysValueDependencies;
+		handleOptions(modelOptions, objectOptions, ipl, "CHANGE_NO", "DATE");
+		execute(function, monitor, new StringBuffer(csticName).append(".").append(valueName).toString());
+		return function;
 	}
 }

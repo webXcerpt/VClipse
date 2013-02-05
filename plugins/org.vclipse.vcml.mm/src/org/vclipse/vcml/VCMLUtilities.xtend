@@ -22,12 +22,10 @@ import java.util.List
 import java.util.Map
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EReference
 import org.vclipse.base.naming.INameProvider
 import org.vclipse.vcml.vcml.CharacteristicOrValueDependencies
-import org.vclipse.vcml.vcml.CharacteristicValue
-import org.vclipse.vcml.vcml.DateCharacteristicValue
 import org.vclipse.vcml.vcml.DateType
-import org.vclipse.vcml.vcml.NumericCharacteristicValue
 import org.vclipse.vcml.vcml.NumericType
 import org.vclipse.vcml.vcml.Option
 import org.vclipse.vcml.vcml.OptionType
@@ -99,33 +97,19 @@ class VCMLUtilities {
 	}
 	
 	/**
-	 * Dependencies of a value are set or returned.
+	 * Dependencies of an object are set or returned.
 	 */
-	def dispatch CharacteristicOrValueDependencies processDependencies(CharacteristicValue value, CharacteristicOrValueDependencies dependencies) {
-		if(dependencies == null) {
-			return value.dependencies
+	def CharacteristicOrValueDependencies processDependencies(EObject object, EReference reference, CharacteristicOrValueDependencies dependencies) {
+		if(object.eClass.EAllReferences.contains(reference)) {
+			if(dependencies == null) {
+				val result = object.eGet(reference)
+				if(result instanceof CharacteristicOrValueDependencies) {
+					return result as CharacteristicOrValueDependencies
+				}
+			}
+			object.eSet(reference, dependencies)
 		}
-		value.dependencies = dependencies
-	}
-	
-	/**
-	 * Dependencies of a value are set or returned.
-	 */
-	def dispatch CharacteristicOrValueDependencies processDependencies(NumericCharacteristicValue value, CharacteristicOrValueDependencies dependencies) {
-		if(dependencies == null) {
-			return value.dependencies
-		}
-		value.dependencies = dependencies
-	}
-	
-	/**
-	 * Dependencies of a value are set or returned.
-	 */
-	def dispatch CharacteristicOrValueDependencies processDependencies(DateCharacteristicValue value, CharacteristicOrValueDependencies dependencies) {
-		if(dependencies == null) {
-			return value.dependencies
-		}
-		value.dependencies = dependencies
+		return null
 	}
 	
 	/**
