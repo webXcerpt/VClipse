@@ -17,7 +17,6 @@ import java.text.SimpleDateFormat
 import org.eclipse.xtext.EcoreUtil2
 import org.vclipse.vcml.vcml.CharacteristicType
 import org.vclipse.vcml.vcml.DateCharacteristicValue
-import org.vclipse.vcml.vcml.DateType
 import org.vclipse.vcml.vcml.NumericCharacteristicValue
 import org.vclipse.vcml.vcml.NumericInterval
 import org.vclipse.vcml.vcml.NumericLiteral
@@ -46,8 +45,8 @@ class SAPFormattingUtility {
 	 * Returns string representation.
 	 */
 	def dispatch toString(NumericCharacteristicValue value) {
-		val csticType = EcoreUtil2::getContainerOfType(value, typeof(CharacteristicType))
-		return format(value.entry, getFormatter(csticType), csticType as NumericType)
+		val csticType = EcoreUtil2::getContainerOfType(value, typeof(CharacteristicType)) as NumericType
+		return format(value.entry, getFormatter(csticType ), csticType)
 	}
 	
 	/**
@@ -107,7 +106,7 @@ class SAPFormattingUtility {
 	/**
 	 * 
 	 */
-	def dispatch getFormatter(NumericType type) {
+	def getFormatter(NumericType type) {
 		val formatBuffer = new StringBuffer
 		var format = NumberFormat::getNumberInstance
 		var decimal = type.decimalPlaces
@@ -135,12 +134,5 @@ class SAPFormattingUtility {
 			format = new DecimalFormat(formatBuffer.toString)
 		}
 		format
-	}
-	
-	/**
-	 * 
-	 */
-	def dispatch getFormatter(DateType type) {
-		
 	}
 }
