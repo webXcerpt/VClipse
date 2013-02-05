@@ -13,6 +13,7 @@ package org.vclipse.bapi.actions.characteristic;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -203,8 +204,15 @@ public class CharacteristicReader extends BAPIUtils {
 						charactValuesNum.setRow(i);
 						DateCharacteristicValue value = VCML.createDateCharacteristicValue();
 						try {
-							// TODO handle intervals
-							value.setFrom(SAPFormattingUtility.DATEFORMAT_VCML.format(SAPFormattingUtility.DATEFORMAT_SAP.parse(new Long(charactValuesNum.getLong("VALUE_FROM")).toString())));
+							long fromValue = charactValuesNum.getLong("VALUE_FROM");
+							Date date = SAPFormattingUtility.DATEFORMAT_SAP.parse(String.valueOf(fromValue));
+							String formatted = SAPFormattingUtility.DATEFORMAT_VCML.format(date);
+							value.setFrom(formatted);
+							
+							long valueTo = charactValuesNum.getLong("VALUE_TO");
+							date = SAPFormattingUtility.DATEFORMAT_SAP.parse(String.valueOf(valueTo));
+							formatted = SAPFormattingUtility.DATEFORMAT_VCML.format(date);
+							value.setTo(formatted);
 						} catch (ParseException e) {
 							value.setFrom(SAPFormattingUtility.DEFAULT_DATE);
 						}
