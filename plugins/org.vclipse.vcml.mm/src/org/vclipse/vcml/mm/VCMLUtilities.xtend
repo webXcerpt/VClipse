@@ -88,7 +88,7 @@ class VCMLUtilities {
 		if(entry instanceof NumericLiteral) {
 			return (entry as NumericLiteral).value
 		}
-		// the interval values have to be formatted 
+		// the interval values have to be formatted in the following way(the same format as in sap)
 		// one can not extract dependencies otherwise
 		var formatBuffer = new StringBuffer
 		val csticType = EcoreUtil2::getContainerOfType(value, typeof(CharacteristicType))
