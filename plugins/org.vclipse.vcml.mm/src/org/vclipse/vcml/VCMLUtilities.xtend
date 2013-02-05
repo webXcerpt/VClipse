@@ -118,6 +118,9 @@ class VCMLUtilities {
 		value.dependencies = dependencies
 	}
 	
+	/**
+	 * Dependencies of a value are set or returned.
+	 */
 	def dispatch CharacteristicOrValueDependencies processDependencies(DateCharacteristicValue value, CharacteristicOrValueDependencies dependencies) {
 		if(dependencies == null) {
 			return value.dependencies
