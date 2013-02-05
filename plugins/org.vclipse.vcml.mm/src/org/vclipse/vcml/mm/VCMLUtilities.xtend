@@ -35,8 +35,6 @@ import org.vclipse.vcml.vcml.Option
 import org.vclipse.vcml.vcml.OptionType
 import org.vclipse.vcml.vcml.SymbolicType
 
-import static java.lang.Character.*
-
 /**
  * Utilities for VCML Objects.
  */
@@ -84,10 +82,7 @@ class VCMLUtilities {
 	 * Returns string representation.
 	 */
 	def String toString(NumericCharacteristicValue value) {
-		val entry = value.entry
-		if(entry instanceof NumericLiteral) {
-			return (entry as NumericLiteral).value
-		}
+		
 		// the interval values have to be formatted in the following way(the same format as in sap)
 		// one can not extract dependencies otherwise
 		var formatBuffer = new StringBuffer
@@ -99,7 +94,7 @@ class VCMLUtilities {
 			while(numOfChars > 0) {
 				formatBuffer.append("#")
 				numOfChars = numOfChars - 1
-				if(numOfChars % decimal == 0 && numOfChars > 1) {
+				if(decimal != 0 && numOfChars % decimal == 0 && numOfChars > 1) {
 					formatBuffer.append(",")
 				}
 			}
@@ -111,25 +106,36 @@ class VCMLUtilities {
 				}
 			}
 			
-			val interval = entry as NumericInterval
 			val resultBuffer = new StringBuffer()
 			val decimalFormat = new DecimalFormat(formatBuffer.toString)
-			resultBuffer.append(decimalFormat.format(new Double(interval.lowerBound)))
-			resultBuffer.append(" - ")
-			resultBuffer.append(decimalFormat.format(new Double(interval.upperBound)))
-			resultBuffer.append(" ").append(numericType.unit.toLowerCase)
-			var start = 0
-			while(start < resultBuffer.length) {
-				val _char = "" + resultBuffer.charAt(start)
-				if(",".equals(_char)) {
-					resultBuffer.replace(start, start + 1, ".")
-				} 
-				if(".".equals(_char)) {
-					resultBuffer.replace(start, start + 1, ",")
-				}
-				start = start + 1
+			val entry = value.entry
+			if(entry instanceof NumericLiteral) {
+				val numericLiteral = (entry as NumericLiteral).value
+				resultBuffer.append(new Double(numericLiteral))
+				return resultBuffer.toString
 			}
-			return resultBuffer.toString
+			
+			if(entry instanceof NumericInterval) {
+				val interval = entry as NumericInterval
+				resultBuffer.append(decimalFormat.format(new Double(interval.lowerBound)))
+				resultBuffer.append(" - ")
+				resultBuffer.append(decimalFormat.format(new Double(interval.upperBound)))
+				resultBuffer.append(" ").append(numericType.unit.toLowerCase)
+			
+				// not possible to work with characters in xtend -> am i alone with this issue ?
+				var start = 0
+				while(start < resultBuffer.length) {
+					val _char = "" + resultBuffer.charAt(start)
+					if(",".equals(_char)) {
+						resultBuffer.replace(start, start + 1, ".")
+					} 
+					if(".".equals(_char)) {
+						resultBuffer.replace(start, start + 1, ",")
+					}
+					start = start + 1
+				}
+				return resultBuffer.toString
+			}
 		}
 		return null
 	}
