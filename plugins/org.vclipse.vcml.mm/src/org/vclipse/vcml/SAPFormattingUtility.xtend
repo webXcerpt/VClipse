@@ -25,7 +25,9 @@ import org.vclipse.vcml.vcml.NumericType
 import static org.vclipse.vcml.SAPFormattingUtility.*
 
 /**
+ * Utility providing formatted string representation for some values.
  * 
+ * The format is equal to the one in sap.
  */
 class SAPFormattingUtility {
 
@@ -40,9 +42,9 @@ class SAPFormattingUtility {
 	public static SimpleDateFormat DATEFORMAT_SAP = new SimpleDateFormat("yyyyMMdd")
 	public static SimpleDateFormat DATEFORMAT_VCML = new SimpleDateFormat("dd.MM.yyyy")
 	public static String DEFAULT_DATE = "00.00.0000"
-
+	
 	/**
-	 * Returns string representation.
+	 * 
 	 */
 	def dispatch toString(NumericCharacteristicValue value) {
 		val csticType = EcoreUtil2::getContainerOfType(value, typeof(CharacteristicType)) as NumericType
