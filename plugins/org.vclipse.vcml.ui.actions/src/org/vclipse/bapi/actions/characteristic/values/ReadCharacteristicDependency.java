@@ -35,6 +35,7 @@ public class ReadCharacteristicDependency extends DependencyReader {
 
 	public void read(Characteristic cstic, VcmlModel vcmlModel, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, boolean recurse) throws JCoException {
 		if(monitor.isCanceled()) {
+			monitor.done();
 			return;
 		}
 		Resource resource = vcmlModel.eResource();

@@ -37,6 +37,7 @@ public class ReadCharacteristicValueDependency extends DependencyReader {
 	
 	public void read(Characteristic cstic, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects, boolean recurse) throws JCoException {
 		if(monitor.isCanceled()) {
+			monitor.done();
 			return;
 		}
 		EList<Option> modelOptions = vcmlModel.getOptions();
