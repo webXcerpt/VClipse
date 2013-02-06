@@ -57,47 +57,6 @@ class VCMLUtilities {
 	}
 	
 	/**
-	 * Returns a mapping name to value for a characteristic with symbolic type.
-	 */
-	def dispatch Map<String, EObject> getNameToValue(SymbolicType type) {
-		val name2Value = Maps::<String, EObject>newHashMap
-		for(value : (type as SymbolicType).values) {
-			name2Value.put(value.name, value)
-		}	
-		return name2Value
-	}
-	
-	/**
-	 * Returns a mapping name to value for a characteristic with numeric type.
-	 */
-	def dispatch Map<String, EObject> getNameToValue(NumericType type) {
-		val name2Value = Maps::<String, EObject>newHashMap
-		for(value : (type as NumericType).values) {
-			val string = sapFormattingUtility.toString(value)
-			if(string == null) {
-				throw new IllegalArgumentException("Result of the computation should not be null.")
-			}
-			name2Value.put(string, value)
-		}	
-		return name2Value
-	}
-	
-	/**
-	 * Returns a mapping name to value for a characteristic with date type.
-	 */
-	def dispatch Map<String, EObject> getNameToValue(DateType type) {
-		val name2Value = Maps::<String, EObject>newHashMap
-		for(value : type.values) {
-			val string = sapFormattingUtility.toString(value)
-			if(string == null) {
-				throw new IllegalArgumentException("Result of the computation should not be null.")
-			}
-			name2Value.put(string, value)
-		}
-		return name2Value
-	}
-	
-	/**
 	 * Sorts a list with a comparator.
 	 */
 	def <T extends EObject> sortEntries(List<T> entries, Comparator<T> comparator) {
@@ -161,5 +120,40 @@ class VCMLUtilities {
 			value.dependencies = factoryExtension.VCML_FACTORY.createCharacteristicOrValueDependencies
 		}
 		return value.dependencies.dependencies
+	}
+	
+	/**
+	 * Dispatcher methods for returning name to value mapping.
+	 */
+	def dispatch Map<String, EObject> getNameToValue(SymbolicType type) {
+		val name2Value = Maps::<String, EObject>newHashMap
+		for(value : (type as SymbolicType).values) {
+			name2Value.put(value.name, value)
+		}	
+		return name2Value
+	}
+	
+	def dispatch Map<String, EObject> getNameToValue(NumericType type) {
+		val name2Value = Maps::<String, EObject>newHashMap
+		for(value : (type as NumericType).values) {
+			val string = sapFormattingUtility.toString(value)
+			if(string == null) {
+				throw new IllegalArgumentException("Result of the computation should not be null.")
+			}
+			name2Value.put(string, value)
+		}	
+		return name2Value
+	}
+	
+	def dispatch Map<String, EObject> getNameToValue(DateType type) {
+		val name2Value = Maps::<String, EObject>newHashMap
+		for(value : type.values) {
+			val string = sapFormattingUtility.toString(value)
+			if(string == null) {
+				throw new IllegalArgumentException("Result of the computation should not be null.")
+			}
+			name2Value.put(string, value)
+		}
+		return name2Value
 	}
 }
