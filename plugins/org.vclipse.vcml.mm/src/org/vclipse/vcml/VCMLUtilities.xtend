@@ -20,8 +20,11 @@ import java.util.Collections
 import java.util.Comparator
 import java.util.List
 import java.util.Map
+import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.xtext.EcoreUtil2
 import org.vclipse.base.naming.INameProvider
 import org.vclipse.vcml.vcml.Characteristic
 import org.vclipse.vcml.vcml.CharacteristicValue
@@ -155,5 +158,24 @@ class VCMLUtilities {
 			name2Value.put(string, value)
 		}
 		return name2Value
+	}
+	
+	/**
+	 * Method for checking a feature of an eobject on equality with exival. 
+	 */
+	 def check(EObject eobject, EStructuralFeature feature, Object exival) {
+	 	if(eobject.eClass.EAllStructuralFeatures.contains(feature)) {
+	 		val value = eobject.eGet(feature)
+	 		if(value instanceof EObject) {
+	 			return EcoreUtil2::equals(value as EObject, exival as EObject)
+	 		}
+	 		if(value instanceof EList<?>) {
+	 			return EcoreUtil2::equals(value as EList, exival as EList)
+	 		}
+	 		if(value == null && exival == null) {
+	 			return true
+	 		}
+	 	}
+		return false
 	}
 }
