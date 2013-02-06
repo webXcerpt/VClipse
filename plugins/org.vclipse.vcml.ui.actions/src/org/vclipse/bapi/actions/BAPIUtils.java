@@ -456,11 +456,11 @@ public class BAPIUtils extends BAPIActionHandler {
 		monitor.worked(1);
 	}
 
-	protected void endTransaction() throws JCoException {
+	public void endTransaction() throws JCoException {
 		JCoContext.end(connectionHandler.getJCoDestination());
 	}
 
-	protected void beginTransaction() throws JCoException {
+	public void beginTransaction() throws JCoException {
 		JCoContext.begin(connectionHandler.getJCoDestination());
 	}
 
