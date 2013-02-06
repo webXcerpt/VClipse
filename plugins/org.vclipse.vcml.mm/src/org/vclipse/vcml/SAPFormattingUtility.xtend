@@ -115,8 +115,7 @@ class SAPFormattingUtility {
 			formatBuffer.append(NUMBER_SIGN)
 			numOfChars = numOfChars - 1
 			if(
-				// do not group numbers if decimal == 0 => should be tested
-				(decimal != 0) && (numOfChars % decimal == 0) && (numOfChars > 1)
+				(numOfChars % 3 == 0) && (numOfChars > 1)
 			) {
 				formatBuffer.append(COMMA)
 			}
