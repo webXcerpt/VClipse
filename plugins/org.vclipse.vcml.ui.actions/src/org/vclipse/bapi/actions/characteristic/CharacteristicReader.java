@@ -277,9 +277,9 @@ public class CharacteristicReader extends BAPIUtils {
 			newCstic.setName(csticName);
 		}
 		// read the dependencies used by the cstic
-		csticDependenciesReader.read(newCstic, vcmlModel, monitor, seenObjects, globalOptions, recurse);
+		csticDependenciesReader.read(newCstic, vcmlModel, monitor, seenObjects, recurse);
 		// read the dependencies used by the cstics values
-		valuesDependenciesReader.read(newCstic, vcmlModel, monitor, seenObjects, globalOptions, recurse);
+		valuesDependenciesReader.read(newCstic, vcmlModel, monitor, seenObjects, recurse);
 		vcmlModel.getObjects().add(newCstic);
 		return newCstic;
 	}

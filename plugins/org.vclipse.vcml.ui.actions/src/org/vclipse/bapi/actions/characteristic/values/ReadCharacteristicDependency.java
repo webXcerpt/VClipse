@@ -11,7 +11,6 @@
  ******************************************************************************/
 package org.vclipse.bapi.actions.characteristic.values;
 
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -36,11 +35,13 @@ import com.sap.conn.jco.JCoTable;
  */
 public class ReadCharacteristicDependency extends DependencyReader {
 
-	public void read(Characteristic cstic, VcmlModel vcmlModel, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
+	public void read(Characteristic cstic, VcmlModel vcmlModel, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, boolean recurse) throws JCoException {
 		if(monitor.isCanceled()) {
 			return;
 		}
 		Resource resource = vcmlModel.eResource();
+		EList<Option> modelOptions = vcmlModel.getOptions();
+		EList<Option> objectOptions = cstic.getOptions();
 		StringBuffer messageBuffer = new StringBuffer("Extracting dependencies for the characteristic").append(cstic.getName());
 		SubMonitor submonitor = SubMonitor.convert(monitor, messageBuffer.toString(), IProgressMonitor.UNKNOWN);
 		
@@ -54,7 +55,7 @@ public class ReadCharacteristicDependency extends DependencyReader {
 		for(int rowIndex=0; rowIndex<table.getNumRows(); rowIndex++) {
 			table.setRow(rowIndex);
 			String dependencyName = table.getString(JCoFunctionPerformer.DEPENDENCY);
-			Dependency dependency = readDependency(dependencyName, submonitor, resource, seenObjects, cstic.getOptions(), globalOptions, recurse);
+			Dependency dependency = readDependency(dependencyName, submonitor, resource, seenObjects, objectOptions, modelOptions, recurse);
 			if(dependency != null) {
 				csticDependencies.add(dependency);
 			}

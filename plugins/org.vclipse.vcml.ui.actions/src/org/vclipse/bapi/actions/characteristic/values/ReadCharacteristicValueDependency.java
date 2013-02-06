@@ -11,7 +11,6 @@
  ******************************************************************************/
 package org.vclipse.bapi.actions.characteristic.values;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -38,11 +37,12 @@ import com.sap.conn.jco.JCoTable;
  */
 public class ReadCharacteristicValueDependency extends DependencyReader {
 	
-	public void read(Characteristic cstic, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
+	public void read(Characteristic cstic, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects, boolean recurse) throws JCoException {
 		if(monitor.isCanceled()) {
 			return;
 		}
 		
+		EList<Option> modelOptions = vcmlModel.getOptions();
 		Resource resource = vcmlModel.eResource();
 		StringBuffer messageBuffer = new StringBuffer("Extracting dependencies for the values of the characteristic").append(cstic.getName());
 		SubMonitor submonitor = SubMonitor.convert(monitor, messageBuffer.toString(), IProgressMonitor.UNKNOWN);
@@ -50,20 +50,19 @@ public class ReadCharacteristicValueDependency extends DependencyReader {
 		EReference valueDependenciesReference = factoryExtension.VCML_PACKAGE.getCharacteristicValue_Dependencies();
 		for(Entry<String, EObject> entries : name2Value.entrySet()) {
 			String value = entries.getKey();
-			JCoFunction valueDependencies = functionPerformer.CARD_CHAR_VAL_READ_ALLOC(cstic.getName(), value, submonitor, cstic.getOptions(), globalOptions);
+			JCoFunction valueDependencies = functionPerformer.CARD_CHAR_VAL_READ_ALLOC(cstic.getName(), value, submonitor, cstic.getOptions(), modelOptions);
 			JCoTable table = valueDependencies.getTableParameterList().getTable(JCoFunctionPerformer.DEP_ASSIGN);
 			EObject csticValue = name2Value.get(value);
 			if(csticValue == null) { 
 				csticValue = factoryExtension.newCharacteristicValue(value);
 			}
-			
 			CharacteristicOrValueDependencies dependencies = vcmlUtilities.processDependencies(csticValue, valueDependenciesReference, null);
 			dependencies = dependencies == null ? factoryExtension.VCML_FACTORY.createCharacteristicOrValueDependencies() : dependencies;
 			EList<Dependency> csticDependencies = dependencies.getDependencies();
 			for(int i=0; i<table.getNumRows(); i++) {
 				table.setRow(i);
 				String dependencyName = table.getString(JCoFunctionPerformer.DEPENDENCY);
-				Dependency dependency = readDependency(dependencyName, submonitor, resource, seenObjects, cstic.getOptions(), globalOptions, recurse);
+				Dependency dependency = readDependency(dependencyName, submonitor, resource, seenObjects, cstic.getOptions(), modelOptions, recurse);
 				if(dependency != null) {
 					csticDependencies.add(dependency);					
 				}
