@@ -51,6 +51,7 @@ import org.eclipse.xtext.util.SimpleAttributeResolver;
 import org.eclipse.xtext.util.StringInputStream;
 import org.vclipse.bapi.actions.BAPIException;
 import org.vclipse.base.ui.util.EditorUtilsExtensions;
+import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.vcml.ui.IUiConstants;
 import org.vclipse.vcml.vcml.Import;
 import org.vclipse.vcml.vcml.Option;
@@ -76,6 +77,9 @@ public class BAPIActionHandler extends AbstractHandler {
 	
 	@Inject
 	protected IPreferenceStore preferenceStore;
+	
+	@Inject
+	protected IConnectionHandler connectionHandler;
 	
 	@Inject
 	@Named("Task")
@@ -174,6 +178,10 @@ public class BAPIActionHandler extends AbstractHandler {
 		return null;
 	}
 
+	public boolean isEnabled() {
+		return connectionHandler.getCurrentConnection() != null;
+	}
+	
 	protected XtextResource getSourceResource(Collection<?> entries, ExecutionEvent event) {
 		for(Object entry : entries) {
 			if(entry instanceof EObjectNode) {
@@ -280,4 +288,6 @@ public class BAPIActionHandler extends AbstractHandler {
 		}
 		return Collections.EMPTY_LIST;
 	}
+
+	
 }
