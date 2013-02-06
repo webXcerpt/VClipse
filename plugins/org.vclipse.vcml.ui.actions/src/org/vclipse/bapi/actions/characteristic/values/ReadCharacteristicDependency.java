@@ -53,7 +53,6 @@ public class ReadCharacteristicDependency extends DependencyReader {
 				csticDependencies.add(dependency);
 			}
 			if(submonitor.isCanceled()) {
-				// do not return in this case -> dependencies are not yet added
 				break;
 			}
 		}
