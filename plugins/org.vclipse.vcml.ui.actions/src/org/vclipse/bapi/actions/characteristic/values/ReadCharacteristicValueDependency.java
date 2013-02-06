@@ -18,11 +18,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.bapi.actions.JCoFunctionPerformer;
 import org.vclipse.vcml.vcml.Characteristic;
-import org.vclipse.vcml.vcml.CharacteristicOrValueDependencies;
 import org.vclipse.vcml.vcml.Dependency;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.VCObject;
@@ -41,13 +39,11 @@ public class ReadCharacteristicValueDependency extends DependencyReader {
 		if(monitor.isCanceled()) {
 			return;
 		}
-		
 		EList<Option> modelOptions = vcmlModel.getOptions();
 		Resource resource = vcmlModel.eResource();
 		StringBuffer messageBuffer = new StringBuffer("Extracting dependencies for the values of the characteristic").append(cstic.getName());
 		SubMonitor submonitor = SubMonitor.convert(monitor, messageBuffer.toString(), IProgressMonitor.UNKNOWN);
 		Map<String, EObject> name2Value = vcmlUtilities.getNameToValue(cstic.getType());
-		EReference valueDependenciesReference = factoryExtension.VCML_PACKAGE.getCharacteristicValue_Dependencies();
 		for(Entry<String, EObject> entries : name2Value.entrySet()) {
 			String value = entries.getKey();
 			JCoFunction valueDependencies = functionPerformer.CARD_CHAR_VAL_READ_ALLOC(cstic.getName(), value, submonitor, cstic.getOptions(), modelOptions);
@@ -56,9 +52,7 @@ public class ReadCharacteristicValueDependency extends DependencyReader {
 			if(csticValue == null) { 
 				csticValue = factoryExtension.newCharacteristicValue(value);
 			}
-			CharacteristicOrValueDependencies dependencies = vcmlUtilities.processDependencies(csticValue, valueDependenciesReference, null);
-			dependencies = dependencies == null ? factoryExtension.VCML_FACTORY.createCharacteristicOrValueDependencies() : dependencies;
-			EList<Dependency> csticDependencies = dependencies.getDependencies();
+			EList<Dependency> csticDependencies = vcmlUtilities.getDependencies(csticValue);
 			for(int i=0; i<table.getNumRows(); i++) {
 				table.setRow(i);
 				String dependencyName = table.getString(JCoFunctionPerformer.DEPENDENCY);
@@ -70,12 +64,6 @@ public class ReadCharacteristicValueDependency extends DependencyReader {
 					// do not return in this case -> dependencies are not yet added
 					break;
 				}
-			}
-			if(!csticDependencies.isEmpty()) {
-				vcmlUtilities.processDependencies(csticValue, valueDependenciesReference, dependencies);				
-			}
-			if(submonitor.isCanceled()) {
-				break;
 			}
 		}
 		submonitor.done();

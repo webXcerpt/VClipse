@@ -22,10 +22,12 @@ import java.util.List
 import java.util.Map
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EReference
 import org.vclipse.base.naming.INameProvider
-import org.vclipse.vcml.vcml.CharacteristicOrValueDependencies
+import org.vclipse.vcml.vcml.Characteristic
+import org.vclipse.vcml.vcml.CharacteristicValue
+import org.vclipse.vcml.vcml.DateCharacteristicValue
 import org.vclipse.vcml.vcml.DateType
+import org.vclipse.vcml.vcml.NumericCharacteristicValue
 import org.vclipse.vcml.vcml.NumericType
 import org.vclipse.vcml.vcml.Option
 import org.vclipse.vcml.vcml.OptionType
@@ -36,12 +38,11 @@ import org.vclipse.vcml.vcml.SymbolicType
  */
 class VCMLUtilities {
 	
+	@Inject
 	private SAPFormattingUtility sapFormattingUtility
 	
 	@Inject
-	new(SAPFormattingUtility formattingUtility) {
-		sapFormattingUtility = formattingUtility
-	}
+	private VCMLFactoryExtension factoryExtension
 	
 	/**
 	 * Returns an option with requested type, null if such an option does not exist as an entry.
@@ -97,22 +98,6 @@ class VCMLUtilities {
 	}
 	
 	/**
-	 * Dependencies of an object are set or returned.
-	 */
-	def CharacteristicOrValueDependencies processDependencies(EObject object, EReference reference, CharacteristicOrValueDependencies dependencies) {
-		if(object.eClass.EAllReferences.contains(reference)) {
-			if(dependencies == null) {
-				val result = object.eGet(reference)
-				if(result instanceof CharacteristicOrValueDependencies) {
-					return result as CharacteristicOrValueDependencies
-				}
-			}
-			object.eSet(reference, dependencies)
-		}
-		return null
-	}
-	
-	/**
 	 * Sorts a list with a comparator.
 	 */
 	def <T extends EObject> sortEntries(List<T> entries, Comparator<T> comparator) {
@@ -145,5 +130,36 @@ class VCMLUtilities {
 			}
 		}
 		return null
+	}
+	
+	/**
+	 * Dispatcher methods for returning dependencies of an object, they are created in the case they haven't been existed. 
+	 */
+	def dispatch getDependencies(Characteristic cstic) {
+		if(cstic.dependencies == null) {
+			cstic.dependencies = factoryExtension.VCML_FACTORY.createCharacteristicOrValueDependencies
+		}
+		return cstic.dependencies.dependencies
+	}
+	
+	def dispatch getDependencies(CharacteristicValue value) {
+		if(value.dependencies == null) {
+			value.dependencies = factoryExtension.VCML_FACTORY.createCharacteristicOrValueDependencies
+		}
+		return value.dependencies.dependencies
+	}
+	
+	def dispatch getDependencies(NumericCharacteristicValue value) {
+		if(value.dependencies == null) {
+			value.dependencies = factoryExtension.VCML_FACTORY.createCharacteristicOrValueDependencies
+		}
+		return value.dependencies.dependencies
+	}
+	
+	def dispatch getDependencies(DateCharacteristicValue value) {
+		if(value.dependencies == null) {
+			value.dependencies = factoryExtension.VCML_FACTORY.createCharacteristicOrValueDependencies
+		}
+		return value.dependencies.dependencies
 	}
 }
