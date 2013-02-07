@@ -116,6 +116,7 @@ public class JCoFunctionPerformer extends BAPIUtils {
 			table.setValue("FLDELETE", SELECTED);
 		}
 		execute(function, monitor, "Deleting global dependencies for cstic " + cstic.getName());
+		commit(monitor);
 		return function;
 	}
 	

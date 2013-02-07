@@ -18,15 +18,21 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.IBAPIActionRunner;
+import org.vclipse.bapi.actions.characteristic.values.DeleteCharacteristicsDependencies;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.VCObject;
+import org.vclipse.vcml.vcml.VcmlModel;
 
+import com.google.inject.Inject;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoParameterList;
 
 public class CharacteristicDeleteActionHandler extends BAPIUtils implements IBAPIActionRunner<Characteristic> {
+	
+	@Inject
+	private DeleteCharacteristicsDependencies deleteCharacteristicsDependencies;
 	
 	public boolean isEnabled(Characteristic object) {
 		return isConnected();
@@ -45,7 +51,14 @@ public class CharacteristicDeleteActionHandler extends BAPIUtils implements IBAP
 			commit(monitor);
 		}
 		endTransaction();
+		
+		if(deleteCharacteristicsDependencies.enabled(object)) {
+			VcmlModel vcmlModel = (VcmlModel)resource.getContents().get(0);
+			try {
+				deleteCharacteristicsDependencies.run(object, vcmlModel, monitor, seenObjects);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
-
-
 }
