@@ -31,11 +31,6 @@ import com.sap.conn.jco.JCoTable;
  */
 public class JCoFunctionPerformer extends BAPIUtils {
 
-	/**
-	 * 
-	 */
-	private static final String FLDELETE = "FL_DELETE";
-
 	public static final String SELECTED = "X";
 	
 	/**
@@ -61,20 +56,7 @@ public class JCoFunctionPerformer extends BAPIUtils {
 	private INameProvider nameProvider;
 	
 	/**
-	 * 
-	 */
-	public JCoFunction CAMA_CHAR_SNGL_MAINTAIN(Characteristic cstic, IProgressMonitor monitor, List<Option> objectOptions, List<Option> modelOptions) throws JCoException {
-		JCoFunction function = getJCoFunction("CAMA_CHAR_SNGL_MAINTAIN", monitor);
-		JCoParameterList ipl = function.getImportParameterList();
-		applyOptions(modelOptions, objectOptions, ipl, JCoFunctionPerformer.CHANGE_NO, JCoFunctionPerformer.DATE);
-		ipl.setValue(CHARACTERISTIC[1], cstic.getName());
-		ipl.setValue(FLDELETE, SELECTED);
-		execute(function, monitor, "");
-		return function;
-	}
-	
-	/**
-	 * 
+	 * Assign global dependencies to a characteristic.
 	 */
 	public JCoFunction CAMA_CHAR_ALLOCATE_GLOB_DEP(Characteristic cstic, IProgressMonitor monitor, List<Option> global, List<Option> local) throws Exception {
 		if(monitor.isCanceled()) {
