@@ -12,7 +12,7 @@
 package org.vclipse.vcml.naming;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.naming.IQualifiedNameProvider;
+import org.eclipse.xtext.naming.SimpleNameProvider;
 import org.vclipse.base.naming.INameProvider;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Import;
@@ -30,7 +30,7 @@ import com.google.inject.Inject;
 public class VCMLNameProvider extends INameProvider.AbstractImpl {
 
 	@Inject
-	private IQualifiedNameProvider nameProvider;
+	private SimpleNameProvider nameProvider;
 	
 	/**
 	 * Returns a name for the object if one exists, type name otherwise.
