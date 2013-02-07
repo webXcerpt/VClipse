@@ -86,6 +86,7 @@ public class JCoFunctionPerformer extends BAPIUtils {
 		applyOptions(global, local, ipl, JCoFunctionPerformer.CHANGE_NO, JCoFunctionPerformer.DATE);
 		JCoTable dependenciesTable = function.getTableParameterList().getTable("CHAR_DEP_ASSIGN");
 		String csticName = cstic.getName();
+		dependenciesTable.deleteAllRows();
 		for(Dependency dependency : cstic.getDependencies().getDependencies()) {
 			dependenciesTable.appendRow();
 			dependenciesTable.setValue(CHARACTERISTIC[1], csticName);
