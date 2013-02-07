@@ -71,7 +71,7 @@ public class JCoFunctionPerformer extends BAPIUtils {
 	/**
 	 * Assign global dependencies to the values of a characteristic.
 	 */
-	public void CAMA_CHAR_VAL_ALLOCAT_GLOB_DEP(Characteristic cstic, IProgressMonitor monitor, EList<Option> global, EList<Option> local) throws Exception {
+	public JCoFunction CAMA_CHAR_VAL_ALLOCAT_GLOB_DEP(Characteristic cstic, IProgressMonitor monitor, EList<Option> global, EList<Option> local) throws Exception {
 		if(monitor.isCanceled()) {
 			throw new BAPIException("Function call CAMA_CHAR_VAL_ALLOCAT_GLOB_DEP cancelled by the user.");
 		}
@@ -81,17 +81,6 @@ public class JCoFunctionPerformer extends BAPIUtils {
 		applyOptions(global, local, ipl, JCoFunctionPerformer.CHANGE_NO, JCoFunctionPerformer.DATE);
 		JCoTable dependenciesTable = function.getTableParameterList().getTable("CHAR_VAL_DEP_ASSIGN");
 		Map<String, EObject> nameToValue = vcmlUtilities.getNameToValue(cstic.getType());
-		for(int i=0; i<dependenciesTable.getNumRows(); i++) {
-			dependenciesTable.setRow(i);
-			String csticEntry = dependenciesTable.getString(CHARACTERISTIC[1]);
-			if(csticEntry.equals(csticName)) {
-				String valueEntry = dependenciesTable.getString(VALUE);
-				EObject type = nameToValue.get(valueEntry);
-				if(type != null) {
-					dependenciesTable.deleteRow(i);
-				}				
-			}
-		}
 		for(Entry<String, EObject> entry : nameToValue.entrySet()) {
 			EObject value = entry.getValue();
 			EList<Dependency> dependencies = vcmlUtilities.getDependencies(value);
@@ -103,7 +92,9 @@ public class JCoFunctionPerformer extends BAPIUtils {
 				dependenciesTable.setValue(DEPENDENCY, dependencyName);
 			}
 		}
+		execute(function, monitor, "Persisting dependencies for the values of the cstic " + csticName);
 		commit(monitor);
+		return function;
 	}
 	
 	/**
@@ -118,13 +109,6 @@ public class JCoFunctionPerformer extends BAPIUtils {
 		applyOptions(global, local, ipl, JCoFunctionPerformer.CHANGE_NO, JCoFunctionPerformer.DATE);
 		JCoTable dependenciesTable = function.getTableParameterList().getTable("CHAR_DEP_ASSIGN");
 		String csticName = cstic.getName();
-		for(int i=0; i<dependenciesTable.getNumRows(); i++) {
-			dependenciesTable.setRow(i);
-			String csticEntry = dependenciesTable.getString(CHARACTERISTIC[1]);
-			if(csticEntry.equals(csticName)) {
-				dependenciesTable.deleteRow(i);
-			}
-		}
 		for(Dependency dependency : cstic.getDependencies().getDependencies()) {
 			dependenciesTable.appendRow();
 			dependenciesTable.setValue(CHARACTERISTIC[1], csticName);
