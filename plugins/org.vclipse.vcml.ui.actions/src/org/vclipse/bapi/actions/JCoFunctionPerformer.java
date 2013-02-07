@@ -88,8 +88,7 @@ public class JCoFunctionPerformer extends BAPIUtils {
 				dependenciesTable.appendRow();
 				dependenciesTable.setValue(CHARACTERISTIC[1], csticName);
 				dependenciesTable.setValue(VALUE, sapFormatter.toString(value));
-				String dependencyName = nameProvider.getName(dependency);
-				dependenciesTable.setValue(DEPENDENCY, dependencyName);
+				dependenciesTable.setValue(DEPENDENCY, nameProvider.getName(dependency));
 			}
 		}
 		execute(function, monitor, "Persisting dependencies for the values of the cstic " + csticName);
@@ -135,8 +134,7 @@ public class JCoFunctionPerformer extends BAPIUtils {
 		for(Dependency dependency : cstic.getDependencies().getDependencies()) {
 			dependenciesTable.appendRow();
 			dependenciesTable.setValue(CHARACTERISTIC[1], csticName);
-			String dependencyName = nameProvider.getName(dependency);
-			dependenciesTable.setValue(DEPENDENCY, dependencyName);
+			dependenciesTable.setValue(DEPENDENCY, nameProvider.getName(dependency));
 		}
 		execute(function, monitor, "Persisting dependencies for cstic " + csticName);
 		commit(monitor);
