@@ -136,4 +136,8 @@ class SAPFormattingUtility {
 		}
 		format
 	}
+
+	def getVcmlDateFormat() {
+		return DATEFORMAT_VCML
+	}
 }
