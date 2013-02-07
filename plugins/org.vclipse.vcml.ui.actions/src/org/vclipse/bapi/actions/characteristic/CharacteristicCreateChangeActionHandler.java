@@ -20,7 +20,8 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.IBAPIActionRunner;
-import org.vclipse.bapi.actions.characteristic.values.CreateChangeCharacteristicDependencies;
+import org.vclipse.bapi.actions.characteristic.values.CreateChangeCharacteristicsDependencies;
+import org.vclipse.bapi.actions.characteristic.values.CreateChangeCharacteristicsValuesDependencies;
 import org.vclipse.vcml.SAPFormattingUtility;
 import org.vclipse.vcml.utils.DescriptionHandler;
 import org.vclipse.vcml.utils.VcmlUtils;
@@ -54,7 +55,10 @@ import com.sap.conn.jco.JCoTable;
 public class CharacteristicCreateChangeActionHandler extends BAPIUtils implements IBAPIActionRunner<Characteristic> {
 	
 	@Inject
-	private CreateChangeCharacteristicDependencies createChangeDependencies;
+	private CreateChangeCharacteristicsDependencies createChangeCsticsDependencies;
+	
+	@Inject
+	private CreateChangeCharacteristicsValuesDependencies createChangeCsticsValuesDependencies;
 	
 	public void run(final Characteristic object, Resource resource, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions) throws JCoException {
 		final DocumentationHandler documentationHandler = new DocumentationHandler(monitor);
@@ -261,11 +265,24 @@ public class CharacteristicCreateChangeActionHandler extends BAPIUtils implement
 			}
 		}
 		
-		if(createChangeDependencies.enabled(object)) {
-			// TODO change interface signature: replace resource with vcml model
-			VcmlModel vcmlModel = (VcmlModel)resource.getContents().get(0);
+		// TODO change interface signature: replace resource with vcml model
+		VcmlModel vcmlModel = (VcmlModel)resource.getContents().get(0);
+		if(createChangeCsticsDependencies.enabled(object)) {
 			try {
-				createChangeDependencies.run(object, vcmlModel, monitor, seenObjects);				
+				createChangeCsticsDependencies.run(object, vcmlModel, monitor, seenObjects);				
+			} catch(Exception exception) {
+				if(exception instanceof JCoException) {
+					throw (JCoException)exception;
+				}
+				if(exception instanceof RuntimeException) {
+					throw (RuntimeException)exception;
+				}
+			}
+		}
+		
+		if(createChangeCsticsValuesDependencies.enabled(object)) {
+			try {
+				createChangeCsticsValuesDependencies.run(object, vcmlModel, monitor, seenObjects);				
 			} catch(Exception exception) {
 				if(exception instanceof JCoException) {
 					throw (JCoException)exception;

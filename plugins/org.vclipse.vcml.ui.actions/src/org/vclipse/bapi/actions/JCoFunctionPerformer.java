@@ -12,9 +12,13 @@
 package org.vclipse.bapi.actions;
 
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.vclipse.base.naming.INameProvider;
+import org.vclipse.vcml.SAPFormattingUtility;
 import org.vclipse.vcml.VCMLUtilities;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.Dependency;
@@ -30,6 +34,11 @@ import com.sap.conn.jco.JCoTable;
  *
  */
 public class JCoFunctionPerformer extends BAPIUtils {
+
+	/**
+	 * 
+	 */
+	public static final String VALUE = "VALUE";
 
 	public static final String SELECTED = "X";
 	
@@ -55,6 +64,36 @@ public class JCoFunctionPerformer extends BAPIUtils {
 	@Inject
 	private INameProvider nameProvider;
 	
+	@Inject
+	private SAPFormattingUtility sapFormatter;
+	
+	/**
+	 * Assign global dependencies to the values of a characteristic.
+	 */
+	public void CAMA_CHAR_VAL_ALLOCAT_GLOB_DEP(Characteristic cstic, IProgressMonitor monitor, EList<Option> global, EList<Option> local) throws Exception {
+		if(monitor.isCanceled()) {
+			throw new BAPIException("Function call CAMA_CHAR_VAL_ALLOCAT_GLOB_DEP cancelled by the user.");
+		}
+		JCoFunction function = getJCoFunction("CAMA_CHAR_VAL_ALLOCAT_GLOB_DEP", monitor);
+		JCoParameterList ipl = function.getImportParameterList();
+		String csticName = cstic.getName();
+		applyOptions(global, local, ipl, JCoFunctionPerformer.CHANGE_NO, JCoFunctionPerformer.DATE);
+		JCoTable dependenciesTable = function.getTableParameterList().getTable("CHAR_VAL_DEP_ASSIGN");
+		dependenciesTable.deleteAllRows();
+		for(Entry<String, EObject> entry : vcmlUtilities.getNameToValue(cstic.getType()).entrySet()) {
+			EObject value = entry.getValue();
+			EList<Dependency> dependencies = vcmlUtilities.getDependencies(value);
+			for(Dependency dependency : dependencies) {
+				dependenciesTable.appendRow();
+				dependenciesTable.setValue(CHARACTERISTIC[1], csticName);
+				dependenciesTable.setValue(VALUE, sapFormatter.toString(value));
+				String dependencyName = nameProvider.getName(dependency);
+				dependenciesTable.setValue(DEPENDENCY, dependencyName);
+			}
+		}
+		commit(monitor);
+	}
+	
 	/**
 	 * Assign global dependencies to a characteristic.
 	 */
@@ -75,6 +114,7 @@ public class JCoFunctionPerformer extends BAPIUtils {
 			dependenciesTable.setValue(DEPENDENCY, dependencyName);
 		}
 		execute(function, monitor, "Persisting dependencies for cstic " + csticName);
+		commit(monitor);
 		return function;
 	}
 	
@@ -123,7 +163,7 @@ public class JCoFunctionPerformer extends BAPIUtils {
 		ipl.setValue(CHARACTERISTIC[0], csticName);
 		ipl.setValue("LIST_ALL_GLOBL", JCoFunctionPerformer.SELECTED);
 		ipl.setValue("LIST_ALL_LOCAL", JCoFunctionPerformer.SELECTED);
-		ipl.setValue("VALUE", valueName);
+		ipl.setValue(VALUE, valueName);
 		
 		handleOptions(modelOptions, objectOptions, ipl, "CHANGE_NO", "DATE");
 		execute(function, monitor, new StringBuffer(csticName).append(".").append(valueName).toString());

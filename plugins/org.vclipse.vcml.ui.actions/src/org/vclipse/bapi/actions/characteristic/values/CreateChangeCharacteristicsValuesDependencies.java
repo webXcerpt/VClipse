@@ -12,17 +12,18 @@
 package org.vclipse.bapi.actions.characteristic.values;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.vclipse.bapi.actions.BAPIException;
 import org.vclipse.bapi.actions.IBAPIActionRunnerExtension;
 import org.vclipse.bapi.actions.JCoFunctionPerformer;
 import org.vclipse.bapi.actions.handler.BAPIActionHandler;
+import org.vclipse.vcml.VCMLUtilities;
 import org.vclipse.vcml.vcml.Characteristic;
-import org.vclipse.vcml.vcml.CharacteristicOrValueDependencies;
-import org.vclipse.vcml.vcml.Dependency;
+import org.vclipse.vcml.vcml.CharacteristicType;
 import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
@@ -31,29 +32,39 @@ import com.google.inject.Inject;
 /**
  *
  */
-public class CreateChangeCharacteristicDependencies extends BAPIActionHandler implements IBAPIActionRunnerExtension<Characteristic> {
+public class CreateChangeCharacteristicsValuesDependencies extends BAPIActionHandler implements IBAPIActionRunnerExtension<Characteristic> {
 
 	@Inject
 	private JCoFunctionPerformer functionPerformer;
 	
+	@Inject
+	private VCMLUtilities vcmlUtilities;
+	
+	@Override
 	public void run(Characteristic cstic, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects) throws Exception {
 		if(monitor.isCanceled()) {
 			monitor.done();
-			throw new BAPIException("Action \"Create/ change dependencies\" for a characteristic was canceled by the user.");
+			throw new BAPIException("Action \"Create/ change dependencies\" for values of a ch was canceled by the user.");
 		}
-		IProgressMonitor submonitor = SubMonitor.convert(monitor, "Creating/ changing dependencies for cstic " + cstic.getName(), IProgressMonitor.UNKNOWN);
+		IProgressMonitor submonitor = SubMonitor.convert(monitor, "Creating/ changing dependencies for values of characteristic " + cstic.getName(), IProgressMonitor.UNKNOWN);
 		functionPerformer.beginTransaction();
-		functionPerformer.CAMA_CHAR_ALLOCATE_GLOB_DEP(cstic, monitor, cstic.getOptions(), vcmlModel.getOptions());
+		functionPerformer.CAMA_CHAR_VAL_ALLOCAT_GLOB_DEP(cstic, submonitor, vcmlModel.getOptions(), cstic.getOptions());
 		functionPerformer.endTransaction();
 		submonitor.done();
 	}
 
+	@Override
 	public boolean enabled(Characteristic cstic) {
-		CharacteristicOrValueDependencies dependencies = cstic.getDependencies();
-		if(dependencies == null) {
-			return false;			
+		if(functionPerformer.isConnected()) {
+			CharacteristicType type = cstic.getType();
+			Map<String, EObject> nameToValue = vcmlUtilities.getNameToValue(type);
+			for(Entry<String, EObject> entry : nameToValue.entrySet()) {
+				EObject value = entry.getValue();
+				if(!vcmlUtilities.getDependencies(value).isEmpty()) {
+					return true;
+				}
+			}
 		}
-		EList<Dependency> dependenciesEntries = dependencies.getDependencies();
-		return !dependenciesEntries.isEmpty() && functionPerformer.isConnected();
+		return false;
 	}
 }
