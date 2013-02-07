@@ -30,6 +30,7 @@ import org.vclipse.bapi.actions.handler.BAPIActionHandler;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.vcml.SAPFormattingUtility;
 import org.vclipse.vcml.VCMLProxyFactory;
+import org.vclipse.vcml.VCMLUtilities;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.utils.DescriptionHandler;
 import org.vclipse.vcml.utils.DocumentationHandler;
@@ -76,6 +77,15 @@ public class BAPIUtils extends BAPIActionHandler {
 	
 	@Inject
 	protected VCMLProxyFactory vcmlProxyFactory;
+	
+	@Inject
+	protected JCoFunctionPerformer functionPerformer;
+	
+	@Inject
+	protected VCMLUtilities vcmlUtilities;
+	
+	@Inject
+	protected SAPFormattingUtility sapFormattingUtility;
 	
 	/**
 	 * @param function
@@ -504,6 +514,26 @@ public class BAPIUtils extends BAPIActionHandler {
 
 	}
 	
+	protected void applyOptions(List<Option> global, List<Option> local, JCoParameterList parameters, String ... options) {
+		for(String option : options) {
+			if(JCoFunctionPerformer.CHANGE_NO.equals(option)) {
+				Option ecm = vcmlUtilities.getOption(global, local, OptionType.ECM);
+				if(ecm != null) {
+					parameters.setValue(JCoFunctionPerformer.CHANGE_NO, ecm.getValue());
+					break;
+				}
+			}
+			
+			if(JCoFunctionPerformer.DATE.equals(option)) {
+				Option date = vcmlUtilities.getOption(global, local, OptionType.KEY_DATE);
+				if(date != null) {
+					SimpleDateFormat simpleDateFormatter = sapFormattingUtility.getVcmlDateFormat();
+					parameters.setValue(JCoFunctionPerformer.DATE, simpleDateFormatter.format(date.getValue()));
+				}
+			}
+		}
+	}
+	
 	protected void handleOptions(List<Option> globalOptions, List<Option> localOptions, JCoParameterList ipl, String ecmName, String keyDateName) {
 		String ecm = getECM(localOptions);
 		if (ecm == null) {
@@ -577,5 +607,3 @@ public class BAPIUtils extends BAPIActionHandler {
 		return vcobject == null ? false : vcobject.getDescription() != null;
 	}
 }
-
-// http://help.sap.com/saphelp_45b/helpdata/de/92/58b469417011d189ec0000e81ddfac/frameset.htm (APIs der Logistik)
