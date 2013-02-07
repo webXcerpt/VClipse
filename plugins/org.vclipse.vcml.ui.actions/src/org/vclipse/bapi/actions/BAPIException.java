@@ -15,4 +15,11 @@ public class BAPIException extends RuntimeException {
 
 	private static final long serialVersionUID = 6919040899219134316L;
 
+	public BAPIException(String message) {
+		super(message);
+	}
+	
+	public BAPIException() {
+		
+	}
 }
