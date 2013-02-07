@@ -15,6 +15,7 @@ import java.io.PrintStream;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.service.AbstractGenericModule;
+import org.vclipse.base.naming.INameProvider;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.connection.VClipseConnectionPlugin;
 import org.vclipse.console.CMConsolePlugin;
@@ -32,6 +33,9 @@ public class ActionModule extends AbstractGenericModule {
 	public void configure(Binder binder) {
 		Injector vcmlInjector = VCMLActivator.getInstance().getInjector(VCMLActivator.ORG_VCLIPSE_VCML_VCML);
 		Injector connectionInjector = VClipseConnectionPlugin.getDefault().getInjector();
+		
+		INameProvider nameProvider = vcmlInjector.getInstance(INameProvider.class);
+		binder.bind(INameProvider.class).toInstance(nameProvider);
 		
 		binder.bind(DependencySourceUtils.class).toInstance(vcmlInjector.getInstance(DependencySourceUtils.class));
 		binder.bind(IPreferenceStore.class).toInstance(vcmlInjector.getInstance(IPreferenceStore.class));
@@ -51,5 +55,7 @@ public class ActionModule extends AbstractGenericModule {
 	
 		binder.bind(PrintStream.class).annotatedWith(Names.named("Result")).toInstance(
 				new PrintStream(CMConsolePlugin.getDefault().getConsole(Kind.Result)));
+		
+		
 	}
 }
