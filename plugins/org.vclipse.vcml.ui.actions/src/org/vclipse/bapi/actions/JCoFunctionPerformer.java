@@ -97,6 +97,28 @@ public class JCoFunctionPerformer extends BAPIUtils {
 		return function;
 	}
 	
+	public JCoFunction CAMA_CHAR_DEL_DEP(Characteristic cstic, IProgressMonitor monitor, EList<Option> global, EList<Option> local) throws Exception {
+		if(monitor.isCanceled()) {
+			throw new BAPIException("Function call CAMA_CHAR_DEL_DEP cancelled by the user.");
+		}
+		JCoFunction function = getJCoFunction("CAMA_CHAR_DEL_DEP", monitor);
+		JCoParameterList ipl = function.getImportParameterList();
+		ipl.setValue(CHARACTERISTIC[0], cstic.getName());
+		ipl.setValue("DELETE_LOCAL_DEP", SELECTED);
+		applyOptions(global, local, ipl, JCoFunctionPerformer.CHANGE_NO, JCoFunctionPerformer.DATE);
+		JCoTable table = function.getTableParameterList().getTable("DEP_ASSIGN_DEL");
+		if(cstic.getDependencies() == null) {
+			return function;
+		}
+		for(Dependency dependency : cstic.getDependencies().getDependencies()) {
+			table.appendRow();
+			table.setValue("DEPENDENCY", nameProvider.getName(dependency));
+			table.setValue("FLDELETE", SELECTED);
+		}
+		execute(function, monitor, "Deleting global dependencies for cstic " + cstic.getName());
+		return function;
+	}
+	
 	/**
 	 * Assign global dependencies to a characteristic.
 	 */
