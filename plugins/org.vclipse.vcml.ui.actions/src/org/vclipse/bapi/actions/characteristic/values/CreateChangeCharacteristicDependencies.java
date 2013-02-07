@@ -48,7 +48,6 @@ public class CreateChangeCharacteristicDependencies extends BAPIActionHandler im
 		submonitor.done();
 	}
 
-	@Override
 	public boolean enabled(Characteristic cstic) {
 		CharacteristicOrValueDependencies dependencies = cstic.getDependencies();
 		if(dependencies == null) {
