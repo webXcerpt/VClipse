@@ -14,6 +14,7 @@ package org.vclipse.bapi.actions.characteristic.values;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.vclipse.bapi.actions.BAPIException;
 import org.vclipse.bapi.actions.IBAPIActionRunnerExtension;
@@ -40,9 +41,11 @@ public class CreateChangeCharacteristicDependencies extends BAPIActionHandler im
 			monitor.done();
 			throw new BAPIException("Action \"Create/ change dependencies\" for a characteristic was canceled by the user.");
 		}
+		IProgressMonitor submonitor = SubMonitor.convert(monitor, "Creating/ changing dependencies for cstic " + cstic.getName(), IProgressMonitor.UNKNOWN);
 		functionPerformer.beginTransaction();
 		functionPerformer.CAMA_CHAR_ALLOCATE_GLOB_DEP(cstic, monitor, cstic.getOptions(), vcmlModel.getOptions());
 		functionPerformer.endTransaction();
+		submonitor.done();
 	}
 
 	@Override

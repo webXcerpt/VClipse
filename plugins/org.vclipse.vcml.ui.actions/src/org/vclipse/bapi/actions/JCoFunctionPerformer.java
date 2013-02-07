@@ -78,7 +78,6 @@ public class JCoFunctionPerformer extends BAPIUtils {
 	 */
 	public JCoFunction CAMA_CHAR_ALLOCATE_GLOB_DEP(Characteristic cstic, IProgressMonitor monitor, List<Option> global, List<Option> local) throws Exception {
 		if(monitor.isCanceled()) {
-			monitor.done();
 			throw new BAPIException("Function call CAMA_CHAR_ALLOCATE_GLOB_DEP cancelled by the user.");
 		}
 		JCoFunction function = getJCoFunction("CAMA_CHAR_ALLOCATE_GLOB_DEP", monitor);
