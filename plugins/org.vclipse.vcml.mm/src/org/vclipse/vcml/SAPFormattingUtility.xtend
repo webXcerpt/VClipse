@@ -44,7 +44,7 @@ class SAPFormattingUtility {
 	public static String DEFAULT_DATE = "00.00.0000"
 	
 	/**
-	 * 
+	 * Retruns formatted string representation of the value.
 	 */
 	def dispatch toString(NumericCharacteristicValue value) {
 		val csticType = EcoreUtil2::getContainerOfType(value, typeof(CharacteristicType)) as NumericType
@@ -52,7 +52,7 @@ class SAPFormattingUtility {
 	}
 	
 	/**
-	 * 
+	 * Returns formatted string representation of the value.
 	 */
 	def dispatch toString(DateCharacteristicValue value) {
 		val resultBuffer = new StringBuffer
@@ -67,7 +67,7 @@ class SAPFormattingUtility {
 	}
 	
 	/**
-	 * 
+	 * Formats an interval with a given formatter.
 	 */
 	def dispatch format(NumericInterval interval, NumberFormat formatter, NumericType type) {
 		val resultBuffer = new StringBuffer
@@ -79,34 +79,24 @@ class SAPFormattingUtility {
 		formatted = formatter.format(doubleValue)
 		resultBuffer.append(formatted)
 		resultBuffer.append(WHITESPACE).append(type.unit.toLowerCase)
-			
-		var start = 0
-		while(start < resultBuffer.length) {
-			val _char = EMPTY + resultBuffer.charAt(start)
-			if(COMMA.equals(_char)) {
-				resultBuffer.replace(start, start + 1, DOT)
-			} 
-			if(DOT.equals(_char)) {
-				resultBuffer.replace(start, start + 1, COMMA)
-			}
-			start = start + 1
-		}
+		replace_COMMA_DOT(resultBuffer)
 		return resultBuffer.toString
 	}
 	
 	/**
-	 * 
+	 * Formats bumeric literal with a given formatter.
 	 */
 	def dispatch format(NumericLiteral literal, NumberFormat formatter, NumericType type) {
 		val resultBuffer = new StringBuffer
 		val doubleValue = new Double(literal.value)
 		val formatted = formatter.format(doubleValue)
 		resultBuffer.append(formatted)
+		replace_COMMA_DOT(resultBuffer)
 		return resultBuffer.toString
 	}
 	
 	/**
-	 * 
+	 * Creates a number or decimal formatter for the type.
 	 */
 	def getFormatter(NumericType type) {
 		val formatBuffer = new StringBuffer
@@ -137,7 +127,27 @@ class SAPFormattingUtility {
 		format
 	}
 
+	/**
+	 * Returns date format specified for vcml.
+	 */
 	def getVcmlDateFormat() {
 		return DATEFORMAT_VCML
+	}
+	
+	/**
+	 * Replaces all commas with dots and all dots with commas in the buffer.
+	 */
+	def replace_COMMA_DOT(StringBuffer buffer) {
+		var start = 0
+		while(start < buffer.length) {
+			val _char = EMPTY + buffer.charAt(start)
+			if(COMMA.equals(_char)) {
+				buffer.replace(start, start + 1, DOT)
+			} 
+			if(DOT.equals(_char)) {
+				buffer.replace(start, start + 1, COMMA)
+			}
+			start = start + 1
+		}
 	}
 }
