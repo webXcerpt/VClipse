@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.IBAPIActionRunner;
 import org.vclipse.bapi.actions.characteristic.values.DeleteCharacteristicsDependencies;
+import org.vclipse.bapi.actions.characteristic.values.DeleteCharacteristicsValuesDependencies;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.VCObject;
@@ -33,6 +34,9 @@ public class CharacteristicDeleteActionHandler extends BAPIUtils implements IBAP
 	
 	@Inject
 	private DeleteCharacteristicsDependencies deleteCharacteristicsDependencies;
+	
+	@Inject
+	private DeleteCharacteristicsValuesDependencies deleteCharacteristicsValuesDependencies;
 	
 	public boolean isEnabled(Characteristic object) {
 		return isConnected();
@@ -52,11 +56,19 @@ public class CharacteristicDeleteActionHandler extends BAPIUtils implements IBAP
 		}
 		endTransaction();
 		
+		VcmlModel vcmlModel = (VcmlModel)resource.getContents().get(0);
 		if(deleteCharacteristicsDependencies.enabled(object)) {
-			VcmlModel vcmlModel = (VcmlModel)resource.getContents().get(0);
 			try {
 				deleteCharacteristicsDependencies.run(object, vcmlModel, monitor, seenObjects);
-			} catch (Exception e) {
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if(deleteCharacteristicsValuesDependencies.enabled(object)) {
+			try {
+				deleteCharacteristicsValuesDependencies.run(object, vcmlModel, monitor, seenObjects);
+			} catch(Exception e) {
 				e.printStackTrace();
 			}
 		}
