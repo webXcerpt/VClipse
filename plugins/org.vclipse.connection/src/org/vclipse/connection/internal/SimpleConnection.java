@@ -32,7 +32,7 @@ public class SimpleConnection extends AbstractConnection {
 	}
 
 	@Override
-	public String getPassword() {
+	String getPassword() {
 		return password;
 	}
 
