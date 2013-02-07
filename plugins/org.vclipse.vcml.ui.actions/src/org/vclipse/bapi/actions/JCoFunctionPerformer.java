@@ -81,15 +81,12 @@ public class JCoFunctionPerformer extends BAPIUtils {
 		applyOptions(global, local, ipl, JCoFunctionPerformer.CHANGE_NO, JCoFunctionPerformer.DATE);
 		JCoTable dependenciesTable = function.getTableParameterList().getTable("CHAR_VAL_DEP_ASSIGN");
 		Map<String, EObject> nameToValue = vcmlUtilities.getNameToValue(cstic.getType());
-		StringBuffer buffer = new StringBuffer();
 		for(int i=0; i<dependenciesTable.getNumRows(); i++) {
 			dependenciesTable.setRow(i);
 			String csticEntry = dependenciesTable.getString(CHARACTERISTIC[1]);
 			if(csticEntry.equals(csticName)) {
 				String valueEntry = dependenciesTable.getString(VALUE);
-				buffer.replace(0, valueEntry.length(), valueEntry);
-				sapFormatter.replace_COMMA_DOT(buffer);
-				EObject type = nameToValue.get(buffer.toString());
+				EObject type = nameToValue.get(valueEntry);
 				if(type != null) {
 					dependenciesTable.deleteRow(i);
 				}				
@@ -121,7 +118,13 @@ public class JCoFunctionPerformer extends BAPIUtils {
 		applyOptions(global, local, ipl, JCoFunctionPerformer.CHANGE_NO, JCoFunctionPerformer.DATE);
 		JCoTable dependenciesTable = function.getTableParameterList().getTable("CHAR_DEP_ASSIGN");
 		String csticName = cstic.getName();
-		dependenciesTable.deleteAllRows();
+		for(int i=0; i<dependenciesTable.getNumRows(); i++) {
+			dependenciesTable.setRow(i);
+			String csticEntry = dependenciesTable.getString(CHARACTERISTIC[1]);
+			if(csticEntry.equals(csticName)) {
+				dependenciesTable.deleteRow(i);
+			}
+		}
 		for(Dependency dependency : cstic.getDependencies().getDependencies()) {
 			dependenciesTable.appendRow();
 			dependenciesTable.setValue(CHARACTERISTIC[1], csticName);
