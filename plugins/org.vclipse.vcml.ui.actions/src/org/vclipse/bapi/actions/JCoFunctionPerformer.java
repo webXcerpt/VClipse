@@ -96,6 +96,9 @@ public class JCoFunctionPerformer extends BAPIUtils {
 		return function;
 	}
 	
+	/**
+	 * Delete the dependencies of a characteristic.
+	 */
 	public JCoFunction CAMA_CHAR_DEL_DEP(Characteristic cstic, IProgressMonitor monitor, EList<Option> global, EList<Option> local) throws Exception {
 		if(monitor.isCanceled()) {
 			throw new BAPIException("Function call CAMA_CHAR_DEL_DEP cancelled by the user.");
@@ -117,6 +120,35 @@ public class JCoFunctionPerformer extends BAPIUtils {
 		execute(function, monitor, "Deleting global dependencies for cstic " + cstic.getName());
 		commit(monitor);
 		return function;
+	}
+	
+	/**
+	 * Delete dependencies of characteristics values.
+	 */
+	public void CAMA_CHAR_VAL_DEL_DEP(Characteristic cstic, IProgressMonitor monitor, EList<Option> global, EList<Option> local) throws Exception {
+		if(monitor.isCanceled()) {
+			throw new BAPIException("Function call CAMA_CHAR_VAL_DEL_DEP cancelled by the user.");
+		}
+		Map<String, EObject> nameToValue = vcmlUtilities.getNameToValue(cstic.getType());
+		for(Entry<String, EObject> entry : nameToValue.entrySet()) {
+			EObject value = entry.getValue();
+			EList<Dependency> dependencies = vcmlUtilities.getDependencies(value);
+			if(dependencies.isEmpty()) {
+				continue;
+			}
+			JCoFunction function = getJCoFunction("CAMA_CHAR_VAL_DEL_DEP", monitor);
+			JCoParameterList ipl = function.getImportParameterList();
+			ipl.setValue(CHARACTERISTIC[0], cstic.getName());
+			ipl.setValue(VALUE, sapFormatter.toString(value));
+			JCoTable table = function.getTableParameterList().getTable("DEP_ASSIGN_DEL");
+			for(Dependency dependency : dependencies) {
+				table.appendRow();
+				table.setValue("DEPENDENCY", nameProvider.getName(dependency));
+				table.setValue("FLDELETE", SELECTED);				
+			}
+			execute(function, monitor, "Deleting dependencies for values of characteristic " + cstic.getName());
+			commit(monitor);
+		}
 	}
 	
 	/**
