@@ -12,6 +12,7 @@
 package org.vclipse.bapi.actions;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -79,8 +80,22 @@ public class JCoFunctionPerformer extends BAPIUtils {
 		String csticName = cstic.getName();
 		applyOptions(global, local, ipl, JCoFunctionPerformer.CHANGE_NO, JCoFunctionPerformer.DATE);
 		JCoTable dependenciesTable = function.getTableParameterList().getTable("CHAR_VAL_DEP_ASSIGN");
-		dependenciesTable.deleteAllRows();
-		for(Entry<String, EObject> entry : vcmlUtilities.getNameToValue(cstic.getType()).entrySet()) {
+		Map<String, EObject> nameToValue = vcmlUtilities.getNameToValue(cstic.getType());
+		StringBuffer buffer = new StringBuffer();
+		for(int i=0; i<dependenciesTable.getNumRows(); i++) {
+			dependenciesTable.setRow(i);
+			String csticEntry = dependenciesTable.getString(CHARACTERISTIC[1]);
+			if(csticEntry.equals(csticName)) {
+				String valueEntry = dependenciesTable.getString(VALUE);
+				buffer.replace(0, valueEntry.length(), valueEntry);
+				sapFormatter.replace_COMMA_DOT(buffer);
+				EObject type = nameToValue.get(buffer.toString());
+				if(type != null) {
+					dependenciesTable.deleteRow(i);
+				}				
+			}
+		}
+		for(Entry<String, EObject> entry : nameToValue.entrySet()) {
 			EObject value = entry.getValue();
 			EList<Dependency> dependencies = vcmlUtilities.getDependencies(value);
 			for(Dependency dependency : dependencies) {
