@@ -85,7 +85,7 @@ public abstract class AbstractConnection implements IConnection {
 	/**
 	 * @return the password
 	 */
-	public abstract String getPassword();
+	abstract String getPassword();
 
 	/**
 	 * @param password the password to set

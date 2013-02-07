@@ -35,6 +35,7 @@ import org.vclipse.connection.IConnection;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.connection.VClipseConnectionPlugin;
 import org.vclipse.connection.internal.AbstractConnection;
+import org.vclipse.connection.internal.CreateEditConnectionDialog;
 
 import com.google.inject.Inject;
 

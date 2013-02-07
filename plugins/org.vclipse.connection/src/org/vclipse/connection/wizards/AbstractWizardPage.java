@@ -40,8 +40,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.vclipse.connection.VClipseConnectionPlugin;
-import org.vclipse.connection.dialogs.CreateEditConnectionDialog;
 import org.vclipse.connection.internal.AbstractConnection;
+import org.vclipse.connection.internal.CreateEditConnectionDialog;
 
 /**
  *
