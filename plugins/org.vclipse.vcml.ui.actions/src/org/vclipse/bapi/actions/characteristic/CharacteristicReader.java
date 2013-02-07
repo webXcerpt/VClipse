@@ -22,8 +22,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.WrappedException;
 import org.vclipse.bapi.actions.BAPIUtils;
-import org.vclipse.bapi.actions.characteristic.values.ReadCharacteristicDependency;
-import org.vclipse.bapi.actions.characteristic.values.ReadCharacteristicValueDependency;
+import org.vclipse.bapi.actions.characteristic.values.ReadCharacteristicsDependency;
+import org.vclipse.bapi.actions.characteristic.values.ReadCharacteristicsValuesDependency;
 import org.vclipse.vcml.SAPFormattingUtility;
 import org.vclipse.vcml.utils.DescriptionHandler;
 import org.vclipse.vcml.utils.VcmlUtils;
@@ -57,10 +57,10 @@ import com.sap.conn.jco.JCoTable;
 public class CharacteristicReader extends BAPIUtils {
 
 	@Inject
-	private ReadCharacteristicValueDependency valuesDependenciesReader;
+	private ReadCharacteristicsValuesDependency valuesDependenciesReader;
 	
 	@Inject
-	private ReadCharacteristicDependency csticDependenciesReader;
+	private ReadCharacteristicsDependency csticDependenciesReader;
 	
 	public Characteristic read(String csticName, VcmlModel vcmlModel, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		if(csticName == null || monitor.isCanceled()) {
