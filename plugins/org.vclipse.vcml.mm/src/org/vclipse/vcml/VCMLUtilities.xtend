@@ -35,6 +35,7 @@ import org.vclipse.vcml.vcml.NumericType
 import org.vclipse.vcml.vcml.Option
 import org.vclipse.vcml.vcml.OptionType
 import org.vclipse.vcml.vcml.SymbolicType
+import org.eclipse.xtext.xbase.lib.IterableExtensions
 
 /**
  * Utilities for VCML Objects.
@@ -50,8 +51,8 @@ class VCMLUtilities {
 	/**
 	 * Returns an option with requested type, null if such an option does not exist as an entry.
 	 */
-	def Option getOption(List<Option> options, OptionType type) {
-		for(option : options) {
+	def Option getOption(List<Option> global, List<Option> local, OptionType type) {
+		for(option : IterableExtensions::operator_plus(global, local)) {
 			if(option.name == type) {
 				return option
 			}
