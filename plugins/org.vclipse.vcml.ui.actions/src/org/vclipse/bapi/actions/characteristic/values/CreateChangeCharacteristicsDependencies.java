@@ -42,7 +42,9 @@ public class CreateChangeCharacteristicsDependencies extends BAPIActionHandler i
 			throw new BAPIException("Action \"Create/ change dependencies\" for a characteristic was canceled by the user.");
 		}
 		IProgressMonitor submonitor = SubMonitor.convert(monitor, "Creating/ changing dependencies for cstic " + cstic.getName(), IProgressMonitor.UNKNOWN);
+		functionPerformer.beginTransaction();
 		functionPerformer.CAMA_CHAR_ALLOCATE_GLOB_DEP(cstic, monitor, cstic.getOptions(), vcmlModel.getOptions());
+		functionPerformer.endTransaction();
 		submonitor.done();
 	}
 

@@ -47,7 +47,9 @@ public class CreateChangeCharacteristicsValuesDependencies extends BAPIActionHan
 			throw new BAPIException("Action \"Create/ change dependencies\" for values of a ch was canceled by the user.");
 		}
 		IProgressMonitor submonitor = SubMonitor.convert(monitor, "Creating/ changing dependencies for values of characteristic " + cstic.getName(), IProgressMonitor.UNKNOWN);
+		functionPerformer.beginTransaction();
 		functionPerformer.CAMA_CHAR_VAL_ALLOCAT_GLOB_DEP(cstic, submonitor, vcmlModel.getOptions(), cstic.getOptions());
+		functionPerformer.endTransaction();
 		submonitor.done();
 	}
 
