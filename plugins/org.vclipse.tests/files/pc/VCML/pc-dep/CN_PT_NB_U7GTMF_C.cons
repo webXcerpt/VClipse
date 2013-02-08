@@ -1,0 +1,7 @@
+objects: NOTEBOOK is_a (300)PT_NB . 
+restrictions:
+  NOTEBOOK.CORE_AMOUNT in (2,  4) if
+    NOTEBOOK.NOTEBOOK_TYPE in ('development', 'multimedia', 'business'),
+  NOTEBOOK.CORE_AMOUNT in (1,  2) if
+    NOTEBOOK.NOTEBOOK_TYPE = 'netbook'. 
+inferences: NOTEBOOK.CORE_AMOUNT. 

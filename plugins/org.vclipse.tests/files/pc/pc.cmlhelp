@@ -1,0 +1,25 @@
+role[Example Name][Example Role]
+
+help:Display
+
+Help text for display.
+
+help:NotebookType
+
+Notebook type.
+
+help:Dimensions
+
+Dimensions description.
+
+help:Cores
+
+Core amount.
+
+help:HDD
+
+Disk description
+
+help:Memory
+
+Amount of memory modules.
