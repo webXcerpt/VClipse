@@ -1,2 +1,0 @@
-$self.GEN_DOC_COMPONENT = 'pchelp.xml',
-$self.GEN_DOC_CSTIC_TAGS = 'DISPLAY'.

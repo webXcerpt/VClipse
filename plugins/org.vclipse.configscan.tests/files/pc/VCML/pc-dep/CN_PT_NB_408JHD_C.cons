@@ -1,7 +1,0 @@
-objects: NOTEBOOK is_a (300)PT_NB . 
-restrictions:
-  NOTEBOOK.DISPLAY = 'glare' if
-    NOTEBOOK.SCREEN_SIZE in ('14', '15.4', '17'),
-  NOTEBOOK.DISPLAY in ('glare', 'non-glare') if
-    NOTEBOOK.SCREEN_SIZE in ('10.1', '12'). 
-inferences: NOTEBOOK.DISPLAY. 

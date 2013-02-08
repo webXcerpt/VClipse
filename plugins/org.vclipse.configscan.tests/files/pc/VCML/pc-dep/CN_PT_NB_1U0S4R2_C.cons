@@ -1,8 +1,0 @@
-objects: NOTEBOOK is_a (300)PT_NB . 
-restrictions:
-  NOTEBOOK.HARD_DISK_SIZE in ('60', '120') if
-    NOTEBOOK.NOTEBOOK_TYPE = 'netbook',
-  NOTEBOOK.HARD_DISK_SIZE in ('120', '340') if
-    NOTEBOOK.NOTEBOOK_TYPE in ('development', 'multimedia', 'business').
-
-inferences: NOTEBOOK.HARD_DISK_SIZE. 

@@ -1,8 +1,0 @@
-objects: NOTEBOOK is_a (300)PT_NB . 
-restrictions:
-  NOTEBOOK.SCREEN_SIZE = '10.1' if NOTEBOOK.NOTEBOOK_TYPE = 'netbook',
-  NOTEBOOK.SCREEN_SIZE in ('15.4', '17') if
-    NOTEBOOK.NOTEBOOK_TYPE = 'multimedia',
-  NOTEBOOK.SCREEN_SIZE in ('12', '14', '15.4', '17') if
-    NOTEBOOK.NOTEBOOK_TYPE in ('development', 'business'). 
-inferences: NOTEBOOK.SCREEN_SIZE. 

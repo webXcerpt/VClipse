@@ -1,5 +1,0 @@
-objects: NOTEBOOK is_a (300)PT_NB . 
-restrictions:
-  NOTEBOOK.RC_SCREEN_DEP_INVISIBLE = 'WEBCAM' if
-    NOTEBOOK.NOTEBOOK_TYPE = 'business'. 
-inferences: NOTEBOOK.RC_SCREEN_DEP_INVISIBLE. 
