@@ -7,12 +7,7 @@ Bundle-SymbolicName: org.vclipse.configscan.vcmlt; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext.generator;resolution:=optional,
  org.vclipse.vcml,
- org.vclipse.configscan,
- org.eclipse.xtext,
- org.eclipse.xtext.util,
- org.eclipse.emf.ecore,
- org.eclipse.emf.common,
- org.antlr.runtime
+ org.vclipse.configscan
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.configscan.vcmlt,
  org.vclipse.configscan.vcmlt.builder,
@@ -29,4 +24,3 @@ Export-Package: org.vclipse.configscan.vcmlt,
  org.vclipse.configscan.vcmlt.vcmlT.impl,
  org.vclipse.configscan.vcmlt.vcmlT.util
 Bundle-ClassPath: .
-Import-Package: org.apache.log4j

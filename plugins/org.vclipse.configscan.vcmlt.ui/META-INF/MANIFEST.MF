@@ -7,18 +7,12 @@ Bundle-SymbolicName: org.vclipse.configscan.vcmlt.ui; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.vclipse.configscan,
  org.vclipse.configscan.vcmlt;visibility:=reexport,
- org.eclipse.xtext.ui,
  org.eclipse.ui.ide,
  org.eclipse.xtext.ui.shared,
  org.eclipse.xtext.builder,
  org.eclipse.xtext.ui.codetemplates.ui,
- org.eclipse.compare,
  org.vclipse.vcml,
- org.vclipse.connection,
- org.vclipse.base.ui,
- org.eclipse.ui.editors,
- org.eclipse.ui,
- org.antlr.runtime
+ org.vclipse.connection
 Import-Package: com.sap.conn.jco,
  org.apache.log4j
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
