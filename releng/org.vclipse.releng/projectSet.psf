@@ -4,31 +4,24 @@
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.base,org.vclipse.base"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.base.ui,org.vclipse.base.ui"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.condition,org.vclipse.condition"/>
-<project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.condition.tests,org.vclipse.condition.tests"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.condition.ui,org.vclipse.condition.ui"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.configscan,org.vclipse.configscan"/>
-<project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.configscan.tests,org.vclipse.configscan.tests"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.configscan.vcmlt,org.vclipse.configscan.vcmlt"/>
-<project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.configscan.vcmlt.tests,org.vclipse.configscan.vcmlt.tests"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.configscan.vcmlt.ui,org.vclipse.configscan.vcmlt.ui"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/features/org.vclipse.configscan_feature,org.vclipse.configscan_feature"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.connection,org.vclipse.connection"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.console,org.vclipse.console"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.constraint,org.vclipse.constraint"/>
-<project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.constraint.tests,org.vclipse.constraint.tests"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.constraint.ui,org.vclipse.constraint.ui"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.dependency,org.vclipse.dependency"/>
-<project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.dependency.tests,org.vclipse.dependency.tests"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.dependency.ui,org.vclipse.dependency.ui"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.idoc,org.vclipse.idoc"/>
-<project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.idoc.tests,org.vclipse.idoc.tests"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.idoc.ui,org.vclipse.idoc.ui"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.idoc2jcoidoc,org.vclipse.idoc2jcoidoc"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/features/org.vclipse.idoc_feature,org.vclipse.idoc_feature"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.jpplib,org.vclipse.jpplib"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/features/org.vclipse.pdr_feature,org.vclipse.pdr_feature"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.procedure,org.vclipse.procedure"/>
-<project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.procedure.tests,org.vclipse.procedure.tests"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.procedure.ui,org.vclipse.procedure.ui"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.refactoring,org.vclipse.refactoring"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/releng/org.vclipse.repository,org.vclipse.repository"/>
@@ -39,7 +32,6 @@
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.vcml,org.vclipse.vcml"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.vcml.compare,org.vclipse.vcml.compare"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.vcml.mm,org.vclipse.vcml.mm"/>
-<project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.vcml.tests,org.vclipse.vcml.tests"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.vcml.ui,org.vclipse.vcml.ui"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.vcml.ui.actions,org.vclipse.vcml.ui.actions"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.vcml.ui.wizards.imports,org.vclipse.vcml.ui.wizards.imports"/>
@@ -47,44 +39,6 @@
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/features/org.vclipse.vcml2idoc_feature,org.vclipse.vcml2idoc_feature"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/features/org.vclipse.vcml_feature,org.vclipse.vcml_feature"/>
 </provider>
-<workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1340900543625_3" label="Language Condition" name="Language Condition">
-<item elementID="=org.vclipse.condition.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.condition" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.condition.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-</workingSets>
-<workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1340900584258_5" label="Language Constraint" name="Language Constraint">
-<item elementID="=org.vclipse.constraint" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.constraint.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.constraint.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-</workingSets>
-<workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1340900595385_6" label="Language Dependency" name="Language Dependency">
-<item elementID="=org.vclipse.dependency.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.dependency.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.dependency" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-</workingSets>
-<workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1340900611265_7" label="Language IDoc" name="Language IDoc">
-<item elementID="=org.vclipse.idoc.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.idoc" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.idoc.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-</workingSets>
-<workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1340900643489_9" label="Language Procedure" name="Language Procedure">
-<item elementID="=org.vclipse.procedure.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.procedure.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.procedure" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-</workingSets>
-<workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1340900625889_8" label="Language Vcml" name="Language Vcml">
-<item elementID="=org.vclipse.vcml.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.vcml.mm" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.vcml.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.vcml" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-</workingSets>
-<workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1340900570034_4" label="Language Vcmlt / ConfigScan" name="Language Vcmlt / ConfigScan">
-<item elementID="=org.vclipse.configscan.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.configscan.vcmlt.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.configscan.vcmlt" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.configscan.vcmlt.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.configscan" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-</workingSets>
 <workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1340900664601_10" label="VClipse Features" name="VClipse Features">
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.vclipse.idoc_feature" type="4"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.vclipse.vcml_feature" type="4"/>
@@ -93,19 +47,37 @@
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.vclipse.pdr_feature" type="4"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.vclipse.vcml2idoc_feature" type="4"/>
 </workingSets>
+<workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1360320896091_21" label="VClipse Languages" name="VClipse Languages">
+<item elementID="=org.vclipse.idoc" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.constraint.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.configscan.vcmlt" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.procedure.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.vcml.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.condition.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.vcml" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.dependency" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.vcml.mm" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.constraint" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.configscan.vcmlt.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.configscan" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.dependency.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.condition" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.idoc.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.procedure" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+</workingSets>
 <workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1340900682657_11" label="VClipse Plugins" name="VClipse Plugins">
-<item elementID="=org.vclipse.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.refactoring" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.jpplib" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.idoc2jcoidoc" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.sap.deployment" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.connection" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.tests" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.vcml.ui.actions" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.vclipse.vcml.compare" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.base" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.vcml.ui.wizards.imports" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.console" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.vcml2idoc.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.jpplib" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.refactoring" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.idoc2jcoidoc" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.sap.deployment" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.vcml.ui.actions" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
-<item elementID="=org.vclipse.vcml.compare" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.base.ui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 </workingSets>
 <workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1340900525961_2" label="VClipse Releng" name="VClipse Releng">
