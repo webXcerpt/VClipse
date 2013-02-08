@@ -18,7 +18,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.vclipse.refactoring.IRefactoringContext;
 import org.vclipse.refactoring.core.RefactoringConfiguration;
-import org.vclipse.vcml.utils.ConstraintRestrictionExtensions;
+import org.vclipse.vcml.ConstraintRestrictionsUtilities;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.vcml.CharacteristicReference_P;
 import org.vclipse.vcml.vcml.Constraint;
@@ -37,7 +37,7 @@ import static org.vclipse.vcml.refactoring.ConstraintRefactorings.*;
 public class VCMLConfiguration extends RefactoringConfiguration {
 	
 	@Inject
-	private ConstraintRestrictionExtensions cre;
+	private ConstraintRestrictionsUtilities cre;
 	
 	@Inject
 	private DependencySourceUtils sourceUtils;

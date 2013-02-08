@@ -34,7 +34,7 @@ import org.vclipse.refactoring.changes.ModelChange;
 import org.vclipse.refactoring.changes.RootChange;
 import org.vclipse.refactoring.core.DefaultRefactoringExecuter;
 import org.vclipse.refactoring.core.RefactoringTask;
-import org.vclipse.vcml.utils.ConstraintRestrictionExtensions;
+import org.vclipse.vcml.ConstraintRestrictionsUtilities;
 import org.vclipse.vcml.utils.CreateVcmlObjects;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.utils.VCMLObjectUtils;
@@ -62,7 +62,7 @@ import com.google.inject.Inject;
 public class ConstraintRefactorings extends DefaultRefactoringExecuter {
  
 	@Inject
-	private ConstraintRestrictionExtensions cre;
+	private ConstraintRestrictionsUtilities cre;
 	
 	@Inject
 	private DependencySourceUtils sourceUtils;
@@ -169,7 +169,7 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 					for(int index=restrictions.size()-1; index>=0; index--) {
 						if(constraintsAmount > index) {
 							ConstraintRestriction cr = restrictions.get(index);
-							List<Characteristic> cstics = cre.getUsedCharacteristics(cr);
+							List<Characteristic> cstics = cre.usedCstis(cr);
 							referenced.addAll(cstics);
 						} else {
 							restrictions.remove(index);
@@ -264,7 +264,7 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 		EList<ConstraintRestriction> newRestrictions = constraintSource.getRestrictions();
 		for(ConstraintRestriction cr : restrictions) {
 			ConstraintRestriction crc = EcoreUtil.copy(cr);
-			referenced.addAll(cre.getUsedCharacteristics(crc));
+			referenced.addAll(cre.usedCstis(crc));
 			newRestrictions.add(crc);
 		}
 		

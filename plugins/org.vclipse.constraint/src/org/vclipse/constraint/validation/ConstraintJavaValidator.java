@@ -19,7 +19,7 @@ import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.vclipse.constraint.validation.AbstractConstraintJavaValidator;
-import org.vclipse.vcml.utils.ConstraintRestrictionExtensions;
+import org.vclipse.vcml.ConstraintRestrictionsUtilities;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicReference_C;
 import org.vclipse.vcml.vcml.ConditionalConstraintRestriction;
@@ -38,7 +38,7 @@ import com.google.inject.Inject;
 public class ConstraintJavaValidator extends AbstractConstraintJavaValidator {
 	
 	@Inject 
-	private ConstraintRestrictionExtensions expressionExtensions;
+	private ConstraintRestrictionsUtilities expressionExtensions;
 	
 	@Check
 	public void checkConstraintSource(ConstraintSource source) {
@@ -62,14 +62,14 @@ public class ConstraintJavaValidator extends AbstractConstraintJavaValidator {
 		// Collect the existing characteristics in the inferences part
 		Map<Characteristic, CharacteristicReference_C> cstics2Reference = Maps.newHashMap();
 		for(CharacteristicReference_C inference : source.getInferences()) {
-			for(Characteristic cstic : expressionExtensions.getUsedCharacteristics(inference)) {
+			for(Characteristic cstic : expressionExtensions.usedCstis(inference)) {
 				cstics2Reference.put(cstic, inference);
 			}
 		}
 		
 		// Remove the referenced characteristics
 		for(ConstraintRestriction currentRestriction : source.getRestrictions()) {
-			for(Characteristic cstic : expressionExtensions.getUsedCharacteristics(currentRestriction)) {
+			for(Characteristic cstic : expressionExtensions.usedCstis(currentRestriction)) {
 				cstics2Reference.remove(cstic);
 			}
 		}
