@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.vclipse.idoc.iDoc.IDoc;
@@ -103,7 +102,6 @@ import com.google.inject.name.Named;
  */
 public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 
-	private static final Logger LOGGER = Logger.getLogger(VCML2IDocSwitch.class);
 	private static final IDocFactory IDOC = IDocFactory.eINSTANCE;
 
 	private static final SimpleDateFormat DATEFORMAT_SAP = new SimpleDateFormat("yyyyMMdd");
@@ -256,6 +254,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 			switch (option.getName()) {
 				case ECM: ecm = option.getValue(); break;
 				case UPS: ups = option.getValue(); break;
+				default : break;
 			}
 		}
 	}
@@ -293,7 +292,7 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 
 		Material material = object.getMaterial();
 		if(material == null) {
-			LOGGER.warn(object.getClass().getSimpleName() + " " + object.getName() + " has no assigned material.");
+			System.err.println(object.getClass().getSimpleName() + " " + object.getName() + " has no assigned material.");
 		} else {
 			final String materialNumber = material.getName();
 			final String plant = getPlant();
@@ -1372,7 +1371,8 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 	private String getEcm(VCObject vcObject) {
 		for (Option o : vcObject.getOptions()) {
 			switch (o.getName()) {
-			case ECM: return o.getValue();
+				case ECM: return o.getValue();
+				default : return ecm;
 			}
 		}
 		return ecm;

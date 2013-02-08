@@ -5,11 +5,9 @@ Bundle-SymbolicName: org.vclipse.vcml2idoc.ui;singleton:=true
 Bundle-Version: 0.5.0.qualifier
 Bundle-Activator: org.vclipse.vcml2idoc.VCML2IDocPlugin
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
-Require-Bundle: org.eclipse.xtext.ui;bundle-version="2.3.0",
- org.vclipse.vcml,
+Require-Bundle: org.vclipse.vcml,
  org.vclipse.vcml.ui,
- org.vclipse.idoc,
- org.vclipse.base.ui
+ org.vclipse.idoc
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.vclipse.vcml2idoc,
@@ -18,5 +16,4 @@ Export-Package: org.vclipse.vcml2idoc,
  org.vclipse.vcml2idoc.injection,
  org.vclipse.vcml2idoc.preferences,
  org.vclipse.vcml2idoc.transformation
-Import-Package: org.apache.log4j
 Bundle-ClassPath: .
