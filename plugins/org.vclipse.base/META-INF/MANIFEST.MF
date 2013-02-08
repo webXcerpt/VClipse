@@ -8,9 +8,7 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.compare,
  org.eclipse.core.runtime;visibility:=reexport,
  org.eclipse.xtext;visibility:=reexport,
- org.eclipse.swt,
- org.eclipse.xtend.lib,
- com.google.guava
+ org.eclipse.swt
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.apache.poi,
