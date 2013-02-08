@@ -6,7 +6,8 @@ Bundle-Version: 0.5.0.qualifier
 Bundle-Activator: org.vclipse.connection.VClipseConnectionPlugin
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Require-Bundle: org.eclipse.xtext.ui,
- org.eclipse.equinox.security
+ org.eclipse.equinox.security,
+ org.apache.commons.lang
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.vclipse.connection,
@@ -17,6 +18,4 @@ Bundle-ClassPath: .,
 Import-Package: com.sap.conn.idoc,
  com.sap.conn.idoc.jco,
  com.sap.conn.jco,
- com.sap.conn.jco.ext,
- org.apache.commons.lang,
- org.apache.commons.lang.exception
+ com.sap.conn.jco.ext
