@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.util.Strings;
@@ -43,8 +42,6 @@ import com.sap.conn.jco.JCoParameterList;
 import com.sap.conn.jco.JCoTable;
 
 public class BillOfMaterialReader extends BAPIUtils {
-
-	private final Logger log = Logger.getLogger(BillOfMaterialReader.class);
 
 	@Inject
 	private MaterialReader materialReader;
@@ -161,8 +158,7 @@ public class BillOfMaterialReader extends BAPIUtils {
 					sortEntries(bomItem.getEntries());
 					
 				} else {
-					if (log.isTraceEnabled()) {
-						log.trace("BOM item with emtpy COMPONENT for material " + materialNumber + ":\n"
+					System.err.println("BOM item with emtpy COMPONENT for material " + materialNumber + ":\n"
 								+ tSTPO.getValue("ITEM_CATEG") + "\t"
 								+ tSTPO.getValue("ITEM_NO") + "\t"
 								+ tSTPO.getValue("COMPONENT") + "\t"
@@ -170,7 +166,6 @@ public class BillOfMaterialReader extends BAPIUtils {
 								+ tSTPO.getValue("COMP_UNIT") + "\t"
 								+ tSTPO.getValue("SORTSTRING"));
 					}
-				}
 			}
 		} catch (AbapException e) {
 			handleAbapException(e);
