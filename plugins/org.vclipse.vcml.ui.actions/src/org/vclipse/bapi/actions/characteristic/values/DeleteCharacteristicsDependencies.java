@@ -15,14 +15,11 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.emf.common.util.EList;
 import org.vclipse.bapi.actions.BAPIException;
 import org.vclipse.bapi.actions.IBAPIActionRunnerExtension;
 import org.vclipse.bapi.actions.JCoFunctionPerformer;
 import org.vclipse.bapi.actions.handler.BAPIActionHandler;
 import org.vclipse.vcml.vcml.Characteristic;
-import org.vclipse.vcml.vcml.CharacteristicOrValueDependencies;
-import org.vclipse.vcml.vcml.Dependency;
 import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
@@ -35,6 +32,9 @@ public class DeleteCharacteristicsDependencies extends BAPIActionHandler impleme
 
 	@Inject
 	private JCoFunctionPerformer functionPerformer;
+	
+	@Inject
+	private CreateChangeCharacteristicsDependencies createChangeAction;
 	
 	@Override
 	public void run(Characteristic cstic, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects) throws Exception {
@@ -51,11 +51,6 @@ public class DeleteCharacteristicsDependencies extends BAPIActionHandler impleme
 	
 	@Override
 	public boolean enabled(Characteristic cstic) {
-		CharacteristicOrValueDependencies dependencies = cstic.getDependencies();
-		if(dependencies == null) {
-			return false;			
-		}
-		EList<Dependency> dependenciesEntries = dependencies.getDependencies();
-		return !dependenciesEntries.isEmpty() && functionPerformer.isConnected();
+		return createChangeAction.enabled(cstic);
 	}
 }
