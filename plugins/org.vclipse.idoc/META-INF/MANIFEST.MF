@@ -8,12 +8,7 @@ Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext.generator,
  org.eclipse.emf.mwe2.launch,
  org.vclipse.jpplib,
- org.vclipse.base,
- org.eclipse.xtext,
- org.eclipse.xtext.util,
- org.eclipse.emf.ecore,
- org.eclipse.emf.common,
- org.antlr.runtime
+ org.vclipse.base
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.idoc,
  org.vclipse.idoc.services,
@@ -27,5 +22,3 @@ Export-Package: org.vclipse.idoc,
  org.vclipse.idoc.scoping,
  org.vclipse.idoc.formatting
 Bundle-ClassPath: .
-Import-Package: org.apache.commons.logging,
- org.apache.log4j
