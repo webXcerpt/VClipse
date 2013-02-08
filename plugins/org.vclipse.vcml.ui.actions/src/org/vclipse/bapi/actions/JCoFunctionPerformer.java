@@ -138,6 +138,7 @@ public class JCoFunctionPerformer extends BAPIUtils {
 			}
 			JCoFunction function = getJCoFunction("CAMA_CHAR_VAL_DEL_DEP", monitor);
 			JCoParameterList ipl = function.getImportParameterList();
+			applyOptions(global, local, ipl, JCoFunctionPerformer.CHANGE_NO, JCoFunctionPerformer.DATE);
 			ipl.setValue(CHARACTERISTIC[0], cstic.getName());
 			ipl.setValue(VALUE, sapFormatter.toString(value));
 			JCoTable table = function.getTableParameterList().getTable("DEP_ASSIGN_DEL");
@@ -181,7 +182,7 @@ public class JCoFunctionPerformer extends BAPIUtils {
 		JCoParameterList ipl = function.getImportParameterList();
 		ipl.setValue("DEPENDENCY", dependencyName);
 		
-		handleOptions(objectOptions, modelOptions, ipl, "CHANGE_NO", "DATE");
+		applyOptions(modelOptions, objectOptions, ipl, JCoFunctionPerformer.CHANGE_NO, JCoFunctionPerformer.DATE);
 		
 		// if the following flags are not checked, then the function performs just an existence check
 		ipl.setValue("FL_WITH_BASIC_DATA", SELECTED);
@@ -204,7 +205,7 @@ public class JCoFunctionPerformer extends BAPIUtils {
 		ipl.setValue("LIST_ALL_GLOBL", JCoFunctionPerformer.SELECTED);
 		ipl.setValue("LIST_ALL_LOCAL", JCoFunctionPerformer.SELECTED);
 				
-		handleOptions(modelOptions, objectOptions, ipl, "CHANGE_NO", "DATE");
+		applyOptions(modelOptions, objectOptions, ipl, JCoFunctionPerformer.CHANGE_NO, JCoFunctionPerformer.DATE);
 		execute(function, monitor, new StringBuffer(csticName).toString());
 		return function;
 	}
@@ -220,7 +221,8 @@ public class JCoFunctionPerformer extends BAPIUtils {
 		ipl.setValue("LIST_ALL_LOCAL", JCoFunctionPerformer.SELECTED);
 		ipl.setValue(VALUE, valueName);
 		
-		handleOptions(modelOptions, objectOptions, ipl, "CHANGE_NO", "DATE");
+		applyOptions(modelOptions, objectOptions, ipl, JCoFunctionPerformer.CHANGE_NO, JCoFunctionPerformer.DATE);
+		
 		execute(function, monitor, new StringBuffer(csticName).append(".").append(valueName).toString());
 		return function;
 	}
