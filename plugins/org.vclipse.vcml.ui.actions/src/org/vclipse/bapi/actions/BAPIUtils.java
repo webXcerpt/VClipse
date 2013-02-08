@@ -215,6 +215,7 @@ public class BAPIUtils extends BAPIActionHandler {
 			
 		} else if ("CL".equals(messageClass)) {
 			switch (messageNumber) {
+			case 000: messageTemplate = "& & & &"; break;
 			case 768: messageTemplate = ">>> End of processing in API: &"; break;
 			}
 		} else if ("CU".equals(messageClass)) {

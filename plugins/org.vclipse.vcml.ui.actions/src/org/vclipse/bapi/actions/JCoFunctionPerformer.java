@@ -71,7 +71,7 @@ public class JCoFunctionPerformer extends BAPIUtils {
 	/**
 	 * Assign global dependencies to the values of a characteristic.
 	 */
-	public JCoFunction CAMA_CHAR_VAL_ALLOCAT_GLOB_DEP(Characteristic cstic, IProgressMonitor monitor, EList<Option> global, EList<Option> local) throws Exception {
+	public JCoFunction CAMA_CHAR_VAL_ALLOCAT_GLOB_DEP(Characteristic cstic, IProgressMonitor monitor, EList<Option> global, EList<Option> local) throws JCoException {
 		if(monitor.isCanceled()) {
 			throw new BAPIException("Function call CAMA_CHAR_VAL_ALLOCAT_GLOB_DEP cancelled by the user.");
 		}
@@ -99,7 +99,7 @@ public class JCoFunctionPerformer extends BAPIUtils {
 	/**
 	 * Delete the dependencies of a characteristic.
 	 */
-	public JCoFunction CAMA_CHAR_DEL_DEP(Characteristic cstic, IProgressMonitor monitor, EList<Option> global, EList<Option> local) throws Exception {
+	public JCoFunction CAMA_CHAR_DEL_DEP(Characteristic cstic, IProgressMonitor monitor, EList<Option> global, EList<Option> local) throws JCoException {
 		if(monitor.isCanceled()) {
 			throw new BAPIException("Function call CAMA_CHAR_DEL_DEP cancelled by the user.");
 		}
@@ -125,7 +125,7 @@ public class JCoFunctionPerformer extends BAPIUtils {
 	/**
 	 * Delete dependencies of characteristics values.
 	 */
-	public void CAMA_CHAR_VAL_DEL_DEP(Characteristic cstic, IProgressMonitor monitor, EList<Option> global, EList<Option> local) throws Exception {
+	public void CAMA_CHAR_VAL_DEL_DEP(Characteristic cstic, IProgressMonitor monitor, EList<Option> global, EList<Option> local) throws JCoException {
 		if(monitor.isCanceled()) {
 			throw new BAPIException("Function call CAMA_CHAR_VAL_DEL_DEP cancelled by the user.");
 		}
@@ -155,7 +155,7 @@ public class JCoFunctionPerformer extends BAPIUtils {
 	/**
 	 * Assign global dependencies to a characteristic.
 	 */
-	public JCoFunction CAMA_CHAR_ALLOCATE_GLOB_DEP(Characteristic cstic, IProgressMonitor monitor, List<Option> global, List<Option> local) throws Exception {
+	public JCoFunction CAMA_CHAR_ALLOCATE_GLOB_DEP(Characteristic cstic, IProgressMonitor monitor, List<Option> global, List<Option> local) throws JCoException {
 		if(monitor.isCanceled()) {
 			throw new BAPIException("Function call CAMA_CHAR_ALLOCATE_GLOB_DEP cancelled by the user.");
 		}

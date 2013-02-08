@@ -24,6 +24,8 @@ import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.inject.Inject;
+import com.sap.conn.jco.AbapException;
+import com.sap.conn.jco.JCoException;
 
 /**
  *
@@ -37,15 +39,21 @@ public class DeleteCharacteristicsDependencies extends BAPIActionHandler impleme
 	private CreateChangeCharacteristicsDependencies createChangeAction;
 	
 	@Override
-	public void run(Characteristic cstic, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects) throws Exception {
+	public void run(Characteristic cstic, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects) {
 		if(monitor.isCanceled()) {
 			monitor.done();
 			throw new BAPIException("Action \"Delete dependencies\" for a characteristic was canceled by the user.");
 		}
 		IProgressMonitor submonitor = SubMonitor.convert(monitor, "Delete dependencies for cstic " + cstic.getName(), IProgressMonitor.UNKNOWN);
-		functionPerformer.beginTransaction();
-		functionPerformer.CAMA_CHAR_DEL_DEP(cstic, monitor, vcmlModel.getOptions(), cstic.getOptions());
-		functionPerformer.endTransaction();
+		try {
+			functionPerformer.beginTransaction();
+			functionPerformer.CAMA_CHAR_DEL_DEP(cstic, monitor, vcmlModel.getOptions(), cstic.getOptions());
+			functionPerformer.endTransaction();
+		} catch(JCoException exception) {
+			if(exception instanceof AbapException) {
+				functionPerformer.handleAbapException((AbapException)exception);
+			}
+		}
 		submonitor.done();
 	}
 	

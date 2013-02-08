@@ -28,6 +28,8 @@ import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.inject.Inject;
+import com.sap.conn.jco.AbapException;
+import com.sap.conn.jco.JCoException;
 
 /**
  *
@@ -41,15 +43,21 @@ public class CreateChangeCharacteristicsValuesDependencies extends BAPIActionHan
 	private VCMLUtilities vcmlUtilities;
 	
 	@Override
-	public void run(Characteristic cstic, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects) throws Exception {
+	public void run(Characteristic cstic, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects) {
 		if(monitor.isCanceled()) {
 			monitor.done();
 			throw new BAPIException("Action \"Create/ change dependencies\" for values of a ch was canceled by the user.");
 		}
 		IProgressMonitor submonitor = SubMonitor.convert(monitor, "Creating/ changing dependencies for values of characteristic " + cstic.getName(), IProgressMonitor.UNKNOWN);
-		functionPerformer.beginTransaction();
-		functionPerformer.CAMA_CHAR_VAL_ALLOCAT_GLOB_DEP(cstic, submonitor, vcmlModel.getOptions(), cstic.getOptions());
-		functionPerformer.endTransaction();
+		try {
+			functionPerformer.beginTransaction();
+			functionPerformer.CAMA_CHAR_VAL_ALLOCAT_GLOB_DEP(cstic, submonitor, vcmlModel.getOptions(), cstic.getOptions());
+			functionPerformer.endTransaction();
+		} catch(JCoException exception) {
+			if(exception instanceof AbapException) {
+				functionPerformer.handleAbapException((AbapException)exception);
+			}
+		}
 		submonitor.done();
 	}
 

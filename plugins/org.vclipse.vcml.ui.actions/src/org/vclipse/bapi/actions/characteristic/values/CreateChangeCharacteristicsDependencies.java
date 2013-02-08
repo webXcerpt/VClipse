@@ -27,6 +27,8 @@ import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.inject.Inject;
+import com.sap.conn.jco.AbapException;
+import com.sap.conn.jco.JCoException;
 
 /**
  *
@@ -36,15 +38,21 @@ public class CreateChangeCharacteristicsDependencies extends BAPIActionHandler i
 	@Inject
 	private JCoFunctionPerformer functionPerformer;
 	
-	public void run(Characteristic cstic, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects) throws Exception {
+	public void run(Characteristic cstic, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects) {
 		if(monitor.isCanceled()) {
 			monitor.done();
 			throw new BAPIException("Action \"Create/ change dependencies\" for a characteristic was canceled by the user.");
 		}
 		IProgressMonitor submonitor = SubMonitor.convert(monitor, "Creating/ changing dependencies for cstic " + cstic.getName(), IProgressMonitor.UNKNOWN);
-		functionPerformer.beginTransaction();
-		functionPerformer.CAMA_CHAR_ALLOCATE_GLOB_DEP(cstic, monitor, cstic.getOptions(), vcmlModel.getOptions());
-		functionPerformer.endTransaction();
+		try {
+			functionPerformer.beginTransaction();
+			functionPerformer.CAMA_CHAR_ALLOCATE_GLOB_DEP(cstic, monitor, cstic.getOptions(), vcmlModel.getOptions());
+			functionPerformer.endTransaction();
+		} catch(JCoException exception) {
+			if(exception instanceof AbapException) {
+				functionPerformer.handleAbapException((AbapException)exception);
+			}
+		}
 		submonitor.done();
 	}
 
