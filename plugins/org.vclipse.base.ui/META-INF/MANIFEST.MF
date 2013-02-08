@@ -6,9 +6,7 @@ Bundle-Version: 0.5.0.qualifier
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Require-Bundle: org.eclipse.xtext.ui,
  org.vclipse.base;visibility:=reexport,
- org.eclipse.e4.ui.workbench;bundle-version="0.10.2";visibility:=reexport,
- org.eclipse.compare,
- org.eclipse.ui.ide
+ org.eclipse.e4.ui.workbench;bundle-version="0.10.2";visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.vclipse.base.ui,
