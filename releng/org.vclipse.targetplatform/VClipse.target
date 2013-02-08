@@ -1,30 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="VClipse" sequenceNumber="24">
+<?pde version="3.8"?><target name="VClipse" sequenceNumber="25">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.mwe.ui.feature.group" version="1.2.1.v201206110920"/>
-<unit id="org.eclipse.emf.mwe.doc.feature.group" version="1.2.1.v201206110920"/>
-<unit id="org.eclipse.emf.mwe.core.feature.group" version="1.2.1.v201206110920"/>
-<unit id="org.eclipse.emf.mwe.sdk.feature.group" version="1.2.1.v201206110920"/>
-<unit id="org.eclipse.emf.mwe2.language.sdk.feature.group" version="2.3.0.v201206120758"/>
-<unit id="org.eclipse.emf.mwe2.runtime.sdk.feature.group" version="2.3.0.v201206110920"/>
-<unit id="org.eclipse.xtext.xtend2.sdk.feature.group" version="2.3.1.v201208210947"/>
-<unit id="org.eclipse.xtext.docs.feature.group" version="2.3.1.v201208210947"/>
-<unit id="org.eclipse.xtext.ui.feature.group" version="2.3.1.v201208210947"/>
-<unit id="org.eclipse.xtext.runtime.feature.group" version="2.3.1.v201208210947"/>
-<unit id="org.eclipse.xtext.xbase.feature.group" version="2.3.1.v201208210947"/>
-<unit id="org.eclipse.xtext.examples.feature.group" version="2.3.1.v201208210947"/>
-<unit id="org.eclipse.xtext.sdk.feature.group" version="2.3.1.v201208210947"/>
-<unit id="de.itemis.xtext.antlr.feature.feature.group" version="2.0.0.v201108011202"/>
-<unit id="de.itemis.xtext.antlr.sdk.feature.group" version="2.0.0.v201108011202"/>
-<repository location="http://download.itemis.de/updates"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipselabs.xtext.utils.unittesting" version="0.9.3.201204261440"/>
-<repository location="http://xtext-utils.eclipselabs.org.codespot.com/git.distribution/releases/unittesting-0.9.x/"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<repository location="http://download.eclipse.org/eclipse/updates/4.2"/>
+<unit id="org.eclipse.m2e.feature.feature.group" version="1.2.0.20120903-1050"/>
+<repository location="http://download.eclipse.org/releases/juno"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.tigris.subversion.subclipse.graph.feature.feature.group" version="1.1.1"/>
@@ -45,8 +24,7 @@
 <repository location="http://download.eclipse.org/modeling/emf/compare/updates/releases/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.m2e.feature.feature.group" version="1.2.0.20120903-1050"/>
-<repository location="http://download.eclipse.org/releases/juno"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.2"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.compare.feature.group" version="2.1.0.201212180932"/>
@@ -56,6 +34,24 @@
 <unit id="org.eclipse.emf.compare.ide.ui.feature.group" version="2.1.0.201212180932"/>
 <unit id="org.eclipse.emf.compare.source.feature.group" version="2.1.0.201212180932"/>
 <repository location="http://download.eclipse.org/modeling/emf/compare/updates/milestones/2.1/S201212180932/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.emf.mwe.ui.feature.group" version="1.2.1.v201206110920"/>
+<unit id="org.eclipse.emf.mwe.doc.feature.group" version="1.2.1.v201206110920"/>
+<unit id="org.eclipse.emf.mwe.core.feature.group" version="1.2.1.v201206110920"/>
+<unit id="org.eclipse.emf.mwe.sdk.feature.group" version="1.2.1.v201206110920"/>
+<unit id="org.eclipse.emf.mwe2.language.sdk.feature.group" version="2.3.0.v201206120758"/>
+<unit id="org.eclipse.emf.mwe2.runtime.sdk.feature.group" version="2.3.0.v201206110920"/>
+<unit id="org.eclipse.xtext.xtend2.sdk.feature.group" version="2.3.1.v201208210947"/>
+<unit id="org.eclipse.xtext.docs.feature.group" version="2.3.1.v201208210947"/>
+<unit id="org.eclipse.xtext.ui.feature.group" version="2.3.1.v201208210947"/>
+<unit id="org.eclipse.xtext.runtime.feature.group" version="2.3.1.v201208210947"/>
+<unit id="org.eclipse.xtext.xbase.feature.group" version="2.3.1.v201208210947"/>
+<unit id="org.eclipse.xtext.examples.feature.group" version="2.3.1.v201208210947"/>
+<unit id="org.eclipse.xtext.sdk.feature.group" version="2.3.1.v201208210947"/>
+<unit id="de.itemis.xtext.antlr.feature.feature.group" version="2.0.0.v201108011202"/>
+<unit id="de.itemis.xtext.antlr.sdk.feature.group" version="2.0.0.v201108011202"/>
+<repository location="http://download.itemis.de/updates"/>
 </location>
 </locations>
 <environment>
