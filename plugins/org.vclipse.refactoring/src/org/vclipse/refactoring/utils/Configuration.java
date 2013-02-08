@@ -32,6 +32,7 @@ import org.vclipse.refactoring.RefactoringStatus;
 
 import com.google.common.collect.Maps;
 import com.google.inject.ConfigurationException;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
@@ -44,6 +45,9 @@ public class Configuration {
 	private static final String ATTRIBUTE_EXECUTER = "executer";
 	
 	private Map<EClassifier, Injector> injectors;
+	
+	@Inject
+	private RefactoringStatus refactoringStatus;
 	
 	public Map<EClassifier, Injector> getInjectors() {
 		if(injectors == null) {
@@ -81,7 +85,7 @@ public class Configuration {
 							String executerPath = element.getAttribute(ATTRIBUTE_EXECUTER);
 							String[] parts = executerPath.split(":");
 							if(parts.length != 2) {
-								RefactoringStatus status = RefactoringStatus.getConfigurationError();
+								RefactoringStatus status = refactoringStatus.getConfigurationError();
 								RefactoringPlugin.log(status);
 								continue;
 							} else {
@@ -103,7 +107,7 @@ public class Configuration {
 							}
 						}
 					} catch(Exception exception) {
-						RefactoringStatus status = RefactoringStatus.getConfigurationError();
+						RefactoringStatus status = refactoringStatus.getConfigurationError();
 						RefactoringPlugin.log(status);
 						continue;
 					}
