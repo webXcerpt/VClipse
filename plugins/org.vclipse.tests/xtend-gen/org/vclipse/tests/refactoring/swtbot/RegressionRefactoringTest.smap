@@ -1,0 +1,32 @@
+SMAP
+RegressionRefactoringTest.java
+Xtend
+*S Xtend
+*F
++ 0 RegressionRefactoringTest.xtend
+src/org/vclipse/tests/refactoring/swtbot/RegressionRefactoringTest.xtend
+*L
+34:30
+35:31,2
+36:33,2
+37:35,2
+38:37,2
+39:39,2
+40:41
+41:42
+44:46,2
+45:48
+47:49
+49:50
+48:51
+52:52,2
+54:54
+53:55,2
+58:57
+57:58,2
+62:60
+61:61,2
+64:63
+44:64,3
+70:71
+*E

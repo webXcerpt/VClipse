@@ -1,0 +1,18 @@
+SMAP
+ProcedureTest.java
+Xtend
+*S Xtend
+*F
++ 0 ProcedureTest.xtend
+src/org/vclipse/tests/vcml/ProcedureTest.xtend
+*L
+27:17,3
+29:20
+27:20
+34:25,3
+36:28
+34:28
+41:33,3
+43:36
+41:36
+*E

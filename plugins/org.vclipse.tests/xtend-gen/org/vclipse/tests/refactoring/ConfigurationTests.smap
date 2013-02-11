@@ -1,0 +1,22 @@
+SMAP
+ConfigurationTests.java
+Xtend
+*S Xtend
+*F
++ 0 ConfigurationTests.xtend
+src/org/vclipse/tests/refactoring/ConfigurationTests.xtend
+*L
+40:37,6
+45:47
+46:48,2
+47:50,2
+48:52
+49:53
+50:54,2
+51:56
+52:57
+54:58
+55:59,3
+56:62,3
+47:65
+*E

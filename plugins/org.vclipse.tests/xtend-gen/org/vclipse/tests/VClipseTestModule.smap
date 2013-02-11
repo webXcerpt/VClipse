@@ -1,0 +1,12 @@
+SMAP
+VClipseTestModule.java
+Xtend
+*S Xtend
+*F
++ 0 VClipseTestModule.xtend
+src/org/vclipse/tests/VClipseTestModule.xtend
+*L
+27:16
+31:20
+35:24
+*E
