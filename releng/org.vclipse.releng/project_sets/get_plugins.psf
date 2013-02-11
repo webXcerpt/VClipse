@@ -38,6 +38,7 @@
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/plugins/org.vclipse.vcml2idoc.ui,org.vclipse.vcml2idoc.ui"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/features/org.vclipse.vcml2idoc_feature,org.vclipse.vcml2idoc_feature"/>
 <project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/features/org.vclipse.vcml_feature,org.vclipse.vcml_feature"/>
+<project reference="0.9.3,https://svn.codespot.com/a/eclipselabs.org/vclipse/wiki,wiki"/>
 </provider>
 <workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1340900664601_10" label="VClipse Features" name="VClipse Features">
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.vclipse.idoc_feature" type="4"/>
@@ -84,5 +85,8 @@
 <item elementID="=org.vclipse.releng" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.repository" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.vclipse.targetplatform" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+</workingSets>
+<workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1360578284181_7" label="VClipse Wiki" name="VClipse Wiki">
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/wiki" type="4"/>
 </workingSets>
 </psf>
