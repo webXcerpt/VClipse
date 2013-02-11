@@ -8,7 +8,7 @@ Require-Bundle: org.eclipse.emf.mwe2.launch;visibility:=reexport,
  org.eclipse.xtend2.lib,
  org.vclipse.base
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany, www.webxcerpt.com
 Export-Package: org.vclipse.vcml,
  org.vclipse.vcml.mm,
@@ -16,3 +16,4 @@ Export-Package: org.vclipse.vcml,
  org.vclipse.vcml.vcml.impl,
  org.vclipse.vcml.vcml.util
 Import-Package: org.apache.log4j
+Bundle-Activator: org.vclipse.vcml.mm.Activator
