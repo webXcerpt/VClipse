@@ -4,5 +4,5 @@ is_project_specific=true
 outlet.DEFAULT_OUTPUT.cleanDirectory=true
 outlet.DEFAULT_OUTPUT.cleanupDerived=true
 outlet.DEFAULT_OUTPUT.createDirectory=true
-outlet.DEFAULT_OUTPUT.derived=true
+outlet.DEFAULT_OUTPUT.derived=false
 outlet.DEFAULT_OUTPUT.override=true
