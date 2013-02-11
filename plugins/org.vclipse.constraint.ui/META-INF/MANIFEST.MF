@@ -9,7 +9,12 @@ Require-Bundle: org.vclipse.constraint;visibility:=reexport,
  org.eclipse.xtext.ui.shared,
  org.eclipse.xtext.builder,
  org.eclipse.xtext.ui.codetemplates.ui,
- org.vclipse.dependency.ui
+ org.vclipse.dependency.ui,
+ org.eclipse.xtext.ui,
+ org.eclipse.ui.editors,
+ org.eclipse.ui,
+ org.eclipse.compare,
+ org.antlr.runtime
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.vclipse.constraint.ui.contentassist,
