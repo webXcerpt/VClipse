@@ -10,7 +10,7 @@
 		<relativePath>../org.vclipse.releng/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>org.vclipse.compare</artifactId>
+	<artifactId>org.vclipse.vcml.compare</artifactId>
 	<packaging>eclipse-plugin</packaging>
 	<version>0.5.0.qualifier</version>
 </project>
