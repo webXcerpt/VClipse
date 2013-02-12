@@ -16,7 +16,7 @@ Require-Bundle: org.vclipse.condition;visibility:=reexport,
  org.eclipse.compare,
  org.antlr.runtime
 Import-Package: org.apache.log4j
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.vclipse.condition.ui,
  org.vclipse.condition.ui.contentassist,
  org.vclipse.condition.ui.contentassist.antlr,

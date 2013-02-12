@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JppLib Plug-in
-Bundle-SymbolicName: org.vclipse.jpplib
+Bundle-SymbolicName: org.vclipse.jpplib;singleton:=true
 Bundle-Version: 0.6.0.qualifier
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

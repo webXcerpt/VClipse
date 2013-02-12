@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: VClipse Test Plug-in
-Bundle-SymbolicName: org.vclipse.tests
+Bundle-SymbolicName: org.vclipse.tests;singleton:=true
 Bundle-Version: 0.5.0.qualifier
 Bundle-Activator: org.vclipse.tests.VClipseTestPlugin
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany, www.webxcerpt.com
