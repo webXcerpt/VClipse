@@ -13,7 +13,9 @@ Require-Bundle: org.eclipse.xtext.generator,
  org.eclipse.xtext.util,
  org.eclipse.emf.ecore,
  org.eclipse.emf.common,
- org.antlr.runtime
+ org.antlr.runtime,
+ org.slf4j.api,
+ org.slf4j.jcl
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.vclipse.idoc,
  org.vclipse.idoc.services,
@@ -28,5 +30,4 @@ Export-Package: org.vclipse.idoc,
  org.vclipse.idoc.formatting
 Bundle-ClassPath: .
 Import-Package: org.apache.commons.logging,
- org.apache.log4j,
- org.slf4j
+ org.apache.log4j
