@@ -207,7 +207,6 @@ waives its rights to a jury trial in any resulting litigation.
       <import plugin="com.google.guava"/>
       <import plugin="org.eclipse.xtext.xbase.lib"/>
       <import plugin="org.eclipse.xtend2.lib"/>
-      <import plugin="org.slf4j.jcl"/>
       <import plugin="org.slf4j.api"/>
       <import plugin="org.eclipse.emf.compare"/>
       <import plugin="org.eclipse.ltk.ui.refactoring"/>

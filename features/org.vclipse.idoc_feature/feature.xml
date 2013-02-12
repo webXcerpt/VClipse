@@ -186,9 +186,8 @@ waives its rights to a jury trial in any resulting litigation.
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.antlr.runtime"/>
-      <import plugin="org.slf4j.jcl"/>
-      <import plugin="org.apache.log4j"/>
       <import plugin="org.slf4j.api"/>
+      <import plugin="org.apache.log4j"/>
       <import plugin="org.eclipse.xtext.ui"/>
       <import plugin="org.eclipse.xtext.ui.shared"/>
       <import plugin="org.eclipse.xtext.ui.codetemplates.ui"/>
