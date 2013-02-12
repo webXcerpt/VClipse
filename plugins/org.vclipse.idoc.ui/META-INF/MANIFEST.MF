@@ -15,7 +15,7 @@ Require-Bundle: org.eclipse.xtext.ui,
  org.eclipse.ui.editors,
  org.eclipse.ui,
  org.antlr.runtime
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.vclipse.idoc.ui.contentassist.antlr,
  org.vclipse.idoc.ui.internal,
  org.vclipse.idoc.ui.contentassist
