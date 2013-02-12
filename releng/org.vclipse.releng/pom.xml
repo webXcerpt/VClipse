@@ -16,10 +16,10 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<tycho-version>0.13.0</tycho-version>
+		<tycho-version>0.16.0</tycho-version>
 		<junit-version>4.8.1</junit-version>
+		<platform-version-name>juno</platform-version-name>
 		<eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
-		<platform-version-name>indigo</platform-version-name>
 	</properties>
 
 	<modules>
@@ -346,12 +346,19 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
+			<!-- <dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>${junit-version}</version>
 				<scope>test</scope>
+			</dependency> -->
+			
+			<dependency>
+  				<groupId>com.googlecode.slf4j-maven-plugin-log</groupId>
+  				<artifactId>slf4j-maven-plugin-log</artifactId>
+  				<version>1.0.0</version>
 			</dependency>
+			
 		</dependencies>
 	</dependencyManagement>
 
