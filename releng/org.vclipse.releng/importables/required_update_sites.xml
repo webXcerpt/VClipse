@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bookmarks>
-	<site name="Import Wizard for SAP Java Connector" selected="true" url="http://rcer.sf.net/update-site"/>
-   		
-	<site name="EMF Compare 2" selected="true" 
-		url="http://download.eclipse.org/modeling/emf/compare/updates/milestones/2.1/S201212180932/"/>
-   		
-   <site url="http://subclipse.tigris.org/update_1.8.x" selected="true" name="Subclipse"/>
-   
-   <site url="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site" selected="true" name="SWTBot"/>
-   
-   <site url="http://download.itemis.de/updates/" selected="true" name="Xtext Composite Update Site"/>
-   
-   <site url="http://svn.codespot.com/a/eclipselabs.org/xtext-utils/updates/snapshots/" selected="true" name="Xtext Unit Test Utils"/>
+	<site name="Import Wizard for SAP Java Connector" selected="true" url="http://rcer.sf.net/update-site"/>	
+	<site name="EMF Compare 2" selected="true" url="http://download.eclipse.org/modeling/emf/compare/updates/milestones/2.1/S201212180932/"/>
+	<site url="http://subclipse.tigris.org/update_1.8.x" selected="true" name="Subclipse"/>
+	<site url="http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site" selected="true" name="SWTBot"/>
+	<site url="http://download.itemis.de/updates/" selected="true" name="Xtext Composite Update Site"/>
+	<site url="http://svn.codespot.com/a/eclipselabs.org/xtext-utils/updates/snapshots/" selected="true" name="Xtext Unit Test Utils"/>
+	<site url="http://eclipsescript.org/updates/" selected="true" name="EclipseScript"/>
 </bookmarks>
