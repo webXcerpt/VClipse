@@ -69,8 +69,8 @@ public class VCMLUtilityTests extends XtextTest {
         }
       };
     this.vcmlUtility.<VCObject>sortEntries(_objects, new Comparator<VCObject>() {
-        public int compare(VCObject arg0,VCObject arg1) {
-          return _function.apply(arg0,arg1);
+        public int compare(VCObject o1,VCObject o2) {
+          return _function.apply(o1,o2);
         }
     });
     String _serialize_1 = this.vcmlSerializer.serialize(vcml_model);

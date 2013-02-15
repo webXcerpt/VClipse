@@ -7,7 +7,9 @@ Bundle-Activator: org.vclipse.connection.VClipseConnectionPlugin
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Require-Bundle: org.eclipse.xtext.ui,
  org.eclipse.equinox.security,
- org.apache.commons.lang
+ org.apache.commons.lang,
+ com.sap.conn.jco,
+ com.sap.conn.jco.idoc
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.vclipse.connection,
@@ -15,7 +17,3 @@ Export-Package: org.vclipse.connection,
 Bundle-ClassPath: .,
  libs/commons-collections-3.2.1.jar,
  libs/commons-configuration-1.6.jar
-Import-Package: com.sap.conn.idoc,
- com.sap.conn.idoc.jco,
- com.sap.conn.jco,
- com.sap.conn.jco.ext
