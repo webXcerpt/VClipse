@@ -16,15 +16,17 @@ import org.eclipse.xtext.generator.*
 import org.eclipse.xtext.ui.generator.*
 
 var grammarURI = "classpath:/org/vclipse/condition/Condition.xtext"
-var file.extensions = "pre,sel"
 var projectName = "org.vclipse.condition"
 var runtimeProject = "../${projectName}"
+var platformPrefix = "platform:/resource/"
+var file.extensions = "pre,sel"
 
 Workflow {
+	
     bean = StandaloneSetup {
-	    scanClassPath = true
-	    registerGenModelFile = "../org.vclipse.vcml.mm/src/org/vclipse/vcml/mm/VCML.genmodel"
-		platformUri = "${runtimeProject}/.."
+    	scanClassPath = true
+    	platformUri = "${runtimeProject}/.."
+	    registerGenModelFile = "${platformPrefix}/org.vclipse.vcml.mm/src/org/vclipse/vcml/mm/VCML.genmodel"
 	}
 
 	component = DirectoryCleaner {
@@ -132,10 +134,7 @@ Workflow {
 					classSplitting = true
 				}
 			}
-
-			// generates junit test support classes into Generator#pathTestProject
-			//fragment = junit.Junit4Fragment {}
-
+			
 			// provides a preference page for template proposals 
 			fragment = templates.CodetemplatesGeneratorFragment {}
 		}
