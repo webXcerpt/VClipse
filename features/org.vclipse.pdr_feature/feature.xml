@@ -178,23 +178,6 @@ No party to this Agreement will bring a legal action under this Agreement more t
 waives its rights to a jury trial in any resulting litigation.
    </license>
 
-   <requires>
-      <import plugin="org.eclipse.xtext.ui"/>
-      <import plugin="org.eclipse.equinox.security"/>
-      <import plugin="org.apache.commons.lang"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.ui.console"/>
-      <import plugin="org.vclipse.vcml"/>
-      <import plugin="org.vclipse.idoc"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.vclipse.vcml2idoc.ui"/>
-      <import plugin="org.vclipse.vcml.ui"/>
-      <import plugin="org.tigris.subversion.subclipse.core"/>
-      <import plugin="org.eclipse.team.core"/>
-      <import plugin="org.vclipse.vcml.compare"/>
-   </requires>
-
    <plugin
          id="org.vclipse.connection"
          download-size="0"

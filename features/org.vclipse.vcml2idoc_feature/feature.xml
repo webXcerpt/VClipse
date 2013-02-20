@@ -178,12 +178,6 @@ No party to this Agreement will bring a legal action under this Agreement more t
 waives its rights to a jury trial in any resulting litigation.
    </license>
 
-   <requires>
-      <import plugin="org.vclipse.vcml"/>
-      <import plugin="org.vclipse.vcml.ui"/>
-      <import plugin="org.vclipse.idoc"/>
-   </requires>
-
    <plugin
          id="org.vclipse.vcml2idoc.ui"
          download-size="0"

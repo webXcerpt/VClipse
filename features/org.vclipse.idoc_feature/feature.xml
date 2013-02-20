@@ -178,29 +178,6 @@ No party to this Agreement will bring a legal action under this Agreement more t
 waives its rights to a jury trial in any resulting litigation.
    </license>
 
-   <requires>
-      <import plugin="org.eclipse.xtext.generator"/>
-      <import plugin="org.eclipse.emf.mwe2.launch"/>
-      <import plugin="org.eclipse.xtext"/>
-      <import plugin="org.eclipse.xtext.util"/>
-      <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.emf.common"/>
-      <import plugin="org.antlr.runtime"/>
-      <import plugin="org.slf4j.api"/>
-      <import plugin="org.apache.log4j"/>
-      <import plugin="org.eclipse.xtext.ui"/>
-      <import plugin="org.eclipse.xtext.ui.shared"/>
-      <import plugin="org.eclipse.xtext.ui.codetemplates.ui"/>
-      <import plugin="org.eclipse.xtext.builder"/>
-      <import plugin="org.eclipse.compare"/>
-      <import plugin="org.eclipse.ui.editors"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.swt"/>
-      <import plugin="org.eclipse.e4.ui.workbench" version="0.10.2" match="greaterOrEqual"/>
-   </requires>
-
    <plugin
          id="org.vclipse.idoc"
          download-size="0"

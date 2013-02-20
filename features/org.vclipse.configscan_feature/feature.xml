@@ -180,28 +180,6 @@ No party to this Agreement will bring a legal action under this Agreement more t
 waives its rights to a jury trial in any resulting litigation.
    </license>
 
-   <requires>
-      <import plugin="org.vclipse.vcml"/>
-      <import plugin="org.eclipse.xtext" version="2.3.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.util" version="2.3.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.ecore"/>
-      <import plugin="org.eclipse.emf.common"/>
-      <import plugin="org.antlr.runtime"/>
-      <import plugin="org.apache.log4j" version="1.2.15" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.ui" version="2.3.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.ide" version="3.5.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.ui.shared" version="2.3.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.builder" version="2.3.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.xtext.ui.codetemplates.ui" version="2.3.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.compare"/>
-      <import plugin="org.vclipse.connection"/>
-      <import plugin="org.vclipse.base.ui"/>
-      <import plugin="org.eclipse.ui.editors" version="3.5.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="com.sap.conn.jco"/>
-      <import plugin="org.eclipse.debug.ui"/>
-   </requires>
-
    <plugin
          id="org.vclipse.configscan.vcmlt"
          download-size="0"
