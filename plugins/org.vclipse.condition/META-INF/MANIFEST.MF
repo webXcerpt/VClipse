@@ -6,6 +6,7 @@ Bundle-Version: 0.5.0.qualifier
 Bundle-SymbolicName: org.vclipse.condition;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext.generator;resolution:=optional,
+ org.vclipse.vcml;visibility:=reexport,
  org.vclipse.dependency,
  org.eclipse.xtext,
  org.eclipse.xtext.util,

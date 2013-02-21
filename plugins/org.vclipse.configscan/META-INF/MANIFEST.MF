@@ -9,7 +9,8 @@ Require-Bundle: org.eclipse.ui.ide,
  org.vclipse.connection,
  org.eclipse.xtext.ui,
  org.vclipse.base.ui,
- com.sap.conn.jco
+ com.sap.conn.jco,
+ javax.xml
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.vclipse.configscan,

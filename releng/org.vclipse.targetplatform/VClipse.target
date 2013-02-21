@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="VClipse" sequenceNumber="26">
+<?pde version="3.8"?><target name="VClipse" sequenceNumber="30">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.compare.feature.group" version="2.1.0.201212180932"/>
@@ -47,7 +47,13 @@
 <unit id="de.itemis.xtext.antlr.sdk.feature.group" version="2.0.0.v201108011202"/>
 <repository location="http://download.itemis.de/updates"/>
 </location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20130118183705/repository/"/>
+</location>
 </locations>
+<includeBundles>
+<plugin id="javax.xml" version="1.3.4.v201005080400"/>
+</includeBundles>
 <environment>
 <nl>en</nl>
 </environment>

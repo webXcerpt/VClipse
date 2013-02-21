@@ -46,3 +46,4 @@ Export-Package: org.vclipse.vcml.ui,
  org.vclipse.vcml.ui.wizard
 Bundle-Activator: org.vclipse.vcml.ui.internal.VCMLActivator
 Bundle-ClassPath: .
+Import-Package: org.apache.log4j
