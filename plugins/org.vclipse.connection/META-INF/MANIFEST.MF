@@ -11,6 +11,8 @@ Require-Bundle: org.eclipse.xtext.ui,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: com.sap.conn.jco,
+ com.sap.conn.jco.ext,
+ com.sap.conn.idoc.jco,
  com.sap.conn.idoc
 Export-Package: org.vclipse.connection,
  org.vclipse.connection.injection

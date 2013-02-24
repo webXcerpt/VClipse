@@ -15,7 +15,9 @@ Require-Bundle: org.vclipse.connection,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: com.sap.conn.jco,
- com.sap.conn.idoc
+ com.sap.conn.idoc,
+ com.sap.conn.idoc.jco,
+ com.sap.conn.idoc.rt.xml
 Export-Package: org.vclipse.idoc2jcoidoc,
  org.vclipse.idoc2jcoidoc.actions
 Bundle-ClassPath: .
