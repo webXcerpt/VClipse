@@ -200,18 +200,6 @@ waives its rights to a jury trial in any resulting litigation.
          unpack="false"/>
 
    <plugin
-         id="com.sap.conn.jco"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="com.sap.conn.jco.idoc"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.vclipse.sap.deployment"
          download-size="0"
          install-size="0"
