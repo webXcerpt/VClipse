@@ -13,9 +13,9 @@ Require-Bundle: org.tigris.subversion.subclipse.core,
  org.vclipse.idoc2jcoidoc,
  org.vclipse.idoc,
  org.vclipse.vcml,
- org.vclipse.vcml.ui,
- com.sap.conn.jco,
- com.sap.conn.jco.idoc
+ org.vclipse.vcml.ui
+Import-Package: com.sap.conn.jco,
+ com.sap.conn.idoc
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)

@@ -11,11 +11,11 @@ Require-Bundle: org.vclipse.connection,
  org.eclipse.ui.ide,
  org.vclipse.console,
  org.vclipse.vcml2idoc.ui,
- org.vclipse.vcml.ui,
- com.sap.conn.jco,
- com.sap.conn.jco.idoc
+ org.vclipse.vcml.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
+Import-Package: com.sap.conn.jco,
+ com.sap.conn.idoc
 Export-Package: org.vclipse.idoc2jcoidoc,
  org.vclipse.idoc2jcoidoc.actions
 Bundle-ClassPath: .
