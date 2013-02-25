@@ -35,9 +35,6 @@ public class RefactoringRunner {
 	@Inject
 	private Configuration configuration;
 	
-	@Inject
-	private RefactoringStatus refactoringStatus;
-	
 	private ChangeRecorder changeRecorder;
 	
 	public void refactor(IRefactoringContext context) throws CoreException {
@@ -47,7 +44,7 @@ public class RefactoringRunner {
 		IRefactoringExecuter refactoring = getRefactoring(element);
 		if(refactoring == null) {
 			EStructuralFeature feature = context.getStructuralFeature();
-			RefactoringStatus status = refactoringStatus.getExcuterNotAvailable(element, feature);
+			RefactoringStatus status = RefactoringStatus.getExcuterNotAvailable(element, feature);
 			throw new CoreException(status);
 		} else {
 			refactoring.refactor(context);			

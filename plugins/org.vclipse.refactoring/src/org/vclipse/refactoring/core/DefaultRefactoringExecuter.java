@@ -64,9 +64,6 @@ public class DefaultRefactoringExecuter extends MethodCollector implements IRefa
 	@Inject
 	private Provider<RefactoringContext> contextProvider;
 	
-	@Inject
-	private RefactoringStatus refactoringStatus;
-	
 	public DefaultRefactoringExecuter() {		
 		collect(1, IRefactoringContext.class);
 		collect(1, IRefactoringUIContext.class);
@@ -86,13 +83,13 @@ public class DefaultRefactoringExecuter extends MethodCollector implements IRefa
 		IRefactoringExecuter executer = refactorings.get(containerType);
 		if(executer == null) {
 			EStructuralFeature feature = context.getStructuralFeature();
-			RefactoringStatus status = refactoringStatus.getExcuterNotAvailable(element, feature);
+			RefactoringStatus status = RefactoringStatus.getExcuterNotAvailable(element, feature);
 			throw new CoreException(status);
 		} else {
 			Pair<EObject, Method> refactoringMethod = getRefactoring(context);
 			if(refactoringMethod == null) {
 				EStructuralFeature feature = context.getStructuralFeature();
-				RefactoringStatus status = refactoringStatus.getMethodNotAvailable(element, feature);
+				RefactoringStatus status = RefactoringStatus.getMethodNotAvailable(element, feature);
 				throw new CoreException(status);
 			} else {
 				try {
