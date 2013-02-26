@@ -78,7 +78,10 @@ class SAPFormattingUtility {
 		doubleValue = new Double(interval.upperBound)
 		formatted = formatter.format(doubleValue)
 		resultBuffer.append(formatted)
-		resultBuffer.append(WHITESPACE).append(type.unit.toLowerCase)
+		resultBuffer.append(WHITESPACE)
+		if (type.unit!=null) {
+			resultBuffer.append(type.unit.toLowerCase)
+		}
 		replace_COMMA_DOT(resultBuffer)
 		return resultBuffer.toString
 	}

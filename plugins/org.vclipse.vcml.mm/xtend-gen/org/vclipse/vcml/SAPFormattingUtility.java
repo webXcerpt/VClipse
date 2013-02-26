@@ -110,10 +110,14 @@ public class SAPFormattingUtility {
     String _format = formatter.format(doubleValue);
     formatted = _format;
     resultBuffer.append(formatted);
-    StringBuffer _append = resultBuffer.append(SAPFormattingUtility.WHITESPACE);
+    resultBuffer.append(SAPFormattingUtility.WHITESPACE);
     String _unit = type.getUnit();
-    String _lowerCase = _unit.toLowerCase();
-    _append.append(_lowerCase);
+    boolean _notEquals = (!Objects.equal(_unit, null));
+    if (_notEquals) {
+      String _unit_1 = type.getUnit();
+      String _lowerCase = _unit_1.toLowerCase();
+      resultBuffer.append(_lowerCase);
+    }
     this.replace_COMMA_DOT(resultBuffer);
     return resultBuffer.toString();
   }
