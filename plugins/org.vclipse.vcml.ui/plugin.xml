@@ -507,6 +507,7 @@
     </provider>
   </extension>
 
+<!--
    <extension
          point="org.eclipse.ui.newWizards">
       <wizard
@@ -517,6 +518,7 @@
             project="true">
       </wizard>
    </extension>
+-->
 
   <extension
         point="org.eclipse.xtext.ui.shared.overridingGuiceModule">
