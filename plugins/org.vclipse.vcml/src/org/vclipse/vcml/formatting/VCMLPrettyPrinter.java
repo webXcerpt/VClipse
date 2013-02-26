@@ -336,6 +336,9 @@ public class VCMLPrettyPrinter extends DefaultPrettyPrinter {
 
 	@Override
 	public DataLayouter<NoExceptions> caseCharacteristicOrValueDependencies(CharacteristicOrValueDependencies object) {
+		if (object.getDependencies().isEmpty()) {
+			return layouter;
+		}
 		layouter.brk().beginC().print("dependencies {");
 		for(Dependency dependency : object.getDependencies()) {
 			layouter.brk();
