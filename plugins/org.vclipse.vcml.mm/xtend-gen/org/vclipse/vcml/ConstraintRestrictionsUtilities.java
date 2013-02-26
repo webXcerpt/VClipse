@@ -15,6 +15,7 @@ import org.vclipse.vcml.vcml.Comparison;
 import org.vclipse.vcml.vcml.Condition;
 import org.vclipse.vcml.vcml.ConditionalConstraintRestriction;
 import org.vclipse.vcml.vcml.ConstraintRestriction;
+import org.vclipse.vcml.vcml.ConstraintRestrictionFalse;
 import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.Expression;
 import org.vclipse.vcml.vcml.Function;
@@ -22,9 +23,11 @@ import org.vclipse.vcml.vcml.InCondition_C;
 import org.vclipse.vcml.vcml.IsSpecified_C;
 import org.vclipse.vcml.vcml.Literal;
 import org.vclipse.vcml.vcml.NegatedConstraintRestrictionLHS;
+import org.vclipse.vcml.vcml.NumericLiteral;
 import org.vclipse.vcml.vcml.ObjectCharacteristicReference;
 import org.vclipse.vcml.vcml.ShortVarDefinition;
 import org.vclipse.vcml.vcml.ShortVarReference;
+import org.vclipse.vcml.vcml.SymbolicLiteral;
 import org.vclipse.vcml.vcml.Table;
 
 @SuppressWarnings("all")
@@ -140,6 +143,21 @@ public class ConstraintRestrictionsUtilities {
     return _xblockexpression;
   }
   
+  protected List<Characteristic> _usedCstis(final SymbolicLiteral obj) {
+    ArrayList<Characteristic> _newArrayList = Lists.<Characteristic>newArrayList();
+    return _newArrayList;
+  }
+  
+  protected List<Characteristic> _usedCstis(final NumericLiteral obj) {
+    ArrayList<Characteristic> _newArrayList = Lists.<Characteristic>newArrayList();
+    return _newArrayList;
+  }
+  
+  protected List<Characteristic> _usedCstis(final ConstraintRestrictionFalse obj) {
+    ArrayList<Characteristic> _newArrayList = Lists.<Characteristic>newArrayList();
+    return _newArrayList;
+  }
+  
   public List<Characteristic> usedCstis(final EObject reference) {
     if (reference instanceof ObjectCharacteristicReference) {
       return _usedCstis((ObjectCharacteristicReference)reference);
@@ -147,12 +165,18 @@ public class ConstraintRestrictionsUtilities {
       return _usedCstis((ShortVarReference)reference);
     } else if (reference instanceof Function) {
       return _usedCstis((Function)reference);
+    } else if (reference instanceof NumericLiteral) {
+      return _usedCstis((NumericLiteral)reference);
+    } else if (reference instanceof SymbolicLiteral) {
+      return _usedCstis((SymbolicLiteral)reference);
     } else if (reference instanceof Table) {
       return _usedCstis((Table)reference);
     } else if (reference instanceof Comparison) {
       return _usedCstis((Comparison)reference);
     } else if (reference instanceof ConditionalConstraintRestriction) {
       return _usedCstis((ConditionalConstraintRestriction)reference);
+    } else if (reference instanceof ConstraintRestrictionFalse) {
+      return _usedCstis((ConstraintRestrictionFalse)reference);
     } else if (reference instanceof InCondition_C) {
       return _usedCstis((InCondition_C)reference);
     } else if (reference instanceof IsSpecified_C) {

@@ -25,6 +25,9 @@ import org.vclipse.vcml.vcml.ShortVarReference
 import org.vclipse.vcml.vcml.Table
 import org.vclipse.vcml.vcml.ConstraintSource
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.vclipse.vcml.vcml.SymbolicLiteral
+import org.vclipse.vcml.vcml.ConstraintRestrictionFalse
+import org.vclipse.vcml.vcml.NumericLiteral
 
 class ConstraintRestrictionsUtilities {
 	
@@ -100,4 +103,17 @@ class ConstraintRestrictionsUtilities {
 		}
 		cstics
 	}
+	
+	def dispatch List<Characteristic> usedCstis(SymbolicLiteral obj) {
+		Lists::<Characteristic>newArrayList // TODO check whether this is correct
+	}
+	
+	def dispatch List<Characteristic> usedCstis(NumericLiteral obj) {
+		Lists::<Characteristic>newArrayList // TODO check whether this is correct
+	}
+	
+	def dispatch List<Characteristic> usedCstis(ConstraintRestrictionFalse obj) {
+		Lists::<Characteristic>newArrayList // TODO check whether this is correct
+	}
+	
 }
