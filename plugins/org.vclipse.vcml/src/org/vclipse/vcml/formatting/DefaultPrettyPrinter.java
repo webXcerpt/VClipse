@@ -79,17 +79,17 @@ abstract class DefaultPrettyPrinter extends VcmlSwitch<DataLayouter<NoExceptions
 	protected boolean hasBody(CharacteristicValue object) {
 		return object.getDescription() != null 
 		|| object.getDocumentation() != null
-		|| object.getDependencies() != null;
+		|| (object.getDependencies() != null && !object.getDependencies().getDependencies().isEmpty());
 	}
 
 	protected boolean hasBody(NumericCharacteristicValue object) {
 		return object.getDocumentation() != null
-		|| object.getDependencies() != null;
+		|| (object.getDependencies() != null && !object.getDependencies().getDependencies().isEmpty());
 	}
 
 	protected boolean hasBody(DateCharacteristicValue object) {
 		return object.getDocumentation() != null
-		|| object.getDependencies() != null;
+		|| (object.getDependencies() != null && !object.getDependencies().getDependencies().isEmpty());
 	}
 
 	protected boolean hasBody(Class object) {
