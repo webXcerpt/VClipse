@@ -48,7 +48,7 @@ public class VariantTableContentReader extends VariantTableContentDeleteActionHa
 	private VariantTableReader variantTableReader;
 	
 	public VariantTableContent read(String variantTableName, VcmlModel vcmlModel, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
-		if(variantTableName == null || monitor.isCanceled()) {
+		if(true || variantTableName == null || monitor.isCanceled()) {
 			return null;
 		}
 		String id = "VariantTableContent/" + variantTableName.toUpperCase();
