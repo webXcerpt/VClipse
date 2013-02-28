@@ -151,16 +151,7 @@ public class VCMLLabelProvider extends AbstractVClipseLabelProvider {
 	}
 
 	private String languageIcon (Language language) {
-		switch (language) {
-			case EN : return "gb.png";
-			case DE : return "de.png";
-			case ES : return "es.png";
-			case FR : return "fr.png";
-			case JA : return "jp.png";
-			case PT : return "pt.png";
-			case RU : return "ru.png";
-			default : return "";
-		}
+		return language.getName().toLowerCase() + ".png";
 	}
 	
 	public String text(BillOfMaterial element) {
