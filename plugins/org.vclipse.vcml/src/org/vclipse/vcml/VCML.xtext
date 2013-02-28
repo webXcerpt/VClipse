@@ -516,6 +516,6 @@ NumberListEntryForValues returns NumberListEntry :
 	;
 	
 NumericInterval :
-	lowerBound=NUMBER '-' upperBound=NUMBER
+	lowerBoundOp=('<' | '<=' | '>' | '>=')? lowerBound=NUMBER '-' upperBoundOp=('<' | '<=' | '>' | '>=')?  upperBound=NUMBER
 	;
 

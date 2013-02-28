@@ -475,6 +475,8 @@
     <genClasses ecoreClass="VCML.ecore#//NumericInterval">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//NumericInterval/lowerBound"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//NumericInterval/upperBound"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//NumericInterval/lowerBoundOp"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//NumericInterval/upperBoundOp"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//SymbolList">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//SymbolList/entries"/>
