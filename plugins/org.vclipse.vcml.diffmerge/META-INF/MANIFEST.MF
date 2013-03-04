@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: VClipse Diffmerge Plug-in
+Bundle-SymbolicName: org.vclipse.vcml.diffmerge;singleton:=true
+Bundle-Version: 0.5.0.qualifier
+Bundle-Activator: org.vclipse.vcml.diffmerge.Activator
+Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany, www.webxcerpt.com
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.vclipse.vcml,
+ org.eclipse.emf.diffmerge,
+ org.eclipse.emf.diffmerge.ui
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
