@@ -532,4 +532,14 @@
            executer="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.vclipse.vcml.refactoring.VCMLRefactoring">
      </refactoring>
   </extension>
+
+<!-- add this to activate EMF Compare for VCML  
+  <extension
+    point="org.eclipse.core.contenttype.contentTypes">
+  <file-association
+      content-type="org.eclipse.emf.ecore.xmi"
+      file-extensions="vcml"
+      file-names="*"/>
+</extension>
+-->
 </plugin>
