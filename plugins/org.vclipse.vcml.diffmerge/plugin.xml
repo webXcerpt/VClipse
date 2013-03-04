@@ -2,12 +2,11 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            category="org.vclipse.preferences.pages.vclipse"
-            class="org.vclipse.vcml.compare.injection.VCMLCompareExtensionFactory:org.vclipse.vcml.compare.ui.VCMLComparePreferencePage"
-            id="org.vclipse.vcml.preferences.pages.compare"
-            name="Vcml Compare">
-      </page>
+         id="org.vclipse.compare.diffmerge.modelComparisonContext"
+         name="VCML Model Comparison Context"
+         point="org.eclipse.emf.diffmerge.ui.modelComparisonContext">
+      <comparisonSpecification
+            specificationFactory="org.vclipse.vcml.diffmerge.VcmlComparisonSpecificationFactory">
+      </comparisonSpecification>
    </extension>
 </plugin>
