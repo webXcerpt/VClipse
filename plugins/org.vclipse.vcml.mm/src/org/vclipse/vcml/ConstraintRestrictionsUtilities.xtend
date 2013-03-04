@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil
 import org.vclipse.vcml.vcml.SymbolicLiteral
 import org.vclipse.vcml.vcml.ConstraintRestrictionFalse
 import org.vclipse.vcml.vcml.NumericLiteral
+import org.vclipse.vcml.vcml.BinaryExpression
 
 class ConstraintRestrictionsUtilities {
 	
@@ -54,6 +55,12 @@ class ConstraintRestrictionsUtilities {
 			}
 			return forReturn
 		}
+	}
+	
+	def dispatch List<Characteristic> usedCstis(BinaryExpression exp) {
+		val cstics = usedCstis(exp.left)
+		cstics.addAll(usedCstis(exp.right))
+		cstics
 	}
 	
 	def dispatch List<Characteristic> usedCstis(Comparison comparison) {

@@ -9,6 +9,7 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.vclipse.vcml.vcml.BinaryExpression;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicReference_C;
 import org.vclipse.vcml.vcml.Comparison;
@@ -61,6 +62,19 @@ public class ConstraintRestrictionsUtilities {
       }
     }
     return null;
+  }
+  
+  protected List<Characteristic> _usedCstis(final BinaryExpression exp) {
+    List<Characteristic> _xblockexpression = null;
+    {
+      Expression _left = exp.getLeft();
+      final List<Characteristic> cstics = this.usedCstis(_left);
+      Expression _right = exp.getRight();
+      List<Characteristic> _usedCstis = this.usedCstis(_right);
+      cstics.addAll(_usedCstis);
+      _xblockexpression = (cstics);
+    }
+    return _xblockexpression;
   }
   
   protected List<Characteristic> _usedCstis(final Comparison comparison) {
@@ -171,6 +185,8 @@ public class ConstraintRestrictionsUtilities {
       return _usedCstis((SymbolicLiteral)reference);
     } else if (reference instanceof Table) {
       return _usedCstis((Table)reference);
+    } else if (reference instanceof BinaryExpression) {
+      return _usedCstis((BinaryExpression)reference);
     } else if (reference instanceof Comparison) {
       return _usedCstis((Comparison)reference);
     } else if (reference instanceof ConditionalConstraintRestriction) {
