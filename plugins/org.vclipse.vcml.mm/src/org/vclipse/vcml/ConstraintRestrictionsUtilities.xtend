@@ -29,6 +29,7 @@ import org.vclipse.vcml.vcml.SymbolicLiteral
 import org.vclipse.vcml.vcml.ConstraintRestrictionFalse
 import org.vclipse.vcml.vcml.NumericLiteral
 import org.vclipse.vcml.vcml.BinaryExpression
+import org.vclipse.vcml.vcml.FunctionCall
 
 class ConstraintRestrictionsUtilities {
 	
@@ -120,6 +121,10 @@ class ConstraintRestrictionsUtilities {
 	}
 	
 	def dispatch List<Characteristic> usedCstis(ConstraintRestrictionFalse obj) {
+		Lists::<Characteristic>newArrayList // TODO check whether this is correct
+	}
+	
+	def dispatch List<Characteristic> usedCstis(FunctionCall obj) {
 		Lists::<Characteristic>newArrayList // TODO check whether this is correct
 	}
 	

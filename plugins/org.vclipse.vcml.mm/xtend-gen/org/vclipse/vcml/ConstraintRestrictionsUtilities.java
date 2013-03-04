@@ -20,6 +20,7 @@ import org.vclipse.vcml.vcml.ConstraintRestrictionFalse;
 import org.vclipse.vcml.vcml.ConstraintSource;
 import org.vclipse.vcml.vcml.Expression;
 import org.vclipse.vcml.vcml.Function;
+import org.vclipse.vcml.vcml.FunctionCall;
 import org.vclipse.vcml.vcml.InCondition_C;
 import org.vclipse.vcml.vcml.IsSpecified_C;
 import org.vclipse.vcml.vcml.Literal;
@@ -172,6 +173,11 @@ public class ConstraintRestrictionsUtilities {
     return _newArrayList;
   }
   
+  protected List<Characteristic> _usedCstis(final FunctionCall obj) {
+    ArrayList<Characteristic> _newArrayList = Lists.<Characteristic>newArrayList();
+    return _newArrayList;
+  }
+  
   public List<Characteristic> usedCstis(final EObject reference) {
     if (reference instanceof ObjectCharacteristicReference) {
       return _usedCstis((ObjectCharacteristicReference)reference);
@@ -193,6 +199,8 @@ public class ConstraintRestrictionsUtilities {
       return _usedCstis((ConditionalConstraintRestriction)reference);
     } else if (reference instanceof ConstraintRestrictionFalse) {
       return _usedCstis((ConstraintRestrictionFalse)reference);
+    } else if (reference instanceof FunctionCall) {
+      return _usedCstis((FunctionCall)reference);
     } else if (reference instanceof InCondition_C) {
       return _usedCstis((InCondition_C)reference);
     } else if (reference instanceof IsSpecified_C) {
