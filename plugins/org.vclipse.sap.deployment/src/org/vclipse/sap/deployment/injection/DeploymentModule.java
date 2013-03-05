@@ -11,6 +11,8 @@
  ******************************************************************************/
 package org.vclipse.sap.deployment.injection;
 
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.emf.compare.match.IEqualityHelperFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.vclipse.base.ui.util.ClasspathAwareImageHelper;
@@ -24,6 +26,7 @@ import org.vclipse.sap.deployment.DeploymentPlugin;
 import org.vclipse.sap.deployment.OneClickWorkflow;
 import org.vclipse.vcml.VCMLRuntimeModule;
 import org.vclipse.vcml.compare.VCMLCompareOperation;
+import org.vclipse.vcml.compare.VCMLComparePlugin;
 import org.vclipse.vcml.ui.VCMLUiPlugin;
 import org.vclipse.vcml2idoc.VCML2IDocPlugin;
 import org.vclipse.vcml2idoc.transformation.VCML2IDocSwitch;
@@ -67,6 +70,10 @@ public class DeploymentModule extends VCMLRuntimeModule {
 		Injector idoc2JCoIDocInjector = IDoc2JCoIDocPlugin.getInstance().getInjector();
 		binder.bind(IPreferenceStore.class).annotatedWith(Names.named(IDoc2JCoIDocPlugin.ID)).
 			toInstance(idoc2JCoIDocInjector.getInstance(IPreferenceStore.class));
+
+		Injector vcmlCompareInjector = VCMLComparePlugin.getInstance().getInjector();
+		binder.bind(IWorkspaceRoot.class).toInstance(vcmlCompareInjector.getInstance(IWorkspaceRoot.class));
+		binder.bind(IEqualityHelperFactory.class).toInstance(vcmlCompareInjector.getInstance(IEqualityHelperFactory.class));
 	}
 	
 	public Class<? extends IExtendedImageHelper> bindImageHelper() {

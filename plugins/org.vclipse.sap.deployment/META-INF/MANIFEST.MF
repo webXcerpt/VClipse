@@ -13,7 +13,8 @@ Require-Bundle: org.tigris.subversion.subclipse.core,
  org.vclipse.idoc2jcoidoc,
  org.vclipse.idoc,
  org.vclipse.vcml,
- org.vclipse.vcml.ui
+ org.vclipse.vcml.ui,
+ org.eclipse.emf.compare
 Import-Package: com.sap.conn.jco,
  com.sap.conn.idoc
 Bundle-ActivationPolicy: lazy
