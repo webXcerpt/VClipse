@@ -44,6 +44,8 @@ import org.vclipse.vcml.utils.DocumentationHandler;
 import org.vclipse.vcml.utils.ISapConstants;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.BOMItem;
+import org.vclipse.vcml.vcml.BOMItem_Class;
+import org.vclipse.vcml.vcml.BOMItem_Material;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicGroup;
@@ -316,7 +318,18 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 				final Segment segmentE1STPOM = addChildSegment(segmentE1STZUM, "E1STPOM");
 				setValue(segmentE1STPOM, "MSGFN", "005");
 				// setValue(segmentE1STPOM, "STLKN", "00000001"); // BOM item code number
-				setValue(segmentE1STPOM, "IDNRK", item.getMaterial().getName());
+				if (item instanceof BOMItem_Material) {
+					setValue(segmentE1STPOM, "IDNRK", ((BOMItem_Material)item).getMaterial().getName());
+				} else if (item instanceof BOMItem_Class) {
+					String classSpec = ((BOMItem_Class)item).getCls().getName();
+					int classType = VcmlUtils.getClassType(classSpec);
+					String className = VcmlUtils.getClassName(classSpec);
+					setValue(segmentE1STPOM, "CLASS", className);
+					setValue(segmentE1STPOM, "KLART", classType);
+				} else {
+					throw new IllegalArgumentException("unknown type of BOMItem: " + item);
+				}
+
 				setValue(segmentE1STPOM, "POSTP", "N");
 				setValue(segmentE1STPOM, "POSNR", item.getItemnumber());
 				setValue(segmentE1STPOM, "MEINS", "PCE");

@@ -61,9 +61,20 @@ BillOfMaterial :
 	'}'
 	;
 
-BOMItem :
+BOMItem : BOMItem_Material | BOMItem_Class;
+
+BOMItem_Material :
 	itemnumber=INT
 	material=[Material | EXTENDED_ID]
+	('dependencies' '{'
+	  (selectionCondition=[SelectionCondition | EXTENDED_ID])?
+	  (entries+=ConfigurationProfileEntry)*
+	 '}')?
+	;
+
+BOMItem_Class :
+	itemnumber=INT
+	cls=[Class | CLASSNAME]
 	('dependencies' '{'
 	  (selectionCondition=[SelectionCondition | EXTENDED_ID])?
 	  (entries+=ConfigurationProfileEntry)*

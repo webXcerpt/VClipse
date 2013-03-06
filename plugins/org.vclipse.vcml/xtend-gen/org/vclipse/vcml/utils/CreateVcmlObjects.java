@@ -12,6 +12,8 @@ import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.vclipse.vcml.conversion.VCMLValueConverter;
 import org.vclipse.vcml.utils.VCMLObjectUtils;
 import org.vclipse.vcml.vcml.BOMItem;
+import org.vclipse.vcml.vcml.BOMItem_Class;
+import org.vclipse.vcml.vcml.BOMItem_Material;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicType;
@@ -155,13 +157,13 @@ public class CreateVcmlObjects extends VCMLObjectUtils {
   
   public BOMItem newBOMItem(final int number, final Material material) {
     final ArrayList<?>_cacheKey = CollectionLiterals.newArrayList(number, material);
-    final BOMItem _result;
+    final BOMItem_Material _result;
     synchronized (_createCache_newBOMItem) {
       if (_createCache_newBOMItem.containsKey(_cacheKey)) {
         return _createCache_newBOMItem.get(_cacheKey);
       }
-      BOMItem _createBOMItem = VcmlFactory.eINSTANCE.createBOMItem();
-      _result = _createBOMItem;
+      BOMItem_Material _createBOMItem_Material = VcmlFactory.eINSTANCE.createBOMItem_Material();
+      _result = _createBOMItem_Material;
       _createCache_newBOMItem.put(_cacheKey, _result);
     }
     _init_newBOMItem(_result, number, material);
@@ -170,20 +172,20 @@ public class CreateVcmlObjects extends VCMLObjectUtils {
   
   private final HashMap<ArrayList<? extends Object>,BOMItem> _createCache_newBOMItem = CollectionLiterals.newHashMap();
   
-  private void _init_newBOMItem(final BOMItem it, final int number, final Material material) {
+  private void _init_newBOMItem(final BOMItem_Material it, final int number, final Material material) {
     it.setMaterial(material);
     it.setItemnumber(number);
   }
   
   public BOMItem newBOMItem(final int number, final Material material, final SelectionCondition condition) {
     final ArrayList<?>_cacheKey = CollectionLiterals.newArrayList(number, material, condition);
-    final BOMItem _result;
+    final BOMItem_Material _result;
     synchronized (_createCache_newBOMItem_1) {
       if (_createCache_newBOMItem_1.containsKey(_cacheKey)) {
         return _createCache_newBOMItem_1.get(_cacheKey);
       }
-      BOMItem _createBOMItem = VcmlFactory.eINSTANCE.createBOMItem();
-      _result = _createBOMItem;
+      BOMItem_Material _createBOMItem_Material = VcmlFactory.eINSTANCE.createBOMItem_Material();
+      _result = _createBOMItem_Material;
       _createCache_newBOMItem_1.put(_cacheKey, _result);
     }
     _init_newBOMItem(_result, number, material, condition);
@@ -192,8 +194,52 @@ public class CreateVcmlObjects extends VCMLObjectUtils {
   
   private final HashMap<ArrayList<? extends Object>,BOMItem> _createCache_newBOMItem_1 = CollectionLiterals.newHashMap();
   
-  private void _init_newBOMItem(final BOMItem it, final int number, final Material material, final SelectionCondition condition) {
+  private void _init_newBOMItem(final BOMItem_Material it, final int number, final Material material, final SelectionCondition condition) {
     final BOMItem newBomItem = this.newBOMItem(number, material);
+    newBomItem.setSelectionCondition(condition);
+  }
+  
+  public BOMItem newBOMItem(final int number, final org.vclipse.vcml.vcml.Class cls) {
+    final ArrayList<?>_cacheKey = CollectionLiterals.newArrayList(number, cls);
+    final BOMItem_Class _result;
+    synchronized (_createCache_newBOMItem_2) {
+      if (_createCache_newBOMItem_2.containsKey(_cacheKey)) {
+        return _createCache_newBOMItem_2.get(_cacheKey);
+      }
+      BOMItem_Class _createBOMItem_Class = VcmlFactory.eINSTANCE.createBOMItem_Class();
+      _result = _createBOMItem_Class;
+      _createCache_newBOMItem_2.put(_cacheKey, _result);
+    }
+    _init_newBOMItem_1(_result, number, cls);
+    return _result;
+  }
+  
+  private final HashMap<ArrayList<? extends Object>,BOMItem> _createCache_newBOMItem_2 = CollectionLiterals.newHashMap();
+  
+  private void _init_newBOMItem_1(final BOMItem_Class it, final int number, final org.vclipse.vcml.vcml.Class cls) {
+    it.setCls(cls);
+    it.setItemnumber(number);
+  }
+  
+  public BOMItem newBOMItem(final int number, final org.vclipse.vcml.vcml.Class cls, final SelectionCondition condition) {
+    final ArrayList<?>_cacheKey = CollectionLiterals.newArrayList(number, cls, condition);
+    final BOMItem_Class _result;
+    synchronized (_createCache_newBOMItem_3) {
+      if (_createCache_newBOMItem_3.containsKey(_cacheKey)) {
+        return _createCache_newBOMItem_3.get(_cacheKey);
+      }
+      BOMItem_Class _createBOMItem_Class = VcmlFactory.eINSTANCE.createBOMItem_Class();
+      _result = _createBOMItem_Class;
+      _createCache_newBOMItem_3.put(_cacheKey, _result);
+    }
+    _init_newBOMItem_1(_result, number, cls, condition);
+    return _result;
+  }
+  
+  private final HashMap<ArrayList<? extends Object>,BOMItem> _createCache_newBOMItem_3 = CollectionLiterals.newHashMap();
+  
+  private void _init_newBOMItem_1(final BOMItem_Class it, final int number, final org.vclipse.vcml.vcml.Class cls, final SelectionCondition condition) {
+    final BOMItem newBomItem = this.newBOMItem(number, cls);
     newBomItem.setSelectionCondition(condition);
   }
   

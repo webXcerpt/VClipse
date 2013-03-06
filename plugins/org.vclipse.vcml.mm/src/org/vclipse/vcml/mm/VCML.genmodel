@@ -127,9 +127,14 @@
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//BOMItem">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute VCML.ecore#//BOMItem/itemnumber"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference VCML.ecore#//BOMItem/material"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference VCML.ecore#//BOMItem/selectionCondition"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//BOMItem/entries"/>
+    </genClasses>
+    <genClasses ecoreClass="VCML.ecore#//BOMItem_Material">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference VCML.ecore#//BOMItem_Material/material"/>
+    </genClasses>
+    <genClasses ecoreClass="VCML.ecore#//BOMItem_Class">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference VCML.ecore#//BOMItem_Class/cls"/>
     </genClasses>
     <genClasses ecoreClass="VCML.ecore#//Characteristic">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference VCML.ecore#//Characteristic/documentation"/>

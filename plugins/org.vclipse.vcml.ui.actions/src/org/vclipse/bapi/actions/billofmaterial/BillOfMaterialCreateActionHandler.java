@@ -18,7 +18,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.IBAPIActionRunner;
+import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.BOMItem;
+import org.vclipse.vcml.vcml.BOMItem_Class;
+import org.vclipse.vcml.vcml.BOMItem_Material;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Material;
 import org.vclipse.vcml.vcml.Option;
@@ -58,7 +61,17 @@ public class BillOfMaterialCreateActionHandler extends BAPIUtils implements IBAP
 			tSTPO.appendRow();
 			tSTPO.setValue("ITEM_CATEG", "N");
 			tSTPO.setValue("ITEM_NO", item.getItemnumber());
-			tSTPO.setValue("COMPONENT", item.getMaterial().getName());
+			if (item instanceof BOMItem_Material) {
+				tSTPO.setValue("COMPONENT", ((BOMItem_Material)item).getMaterial().getName());
+			} else if (item instanceof BOMItem_Class) {
+				String classSpec = ((BOMItem_Class)item).getCls().getName();
+				int classType = VcmlUtils.getClassType(classSpec);
+				String className = VcmlUtils.getClassName(classSpec);
+				tSTPO.setValue("CLASS", className);
+				tSTPO.setValue("CLASS_TYPE", classType);
+			} else {
+				throw new IllegalArgumentException("unknown type of BOMItem: " + item);
+			}
 			tSTPO.setValue("COMP_QTY", 1);
 			tSTPO.setValue("COMP_UNIT", "PC");
 			// TODO sales-relevant flag

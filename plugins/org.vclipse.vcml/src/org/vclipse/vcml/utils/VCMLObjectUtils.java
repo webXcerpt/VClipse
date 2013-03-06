@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
-import org.vclipse.vcml.vcml.BOMItem;
+import org.vclipse.vcml.vcml.BOMItem_Material;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicGroup;
@@ -72,8 +72,8 @@ public class VCMLObjectUtils {
 		return VCML.createBillOfMaterial();
 	}
 
-	static public BOMItem mkBOMItem() {
-		return VCML.createBOMItem();
+	static public BOMItem_Material mkBOMItem_Material() {
+		return VCML.createBOMItem_Material();
 	}
 
 	static public Characteristic mkCharacteristic(final String name) {

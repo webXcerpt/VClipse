@@ -23,6 +23,8 @@ import org.vclipse.base.VClipseStrings;
 import org.vclipse.vcml.utils.DependencySourceUtils;
 import org.vclipse.vcml.utils.VCMLObjectUtils;
 import org.vclipse.vcml.vcml.BOMItem;
+import org.vclipse.vcml.vcml.BOMItem_Class;
+import org.vclipse.vcml.vcml.BOMItem_Material;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicGroup;
@@ -505,7 +507,13 @@ public class VCMLPrettyPrinter extends DefaultPrettyPrinter {
 	public DataLayouter<NoExceptions> caseBOMItem(BOMItem object) {
 		printNullsafe(object.getItemnumber());
 		layouter.print(" ");
-		printCrossReference(object, VCMLPACKAGE.getBOMItem_Material(), VCMLPACKAGE.getVCObject_Name());
+		if (object instanceof BOMItem_Material) {
+			printCrossReference(object, VCMLPACKAGE.getBOMItem_Material_Material(), VCMLPACKAGE.getVCObject_Name());
+		} else if (object instanceof BOMItem_Class) {
+			printCrossReference(object, VCMLPACKAGE.getBOMItem_Class_Cls(), VCMLPACKAGE.getVCObject_Name());
+		} else {
+			throw new IllegalArgumentException("unknown subclass of BOMItem: " + object);
+		}
 		SelectionCondition selCondition = object.getSelectionCondition();
 		EList<ConfigurationProfileEntry> entries = object.getEntries();
 		if(selCondition != null || !entries.isEmpty()) {

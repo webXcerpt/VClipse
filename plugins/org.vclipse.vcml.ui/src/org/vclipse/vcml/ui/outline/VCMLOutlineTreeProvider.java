@@ -26,6 +26,8 @@ import org.eclipse.xtext.ui.editor.outline.impl.DocumentRootNode;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 import org.vclipse.vcml.ui.IUiConstants;
 import org.vclipse.vcml.vcml.BOMItem;
+import org.vclipse.vcml.vcml.BOMItem_Class;
+import org.vclipse.vcml.vcml.BOMItem_Material;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicGroup;
@@ -89,11 +91,26 @@ public class VCMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		}
 	}
 
-	protected void _createChildren(IOutlineNode parentNode, BOMItem modelElement) {
+	protected void _createChildren(IOutlineNode parentNode, BOMItem_Material modelElement) {
 		if(!hierarchical) {
 			super._createChildren(parentNode, modelElement);
 		} else {
 			createNode(parentNode, modelElement.getMaterial());
+			SelectionCondition selectionCondition = modelElement.getSelectionCondition();
+			if (selectionCondition!=null) {
+				createNode(parentNode, selectionCondition);
+			}
+			for(ConfigurationProfileEntry cpe : modelElement.getEntries()) {
+				createNode(parentNode, cpe);
+			}
+		}
+	}
+	
+	protected void _createChildren(IOutlineNode parentNode, BOMItem_Class modelElement) {
+		if(!hierarchical) {
+			super._createChildren(parentNode, modelElement);
+		} else {
+			createNode(parentNode, modelElement.getCls());
 			SelectionCondition selectionCondition = modelElement.getSelectionCondition();
 			if (selectionCondition!=null) {
 				createNode(parentNode, selectionCondition);
@@ -220,10 +237,14 @@ public class VCMLOutlineTreeProvider extends DefaultOutlineTreeProvider {
 		return hierarchical;
 	}
 
-	protected Object _text(BOMItem modelElement) {
+	protected Object _text(BOMItem_Material modelElement) {
 		if(EcoreUtil.isAncestor(modelElement.getMaterial(), modelElement)) {
 			return super._text(modelElement.getMaterial()) + " [cyclic]";
 		}			
+		return super._text(modelElement);
+	}
+	
+	protected Object _text(BOMItem_Class modelElement) {
 		return super._text(modelElement);
 	}
 	

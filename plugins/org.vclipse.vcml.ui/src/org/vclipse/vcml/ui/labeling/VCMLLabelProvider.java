@@ -17,6 +17,8 @@ import org.eclipse.swt.graphics.Image;
 import org.vclipse.vcml.utils.DescriptionHandler;
 import org.vclipse.vcml.utils.VcmlUtils;
 import org.vclipse.vcml.vcml.BOMItem;
+import org.vclipse.vcml.vcml.BOMItem_Class;
+import org.vclipse.vcml.vcml.BOMItem_Material;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.CharacteristicGroup;
 import org.vclipse.vcml.vcml.CharacteristicOrValueDependencies;
@@ -158,8 +160,12 @@ public class VCMLLabelProvider extends AbstractVClipseLabelProvider {
 		return "BOM";
 	}
 	
-	public StyledString text(BOMItem element) {
+	public StyledString text(BOMItem_Material element) {
 		return new StyledString(element.getItemnumber() + " ", StyledString.COUNTER_STYLER).append(getStyledText(element.getMaterial()));
+	}
+	
+	public StyledString text(BOMItem_Class element) {
+		return new StyledString(element.getItemnumber() + " ", StyledString.COUNTER_STYLER).append(getStyledText(element.getCls()));
 	}
 	
 	public StyledString text(CharacteristicGroup element) {

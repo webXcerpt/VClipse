@@ -78,13 +78,23 @@ class CreateVcmlObjects extends VCMLObjectUtils {
 		it.description = mkSimpleDescription(description)
 	}
 	 
-	def BOMItem create it : VcmlFactory::eINSTANCE.createBOMItem newBOMItem(int number, Material material) {
+	def BOMItem create it : VcmlFactory::eINSTANCE.createBOMItem_Material newBOMItem(int number, Material material) {
 		it.material = material
 		it.itemnumber = number
 	}
 	
-	def BOMItem create it : VcmlFactory::eINSTANCE.createBOMItem newBOMItem(int number, Material material, SelectionCondition condition) {
+	def BOMItem create it : VcmlFactory::eINSTANCE.createBOMItem_Material newBOMItem(int number, Material material, SelectionCondition condition) {
 		val newBomItem = newBOMItem(number, material)
+		newBomItem.selectionCondition = condition
+	}
+	
+	def BOMItem create it : VcmlFactory::eINSTANCE.createBOMItem_Class newBOMItem(int number, org.vclipse.vcml.vcml.Class cls) {
+		it.cls = cls
+		it.itemnumber = number
+	}
+	
+	def BOMItem create it : VcmlFactory::eINSTANCE.createBOMItem_Class newBOMItem(int number, org.vclipse.vcml.vcml.Class cls, SelectionCondition condition) {
+		val newBomItem = newBOMItem(number, cls)
 		newBomItem.selectionCondition = condition
 	}
 	

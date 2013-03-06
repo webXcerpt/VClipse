@@ -34,12 +34,17 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="material" eType="#//Material"
         eOpposite="#//Material/billofmaterials"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BOMItem">
+  <eClassifiers xsi:type="ecore:EClass" name="BOMItem" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="itemnumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="material" eType="#//Material"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="selectionCondition" eType="#//SelectionCondition"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entries" upperBound="-1"
         eType="#//ConfigurationProfileEntry" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BOMItem_Material" eSuperTypes="#//BOMItem">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="material" eType="#//Material"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BOMItem_Class" eSuperTypes="#//BOMItem">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cls" eType="#//Class"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Characteristic" eSuperTypes="#//VCObject">
     <eStructuralFeatures xsi:type="ecore:EReference" name="documentation" eType="#//Documentation"
