@@ -91,12 +91,22 @@ public class MaterialReader extends BAPIUtils {
 		// BAPI_MAT_BOM_EXISTENCE_CHECK
 		bomReader.read(object, resource, monitor, seenObjects, globalOptions, recurse);
 
-		JCoFunction functionGetClasses = getJCoFunction("BAPI_OBJCL_GETCLASSES", monitor); // BAPI_OBJCL_GET_KEY_OF_OBJECT
+		readClassesForMaterial(materialName, "300", resource, monitor,	seenObjects, globalOptions, recurse, object, model);
+		readClassesForMaterial(materialName, "200", resource, monitor,	seenObjects, globalOptions, recurse, object, model);
+		return object;
+	}
+
+	private void readClassesForMaterial(String materialName, String classType,
+			Resource resource, IProgressMonitor monitor,
+			Map<String, VCObject> seenObjects, List<Option> globalOptions,
+			boolean recurse, Material object, VcmlModel model)
+			throws JCoException {
+		JCoFunction functionGetClasses = getJCoFunction("BAPI_OBJCL_GETCLASSES", monitor);
 		JCoParameterList iplGetClasses = functionGetClasses.getImportParameterList();
-		iplGetClasses.setValue("CLASSTYPE_IMP", 300); // TODO what about class type 200?
+		iplGetClasses.setValue("CLASSTYPE_IMP", classType);
 		iplGetClasses.setValue("OBJECTKEY_IMP", materialName);
 		iplGetClasses.setValue("OBJECTTABLE_IMP", "MARA");
-		execute(functionGetClasses, monitor, materialName + " 300");
+		execute(functionGetClasses, monitor, materialName + " " + classType);
 		if (processReturnTable(functionGetClasses)) {
 			JCoTable allocList = functionGetClasses.getTableParameterList().getTable("ALLOCLIST");
 			if (allocList.getNumRows()>0) {
@@ -107,7 +117,7 @@ public class MaterialReader extends BAPIUtils {
 					Class cls = null;
 					if (recurse) {
 						if(monitor.isCanceled()) {
-							return null;
+							return;
 						}
 						cls = classReader.read(className, model, monitor, seenObjects, globalOptions, recurse);
 					}
@@ -120,7 +130,6 @@ public class MaterialReader extends BAPIUtils {
 				}
 			}
 		}
-		return object;
 	}
 	
 }

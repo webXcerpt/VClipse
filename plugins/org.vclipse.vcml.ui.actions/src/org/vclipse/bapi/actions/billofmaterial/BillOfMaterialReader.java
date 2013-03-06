@@ -42,6 +42,7 @@ import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoParameterList;
+import com.sap.conn.jco.JCoStructure;
 import com.sap.conn.jco.JCoTable;
 
 public class BillOfMaterialReader extends BAPIUtils {
@@ -146,6 +147,35 @@ public class BillOfMaterialReader extends BAPIUtils {
 							cls = vcmlProxyFactory.classProxy(classSpec, resource);
 						}
 						bomItem.setCls(cls);
+						
+						JCoFunction classificationFunction = getJCoFunction("BAPI_OBJCL_GETOBJECTS", monitor);
+						JCoParameterList classificationIpl = classificationFunction.getImportParameterList();
+						classificationIpl.setValue("CLASSTYPE", classType);
+						JCoParameterList classificationTpl = classificationFunction.getTableParameterList();
+						JCoTable classNumRange = classificationTpl.getTable("CLASSNUMRANGE");
+						classNumRange.appendRow();
+						classNumRange.setValue("SIGN", "I");
+						classNumRange.setValue("OPTION", "EQ");
+						classNumRange.setValue("LOW", className);
+						execute(classificationFunction, monitor, classSpec);
+						JCoTable allocList = classificationTpl.getTable("ALLOCLIST");
+						for (int j= 0; j < allocList.getNumRows(); j++) {
+							allocList.setRow(j);
+						if ("MARA".equals(allocList.getString("OBJTYP"))) {
+							String classifiedMaterialName = allocList.getString("OBJECT");
+							Material classifiedMaterial = null;
+							if (recurse) {
+								if(monitor.isCanceled()) {
+									return;
+								}
+								classifiedMaterial = materialReader.read(classifiedMaterialName, resource, monitor, seenObjects, globalOptions, recurse);
+							}
+							if (classifiedMaterial==null) {
+								classifiedMaterial = vcmlProxyFactory.materialProxy(component, resource);
+							}
+						}
+						}
+
 						readDependencies(bomItem, resource, monitor, seenObjects,
 								globalOptions, recurse, tSTPO, tT_DEP_DATA,
 								tT_DEP_ORDER);
