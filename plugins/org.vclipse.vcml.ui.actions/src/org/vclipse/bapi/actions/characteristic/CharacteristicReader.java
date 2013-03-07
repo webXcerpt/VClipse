@@ -57,6 +57,7 @@ import com.sap.conn.jco.JCoTable;
 public class CharacteristicReader extends BAPIUtils {
 
 	private static final boolean FLAG_READ_DOCUMENTATION_FOR_VALUE = false;
+	private static final boolean FLAG_READ_DOCUMENTATION_FOR_CSTIC = false;
 
 	@Inject
 	private ReadCharacteristicsValuesDependency valuesDependenciesReader;
@@ -227,11 +228,13 @@ public class CharacteristicReader extends BAPIUtils {
 					multiLanguageDescription.setLanguage(language);
 					multiLanguageDescription.setValue(charactDescr.getString("DESCRIPTION"));
 					descriptions.add(multiLanguageDescription);
-					// problem: this extracts only the documentation for languages with description
-					// currently unknown whether there might be a documentation without description in SAP
-					MultipleLanguageDocumentation_LanguageBlock languageBlock = getLanguageBlock(newCstic, null, language, monitor);
-					if (!languageBlock.getFormattedDocumentationBlocks().isEmpty())
-						languageBlocks.add(languageBlock);
+					if (FLAG_READ_DOCUMENTATION_FOR_CSTIC) {
+						// problem: this extracts only the documentation for languages with description
+						// currently unknown whether there might be a documentation without description in SAP
+						MultipleLanguageDocumentation_LanguageBlock languageBlock = getLanguageBlock(newCstic, null, language, monitor);
+						if (!languageBlock.getFormattedDocumentationBlocks().isEmpty())
+							languageBlocks.add(languageBlock);
+					}
 				}
 				if (!descriptions.isEmpty())
 					newCstic.setDescription(simplifyDescription(multiLanguageDescriptions));
