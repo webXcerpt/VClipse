@@ -56,6 +56,8 @@ import com.sap.conn.jco.JCoTable;
 
 public class CharacteristicReader extends BAPIUtils {
 
+	private static final boolean FLAG_READ_DOCUMENTATION_FOR_VALUE = false;
+
 	@Inject
 	private ReadCharacteristicsValuesDependency valuesDependenciesReader;
 	
@@ -168,33 +170,7 @@ public class CharacteristicReader extends BAPIUtils {
 				}
 				for (final CharacteristicValue value : values) {
 					value.setDescription(simplifyDescription(value.getDescription()));
-					MultipleLanguageDocumentation multipleLanguageDocumentation = VCML.createMultipleLanguageDocumentation();
-					final EList<MultipleLanguageDocumentation_LanguageBlock> languageBlocks = multipleLanguageDocumentation.getLanguageblocks();
-					final Description description = value.getDescription();
-					if (description==null) {
-						try {
-							MultipleLanguageDocumentation_LanguageBlock languageBlock = getLanguageBlock(newCstic, value, null, monitor);
-							if (!languageBlock.getFormattedDocumentationBlocks().isEmpty())
-								languageBlocks.add(languageBlock);
-						} catch (JCoException e) {
-							throw new WrappedException(e);
-						}
-					} else  {
-						new DescriptionHandler() {
-							@Override
-							public void handleSingleDescription(Language language, String descriptionValue) {
-								try {
-									MultipleLanguageDocumentation_LanguageBlock languageBlock = getLanguageBlock(newCstic, value, language, monitor);
-									if (!languageBlock.getFormattedDocumentationBlocks().isEmpty())
-										languageBlocks.add(languageBlock);
-								} catch (JCoException e) {
-									throw new WrappedException(e);
-								}
-							}
-						}.handleDescription(description);
-					}
-					if (!languageBlocks.isEmpty())
-						value.setDocumentation(multipleLanguageDocumentation);
+					readDocumentationForValue(newCstic, value, monitor);
 				}
 
 			} else if ("DATE".equals(dataType)) {
@@ -282,6 +258,38 @@ public class CharacteristicReader extends BAPIUtils {
 		valuesDependenciesReader.read(newCstic, vcmlModel, monitor, seenObjects, recurse);
 		vcmlModel.getObjects().add(newCstic);
 		return newCstic;
+	}
+
+	private void readDocumentationForValue(final Characteristic newCstic,
+			final CharacteristicValue value, final IProgressMonitor monitor) {
+		if (!FLAG_READ_DOCUMENTATION_FOR_VALUE) return;
+		MultipleLanguageDocumentation multipleLanguageDocumentation = VCML.createMultipleLanguageDocumentation();
+		final EList<MultipleLanguageDocumentation_LanguageBlock> languageBlocks = multipleLanguageDocumentation.getLanguageblocks();
+		final Description description = value.getDescription();
+		if (description==null) {
+			try {
+				MultipleLanguageDocumentation_LanguageBlock languageBlock = getLanguageBlock(newCstic, value, null, monitor);
+				if (!languageBlock.getFormattedDocumentationBlocks().isEmpty())
+					languageBlocks.add(languageBlock);
+			} catch (JCoException e) {
+				throw new WrappedException(e);
+			}
+		} else  {
+			new DescriptionHandler() {
+				@Override
+				public void handleSingleDescription(Language language, String descriptionValue) {
+					try {
+						MultipleLanguageDocumentation_LanguageBlock languageBlock = getLanguageBlock(newCstic, value, language, monitor);
+						if (!languageBlock.getFormattedDocumentationBlocks().isEmpty())
+							languageBlocks.add(languageBlock);
+					} catch (JCoException e) {
+						throw new WrappedException(e);
+					}
+				}
+			}.handleDescription(description);
+		}
+		if (!languageBlocks.isEmpty())
+			value.setDocumentation(multipleLanguageDocumentation);
 	}
 		
 	private MultipleLanguageDocumentation_LanguageBlock getLanguageBlock(Characteristic cstic, CharacteristicValue value, Language language, IProgressMonitor monitor) throws JCoException {
