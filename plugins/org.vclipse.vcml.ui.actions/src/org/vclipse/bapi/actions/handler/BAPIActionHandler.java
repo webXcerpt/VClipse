@@ -53,6 +53,7 @@ import org.vclipse.bapi.actions.BAPIException;
 import org.vclipse.base.ui.util.EditorUtilsExtensions;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.vcml.ui.IUiConstants;
+import org.vclipse.vcml.ui.internal.VCMLActivator;
 import org.vclipse.vcml.vcml.Import;
 import org.vclipse.vcml.vcml.Option;
 import org.vclipse.vcml.vcml.VCObject;
@@ -76,6 +77,7 @@ public class BAPIActionHandler extends AbstractHandler {
 	private EObjectAtOffsetHelper offsetHelper;
 	
 	@Inject
+	@Named(VCMLActivator.ORG_VCLIPSE_VCML_VCML)
 	protected IPreferenceStore preferenceStore;
 	
 	@Inject

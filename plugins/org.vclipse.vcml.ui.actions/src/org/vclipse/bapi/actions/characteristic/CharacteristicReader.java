@@ -21,9 +21,12 @@ import java.util.Map;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.WrappedException;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.vclipse.bapi.actions.BAPIActionPlugin;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.characteristic.values.ReadCharacteristicsDependency;
 import org.vclipse.bapi.actions.characteristic.values.ReadCharacteristicsValuesDependency;
+import org.vclipse.bapi.actions.preferences.PreferenceNames;
 import org.vclipse.vcml.SAPFormattingUtility;
 import org.vclipse.vcml.utils.DescriptionHandler;
 import org.vclipse.vcml.utils.VcmlUtils;
@@ -48,6 +51,7 @@ import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoParameterList;
@@ -56,14 +60,15 @@ import com.sap.conn.jco.JCoTable;
 
 public class CharacteristicReader extends BAPIUtils {
 
-	private static final boolean FLAG_READ_DOCUMENTATION_FOR_VALUE = false;
-	private static final boolean FLAG_READ_DOCUMENTATION_FOR_CSTIC = false;
-
 	@Inject
 	private ReadCharacteristicsValuesDependency valuesDependenciesReader;
 	
 	@Inject
 	private ReadCharacteristicsDependency csticDependenciesReader;
+	
+	@Inject
+	@Named(BAPIActionPlugin.ID)
+	private IPreferenceStore preferenceStore;
 	
 	public Characteristic read(String csticName, VcmlModel vcmlModel, final IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		if(csticName == null || monitor.isCanceled()) {
@@ -228,7 +233,7 @@ public class CharacteristicReader extends BAPIUtils {
 					multiLanguageDescription.setLanguage(language);
 					multiLanguageDescription.setValue(charactDescr.getString("DESCRIPTION"));
 					descriptions.add(multiLanguageDescription);
-					if (FLAG_READ_DOCUMENTATION_FOR_CSTIC) {
+					if (preferenceStore.getBoolean(PreferenceNames.CHR_LONGTEXTS)) {
 						// problem: this extracts only the documentation for languages with description
 						// currently unknown whether there might be a documentation without description in SAP
 						MultipleLanguageDocumentation_LanguageBlock languageBlock = getLanguageBlock(newCstic, null, language, monitor);
@@ -255,17 +260,21 @@ public class CharacteristicReader extends BAPIUtils {
 		} else {
 			newCstic.setName(csticName);
 		}
-		// read the dependencies used by the cstic
-		csticDependenciesReader.read(newCstic, vcmlModel, monitor, seenObjects, recurse);
-		// read the dependencies used by the cstics values
-		valuesDependenciesReader.read(newCstic, vcmlModel, monitor, seenObjects, recurse);
+		if (preferenceStore.getBoolean(PreferenceNames.CHR_DEPENDENCIES)) {
+			// read the dependencies used by the cstic
+			csticDependenciesReader.read(newCstic, vcmlModel, monitor, seenObjects, recurse);
+		}
+		if (preferenceStore.getBoolean(PreferenceNames.CHR_VALUE_DEPENDENCIES)) {
+			// read the dependencies used by the cstics values
+			valuesDependenciesReader.read(newCstic, vcmlModel, monitor, seenObjects, recurse);
+		}
 		vcmlModel.getObjects().add(newCstic);
 		return newCstic;
 	}
 
 	private void readDocumentationForValue(final Characteristic newCstic,
 			final CharacteristicValue value, final IProgressMonitor monitor) {
-		if (!FLAG_READ_DOCUMENTATION_FOR_VALUE) return;
+		if (!preferenceStore.getBoolean(PreferenceNames.CHR_VALUE_LONGTEXTS)) return;
 		MultipleLanguageDocumentation multipleLanguageDocumentation = VCML.createMultipleLanguageDocumentation();
 		final EList<MultipleLanguageDocumentation_LanguageBlock> languageBlocks = multipleLanguageDocumentation.getLanguageblocks();
 		final Description description = value.getDescription();

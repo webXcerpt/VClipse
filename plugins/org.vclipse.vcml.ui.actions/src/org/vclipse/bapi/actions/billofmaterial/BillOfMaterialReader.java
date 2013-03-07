@@ -20,10 +20,13 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.util.Strings;
+import org.vclipse.bapi.actions.BAPIActionPlugin;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.classes.ClassReader;
 import org.vclipse.bapi.actions.material.MaterialReader;
+import org.vclipse.bapi.actions.preferences.PreferenceNames;
 import org.vclipse.bapi.actions.procedure.ProcedureReader;
 import org.vclipse.bapi.actions.selectioncondition.SelectionConditionReader;
 import org.vclipse.vcml.vcml.BOMItem;
@@ -38,6 +41,7 @@ import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.sap.conn.jco.AbapException;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
@@ -59,6 +63,10 @@ public class BillOfMaterialReader extends BAPIUtils {
 	@Inject
 	private SelectionConditionReader selectionConditionReader;
 	
+	@Inject
+	@Named(BAPIActionPlugin.ID)
+	private IPreferenceStore preferenceStore;
+
 	public void read(Material containerMaterial, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		String materialNumber = containerMaterial.getName();
 		if(materialNumber == null || monitor.isCanceled()) {
@@ -148,32 +156,34 @@ public class BillOfMaterialReader extends BAPIUtils {
 						}
 						bomItem.setCls(cls);
 						
-						JCoFunction classificationFunction = getJCoFunction("BAPI_OBJCL_GETOBJECTS", monitor);
-						JCoParameterList classificationIpl = classificationFunction.getImportParameterList();
-						classificationIpl.setValue("CLASSTYPE", classType);
-						JCoParameterList classificationTpl = classificationFunction.getTableParameterList();
-						JCoTable classNumRange = classificationTpl.getTable("CLASSNUMRANGE");
-						classNumRange.appendRow();
-						classNumRange.setValue("SIGN", "I");
-						classNumRange.setValue("OPTION", "EQ");
-						classNumRange.setValue("LOW", className);
-						execute(classificationFunction, monitor, classSpec);
-						JCoTable allocList = classificationTpl.getTable("ALLOCLIST");
-						for (int j= 0; j < allocList.getNumRows(); j++) {
-							allocList.setRow(j);
-						if ("MARA".equals(allocList.getString("OBJTYP"))) {
-							String classifiedMaterialName = allocList.getString("OBJECT");
-							Material classifiedMaterial = null;
-							if (recurse) {
-								if(monitor.isCanceled()) {
-									return;
+						if (preferenceStore.getBoolean(PreferenceNames.CLASSNODES_MATERIALS)) {
+							JCoFunction classificationFunction = getJCoFunction("BAPI_OBJCL_GETOBJECTS", monitor);
+							JCoParameterList classificationIpl = classificationFunction.getImportParameterList();
+							classificationIpl.setValue("CLASSTYPE", classType);
+							JCoParameterList classificationTpl = classificationFunction.getTableParameterList();
+							JCoTable classNumRange = classificationTpl.getTable("CLASSNUMRANGE");
+							classNumRange.appendRow();
+							classNumRange.setValue("SIGN", "I");
+							classNumRange.setValue("OPTION", "EQ");
+							classNumRange.setValue("LOW", className);
+							execute(classificationFunction, monitor, classSpec);
+							JCoTable allocList = classificationTpl.getTable("ALLOCLIST");
+							for (int j= 0; j < allocList.getNumRows(); j++) {
+								allocList.setRow(j);
+								if ("MARA".equals(allocList.getString("OBJTYP"))) {
+									String classifiedMaterialName = allocList.getString("OBJECT");
+									Material classifiedMaterial = null;
+									if (recurse) {
+										if(monitor.isCanceled()) {
+											return;
+										}
+										classifiedMaterial = materialReader.read(classifiedMaterialName, resource, monitor, seenObjects, globalOptions, recurse);
+									}
+									if (classifiedMaterial==null) {
+										classifiedMaterial = vcmlProxyFactory.materialProxy(component, resource);
+									}
 								}
-								classifiedMaterial = materialReader.read(classifiedMaterialName, resource, monitor, seenObjects, globalOptions, recurse);
 							}
-							if (classifiedMaterial==null) {
-								classifiedMaterial = vcmlProxyFactory.materialProxy(component, resource);
-							}
-						}
 						}
 
 						readDependencies(bomItem, resource, monitor, seenObjects,

@@ -17,10 +17,13 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.vclipse.bapi.actions.BAPIActionPlugin;
 import org.vclipse.bapi.actions.BAPIUtils;
 import org.vclipse.bapi.actions.billofmaterial.BillOfMaterialReader;
 import org.vclipse.bapi.actions.classes.ClassReader;
 import org.vclipse.bapi.actions.configurationprofile.ConfigurationProfileReader;
+import org.vclipse.bapi.actions.preferences.PreferenceNames;
 import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.Classification;
 import org.vclipse.vcml.vcml.Material;
@@ -30,6 +33,7 @@ import org.vclipse.vcml.vcml.VCObject;
 import org.vclipse.vcml.vcml.VcmlModel;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.sap.conn.jco.JCoException;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoParameterList;
@@ -46,7 +50,11 @@ public class MaterialReader extends BAPIUtils {
 	
 	@Inject
 	private BillOfMaterialReader bomReader;
-	
+
+	@Inject
+	@Named(BAPIActionPlugin.ID)
+	private IPreferenceStore preferenceStore;
+
 	public Material read(String materialName, Resource resource, IProgressMonitor monitor, Map<String, VCObject> seenObjects, List<Option> globalOptions, boolean recurse) throws JCoException {
 		if(materialName == null || monitor.isCanceled() ) {
 			return null;
@@ -80,10 +88,12 @@ public class MaterialReader extends BAPIUtils {
 			object.setDescription(description);
 			object.setType(materialGeneralData.getString("MATL_TYPE"));
 		}
-		readClassesForMaterial(materialName, "300", resource, monitor,	seenObjects, globalOptions, recurse, object, model);
-		readClassesForMaterial(materialName, "200", resource, monitor,	seenObjects, globalOptions, recurse, object, model);
-		if(monitor.isCanceled()) {
-			return null;
+		
+		for (String classType : preferenceStore.getString(PreferenceNames.MAT_CLASSTYPES).split("\\s+")) {
+			readClassesForMaterial(materialName, classType, resource, monitor,	seenObjects, globalOptions, recurse, object, model);
+			if(monitor.isCanceled()) {
+				return null;
+			}
 		}
 		configurationProfileReader.read(object, null /* all profiles */, resource, monitor, seenObjects, globalOptions, recurse);
 

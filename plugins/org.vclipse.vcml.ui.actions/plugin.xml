@@ -2394,4 +2394,21 @@
       </startup>
    </extension>
 
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.vclipse.preferences.pages.vclipse"
+            class="org.vclipse.bapi.actions.injection.ExecutableExtensionFactory:org.vclipse.bapi.actions.preferences.PreferencePage"
+            id="org.vclipse.preferences.pages.bapi.actions"
+            name="Model Extraction via RFC">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.vclipse.bapi.actions.injection.ExecutableExtensionFactory:org.vclipse.bapi.actions.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+
+
 </plugin>

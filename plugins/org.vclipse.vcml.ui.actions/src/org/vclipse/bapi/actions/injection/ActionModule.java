@@ -15,6 +15,7 @@ import java.io.PrintStream;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.xtext.service.AbstractGenericModule;
+import org.vclipse.bapi.actions.BAPIActionPlugin;
 import org.vclipse.base.naming.INameProvider;
 import org.vclipse.connection.IConnectionHandler;
 import org.vclipse.connection.VClipseConnectionPlugin;
@@ -25,6 +26,7 @@ import org.vclipse.vcml.utils.DependencySourceUtils;
 
 import com.google.inject.Binder;
 import com.google.inject.Injector;
+import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 
 public class ActionModule extends AbstractGenericModule {
@@ -38,7 +40,8 @@ public class ActionModule extends AbstractGenericModule {
 		binder.bind(INameProvider.class).toInstance(nameProvider);
 		
 		binder.bind(DependencySourceUtils.class).toInstance(vcmlInjector.getInstance(DependencySourceUtils.class));
-		binder.bind(IPreferenceStore.class).toInstance(vcmlInjector.getInstance(IPreferenceStore.class));
+		binder.bind(IPreferenceStore.class).annotatedWith(Names.named(BAPIActionPlugin.ID)).toInstance(BAPIActionPlugin.getInstance().getPreferenceStore());
+		binder.bind(IPreferenceStore.class).annotatedWith(Names.named(VCMLActivator.ORG_VCLIPSE_VCML_VCML)).toInstance(vcmlInjector.getInstance(IPreferenceStore.class));
 		binder.bind(IConnectionHandler.class).toInstance(connectionInjector.getInstance(IConnectionHandler.class));
 		
 		binder.bind(PrintStream.class).annotatedWith(Names.named("Task")).toInstance(
