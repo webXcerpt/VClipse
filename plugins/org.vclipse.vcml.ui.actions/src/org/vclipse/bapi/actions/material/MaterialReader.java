@@ -80,6 +80,8 @@ public class MaterialReader extends BAPIUtils {
 			object.setDescription(description);
 			object.setType(materialGeneralData.getString("MATL_TYPE"));
 		}
+		readClassesForMaterial(materialName, "300", resource, monitor,	seenObjects, globalOptions, recurse, object, model);
+		readClassesForMaterial(materialName, "200", resource, monitor,	seenObjects, globalOptions, recurse, object, model);
 		if(monitor.isCanceled()) {
 			return null;
 		}
@@ -91,8 +93,6 @@ public class MaterialReader extends BAPIUtils {
 		// BAPI_MAT_BOM_EXISTENCE_CHECK
 		bomReader.read(object, resource, monitor, seenObjects, globalOptions, recurse);
 
-		readClassesForMaterial(materialName, "300", resource, monitor,	seenObjects, globalOptions, recurse, object, model);
-		readClassesForMaterial(materialName, "200", resource, monitor,	seenObjects, globalOptions, recurse, object, model);
 		return object;
 	}
 
