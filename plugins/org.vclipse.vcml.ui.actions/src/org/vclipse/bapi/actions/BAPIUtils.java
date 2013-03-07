@@ -64,6 +64,8 @@ import com.sap.conn.jco.JCoTable;
 
 public class BAPIUtils extends BAPIActionHandler {
 
+	private static final boolean FLAG_SIMPLIFY_DESCRIPTION = false;
+
 	private JCoFunction currentFunction;
 	
 	@Inject
@@ -300,7 +302,7 @@ public class BAPIUtils extends BAPIActionHandler {
 	}
 
 	protected Description simplifyDescription(Description description) {
-		if (description instanceof MultiLanguageDescriptions)
+		if (FLAG_SIMPLIFY_DESCRIPTION && description instanceof MultiLanguageDescriptions)
 			return simplifyMultiLanguageDescriptions((MultiLanguageDescriptions)description);
 		else
 			return description;
