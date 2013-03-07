@@ -69,4 +69,36 @@
             name="Vcml Compare">
       </page>
    </extension>
+   
+   
+
+  <extension
+    point="org.eclipse.core.contenttype.contentTypes">
+  <file-association
+      content-type="org.vclipse.vcml"
+      file-extensions="vcml"
+      file-names="*"/>
+  <content-type
+        id="org.vclipse.vcml"
+        name="VClipse VCML"
+        base-type="org.eclipse.core.runtime.text"
+        priority="normal">
+  </content-type>
+</extension>
+   
+
+   <extension
+         point="org.eclipse.compare.structureMergeViewers">
+      <viewer
+            class="org.vclipse.vcml.compare.experimental.EMFCompareStructureMergeViewerCreator"
+            extensions="vcml"
+            id="org.vclipse.vcml.compare.structureMergeViewer"
+            label="EMFCompare Structure Merge Viewer">
+      </viewer>
+      <contentTypeBinding
+            contentTypeId="org.vclipse.vcml"
+            structureMergeViewerId="org.vclipse.vcml.compare.structureMergeViewer">
+      </contentTypeBinding>
+   </extension>
+   
 </plugin>
