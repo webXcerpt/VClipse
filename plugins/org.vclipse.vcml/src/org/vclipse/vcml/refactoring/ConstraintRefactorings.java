@@ -206,6 +206,7 @@ public class ConstraintRefactorings extends DefaultRefactoringExecuter {
 		context.setSourceElement(source);
 	}
 	
+	// FIXME this is not correct
 	public void extract_Condition(ConstraintSource source) {
 		ConditionalConstraintRestriction ccr = cre.canExtractCommonConditions(source);
 		if(ccr != null) {
