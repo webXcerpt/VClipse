@@ -57,7 +57,6 @@ BillOfMaterial :
 	'billofmaterial' name=EXTENDED_ID ('[' options+=Option* ']')? '{'
 		('material' material=[Material|EXTENDED_ID])?
 		('items' '{' items+=BOMItem* '}')?
-	//	('classitems' '{' classitems+=BOMItem* '}')? // currently deactivated
 	'}'
 	;
 
