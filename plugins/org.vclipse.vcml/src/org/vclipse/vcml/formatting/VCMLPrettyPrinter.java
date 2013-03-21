@@ -656,6 +656,7 @@ public class VCMLPrettyPrinter extends DefaultPrettyPrinter {
 				printGroup(object.getGroup());
 			}
 			layouter.brk(1,-INDENTATION).print("}");
+			writeSourceCode(object, object.getSource());
 		}
 		return layouter.end();
 	}
@@ -710,6 +711,7 @@ public class VCMLPrettyPrinter extends DefaultPrettyPrinter {
 				printGroup(object.getGroup());
 			}
 			layouter.brk(1, -INDENTATION).print("}");
+			writeSourceCode(object, object.getSource());
 		}
 		return layouter.end();
 	}
