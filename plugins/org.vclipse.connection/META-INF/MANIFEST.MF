@@ -17,4 +17,4 @@ Import-Package: com.sap.conn.jco,
 Export-Package: org.vclipse.connection,
  org.vclipse.connection.injection
 Bundle-ClassPath: .,
- libs/commons-configuration-1.6.jar
+ libs/commons-configuration-1.9.jar
