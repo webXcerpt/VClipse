@@ -81,7 +81,7 @@ BOMItem_Class :
 	;
 
 Characteristic :
-	'characteristic' name=XID ('[' options+=Option* ']')? ('{'
+	'characteristic' name=EXTENDED_ID ('[' options+=Option* ']')? ('{'
 	(	description=Description
 	&	documentation=Documentation?
 	&	type=CharacteristicType
@@ -188,7 +188,7 @@ Class :
 		&	('status' status=Status)?
 		&	('group' group=STRING)?
 		&	('characteristics' '{' 
-				characteristics+=[Characteristic|XID]* 
+				characteristics+=[Characteristic|EXTENDED_ID]* 
 			'}')
 		&	('superclasses' '{' 
 				superClasses+=[Class | CLASSNAME]*
@@ -198,14 +198,14 @@ Class :
 	;
 
 CLASSNAME
-	:	'(' INT ')' XID
+	:	'(' INT ')' EXTENDED_ID
 	;
 
 ConfigurationProfile :
     'configurationprofile' name=EXTENDED_ID ('[' options+=Option* ']')? '{'
 	   (	('material' material=[Material|EXTENDED_ID])?
 	   &	('status' status=Status)?
-	   &	('bomapplication' bomapplication=XID)?
+	   &	('bomapplication' bomapplication=EXTENDED_ID)?
 	   &	('uidesign' uidesign=[InterfaceDesign | EXTENDED_ID])?
 	   &    ('fixing' fixing=Fixing)?
 	   )
@@ -278,7 +278,7 @@ InterfaceDesign :
 CharacteristicGroup :
 	'characteristicgroup' name=EXTENDED_ID '{'
 		description=Description?
-		(characteristics+=[Characteristic | XID])*
+		(characteristics+=[Characteristic | EXTENDED_ID])*
 	'}'
 	;    
 
@@ -298,13 +298,13 @@ Classification :
 	;
 
 ValueAssignment :
-	characteristic=[Characteristic | XID]
+	characteristic=[Characteristic | EXTENDED_ID]
 	'='
 	values+=(NumericLiteral | SymbolicLiteral)+
 	;
 	
 VariantFunction :
-	'variantfunction' name=XID ('[' options+=Option* ']')? ('{'
+	'variantfunction' name=EXTENDED_ID ('[' options+=Option* ']')? ('{'
 		(	description=Description
 		&	('status' status=Status)?
 		&	('group' group=STRING)?
@@ -314,11 +314,11 @@ VariantFunction :
 	; 
 	
 VariantFunctionArgument
-	:	(in?='in')? characteristic=[Characteristic|XID]
+	:	(in?='in')? characteristic=[Characteristic|EXTENDED_ID]
 	;
 	
 VariantTable
-	:	'varianttable' name=XID ('[' options+=Option* ']')? ('{'
+	:	'varianttable' name=EXTENDED_ID ('[' options+=Option* ']')? ('{'
 			(	description=Description
 			&	('status' status=Status)?
 			&	('group' group=STRING)?
@@ -328,11 +328,11 @@ VariantTable
 	; 
 	
 VariantTableArgument
-	:	(key?='key')? characteristic=[Characteristic|XID]
+	:	(key?='key')? characteristic=[Characteristic|EXTENDED_ID]
 	;
 
 VariantTableContent
-	:	'varianttablecontent' table=[VariantTable | XID] ('[' options+=Option* ']')? '{'
+	:	'varianttablecontent' table=[VariantTable | EXTENDED_ID] ('[' options+=Option* ']')? '{'
 			rows += Row*
 		'}'
 	;
