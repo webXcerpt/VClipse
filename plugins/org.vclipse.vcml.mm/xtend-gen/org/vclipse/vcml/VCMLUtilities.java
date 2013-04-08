@@ -1,3 +1,14 @@
+/**
+ * Copyright (c) 2010 - 2013 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
+ */
 package org.vclipse.vcml;
 
 import com.google.common.base.Objects;
@@ -20,7 +31,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.vclipse.base.naming.INameProvider;
 import org.vclipse.vcml.SAPFormattingUtility;
 import org.vclipse.vcml.VCMLFactoryExtension;
@@ -86,8 +96,8 @@ public class VCMLUtilities {
     final Iterator<T> iterator = entries.iterator();
     boolean _hasNext = iterator.hasNext();
     if (_hasNext) {
-      final Function1<T,Boolean> _function = new Function1<T,Boolean>() {
-          public Boolean apply(final T entry) {
+      final Predicate<T> _function = new Predicate<T>() {
+          public boolean apply(final T entry) {
             final String entryName = nameProvider.getName(entry);
             boolean _isNullOrEmpty = Strings.isNullOrEmpty(entryName);
             if (_isNullOrEmpty) {
@@ -105,11 +115,7 @@ public class VCMLUtilities {
             return _and;
           }
         };
-      Iterable<T> _filter = Iterables.<T>filter(entries, new Predicate<T>() {
-          public boolean apply(T input) {
-            return _function.apply(input);
-          }
-      });
+      Iterable<T> _filter = Iterables.<T>filter(entries, _function);
       final Iterator<T> typedAndNamed = _filter.iterator();
       boolean _hasNext_1 = typedAndNamed.hasNext();
       if (_hasNext_1) {
