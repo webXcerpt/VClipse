@@ -7,6 +7,7 @@ Bundle-SymbolicName: org.vclipse.dependency;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext.generator;resolution:=optional,
  org.vclipse.vcml;visibility:=reexport,
+ org.vclipse.vcml.mm;visibility:=reexport,
  org.eclipse.xtext,
  org.eclipse.xtext.util,
  org.antlr.runtime
