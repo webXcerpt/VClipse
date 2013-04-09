@@ -23,7 +23,8 @@ var runtimeProject = "../${projectName}"
 Workflow {
     bean = StandaloneSetup {
 	    scanClassPath = true
-	    registerGenModelFile = "../org.vclipse.vcml.mm/src/org/vclipse/vcml/mm/VCML.genmodel"
+	    registerGenModelFile = "platform:/resource/org.vclipse.vcml.mm/src/org/vclipse/vcml/mm/VCML.genmodel"
+	    registerGeneratedEPackage = "org.vclipse.vcml.vcml.VcmlPackage"
 		platformUri = "${runtimeProject}/.."
 	}
 
