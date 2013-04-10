@@ -23,9 +23,25 @@ var runtimeProject = "../${projectName}"
 Workflow {
     bean = StandaloneSetup {
 	    scanClassPath = true
-	    registerGenModelFile = "platform:/resource/org.vclipse.vcml.mm/src/org/vclipse/vcml/mm/VCML.genmodel"
+	    registerGenModelFile = "platform:/resource/org.vclipse.vcml.mm/model/VCML.genmodel"
 	    registerGeneratedEPackage = "org.vclipse.vcml.vcml.VcmlPackage"
 		platformUri = "${runtimeProject}/.."
+		uriMap = {
+			from = "platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore"
+			to = "platform:/resource/org.eclipse.emf.ecore/model/Ecore.ecore"
+		}
+		uriMap = {
+			from = "platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel"
+			to = "platform:/resource/org.eclipse.emf.ecore/model/Ecore.genmodel"
+		}
+		uriMap = {
+			from = "platform:/plugin/org.vclipse.vcml.mm/model/VCML.ecore"
+			to = "platform:/resource/org.vclipse.vcml.mm/model/VCML.ecore"
+		}
+		uriMap = {
+			from = "platform:/plugin/org.vclipse.vcml.mm/model/VCML.genmodel"
+			to = "platform:/resource/org.vclipse.vcml.mm/model/VCML.genmodel"
+		}
 	}
 
 	component = DirectoryCleaner {
