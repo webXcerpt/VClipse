@@ -15,7 +15,8 @@ Require-Bundle: org.vclipse.procedure;visibility:=reexport,
  org.eclipse.ui,
  org.eclipse.compare,
  org.antlr.runtime
-Import-Package: org.apache.log4j
+Import-Package: org.apache.log4j,
+ org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.vclipse.procedure.ui,
  org.vclipse.procedure.ui.contentassist,
