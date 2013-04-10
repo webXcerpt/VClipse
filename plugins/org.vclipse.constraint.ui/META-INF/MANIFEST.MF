@@ -15,9 +15,11 @@ Require-Bundle: org.vclipse.constraint;visibility:=reexport,
  org.eclipse.ui,
  org.eclipse.compare,
  org.antlr.runtime
-Import-Package: org.apache.log4j
+Import-Package: org.apache.log4j,
+ org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.vclipse.constraint.ui.contentassist,
- org.vclipse.constraint.ui.internal
+ org.vclipse.constraint.ui.internal,
+ org.vclipse.constraint.ui.quickfix
 Bundle-Activator: org.vclipse.constraint.ui.internal.ConstraintActivator
 Bundle-ClassPath: .
