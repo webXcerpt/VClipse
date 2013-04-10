@@ -15,16 +15,20 @@ import org.eclipse.emf.mwe.utils.*
 import org.eclipse.xtext.generator.*
 import org.eclipse.xtext.ui.generator.*
 
-var projectName = "org.vclipse.vcml.mm"
-var platformPrefix = "platform:/resource/${projectName}/src"
-var projectPrefix = "../${projectName}"
-
 Workflow {
 	 
 	bean = StandaloneSetup {
 		scanClassPath = true
-		platformUri = "${projectPrefix}/.."
-		registerGenModelFile = "${platformPrefix}/org/vclipse/vcml/mm/VCML.genmodel"
+		platformUri = ".."
+		registerGenModelFile = "platform:/resource/org.vclipse.vcml.mm/model/VCML.genmodel"
+		uriMap = {
+			from = "platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore"
+			to = "platform:/resource/org.eclipse.emf.ecore/model/Ecore.ecore"
+		}
+		uriMap = {
+			from = "platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel"
+			to = "platform:/resource/org.eclipse.emf.ecore/model/Ecore.genmodel"
+		}
 	}
 	
 	component = DirectoryCleaner {
@@ -32,7 +36,7 @@ Workflow {
 	}
 	
 	component = org.eclipse.emf.mwe2.ecore.EcoreGenerator {
-		genModel = "${platformPrefix}/org/vclipse/vcml/mm/VCML.genmodel"
-		srcPath = "${platformPrefix}"
+		genModel = "platform:/resource/org.vclipse.vcml.mm/model/VCML.genmodel"
+		srcPath = "platform:/resource/org.vclipse.vcml.mm/src"
 	}
 }
