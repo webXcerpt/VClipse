@@ -19,6 +19,8 @@ import org.eclipse.emf.compare.match.IEqualityHelperFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
+import org.eclipse.xtext.ui.resource.IStorage2UriMapperJdtExtensions;
+import org.eclipse.xtext.ui.resource.Storage2UriMapperJavaImpl;
 import org.vclipse.vcml.VCMLRuntimeModule;
 import org.vclipse.vcml.compare.VCMLComparePlugin;
 
@@ -56,4 +58,10 @@ public class VCMLCompareModule extends VCMLRuntimeModule {
 	public Class<? extends FeatureFilter> bindFeatureFilter() {
 		return FeatureFilter.class;
 	}
+	
+	public Class<? extends IStorage2UriMapperJdtExtensions>bindIStorage2UriMapperJdtExtensions() {
+		return Storage2UriMapperJavaImpl.class;
+	}
+	
+	
 }
