@@ -1,3 +1,14 @@
+/**
+ * Copyright (c) 2010 - 2013 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
+ */
 package org.vclipse.tests;
 
 import com.google.common.base.Objects;
@@ -18,9 +29,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.IStatusLineManager;
-import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
-import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotPerspective;
-import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -32,61 +40,40 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.xtext.util.StringInputStream;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipselabs.xtext.utils.unittesting.XtextTest;
-import org.vclipse.base.ui.util.EditorUtilsExtensions;
 
 @SuppressWarnings("all")
-public class SWTBotWorkspaceWorker extends XtextTest {
-  protected SWTWorkbenchBot bot;
+public class SWTBotWorkspaceWorker /* implements XtextTest  */{
+  protected /* SWTWorkbenchBot */Object bot;
   
   protected IProgressMonitor monitor;
   
   /**
    * Initialization
    */
-  public void before() {
-    super.before();
-    SWTWorkbenchBot _sWTWorkbenchBot = new SWTWorkbenchBot();
-    this.bot = _sWTWorkbenchBot;
-    SWTBotPerspective _perspectiveByLabel = this.bot.perspectiveByLabel("Java");
-    _perspectiveByLabel.activate();
-    final SWTBotView welcomeView = this.bot.viewByTitle("Welcome");
-    boolean _notEquals = (!Objects.equal(welcomeView, null));
-    if (_notEquals) {
-      welcomeView.close();
-    }
-    IProgressMonitor _progressMonitor = EditorUtilsExtensions.getProgressMonitor();
-    this.monitor = _progressMonitor;
-    this.bot.sleep(10000);
+  public Object before() {
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field super is undefined for the type SWTBotWorkspaceWorker"
+      + "\nSWTWorkbenchBot cannot be resolved."
+      + "\nbefore cannot be resolved"
+      + "\nactivate cannot be resolved"
+      + "\nperspectiveByLabel cannot be resolved"
+      + "\nviewByTitle cannot be resolved"
+      + "\n!= cannot be resolved"
+      + "\nclose cannot be resolved"
+      + "\nsleep cannot be resolved");
   }
   
-  public void after() {
-    this.bot.sleep(1000);
+  public Object after() {
+    throw new Error("Unresolved compilation problems:"
+      + "\nsleep cannot be resolved");
   }
   
   /**
    * Removes all projects from the workspace
    */
-  protected void cleanWorkspace() {
-    try {
-      this.monitor.beginTask("Deleting all projects in the workspace", IProgressMonitor.UNKNOWN);
-      IWorkspace _workspace = ResourcesPlugin.getWorkspace();
-      final IWorkspaceRoot root = _workspace.getRoot();
-      IProject[] _projects = root.getProjects();
-      for (final IProject project : _projects) {
-        {
-          boolean _isAccessible = project.isAccessible();
-          if (_isAccessible) {
-            project.delete(true, this.monitor);
-          }
-          this.monitor.worked(1);
-        }
-      }
-      this.monitor.done();
-      this.bot.sleep(1000);
-    } catch (Exception _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
+  protected Object cleanWorkspace() {
+    throw new Error("Unresolved compilation problems:"
+      + "\nsleep cannot be resolved");
   }
   
   /**
@@ -129,7 +116,7 @@ public class SWTBotWorkspaceWorker extends XtextTest {
         _xblockexpression = (project);
       }
       return _xblockexpression;
-    } catch (Exception _e) {
+    } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
@@ -152,7 +139,7 @@ public class SWTBotWorkspaceWorker extends XtextTest {
         _xblockexpression = (folder);
       }
       return _xblockexpression;
-    } catch (Exception _e) {
+    } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }
@@ -183,7 +170,7 @@ public class SWTBotWorkspaceWorker extends XtextTest {
         _xblockexpression = (file);
       }
       return _xblockexpression;
-    } catch (Exception _e) {
+    } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
   }

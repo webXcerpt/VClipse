@@ -1,19 +1,23 @@
+/**
+ * Copyright (c) 2010 - 2013 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
+ */
 package org.vclipse.tests;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.xbase.lib.Conversions;
-import org.eclipselabs.xtext.utils.unittesting.XtextTest;
-import org.vclipse.tests.VClipseTestPlugin;
 import org.vclipse.vcml.vcml.VcmlFactory;
 import org.vclipse.vcml.vcml.VcmlPackage;
 
@@ -21,7 +25,7 @@ import org.vclipse.vcml.vcml.VcmlPackage;
  * Utilities for VClipse tests.
  */
 @SuppressWarnings("all")
-public class VClipseTestUtilities extends XtextTest {
+public class VClipseTestUtilities /* implements XtextTest  */{
   public static VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
   
   public static VcmlFactory VCML_FACTORY = VcmlFactory.eINSTANCE;
@@ -44,50 +48,40 @@ public class VClipseTestUtilities extends XtextTest {
   /**
    * Loads a resource for a particular location.
    */
-  public Resource getResource(final String location) {
-    EObject _resourceRoot = this.getResourceRoot(location);
-    Resource _eResource = _resourceRoot.eResource();
-    return _eResource;
+  public Object getResource(final String location) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method eResource is undefined for the type VClipseTestUtilities");
   }
   
   /**
    * Returns the top level element for a resource on particular location.
    */
-  public EObject getResourceRoot(final String location) {
-    String _plus = (VClipseTestPlugin.ID + location);
-    final URI uri = URI.createPlatformPluginURI(_plus, true);
-    final Resource resource = this.resourceSet.getResource(uri, true);
-    final EList<EObject> contents = resource.getContents();
-    boolean _isEmpty = contents.isEmpty();
-    if (_isEmpty) {
-      return null;
-    }
-    return contents.get(0);
+  public Object getResourceRoot(final String location) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field resourceSet is undefined for the type VClipseTestUtilities"
+      + "\ngetResource cannot be resolved"
+      + "\ncontents cannot be resolved"
+      + "\nempty cannot be resolved"
+      + "\nget cannot be resolved");
   }
   
   /**
    * Provides an input stream for a particular location.
    */
-  public InputStream getInputStream(final String location) {
-    Class<? extends Object> _class = this.getClass();
-    ClassLoader _classLoader = _class.getClassLoader();
-    InputStream _resourceAsStream = _classLoader.getResourceAsStream(location);
-    return _resourceAsStream;
+  public Object getInputStream(final String location) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field getClass is undefined for the type VClipseTestUtilities"
+      + "\ngetResourceAsStream cannot be resolved"
+      + "\nclassLoader cannot be resolved");
   }
   
   /**
    * Loads all contents of a resource on a particular location.
    */
   public ArrayList<EObject> getResourceContents(final String location) {
-    final EObject root = this.getResourceRoot(location);
-    boolean _equals = Objects.equal(root, null);
-    if (_equals) {
-      return Lists.<EObject>newArrayList();
-    }
-    TreeIterator<EObject> _eAllContents = root.eAllContents();
-    final ArrayList<EObject> contents = Lists.<EObject>newArrayList(_eAllContents);
-    contents.add(0, root);
-    return contents;
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method eAllContents is undefined for the type VClipseTestUtilities"
+      + "\nType mismatch: cannot convert from Object to EObject");
   }
   
   /**

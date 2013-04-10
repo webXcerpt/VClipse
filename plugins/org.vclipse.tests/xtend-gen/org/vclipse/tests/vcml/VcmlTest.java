@@ -1,52 +1,62 @@
+/**
+ * Copyright (c) 2010 - 2013 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     	webXcerpt Software GmbH - initial creator
+ * 		www.webxcerpt.com
+ */
 package org.vclipse.tests.vcml;
 
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.junit4.InjectWith;
 import org.eclipse.xtext.junit4.XtextRunner;
-import org.eclipselabs.xtext.utils.unittesting.XtextTest;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.vclipse.tests.vcml.VCMLInjectorProvider;
 
-@RunWith(value = XtextRunner.class)
-@InjectWith(value = VCMLInjectorProvider.class)
+/* @RunWith(XtextRunner.class) */@InjectWith(VCMLInjectorProvider.class)
 @SuppressWarnings("all")
-public class VcmlTest extends XtextTest {
-  public void testParserRule(final CharSequence textToParse, final String ruleName) {
+public class VcmlTest /* implements XtextTest  */{
+  public Object testParserRule(final CharSequence textToParse, final String ruleName) {
     String _string = textToParse.toString();
-    this.testParserRule(_string, ruleName);
+    Object _testParserRule = this.testParserRule(_string, ruleName);
+    return _testParserRule;
   }
   
-  @Test
-  public void fileTest() {
-    this.setResourceRoot("file:C:/eclipse/workspace-splitting/org.vclipse.vcml.tests/resources");
-    this.testFile("VcmlTest/characteristictest.vcml");
+  /* @Test
+   */public void fileTest() {
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method setResourceRoot is undefined for the type VcmlTest"
+      + "\nThe method testFile is undefined for the type VcmlTest");
   }
   
-  @Test
-  public void fileTest2() {
-    this.setResourceRoot("classpath:/resources");
-    this.testFile("characteristictest.vcml");
+  /* @Test
+   */public void fileTest2() {
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method setResourceRoot is undefined for the type VcmlTest"
+      + "\nThe method testFile is undefined for the type VcmlTest");
   }
   
-  @Test
-  public void parseImportTest() {
+  /* @Test
+   */public void parseImportTest() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("import \"platform:/resource/org.vclipse.vcml.mm/src/org/vclipse/vcml/mm/VCML.ecore\"");
     _builder.newLine();
     this.testParserRule(_builder, "Import");
   }
   
-  @Test
-  public void parseOptionTest() {
+  /* @Test
+   */public void parseOptionTest() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("ECM = \"engineering change master\" ");
     _builder.newLine();
     this.testParserRule(_builder, "Option");
   }
   
-  @Test
-  public void parseBillOfMaterialTest() {
+  /* @Test
+   */public void parseBillOfMaterialTest() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("billofmaterial {");
     _builder.newLine();
@@ -82,8 +92,8 @@ public class VcmlTest extends XtextTest {
     this.testParserRule(_builder, "BillOfMaterial");
   }
   
-  @Test
-  public void parseCharacteristicSymbolicTest() {
+  /* @Test
+   */public void parseCharacteristicSymbolicTest() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("characteristic CSTIC1 {");
     _builder.newLine();
@@ -143,8 +153,8 @@ public class VcmlTest extends XtextTest {
     this.testParserRule(_builder, "Characteristic");
   }
   
-  @Test
-  public void parseCharacteristicNumericTest() {
+  /* @Test
+   */public void parseCharacteristicNumericTest() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("characteristic CSTIC1 {");
     _builder.newLine();
@@ -219,8 +229,8 @@ public class VcmlTest extends XtextTest {
     this.testParserRule(_builder, "Characteristic");
   }
   
-  @Test
-  public void parseCharacteristicDateTest() {
+  /* @Test
+   */public void parseCharacteristicDateTest() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("characteristic CSTIC1 {");
     _builder.newLine();
@@ -301,8 +311,8 @@ public class VcmlTest extends XtextTest {
     this.testParserRule(_builder, "Characteristic");
   }
   
-  @Test
-  public void parseClassTest() {
+  /* @Test
+   */public void parseClassTest() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("class (300) DE {");
     _builder.newLine();
@@ -338,8 +348,8 @@ public class VcmlTest extends XtextTest {
     this.testParserRule(_builder, "Class");
   }
   
-  @Test
-  public void parseConfigurationProfileTest() {
+  /* @Test
+   */public void parseConfigurationProfileTest() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("configurationprofile testprofile {");
     _builder.newLine();
@@ -376,8 +386,8 @@ public class VcmlTest extends XtextTest {
     this.testParserRule(_builder, "ConfigurationProfile");
   }
   
-  @Test
-  public void parseProcedureTest() {
+  /* @Test
+   */public void parseProcedureTest() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("procedure testprocedure {");
     _builder.newLine();
@@ -398,8 +408,8 @@ public class VcmlTest extends XtextTest {
     this.testParserRule(_builder, "Procedure");
   }
   
-  @Test
-  public void parseSelectionConditionTest() {
+  /* @Test
+   */public void parseSelectionConditionTest() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("selectioncondition testselectioncondition {");
     _builder.newLine();
@@ -420,8 +430,8 @@ public class VcmlTest extends XtextTest {
     this.testParserRule(_builder, "SelectionCondition");
   }
   
-  @Test
-  public void parsePreconditionTest() {
+  /* @Test
+   */public void parsePreconditionTest() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("precondition testprecondition {");
     _builder.newLine();
@@ -442,8 +452,8 @@ public class VcmlTest extends XtextTest {
     this.testParserRule(_builder, "Precondition");
   }
   
-  @Test
-  public void parseDependencyNetTest() {
+  /* @Test
+   */public void parseDependencyNetTest() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("dependencynet netid {");
     _builder.newLine();
@@ -469,8 +479,8 @@ public class VcmlTest extends XtextTest {
     this.testParserRule(_builder, "DependencyNet");
   }
   
-  @Test
-  public void parseMaterialTest() {
+  /* @Test
+   */public void parseMaterialTest() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("material testmaterial {");
     _builder.newLine();
@@ -554,8 +564,8 @@ public class VcmlTest extends XtextTest {
     this.testParserRule(_builder, "Material");
   }
   
-  @Test
-  public void parseInterfaceDesignTest() {
+  /* @Test
+   */public void parseInterfaceDesignTest() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("interfacedesign testdesign {");
     _builder.newLine();
@@ -579,8 +589,8 @@ public class VcmlTest extends XtextTest {
     this.testParserRule(_builder, "InterfaceDesign");
   }
   
-  @Test
-  public void parseConstraintTest() {
+  /* @Test
+   */public void parseConstraintTest() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("constraint testconstraint {");
     _builder.newLine();
@@ -601,8 +611,8 @@ public class VcmlTest extends XtextTest {
     this.testParserRule(_builder, "Constraint");
   }
   
-  @Test
-  public void parseVariantFunctionTest() {
+  /* @Test
+   */public void parseVariantFunctionTest() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("variantfunction testfunction {");
     _builder.newLine();
@@ -632,8 +642,8 @@ public class VcmlTest extends XtextTest {
     this.testParserRule(_builder, "VariantFunction");
   }
   
-  @Test
-  public void parseVariantTableTest() {
+  /* @Test
+   */public void parseVariantTableTest() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("varianttable testtable {");
     _builder.newLine();
@@ -666,8 +676,8 @@ public class VcmlTest extends XtextTest {
     this.testParserRule(_builder, "VariantTable");
   }
   
-  @Test
-  public void parseVariantTableContentTest() {
+  /* @Test
+   */public void parseVariantTableContentTest() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("varianttablecontent DE {");
     _builder.newLine();
@@ -679,35 +689,29 @@ public class VcmlTest extends XtextTest {
     this.testParserRule(_builder, "VariantTableContent");
   }
   
-  @Test
-  public void idTest() {
-    this.testTerminal("abc", "ID");
-    this.testTerminal("abc4", "ID");
-    this.testTerminal("_abc", "ID");
-    this.testNotTerminal("1abc", "ID");
-    this.testNotTerminal("#abc", "ID");
+  /* @Test
+   */public void idTest() {
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method testTerminal is undefined for the type VcmlTest"
+      + "\nThe method testTerminal is undefined for the type VcmlTest"
+      + "\nThe method testTerminal is undefined for the type VcmlTest"
+      + "\nThe method testNotTerminal is undefined for the type VcmlTest"
+      + "\nThe method testNotTerminal is undefined for the type VcmlTest");
   }
   
-  @Test
-  public void stringTest() {
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append("\"\\\\t\"");
-    String _string = _builder.toString();
-    this.testTerminal(_string, "STRING");
-    StringConcatenation _builder_1 = new StringConcatenation();
-    _builder_1.append("\"foo\"");
-    String _string_1 = _builder_1.toString();
-    this.testTerminal(_string_1, "STRING");
-    StringConcatenation _builder_2 = new StringConcatenation();
-    _builder_2.append("\"\\\\tbar\"");
-    String _string_2 = _builder_2.toString();
-    this.testTerminal(_string_2, "STRING");
+  /* @Test
+   */public void stringTest() {
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method testTerminal is undefined for the type VcmlTest"
+      + "\nThe method testTerminal is undefined for the type VcmlTest"
+      + "\nThe method testTerminal is undefined for the type VcmlTest");
   }
   
-  @Test
-  public void symbolTest() {
-    this.testTerminal("\'a\'", "SYMBOL");
-    this.testTerminal("\'\b\'", "SYMBOL");
-    this.testNotTerminal("\'\t\'", "SYMBOL");
+  /* @Test
+   */public void symbolTest() {
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method testTerminal is undefined for the type VcmlTest"
+      + "\nThe method testTerminal is undefined for the type VcmlTest"
+      + "\nThe method testNotTerminal is undefined for the type VcmlTest");
   }
 }
