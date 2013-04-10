@@ -19,10 +19,12 @@ Require-Bundle: org.vclipse.configscan,
  org.antlr.runtime,
  org.eclipse.compare
 Import-Package: com.sap.conn.jco,
- org.apache.log4j
+ org.apache.log4j,
+ org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.vclipse.configscan.vcmlt.ui.contentassist.antlr,
  org.vclipse.configscan.vcmlt.ui.internal,
- org.vclipse.configscan.vcmlt.ui.contentassist
+ org.vclipse.configscan.vcmlt.ui.contentassist,
+ org.vclipse.configscan.vcmlt.ui.quickfix
 Bundle-Activator: org.vclipse.configscan.vcmlt.ui.internal.VcmlTActivator
 Bundle-ClassPath: .
