@@ -11,7 +11,7 @@
  ******************************************************************************/
 grammar org.vclipse.condition.Condition with org.vclipse.dependency.Dependency
 
-import "platform:/resource/org.vclipse.vcml.mm/src/org/vclipse/vcml/mm/VCML.ecore"
+import "http://www.vclipse.org/vcml"
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
 ConditionSource:
