@@ -10,6 +10,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.compare.edit;bundle-version="3.0.0",
  org.eclipse.emf.compare.ide;bundle-version="3.0.0",
  org.eclipse.emf.compare.ide.ui;bundle-version="3.0.0",
- org.eclipse.emf.compare.rcp.ui;bundle-version="3.0.0"
+ org.eclipse.emf.compare.rcp.ui;bundle-version="3.0.0",
+ org.eclipse.emf.compare.rcp;bundle-version="2.1.0",
+ com.google.guava,
+ org.vclipse.vcml.mm
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
