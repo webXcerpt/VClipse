@@ -65,6 +65,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 	private Document doc;
 	private Map<Element, URI> map;
 	private Element current;
+	private int currentXid;
 	private DocumentBuilder xmlDocBuilder;
 	
 	private ITestObjectFilter filter;
@@ -88,6 +89,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 	@Override
 	public Object caseModel(Model model) {
 		Element root = doc.createElement("configtest");
+		root.setAttribute("xid", String.valueOf(currentXid++));
 		String materialid = model.getTestcase().getItem().getName();
 		String document = model.getTestcase().getDocument();
 		String documentname = (document != null) ? document : materialid;
@@ -105,6 +107,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 		map.put(root, EcoreUtil.getURI(model));
 		root.setAttribute("version", "1.0");
 		Element session = doc.createElement("session");
+		session.setAttribute("xid", String.valueOf(currentXid++));
 		
 		root.appendChild(session);		
 		doc.appendChild(root);
@@ -122,6 +125,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 	@Override
 	public Object caseTestGroup(final TestGroup testGroup) {
 		Element tg = doc.createElement("testgroup");
+		tg.setAttribute("xid", String.valueOf(currentXid++));
 		final String name = testGroup.getName();
 		tg.setAttribute("id", name);
 		final String description = testGroup.getDescription();
@@ -154,6 +158,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 	@Override
 	public Object caseSetValue(final SetValue object) {
 		Element e = doc.createElement("command");
+		e.setAttribute("xid", String.valueOf(currentXid++));
 		e.setAttribute("action", "setvalue");
 		e.setAttribute("name", (object.getCstic()).getName());
 		e.setAttribute("value", getValue(object.getValue()));
@@ -170,6 +175,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 	public Object caseCheckSingleValue (final CheckSingleValue object) {
 		if (object.getValue() != null) {
 			Element ec = doc.createElement("checksinglevalue");
+			ec.setAttribute("xid", String.valueOf(currentXid++));
 			ec.setAttribute("name", (object.getCstic()).getName());
 			String prefix = "";
 			if ((Literal)object.getValue() instanceof NumericLiteral) {
@@ -201,6 +207,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 	@Override
 	public Object caseCheckStatus(final CheckStatus object) {
 		Element ec = doc.createElement("checkstatus");
+		ec.setAttribute("xid", String.valueOf(currentXid++));
 		ec.setAttribute("name", (object.getCstic()).getName());
 		ec.setAttribute("bompath", bompath(object));
 		
@@ -209,6 +216,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 		
 		for (final CsticState status : object.getStatus()) {
 			Element cs = doc.createElement("status");
+			cs.setAttribute("xid", String.valueOf(currentXid++));
 			cs.appendChild(doc.createTextNode(toXML(status)));
 			map.put(cs, EcoreUtil.getURI(object));
 			ec.appendChild(cs);
@@ -220,6 +228,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 	@Override
 	public Object caseCheckBomItemExists (final CheckBomItemExists object) {
 		Element e = doc.createElement("checkitemexist");
+		e.setAttribute("xid", String.valueOf(currentXid++));
 		if (object.isExists())
 			e.setAttribute("value", "TRUE");
 		else
@@ -235,6 +244,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 	@Override
 	public Object caseCheckDomain (final CheckDomain object) {
 		Element e = doc.createElement("checkdomain");
+		e.setAttribute("xid", String.valueOf(currentXid++));
 		e.setAttribute("name", object.getCstic().getName());
 		e.setAttribute("bompath", bompath(object));
 		e.setAttribute("strict", object.isStrict() ? "TRUE" : "FALSE");
@@ -243,6 +253,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 			Iterator<DomainValue> vsi = vs.iterator();
 			while (vsi.hasNext()) {
 				Element ev = doc.createElement("values");
+				ev.setAttribute("xid", String.valueOf(currentXid++));
 				DomainValue val = vsi.next();
 				ev.setAttribute("value", getValue(val.getLiteral()));
 				if (!object.isStrict()) {
@@ -264,6 +275,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 	@Override
 	public Object caseCheckBomCountItems (final CheckBomCountItems object) {
 		Element e = doc.createElement("countitems");
+		e.setAttribute("xid", String.valueOf(currentXid++));
 		e.setAttribute("quantity", Integer.toString(object.getValue()));
 		e.setAttribute("bompath", bompath(object));
 		
@@ -275,6 +287,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 	@Override
 	public Object caseCheckComplete (final CheckComplete object) {
 		Element e = doc.createElement("checkinststatus");
+		e.setAttribute("xid", String.valueOf(currentXid++));
 		if (object.isComplete())
 			e.setAttribute("iscomplete", "TRUE");
 		else
@@ -289,6 +302,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 	@Override
 	public Object caseCheckConflict (final CheckConflict object) {
 		Element e = doc.createElement("checkinststatus");
+		e.setAttribute("xid", String.valueOf(currentXid++));
 		if (object.isConflict())
 			e.setAttribute("isconsistent", "FALSE");
 		else
@@ -304,6 +318,7 @@ public class VcmlTConfigScanXMLProvider extends VcmlTSwitch<Object> implements I
 	@Override
 	public Object caseEquation(final Equation object) {
 		Element check = doc.createElement("checkbomquantity");
+		check.setAttribute("xid", String.valueOf(currentXid++));
 		check.setAttribute("quantity", object.getAmount().getValue());
 		check.setAttribute("operator", toXML(object.getOperator()));
 		check.setAttribute("bompath", bompath(object.getMaterial()) + " " + object.getMaterial().getMaterial().getName());
