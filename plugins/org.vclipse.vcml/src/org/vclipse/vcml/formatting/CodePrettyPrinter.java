@@ -322,17 +322,17 @@ public abstract class CodePrettyPrinter extends DefaultPrettyPrinter {
 	 */
 	@Override
 	public DataLayouter<NoExceptions> caseNumberList(NumberList object) {
-		layouter.print("(").beginI();
+		layouter.print("(").beginI().brk();
 		boolean start = true;
 		for(NumberListEntry entry : object.getEntries()) {
 			if(start) {
 				start = false;
 			} else {
-				layouter.print(", ").brk();
+				layouter.brk().print(", ").brk();
 			}
 			doSwitch(entry);
 		}
-		return layouter.end().print(")");
+		return layouter.brk().end().print(")");
 	}
 	
 	/**
@@ -360,17 +360,17 @@ public abstract class CodePrettyPrinter extends DefaultPrettyPrinter {
 	 */
 	@Override
 	public DataLayouter<NoExceptions> caseSymbolList(SymbolList object) {
-		layouter.print("(").beginI(0);
+		layouter.print("(").beginI(0).brk();
 		boolean start = true;
 		for(SymbolicLiteral entry : object.getEntries()) {
 			if(start) {
 				start = false;
 			} else {
-				layouter.print(",").brk();
+				layouter.brk().print(",").brk();
 			}
 			doSwitch(entry);
 		}
-		return layouter.end().print(")");
+		return layouter.brk().end().print(")");
 	}
 	
 	/**
