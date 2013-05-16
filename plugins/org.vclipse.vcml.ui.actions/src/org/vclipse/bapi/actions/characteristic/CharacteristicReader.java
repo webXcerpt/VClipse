@@ -137,6 +137,7 @@ public class CharacteristicReader extends BAPIUtils {
 				EList<CharacteristicValue> values = type.getValues();
 				HashMap<String, CharacteristicValue> seenValues = new HashMap<String, CharacteristicValue>(); // for grouping the descriptions by value
 				JCoTable charactValuesChar = tpl.getTable("CHARACTVALUESCHAR");
+				System.err.println(charactValuesChar);
 				if (charactValuesChar!=null) {
 					for (int i = 0; i < charactValuesChar.getNumRows(); i++) {
 						charactValuesChar.setRow(i);
@@ -152,6 +153,7 @@ public class CharacteristicReader extends BAPIUtils {
 					}
 				}
 				JCoTable charactValuesDescr = tpl.getTable("CHARACTVALUESDESCR");
+				System.err.println(charactValuesDescr);
 				if (charactValuesDescr!=null) {
 					for (int i = 0; i < charactValuesDescr.getNumRows(); i++) {
 						charactValuesDescr.setRow(i);
@@ -163,15 +165,16 @@ public class CharacteristicReader extends BAPIUtils {
 							value.setName(name);
 							seenValues.put(name, value);
 						}
-						value.setDescription(VCML.createMultiLanguageDescriptions());
 						MultiLanguageDescriptions multiLanguageDescriptions = (MultiLanguageDescriptions)value.getDescription();
-						if (multiLanguageDescriptions!=null) {
-							EList<MultiLanguageDescription> descriptions = multiLanguageDescriptions.getDescriptions();
-							MultiLanguageDescription multiLanguageDescription = VCML.createMultiLanguageDescription();
-							multiLanguageDescription.setLanguage(VcmlUtils.getLanguageByISOString(charactValuesDescr.getString("LANGUAGE_ISO")));
-							multiLanguageDescription.setValue(charactValuesDescr.getString("DESCRIPTION"));
-							descriptions.add(multiLanguageDescription);
+						if (multiLanguageDescriptions==null) {
+							multiLanguageDescriptions = VCML.createMultiLanguageDescriptions();
 						}
+						EList<MultiLanguageDescription> descriptions = multiLanguageDescriptions.getDescriptions();
+						MultiLanguageDescription multiLanguageDescription = VCML.createMultiLanguageDescription();
+						multiLanguageDescription.setLanguage(VcmlUtils.getLanguageByISOString(charactValuesDescr.getString("LANGUAGE_ISO")));
+						multiLanguageDescription.setValue(charactValuesDescr.getString("DESCRIPTION"));
+						descriptions.add(multiLanguageDescription);
+						value.setDescription(multiLanguageDescriptions);
 					}
 				}
 				for (final CharacteristicValue value : values) {
