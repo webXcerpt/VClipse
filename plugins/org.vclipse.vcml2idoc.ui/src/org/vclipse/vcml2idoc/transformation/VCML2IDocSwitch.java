@@ -49,6 +49,7 @@ import org.vclipse.vcml.vcml.BOMItem_Material;
 import org.vclipse.vcml.vcml.BillOfMaterial;
 import org.vclipse.vcml.vcml.Characteristic;
 import org.vclipse.vcml.vcml.CharacteristicGroup;
+import org.vclipse.vcml.vcml.CharacteristicOrValueDependencies;
 import org.vclipse.vcml.vcml.CharacteristicValue;
 import org.vclipse.vcml.vcml.Class;
 import org.vclipse.vcml.vcml.Classification;
@@ -93,6 +94,7 @@ import org.vclipse.vcml.vcml.util.VcmlSwitch;
 import org.vclipse.vcml2idoc.VCML2IDocPlugin;
 import org.vclipse.vcml2idoc.preferences.IVCML2IDocPreferences;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -490,6 +492,24 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		setValue(segmentE1CAWNM, "ATZHL", String.format("%1$04d", counter)); // internal counter
 		setValue(segmentE1CAWNM, "ATWRT", caseSensitive ? value.getName() : value.getName().toUpperCase());
 		setValue(segmentE1CAWNM, "ATZHH", "0000"); // internal counter for value hierarchy
+		CharacteristicOrValueDependencies dependencies = value.getDependencies();
+		if (dependencies!=null) {
+			for (Dependency dep : dependencies.getDependencies()) {
+				// TODO this could be simplified after a model refactoring
+				if (dep instanceof Precondition) {
+					Precondition precondition = (Precondition)dep;
+					addSegmentE1CUKB1(segmentE1CAWNM, precondition.getName(), "PRE", precondition.getGroup(), precondition.getStatus(), null);
+				} else if (dep instanceof Procedure) {
+					Procedure procedure = (Procedure)dep;
+					addSegmentE1CUKB1(segmentE1CAWNM, procedure.getName(), "PROC", procedure.getGroup(), procedure.getStatus(), null);
+				} else if (dep instanceof SelectionCondition) {
+					SelectionCondition selectionCondition = (SelectionCondition)dep;
+					addSegmentE1CUKB1(segmentE1CAWNM, selectionCondition.getName(), "SEL", selectionCondition.getGroup(), selectionCondition.getStatus(), null);
+				} else {
+					throw new IllegalArgumentException("illegal dependency type for cstic values: " + dep);
+				} 
+			}
+		}
 		// Master Characteristic Value Language-Dependent Name
 		final Description description = value.getDescription();
 		if (description!=null) {
@@ -852,9 +872,24 @@ public class VCML2IDocSwitch extends VcmlSwitch<List<IDoc>> {
 		setValue(segmentE1CUKBM, "DEP_INTERN", toUpperCase(name));
 		setValue(segmentE1CUKBM, "DEP_TYPE", type);
 		setValue(segmentE1CUKBM, "STATUS", VcmlUtils.createIntFromStatus(status));
-		setValue(segmentE1CUKBM, "GROUP", toUpperCase(group));
+		if (!Strings.isNullOrEmpty(group)) {
+			setValue(segmentE1CUKBM, "GROUP", toUpperCase(group));
+		}
 		setValue(segmentE1CUKBM, "DEP_LINENO", lineno);
 		return segmentE1CUKBM;
+	}
+
+	private Segment addSegmentE1CUKB1(final Segment parentSegment, final String name, final String type, final String group, final Status status, final String lineno) {
+		final Segment segmentE1CUKB1 = addChildSegment(parentSegment, "E1CUKB1");
+		setValue(segmentE1CUKB1, "MSGFN", "004");
+		setValue(segmentE1CUKB1, "DEP_INTERN", toUpperCase(name));
+		setValue(segmentE1CUKB1, "DEP_TYPE", type);
+		setValue(segmentE1CUKB1, "STATUS", VcmlUtils.createIntFromStatus(status));
+		if (!Strings.isNullOrEmpty(group)) {
+			setValue(segmentE1CUKB1, "GROUP", toUpperCase(group));
+		}
+		setValue(segmentE1CUKB1, "DEP_LINENO", lineno);
+		return segmentE1CUKB1;
 	}
 
 	/**
