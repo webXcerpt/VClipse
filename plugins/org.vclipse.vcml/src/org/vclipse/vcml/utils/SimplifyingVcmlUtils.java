@@ -33,6 +33,10 @@ import org.vclipse.vcml.vcml.Statement;
 import org.vclipse.vcml.vcml.SymbolicLiteral;
 import org.vclipse.vcml.vcml.UnaryExpressionOperator;
 
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+
 
 /**
  *
@@ -100,20 +104,14 @@ public class SimplifyingVcmlUtils {
 		return mkConditionalStatement(statement, condition);
 	}
 
-	public Statement mkSimplifiedCompoundStatement(final SimpleStatement statement1, final SimpleStatement statement2) {
-		if (statement1==null) {
-			if (statement2==null) {
-				return null;
-			} else {
-				return statement2;
-			}
-		} else if (statement2==null) {
-			return statement1;
-		} else {
+	public Statement mkSimplifiedCompoundStatement(final SimpleStatement... statements) {
+		Iterable<SimpleStatement> statementsNonNull = Iterables.filter(Lists.newArrayList(statements), Predicates.notNull());
+		switch (Iterables.size(statementsNonNull)) {
+		case 0: return null;
+		case 1: return Iterables.getFirst(statementsNonNull, null);
+		default:
 			final CompoundStatement compoundStatement = mkCompoundStatement();
-			final EList<SimpleStatement> statements = compoundStatement.getStatements();
-			statements.add(statement1);
-			statements.add(statement2);
+			compoundStatement.getStatements().addAll(Lists.newArrayList(statementsNonNull));
 			return compoundStatement;
 		}
 	}
