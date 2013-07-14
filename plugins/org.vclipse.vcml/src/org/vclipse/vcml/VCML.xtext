@@ -201,6 +201,19 @@ CLASSNAME
 	:	'(' INT ')' EXTENDED_ID
 	;
 
+/*
+ * 
+CharacteristicReference
+	:	ref=[Characteristic|EXTENDED_ID]
+	;
+
+CharacteristicOverride
+	:	ref=[Characteristic|EXTENDED_ID] '{'
+		// welche Objekte?
+		'}'
+	;
+ */
+
 ConfigurationProfile :
     'configurationprofile' name=EXTENDED_ID ('[' options+=Option* ']')? '{'
 	   (	('material' material=[Material|EXTENDED_ID])?
