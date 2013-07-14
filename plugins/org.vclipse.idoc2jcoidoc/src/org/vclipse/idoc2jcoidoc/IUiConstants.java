@@ -17,8 +17,13 @@ package org.vclipse.idoc2jcoidoc;
 public interface IUiConstants {
 	
 	public static final String NUMBERS_PROVIDER = IDoc2JCoIDocPlugin.ID + ".senderType";
+	public static final String NUMBERS_VIA_RFC = IDoc2JCoIDocPlugin.ID + ".numbersViaRfc";
 	public static final String RFC_FOR_UPS_NUMBERS = "RfcSetting_UPS_NUMBER";
 	public static final String RFC_FOR_IDOC_NUMBERS = "RfcSetting_IDOC_NUMBER";
+	public static final String URL_FOR_UPS_NUMBERS = "UrlSetting_UPS_NUMBER";
+	public static final String URL_FOR_IDOC_NUMBERS = "UrlSetting_IDOC_NUMBER";
+	public static final String FORMAT_FOR_UPS_NUMBERS = "FORMAT_UPS_NUMBER";
+	public static final String FORMAT_FOR_IDOC_NUMBERS = "FORMAT_IDOC_NUMBER";
 	public static final String UPS_PACKAGE_PREFIX = IDoc2JCoIDocPlugin.ID + ".upsPackagePrefix";
 	/**
 	 * Values for sender types

@@ -11,9 +11,11 @@
  ******************************************************************************/
 package org.vclipse.idoc2jcoidoc.internal;
 
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.vclipse.idoc2jcoidoc.IUiConstants;
@@ -52,9 +54,15 @@ public final class IDoc2JCoIDocPreferencePage extends FieldEditorPreferencePage 
 	 */
 	@Override
 	protected void createFieldEditors() {
-		addField(new StringFieldEditor(IUiConstants.PARTNER_TYPE, "Partner type: ", getFieldEditorParent()));
-		addField(new StringFieldEditor(IUiConstants.PARTNER_NUMBER, "Partner number: ", getFieldEditorParent()));
-		addField(new StringFieldEditor(IUiConstants.RFC_FOR_UPS_NUMBERS, "RFC to retrieve new UPS numbers: ", getFieldEditorParent()));
-		addField(new StringFieldEditor(IUiConstants.RFC_FOR_IDOC_NUMBERS, "RFC to retrieve new IDoc numbers: ", getFieldEditorParent()));
+		Composite parent = getFieldEditorParent();
+		addField(new StringFieldEditor(IUiConstants.PARTNER_TYPE, "Partner type: ", parent));
+		addField(new StringFieldEditor(IUiConstants.PARTNER_NUMBER, "Partner number: ", parent));
+		addField(new BooleanFieldEditor(IUiConstants.NUMBERS_VIA_RFC, "Retrieve new UPS and IDoc numbers via RFC", parent));
+		addField(new StringFieldEditor(IUiConstants.RFC_FOR_UPS_NUMBERS, "RFC to retrieve new UPS numbers: ", parent));
+		addField(new StringFieldEditor(IUiConstants.RFC_FOR_IDOC_NUMBERS, "RFC to retrieve new IDoc numbers: ", parent));
+		addField(new StringFieldEditor(IUiConstants.URL_FOR_UPS_NUMBERS, "URL to retrieve new UPS numbers: ", parent));
+		addField(new StringFieldEditor(IUiConstants.URL_FOR_IDOC_NUMBERS, "URL to retrieve new IDoc numbers: ", parent));
+		addField(new StringFieldEditor(IUiConstants.FORMAT_FOR_UPS_NUMBERS, "Format string for UPS numbers: ", parent));
+		addField(new StringFieldEditor(IUiConstants.FORMAT_FOR_IDOC_NUMBERS, "Format string IDoc numbers: ", parent));
 	}
 }
