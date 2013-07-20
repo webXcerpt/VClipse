@@ -13,22 +13,21 @@ package org.vclipse.vcml.compare;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.eclipse.emf.compare.diff.DefaultDiffEngine;
 import org.vclipse.vcml.compare.FeatureFilter;
 import org.vclipse.vcml.compare.ModelChangesProcessor;
 
 @Singleton
 @SuppressWarnings("all")
-public class ModelDifferencesEngine extends DefaultDiffEngine {
+public class ModelDifferencesEngine /* implements DefaultDiffEngine  */{
   private FeatureFilter featureFilter;
   
   @Inject
   public ModelDifferencesEngine(final ModelChangesProcessor processor, final FeatureFilter featureFilter) {
-    super(processor);
-    this.featureFilter = featureFilter;
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method super is undefined for the type ModelDifferencesEngine");
   }
   
-  protected org.eclipse.emf.compare.diff.FeatureFilter createFeatureFilter() {
+  protected FeatureFilter createFeatureFilter() {
     return this.featureFilter;
   }
 }

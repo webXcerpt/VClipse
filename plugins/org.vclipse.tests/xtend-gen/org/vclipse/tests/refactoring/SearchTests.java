@@ -51,12 +51,18 @@ public class SearchTests /* implements XtextTest  */{
    */public void testFindByTypeAndName() {
     throw new Error("Unresolved compilation problems:"
       + "\nAssert cannot be resolved to a type."
+      + "\nThe method VCML_PACKAGE is undefined for the type SearchTests"
       + "\nAssert cannot be resolved to a type."
+      + "\nThe method VCML_PACKAGE is undefined for the type SearchTests"
       + "\nAssert cannot be resolved to a type."
+      + "\nThe method VCML_PACKAGE is undefined for the type SearchTests"
       + "\nAssert cannot be resolved to a type."
       + "\nassertTrue cannot be resolved"
+      + "\nconstraint cannot be resolved"
       + "\nassertNotNull cannot be resolved"
+      + "\ngetCharacteristic cannot be resolved"
       + "\nassertNotNull cannot be resolved"
+      + "\ngetClass_ cannot be resolved"
       + "\nassertNotNull cannot be resolved");
   }
   
@@ -64,27 +70,53 @@ public class SearchTests /* implements XtextTest  */{
    */public void testSearchByName() {
     throw new Error("Unresolved compilation problems:"
       + "\nAssert cannot be resolved to a type."
+      + "\nThe method VCML_PACKAGE is undefined for the type SearchTests"
       + "\nAssert cannot be resolved to a type."
       + "\nassertTrue cannot be resolved"
+      + "\ndependencyNet cannot be resolved"
       + "\nassertNull cannot be resolved");
   }
   
   /* @Test
    */public void testWithRefactorings() {
     throw new Error("Unresolved compilation problems:"
+      + "\norg.vclipse.vcml.vcml.Class cannot be resolved to a type."
+      + "\norg.vclipse.vcml.vcml.Class cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
+      + "\nThe method VCML_PACKAGE is undefined for the type SearchTests"
       + "\nAssert cannot be resolved to a type."
+      + "\nThe method name is undefined for the type SearchTests"
       + "\nAssert cannot be resolved to a type."
+      + "\nThe method VCML_PACKAGE is undefined for the type SearchTests"
       + "\nAssert cannot be resolved to a type."
+      + "\nThe method VCML_PACKAGE is undefined for the type SearchTests"
+      + "\nThe method VCML_PACKAGE is undefined for the type SearchTests"
       + "\nAssert cannot be resolved to a type."
+      + "\nThe method VCML_PACKAGE is undefined for the type SearchTests"
       + "\nAssert cannot be resolved to a type."
+      + "\nThe method name is undefined for the type SearchTests"
       + "\nAssert cannot be resolved to a type."
+      + "\nThere is no context to infer the closure\'s argument types from. Consider typing the arguments or put the closures into a typed context."
+      + "\nThere is no context to infer the closure\'s argument types from. Consider typing the arguments or put the closures into a typed context."
       + "\nfail cannot be resolved"
+      + "\nclass_ cannot be resolved"
       + "\nassertNotNull cannot be resolved"
+      + "\ncharacteristics cannot be resolved"
+      + "\ntoMap cannot be resolved"
       + "\nassertTrue cannot be resolved"
+      + "\nkeySet cannot be resolved"
+      + "\ncontains cannot be resolved"
+      + "\ncharacteristic cannot be resolved"
       + "\nassertNotNull cannot be resolved"
+      + "\nvcmlModel_Objects cannot be resolved"
+      + "\ncharacteristic cannot be resolved"
       + "\nassertNull cannot be resolved"
+      + "\nclass_ cannot be resolved"
       + "\nassertNotNull cannot be resolved"
-      + "\nassertFalse cannot be resolved");
+      + "\ncharacteristics cannot be resolved"
+      + "\ntoMap cannot be resolved"
+      + "\nassertFalse cannot be resolved"
+      + "\nkeySet cannot be resolved"
+      + "\ncontains cannot be resolved");
   }
 }

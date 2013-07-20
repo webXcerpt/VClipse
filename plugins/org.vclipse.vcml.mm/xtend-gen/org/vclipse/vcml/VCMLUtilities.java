@@ -16,13 +16,11 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -34,18 +32,6 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.vclipse.base.naming.INameProvider;
 import org.vclipse.vcml.SAPFormattingUtility;
 import org.vclipse.vcml.VCMLFactoryExtension;
-import org.vclipse.vcml.vcml.Characteristic;
-import org.vclipse.vcml.vcml.CharacteristicOrValueDependencies;
-import org.vclipse.vcml.vcml.CharacteristicType;
-import org.vclipse.vcml.vcml.CharacteristicValue;
-import org.vclipse.vcml.vcml.DateCharacteristicValue;
-import org.vclipse.vcml.vcml.DateType;
-import org.vclipse.vcml.vcml.Dependency;
-import org.vclipse.vcml.vcml.NumericCharacteristicValue;
-import org.vclipse.vcml.vcml.NumericType;
-import org.vclipse.vcml.vcml.Option;
-import org.vclipse.vcml.vcml.OptionType;
-import org.vclipse.vcml.vcml.SymbolicType;
 
 /**
  * Utilities for VCML Objects.
@@ -61,16 +47,10 @@ public class VCMLUtilities {
   /**
    * Returns an option with requested type, null if such an option does not exist as an entry.
    */
-  public Option getOption(final List<Option> global, final List<Option> local, final OptionType type) {
-    Iterable<Option> _plus = Iterables.<Option>concat(global, local);
-    for (final Option option : _plus) {
-      OptionType _name = option.getName();
-      boolean _equals = Objects.equal(_name, type);
-      if (_equals) {
-        return option;
-      }
-    }
-    return null;
+  public /* Option */Object getOption(final /* List<Option> */Object global, final /* List<Option> */Object local, final /* OptionType */Object type) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nname cannot be resolved"
+      + "\n== cannot be resolved");
   }
   
   /**
@@ -128,95 +108,65 @@ public class VCMLUtilities {
   /**
    * Dispatcher methods for returning dependencies of an object, they are created in the case they haven't been existed.
    */
-  protected EList<Dependency> _getDependencies(final Characteristic cstic) {
-    CharacteristicOrValueDependencies _dependencies = cstic.getDependencies();
-    boolean _equals = Objects.equal(_dependencies, null);
-    if (_equals) {
-      CharacteristicOrValueDependencies _createCharacteristicOrValueDependencies = this.factoryExtension.VCML_FACTORY.createCharacteristicOrValueDependencies();
-      cstic.setDependencies(_createCharacteristicOrValueDependencies);
-    }
-    CharacteristicOrValueDependencies _dependencies_1 = cstic.getDependencies();
-    return _dependencies_1.getDependencies();
+  protected Object _getDependencies(final /* Characteristic */Object cstic) {
+    throw new Error("Unresolved compilation problems:"
+      + "\ndependencies cannot be resolved"
+      + "\n== cannot be resolved"
+      + "\ndependencies cannot be resolved"
+      + "\ncreateCharacteristicOrValueDependencies cannot be resolved"
+      + "\ndependencies cannot be resolved"
+      + "\ndependencies cannot be resolved");
   }
   
-  protected EList<Dependency> _getDependencies(final CharacteristicValue value) {
-    CharacteristicOrValueDependencies _dependencies = value.getDependencies();
-    boolean _equals = Objects.equal(_dependencies, null);
-    if (_equals) {
-      CharacteristicOrValueDependencies _createCharacteristicOrValueDependencies = this.factoryExtension.VCML_FACTORY.createCharacteristicOrValueDependencies();
-      value.setDependencies(_createCharacteristicOrValueDependencies);
-    }
-    CharacteristicOrValueDependencies _dependencies_1 = value.getDependencies();
-    return _dependencies_1.getDependencies();
+  protected Object _getDependencies(final /* CharacteristicValue */Object value) {
+    throw new Error("Unresolved compilation problems:"
+      + "\ndependencies cannot be resolved"
+      + "\n== cannot be resolved"
+      + "\ndependencies cannot be resolved"
+      + "\ncreateCharacteristicOrValueDependencies cannot be resolved"
+      + "\ndependencies cannot be resolved"
+      + "\ndependencies cannot be resolved");
   }
   
-  protected EList<Dependency> _getDependencies(final NumericCharacteristicValue value) {
-    CharacteristicOrValueDependencies _dependencies = value.getDependencies();
-    boolean _equals = Objects.equal(_dependencies, null);
-    if (_equals) {
-      CharacteristicOrValueDependencies _createCharacteristicOrValueDependencies = this.factoryExtension.VCML_FACTORY.createCharacteristicOrValueDependencies();
-      value.setDependencies(_createCharacteristicOrValueDependencies);
-    }
-    CharacteristicOrValueDependencies _dependencies_1 = value.getDependencies();
-    return _dependencies_1.getDependencies();
+  protected Object _getDependencies(final /* NumericCharacteristicValue */Object value) {
+    throw new Error("Unresolved compilation problems:"
+      + "\ndependencies cannot be resolved"
+      + "\n== cannot be resolved"
+      + "\ndependencies cannot be resolved"
+      + "\ncreateCharacteristicOrValueDependencies cannot be resolved"
+      + "\ndependencies cannot be resolved"
+      + "\ndependencies cannot be resolved");
   }
   
-  protected EList<Dependency> _getDependencies(final DateCharacteristicValue value) {
-    CharacteristicOrValueDependencies _dependencies = value.getDependencies();
-    boolean _equals = Objects.equal(_dependencies, null);
-    if (_equals) {
-      CharacteristicOrValueDependencies _createCharacteristicOrValueDependencies = this.factoryExtension.VCML_FACTORY.createCharacteristicOrValueDependencies();
-      value.setDependencies(_createCharacteristicOrValueDependencies);
-    }
-    CharacteristicOrValueDependencies _dependencies_1 = value.getDependencies();
-    return _dependencies_1.getDependencies();
+  protected Object _getDependencies(final /* DateCharacteristicValue */Object value) {
+    throw new Error("Unresolved compilation problems:"
+      + "\ndependencies cannot be resolved"
+      + "\n== cannot be resolved"
+      + "\ndependencies cannot be resolved"
+      + "\ncreateCharacteristicOrValueDependencies cannot be resolved"
+      + "\ndependencies cannot be resolved"
+      + "\ndependencies cannot be resolved");
   }
   
   /**
    * Dispatcher methods for returning name to value mapping.
    */
-  protected Map<String,EObject> _getNameToValue(final SymbolicType type) {
-    final HashMap<String,EObject> name2Value = Maps.<String, EObject>newHashMap();
-    EList<CharacteristicValue> _values = ((SymbolicType) type).getValues();
-    for (final CharacteristicValue value : _values) {
-      String _name = value.getName();
-      name2Value.put(_name, value);
-    }
-    return name2Value;
+  protected Map<String,EObject> _getNameToValue(final /* SymbolicType */Object type) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nSymbolicType cannot be resolved to a type."
+      + "\nThe method name is undefined for the type VCMLUtilities"
+      + "\nvalues cannot be resolved");
   }
   
-  protected Map<String,EObject> _getNameToValue(final NumericType type) {
-    final HashMap<String,EObject> name2Value = Maps.<String, EObject>newHashMap();
-    EList<NumericCharacteristicValue> _values = ((NumericType) type).getValues();
-    for (final NumericCharacteristicValue value : _values) {
-      {
-        final String string = this.sapFormattingUtility.toString(value);
-        boolean _equals = Objects.equal(string, null);
-        if (_equals) {
-          IllegalArgumentException _illegalArgumentException = new IllegalArgumentException("Result of the computation should not be null.");
-          throw _illegalArgumentException;
-        }
-        name2Value.put(string, value);
-      }
-    }
-    return name2Value;
+  protected Map<String,EObject> _getNameToValue(final /* NumericType */Object type) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nNumericType cannot be resolved to a type."
+      + "\nvalues cannot be resolved");
   }
   
-  protected Map<String,EObject> _getNameToValue(final DateType type) {
-    final HashMap<String,EObject> name2Value = Maps.<String, EObject>newHashMap();
-    EList<DateCharacteristicValue> _values = type.getValues();
-    for (final DateCharacteristicValue value : _values) {
-      {
-        final String string = this.sapFormattingUtility.toString(value);
-        boolean _equals = Objects.equal(string, null);
-        if (_equals) {
-          IllegalArgumentException _illegalArgumentException = new IllegalArgumentException("Result of the computation should not be null.");
-          throw _illegalArgumentException;
-        }
-        name2Value.put(string, value);
-      }
-    }
-    return name2Value;
+  protected Map<String,EObject> _getNameToValue(final /* DateType */Object type) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nvalues cannot be resolved");
   }
   
   /**
@@ -249,28 +199,18 @@ public class VCMLUtilities {
     return false;
   }
   
-  public EList<Dependency> getDependencies(final EObject cstic) {
-    if (cstic instanceof Characteristic) {
-      return _getDependencies((Characteristic)cstic);
-    } else if (cstic instanceof CharacteristicValue) {
-      return _getDependencies((CharacteristicValue)cstic);
-    } else if (cstic instanceof DateCharacteristicValue) {
-      return _getDependencies((DateCharacteristicValue)cstic);
-    } else if (cstic instanceof NumericCharacteristicValue) {
-      return _getDependencies((NumericCharacteristicValue)cstic);
+  public Object getDependencies(final Characteristic cstic) {
+    if (cstic != null) {
+      return _getDependencies(cstic);
     } else {
       throw new IllegalArgumentException("Unhandled parameter types: " +
         Arrays.<Object>asList(cstic).toString());
     }
   }
   
-  public Map<String,EObject> getNameToValue(final CharacteristicType type) {
-    if (type instanceof DateType) {
-      return _getNameToValue((DateType)type);
-    } else if (type instanceof NumericType) {
-      return _getNameToValue((NumericType)type);
-    } else if (type instanceof SymbolicType) {
-      return _getNameToValue((SymbolicType)type);
+  public Map<String,EObject> getNameToValue(final SymbolicType type) {
+    if (type != null) {
+      return _getNameToValue(type);
     } else {
       throw new IllegalArgumentException("Unhandled parameter types: " +
         Arrays.<Object>asList(type).toString());

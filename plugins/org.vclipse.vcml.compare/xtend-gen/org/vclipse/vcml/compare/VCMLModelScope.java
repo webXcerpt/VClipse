@@ -11,26 +11,21 @@
  */
 package org.vclipse.vcml.compare;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.compare.scope.FilterComparisonScope;
-import org.vclipse.vcml.vcml.Option;
-import org.vclipse.vcml.vcml.VCObject;
 
 /**
  * This scope contains VCObject and Option objects.
  */
 @SuppressWarnings("all")
-public class VCMLModelScope extends FilterComparisonScope {
+public class VCMLModelScope /* implements FilterComparisonScope  */{
   /**
    * Constructor
    */
   public VCMLModelScope(final Notifier left, final Notifier right) {
-    super(left, right, null);
-    Predicate<Object> _instanceOf = Predicates.instanceOf(Option.class);
-    Predicate<Object> _instanceOf_1 = Predicates.instanceOf(VCObject.class);
-    Predicate<Object> _or = Predicates.<Object>or(_instanceOf, _instanceOf_1);
-    this.setEObjectContentFilter(_or);
+    throw new Error("Unresolved compilation problems:"
+      + "\nOption cannot be resolved to a type."
+      + "\nVCObject cannot be resolved to a type."
+      + "\nThe method super is undefined for the type VCMLModelScope"
+      + "\nThe method setEObjectContentFilter is undefined for the type VCMLModelScope");
   }
 }

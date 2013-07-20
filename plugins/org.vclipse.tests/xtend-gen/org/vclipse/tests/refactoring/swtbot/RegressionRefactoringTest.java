@@ -54,12 +54,16 @@ public class RegressionRefactoringTest extends SWTBotWorkspaceWorker {
   
   protected IProject createProject() {
     throw new Error("Unresolved compilation problems:"
-      + "\nsleep cannot be resolved");
+      + "\nThe method sleep is undefined for the type RegressionRefactoringTest"
+      + "\nType mismatch: cannot convert from Object to InputStream"
+      + "\nType mismatch: cannot convert from Object to InputStream"
+      + "\nType mismatch: cannot convert from Object to InputStream"
+      + "\nType mismatch: cannot convert from Object to InputStream");
   }
   
   /* @Test
    */public void test() {
     throw new Error("Unresolved compilation problems:"
-      + "\nsleep cannot be resolved");
+      + "\nThe method sleep is undefined for the type RegressionRefactoringTest");
   }
 }

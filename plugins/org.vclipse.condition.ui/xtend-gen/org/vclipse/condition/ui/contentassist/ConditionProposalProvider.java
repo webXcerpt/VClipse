@@ -3,11 +3,9 @@
  */
 package org.vclipse.condition.ui.contentassist;
 
-import org.vclipse.condition.ui.contentassist.AbstractConditionProposalProvider;
-
 /**
  * see http://www.eclipse.org/Xtext/documentation/latest/xtext.html#contentAssist on how to customize content assistant
  */
 @SuppressWarnings("all")
-public class ConditionProposalProvider extends AbstractConditionProposalProvider {
+public class ConditionProposalProvider /* implements AbstractConditionProposalProvider  */{
 }

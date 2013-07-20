@@ -19,7 +19,6 @@ import org.vclipse.base.naming.INameProvider;
 import org.vclipse.tests.VClipseTestPlugin;
 import org.vclipse.tests.VClipseTestUtilities;
 import org.vclipse.vcml.VCMLUtilities;
-import org.vclipse.vcml.vcml.VcmlPackage;
 
 /* @RunWith(XtextRunner.class) */@InjectWith(VClipseTestPlugin.class)
 @SuppressWarnings("all")
@@ -36,7 +35,7 @@ public class VCMLUtilityTests /* implements XtextTest  */{
   @Inject
   private INameProvider nameProvider;
   
-  private VcmlPackage vcmlPackage = VcmlPackage.eINSTANCE;
+  private /* VcmlPackage */Object vcmlPackage /* Skipped initializer because of errors */;
   
   public VCMLUtilityTests() {
     throw new Error("Unresolved compilation problems:"
@@ -46,24 +45,40 @@ public class VCMLUtilityTests /* implements XtextTest  */{
   /* @Test
    */public void test_SortVCObjectsList() {
     throw new Error("Unresolved compilation problems:"
+      + "\nVcmlModel cannot be resolved to a type."
+      + "\nVCObject cannot be resolved to a type."
+      + "\nVCObject cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
-      + "\nget cannot be resolved"
       + "\ncontents cannot be resolved"
+      + "\nget cannot be resolved"
+      + "\nobjects cannot be resolved"
+      + "\nname cannot be resolved"
+      + "\ncompareTo cannot be resolved"
+      + "\nname cannot be resolved"
       + "\nassertFalse cannot be resolved");
   }
   
   /* @Test
    */public void test_FindEntries() {
     throw new Error("Unresolved compilation problems:"
+      + "\nVcmlModel cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
-      + "\nget cannot be resolved"
       + "\ncontents cannot be resolved"
+      + "\nget cannot be resolved"
+      + "\nclass_ cannot be resolved"
+      + "\nobjects cannot be resolved"
       + "\nassertNotNull cannot be resolved"
+      + "\ncharacteristic cannot be resolved"
+      + "\nobjects cannot be resolved"
       + "\nassertNotNull cannot be resolved"
+      + "\ncharacteristic cannot be resolved"
+      + "\nobjects cannot be resolved"
       + "\nassertNull cannot be resolved"
+      + "\nconstraint cannot be resolved"
+      + "\nobjects cannot be resolved"
       + "\nassertNull cannot be resolved");
   }
 }

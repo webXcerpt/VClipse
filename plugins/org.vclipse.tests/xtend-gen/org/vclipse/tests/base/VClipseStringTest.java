@@ -12,13 +12,11 @@
 package org.vclipse.tests.base;
 
 import org.eclipse.xtext.junit4.XtextRunner;
-import org.vclipse.tests.VClipseTestUtilities;
-import org.vclipse.vcml.vcml.VcmlPackage;
 
 /* @RunWith(XtextRunner.class)
  */@SuppressWarnings("all")
 public class VClipseStringTest /* implements XtextTest  */{
-  private VcmlPackage vcmlPackage;
+  private /* VcmlPackage */Object vcmlPackage;
   
   public VClipseStringTest() {
     throw new Error("Unresolved compilation problems:"
@@ -26,8 +24,8 @@ public class VClipseStringTest /* implements XtextTest  */{
   }
   
   public VcmlPackage before() {
-    VcmlPackage _vcmlPackage = this.vcmlPackage = VClipseTestUtilities.VCML_PACKAGE;
-    return _vcmlPackage;
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method VCML_PACKAGE is undefined for the type VClipseStringTest");
   }
   
   /* @Test
@@ -36,6 +34,8 @@ public class VClipseStringTest /* implements XtextTest  */{
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
+      + "\nBOMItem cannot be resolved"
+      + "\nname cannot be resolved"
       + "\nassertEquals cannot be resolved"
       + "\nassertEquals cannot be resolved"
       + "\nassertEquals cannot be resolved");
@@ -49,6 +49,8 @@ public class VClipseStringTest /* implements XtextTest  */{
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
+      + "\nMDataCharacteristic_C cannot be resolved"
+      + "\nname cannot be resolved"
       + "\nassertEquals cannot be resolved"
       + "\nassertEquals cannot be resolved"
       + "\nassertEquals cannot be resolved"
@@ -62,6 +64,8 @@ public class VClipseStringTest /* implements XtextTest  */{
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
+      + "\nPFunction cannot be resolved"
+      + "\nname cannot be resolved"
       + "\nassertEquals cannot be resolved"
       + "\nassertEquals cannot be resolved"
       + "\nassertEquals cannot be resolved");
@@ -73,6 +77,8 @@ public class VClipseStringTest /* implements XtextTest  */{
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
+      + "\nbinaryCondition cannot be resolved"
+      + "\nname cannot be resolved"
       + "\nassertEquals cannot be resolved"
       + "\nassertEquals cannot be resolved"
       + "\nassertEquals cannot be resolved");
