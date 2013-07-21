@@ -42,10 +42,8 @@ public class LabelsTests /* implements XtextTest  */{
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
-      + "\nclass_ cannot be resolved"
       + "\nassertNotNull cannot be resolved"
       + "\nassertEquals cannot be resolved"
-      + "\nclass_Characteristics cannot be resolved"
       + "\nassertEquals cannot be resolved");
   }
 }

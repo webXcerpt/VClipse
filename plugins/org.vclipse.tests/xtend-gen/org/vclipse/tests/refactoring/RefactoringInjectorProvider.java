@@ -11,8 +11,14 @@
  */
 package org.vclipse.tests.refactoring;
 
+import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 import org.eclipse.xtext.junit4.IInjectorProvider;
+import org.eclipse.xtext.util.Modules2;
+import org.vclipse.refactoring.RefactoringPlugin;
+import org.vclipse.refactoring.guice.RefactoringModule;
+import org.vclipse.vcml.VCMLRuntimeModule;
 
 /**
  * Injector provider used by test classes being written for re-factoring plug-in
@@ -20,7 +26,11 @@ import org.eclipse.xtext.junit4.IInjectorProvider;
 @SuppressWarnings("all")
 public class RefactoringInjectorProvider implements IInjectorProvider {
   public Injector getInjector() {
-    throw new Error("Unresolved compilation problems:"
-      + "\nType mismatch: cannot convert from VCMLRuntimeModule to Module");
+    RefactoringPlugin _instance = RefactoringPlugin.getInstance();
+    RefactoringModule _refactoringModule = new RefactoringModule(_instance);
+    VCMLRuntimeModule _vCMLRuntimeModule = new VCMLRuntimeModule();
+    Module _mixin = Modules2.mixin(_refactoringModule, _vCMLRuntimeModule);
+    final Injector injector = Guice.createInjector(_mixin);
+    return injector;
   }
 }

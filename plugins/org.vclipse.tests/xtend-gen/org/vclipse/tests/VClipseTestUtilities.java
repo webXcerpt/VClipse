@@ -18,15 +18,17 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.xbase.lib.Conversions;
+import org.vclipse.vcml.vcml.VcmlFactory;
+import org.vclipse.vcml.vcml.VcmlPackage;
 
 /**
  * Utilities for VClipse tests.
  */
 @SuppressWarnings("all")
 public class VClipseTestUtilities /* implements XtextTest  */{
-  public static /* VcmlPackage */Object VCML_PACKAGE /* Skipped initializer because of errors */;
+  public static VcmlPackage VCML_PACKAGE = VcmlPackage.eINSTANCE;
   
-  public static /* VcmlFactory */Object VCML_FACTORY /* Skipped initializer because of errors */;
+  public static VcmlFactory VCML_FACTORY = VcmlFactory.eINSTANCE;
   
   /**
    * Returns all contents of an entries container.

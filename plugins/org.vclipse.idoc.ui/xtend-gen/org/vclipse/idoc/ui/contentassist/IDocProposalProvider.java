@@ -3,9 +3,11 @@
  */
 package org.vclipse.idoc.ui.contentassist;
 
+import org.vclipse.idoc.ui.contentassist.AbstractIDocProposalProvider;
+
 /**
  * see http://www.eclipse.org/Xtext/documentation/latest/xtext.html#contentAssist on how to customize content assistant
  */
 @SuppressWarnings("all")
-public class IDocProposalProvider /* implements AbstractIDocProposalProvider  */{
+public class IDocProposalProvider extends AbstractIDocProposalProvider {
 }

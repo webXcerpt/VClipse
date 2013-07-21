@@ -16,6 +16,7 @@ import com.google.inject.Inject;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Map.Entry;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -24,8 +25,19 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.Monitor;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.match.DefaultComparisonFactory;
+import org.eclipse.emf.compare.match.DefaultMatchEngine;
+import org.eclipse.emf.compare.match.IEqualityHelperFactory;
+import org.eclipse.emf.compare.match.eobject.IdentifierEObjectMatcher;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.ui.editor.validation.MarkerCreator;
 import org.eclipse.xtext.ui.util.ResourceUtil;
@@ -38,15 +50,19 @@ import org.vclipse.vcml.compare.ModelDifferencesEngine;
 import org.vclipse.vcml.compare.ResourceChangesProcessor;
 import org.vclipse.vcml.compare.ResourceDifferencesEngine;
 import org.vclipse.vcml.compare.VCMLComparePlugin;
+import org.vclipse.vcml.compare.VCMLModelScope;
+import org.vclipse.vcml.compare.VCMLResourceScope;
+import org.vclipse.vcml.vcml.VcmlFactory;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 @SuppressWarnings("all")
 public class VCMLCompareOperation {
   public static String ERRORS_FILE_EXTENSION = "_errors.txt";
   
-  private static /* VcmlFactory */Object VCML_FACTORY /* Skipped initializer because of errors */;
+  private static VcmlFactory VCML_FACTORY = VcmlFactory.eINSTANCE;
   
   @Inject
-  private /* IEqualityHelperFactory */Object equalityHelperFactory;
+  private IEqualityHelperFactory equalityHelperFactory;
   
   @Inject
   private INameProvider vcmlNameProvider;
@@ -101,27 +117,61 @@ public class VCMLCompareOperation {
    * Compare operation for 2 vcml resources. Results are extracted to the result resource.
    */
   public void compare(final Resource oldResource, final Resource newResource, final Resource resultResource, final IProgressMonitor monitor) throws Exception {
-    throw new Error("Unresolved compilation problems:"
-      + "\nVcmlModel cannot be resolved to a type."
-      + "\nVcmlModel cannot be resolved to a type."
-      + "\nIdentifierEObjectMatcher cannot be resolved."
-      + "\nDefaultComparisonFactory cannot be resolved."
-      + "\nDefaultMatchEngine cannot be resolved."
-      + "\nThe method diff is undefined for the type VCMLCompareOperation"
-      + "\ncreateVcmlModel cannot be resolved"
-      + "\nmatch cannot be resolved");
+    final SubMonitor submonitor = SubMonitor.convert(monitor, "Comparing 2 vcml resources...", IProgressMonitor.UNKNOWN);
+    final EList<EObject> newContents = newResource.getContents();
+    final VcmlModel resultModel = VCMLCompareOperation.VCML_FACTORY.createVcmlModel();
+    final EList<EObject> contents = resultResource.getContents();
+    boolean _isEmpty = contents.isEmpty();
+    boolean _not = (!_isEmpty);
+    if (_not) {
+      contents.clear();
+    }
+    contents.add(resultModel);
+    SaveOptions _defaultOptions = SaveOptions.defaultOptions();
+    Map<Object,Object> _optionsMap = _defaultOptions.toOptionsMap();
+    resultResource.save(_optionsMap);
+    EObject _get = newContents.get(0);
+    final VcmlModel newModel = ((VcmlModel) _get);
+    EList<EObject> _contents = oldResource.getContents();
+    EObject _get_1 = _contents.get(0);
+    final VcmlModel oldModel = ((VcmlModel) _get_1);
+    this.resourceChangesProcessor.initialize(resultModel);
+    IdentifierEObjectMatcher _identifierEObjectMatcher = new IdentifierEObjectMatcher(this.vcmlNameProvider);
+    final IdentifierEObjectMatcher objectMatcher = _identifierEObjectMatcher;
+    DefaultComparisonFactory _defaultComparisonFactory = new DefaultComparisonFactory(this.equalityHelperFactory);
+    final DefaultComparisonFactory comparisonFactory = _defaultComparisonFactory;
+    DefaultMatchEngine _defaultMatchEngine = new DefaultMatchEngine(objectMatcher, comparisonFactory);
+    final DefaultMatchEngine matchEngine = _defaultMatchEngine;
+    final Monitor emfMonitor = BasicMonitor.toMonitor(monitor);
+    VCMLResourceScope _vCMLResourceScope = new VCMLResourceScope(newModel, oldModel);
+    final VCMLResourceScope vcmlScope = _vCMLResourceScope;
+    this.compare(oldModel, newModel, resultModel, monitor);
+    Comparison _match = matchEngine.match(vcmlScope, emfMonitor);
+    this.resourceDifferencesEngine.diff(_match, emfMonitor);
+    SaveOptions _defaultOptions_1 = SaveOptions.defaultOptions();
+    Map<Object,Object> _optionsMap_1 = _defaultOptions_1.toOptionsMap();
+    resultResource.save(_optionsMap_1);
+    submonitor.done();
   }
   
   /**
    * Compare operation for 2 vcml models.
    */
-  public void compare(final /* VcmlModel */Object oldModel, final /* VcmlModel */Object newModel, final /* VcmlModel */Object resultModel, final IProgressMonitor monitor) throws Exception {
-    throw new Error("Unresolved compilation problems:"
-      + "\nIdentifierEObjectMatcher cannot be resolved."
-      + "\nDefaultComparisonFactory cannot be resolved."
-      + "\nDefaultMatchEngine cannot be resolved."
-      + "\nThe method diff is undefined for the type VCMLCompareOperation"
-      + "\nmatch cannot be resolved");
+  public void compare(final VcmlModel oldModel, final VcmlModel newModel, final VcmlModel resultModel, final IProgressMonitor monitor) throws Exception {
+    final SubMonitor submonitor = SubMonitor.convert(monitor, "Comparing 2 vcml models...", IProgressMonitor.UNKNOWN);
+    this.modelChangesProcessor.initialize(resultModel);
+    IdentifierEObjectMatcher _identifierEObjectMatcher = new IdentifierEObjectMatcher(this.vcmlNameProvider);
+    final IdentifierEObjectMatcher objectMatcher = _identifierEObjectMatcher;
+    DefaultComparisonFactory _defaultComparisonFactory = new DefaultComparisonFactory(this.equalityHelperFactory);
+    final DefaultComparisonFactory comparisonFactory = _defaultComparisonFactory;
+    DefaultMatchEngine _defaultMatchEngine = new DefaultMatchEngine(objectMatcher, comparisonFactory);
+    final DefaultMatchEngine matchEngine = _defaultMatchEngine;
+    final Monitor emfMonitor = BasicMonitor.toMonitor(monitor);
+    VCMLModelScope _vCMLModelScope = new VCMLModelScope(newModel, oldModel);
+    final VCMLModelScope vcmlScope = _vCMLModelScope;
+    Comparison _match = matchEngine.match(vcmlScope, emfMonitor);
+    this.modelDifferencesEngine.diff(_match, emfMonitor);
+    submonitor.done();
   }
   
   /**

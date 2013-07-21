@@ -3,9 +3,11 @@
  */
 package org.vclipse.dependency.ui.contentassist;
 
+import org.vclipse.dependency.ui.contentassist.AbstractDependencyProposalProvider;
+
 /**
  * see http://www.eclipse.org/Xtext/documentation/latest/xtext.html#contentAssist on how to customize content assistant
  */
 @SuppressWarnings("all")
-public class DependencyProposalProvider /* implements AbstractDependencyProposalProvider  */{
+public class DependencyProposalProvider extends AbstractDependencyProposalProvider {
 }

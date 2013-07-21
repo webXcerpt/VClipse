@@ -13,11 +13,12 @@ package org.vclipse.tests.base;
 
 import org.eclipse.xtext.junit4.XtextRunner;
 import org.vclipse.tests.VClipseTestUtilities;
+import org.vclipse.vcml.vcml.VcmlPackage;
 
 /* @RunWith(XtextRunner.class)
  */@SuppressWarnings("all")
 public class VClipseStringTest /* implements XtextTest  */{
-  private /* VcmlPackage */Object vcmlPackage;
+  private VcmlPackage vcmlPackage;
   
   public VClipseStringTest() {
     throw new Error("Unresolved compilation problems:"
@@ -35,8 +36,6 @@ public class VClipseStringTest /* implements XtextTest  */{
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
-      + "\nBOMItem cannot be resolved"
-      + "\nname cannot be resolved"
       + "\nassertEquals cannot be resolved"
       + "\nassertEquals cannot be resolved"
       + "\nassertEquals cannot be resolved");
@@ -50,8 +49,6 @@ public class VClipseStringTest /* implements XtextTest  */{
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
-      + "\nMDataCharacteristic_C cannot be resolved"
-      + "\nname cannot be resolved"
       + "\nassertEquals cannot be resolved"
       + "\nassertEquals cannot be resolved"
       + "\nassertEquals cannot be resolved"
@@ -65,8 +62,6 @@ public class VClipseStringTest /* implements XtextTest  */{
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
-      + "\nPFunction cannot be resolved"
-      + "\nname cannot be resolved"
       + "\nassertEquals cannot be resolved"
       + "\nassertEquals cannot be resolved"
       + "\nassertEquals cannot be resolved");
@@ -78,8 +73,6 @@ public class VClipseStringTest /* implements XtextTest  */{
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
-      + "\nbinaryCondition cannot be resolved"
-      + "\nname cannot be resolved"
       + "\nassertEquals cannot be resolved"
       + "\nassertEquals cannot be resolved"
       + "\nassertEquals cannot be resolved");

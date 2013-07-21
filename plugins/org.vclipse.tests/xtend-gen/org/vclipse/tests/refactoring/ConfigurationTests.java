@@ -35,16 +35,11 @@ public class ConfigurationTests /* implements XtextTest  */{
   /* @Test
    */public Object testRefactoringConfiguration() {
     throw new Error("Unresolved compilation problems:"
-      + "\nCharacteristic cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
-      + "\nType mismatch: cannot convert from Void to EObject"
-      + "\nType mismatch: cannot convert from Void to EObject"
-      + "\nvcmlModel_Objects cannot be resolved"
       + "\nassertEquals cannot be resolved"
       + "\nassertTrue cannot be resolved"
-      + "\nassertTrue cannot be resolved"
-      + "\nvcmlModel_Objects cannot be resolved");
+      + "\nassertTrue cannot be resolved");
   }
 }

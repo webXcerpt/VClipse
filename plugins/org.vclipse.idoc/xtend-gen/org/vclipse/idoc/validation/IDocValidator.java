@@ -3,7 +3,14 @@
  */
 package org.vclipse.idoc.validation;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.validation.Check;
+import org.eclipse.xtext.validation.ValidationMessageAcceptor;
+import org.vclipse.idoc.iDoc.Field;
+import org.vclipse.idoc.iDoc.IDocPackage.Literals;
+import org.vclipse.idoc.iDoc.Segment;
+import org.vclipse.idoc.iDoc.StringField;
+import org.vclipse.idoc.validation.AbstractIDocValidator;
 
 /**
  * Custom validation rules.
@@ -11,22 +18,40 @@ import org.eclipse.xtext.validation.Check;
  * see http://www.eclipse.org/Xtext/documentation.html#validation
  */
 @SuppressWarnings("all")
-public class IDocValidator /* implements AbstractIDocValidator  */{
+public class IDocValidator extends AbstractIDocValidator {
   private final static int LENGTH_LIMIT = 72;
   
   @Check
-  public void checkSegment(final /* Segment */Object segment) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nStringField cannot be resolved to a type."
-      + "\nThe method name is undefined for the type IDocValidator"
-      + "\nThe method error is undefined for the type IDocValidator"
-      + "\nIDocPackage$Literals cannot be resolved to a type."
-      + "\nStringField cannot be resolved to a type."
-      + "\ntype cannot be resolved"
-      + "\nfields cannot be resolved"
-      + "\nvalue cannot be resolved"
-      + "\nlength cannot be resolved"
-      + "\n> cannot be resolved"
-      + "\nSTRING_FIELD__VALUE cannot be resolved");
+  public void checkSegment(final Segment segment) {
+    String _type = segment.getType();
+    boolean _equals = "E1CUKNM".equals(_type);
+    if (_equals) {
+      EList<Field> _fields = segment.getFields();
+      for (final Field field : _fields) {
+        boolean _and = false;
+        String _name = field.getName();
+        boolean _equals_1 = "LINE".equals(_name);
+        if (!_equals_1) {
+          _and = false;
+        } else {
+          _and = (_equals_1 && (field instanceof StringField));
+        }
+        if (_and) {
+          final StringField stringfield = ((StringField) field);
+          String _value = stringfield.getValue();
+          final int length = _value.length();
+          boolean _greaterThan = (length > IDocValidator.LENGTH_LIMIT);
+          if (_greaterThan) {
+            String _plus = ("Length of E1CUKNM LINE should be " + Integer.valueOf(IDocValidator.LENGTH_LIMIT));
+            String _plus_1 = (_plus + " characters maximum, but is ");
+            String _plus_2 = (_plus_1 + Integer.valueOf(length));
+            String _plus_3 = (_plus_2 + " characters");
+            this.error(_plus_3, stringfield, 
+              Literals.STRING_FIELD__VALUE, 
+              ValidationMessageAcceptor.INSIGNIFICANT_INDEX);
+          }
+        }
+      }
+    }
   }
 }

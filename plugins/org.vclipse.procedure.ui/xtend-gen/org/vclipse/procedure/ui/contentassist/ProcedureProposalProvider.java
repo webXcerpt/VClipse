@@ -3,9 +3,11 @@
  */
 package org.vclipse.procedure.ui.contentassist;
 
+import org.vclipse.procedure.ui.contentassist.AbstractProcedureProposalProvider;
+
 /**
  * see http://www.eclipse.org/Xtext/documentation/latest/xtext.html#contentAssist on how to customize content assistant
  */
 @SuppressWarnings("all")
-public class ProcedureProposalProvider /* implements AbstractProcedureProposalProvider  */{
+public class ProcedureProposalProvider extends AbstractProcedureProposalProvider {
 }

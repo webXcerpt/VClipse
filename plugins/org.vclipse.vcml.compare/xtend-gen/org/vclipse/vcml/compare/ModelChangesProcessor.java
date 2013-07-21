@@ -15,7 +15,11 @@ import com.google.common.base.Objects;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.inject.Singleton;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.DifferenceSource;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -30,6 +34,12 @@ import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.Issue.IssueImpl;
 import org.eclipse.xtext.validation.ValidationMessageAcceptor;
 import org.vclipse.vcml.compare.ResourceChangesProcessor;
+import org.vclipse.vcml.vcml.Characteristic;
+import org.vclipse.vcml.vcml.CharacteristicType;
+import org.vclipse.vcml.vcml.Option;
+import org.vclipse.vcml.vcml.OptionType;
+import org.vclipse.vcml.vcml.VCObject;
+import org.vclipse.vcml.vcml.VcmlModel;
 
 /**
  * Implements the handling of reference changes and issue creation if a change does not allowed.
@@ -48,7 +58,7 @@ public class ModelChangesProcessor extends ResourceChangesProcessor {
   /**
    * Initialisation -> should be done before the handling on the changes is executed.
    */
-  public void initialize(final /* VcmlModel */Object vcmlModel) {
+  public void initialize(final VcmlModel vcmlModel) {
     super.initialize(vcmlModel);
     HashMultimap<String,IssueImpl> _create = HashMultimap.<String, IssueImpl>create();
     this.name2Issue = _create;
@@ -64,83 +74,133 @@ public class ModelChangesProcessor extends ResourceChangesProcessor {
   /**
    * Reaction on an attribute change in a VCObject
    */
-  public VCObject attributeChange(final /* Match */Object match, final EAttribute attribute, final Object value, final /* DifferenceKind */Object kind, final /* DifferenceSource */Object source) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nVCObject cannot be resolved to a type."
-      + "\nDifferenceSource cannot be resolved to a type."
-      + "\nVCObject cannot be resolved to a type."
-      + "\nleft cannot be resolved"
-      + "\nLEFT cannot be resolved"
-      + "\n== cannot be resolved");
+  public void attributeChange(final Match match, final EAttribute attribute, final Object value, final DifferenceKind kind, final DifferenceSource source) {
+    final EObject left = match.getLeft();
+    boolean _equals = Objects.equal(DifferenceSource.LEFT, source);
+    if (_equals) {
+      if ((left instanceof VCObject)) {
+        this.addVCObject(((VCObject) left));
+      }
+    }
   }
   
   /**
    * Rection on a reference change in the vcml model.
    */
-  public void referenceChange(final /* Match */Object match, final EReference reference, final EObject value, final /* DifferenceKind */Object kind, final /* DifferenceSource */Object source) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nVcmlModel cannot be resolved to a type."
-      + "\nOptionType cannot be resolved to a type."
-      + "\nThe method name is undefined for the type ModelChangesProcessor"
-      + "\nThe method eClass is undefined for the type ModelChangesProcessor"
-      + "\nThe method name is undefined for the type ModelChangesProcessor"
-      + "\nDifferenceKind cannot be resolved to a type."
-      + "\nDifferenceSource cannot be resolved to a type."
-      + "\nVcmlModel cannot be resolved to a type."
-      + "\nleft cannot be resolved"
-      + "\nright cannot be resolved"
-      + "\nvcmlModel_Options cannot be resolved"
-      + "\n== cannot be resolved"
-      + "\noptions cannot be resolved"
-      + "\nUPS cannot be resolved"
-      + "\n== cannot be resolved"
-      + "\n&& cannot be resolved"
-      + "\ninstanceClassName cannot be resolved"
-      + "\n+ cannot be resolved"
-      + "\nDELETE cannot be resolved"
-      + "\n== cannot be resolved"
-      + "\n&& cannot be resolved"
-      + "\nLEFT cannot be resolved"
-      + "\n== cannot be resolved"
-      + "\n&& cannot be resolved"
-      + "\ncharacteristic_Type cannot be resolved"
-      + "\n== cannot be resolved"
-      + "\nleft cannot be resolved"
-      + "\nright cannot be resolved");
+  public void referenceChange(final Match match, final EReference reference, final EObject value, final DifferenceKind kind, final DifferenceSource source) {
+    final EObject left = match.getLeft();
+    final EObject right = match.getRight();
+    boolean _and = false;
+    if (!(left instanceof VcmlModel)) {
+      _and = false;
+    } else {
+      EReference _vcmlModel_Options = this.vcmlPackage.getVcmlModel_Options();
+      boolean _equals = Objects.equal(_vcmlModel_Options, reference);
+      _and = ((left instanceof VcmlModel) && _equals);
+    }
+    if (_and) {
+      EList<Option> _options = ((VcmlModel) left).getOptions();
+      for (final Option option : _options) {
+        boolean _and_1 = false;
+        OptionType _name = option.getName();
+        boolean _equals_1 = Objects.equal(OptionType.UPS, _name);
+        if (!_equals_1) {
+          _and_1 = false;
+        } else {
+          EClass _eClass = option.eClass();
+          String _instanceClassName = _eClass.getInstanceClassName();
+          OptionType _name_1 = option.getName();
+          String _plus = (_instanceClassName + _name_1);
+          boolean _contains = this.seenObjects.contains(_plus);
+          boolean _not = (!_contains);
+          _and_1 = (_equals_1 && _not);
+        }
+        if (_and_1) {
+          Option _copy = EcoreUtil.<Option>copy(option);
+          this.newOptions.add(_copy);
+          EClass _eClass_1 = option.eClass();
+          String _instanceClassName_1 = _eClass_1.getInstanceClassName();
+          this.seenObjects.add(_instanceClassName_1);
+        }
+      }
+      return;
+    }
+    boolean _and_2 = false;
+    boolean _and_3 = false;
+    boolean _equals_2 = Objects.equal(DifferenceKind.DELETE, kind);
+    if (!_equals_2) {
+      _and_3 = false;
+    } else {
+      boolean _equals_3 = Objects.equal(DifferenceSource.LEFT, source);
+      _and_3 = (_equals_2 && _equals_3);
+    }
+    if (!_and_3) {
+      _and_2 = false;
+    } else {
+      EReference _characteristic_Type = this.vcmlPackage.getCharacteristic_Type();
+      boolean _equals_4 = Objects.equal(_characteristic_Type, reference);
+      _and_2 = (_and_3 && _equals_4);
+    }
+    if (_and_2) {
+      EObject _left = match.getLeft();
+      EObject _right = match.getRight();
+      this.validate(_left, _right, value, reference, kind, source);
+      return;
+    }
+    this.reference(left, right, value, reference, kind, source);
   }
   
   /**
    * Reaction on add operation between 2 models.
    */
-  public void reference(final EObject left, final EObject right, final EObject value, final EReference reference, final /* DifferenceKind */Object kind, final /* DifferenceSource */Object source) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nVCObject cannot be resolved to a type."
-      + "\nVCObject cannot be resolved to a type."
-      + "\nVCObject cannot be resolved to a type."
-      + "\nDifferenceKind cannot be resolved to a type."
-      + "\nDifferenceSource cannot be resolved to a type."
-      + "\nVcmlModel cannot be resolved to a type."
-      + "\nVCObject cannot be resolved to a type."
-      + "\nVCObject cannot be resolved to a type."
-      + "\nVCObject cannot be resolved to a type."
-      + "\nADD cannot be resolved"
-      + "\n== cannot be resolved"
-      + "\n&& cannot be resolved"
-      + "\nLEFT cannot be resolved"
-      + "\n== cannot be resolved"
-      + "\nvcmlModel_Objects cannot be resolved"
-      + "\n== cannot be resolved");
+  public void reference(final EObject left, final EObject right, final EObject value, final EReference reference, final DifferenceKind kind, final DifferenceSource source) {
+    boolean _and = false;
+    boolean _equals = Objects.equal(DifferenceKind.ADD, kind);
+    if (!_equals) {
+      _and = false;
+    } else {
+      boolean _equals_1 = Objects.equal(DifferenceSource.LEFT, source);
+      _and = (_equals && _equals_1);
+    }
+    if (_and) {
+      this.validate(left, right, value, reference, kind, source);
+      EReference _vcmlModel_Objects = this.vcmlPackage.getVcmlModel_Objects();
+      boolean _equals_2 = Objects.equal(_vcmlModel_Objects, reference);
+      if (_equals_2) {
+        boolean _and_1 = false;
+        if (!(left instanceof VcmlModel)) {
+          _and_1 = false;
+        } else {
+          _and_1 = ((left instanceof VcmlModel) && (value instanceof VCObject));
+        }
+        if (_and_1) {
+          this.addVCObject(((VCObject) value));
+          return;
+        }
+      }
+      if ((left instanceof VCObject)) {
+        if ((right instanceof VCObject)) {
+          boolean _equals_3 = EcoreUtil.equals(left, right);
+          boolean _not = (!_equals_3);
+          if (_not) {
+            this.addVCObject(((VCObject) left));
+          }
+        } else {
+          this.addVCObject(((VCObject) left));
+        }
+        return;
+      }
+    }
   }
   
   /**
    * adds a vc object to the objects lists
    */
-  protected VCObject addVCObject(final /* VCObject */Object vcobject) {
+  protected VCObject addVCObject(final VCObject vcobject) {
     VCObject _xblockexpression = null;
     {
       VCObject theObject = vcobject;
-      final VCObject _converted_theObject = (VCObject)theObject;
-      QualifiedName _fullyQualifiedName = this.nameProvider.getFullyQualifiedName(_converted_theObject);
+      QualifiedName _fullyQualifiedName = this.nameProvider.getFullyQualifiedName(theObject);
       final String name = _fullyQualifiedName.toString();
       boolean _contains = this.seenObjects.contains(name);
       boolean _not = (!_contains);
@@ -158,25 +218,60 @@ public class ModelChangesProcessor extends ResourceChangesProcessor {
   /**
    * Validation of the change, the errors are reported as issues in the xtext editor
    */
-  protected VCObject validate(final EObject left, final EObject right, final EObject value, final EReference reference, final /* DifferenceKind */Object kind, final /* DifferenceSource */Object source) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nCharacteristic cannot be resolved to a type."
-      + "\nCharacteristic cannot be resolved to a type."
-      + "\nCharacteristic cannot be resolved to a type."
-      + "\nCharacteristic cannot be resolved to a type."
-      + "\nCharacteristic cannot be resolved to a type."
-      + "\ncharacteristic_Type cannot be resolved"
-      + "\n== cannot be resolved"
-      + "\ntype cannot be resolved"
-      + "\ntype cannot be resolved"
-      + "\n!= cannot be resolved"
-      + "\n&& cannot be resolved"
-      + "\n!= cannot be resolved"
-      + "\n&& cannot be resolved"
-      + "\neClass cannot be resolved"
-      + "\n!= cannot be resolved"
-      + "\neClass cannot be resolved"
-      + "\nname cannot be resolved");
+  protected VCObject validate(final EObject left, final EObject right, final EObject value, final EReference reference, final DifferenceKind kind, final DifferenceSource source) {
+    VCObject _xifexpression = null;
+    boolean _and = false;
+    if (!(left instanceof Characteristic)) {
+      _and = false;
+    } else {
+      _and = ((left instanceof Characteristic) && (right instanceof Characteristic));
+    }
+    if (_and) {
+      VCObject _xifexpression_1 = null;
+      EReference _characteristic_Type = this.vcmlPackage.getCharacteristic_Type();
+      boolean _equals = Objects.equal(_characteristic_Type, reference);
+      if (_equals) {
+        VCObject _xblockexpression = null;
+        {
+          final CharacteristicType leftType = ((Characteristic) left).getType();
+          final CharacteristicType rightType = ((Characteristic) right).getType();
+          VCObject _xifexpression_2 = null;
+          boolean _and_1 = false;
+          boolean _and_2 = false;
+          boolean _notEquals = (!Objects.equal(leftType, null));
+          if (!_notEquals) {
+            _and_2 = false;
+          } else {
+            boolean _notEquals_1 = (!Objects.equal(rightType, null));
+            _and_2 = (_notEquals && _notEquals_1);
+          }
+          if (!_and_2) {
+            _and_1 = false;
+          } else {
+            EClass _eClass = leftType.eClass();
+            EClass _eClass_1 = rightType.eClass();
+            boolean _notEquals_2 = (!Objects.equal(_eClass, _eClass_1));
+            _and_1 = (_and_2 && _notEquals_2);
+          }
+          if (_and_1) {
+            VCObject _xblockexpression_1 = null;
+            {
+              final Characteristic cstic = ((Characteristic) left);
+              String _name = cstic.getName();
+              IssueImpl _createCharacteristicTypeIssue = this.createCharacteristicTypeIssue(left, right, leftType);
+              this.name2Issue.put(_name, _createCharacteristicTypeIssue);
+              VCObject _addVCObject = this.addVCObject(cstic);
+              _xblockexpression_1 = (_addVCObject);
+            }
+            _xifexpression_2 = _xblockexpression_1;
+          }
+          _xblockexpression = (_xifexpression_2);
+        }
+        _xifexpression_1 = _xblockexpression;
+      }
+      _xifexpression = _xifexpression_1;
+    }
+    return _xifexpression;
   }
   
   /**

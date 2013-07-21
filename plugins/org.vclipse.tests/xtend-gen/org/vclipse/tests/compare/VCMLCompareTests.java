@@ -19,6 +19,8 @@ import org.vclipse.refactoring.utils.EntrySearch;
 import org.vclipse.tests.VClipseTestUtilities;
 import org.vclipse.tests.compare.VCMLCompareInjectorProvider;
 import org.vclipse.vcml.compare.VCMLCompareOperation;
+import org.vclipse.vcml.vcml.VcmlFactory;
+import org.vclipse.vcml.vcml.VcmlPackage;
 
 /* @RunWith(XtextRunner.class) */@InjectWith(VCMLCompareInjectorProvider.class)
 @SuppressWarnings("all")
@@ -34,9 +36,9 @@ public class VCMLCompareTests /* implements XtextTest  */{
   
   private NullProgressMonitor monitor;
   
-  private /* VcmlFactory */Object vcmlFactory;
+  private VcmlFactory vcmlFactory;
   
-  private /* VcmlPackage */Object vcmlPackage;
+  private VcmlPackage vcmlPackage;
   
   /**
    * Following tests are to execute as JUnit Plug-in tests
@@ -44,11 +46,7 @@ public class VCMLCompareTests /* implements XtextTest  */{
   public VcmlPackage before() {
     throw new Error("Unresolved compilation problems:"
       + "\nThe method or field super is undefined for the type VCMLCompareTests"
-      + "\nVcmlFactory cannot be resolved to a type."
-      + "\nVcmlPackage cannot be resolved to a type."
-      + "\nbefore cannot be resolved"
-      + "\neINSTANCE cannot be resolved"
-      + "\neINSTANCE cannot be resolved");
+      + "\nbefore cannot be resolved");
   }
   
   /**
@@ -58,13 +56,8 @@ public class VCMLCompareTests /* implements XtextTest  */{
   /* @Test
    */public Object testAddingVCObjects() {
     throw new Error("Unresolved compilation problems:"
-      + "\nVcmlModel cannot be resolved to a type."
-      + "\nVcmlModel cannot be resolved to a type."
       + "\nThe method assertFalse is undefined for the type VCMLCompareTests"
-      + "\nThe method assertFalse is undefined for the type VCMLCompareTests"
-      + "\ncreateVcmlModel cannot be resolved"
-      + "\nobjects cannot be resolved"
-      + "\nempty cannot be resolved");
+      + "\nThe method assertFalse is undefined for the type VCMLCompareTests");
   }
   
   /**
@@ -74,12 +67,6 @@ public class VCMLCompareTests /* implements XtextTest  */{
   /* @Test
    */public Object testChangedCsticType() {
     throw new Error("Unresolved compilation problems:"
-      + "\nVcmlModel cannot be resolved to a type."
-      + "\nVcmlModel cannot be resolved to a type."
-      + "\nCharacteristic cannot be resolved to a type."
-      + "\nVcmlModel cannot be resolved to a type."
-      + "\nVcmlModel cannot be resolved to a type."
-      + "\nCharacteristic cannot be resolved to a type."
       + "\nThe method assertFalse is undefined for the type VCMLCompareTests"
       + "\nThe method assertTrue is undefined for the type VCMLCompareTests"
       + "\nThe method assertFalse is undefined for the type VCMLCompareTests"
@@ -89,26 +76,6 @@ public class VCMLCompareTests /* implements XtextTest  */{
       + "\nThe method assertTrue is undefined for the type VCMLCompareTests"
       + "\nThe method assertFalse is undefined for the type VCMLCompareTests"
       + "\nThe method assertTrue is undefined for the type VCMLCompareTests"
-      + "\nThe method assertTrue is undefined for the type VCMLCompareTests"
-      + "\nNumericType cannot be resolved to a type."
-      + "\nSymbolicType cannot be resolved to a type."
-      + "\ncreateVcmlModel cannot be resolved"
-      + "\nobjects cannot be resolved"
-      + "\nempty cannot be resolved"
-      + "\ncharacteristic cannot be resolved"
-      + "\nobjects cannot be resolved"
-      + "\ntype cannot be resolved"
-      + "\nobjects cannot be resolved"
-      + "\nsize cannot be resolved"
-      + "\n== cannot be resolved"
-      + "\ncreateVcmlModel cannot be resolved"
-      + "\nobjects cannot be resolved"
-      + "\nempty cannot be resolved"
-      + "\ncharacteristic cannot be resolved"
-      + "\nobjects cannot be resolved"
-      + "\ntype cannot be resolved"
-      + "\nobjects cannot be resolved"
-      + "\nsize cannot be resolved"
-      + "\n== cannot be resolved");
+      + "\nThe method assertTrue is undefined for the type VCMLCompareTests");
   }
 }
