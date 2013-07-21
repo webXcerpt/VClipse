@@ -17,8 +17,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.e4.ui.workbench.modeling.ExpressionContext;
-
+import org.eclipse.e4.core.commands.ExpressionContext;
 import com.google.common.collect.Iterables;
 
 public abstract class FileListHandler extends AbstractHandler {

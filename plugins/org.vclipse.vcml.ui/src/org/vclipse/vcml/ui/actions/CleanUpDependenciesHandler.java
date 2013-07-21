@@ -27,7 +27,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.e4.ui.workbench.modeling.ExpressionContext;
+import org.eclipse.e4.core.commands.ExpressionContext;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -65,39 +65,39 @@ public class CleanUpDependenciesHandler extends AbstractHandler {
 	
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		Object appContext = event.getApplicationContext();
-		if(appContext instanceof ExpressionContext) {
-			Object defVariable = ((ExpressionContext)appContext).getDefaultVariable();
-			if(defVariable instanceof Collection<?>) {
-				final Collection<?> entries = (Collection<?>)defVariable;
-				Job job = new Job("Cleanup dependencies job") {
-					@Override
-					protected IStatus run(IProgressMonitor monitor) {
-						monitor.beginTask("Removing not required files with source code.", IProgressMonitor.UNKNOWN);
-						for(Object entry : entries) {
-							if(monitor.isCanceled()) {
-								return Status.CANCEL_STATUS;
-							}
-							if(entry instanceof IContainer) {
-								IContainer container = (IContainer)entry;
-								monitor.subTask("Handling " + container.getName());
-								handleContainer(container, monitor);
-								monitor.worked(1);
-							} else if(entry instanceof ITextSelection) {
-								XtextEditor xtextEditor = EditorUtils.getActiveXtextEditor(event);
-								IResource resource = xtextEditor.getResource();
-								if(resource instanceof IFile) {
-									monitor.subTask("Handling file " + ((IFile)resource).getName());
-									handleFile(resource, monitor);
-									monitor.worked(1);
-								}
-							}
-						}
-						return Status.OK_STATUS;
-					}
-				};
-				job.schedule();
-			} 
-		}
+//		if(appContext instanceof ExpressionContext) {
+//			Object defVariable = ((ExpressionContext)appContext).getDefaultVariable();
+//			if(defVariable instanceof Collection<?>) {
+//				final Collection<?> entries = (Collection<?>)defVariable;
+//				Job job = new Job("Cleanup dependencies job") {
+//					@Override
+//					protected IStatus run(IProgressMonitor monitor) {
+//						monitor.beginTask("Removing not required files with source code.", IProgressMonitor.UNKNOWN);
+//						for(Object entry : entries) {
+//							if(monitor.isCanceled()) {
+//								return Status.CANCEL_STATUS;
+//							}
+//							if(entry instanceof IContainer) {
+//								IContainer container = (IContainer)entry;
+//								monitor.subTask("Handling " + container.getName());
+//								handleContainer(container, monitor);
+//								monitor.worked(1);
+//							} else if(entry instanceof ITextSelection) {
+//								XtextEditor xtextEditor = EditorUtils.getActiveXtextEditor(event);
+//								IResource resource = xtextEditor.getResource();
+//								if(resource instanceof IFile) {
+//									monitor.subTask("Handling file " + ((IFile)resource).getName());
+//									handleFile(resource, monitor);
+//									monitor.worked(1);
+//								}
+//							}
+//						}
+//						return Status.OK_STATUS;
+//					}
+//				};
+//				job.schedule();
+//			} 
+//		}
 		return null;
 	}
 
