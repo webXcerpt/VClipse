@@ -3,9 +3,11 @@
  */
 package org.vclipse.vcml.ui.contentassist;
 
+import org.vclipse.vcml.ui.contentassist.AbstractVCMLProposalProvider;
+
 /**
  * see http://www.eclipse.org/Xtext/documentation/latest/xtext.html#contentAssist on how to customize content assistant
  */
 @SuppressWarnings("all")
-public class VCMLProposalProvider /* implements AbstractVCMLProposalProvider  */{
+public class VCMLProposalProvider extends AbstractVCMLProposalProvider {
 }
