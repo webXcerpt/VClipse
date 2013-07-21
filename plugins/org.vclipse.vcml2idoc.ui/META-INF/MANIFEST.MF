@@ -8,7 +8,7 @@ Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Require-Bundle: org.vclipse.vcml,
  org.vclipse.vcml.ui,
  org.vclipse.idoc,
- org.eclipse.e4.core.contexts
+ org.eclipse.e4.core.commands
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.vclipse.vcml2idoc,

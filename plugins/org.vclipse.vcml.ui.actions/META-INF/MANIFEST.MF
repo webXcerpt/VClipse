@@ -9,7 +9,7 @@ Require-Bundle: org.vclipse.connection,
  org.vclipse.vcml.ui,
  org.vclipse.console,
  org.vclipse.vcml,
- org.eclipse.e4.core.contexts
+ org.eclipse.e4.core.commands
 Import-Package: com.sap.conn.jco
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
