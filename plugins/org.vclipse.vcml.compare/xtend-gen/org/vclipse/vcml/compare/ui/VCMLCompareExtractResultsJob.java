@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.xtext.util.StringInputStream;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.vclipse.vcml.compare.VCMLCompareOperation;
@@ -46,10 +47,17 @@ public class VCMLCompareExtractResultsJob extends WorkspaceJob {
   /**
    * Setter for files the compare operation is running on.
    */
-  protected IFile setFileToCompare(final IFile file, final /* DifferenceSource */Object source) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nThe method or field LEFT is undefined for the type VCMLCompareExtractResultsJob"
-      + "\n== cannot be resolved");
+  protected IFile setFileToCompare(final IFile file, final DifferenceSource source) {
+    IFile _xifexpression = null;
+    boolean _equals = Objects.equal(DifferenceSource.LEFT, source);
+    if (_equals) {
+      IFile _left = this.left = file;
+      _xifexpression = _left;
+    } else {
+      IFile _right = this.right = file;
+      _xifexpression = _right;
+    }
+    return _xifexpression;
   }
   
   /**
