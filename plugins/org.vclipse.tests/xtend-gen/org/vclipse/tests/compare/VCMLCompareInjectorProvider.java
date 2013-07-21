@@ -22,8 +22,8 @@ public class VCMLCompareInjectorProvider implements IInjectorProvider {
   public Injector getInjector() {
     throw new Error("Unresolved compilation problems:"
       + "\nVCMLActivator cannot be resolved to a type."
-      + "\nType mismatch: cannot convert from VCMLUiModule to Module"
       + "\nType mismatch: cannot convert from VCMLCompareModule to Module"
+      + "\nType mismatch: cannot convert from VCMLUiModule to Module"
       + "\ninstance cannot be resolved");
   }
 }

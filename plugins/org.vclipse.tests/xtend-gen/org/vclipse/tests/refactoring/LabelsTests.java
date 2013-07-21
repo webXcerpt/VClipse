@@ -39,13 +39,13 @@ public class LabelsTests /* implements XtextTest  */{
   /* @Test
    */public Object test_UILabelProvider() {
     throw new Error("Unresolved compilation problems:"
-      + "\nThe method class_ is undefined for the type LabelsTests"
       + "\nAssert cannot be resolved to a type."
       + "\nAssert cannot be resolved to a type."
-      + "\nThe method class_Characteristics is undefined for the type LabelsTests"
       + "\nAssert cannot be resolved to a type."
+      + "\nclass_ cannot be resolved"
       + "\nassertNotNull cannot be resolved"
       + "\nassertEquals cannot be resolved"
+      + "\nclass_Characteristics cannot be resolved"
       + "\nassertEquals cannot be resolved");
   }
 }
