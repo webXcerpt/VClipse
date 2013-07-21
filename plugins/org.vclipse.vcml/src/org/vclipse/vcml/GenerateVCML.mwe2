@@ -118,7 +118,7 @@ Workflow {
 
 			// outline API 
 			fragment = outline.OutlineTreeProviderFragment auto-inject {}
-			fragment = outline.QuickOutlineFragment {}
+			fragment = outline.QuickOutlineFragment auto-inject {}
 
 			// quickfix API 
 			fragment = quickfix.QuickfixProviderFragment auto-inject {}
