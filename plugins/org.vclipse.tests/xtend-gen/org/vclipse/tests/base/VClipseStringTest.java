@@ -12,6 +12,7 @@
 package org.vclipse.tests.base;
 
 import org.eclipse.xtext.junit4.XtextRunner;
+import org.vclipse.tests.VClipseTestUtilities;
 
 /* @RunWith(XtextRunner.class)
  */@SuppressWarnings("all")
@@ -24,8 +25,8 @@ public class VClipseStringTest /* implements XtextTest  */{
   }
   
   public VcmlPackage before() {
-    throw new Error("Unresolved compilation problems:"
-      + "\nThe method VCML_PACKAGE is undefined for the type VClipseStringTest");
+    VcmlPackage _vcmlPackage = this.vcmlPackage = VClipseTestUtilities.VCML_PACKAGE;
+    return _vcmlPackage;
   }
   
   /* @Test
