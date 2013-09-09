@@ -138,7 +138,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="entries" upperBound="-1"
         eType="#//ConfigurationProfileEntry" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fixing" eType="#//Fixing"
-        defaultValueLiteral=""/>
+        defaultValueLiteral="None"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="material" eType="#//Material"
         eOpposite="#//Material/configurationprofiles"/>
   </eClassifiers>
