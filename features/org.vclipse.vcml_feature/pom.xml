@@ -12,5 +12,4 @@
 
 	<artifactId>org.vclipse.vcml_feature</artifactId>
 	<packaging>eclipse-feature</packaging>
-	<version>0.5.0.qualifier</version>
 </project>

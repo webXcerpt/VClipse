@@ -15,7 +15,6 @@
 	<artifactId>org.vclipse.dependency</artifactId>
 	<packaging>eclipse-plugin</packaging>
 
-	<version>0.5.0.qualifier</version>
 	<build>
 		<resources>
 			<resource>

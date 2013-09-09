@@ -12,5 +12,4 @@
 
 	<artifactId>org.vclipse.vcml2idoc.ui</artifactId>
 	<packaging>eclipse-plugin</packaging>
-	<version>0.5.0.qualifier</version>
 </project>

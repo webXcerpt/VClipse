@@ -12,5 +12,4 @@
 
 	<artifactId>org.vclipse.connection</artifactId>
 	<packaging>eclipse-plugin</packaging>
-	<version>0.5.0.qualifier</version>
 </project>
