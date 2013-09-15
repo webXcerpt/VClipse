@@ -12,4 +12,5 @@
 
 	<artifactId>org.vclipse.jpplib</artifactId>
 	<packaging>eclipse-plugin</packaging>
+	<version>0.6.0.qualifier</version>
 </project>
