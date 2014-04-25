@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+<project 
+	xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	
-	<!-- Please note that you need SAP JCo Plug-ins in your workspace to get built the VClipse Plug-ins with Maven/Tycho -->
 	
 	<modelVersion>4.0.0</modelVersion>
 	
@@ -10,67 +11,77 @@
 		<maven>3.0</maven>
 	</prerequisites>
 
-	<groupId>org.vclipse</groupId>
+	<groupId>p2.osgi.bundle</groupId>
 	<artifactId>org.vclipse.releng</artifactId>
 	<version>0.5.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-
+	
+	<description>
+		VClipse is an Eclipse-based integrated development environment (IDE) for product modeling for the 
+		SAP Variant Configurator (VC). VClipse supports the specification of objects and dependencies in a textual 
+		domain specific language called VCML. This enables the use of standard text comparison tools and version control 
+		systems in the model development process.
+	</description>
+	
 	<properties>
-		<tycho-version>0.16.0</tycho-version>
-		<junit-version>4.8.1</junit-version>
-		<platform-version-name>juno</platform-version-name>
+		<tycho-version>0.18.1</tycho-version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
+		<compileSource>1.7</compileSource>
+		<compileTarget>1.7</compileTarget>
+		<fornax.version>3.4.0</fornax.version>
+		<xtext.version>2.5.4</xtext.version>
+		<platform-version-name>kepler</platform-version-name>
 		<eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
+		<tests.fail.if.none.exist>false</tests.fail.if.none.exist>
 	</properties>
-
+	
 	<modules>
-		<module>../org.vclipse.targetplatform</module>
 		<module>../org.vclipse.repository</module>
 		
-		<!-- JCo Plug-ins -->
-		<module>../com.sap.conn.jco</module>
-		<module>../com.sap.conn.jco.doc</module>
-		<module>../com.sap.conn.jco.idoc</module>
-		<module>../com.sap.conn.jco.win32.x86</module>
-		<module>../com.sap.conn.jco.win32.x86_64</module>
-		
-		<!-- VClipse Plug-ins -->
-		<module>../org.vclipse.base</module>
-		<module>../org.vclipse.base.ui</module>
-		
+		<!-- IDoc Language -->
 		<module>../org.vclipse.idoc</module>
 		<module>../org.vclipse.idoc.ui</module>
 		
+		<!-- VCML Language -->
 		<module>../org.vclipse.vcml</module>
 		<module>../org.vclipse.vcml.mm</module>
 		<module>../org.vclipse.vcml.ui</module>
 		
-		<module>../org.vclipse.configscan.vcmlt</module>
-		<module>../org.vclipse.configscan.vcmlt.ui</module>
-		
-		<module>../org.vclipse.condition</module>
-		<module>../org.vclipse.condition.ui</module>
-		
-		<module>../org.vclipse.constraint</module>
-		<module>../org.vclipse.constraint.ui</module>
-		
+		<!-- Dependency Language -->
 		<module>../org.vclipse.dependency</module>
 		<module>../org.vclipse.dependency.ui</module>
 		
+		<!-- Procedure Language -->
 		<module>../org.vclipse.procedure</module>
 		<module>../org.vclipse.procedure.ui</module>
 		
+		<!-- Constraint Language -->
+		<module>../org.vclipse.constraint</module>
+		<module>../org.vclipse.constraint.ui</module>
+		
+		<!-- Condition Language -->
+		<module>../org.vclipse.condition</module>
+		<module>../org.vclipse.condition.ui</module>
+		
+		<!-- Vcmlt Language -->
+		<module>../org.vclipse.configscan.vcmlt</module>
+		<module>../org.vclipse.configscan.vcmlt.ui</module>
+		
+		<!-- VClipse Plug-ins -->
+		<module>../org.vclipse.base</module>
+		<module>../org.vclipse.base.ui</module>
 		<module>../org.vclipse.connection</module>
 		<module>../org.vclipse.console</module>
-		
-		<module>../org.vclipse.idoc2jcoidoc</module>
-		<module>../org.vclipse.jpplib</module>
-		
-		<module>../org.vclipse.vcml.compare</module>
-		<module>../org.vclipse.vcml.ui.actions</module>
-		<module>../org.vclipse.vcml.ui.wizards.imports</module>
-		<module>../org.vclipse.vcml2idoc.ui</module>
 		<module>../org.vclipse.sap.deployment</module>
-		
+		<module>../org.vclipse.jpplib</module>
+		<module>../org.vclipse.vcml.compare</module>
+<!-- 		<module>../org.vclipse.vcml.diffmerge</module> -->
+		<module>../org.vclipse.vcml.ui.actions</module>
+		<module>../org.vclipse.vcml2idoc.ui</module>
+		<module>../org.vclipse.idoc2jcoidoc</module>
+		<module>../org.vclipse.vcml.ui.wizards.imports</module>
+
 		<module>../org.vclipse.configscan</module>
 		<module>../org.vclipse.refactoring</module>
 		
@@ -81,33 +92,24 @@
 		<module>../org.vclipse.vcml_feature</module>
 		<module>../org.vclipse.vcml2idoc_feature</module>
 		<module>../org.vclipse.configscan_feature</module>
+		
 	</modules>
-
+	
 	<build>
 		<plugins>
-		
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-maven-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<extensions>true</extensions>
 			</plugin>
-			
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
+					<optionalDependencies>greedy</optionalDependencies>
 					<resolver>p2</resolver>
-					<pomDependencies>consider</pomDependencies>
-					<target>
-						<artifact>
-							<groupId>org.vclipse</groupId>
-							<artifactId>org.vclipse.targetplatform</artifactId>
-							<version>0.5.0-SNAPSHOT</version>
-							<classifier>VClipse</classifier>
-						</artifact>
-					</target>
 					<environments>
 						<environment>
 							<os>win32</os>
@@ -132,86 +134,73 @@
 					</environments>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.eclipse.xtend</groupId>
+				<artifactId>xtend-maven-plugin</artifactId>
+			</plugin>
 		</plugins>
-		
 		<pluginManagement>
 			<plugins>
-				<!-- TYCHO -->
+				<plugin>
+					<groupId>org.fornax.toolsupport</groupId>
+					<artifactId>fornax-oaw-m2-plugin</artifactId>
+					<version>${fornax.version}</version>
+					<configuration>
+						<workflowEngine>mwe2</workflowEngine>
+						<force>true</force>
+						<jvmSettings>
+							<jvmArgs>
+								<arg>-Xms512m</arg>
+								<arg>-Xmx1024m</arg>
+								<arg>-Xss4m</arg>
+								<arg>-Dfile.encoding=UTF-8</arg>
+							</jvmArgs>
+						</jvmSettings>
+					</configuration>
+					<executions>
+						<execution>
+							<id>build-workflow</id>
+							<phase>generate-sources</phase>
+							<goals>
+								<goal>run-workflow</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.xtend</groupId>
+					<artifactId>xtend-maven-plugin</artifactId>
+					<version>${xtext.version}</version>
+					<executions>
+						<execution>
+							<phase>process-sources</phase>
+							<goals>
+								<goal>compile</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${project.basedir}/xtend-gen</outputDirectory>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-compiler-plugin</artifactId>
 					<version>${tycho-version}</version>
 					<configuration>
-						<encoding>UTF-8</encoding>
-						<source>6.0</source>
-						<target>6.0</target>
+						<source>${compileSource}</source>
+						<target>${compileTarget}</target>
 					</configuration>
 				</plugin>
-				
-				<!-- enable source bundle generation -->
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-surefire-plugin</artifactId>
 					<version>${tycho-version}</version>
-				</plugin>
-				
-				<plugin>
-					<groupId>org.eclipse.tycho</groupId>
-					<artifactId>maven-osgi-test-plugin</artifactId>
-					<version>${tycho-version}</version>
-				</plugin>
-				
-				<plugin>
-					<groupId>org.eclipse.tycho</groupId>
-					<artifactId>tycho-p2-repository-plugin</artifactId>
-					<version>${tycho-version}</version>
-				</plugin>
-				
-				<!-- APACHE MAVEN PLUGINS -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-resources-plugin</artifactId>
-					<version>2.4.1</version>
 					<configuration>
-						<encoding>ISO-8859-1</encoding>
+						<argLine>-Dfile.encoding=UTF-8</argLine>
+						<failIfNoTests>${tests.fail.if.none.exist}</failIfNoTests>
 					</configuration>
 				</plugin>
-				
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-antrun-plugin</artifactId>
-					<version>1.3</version>
-				</plugin>
-				
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.9</version>
-				</plugin>
-				
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-clean-plugin</artifactId>
-					<version>2.4.1</version>
-				</plugin>
-				
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.2-beta-4</version>
-				</plugin>
-				
-				<plugin>
-					<artifactId>maven-release-plugin</artifactId>
-					<configuration>
-						<preparationGoals>clean -DnewVersion=${releaseVersion} -Dprudent=true
-							org.eclipse.tycho:tycho-versions-plugin:set-version
-							verify scm:checkin</preparationGoals>
-						<arguments>-Prelease</arguments>
-					</configuration>
-				</plugin>
-				
-				<!-- OTHER PLUGINS -->
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>build-helper-maven-plugin</artifactId>
@@ -219,40 +208,114 @@
 					<executions>
 						<execution>
 							<id>add-source</id>
-							<phase>generate-sources</phase>
+							<phase>process-sources</phase>
 							<goals>
 								<goal>add-source</goal>
 							</goals>
 							<configuration>
 								<sources>
 									<source>src-gen</source>
-								</sources>
-								<sources>
-									<source>${project.build.directory}/xtend-gen</source>
+									<source>xtend-gen</source>
 								</sources>
 							</configuration>
 						</execution>
 					</executions>
 				</plugin>
-				
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 				<plugin>
-					<groupId>org.eclipse.dash.maven</groupId>
-					<artifactId>eclipse-signing-maven-plugin</artifactId>
-					<version>1.0.2</version>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.fornax.toolsupport</groupId>
+										<artifactId>fornax-oaw-m2-plugin</artifactId>
+										<versionRange>[${fornax.version},)</versionRange>
+										<goals>
+											<goal>run-workflow</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.eclipse.tycho</groupId>
+										<artifactId>tycho-packaging-plugin</artifactId>
+										<versionRange>[${tycho-version},)</versionRange>
+										<goals>
+											<goal>validate-id</goal>
+											<goal>build-qualifier</goal>
+											<goal>validate-version</goal>
+											<goal>build-qualifier-aggregator</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.eclipse.tycho</groupId>
+										<artifactId>tycho-compiler-plugin</artifactId>
+										<versionRange>[${tycho-version},)</versionRange>
+										<goals>
+											<goal>compile</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
 				</plugin>
-				
-				<plugin>
-					<groupId>org.fornax.toolsupport</groupId>
-					<artifactId>fornax-oaw-m2-plugin</artifactId>
-					<version>3.3.0</version>
-				</plugin>
-				
 			</plugins>
 		</pluginManagement>
 	</build>
 
+    <repositories>
+		<repository>
+			<id>eclipse-kepler</id>
+			<url>${eclipse-site}</url>
+			<layout>p2</layout>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+        	<id>subclipse</id>
+        	<layout>p2</layout>
+        	<url>http://subclipse.tigris.org/update_1.10.x</url>
+      	</repository>
+		<repository>
+			<id>Xtext Composite Update Site</id>
+			<url>http://download.itemis.de/updates/releases</url>
+			<layout>p2</layout>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+       	<repository>
+        	<id>JCo Update Site</id>
+        	<layout>p2</layout>
+        	<url>TODO add here an update site for JCo plugins</url>
+      	</repository>
+    </repositories>
+
 	<pluginRepositories>
-	
 		<pluginRepository>
 			<id>sonatype</id>
 			<url>http://repository.sonatype.org/content/groups/sonatype-public-grid/</url>
@@ -263,7 +326,7 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</pluginRepository>
-		
+
 		<!-- Fornax Workflow Runner plugin -->
 		<pluginRepository>
 			<id>fornax</id>
@@ -275,124 +338,23 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</pluginRepository>
-		
 	</pluginRepositories>
-
-	<profiles>
 	
-		<profile>
-			<id>platform-indigo</id>
-			<activation>
-				<property>
-					<name>platform-version-name</name>
-					<value>indigo</value>
-				</property>
-			</activation>
-			<properties>
-				<eclipse-site>http://download.eclipse.org/releases/indigo</eclipse-site>
-				<platform-version>[3.7,3.8)</platform-version>
-			</properties>
-		</profile>
-		
-		<profile>
-			<id>release</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.sonatype.tycho</groupId>
-						<artifactId>maven-osgi-packaging-plugin</artifactId>
-						<configuration>
-							<strictVersions>false</strictVersions>
-						</configuration>
-					</plugin>
-					<plugin>
-						<artifactId>maven-scm-plugin</artifactId>
-						<configuration>
-							<basedir>${basedir}</basedir>
-							<includes>${basedir}/../feature/feature.xml,${basedir}/../site/site.xml,${basedir}/repository/category.xml</includes>
-							<message>[maven-release-plugin] prepare release of OSGI artifacts</message>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		
-		<profile>
-			<id>skip-ui-tests</id>
-			<activation>
-				<property>
-					<name>skip-ui-tests</name>
-				</property>
-			</activation>
-			<properties>
-				<tycho.surefire.skipUiTest>true</tycho.surefire.skipUiTest>
-			</properties>
-		</profile>
-		
-		<profile>
-			<id>other-os</id>
-			<activation>
-				<os>
-					<name>not-mac</name>
-					<family>!mac</family>
-				</os>
-			</activation>
-			<properties>
-				<ui.test.vmargs>-Xmx512m -XX:MaxPermSize=256m</ui.test.vmargs>
-			</properties>
-		</profile>
-	
-	</profiles>
-
 	<dependencyManagement>
 		<dependencies>
-			<!-- <dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>${junit-version}</version>
-				<scope>test</scope>
-			</dependency> -->
-			
 			<dependency>
   				<groupId>com.googlecode.slf4j-maven-plugin-log</groupId>
   				<artifactId>slf4j-maven-plugin-log</artifactId>
   				<version>1.0.0</version>
 			</dependency>
-			
 		</dependencies>
 	</dependencyManagement>
-
+	
 	<licenses>
 		<license>
 			<name>Eclipse Public License v1.0</name>
-			<comments>
-       All rights reserved.
-
-       This program and the accompanying materials are made
-       available under the terms of the Eclipse Public License v1.0
-       which accompanies this distribution, and is available at
-       http://www.eclipse.org/legal/epl-v10.htm
-      </comments>
+			<url>http://www.eclipse.org/legal/epl-v10.html</url>
 		</license>
 	</licenses>
-
-	<url>http://http://code.google.com/a/eclipselabs.org/p/vclipse/</url>
-	<inceptionYear>2011</inceptionYear>
-	<issueManagement>
-		<system>GoogleCode Issue Tracker</system>
-		<url>http://code.google.com/a/eclipselabs.org/p/vclipse/issues/list</url>
-	</issueManagement>
-	<organization>
-		<name>webXcerpt Software GmbH</name>
-		<url>http://www.vclipse.org</url>
-	</organization>
-	<scm>
-		<developerConnection>http://code.google.com/a/eclipselabs.org/p/vclipse/people/list</developerConnection>
-	</scm>
-	<ciManagement>
-	</ciManagement>
-	<description>VClipse is an Eclipse-based integrated development environment (IDE) for product modeling for 
-	the SAP Variant Configurator (VC). VClipse supports the specification of objects and dependencies in a textual 
-	domain specific language called VCML. This enables the use of standard text comparison tools and version control 
-	systems in the model development process.</description>
+	
 </project>

@@ -36,7 +36,8 @@ Workflow {
 	}
 	
 	component = org.eclipse.emf.mwe2.ecore.EcoreGenerator {
+		generateCustomClasses = false
 		genModel = "platform:/resource/org.vclipse.vcml.mm/model/VCML.genmodel"
-		srcPath = "platform:/resource/org.vclipse.vcml.mm/src"
+		srcPath = "platform:/resource/org.vclipse.vcml.mm/emf-gen"
 	}
 }

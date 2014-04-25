@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: VClipse Releng Project
-Bundle-SymbolicName: org.vclipse.releng
+Bundle-SymbolicName: org.vclipse.releng-vclipse.org
 Bundle-Version: 0.5.0.qualifier
 Require-Bundle: org.eclipse.emf.mwe2.launch,
  org.vclipse.vcml,
