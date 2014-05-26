@@ -353,5 +353,30 @@
             extensions="vcmlbase">
     </provider>
   </extension>
+<!-- task preference page for org.vclipse.dependency.Dependency -->
+<extension
+	point="org.eclipse.ui.preferencePages">
+	<page
+		category="org.vclipse.dependency.Dependency"
+		class="org.vclipse.dependency.ui.DependencyExecutableExtensionFactory:org.eclipse.xtext.ui.tasks.preferences.TaskTagPreferencePage"
+		id="org.vclipse.dependency.Dependency.task.preferencePage"
+		name="Task Tags">
+		<keywordReference id="org.vclipse.dependency.ui.keyword_Dependency"/>
+	</page>
+</extension>
+<extension
+	point="org.eclipse.ui.propertyPages">
+	<page
+		category="org.vclipse.dependency.Dependency"
+		class="org.vclipse.dependency.ui.DependencyExecutableExtensionFactory:org.eclipse.xtext.ui.tasks.preferences.TaskTagPreferencePage"
+		id="org.vclipse.dependency.Dependency.task.propertyPage"
+		name="Task Tags">
+		<keywordReference id="org.vclipse.dependency.ui.keyword_Dependency"/>
+		<enabledWhen>
+			<adapt type="org.eclipse.core.resources.IProject"/>
+		</enabledWhen>
+		<filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
+	</page>
+</extension>
 
 </plugin>

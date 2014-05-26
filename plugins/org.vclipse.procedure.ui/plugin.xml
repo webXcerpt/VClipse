@@ -369,5 +369,30 @@
            executer="org.vclipse.procedure.ui.ProcedureExecutableExtensionFactory:org.vclipse.procedure.ui.refactoring.ProcedureRefactoring">
      </refactoring>
   </extension>
+<!-- task preference page for org.vclipse.procedure.Procedure -->
+<extension
+	point="org.eclipse.ui.preferencePages">
+	<page
+		category="org.vclipse.procedure.Procedure"
+		class="org.vclipse.procedure.ui.ProcedureExecutableExtensionFactory:org.eclipse.xtext.ui.tasks.preferences.TaskTagPreferencePage"
+		id="org.vclipse.procedure.Procedure.task.preferencePage"
+		name="Task Tags">
+		<keywordReference id="org.vclipse.procedure.ui.keyword_Procedure"/>
+	</page>
+</extension>
+<extension
+	point="org.eclipse.ui.propertyPages">
+	<page
+		category="org.vclipse.procedure.Procedure"
+		class="org.vclipse.procedure.ui.ProcedureExecutableExtensionFactory:org.eclipse.xtext.ui.tasks.preferences.TaskTagPreferencePage"
+		id="org.vclipse.procedure.Procedure.task.propertyPage"
+		name="Task Tags">
+		<keywordReference id="org.vclipse.procedure.ui.keyword_Procedure"/>
+		<enabledWhen>
+			<adapt type="org.eclipse.core.resources.IProject"/>
+		</enabledWhen>
+		<filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
+	</page>
+</extension>
 
 </plugin>

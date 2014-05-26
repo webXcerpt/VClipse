@@ -605,6 +605,31 @@
            executer="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.vclipse.vcml.refactoring.VCMLRefactoring">
      </refactoring>
   </extension>
+<!-- task preference page for org.vclipse.vcml.VCML -->
+<extension
+	point="org.eclipse.ui.preferencePages">
+	<page
+		category="org.vclipse.vcml.VCML"
+		class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.tasks.preferences.TaskTagPreferencePage"
+		id="org.vclipse.vcml.VCML.task.preferencePage"
+		name="Task Tags">
+		<keywordReference id="org.vclipse.vcml.ui.keyword_VCML"/>
+	</page>
+</extension>
+<extension
+	point="org.eclipse.ui.propertyPages">
+	<page
+		category="org.vclipse.vcml.VCML"
+		class="org.vclipse.vcml.ui.VCMLExecutableExtensionFactory:org.eclipse.xtext.ui.tasks.preferences.TaskTagPreferencePage"
+		id="org.vclipse.vcml.VCML.task.propertyPage"
+		name="Task Tags">
+		<keywordReference id="org.vclipse.vcml.ui.keyword_VCML"/>
+		<enabledWhen>
+			<adapt type="org.eclipse.core.resources.IProject"/>
+		</enabledWhen>
+		<filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
+	</page>
+</extension>
 
 <!-- add this to activate EMF Compare for VCML  
   <extension

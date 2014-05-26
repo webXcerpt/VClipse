@@ -368,6 +368,31 @@
      <refactoring
            executer="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.vclipse.constraint.ui.refactoring.ConstraintRefactoring"></refactoring>
   </extension>
+<!-- task preference page for org.vclipse.constraint.Constraint -->
+<extension
+	point="org.eclipse.ui.preferencePages">
+	<page
+		category="org.vclipse.constraint.Constraint"
+		class="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.eclipse.xtext.ui.tasks.preferences.TaskTagPreferencePage"
+		id="org.vclipse.constraint.Constraint.task.preferencePage"
+		name="Task Tags">
+		<keywordReference id="org.vclipse.constraint.ui.keyword_Constraint"/>
+	</page>
+</extension>
+<extension
+	point="org.eclipse.ui.propertyPages">
+	<page
+		category="org.vclipse.constraint.Constraint"
+		class="org.vclipse.constraint.ui.ConstraintExecutableExtensionFactory:org.eclipse.xtext.ui.tasks.preferences.TaskTagPreferencePage"
+		id="org.vclipse.constraint.Constraint.task.propertyPage"
+		name="Task Tags">
+		<keywordReference id="org.vclipse.constraint.ui.keyword_Constraint"/>
+		<enabledWhen>
+			<adapt type="org.eclipse.core.resources.IProject"/>
+		</enabledWhen>
+		<filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
+	</page>
+</extension>
   
 
 </plugin>

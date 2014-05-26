@@ -382,5 +382,30 @@
      <refactoring
            executer="org.vclipse.condition.ui.ConditionExecutableExtensionFactory:org.vclipse.condition.ui.refactoring.ConditionRefactoring"></refactoring>
   </extension>
+<!-- task preference page for org.vclipse.condition.Condition -->
+<extension
+	point="org.eclipse.ui.preferencePages">
+	<page
+		category="org.vclipse.condition.Condition"
+		class="org.vclipse.condition.ui.ConditionExecutableExtensionFactory:org.eclipse.xtext.ui.tasks.preferences.TaskTagPreferencePage"
+		id="org.vclipse.condition.Condition.task.preferencePage"
+		name="Task Tags">
+		<keywordReference id="org.vclipse.condition.ui.keyword_Condition"/>
+	</page>
+</extension>
+<extension
+	point="org.eclipse.ui.propertyPages">
+	<page
+		category="org.vclipse.condition.Condition"
+		class="org.vclipse.condition.ui.ConditionExecutableExtensionFactory:org.eclipse.xtext.ui.tasks.preferences.TaskTagPreferencePage"
+		id="org.vclipse.condition.Condition.task.propertyPage"
+		name="Task Tags">
+		<keywordReference id="org.vclipse.condition.ui.keyword_Condition"/>
+		<enabledWhen>
+			<adapt type="org.eclipse.core.resources.IProject"/>
+		</enabledWhen>
+		<filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
+	</page>
+</extension>
 
 </plugin>

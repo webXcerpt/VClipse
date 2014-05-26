@@ -447,5 +447,30 @@
            xmlProvider="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.vclipse.configscan.vcmlt.builder.VcmlTConfigScanXMLProvider">
      </languageExtension>
   </extension>
+<!-- task preference page for org.vclipse.configscan.vcmlt.VcmlT -->
+<extension
+	point="org.eclipse.ui.preferencePages">
+	<page
+		category="org.vclipse.configscan.vcmlt.VcmlT"
+		class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.eclipse.xtext.ui.tasks.preferences.TaskTagPreferencePage"
+		id="org.vclipse.configscan.vcmlt.VcmlT.task.preferencePage"
+		name="Task Tags">
+		<keywordReference id="org.vclipse.configscan.vcmlt.ui.keyword_VcmlT"/>
+	</page>
+</extension>
+<extension
+	point="org.eclipse.ui.propertyPages">
+	<page
+		category="org.vclipse.configscan.vcmlt.VcmlT"
+		class="org.vclipse.configscan.vcmlt.ui.VcmlTExecutableExtensionFactory:org.eclipse.xtext.ui.tasks.preferences.TaskTagPreferencePage"
+		id="org.vclipse.configscan.vcmlt.VcmlT.task.propertyPage"
+		name="Task Tags">
+		<keywordReference id="org.vclipse.configscan.vcmlt.ui.keyword_VcmlT"/>
+		<enabledWhen>
+			<adapt type="org.eclipse.core.resources.IProject"/>
+		</enabledWhen>
+		<filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
+	</page>
+</extension>
 
 </plugin>
