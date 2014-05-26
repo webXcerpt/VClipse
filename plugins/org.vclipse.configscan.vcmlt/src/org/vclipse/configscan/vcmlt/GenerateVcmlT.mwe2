@@ -149,6 +149,8 @@ Workflow {
                  fileExtensions = file.extensions
             }
 
+			// provides a preference page for task tags 
+			fragment = tasks.TaskTagPreferencePageFragment auto-inject {}
         }
     }
 }

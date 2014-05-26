@@ -148,6 +148,9 @@ Workflow {
 
 			// provides a preference page for template proposals 
 			fragment = templates.CodetemplatesGeneratorFragment auto-inject {}
+
+			// provides a preference page for task tags 
+			fragment = tasks.TaskTagPreferencePageFragment auto-inject {}
 		}
 	}
 }
