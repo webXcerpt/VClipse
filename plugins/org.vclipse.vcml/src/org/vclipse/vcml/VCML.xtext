@@ -189,7 +189,7 @@ Class :
 		&	('group' group=STRING)?
 		&	('characteristics' '{' 
 				characteristics+=[Characteristic|EXTENDED_ID]* 
-			'}')
+			'}')?
 		&	('superclasses' '{' 
 				superClasses+=[Class | CLASSNAME]*
 			'}')?
