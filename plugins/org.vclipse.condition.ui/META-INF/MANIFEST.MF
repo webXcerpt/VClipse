@@ -14,10 +14,11 @@ Require-Bundle: org.vclipse.condition;visibility:=reexport,
  org.eclipse.ui.editors,
  org.eclipse.ui,
  org.eclipse.compare,
- org.antlr.runtime
+ org.antlr.runtime,
+ org.eclipse.xtext.xbase.lib
 Import-Package: org.apache.log4j,
  org.eclipse.xtext.xbase.lib
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.vclipse.condition.ui,
  org.vclipse.condition.ui.contentassist,
  org.vclipse.condition.ui.contentassist.antlr,

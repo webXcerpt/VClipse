@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.emf.compare,
  org.eclipse.xtext.ui.shared,
  org.eclipse.xtext.ui;visibility:=reexport,
  org.vclipse.base.ui;visibility:=reexport
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: org.vclipse.refactoring,
  org.vclipse.refactoring.changes,

@@ -8,6 +8,6 @@ Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Require-Bundle: org.eclipse.ui;visibility:=reexport,
  org.eclipse.core.runtime;visibility:=reexport,
  org.eclipse.ui.console;visibility:=reexport
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: org.vclipse.console

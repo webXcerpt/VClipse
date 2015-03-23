@@ -11,5 +11,5 @@ Require-Bundle: org.eclipse.ui,
  org.apache.ant,
  org.eclipse.pde.ui
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .

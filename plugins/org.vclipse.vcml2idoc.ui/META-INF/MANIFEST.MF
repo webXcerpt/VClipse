@@ -9,7 +9,7 @@ Require-Bundle: org.vclipse.vcml,
  org.vclipse.vcml.ui,
  org.vclipse.idoc,
  org.eclipse.e4.core.commands
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: org.vclipse.vcml2idoc,
  org.vclipse.vcml2idoc.actions,

@@ -15,6 +15,6 @@ Require-Bundle: org.eclipse.emf.mwe2.launch,
  org.vclipse.condition,
  org.vclipse.constraint
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: org.apache.log4j,
  org.slf4j

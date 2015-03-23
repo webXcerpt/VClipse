@@ -4,7 +4,7 @@ Bundle-Name: JppLib Plug-in
 Bundle-SymbolicName: org.vclipse.jpplib;singleton:=true
 Bundle-Version: 0.6.0.qualifier
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: jpplib-0.6.jar,
  .
