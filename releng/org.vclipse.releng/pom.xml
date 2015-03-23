@@ -24,74 +24,74 @@
 	</description>
 	
 	<properties>
-		<tycho-version>0.18.1</tycho-version>
+		<tycho-version>0.22.0</tycho-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
 		<compileSource>1.7</compileSource>
 		<compileTarget>1.7</compileTarget>
 		<fornax.version>3.4.0</fornax.version>
-		<xtext.version>2.5.4</xtext.version>
-		<platform-version-name>kepler</platform-version-name>
+		<xtext.version>2.8.0</xtext.version>
+		<platform-version-name>luna</platform-version-name>
 		<eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
 		<tests.fail.if.none.exist>false</tests.fail.if.none.exist>
 	</properties>
 	
 	<modules>
-		<module>../org.vclipse.repository</module>
+		<module>../../releng/org.vclipse.repository</module>
 		
 		<!-- IDoc Language -->
-		<module>../org.vclipse.idoc</module>
-		<module>../org.vclipse.idoc.ui</module>
+		<module>../../plugins/org.vclipse.idoc</module>
+		<module>../../plugins/org.vclipse.idoc.ui</module>
 		
 		<!-- VCML Language -->
-		<module>../org.vclipse.vcml</module>
-		<module>../org.vclipse.vcml.mm</module>
-		<module>../org.vclipse.vcml.ui</module>
+		<module>../../plugins/org.vclipse.vcml</module>
+		<module>../../plugins/org.vclipse.vcml.mm</module>
+		<module>../../plugins/org.vclipse.vcml.ui</module>
 		
 		<!-- Dependency Language -->
-		<module>../org.vclipse.dependency</module>
-		<module>../org.vclipse.dependency.ui</module>
+		<module>../../plugins/org.vclipse.dependency</module>
+		<module>../../plugins/org.vclipse.dependency.ui</module>
 		
 		<!-- Procedure Language -->
-		<module>../org.vclipse.procedure</module>
-		<module>../org.vclipse.procedure.ui</module>
+		<module>../../plugins/org.vclipse.procedure</module>
+		<module>../../plugins/org.vclipse.procedure.ui</module>
 		
 		<!-- Constraint Language -->
-		<module>../org.vclipse.constraint</module>
-		<module>../org.vclipse.constraint.ui</module>
+		<module>../../plugins/org.vclipse.constraint</module>
+		<module>../../plugins/org.vclipse.constraint.ui</module>
 		
 		<!-- Condition Language -->
-		<module>../org.vclipse.condition</module>
-		<module>../org.vclipse.condition.ui</module>
+		<module>../../plugins/org.vclipse.condition</module>
+		<module>../../plugins/org.vclipse.condition.ui</module>
 		
 		<!-- Vcmlt Language -->
-		<module>../org.vclipse.configscan.vcmlt</module>
-		<module>../org.vclipse.configscan.vcmlt.ui</module>
+		<module>../../plugins/org.vclipse.configscan.vcmlt</module>
+		<module>../../plugins/org.vclipse.configscan.vcmlt.ui</module>
 		
 		<!-- VClipse Plug-ins -->
-		<module>../org.vclipse.base</module>
-		<module>../org.vclipse.base.ui</module>
-		<module>../org.vclipse.connection</module>
-		<module>../org.vclipse.console</module>
-		<module>../org.vclipse.sap.deployment</module>
-		<module>../org.vclipse.jpplib</module>
-		<module>../org.vclipse.vcml.compare</module>
+		<module>../../plugins/org.vclipse.base</module>
+		<module>../../plugins/org.vclipse.base.ui</module>
+		<module>../../plugins/org.vclipse.connection</module>
+		<module>../../plugins/org.vclipse.console</module>
+		<module>../../plugins/org.vclipse.sap.deployment</module>
+		<module>../../plugins/org.vclipse.jpplib</module>
+		<module>../../plugins/org.vclipse.vcml.compare</module>
 <!-- 		<module>../org.vclipse.vcml.diffmerge</module> -->
-		<module>../org.vclipse.vcml.ui.actions</module>
-		<module>../org.vclipse.vcml2idoc.ui</module>
-		<module>../org.vclipse.idoc2jcoidoc</module>
-		<module>../org.vclipse.vcml.ui.wizards.imports</module>
+		<module>../../plugins/org.vclipse.vcml.ui.actions</module>
+		<module>../../plugins/org.vclipse.vcml2idoc.ui</module>
+		<module>../../plugins/org.vclipse.idoc2jcoidoc</module>
+		<module>../../plugins/org.vclipse.vcml.ui.wizards.imports</module>
 
-		<module>../org.vclipse.configscan</module>
-		<module>../org.vclipse.refactoring</module>
+		<module>../../plugins/org.vclipse.configscan</module>
+		<module>../../plugins/org.vclipse.refactoring</module>
 		
 		<!-- VClipse Features -->
-		<module>../org.vclipse.idoc_feature</module>
-		<module>../org.vclipse.pdr_feature</module>
-		<module>../org.vclipse.rfc_feature</module>
-		<module>../org.vclipse.vcml_feature</module>
-		<module>../org.vclipse.vcml2idoc_feature</module>
-		<module>../org.vclipse.configscan_feature</module>
+		<module>../../features/org.vclipse.idoc_feature</module>
+		<module>../../features/org.vclipse.pdr_feature</module>
+		<module>../../features/org.vclipse.rfc_feature</module>
+		<module>../../features/org.vclipse.vcml_feature</module>
+		<module>../../features/org.vclipse.vcml2idoc_feature</module>
+		<module>../../features/org.vclipse.configscan_feature</module>
 		
 	</modules>
 	
