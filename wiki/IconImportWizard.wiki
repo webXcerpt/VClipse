@@ -1,0 +1,24 @@
+#summary How to use icon import wizard for customization of the VCML outline page
+#labels Phase-Design
+
+= How to generate a plug-in fragment with icons for the outline view =
+
+Per default each VCML object contained in the VCML outline view is labeled with a default icon.
+
+You can use the *Icons for outline view* import wizard in order to customize the VCML outline view with icons, which describe each VCML object in a better way(for example SAP icons - they can not be deployed with the VCML UI plug-in because of license agreements).
+
+In a normal case SAP icons are in the *platinr3S.jar* file, which is shipped with your SAP client software. 
+
+Please use the import wizard in the following way:
+  * Select "File" > "Import..." > "VClipse" > "Icons for Outline View" entry in the import wizards tree and push the "Next" button
+  * Use "Browse..." button in order to provide the path to the jar or zip file, containing icons for the VCML outline view 
+  * Push "Finish" button and wait until *org.vclipse.vcml.ui_sapicons* plug-in fragment is created in your workspace. 
+
+= How to install the generated fragment into the workbench =
+ 
+  * Select the generated fragment in the *Package Explorer* or *Project View*
+  * Select "File" > "Export..." > "Deployable plug-ins and fragments" entry in the export wizards tree and push the "Next" button
+  * Select the "Install into host..." option in the *Destination* tab.
+  * Push the "Finish" button.
+
+As far as the installation is complete, restart the workbench. If you open a vcml file now, VCML outline view should now contain VCML objects labeled with imported images. The genrated plug-in fragment can be deleted from your workspace.

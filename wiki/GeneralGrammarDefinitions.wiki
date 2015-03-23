@@ -1,0 +1,55 @@
+#summary General Grammar Language Definitions
+#labels Phase-Design
+#sidebar TableOfContents
+
+= General Grammar Language Definitions =
+
+Various operators provided by Xtext grammar language are used in the VCML grammar language definition. These operators are _Extended Backus-Naur Form (EBNF)_-like expressions. 
+They allow to describe object dependencies and value assignments.
+
+The most important operators are:
+  * `?` cardinality one or none
+  * `*` cardinality any number
+  * `+` cardinality at least once
+  * cardinality exactly one is the default value and requires no operator
+  * `()` parentheses group a number of expressions, like alternatives or numeric intervals
+  * `|` allows for multiple valid options as alternatives
+  * `&` allows to enter the expressions in any order
+  * `:` an expression before the colon is defined by the expression behind the colon
+  * `''` single quotes enclose literals and characters which have to be entered in the `.vcml`-file
+ 
+Examples for usage of operators in the `VCML.xtext` file:
+{{{
+Material :
+	'material' EXTENDED_ID ('[' Option* ']')? ('{'			// material must be entered as keyword (literal), it's name is a mandatory single value EXTENDED_ID (no rule character behind it); any number of options (*) can be entered (?) within square brackets ('[' ']'); the left parenthesis starts a grouping of the features in the optional body, see operator ? at the and of the body definition; { must be entered as character since it is enclosed in single quotes
+		Description						// cardinality of the description is exactly one (no rule), if the optional body is used, see (?) at the and of the body definition
+		& (type EXTENDED_ID)					// cardinality of the group is exactly one (no rule), if the optional body is used, see (?) at the and of the body definition; EXTENDED_ID is the name of the type, it's cardinality is exactly one
+		& ('billofmaterials' '{' EXTENDED_ID* '}')?		// cardinality of the group is one or none (?); literals in single quotes must be entered; EXTENDED_ID is the name of a bill of material, it's cardinality is any number (*)
+		& ('classes' '{' Classification* '}')?			// cardinality of the group is one or none (?); literals in single quotes must be entered; the classes can contain any number of classifications (*)
+		& ('configurationprofiles' '{' EXTENDED_ID* '}')?	// cardinality of the group is one or none (?); literals in single quotes must be entered; EXTENDED_ID is the name of a configuration profile, it's cardinality is any number (*)
+	'}')?								// } must be entered as character since it is enclosed in single quotes (if the body is used); the right parenthesis closes the group for the body; cardinality of the complete body is one or none (?)
+									// the expressions in the body can be entered in any order because they are all linked with &
+														
+Classification
+	CLASSNAME ('{' ValueAssignment* '}')?				// The classification name is a a mandatory single value CLASSNAME (no rule) which can optionally be followed by any number of value assignment definitions (?) which have to be enclosed in . 
+
+ValueAssignment :
+	EXTENDED_ID* '=' (NumericLiteral | SymbolicLiteral)+		// The value assignment can contain any number of EXTENDED_IDs (*). Each EXTENDED_ID is followed by = (since enclosed in single quotes) and at least one (+) NumericLiteral or (|) SymbolicLitereal.
+}}}
+
+Examples for valid material definitions in the `.vcml`-file:
+{{{
+material CAR 
+
+material CAR {
+	description "A configurable car"
+	type KMAT
+	billofmaterials { bom_car1 bom_car2}
+	configurationprofiles { profile_car1 profile_car2 }
+	classes { (300)CAR { CAR1 = (10 20 30) } }				
+}
+}}}
+
+<wiki:comment>
+Please check the value assignment in the example! 
+</wiki:comment>

@@ -1,0 +1,43 @@
+#summary VClipse News
+#labels Featured
+#sidebar TableOfContents
+
+= News =
+
+== Interface Plugins Released (2011-05-18) ==
+
+The plugins which are used to interface to a SAP R/3 system by RFC or PDR have been released.
+
+== Migration to Subversion (2011-05-18) ==
+
+We migrated the version control system back from Mercurial to Subversion. Local modifications and additions can be maintained by tools like git-svn. Subversion is more known to current VClipse users.
+
+== Presentation of VClipse at CWG 2011 Spring Conference (2011-05-10) ==
+
+VClipse has been [http://www.configuration-workgroup.com/webfm_send/2003 presented] at the Configuration Workgroup 2011 Spring Conference in Cologne.
+
+== Update Site (2010-06-24) ==
+
+We created an update site for VClipse. VClipse is available from the update site
+http://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/update
+
+== Migration to Xtext 1.0 (Eclipse Helios) (2010-06-21) ==
+
+We migrated VClipse to Xtext 1.0 as released with Eclipse Helios (Eclipse 3.6.x).
+Xtext 1.0 offers a number of new features which are immediately usable like _code folding_,
+_quick outline_, and _find references_. Several more features like _case-insensitive keywords and identifiers_, _quickfix support_, or _splitting of models into several files_ will be available in future by extending VClipse.
+
+== Migration to Mercurial (2010-06-20) ==
+
+We migrated the version control system from Subversion to Mercurial.
+By using a distributed version control system, it is easier for users of VClipse to locally maintain their adaptions and extensions of VClipse in a cloned repository. 
+
+== Migration to Eclipse Labs (2010-06-04) ==
+
+We migrated the VClipse project to Eclipse Labs.
+We expect increased visibility in the Eclipse community due to this move.
+Since Eclipse Labs is also hosted by Google Code, there is no change in infrasctructure.
+
+== Presentation of VClipse at CWG 2010 Spring Conference (2010-04-20) ==
+
+VClipse has been [http://www.configuration-workgroup.com/node/457 presented] at the Configuration Workgroup 2010 Spring Conference in Vienna.

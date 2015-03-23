@@ -1,0 +1,9 @@
+#summary Recommendations and notes for VCML source code organization in the workspace.
+#sidebar TableOfContents
+
+_Please note that this documentation is still incomplete._
+
+= Project Structure =
+
+There are currently no restrictions on the organization of your vcml source files in the workspace. So you can place them in any project or a folder you like. But it is important that the project, containing your source files, has an Xtext nature. You will be asked to add it to a project as soon as you will create and open the first vcml file in it. Please push the "Yes" button or you will miss many valuable features otherwise(the icons of the projects, that have an Xtext feature are branded with a little x in the top right corner).
+

@@ -1,0 +1,112 @@
+#summary VClipse presentations at CWG conferences and Eclipse DemoCamps
+#labels Featured
+#sidebar TableOfContents
+
+= Introduction =
+
+VClipse was presented at the following [http://www.configuration-workgroup.com Configuration Workgroup (CWG)] conferences and [http://wiki.eclipse.org/Eclipse_DemoCamp Eclipse DemoCamps]
+
+
+== [http://vclipse.eclipselabs.org.codespot.com/files/webXcerpt-TimGeisler-ConfigModeler-VClipse-CWG-2010-04-20.pdf ConfigModeler and VClipse - languages and IDEs for product modeling] ==
+
+_2010 CWG European Conference - Vienna, Austria (Tim Geisler, webXcerpt Software GmbH)_
+
+We present !ConfigModeler and VClipse, two domain-specific languages and corresponding Eclipse-based integrated development environments (IDEs) for product modeling on different levels of abstraction.
+
+VClipse supports the direct specification of objects and dependencies using VC's abstraction level in a textual language called VCML.
+
+!ConfigModeler supports the specification of product models in a language supporting a high degree of abstraction. Developed in a customer project, this language has been designed according to the customer's needs and uses the customer's concepts. !ConfigModeler translates the product models to VC objects and dependencies, optionally represented as VCML code.
+
+In both cases the VC objects and dependencies can be transferred to an SAP system using RFC or product data replication (PDR) via IDocs. With VClipse, it is also possible to extract product models from an SAP system. This enables the use of standard text comparison tools and version control systems.
+
+VClipse is released as an open-source project on http://www.vclipse.org - so you are all invited to use VClipse in your work and products, or even to contribute to it.
+
+
+== [http://vclipse.eclipselabs.org.codespot.com/files/webXcerpt-TimGeisler-DomainSpecificLanguagesForProductModeling-CWG-2011-05-10.pdf Domain-Specific Languages for Product Modeling] ==
+
+_2011 CWG European Conference - Cologne, Germany (Tim Geisler, webXcerpt Software GmbH)_
+
+We present !ConfigModeler and VClipse, two domain-specific languages and corresponding Eclipse-based integrated development environments (IDEs) for product modeling on different levels of abstraction.
+
+VClipse supports the direct specification of objects and dependencies using VC's abstraction level in a textual language called VCML. VC objects and dependencies can be transferred to an SAP system using RFC or product data replication (PDR) via IDocs. It is also possible to extract product models from an SAP system. This enables the use of standard text comparison tools and version control systems. VClipse is released as an open-source project on http://www.vclipse.org.
+
+!ConfigModeler supports the specification of product models in a language supporting a high degree of abstraction. Developed in a customer project at [http://www.nokiasiemensnetworks.com Nokia Siemens Networks], this language has been designed according to the customer's needs, uses the customer's concepts, and fits into the customer’s VC and IPC add-ons. !ConfigModeler translates the product models to VC objects and dependencies represented as VCML code.
+
+We will give a demonstration of the two development environments and give an outlook to current and future developments.
+
+
+== [http://vclipse.eclipselabs.org.codespot.com/files/webXcerpt-TimGeisler-HowToCreateYourOwnProductModelingEnvironment-CWG-2011-10-04.pdf How to Create Your Own Product-Modeling Environment] ==
+
+_2011 North American CWG Conference - Marco Island, Florida, USA (Tim Geisler, webXcerpt Software GmbH)_
+
+We present !ConfigModeler and VClipse, two domain-specific languages and corresponding Eclipse-based integrated development environments (IDEs) for product modeling on different levels of abstraction.
+
+VClipse supports the direct specification of objects and dependencies using VC's abstraction level in a textual language called VCML. VC objects and dependencies can be transferred to an SAP system using RFC or product data replication (PDR) via IDocs. It is also possible to extract product models from an SAP system. This enables the use of standard text comparison tools and version control systems. VClipse is released as an open-source project on www.vclipse.org.
+
+!ConfigModeler supports the specification of product models in a language supporting a high degree of abstraction. Developed in a customer project at [http://www.nokiasiemensnetworks.com Nokia Siemens Networks], this language has been designed according to the customer's needs, uses the customer's concepts, and fits into the customer’s VC and IPC add-ons. !ConfigModeler translates the product models to VC objects and dependencies represented as VCML code.
+
+An integration of the automatic testing tool [http://www.fysbee.com ConfigScan] allows to validate the product models.
+
+We will give a demonstration of the two development environments and give an outlook to current and future developments.
+
+We sketch what has to be done when you consider to take a similar approach for product modeling in your domain.
+
+
+== [http://vclipse.eclipselabs.org.codespot.com/files/webXcerpt-TimGeisler-HowToBuildYourOwnProductModelingEnvironment-CWG-2012-05-08.pdf How to Build Your Own Product-Modeling Environment?] ==
+
+_2012 CWG European Conference - Berlin, Germany (Tim Geisler, webXcerpt Software GmbH)_
+
+VC and IPC are very generic configuration engines which are suited to many SAP customers. Product models are implemented in generic languages for dependencies with the use of tools like PMEVC and various different transactions each of which allows to maintain a certain object type.
+
+However, usually an SAP customer has its own specific way of using VC and IPC. Special coding patterns are used to achieve desired functionality, there may be restrictions of using some configurator features, and there might be additional functionality added to the configurator. Furthermore, an SAP customer uses its own specific way of specifying product models - which typically happens outside of the modeling environment.
+
+There are no integrated tools for specifying product models. Furthermore, a systematic way of obtaining the implementation of the product model in VC from its specification is missing. For the implementation of product models, generic (and sometimes ancient) tools have to be used.
+
+As product modeling has several common aspects with programming, it helps to look for approaches to these problems in the software-development area. In Model-Driven Software Development domain-specific languages are used to create models which express application structure and behaviour in a concise and domain-specific way. Subsequently, these models are transformed into executable code using model transformations.
+
+We propose to create your own domain-specific language to specify your product models. By using powerful modern open-source frameworks like Eclipse, Xtext, and Xtend2 it is now possible to develop an integrated-development environment for your domain-specific language - your product-modeling environment - with reasonable effort. With the open-source project VClipse as well as with the solution-modeling environment from SAP now two backend systems for the interaction with an SAP system exist which drastically simplify the task of implementing model transformations from your own domain-specific language to a product model in VC or IPC.
+
+We will present as an example for this approach the solution built in a customer project at Nokia Siemens Networks and also give a demonstration.
+
+We examine various aspects of the architecture of a product-modeling environment tailored to your needs. Finally, we discuss whether it is worth the effort to build your own product-modeling environment and point out the preconditions for this approach and describe its benefits.
+
+
+== [http://vclipse.eclipselabs.org.codespot.com/files/webXcerpt-TimGeisler-Fysbee-ChristopheFaure-ToolsForTestDrivenProductModeling-CWG-2012-05-08.pdf Tools for Test-Driven Product Modeling] ==
+
+_2012 CWG European Conference - Berlin, Germany (Tim Geisler, webXcerpt Software GmbH, Christophe Faure, Fysbee SAS)_
+
+Test-driven product modeling is a methodology of product modeling which leads to quick development of high-quality product models. Automatizable test case(s) are written before the product model is implemented. Subsequently the product model is modified until no test cases fail. With subsequent refactoring steps the design and implementation is improved.
+
+To apply this development process, product modelers need to write test cases themselves while implementing the product model. The test cases have to be created and maintained easily and tests have to be executed very quickly. After running the tests, it must be very easy to analyze test results. Furthermore, support for refactoring the product model and test cases is required.
+
+Special tool support is essential to model products in a test-driven way. As an example of such tool support, we present the integration of the [http://www.fysbee.com/configscansuite/ ConfigScan test engine] into the Eclipse-based modeling environments VClipse and !ConfigModeler.
+
+VClipse is an open-source product-modeling environment. Product models can be specified using the textual language VCML. !ConfigModeler is a customer-specific product-modeling environment built in a customer project at Nokia Siemens Networks. Product models can be specified in a high-level and customer-specific language.
+
+
+== [http://vclipse.eclipselabs.org.codespot.com/files/webXcerpt-TimGeisler-VClipse-EclipseDemoDamp-Walldorf-2012-06-20.pdf VClipse – Xtext-based IDE for the SAP Variant Configurator] ==
+
+_[http://wiki.eclipse.org/Eclipse_DemoCamps_Juno_2012/Walldorf Eclipse DemoCamps Juno 2012, Walldorf]_
+
+
+== [http://vclipse.eclipselabs.org.codespot.com/files/webXcerpt-TimGeisler-VClipseUseCases-CWG-2013-05-07.pdf Use Cases for the Open-Source Textual Product-Modeling Environment VClipse] ==
+
+_2013 CWG European Conference - Vienna, Austria (Tim Geisler, webXcerpt Software GmbH)_
+
+VClipse is an Eclipse-based textual product-modeling environment for VC and IPC. VClipse is provided as open-source software released under the Eclipse Public License and therefore free of charge to use, to extend, and to integrate in own applications.
+
+VClipse supports the specification of objects in a textual domain-specific language VCML. Source code of dependencies is implemented in SAP’s languages for constraints and procedures. Implemented using the Xtext framework inside the widely used integrated development environ
+ment Eclipse, VClipse offers modern tooling such as content assist, navigable cross references, quickfixes, tooltips, refactoring operations, or templates for product modeling.
+
+VClipse offers two interfaces to SAP systems. The VC objects and
+dependencies can be transferred to or retrieved from a SAP system using
+remote function calls (RFC). Furthermore, the VC objects and dependencies can be transferred using product data replication (PDR) via IDocs.
+
+We will present several use cases for VClipse.
+ * Comparing and merging models. VClipse can extract complete product models as a set of text files from a SAP system. These files can be compared and merged using standard text comparison tools inside VClipse as well as more elaborate model-comparison tools. This could be useful for detecting differences in models or consolidating models on different SAP systems.
+ * Model migration. The textual product models can act as source resp. target for migration from resp. to the SAP variant configurator.
+ * High-level product modeling. VClipse can act as a backend for implementing a custom-tailored modeling environment.
+ * Model validation. VClipse can be used to validate the consistency of product models. Furthermore, it is possible to implement own validation rules e.g. to che ck for compliance with company’s modeling conventions.
+ * Product modeling. VClipse has support for complex modeling operations like consistently renaming objects or mass changes.
+ * Integration of modern software development tools. Due to VClipse’s Eclipse integration, modern software development tools like version-control systems and bug-tracking systems can be used for product modeling in an integrated way.
+ * Automatic model testing. VClipse provides a language for describing test cases and an interface to the [http://www.fysbee.com/configscansuite/ Fysbee ConfigScan Suite] which allows to execute the test cases from within VClipse.

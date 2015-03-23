@@ -1,0 +1,101 @@
+#summary Features of VClipse
+#labels Featured,Phase-Design
+#sidebar TableOfContents
+
+= VClipse Features =
+
+_Please note that this documentation will be enhanced with screen shots._
+
+VClipse is an Eclipse-based integrated development environment (IDE) for product modeling for the SAP Variant Configurator (VC).
+
+== VCML ==
+
+VClipse supports the specification of objects and dependencies in a textual domain specific language called VCML.
+
+VCML allows the specification of the most important aspects of various object types used in a SAP system to build product models.
+
+VCML is able to represent the following object types as text:
+ * Bill of Material
+ * Class
+ * Characteristic
+ * Configuration Profile
+ * Constraint
+ * Dependency Net
+ * Interface Design
+ * Material
+ * Precondition
+ * Procedure
+ * Selection Condition
+ * Variant Function
+ * Variant Table (currently only its structure)
+
+The languages for dependencies (source code) is embedded in VCML.
+ 
+VCML supports the specification of partial models.
+VC objects can be referenced from other VC objects, but do not have to be defined in detail.
+Their definition can be done later or probably already exists in the SAP system.
+
+
+== VCML Editor ==
+
+The Eclipse-based editor for VCML files offers various features.
+
+
+=== Syntax Highlighting ===
+
+Certain syntactic constructs of the language like keywords, comments, and strings are shown in different colors.
+
+Syntax highlighting is fully customizable for the user using the preference page.
+
+
+=== Outline View ===
+
+The Outline view shows the structure of the VCML document.
+Two different views on the document are possible:
+ * Document order: the VC objects are shown in the order as they appear in the file
+ * PMEVC-like order: the VC objects are shown in a hierarchical structure as in SAP's Product Modeling Environment for Variant Configuration (PMEVC) 
+
+
+=== Syntax Checking ===
+
+The syntax of VCML files is checked automatically.
+Syntactical errors are shown in the Problems view.
+
+
+=== Linking References Objects ===
+
+Referenced objects are linked to their definitions.
+If no definition exist for some object, an error is shown.
+Ctrl-clicking on an object reference jumps to the definition of the object. 
+
+ 
+=== Content Assist ===
+
+By typing Ctrl Space, VClipse offers context-dependent suggestions on how to complete some prefix letters.
+
+
+=== Templates ===
+
+The VCML editor provides pre-defined templates for the insertion of VC objects.
+The templates use the standard Eclipse template mechanism and are thus fully customizable and extensible.
+
+
+== Determining the Difference of Models ===
+
+A VCML file which contains only those objects which differ in two VCML files can be computed using VClipse.
+
+
+== Transformation into IDocs ==
+
+VCML documents can be transformed into IDocs.
+The VClipse preferences allow to filter out certain IDoc types.
+
+VClipse provides a textual language to edit IDocs.
+
+
+== Outlook ==
+
+VClipse will be enhanced in near future with the following features:
+ * RFC-based interface to SAP
+ * IDoc-based interface to SAP
+ * Management of SAP connections

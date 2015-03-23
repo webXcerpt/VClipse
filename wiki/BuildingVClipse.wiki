@@ -1,0 +1,119 @@
+#summary Instructions on how to build VClipse from its sources
+#labels Featured,Phase-Deploy
+#sidebar TableOfContents
+
+= Building VClipse =
+
+You should follow these instructions when you like to build VClipse from its sources.
+
+It is assumed that you know how to install Java, Eclipse, and Eclipse plugins from update sites.
+
+
+== Prerequisites ==
+
+VClipse requires Java Runtime Environment (JRE) version 7, Eclipse Kepler (4.3), and the Eclipse TMF Xtext 2.4.2 SDK installed.
+VClipse does not work with older releases of TMF Xtext, since the APIs have been changed.
+
+ * Install Java Runtime Environment 7 from http://www.oracle.com/technetwork/java
+ * Install the Eclipse Kepler distribution ''Eclipse for DSL and Java Developers'' from http://www.eclipse.org/downloads
+ * Install the following items out of the ''Modeling'' category from the Kepler update site http://download.eclipse.org/releases/kepler
+   * EMF Compare SDK
+   * EMF DiffMerge
+ * Install the following items from the TMF Xtext update site at itemis http://download.itemis.de/updates/
+   * Xtext Antlr-2.0.0	
+
+== Subversion ==
+
+VClipse is maintained on [http://code.google.com/a/eclipselabs.org/hosting/ Eclipse Labs] using the version control system [http://subversion.apache.org/ Subversion]. You can retrieve the source code using any Subversion client. 
+
+ * Make sure a Subversion client is installed in your Eclipse distribution, e.g., [http://www.eclipse.org/subversive/ Sublipse] (update site at http://subclipse.tigris.org/update_1.8.x) or [http://www.eclipse.org/subversive/ Subversive] (part of Indigo release, update site at http://download.eclipse.org/releases/indigo).
+ * Select ''File'' > ''Import...'' > ''Checkout from SVN'' and import all projects using the repository location http://svn.codespot.com/a/eclipselabs.org/vclipse/trunk/ You do not have to supply a user name. Import all projects into your workspace.
+
+You will now notice error markers in several files when Eclipse tries to build the projects.
+They will disappear after the next steps.
+
+== SAP Java Connector (JCo) and SAP Java IDoc Class Library ==
+
+VClipse relies on the SAP Java Connector and the SAP Java IDoc Class Library for communicating with a R/3 system.
+These libraries are licensed by SAP without additional license fees as part of the respective solution or component license
+when you are a SAP customer.
+Redistribution of these libraries is not allowed.
+Therefore, you have to download these libraries from the SAP Service Marketplace at http://service.sap.com/connectors/ .
+You need to have an account for the SAP Service Marketplace with appropriate privileges.
+
+You need to download the most recent versions of
+ * SAP JCo 3.0.x for your operating system and architecture and
+ * SAP Java IDoc Class Library 3.0.x
+
+=== RCER: Packaging SAP JCo and SAP Java IDoc Class Library as Eclipse Bundles ===
+
+[http://rcer.sourceforge.net/ RCER] is an open-source project which permits to package JCo as Eclipse bundles. 
+
+The following documentation is taken from the RCER project and slightly adapted:
+
+==== Step 1: Installation of the Import Wizard ====
+
+    Add http://rcer.sf.net/update-site to the list of update sites:
+    Select Help - Software Updates, switch to the Available Software tab, press Add Site and add the location.
+
+    Expand the update site entry and the category and select Import Wizard for SAP Java Connector. 
+    Important: Do NOT select the SDK yet - you won't be able to install it because of missing dependencies.
+
+    Perform the installation and restart the Eclipse Workbench.
+
+==== Step 2: Generating the JCo Bundles and Fragments ====
+
+    In your Eclipse Workbench, select File - Import....
+
+    From the list of import sources, select SAP R/3 Connector - Create SAP Java Connector Plug-ins and choose Next.
+
+    If you haven't done so yet, download the JCo archives for the platforms you want to support (registration required).
+    Note that the Connector was designed to use JCo versions 3 and up - it will not work with versions prior to 3.0.0.
+
+    Select the locations of the downloaded archives. Obviously, you need to specify at least one file before continuing.
+
+    On the last page, you can choose whether you want to create the plug-in and fragment projects for the platforms you have selected archive files for.
+    If the projects already exist in your workspace, you'll be prompted whether you want to replace the existing projects instead.
+
+    You can also select whether you want to export the generated plug-ins to the dropins folder of your Eclipse installation automatically.
+    Select this option.
+
+    Select Finish.
+    This will generate the projects and export them if you have selected the corresponding option.
+    This might take some time.
+
+    Restart the Eclipse Workbench.
+
+== Building VClipse ==
+
+VClipse is implemented using the [http://www.eclipse.org/Xtext Xtext] framework.
+From the grammar definition files ''*.xtext'' inside of the VClipse plugins, 
+certain Java code has to be generated by running two MWE2 workflow files in sequence: 
+
+ * In the folder org.vclipse.idoc/src/org/vclipse/idoc, right click on ''GenerateIDoc.mwe2'' and select ''Run As'' > ''MWE2 Workflow''
+ * In the folder org.vclipse.vcml/src/org/vclipse/vcml, right click on ''GenerateVCML.mwe2'' and select ''Run As'' > ''MWE2 Workflow''
+ * In the folder org.vclipse.vcml/src/org/vclipse/dependency, right click on ''GenerateDependency.mwe2'' and select ''Run As'' > ''MWE2 Workflow''
+ * In the folder org.vclipse.vcml/src/org/vclipse/condition, right click on ''GenerateCondition.mwe2'' and select ''Run As'' > ''MWE2 Workflow''
+ * In the folder org.vclipse.vcml/src/org/vclipse/constraint, right click on ''GenerateConstraint.mwe2'' and select ''Run As'' > ''MWE2 Workflow''
+ * In the folder org.vclipse.vcml/src/org/vclipse/procedure, right click on ''GenerateProcedure.mwe2'' and select ''Run As'' > ''MWE2 Workflow''
+
+If there are error messages coming up, just click ''Proceed''.
+The ''Console'' view will show the progress of the workflows.
+
+Building the workspace might take a while, but after it is finished all error markers should have disappeared.
+
+If you get !OutOfMemory errors or warnings from the parser generator, you should increase the heap size for the workflow launcher.
+Supply e.g. the VM argument -Xmx1024m to the run configuration. 
+
+You can now start VClipse by launching a separate Eclipse application using the Eclipse Application launcher.
+
+
+== Installing VClipse ==
+
+To install VClipse directly into your Eclipse instance
+ # Select ''File'' > ''Export...'' > ''Plug-in Development'' > ''Deployable features'' > ''Next''
+ # Select all VClipse features.
+ # Select ''Install into host. Repository'' and click 'Finish'.
+ # Restart Eclipse, when asked.
+
+Now you can start using VClipse by creating a VCML file. 
