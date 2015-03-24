@@ -12,6 +12,6 @@
 	</parent>
 
 	<groupId>p2.osgi.bundle</groupId>
-	<artifactId>org.vclipse.exporter.opencpq</artifactId>
+	<artifactId>org.vclipse.exports.opencpq</artifactId>
 	<packaging>eclipse-plugin</packaging>
 </project>
