@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: VClipse to openCPQ exporter
+Bundle-SymbolicName: org.vclipse.exports.opencpq;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Bundle-Activator: org.vclipse.exports.opencpq.Activator
+Bundle-Vendor: webXcerpt Software GmbH
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ com.google.guava,
+ org.eclipse.xtend.lib,
+ org.eclipse.xtext.xbase.lib,
+ org.vclipse.vcml.mm;bundle-version="0.5.0",
+ org.vclipse.vcml;bundle-version="0.5.0",
+ org.vclipse.vcml.ui;bundle-version="0.5.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Import-Package: org.apache.log4j,
+ org.junit;version="4.11.0",
+ org.junit.runner;version="4.11.0",
+ org.junit.runner.manipulation;version="4.11.0",
+ org.junit.runner.notification;version="4.11.0",
+ org.junit.runners;version="4.11.0",
+ org.junit.runners.model;version="4.11.0",
+ org.hamcrest.core

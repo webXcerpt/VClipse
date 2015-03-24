@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <menu
+               id="org.vclipse.exports.opencpq.menus.popup"
+               label="openCPQ">
+            <command
+                  commandId="org.vclipse.exports.opencpq.commands.export"
+                  label="Export SAP VC model (VCML) to openCPQ"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="org.vclipse.exports.opencpq.resources.vcml">
+                  </reference>
+               </visibleWhen>
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.vclipse.exports.opencpq.ExecutableExtensionFactory:org.vclipse.exports.opencpq.ExportHandler"
+            commandId="org.vclipse.exports.opencpq.commands.export">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="org.vclipse.ui.commands"
+            id="org.vclipse.exports.opencpq.commands.export"
+            name="Export SAP VC model (VCML) to openCPQ">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="org.vclipse.exports.opencpq.resources.vcml">
+         <iterate
+               ifEmpty="false">
+            <adapt
+                  type="org.eclipse.core.resources.IResource">
+               <test
+                     property="org.eclipse.core.resources.extension"
+                     value="vcml">
+               </test>
+            </adapt>
+         </iterate>
+      </definition>
+   </extension>
+</plugin>

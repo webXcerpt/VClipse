@@ -93,6 +93,10 @@
 		<module>../../features/org.vclipse.vcml2idoc_feature</module>
 		<module>../../features/org.vclipse.configscan_feature</module>
 		
+		<!--  VClipse to openCPQ export -->
+		<module>../../plugins/org.vclipse.exports.opencpq</module>
+		<module>../../features/org.vclipse.exports.opencpq_feature</module>
+		
 	</modules>
 	
 	<build>
