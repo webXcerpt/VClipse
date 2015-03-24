@@ -17,15 +17,21 @@ import org.vclipse.vcml.vcml.CharacteristicReference_P
 import org.vclipse.vcml.vcml.CharacteristicValue
 import org.vclipse.vcml.vcml.Classification
 import org.vclipse.vcml.vcml.Comparison
+import org.vclipse.vcml.vcml.ComparisonOperator
 import org.vclipse.vcml.vcml.Condition
 import org.vclipse.vcml.vcml.ConfigurationProfile
 import org.vclipse.vcml.vcml.DateType
 import org.vclipse.vcml.vcml.Description
 import org.vclipse.vcml.vcml.Expression
+import org.vclipse.vcml.vcml.InCondition_P
 import org.vclipse.vcml.vcml.InterfaceDesign
+import org.vclipse.vcml.vcml.IsSpecified_P
 import org.vclipse.vcml.vcml.Language
+import org.vclipse.vcml.vcml.List
 import org.vclipse.vcml.vcml.Material
 import org.vclipse.vcml.vcml.MultiLanguageDescriptions
+import org.vclipse.vcml.vcml.NumberList
+import org.vclipse.vcml.vcml.NumberListEntry
 import org.vclipse.vcml.vcml.NumericCharacteristicValue
 import org.vclipse.vcml.vcml.NumericInterval
 import org.vclipse.vcml.vcml.NumericLiteral
@@ -33,14 +39,15 @@ import org.vclipse.vcml.vcml.NumericType
 import org.vclipse.vcml.vcml.Precondition
 import org.vclipse.vcml.vcml.SelectionCondition
 import org.vclipse.vcml.vcml.SimpleDescription
+import org.vclipse.vcml.vcml.SymbolList
 import org.vclipse.vcml.vcml.SymbolicLiteral
 import org.vclipse.vcml.vcml.SymbolicType
 import org.vclipse.vcml.vcml.UnaryCondition
 import org.vclipse.vcml.vcml.UnaryExpression
+import org.vclipse.vcml.vcml.UnaryExpressionOperator
 import org.vclipse.vcml.vcml.VCObject
 import org.vclipse.vcml.vcml.VcmlFactory
 import org.vclipse.vcml.vcml.VcmlModel
-import org.vclipse.vcml.vcml.ConditionSource
 
 class Exporter {
 	
@@ -75,6 +82,10 @@ class Exporter {
 		«FOR c: model.objects.filter(Precondition)»
 		«c.export»
 		«ENDFOR»
+		
+		function in(v, list) {
+			return list.indexOf(v) >= 0;
+		}
 		
 		module.exports = {
 			«FOR m: kmats»
@@ -290,7 +301,7 @@ class Exporter {
 		'''
 		function «o.jsId»(p) {
 			return «translate(c)»;
-		} 
+		}
 		'''
 	}
 	
@@ -351,22 +362,75 @@ class Exporter {
 	def CharSequence translate(Condition c) {
 		switch c {
 			case null: '''/* null */ true'''
-			BinaryCondition: '''(«c.left.translate» «c.operator» «c.right.translate»)'''
+			BinaryCondition: '''(«c.left.translate» «c.operator.translateOp» «c.right.translate»)'''
 			UnaryCondition: '''!(«c.condition.translate»)'''
-			Comparison: '''(«c.left.translate» «c.operator» «c.right.translate»)'''
+			Comparison: '''(«c.left.translate» «c.operator.translate» «c.right.translate»)'''
+			IsSpecified_P: '''«c.characteristic.characteristic.value» != null'''
+			InCondition_P: '''in(«c.characteristic.characteristic.value», «c.list.translate»)'''
 			default: '''unknown condition «c»'''
+		}
+	}
+	
+	def CharSequence translate(List l) {
+		switch l {
+			NumberList: '''[«l.entries.map[translate].join(", ")»]'''
+			SymbolList: '''[«l.entries.map[translate].join(", ")»]'''
+		}
+	}
+	
+	def CharSequence translate(NumberListEntry e) {
+		switch e {
+			NumericInterval: '''### «e» ###''' 
+			NumericLiteral: e.value
 		}
 	}
 	
 	def CharSequence translate(Expression e) {
 		switch e {
 			case null: '''/* null */ true'''
-			BinaryExpression: '''(«e.left.translate» «e.operator» «e.right.translate»)'''
-			UnaryExpression: '''«e.operator»(«e.expression.translate»)'''
-			SymbolicLiteral: '''«e.value»'''
-			CharacteristicReference_P: '''p.«e.characteristic.jsId»''' // TODO handle location?
+			BinaryExpression: '''(«e.left.translate» «e.operator.translateOp» «e.right.translate»)'''
+			UnaryExpression: '''«e.operator.translate»(«e.expression.translate»)'''
+			SymbolicLiteral: '''"«Strings.convertToJavaString(e.value, false)»"'''
+			NumericLiteral: e.value
+			CharacteristicReference_P: e.characteristic.value
 			default: '''unknown expression «e»'''
 		}
+	}
+	
+	def CharSequence translate(UnaryExpressionOperator op) {
+		switch op {
+			case PLUS: "+"
+			case MINUS: "-"
+			case UC: "### UC ###"
+			case LC: "### LC ###"
+		}
+	}
+	
+	def CharSequence translate(ComparisonOperator op) {
+		switch op {
+			case NE: "!=="
+			case EQ:  "==="
+			case LT:  "<"
+			case LE:  "<="
+			case GT:  ">"
+			case GE:  ">="
+		}
+	}
+	
+	def CharSequence translateOp(String op) {
+		switch op.toLowerCase {
+			case "and": "&&"
+			case "or": "||"
+			case "||": "### concatenate ###"
+			default: op
+		}
+	}
+	
+	def value(Characteristic it) {
+		if (it == null)
+			'''### value(Characteristic) == null ###'''
+		else
+			'''p["«Strings.convertToJavaString(name ?: "### name = null ###", false)»"]'''
 	}
 	
 }

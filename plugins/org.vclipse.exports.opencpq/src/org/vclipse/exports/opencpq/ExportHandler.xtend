@@ -32,7 +32,7 @@ class ExportHandler extends AbstractHandler {
 			while (iter.hasNext) {
 				switch el: iter.next {
 					IFile: {
-						val URI vcmlUri = URI.createURI(el.locationURI.toString);
+						val URI vcmlUri = URI.createPlatformResourceURI(el.fullPath.toOSString, true);
 						val resource = resourceSetProvider.get.getResource(vcmlUri, true);
 						val IFile jsFile = el.parent.getFile(new Path(vcmlUri.trimFileExtension.lastSegment.toString).addFileExtension("js"));
 						val contents = new StringInputStream(exporter.export(resource.contents.get(0) as VcmlModel).toString);
