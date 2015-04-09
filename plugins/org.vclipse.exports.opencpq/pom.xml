@@ -11,7 +11,7 @@
 		<relativePath>../../releng/org.vclipse.releng/pom.xml</relativePath>
 	</parent>
 
-	<groupId>p2.osgi.bundle</groupId>
 	<artifactId>org.vclipse.exports.opencpq</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 </project>
