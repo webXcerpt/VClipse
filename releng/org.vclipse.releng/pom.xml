@@ -312,11 +312,6 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
-       	<repository>
-        	<id>JCo Update Site</id>
-        	<layout>p2</layout>
-        	<url>TODO add here an update site for JCo plugins</url>
-      	</repository>
     </repositories>
 
 	<pluginRepositories>
