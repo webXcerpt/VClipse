@@ -135,7 +135,7 @@ public class ImportWizard extends Wizard implements IImportWizard {
 						manifest.append("Bundle-Version: 0.3.0.qualifier\n");
 						manifest.append("Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany\n");
 						manifest.append("Fragment-Host: org.vclipse.vcml.ui;bundle-version=\"0.3.0\"\n");
-						manifest.append("Bundle-RequiredExecutionEnvironment: JavaSE-1.6\n");
+						manifest.append("Bundle-RequiredExecutionEnvironment: JavaSE-1.7\n");
 						metaInfFolder.getFile("MANIFEST.MF").create(new StringInputStream(manifest.toString()), true, monitor);
 						monitor.worked(1);
 
