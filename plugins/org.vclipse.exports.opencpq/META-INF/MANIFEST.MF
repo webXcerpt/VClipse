@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: VClipse to openCPQ exporter
 Bundle-SymbolicName: org.vclipse.exports.opencpq;singleton:=true
-Bundle-Version: 0.0.1.qualifier
+Bundle-Version: 0.5.0.qualifier
 Bundle-Activator: org.vclipse.exports.opencpq.Activator
 Bundle-Vendor: webXcerpt Software GmbH
 Require-Bundle: org.eclipse.ui,

@@ -11,6 +11,5 @@
 	</parent>
 
 	<artifactId>org.vclipse.exports.opencpq_feature</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<packaging>eclipse-feature</packaging>
 </project>
