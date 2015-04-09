@@ -6,20 +6,18 @@
       provider-name="webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)">
 
    <description>
-      Integration of the Automated Testing System ConfigScan into VClipse.
-      ConfigScan is a product by Fysbee (www.fysbee.com)
+      Export of SAP VC product models to openCPQ (www.opencpq.org)
    </description>
 
-   <copyright url="http://www.example.com/copyright">
+   <copyright>
       Copyright (c) 2011 webXcerpt Software GmbH and other committers.
-    All rights reserved. This program and the accompanying materials
-    are made available under the terms of the Eclipse Public License v1.0
-    which accompanies this distribution, and is available at
-    http://www.eclipse.org/legal/epl-v10.html
-   
-    Contributors:
-       webXcerpt Software GmbH - initial creator
-       Winfried Kung - initial creator
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License
+v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+Contributors:
+webXcerpt Software GmbH - initial creator
    </copyright>
 
    <license url="http://www.eclipse.org/legal/epl-v10.html">
@@ -181,21 +179,7 @@ waives its rights to a jury trial in any resulting litigation.
    </license>
 
    <plugin
-         id="org.vclipse.configscan.vcmlt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.vclipse.configscan.vcmlt.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.vclipse.configscan"
+         id="org.vclipse.exports.opencpq"
          download-size="0"
          install-size="0"
          version="0.0.0"
