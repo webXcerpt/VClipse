@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.vclipse.exports.opencpq_feature"
-      label="VClipse to openCPQ exporter"
+      label="VClipse to openCPQ Exporter"
       version="0.5.0.qualifier"
       provider-name="webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)">
 
