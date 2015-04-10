@@ -286,7 +286,7 @@
 
     <repositories>
 		<repository>
-			<id>eclipse-kepler</id>
+			<id>eclipse-${platform-version-name}</id>
 			<url>${eclipse-site}</url>
 			<layout>p2</layout>
 			<releases>
