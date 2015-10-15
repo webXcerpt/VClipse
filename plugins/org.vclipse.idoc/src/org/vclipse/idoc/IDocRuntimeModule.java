@@ -13,9 +13,7 @@ package org.vclipse.idoc;
 
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.serializer.ISerializer;
 import org.vclipse.idoc.conversion.IDocValueConverter;
-import org.vclipse.idoc.formatting.IDocSerializer;
 import org.vclipse.idoc.iDoc.IDocFactory;
 import org.vclipse.idoc.resource.IDocResourceDescriptionManager;
 
@@ -30,13 +28,8 @@ public class IDocRuntimeModule extends AbstractIDocRuntimeModule {
 		return IDocValueConverter.class;
 	}
 
-	// use own serializer since this is much more performant
-	@Override
-	public Class<? extends ISerializer> bindISerializer() {
-		return IDocSerializer.class;
-	}
 
-	public Class<? extends IResourceDescription.Manager> bindIResourceDescriptionManager() {
+public Class<? extends IResourceDescription.Manager> bindIResourceDescriptionManager() {
 		return IDocResourceDescriptionManager.class;
 	}
 

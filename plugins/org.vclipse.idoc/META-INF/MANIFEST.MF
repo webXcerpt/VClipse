@@ -13,19 +13,19 @@ Require-Bundle: org.eclipse.xtext.generator,
  org.eclipse.xtext.util,
  org.eclipse.emf.ecore,
  org.eclipse.emf.common,
- org.antlr.runtime
+ org.antlr.runtime,
+ org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.vclipse.idoc,
  org.vclipse.idoc.services,
  org.vclipse.idoc.iDoc,
  org.vclipse.idoc.iDoc.impl,
  org.vclipse.idoc.iDoc.util,
- org.vclipse.idoc.parseTreeConstruction,
  org.vclipse.idoc.parser.antlr,
  org.vclipse.idoc.parser.antlr.internal,
  org.vclipse.idoc.validation,
- org.vclipse.idoc.scoping,
- org.vclipse.idoc.formatting
+ org.vclipse.idoc.formatting,
+ org.vclipse.idoc.serializer
 Bundle-ClassPath: .
 Import-Package: org.apache.commons.logging,
  org.apache.log4j,
