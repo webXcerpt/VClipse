@@ -11,7 +11,11 @@ Require-Bundle: org.vclipse.connection,
  org.eclipse.ui.ide,
  org.vclipse.console,
  org.vclipse.vcml2idoc.ui,
- org.vclipse.vcml.ui
+ org.vclipse.vcml.ui,
+ com.google.guava,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.xtend.lib,
+ org.eclipse.xtend.lib.macro
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: com.sap.conn.jco,
