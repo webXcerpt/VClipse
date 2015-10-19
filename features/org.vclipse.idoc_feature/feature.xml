@@ -2,7 +2,7 @@
 <feature
       id="org.vclipse.idoc_feature"
       label="VClipse IDoc Editor"
-      version="0.5.0.qualifier"
+      version="0.6.0.qualifier"
       provider-name="webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)">
 
    <description url="http://www.example.com/description">
@@ -187,27 +187,6 @@ waives its rights to a jury trial in any resulting litigation.
 
    <plugin
          id="org.vclipse.idoc.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.vclipse.base"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.vclipse.base.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.vclipse.jpplib"
          download-size="0"
          install-size="0"
          version="0.0.0"
