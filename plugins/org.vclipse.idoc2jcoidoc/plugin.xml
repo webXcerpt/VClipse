@@ -102,6 +102,7 @@
             commandId="org.vclipse.commands.transformation.idoc2sapxml">
       </handler>
       <handler
+            class="org.vclipse.idoc2jcoidoc.injection.ExecutableExtensionFactory:org.vclipse.idoc2jcoidoc.actions.TransformIDoc2AlePackage"
             commandId="org.vclipse.commands.transformation.idoc2alepackage">
       </handler>
    </extension>

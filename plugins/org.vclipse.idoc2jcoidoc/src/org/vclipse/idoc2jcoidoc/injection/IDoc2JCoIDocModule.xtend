@@ -18,9 +18,9 @@ import org.vclipse.connection.VClipseConnectionPlugin
 import org.vclipse.idoc2jcoidoc.DefaultIDoc2JCoIDocProcessor
 import org.vclipse.idoc2jcoidoc.IDoc2JCoIDocPlugin
 import org.vclipse.idoc2jcoidoc.IIDoc2JCoIDocProcessor
-import org.vclipse.vcml.ui.VCMLUiPlugin
-import org.vclipse.vcml2idoc.VCML2IDocPlugin
-import org.vclipse.vcml2idoc.transformation.VCML2IDocSwitch
+// import org.vclipse.vcml.ui.VCMLUiPlugin
+// import org.vclipse.vcml2idoc.VCML2IDocPlugin
+// import org.vclipse.vcml2idoc.transformation.VCML2IDocSwitch
 import com.google.inject.Binder
 import com.google.inject.Injector
 import com.google.inject.name.Names
@@ -38,16 +38,16 @@ class IDoc2JCoIDocModule extends AbstractGenericModule {
 
 	override void configure(Binder binder) {
 		super.configure(binder)
-		var Injector vcmlInjector = VCMLUiPlugin.getInjector()
-		var Injector vcml2IDocInjector = VCML2IDocPlugin.getDefault().getInjector()
+		// var Injector vcmlInjector = VCMLUiPlugin.getInjector()
+		// var Injector vcml2IDocInjector = VCML2IDocPlugin.getDefault().getInjector()
 		var Injector connectionInjector = VClipseConnectionPlugin.getDefault().getInjector()
-		binder.bind(IPreferenceStore).annotatedWith(Names.named(VCMLUiPlugin.ID)).toInstance(
-			vcmlInjector.getInstance(IPreferenceStore))
-		binder.bind(IPreferenceStore).annotatedWith(Names.named(VCML2IDocPlugin.ID)).toInstance(
-			vcml2IDocInjector.getInstance(IPreferenceStore))
+		// binder.bind(IPreferenceStore).annotatedWith(Names.named(VCMLUiPlugin.ID)).toInstance(
+		// 	vcmlInjector.getInstance(IPreferenceStore))
+		// binder.bind(IPreferenceStore).annotatedWith(Names.named(VCML2IDocPlugin.ID)).toInstance(
+		//	vcml2IDocInjector.getInstance(IPreferenceStore))
 		binder.bind(IPreferenceStore).annotatedWith(Names.named(IDoc2JCoIDocPlugin.ID)).toInstance(
 			plugin.getPreferenceStore())
-		binder.bind(VCML2IDocSwitch).toInstance(vcml2IDocInjector.getInstance(VCML2IDocSwitch))
+		// binder.bind(VCML2IDocSwitch).toInstance(vcml2IDocInjector.getInstance(VCML2IDocSwitch))
 		binder.bind(IConnectionHandler).toInstance(connectionInjector.getInstance(IConnectionHandler))
 	}
 

@@ -6,8 +6,10 @@ Bundle-Version: 0.6.0.qualifier
 Bundle-Activator: org.vclipse.idoc2jcoidoc.IDoc2JCoIDocPlugin
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Require-Bundle: org.vclipse.connection,
- org.vclipse.vcml,
  org.vclipse.idoc,
+ org.vclipse.base.ui,
+ org.eclipse.xtext.ui,
+ org.eclipse.xtext.ui.shared,
  org.eclipse.ui.ide,
  org.vclipse.console,
  org.vclipse.vcml2idoc.ui,
