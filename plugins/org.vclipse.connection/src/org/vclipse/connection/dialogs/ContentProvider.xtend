@@ -1,0 +1,54 @@
+/** 
+ * Copyright (c) 2010 - 2013 webXcerpt Software GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * Contributors:
+ * webXcerpt Software GmbH - initial creator
+ * www.webxcerpt.com
+ */
+package org.vclipse.connection.dialogs
+
+import org.eclipse.jface.viewers.IStructuredContentProvider
+import org.eclipse.jface.viewers.Viewer
+import org.vclipse.connection.internal.AbstractConnection
+
+/** 
+ */
+class ContentProvider implements IStructuredContentProvider {
+	/** 
+	 */
+	AbstractConnection[] input
+
+	/** 
+	 */
+	new() {
+		input = newArrayOfSize(0)
+	}
+
+	/** 
+	 * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
+	 */
+	override Object[] getElements(Object inputElement) {
+		return input
+	}
+
+	/** 
+	 * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+	 */
+	override void dispose() {
+		// nothing to do
+	}
+
+	/** 
+	 * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+	 */
+	override void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		if (newInput instanceof AbstractConnection[]) {
+			input = newInput as AbstractConnection[]
+		}
+
+	}
+
+}

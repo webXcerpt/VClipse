@@ -80,10 +80,11 @@
 		<module>../../plugins/org.vclipse.configscan.vcmlt.ui</module>
 		-->
 		
-		<!-- VClipse Plug-ins 
+		<!-- VClipse Plug-ins -->
 		<module>../../plugins/org.vclipse.connection</module>
 		<module>../../plugins/org.vclipse.console</module>
 		<module>../../plugins/org.vclipse.sap.deployment</module>
+		<!-- 
 		<module>../../plugins/org.vclipse.jpplib</module>
 		<module>../../plugins/org.vclipse.vcml.compare</module>
 		<module>../../plugins/org.vclipse.vcml.ui.actions</module>
@@ -98,8 +99,8 @@
 		
 		<!-- VClipse Features -->
 		<module>../../features/org.vclipse.idoc_feature</module>
-		<!-- 
 		<module>../../features/org.vclipse.pdr_feature</module>
+		<!-- 
 		<module>../../features/org.vclipse.rfc_feature</module>
 		<module>../../features/org.vclipse.vcml_feature</module>
 		<module>../../features/org.vclipse.vcml2idoc_feature</module>

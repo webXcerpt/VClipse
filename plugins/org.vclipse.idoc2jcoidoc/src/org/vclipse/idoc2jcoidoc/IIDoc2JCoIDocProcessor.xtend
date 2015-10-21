@@ -18,7 +18,7 @@ import com.google.inject.ImplementedBy
 import com.sap.conn.idoc.IDocDocument
 import com.sap.conn.jco.JCoException
 
-@ImplementedBy(DefaultIDoc2JCoIDocProcessor) interface IIDoc2JCoIDocProcessor {
+@ImplementedBy(DefaultIDoc2JCoIDocProcessor)
+interface IIDoc2JCoIDocProcessor {
 	def List<IDocDocument> transform(Model idocModel, IProgressMonitor monitor) throws JCoException, CoreException
-
 }

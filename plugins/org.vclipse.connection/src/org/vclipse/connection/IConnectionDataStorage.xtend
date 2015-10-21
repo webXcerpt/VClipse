@@ -8,12 +8,26 @@
  * webXcerpt Software GmbH - initial creator
  * www.webxcerpt.com
  */
-package org.vclipse.idoc2jcoidoc
+package org.vclipse.connection
 
 import java.util.List
-import com.sap.conn.idoc.IDocDocument
-import com.sap.conn.idoc.IDocException
 
-interface IJCoIDocPostprocessor {
-	def void postprocess(List<IDocDocument> idocs) throws IDocException
+/** 
+ */
+interface IConnectionDataStorage {
+	/** 
+	 * @return
+	 */
+	def List<IConnection> loadConnectionData(boolean loadPassword)
+
+	/** 
+	 * @param connections
+	 */
+	def void storeConnectionData(List<IConnection> connections, int currentConnectionIndex)
+
+	/** 
+	 * @return
+	 */
+	def int getCurrentConnectionIndex()
+
 }

@@ -8,12 +8,16 @@
  * webXcerpt Software GmbH - initial creator
  * www.webxcerpt.com
  */
-package org.vclipse.idoc2jcoidoc
+package org.vclipse.connection
 
-import java.util.List
-import com.sap.conn.idoc.IDocDocument
-import com.sap.conn.idoc.IDocException
+import com.sap.conn.jco.ext.DestinationDataProvider
 
-interface IJCoIDocPostprocessor {
-	def void postprocess(List<IDocDocument> idocs) throws IDocException
+/** 
+ */
+interface IDestinationDataProvider extends DestinationDataProvider {
+	/** 
+	 * Name for the system name property
+	 */
+	public static final String SYSTEM_NAME = VClipseConnectionPlugin::ID + ".systemName"
+
 }

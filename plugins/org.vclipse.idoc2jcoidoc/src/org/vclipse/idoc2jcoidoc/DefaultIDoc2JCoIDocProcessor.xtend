@@ -1,5 +1,5 @@
 /** 
- * Copyright (c) 2010 - 2013 webXcerpt Software GmbH.
+ * Copyright (c) 2010 - 2015 webXcerpt Software GmbH.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,7 +9,16 @@
  * www.webxcerpt.com
  */
 package org.vclipse.idoc2jcoidoc
-import java.lang.reflect.Method
+
+import com.google.inject.Inject
+import com.google.inject.name.Named
+import com.sap.conn.idoc.IDocDocument
+import com.sap.conn.idoc.IDocException
+import com.sap.conn.idoc.IDocFactory
+import com.sap.conn.idoc.IDocRepository
+import com.sap.conn.idoc.IDocSegment
+import com.sap.conn.idoc.jco.JCoIDoc
+import com.sap.conn.jco.JCoException
 import java.util.ArrayList
 import java.util.List
 import org.eclipse.core.runtime.AssertionFailedException
@@ -30,169 +39,135 @@ import org.vclipse.idoc.iDoc.Model
 import org.vclipse.idoc.iDoc.NumberField
 import org.vclipse.idoc.iDoc.Segment
 import org.vclipse.idoc.iDoc.StringField
-import org.vclipse.idoc.iDoc.util.IDocSwitch
-import com.google.common.base.Strings
-import com.google.inject.Inject
-import com.google.inject.name.Named
-import com.sap.conn.idoc.IDocDocument
-import com.sap.conn.idoc.IDocException
-import com.sap.conn.idoc.IDocFactory
-import com.sap.conn.idoc.IDocRepository
-import com.sap.conn.idoc.IDocSegment
-import com.sap.conn.idoc.jco.JCoIDoc
-import com.sap.conn.jco.JCoException
+
 /** 
  * @author tg
  * transforms an ecore IDoc model into a list of SAP JCo IDocDocuments
- * Note: this implements the same as model.accept(new SAPModelIDocConverter(model)) from SAPModelIDocConverter.java from trunk).
+ * 
  * The addition of the IDoc segments required for serialization should be implemented during the transformation of a vcml.Model to an idoc.Model.
  */
-class DefaultIDoc2JCoIDocProcessor extends IDocSwitch<Object> implements IIDoc2JCoIDocProcessor, IPropertyChangeListener{
+class DefaultIDoc2JCoIDocProcessor implements IIDoc2JCoIDocProcessor, IPropertyChangeListener{
 	IDocRepository iDocRepository
 	IDocFactory iDocFactory
 	String senderPartnerType
 	String senderPartnerNumber
-	/** 
-	 */
 	final IPreferenceStore preferenceStore
-	/** 
-	 */
 	final IConnectionHandler handler
-	/** 
-	 */
-	@Inject  new(@Named(IDoc2JCoIDocPlugin.ID)IPreferenceStore preferenceStore, IConnectionHandler connectionHandler) {
-		super()this.preferenceStore=preferenceStore this.handler=connectionHandler this.preferenceStore.addPropertyChangeListener(this) 
+
+	@Inject new(@Named(IDoc2JCoIDocPlugin.ID)IPreferenceStore preferenceStore, IConnectionHandler connectionHandler) {
+		super();
+		this.preferenceStore = preferenceStore;
+		this.handler = connectionHandler;
+		this.preferenceStore.addPropertyChangeListener(this) 
 	}
-	/** 
-	 * @see java.lang.Object#finalize()
-	 */
+
 	override protected void finalize() throws Throwable {
-		this.preferenceStore.removePropertyChangeListener(this) super.finalize() 
+		this.preferenceStore.removePropertyChangeListener(this);
+		super.finalize; 
 	}
-	/** 
-	 * @param idocModel
-	 * @param monitor
-	 * @return
-	 * @throws CoreException
-	 */
+
 	override List<IDocDocument> transform(Model idocModel, IProgressMonitor monitor) throws JCoException, CoreException {
-		val List<IDocDocument> idocDocuments=new ArrayList<IDocDocument>() 
+		val List<IDocDocument> idocDocuments = newArrayList 
 		if (idocModel !== null) {
-			val EList<IDoc> idocs=idocModel.getIdocs() 
-			monitor.beginTask("Running transformation...", idocs.size()) for (IDoc idoc : idocs) {
-				if (monitor.isCanceled()) {
-					/* FIXME Unsupported BreakStatement: */
-				} else {
-					val IDocDocument iDocDocument=transform(idoc, monitor) 
+			val EList<IDoc> idocs = idocModel.idocs; 
+			monitor.beginTask("Running transformation...", idocs.size);
+			for (IDoc idoc : idocs) {
+				if (monitor.isCanceled)
+					return idocDocuments
+				else {
+					val IDocDocument iDocDocument = transform(idoc, monitor) 
 					if (iDocDocument !== null) {
 						idocDocuments.add(iDocDocument) 
 					}
-					monitor.worked(1) 
+					monitor.worked(1)
 				}
 			}
-			monitor.done() 
+			monitor.done
 		}
-		return idocDocuments 
+		idocDocuments 
 	}
-	/** 
-	 * @param object
-	 * @param monitor
-	 * @return
-	 * @throws CoreException
-	 */
+
 	def IDocDocument transform(IDoc object, IProgressMonitor monitor) throws JCoException, CoreException {
-		senderPartnerType=preferenceStore.getString(IUiConstants.PARTNER_TYPE) if(!(!Strings.isNullOrEmpty(senderPartnerType))) {throw new AssertionError("senderPartnerType is not set")}senderPartnerNumber=preferenceStore.getString(IUiConstants.PARTNER_NUMBER) if(!(!Strings.isNullOrEmpty(senderPartnerNumber))) {throw new AssertionError("senderPartnerNumber is not set")}iDocRepository=handler.getIDocRepository() iDocFactory=JCoIDoc.getIDocFactory() if (iDocRepository === null) {
-			throw new CoreException(new Status(IStatus.ERROR,IDoc2JCoIDocPlugin.ID,"Could not retrieve the IDoc repository"))
-		} else {
-			var IDocDocument iDoc=null 
-			try {
-				monitor.subTask('''Transforming «object.getType()»''') iDoc=iDocFactory.createIDocDocument(iDocRepository, object.getType()) iDoc.setIDocNumber(object.getName()) iDoc.setMessageType(object.getMessageType()) iDoc.setSenderPartnerNumber(senderPartnerNumber) iDoc.setSenderPartnerType(senderPartnerType) // TODO handle object.getFields() via Java reflection for setXXX(Date)
-				for (Field field : object.getFields()) {
-					if (field instanceof StringField) {
-						val StringField stringField=field as StringField 
-						var Method method 
+		senderPartnerType = preferenceStore.getString(IUiConstants.PARTNER_TYPE);
+		if (senderPartnerType.nullOrEmpty)
+		 	throw new AssertionError("senderPartnerType is not set");
+		senderPartnerNumber = preferenceStore.getString(IUiConstants.PARTNER_NUMBER);
+		if (senderPartnerNumber.nullOrEmpty)
+		 	throw new AssertionError("senderPartnerNumber is not set");
+		iDocRepository = handler.IDocRepository
+		iDocFactory = JCoIDoc.IDocFactory
+		if (iDocRepository == null)
+			throw new CoreException(new Status(IStatus.ERROR, IDoc2JCoIDocPlugin.ID, "Could not retrieve the IDoc repository"));
+		var IDocDocument iDoc = null 
+		try {
+			monitor.subTask('''Transforming «object.type»''');
+			iDoc = iDocFactory.createIDocDocument(iDocRepository, object.type) => [
+				IDocNumber = object.name;
+				messageType = object.messageType;
+				it.senderPartnerNumber = senderPartnerNumber;
+				it.senderPartnerType = senderPartnerType;
+			];
+			// TODO handle object.getFields() via Java reflection for setXXX(Date)
+			for (Field field : object.fields) {
+				switch field {
+					StringField: {
 						try {
-							method=iDoc.getClass().getMethod('''set«stringField.getName()»''', java.lang.String) method.invoke(iDoc, stringField.getValue()) 
+							iDoc.class.getMethod('''set«field.name»''', String).invoke(iDoc, field.value);
 						} catch (Exception e) {
 							handleException(object, e) 
 						}
-						
-					} else {
-						handleException(object, new AssertionFailedException('''illegal field type of field «field»''')) 
 					}
+					default: handleException(object, new AssertionFailedException('''illegal field type of field «field»'''))
 				}
-				for (Segment segment : object.getSegments()) {
-					transform(iDoc.getRootSegment(), segment) 
-				}
-				
-			} catch (IDocException exception) {
-				handleException(object, exception) 
 			}
-			return iDoc 
+			for (Segment segment : object.segments)
+				transform(iDoc.rootSegment, segment) 
+		} catch (IDocException exception) {
+			handleException(object, exception) 
 		}
+		return iDoc 
 	}
-	/** 
-	 * @param containerSegment
-	 * @param segment
-	 */
+
 	def private void transform(IDocSegment containerSegment, Segment segment) {
 		var IDocSegment transformedSegment 
 		try {
-			transformedSegment=containerSegment.addChild(segment.getType()) 
+			transformedSegment = containerSegment.addChild(segment.type); 
 		} catch (IDocException exception) {
-			handleException(segment, exception) return;
+			handleException(segment, exception)
+			return;
 		}
-		for (Field field : segment.getFields()) {
-			if (field instanceof StringField) {
-				val StringField stringField=field as StringField 
-				try {
-					transformedSegment.setValue(stringField.getName(), stringField.getValue()) 
-				} catch (IDocException exception) {
-					handleException(field, exception) 
-				}
-				
-			} else if (field instanceof NumberField) {
-				val NumberField numberField=field as NumberField 
-				try {
-					transformedSegment.setValue(numberField.getName(), numberField.getValue()) 
-				} catch (IDocException e) {
-					handleException(field, e) 
-				}
-				
-			} else {
-				handleException(field, new AssertionFailedException('''illegal field type of field «field»''')) 
+		for (Field field : segment.fields) {
+			try {
+				switch field {
+					StringField: transformedSegment.setValue(field.name, field.value)
+					NumberField: transformedSegment.setValue(field.name, field.value)
+					default:     handleException(field, new AssertionFailedException('''illegal field type of field «field»''')) 
+				}			
+			} catch (IDocException exception) {
+				handleException(field, exception)
 			}
 		}
-		for (Segment childSegment : segment.getSegments()) {
+		for (Segment childSegment : segment.segments) {
 			transform(transformedSegment, childSegment) 
 		}
 		
 	}
-	/** 
-	 * @param sourceObject
-	 * @param exception
-	 */
+
 	def private void handleException(EObject sourceObject, Exception exception) {
-		sourceObject.eResource().getErrors().add(new ExceptionDiagnostic(exception)) // TODO make this appear in editor and error log
-		if (exception instanceof AssertionFailedException) {
-			IDoc2JCoIDocPlugin.log((exception as AssertionFailedException).getMessage(), exception) 
-		} else if (exception instanceof IDocException) {
-			IDoc2JCoIDocPlugin.log((exception as IDocException).getMessage(), exception) 
-		} else {
-			IDoc2JCoIDocPlugin.log("", exception) 
+		sourceObject.eResource.errors.add(new ExceptionDiagnostic(exception));
+		// TODO make this appear in editor and error log
+		switch exception {
+			AssertionFailedException: IDoc2JCoIDocPlugin.log(exception.message, exception) 
+			IDocException:            IDoc2JCoIDocPlugin.log(exception.message, exception)
+			default:                  IDoc2JCoIDocPlugin.log("", exception)
 		}
 	}
-	/** 
-	 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
-	 */
+
 	override void propertyChange(PropertyChangeEvent event) {
-		if (IUiConstants.PARTNER_TYPE.equals(event.getProperty())) {
-			senderPartnerType=event.getNewValue() as String 
+		switch event.property {
+			case IUiConstants.PARTNER_TYPE:   senderPartnerType = event.newValue as String
+			case IUiConstants.PARTNER_NUMBER: senderPartnerNumber = event.newValue as String
 		}
-		if (IUiConstants.PARTNER_NUMBER.equals(event.getProperty())) {
-			senderPartnerNumber=event.getNewValue() as String 
-		}
-		
 	}
 	
 }

@@ -8,12 +8,18 @@
  * webXcerpt Software GmbH - initial creator
  * www.webxcerpt.com
  */
-package org.vclipse.idoc2jcoidoc
+package org.vclipse.connection
 
-import java.util.List
-import com.sap.conn.idoc.IDocDocument
-import com.sap.conn.idoc.IDocException
+/** 
+ */
+interface IConnectionListener {
+	/** 
+	 * @param connection
+	 */
+	def void connected(IConnection connection)
 
-interface IJCoIDocPostprocessor {
-	def void postprocess(List<IDocDocument> idocs) throws IDocException
+	/** 
+	 */
+	def void disconnected()
+
 }

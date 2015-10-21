@@ -18,5 +18,4 @@ import com.sap.conn.idoc.IDocDocument
 
 interface IIDocsSender {
 	def IStatus send(List<IDocDocument> idocs, IConnectionHandler handler, IProgressMonitor monitor)
-
 }
