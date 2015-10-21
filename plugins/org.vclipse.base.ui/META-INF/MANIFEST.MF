@@ -6,9 +6,14 @@ Bundle-Version: 0.6.0.qualifier
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Require-Bundle: org.eclipse.xtext.ui,
  org.vclipse.base;visibility:=reexport,
- org.eclipse.e4.core.commands
+ org.eclipse.e4.core.commands,
+ com.google.guava,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.xtend.lib,
+ org.eclipse.xtend.lib.macro
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.vclipse.base.ui,
  org.vclipse.base.ui.util
 Bundle-ClassPath: .
+
