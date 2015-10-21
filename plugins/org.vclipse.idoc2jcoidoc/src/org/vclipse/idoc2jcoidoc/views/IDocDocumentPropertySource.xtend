@@ -58,7 +58,7 @@ class IDocDocumentPropertySource implements IPropertySource {
 				{
 					val _wrVal_pds = pds
 					val _wrIndx_pds = i
-					_wrVal_pds.set(_wrIndx_pds, new PropertyDescriptor(attName, attName))
+					_wrVal_pds.set(_wrIndx_pds, new PropertyDescriptor(attName, '''«attName» («rec.recordMetaData.getDescription(attName)»)'''))
 				}
 				{
 					val _rdIndx_pds = i
