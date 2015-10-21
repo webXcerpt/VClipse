@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.vclipse.idoc_feature-0.5.0.qualifier.jar" id="org.vclipse.idoc_feature" version="0.5.0.qualifier">
+   <feature url="features/org.vclipse.idoc_feature-0.6.0.qualifier.jar" id="org.vclipse.idoc_feature" version="0.6.0.qualifier">
       <category name="org.vclipse"/>
    </feature>
+   <!--
    <feature url="features/org.vclipse.vcml2idoc_feature-0.5.0.qualifier.jar" id="org.vclipse.vcml2idoc_feature" version="0.5.0.qualifier">
       <category name="org.vclipse"/>
    </feature>
@@ -21,5 +22,6 @@
    <feature url="features/org.vclipse.exports.opencpq_feature_0.5.0.qualifier.jar" id="org.vclipse.exports.opencpq_feature" version="0.5.0.qualifier">
       <category name="org.vclipse"/>
    </feature>
+   -->
    <category-def name="org.vclipse" label="VClipse"/>
 </site>
