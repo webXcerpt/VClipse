@@ -1,5 +1,4 @@
 /** 
- * Copyright (c) 2010 - 2013 webXcerpt Software GmbH.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,27 +24,21 @@ class IDocLabelProvider extends BaseLabelProvider implements ILabelProvider {
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
 	 */
 	override Image getImage(Object object) {
-		if (object instanceof IDocDocument) {
-			return IDoc2JCoIDocPlugin.getImage(IUiConstants.IDOC_DOCUMENT_IMAGE)
-		} else if (object instanceof IDocSegment) {
-			return IDoc2JCoIDocPlugin.getImage(IUiConstants.IDOC_SEGMENT_IMAGE)
-		} else {
-			return null
+		switch object {
+		IDocDocument: IDoc2JCoIDocPlugin.getImage(IUiConstants.IDOC_DOCUMENT_IMAGE)
+		IDocSegment:  IDoc2JCoIDocPlugin.getImage(IUiConstants.IDOC_SEGMENT_IMAGE)
+		default:      null
 		}
 	}
 
 	/** 
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 	 */
-	override String getText(Object object) {
-		if (object instanceof IDocDocument) {
-			val IDocDocument iDocDocument = object as IDocDocument
-			return '''«iDocDocument.getIDocNumber()» «iDocDocument.getIDocType()» «iDocDocument.getMessageType()»'''
-		} else if (object instanceof IDocSegment) {
-			val IDocSegment iDocSegment = object as IDocSegment
-			return '''«iDocSegment.getDefinition()» («iDocSegment.getDescription()»)'''
-		} else {
-			return object.toString()
+	override String getText(Object it) {
+		switch it {
+		IDocDocument: '''«IDocNumber» «IDocType» «messageType»'''
+		IDocSegment:  '''«definition» («description»)'''
+		default:      toString
 		}
 	}
 
