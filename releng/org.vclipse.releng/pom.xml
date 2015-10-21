@@ -83,13 +83,13 @@
 		<!-- VClipse Plug-ins -->
 		<module>../../plugins/org.vclipse.connection</module>
 		<module>../../plugins/org.vclipse.console</module>
-		<module>../../plugins/org.vclipse.sap.deployment</module>
+		<module>../../plugins/org.vclipse.idoc2jcoidoc</module>
 		<!-- 
+		<module>../../plugins/org.vclipse.sap.deployment</module>
 		<module>../../plugins/org.vclipse.jpplib</module>
 		<module>../../plugins/org.vclipse.vcml.compare</module>
 		<module>../../plugins/org.vclipse.vcml.ui.actions</module>
 		<module>../../plugins/org.vclipse.vcml2idoc.ui</module>
-		<module>../../plugins/org.vclipse.idoc2jcoidoc</module>
 		<module>../../plugins/org.vclipse.vcml.ui.wizards.imports</module>
 		<module>../../plugins/org.vclipse.configscan</module>
 		<module>../../plugins/org.vclipse.refactoring</module>
