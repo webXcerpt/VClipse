@@ -38,5 +38,10 @@ class IDocLabelProvider extends DefaultEObjectLabelProvider {
 		new StyledString(name + " ", StyledString.COUNTER_STYLER)
 		.append(Integer.toString(value));
 	}
+
+	def image(IDoc it) {"idoc.gif"}
+	def image(Segment it) {"page_white_text.png"}
+	def image(StringField it) {"StringField.png"}
+	def image(NumberField it) {"NumberField.png"}
 	
 }
