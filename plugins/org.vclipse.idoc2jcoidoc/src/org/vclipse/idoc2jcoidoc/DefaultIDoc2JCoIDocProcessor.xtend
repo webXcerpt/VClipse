@@ -19,7 +19,6 @@ import com.sap.conn.idoc.IDocRepository
 import com.sap.conn.idoc.IDocSegment
 import com.sap.conn.idoc.jco.JCoIDoc
 import com.sap.conn.jco.JCoException
-import java.util.ArrayList
 import java.util.List
 import org.eclipse.core.runtime.AssertionFailedException
 import org.eclipse.core.runtime.CoreException

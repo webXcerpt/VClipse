@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.IProgressMonitor
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.ui.IActionBars
 import org.eclipse.ui.IEditorPart
 import org.eclipse.ui.IEditorSite
 import org.eclipse.ui.IWorkbenchPartSite
