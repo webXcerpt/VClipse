@@ -14,10 +14,15 @@ Require-Bundle: org.tigris.subversion.subclipse.core,
  org.vclipse.idoc,
  org.vclipse.vcml,
  org.vclipse.vcml.ui,
- org.eclipse.emf.compare
+ org.eclipse.emf.compare,
+ com.google.guava,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.xtend.lib,
+ org.eclipse.xtend.lib.macro
 Import-Package: com.sap.conn.jco,
  com.sap.conn.idoc
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Vendor: webXcerpt Software GmbH, Munich, Germany (www.webxcerpt.com)
 Bundle-ClassPath: .
+
