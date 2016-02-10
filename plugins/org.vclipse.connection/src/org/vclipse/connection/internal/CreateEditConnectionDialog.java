@@ -43,6 +43,7 @@ public class CreateEditConnectionDialog extends TitleAreaDialog {
 	private Text systemNumberText;
 	private Text hostNameText;
 	private Text clientNumberText;
+	private Text routerText;
 	private Text userNameText;
 	private Text passwordText;
 	private Text languageText;
@@ -54,6 +55,7 @@ public class CreateEditConnectionDialog extends TitleAreaDialog {
 	private String systemNumber;
 	private String hostName;
 	private String clientNumber;
+	private String router;
 	private String userName;
 	private String password;
 	private String language;
@@ -135,6 +137,17 @@ public class CreateEditConnectionDialog extends TitleAreaDialog {
 		});
 				
 		label = new Label(mainArea, SWT.NONE);
+		label.setText("SAP router string:");
+		
+		routerText = new Text(mainArea, SWT.BORDER);
+		routerText.setLayoutData(gridData);
+		routerText.addModifyListener(new ModifyListener() {
+			public void modifyText(final ModifyEvent event) {
+				router = ((Text)event.widget).getText();
+			}
+		});
+				
+		label = new Label(mainArea, SWT.NONE);
 		label.setText("User name:");
 		
 		userNameText = new Text(mainArea, SWT.BORDER);
@@ -188,6 +201,7 @@ public class CreateEditConnectionDialog extends TitleAreaDialog {
 		systemNumberText.setText(connection.getSystemNumber());
 		hostNameText.setText(connection.getHostName());
 		clientNumberText.setText(connection.getClientNumber());
+		routerText.setText(connection.getRouter());
 		userNameText.setText(connection.getUserName());
 		passwordText.setText(connection.getPassword());
 		languageText.setText(connection.getLanguage());
@@ -204,6 +218,7 @@ public class CreateEditConnectionDialog extends TitleAreaDialog {
 			connection.setSystemNumber(systemNumber);
 			connection.setHostName(hostName);
 			connection.setClientNumber(clientNumber);
+			connection.setRouter(router);
 			connection.setUserName(userName);
 			connection.setPassword(password);
 			connection.setLanguage(language);

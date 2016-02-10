@@ -54,6 +54,16 @@ interface IConnection {
 	 * @param clientNumber the clientNumber to set
 	 */
 	def void setClientNumber(String clientNumber)
+	
+	/** 
+	 * @return the SAP router string
+	 */
+	def String getRouter()
+
+	/** 
+	 * @param router the SAP router string to set
+	 */
+	def void setRouter(String router)
 
 	/** 
 	 * @return the userName

@@ -380,6 +380,11 @@ public class PreferencePage extends org.eclipse.jface.preference.PreferencePage 
 		column.setWidth(120);
 		column.addSelectionListener(listener);
 		
+		column = new TableColumn(table, SWT.LEFT);
+		column.setText("SAP router string");
+		column.setWidth(120);
+		column.addSelectionListener(listener);
+		
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		table.setSortDirection(SWT.UP);

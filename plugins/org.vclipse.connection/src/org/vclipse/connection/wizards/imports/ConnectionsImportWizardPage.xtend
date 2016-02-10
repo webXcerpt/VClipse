@@ -99,6 +99,8 @@ final class ConnectionsImportWizardPage extends AbstractWizardPage implements II
 					validateString(iniConfiguration.getString(key.replaceFirst(SYSTEM_NAME, HOST_NAME))))
 				connection.setClientNumber(
 					validateString(iniConfiguration.getString(key.replaceFirst(SYSTEM_NAME, CLIENT_NUMBER))))
+				connection.setRouter(
+					validateString(iniConfiguration.getString(key.replaceFirst(SYSTEM_NAME, ROUTER))))
 				connection.setUserName(
 					validateString(iniConfiguration.getString(key.replaceFirst(SYSTEM_NAME, USER_NAME))))
 				connection.setPassword(

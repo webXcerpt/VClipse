@@ -44,6 +44,7 @@ class DefaultDestinationDataProvider implements IDestinationDataProvider {
 			properties.setProperty(JCO_SYSNR, connection.getSystemNumber())
 			properties.setProperty(JCO_ASHOST, connection.getHostName())
 			properties.setProperty(JCO_CLIENT, connection.getClientNumber())
+			properties.setProperty(JCO_SAPROUTER, connection.getRouter())
 			properties.setProperty(JCO_USER, connection.getUserName())
 			if (connection instanceof AbstractConnection) {
 				properties.setProperty(JCO_PASSWD, (connection as AbstractConnection).getPassword())

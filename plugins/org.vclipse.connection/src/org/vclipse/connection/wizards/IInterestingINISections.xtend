@@ -31,6 +31,10 @@ interface IInterestingINISections {
 	 */
 	public static final String CLIENT_NUMBER = "ClientNumber"
 	/** 
+	 * Section containing SAP router
+	 */
+	public static final String ROUTER = "Router"
+	/** 
 	 * Section containing user name
 	 */
 	public static final String USER_NAME = "UserName"

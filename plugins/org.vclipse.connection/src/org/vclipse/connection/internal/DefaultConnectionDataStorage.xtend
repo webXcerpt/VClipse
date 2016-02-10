@@ -78,6 +78,7 @@ class DefaultConnectionDataStorage implements IConnectionDataStorage {
 			newConnection.setSystemNumber(preferenceStore.getString(IDestinationDataProvider::JCO_SYSNR + index))
 			newConnection.setHostName(preferenceStore.getString(IDestinationDataProvider::JCO_ASHOST + index))
 			newConnection.setClientNumber(preferenceStore.getString(IDestinationDataProvider::JCO_CLIENT + index))
+			newConnection.setRouter(preferenceStore.getString(IDestinationDataProvider::JCO_SAPROUTER + index))
 			newConnection.setUserName(preferenceStore.getString(IDestinationDataProvider::JCO_USER + index))
 			newConnection.setLanguage(preferenceStore.getString(IDestinationDataProvider::JCO_LANG + index))
 			availableConnections.add(newConnection)
@@ -97,6 +98,7 @@ class DefaultConnectionDataStorage implements IConnectionDataStorage {
 			preferenceStore.setValue(IDestinationDataProvider::JCO_SYSNR + i, current.getSystemNumber())
 			preferenceStore.setValue(IDestinationDataProvider::SYSTEM_NAME + i, current.getSystemName())
 			preferenceStore.setValue(IDestinationDataProvider::JCO_CLIENT + i, current.getClientNumber())
+			preferenceStore.setValue(IDestinationDataProvider::JCO_SAPROUTER + i, current.getRouter())
 			preferenceStore.setValue(IDestinationDataProvider::JCO_USER + i, current.getUserName())
 			preferenceStore.setValue(IDestinationDataProvider::JCO_LANG + i, current.getLanguage())
 			try {

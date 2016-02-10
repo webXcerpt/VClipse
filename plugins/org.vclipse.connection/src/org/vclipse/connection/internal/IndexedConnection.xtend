@@ -46,6 +46,10 @@ final package class IndexedConnection extends AbstractConnection {
 		return clientNumber
 	}
 
+	override String getRouter() {
+		return router
+	}
+
 	override String getHostName() {
 		return hostName
 	}
@@ -82,6 +86,10 @@ final package class IndexedConnection extends AbstractConnection {
 
 	override void setClientNumber(String clientNumber) {
 		this.clientNumber = clientNumber
+	}
+
+	override void setRouter(String router) {
+		this.router = router
 	}
 
 	override void setHostName(String hostName) {

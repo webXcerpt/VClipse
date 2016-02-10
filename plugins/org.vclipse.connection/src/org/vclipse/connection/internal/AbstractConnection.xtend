@@ -24,6 +24,7 @@ abstract class AbstractConnection implements IConnection {
 	protected String systemNumber = ""
 	protected String hostName = ""
 	protected String clientNumber = ""
+	protected String router = ""
 	protected String userName = ""
 	protected String password = ""
 	protected String language = ""
@@ -64,9 +65,19 @@ abstract class AbstractConnection implements IConnection {
 	override abstract String getClientNumber()
 
 	/** 
+	 * @return the router
+	 */
+	override abstract String getRouter()
+
+	/** 
 	 * @param clientNumber the clientNumber to set
 	 */
 	override abstract void setClientNumber(String clientNumber)
+
+	/** 
+	 * @param rotuer the router to set
+	 */
+	override abstract void setRouter(String router)
 
 	/** 
 	 * @return the userName
