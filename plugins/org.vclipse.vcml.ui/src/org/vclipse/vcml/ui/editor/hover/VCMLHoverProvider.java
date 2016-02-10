@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.ui.editor.hover.html.DefaultEObjectHoverProvider;
 import org.vclipse.base.naming.IClassNameProvider;
@@ -77,9 +78,52 @@ public class VCMLHoverProvider extends DefaultEObjectHoverProvider {
 	}
 
 	protected String getHoverInfoAsHtml(EObject eObject) {
-		if(!(eObject instanceof VCObject) || !hasHover(eObject))
-			return null;
-		VCObject vcObject = (VCObject)eObject;
+		if (eObject instanceof VCObject)
+			return getHoverInfoAsHtml_VCObject((VCObject)eObject);
+		else if (eObject instanceof CharacteristicValue)
+			return getHoverInfoAsHtml_CharacteristicValue((CharacteristicValue)eObject);
+		else
+			return super.getHoverInfoAsHtml(eObject);
+	}
+
+	protected String getHoverInfoAsHtml_CharacteristicValue(CharacteristicValue vcObject) {
+		final StringBuffer buffer = new StringBuffer();
+		buffer.append(getFirstLine(vcObject));
+		String description = descriptionProvider.getDocumentation(vcObject);
+		if (description!=null && description.length()>0) {
+			buffer.append("<br/>");
+			buffer.append(description);
+		}
+		String documentation = documentationProvider.getDocumentation(vcObject);
+		if (documentation!=null && documentation.length()>0) {
+			buffer.append("<br/>");
+			buffer.append(documentation);
+		}
+		String multilineCommentDocumentation = getDocumentation(vcObject);
+		if (multilineCommentDocumentation!=null && multilineCommentDocumentation.length()>0) {
+			buffer.append("<p>");
+			buffer.append(multilineCommentDocumentation);
+			buffer.append("</p>");
+		}
+		Characteristic cstic = EcoreUtil2.getContainerOfType(vcObject, Characteristic.class);
+		if (cstic!=null) {
+			buffer.append("<br/>");
+			buffer.append("value of characteristic " + cstic.getName());
+			String csticDescription = descriptionProvider.getDocumentation(cstic);
+			if (csticDescription!=null && csticDescription.length()>0) {
+				buffer.append("<br/>");
+				buffer.append(csticDescription);
+			}
+			String csticDocumentation = documentationProvider.getDocumentation(cstic);
+			if (csticDocumentation!=null && csticDocumentation.length()>0) {
+				buffer.append("<br/>");
+				buffer.append(csticDocumentation);
+			}
+		}
+		return buffer.toString();
+	}
+		
+	protected String getHoverInfoAsHtml_VCObject(VCObject vcObject) {
 		final StringBuffer buffer = new StringBuffer();
 		buffer.append(getFirstLine(vcObject));
 		String description = descriptionProvider.getDocumentation(vcObject);
